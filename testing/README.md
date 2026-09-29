@@ -8,7 +8,7 @@
 
 | Machine | Why | Status |
 |---|---|---|
-| **Omarchy** virtual machine | Study the reference hands-on, and prove that our virtual machines can run Hyprland at all | **running**: Omarchy 4.0.4 installed 2026-09-28, Hyprland drawing on the RTX 3060 |
+| **Omarchy** virtual machine | A known-good Hyprland setup: it proves that our virtual machines can run Hyprland at all | **running**: Omarchy 4.0.4 installed 2026-09-28, Hyprland drawing on the RTX 3060 |
 | **KognogOS** virtual machine | The main target: a real KognogOS install | waits on a fully rebuilt KognogOS installer image |
 | **Plain Arch** virtual machine | The "any Arch install" promise | planned |
 | **The test desktop** | Real hardware: NVIDIA RTX 3060, three 2560×1440 screens at 144 Hz | after the virtual machines pass |

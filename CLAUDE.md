@@ -11,7 +11,7 @@ A [forgekit](https://github.com/jetomev/forgekit) (Python/Textual) terminal app 
 - **One portable folder is the source of truth.** Nothing outside `$HOME` is ever edited by hand. System pieces are applied by the app, with a backup and an undo, through polkit and a fixed-purpose helper (grubForge's pattern). Never put a password field inside the terminal app.
 - **Packages go through nog.** The Hyprland family is a nog group (D-9).
 - **Must be readable on a plain text screen** (`TERM=linux`), which depends on forgekit#1.
-- **Omarchy (MIT) is the reference.** Credit anything adapted from it and keep its notice.
+- **We learn from Omarchy (MIT) and every app we use, and we never compare** (D-27). No "better than" or "unlike X" framing anywhere. Credit anything adapted and keep its notice.
 
 ## Documentation, at every step
 - A new decision goes in `docs/DECISIONS.md`: newest first, numbered D-n, dated, with who decided.

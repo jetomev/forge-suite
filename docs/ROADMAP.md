@@ -14,7 +14,7 @@
 - [x] [kognogos.org](https://kognogos.org/#hypeforge) announces hypeForge as coming soon
 - [x] Recipe research: up to five options per job, with sources ([RECIPE.md](RECIPE.md)) · #1, #11
 - [x] Virtual machines that can run Hyprland: 3D graphics switched on and proven on the NVIDIA desktop · #2
-- [ ] Omarchy reference machine: installed and snapshotted 2026-09-28; the comparison note is still to write · #3
+- [x] Omarchy machine, a known-good Hyprland setup: installed and snapshotted 2026-09-28 · #3
 - [ ] A real KognogOS machine, from a fully rebuilt KognogOS installer image *(KognogOS work)* · #4
 - [ ] A saved clean state (snapshot) on every test machine
 
@@ -40,7 +40,7 @@
 - [ ] How nog comes along on a plain Arch install
 
 ### Phase 4 · Test
-- [ ] Test matrix: Omarchy-reference comparison, the KognogOS machine, the plain Arch machine, then the test desktop
+- [ ] Test matrix: the KognogOS machine, the plain Arch machine, then the test desktop
 - [ ] A run on a plain text screen in every matrix
 - [ ] Numbered findings (F-1, F-2…), each with its own issue, shipped as one fix batch
 

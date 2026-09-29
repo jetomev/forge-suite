@@ -88,7 +88,7 @@
 
 ## 0. One all-in-one shell, or separate small apps?
 *What this job is:* Decide whether one program draws the bar, pop-ups, lock screen and menus, or whether each job gets its own small program.
-*Omarchy reference:* Omarchy 3 used separate apps: Waybar, Walker, Mako, SwayOSD, hyprlock, hypridle, swaybg and polkit-gnome. Omarchy 4 replaced all of them with one Quickshell program it wrote itself: "the bar, launcher, menus, notifications, on-screen displays, control panels, lock screen, and polkit agent now all live inside a single long-running shell process" ([v4.0.0 notes](https://github.com/basecamp/omarchy/releases/tag/v4.0.0)). That shell lives inside Omarchy's own repo and is not published as a separate package.
+*What Omarchy does:* Omarchy 3 used separate apps: Waybar, Walker, Mako, SwayOSD, hyprlock, hypridle, swaybg and polkit-gnome. Omarchy 4 replaced all of them with one Quickshell program it wrote itself: "the bar, launcher, menus, notifications, on-screen displays, control panels, lock screen, and polkit agent now all live inside a single long-running shell process" ([v4.0.0 notes](https://github.com/basecamp/omarchy/releases/tag/v4.0.0)). That shell lives inside Omarchy's own repo and is not published as a separate package.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -131,7 +131,7 @@
 
 ## 1. Top bar
 *What this job is:* The strip along the top of the screen that shows workspaces, the clock, volume, network and small app icons.
-*Omarchy reference:* Omarchy 3 used Waybar. Omarchy 4 draws the bar inside its own Quickshell shell, with plugin widgets and a bar you can drag to any screen edge.
+*What Omarchy does:* Omarchy 3 used Waybar. Omarchy 4 draws the bar inside its own Quickshell shell, with plugin widgets and a bar you can drag to any screen edge.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -148,7 +148,7 @@
 
 ## 2. App launcher / menu
 *What this job is:* The pop-up where you type part of an app's name and press Enter. It doubles as a "pick one from a list" menu for other things, such as clipboard history.
-*Omarchy reference:* Omarchy 3 used Walker (with its helper service "elephant"). Omarchy 4 has its own launcher merged into the Omarchy menu on Super+Space, which searches apps and commands.
+*What Omarchy does:* Omarchy 3 used Walker (with its helper service "elephant"). Omarchy 4 has its own launcher merged into the Omarchy menu on Super+Space, which searches apps and commands.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -165,7 +165,7 @@
 
 ## 3. Notifications
 *What this job is:* The small message boxes that pop up ("Download finished"), plus a way to see ones you missed.
-*Omarchy reference:* Omarchy 3 used Mako. Omarchy 4 has its own notification service inside the shell, with do-not-disturb and a history that replays the last ten notifications.
+*What Omarchy does:* Omarchy 3 used Mako. Omarchy 4 has its own notification service inside the shell, with do-not-disturb and a history that replays the last ten notifications.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -182,7 +182,7 @@
 
 ## 4. Volume / brightness pop-ups (OSD)
 *What this job is:* The small bar that flashes on screen when you press the volume or brightness keys. OSD means "on-screen display".
-*Omarchy reference:* Omarchy 3 used SwayOSD. Omarchy 4 draws its own volume, brightness and media pop-ups in the shell, and added external-monitor brightness through DDC/CI (the standard way a PC talks to a monitor's own settings).
+*What Omarchy does:* Omarchy 3 used SwayOSD. Omarchy 4 draws its own volume, brightness and media pop-ups in the shell, and added external-monitor brightness through DDC/CI (the standard way a PC talks to a monitor's own settings).
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -199,7 +199,7 @@
 
 ## 5. Lock screen
 *What this job is:* The screen that covers everything and asks for your password before you can get back in.
-*Omarchy reference:* Omarchy 3 used hyprlock. Omarchy 4 replaced it with a lock screen drawn by its shell, using the system's normal password check (PAM) plus fingerprint support.
+*What Omarchy does:* Omarchy 3 used hyprlock. Omarchy 4 replaced it with a lock screen drawn by its shell, using the system's normal password check (PAM) plus fingerprint support.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -216,7 +216,7 @@
 
 ## 6. Idle / screen-off / sleep timer
 *What this job is:* A quiet background helper. After some minutes of no keyboard or mouse it locks the screen, then turns the monitors off, then puts the PC to sleep. It holds off while a video is playing.
-*Omarchy reference:* Omarchy 3 used hypridle. In Omarchy 4 the shell itself handles idle, with timings in `~/.config/omarchy/shell.json` ([O4 manual](https://github.com/basecamp/omarchy/blob/v4.0.4/manual/13-toggles-idle-screensaver.md)).
+*What Omarchy does:* Omarchy 3 used hypridle. In Omarchy 4 the shell itself handles idle, with timings in `~/.config/omarchy/shell.json` ([O4 manual](https://github.com/basecamp/omarchy/blob/v4.0.4/manual/13-toggles-idle-screensaver.md)).
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -231,7 +231,7 @@
 
 ## 7. Wallpaper
 *What this job is:* Draws the background picture on each of the three monitors.
-*Omarchy reference:* Omarchy 3 used swaybg. Omarchy 4 draws the background inside its shell and adds a visual background picker (Super+Ctrl+Space).
+*What Omarchy does:* Omarchy 3 used swaybg. Omarchy 4 draws the background inside its shell and adds a visual background picker (Super+Ctrl+Space).
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -248,7 +248,7 @@
 
 ## 8. Admin password pop-up (polkit agent)
 *What this job is:* The window that asks for your password when a graphical app needs admin rights, for example a disk tool. polkit is the system service that decides when an app may do admin things. Without this helper, those apps simply fail or hang.
-*Omarchy reference:* Omarchy 3 used polkit-gnome. Omarchy 4 draws the password prompt inside its shell (themed, and it shows exactly what is being authorised) and moved its own admin actions to pkexec/polkit.
+*What Omarchy does:* Omarchy 3 used polkit-gnome. Omarchy 4 draws the password prompt inside its shell (themed, and it shows exactly what is being authorised) and moved its own admin actions to pkexec/polkit.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -264,7 +264,7 @@
 
 ## 9. Login screen (display manager)
 *What this job is:* The screen after boot where you type your password; it then starts Hyprland.
-*Omarchy reference:* Omarchy 3 used SDDM with its own QML theme and automatic login; the disk-encryption password is the real gate ([O3 sddm.sh](https://github.com/basecamp/omarchy/blob/v3.8.4/install/login/sddm.sh)). Omarchy 4 still uses SDDM, but runs SDDM's own login screen on Hyprland (`DisplayServer=wayland`, `CompositorCommand=start-hyprland … hyprland.lua`, [O4 config](https://github.com/basecamp/omarchy/blob/v4.0.4/etc/sddm.conf.d/10-wayland.conf)).
+*What Omarchy does:* Omarchy 3 used SDDM with its own QML theme and automatic login; the disk-encryption password is the real gate ([O3 sddm.sh](https://github.com/basecamp/omarchy/blob/v3.8.4/install/login/sddm.sh)). Omarchy 4 still uses SDDM, but runs SDDM's own login screen on Hyprland (`DisplayServer=wayland`, `CompositorCommand=start-hyprland … hyprland.lua`, [O4 config](https://github.com/basecamp/omarchy/blob/v4.0.4/etc/sddm.conf.d/10-wayland.conf)).
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -281,7 +281,7 @@
 
 ## 10. Clipboard history
 *What this job is:* Remembers the last things you copied (text and pictures) so you can paste an older one.
-*Omarchy reference:* Omarchy 3 used Walker's clipboard mode on Super+Ctrl+V ([O3 bindings](https://github.com/basecamp/omarchy/blob/v3.8.4/default/hypr/bindings/clipboard.conf)). Omarchy 4 has a clipboard manager inside the shell with picture previews, and it skips sensitive items such as one-time codes.
+*What Omarchy does:* Omarchy 3 used Walker's clipboard mode on Super+Ctrl+V ([O3 bindings](https://github.com/basecamp/omarchy/blob/v3.8.4/default/hypr/bindings/clipboard.conf)). Omarchy 4 has a clipboard manager inside the shell with picture previews, and it skips sensitive items such as one-time codes.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -298,7 +298,7 @@
 
 ## 11. Screenshots (and annotation)
 *What this job is:* Captures the whole screen, one window or a dragged area, and optionally lets you draw arrows or boxes on it before saving or pasting.
-*Omarchy reference:* Omarchy 3 used grim + slurp + Satty, freezing the screen with hyprpicker while you aim ([O3 script](https://github.com/basecamp/omarchy/blob/v3.8.4/bin/omarchy-capture-screenshot)). Omarchy 4 still uses grim + slurp but switched the drawing editor from Satty to Tensaku (Rust, AUR only, ★94) ([O4 manual](https://github.com/basecamp/omarchy/blob/v4.0.4/manual/12-screenshots-recording.md)).
+*What Omarchy does:* Omarchy 3 used grim + slurp + Satty, freezing the screen with hyprpicker while you aim ([O3 script](https://github.com/basecamp/omarchy/blob/v3.8.4/bin/omarchy-capture-screenshot)). Omarchy 4 still uses grim + slurp but switched the drawing editor from Satty to Tensaku (Rust, AUR only, ★94) ([O4 manual](https://github.com/basecamp/omarchy/blob/v4.0.4/manual/12-screenshots-recording.md)).
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -315,7 +315,7 @@
 
 ## 12. Screen recording
 *What this job is:* Records the screen, or part of it, to a video file.
-*Omarchy reference:* Omarchy 3 and Omarchy 4 both use gpu-screen-recorder. Omarchy 4 adds a recording indicator in the bar, a webcam overlay, and a clean-up step when you stop. Both also install OBS Studio.
+*What Omarchy does:* Omarchy 3 and Omarchy 4 both use gpu-screen-recorder. Omarchy 4 adds a recording indicator in the bar, a webcam overlay, and a clean-up step when you stop. Both also install OBS Studio.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -332,7 +332,7 @@
 
 ## 13. Look of GTK and Qt apps + mouse cursor
 *What this job is:* Makes GTK apps (most Linux apps), Qt apps (KDE-style apps) and the mouse pointer all use Catppuccin Mocha instead of clashing styles.
-*Omarchy reference:* Omarchy 3 set GTK to Adwaita-dark with Yaru icons using `gsettings`, and styled Qt apps with Kvantum (`QT_STYLE_OVERRIDE=kvantum`, [O3 envs](https://github.com/basecamp/omarchy/blob/v3.8.4/default/hypr/envs.conf)). Omarchy 4 keeps the gsettings part, drops Kvantum, and tells Qt apps to follow the GTK theme (`QT_QPA_PLATFORMTHEME=gtk3`, [O4 envs.lua](https://github.com/basecamp/omarchy/blob/v4.0.4/default/hypr/envs.lua)). Both set only the cursor size (24).
+*What Omarchy does:* Omarchy 3 set GTK to Adwaita-dark with Yaru icons using `gsettings`, and styled Qt apps with Kvantum (`QT_STYLE_OVERRIDE=kvantum`, [O3 envs](https://github.com/basecamp/omarchy/blob/v3.8.4/default/hypr/envs.conf)). Omarchy 4 keeps the gsettings part, drops Kvantum, and tells Qt apps to follow the GTK theme (`QT_QPA_PLATFORMTHEME=gtk3`, [O4 envs.lua](https://github.com/basecamp/omarchy/blob/v4.0.4/default/hypr/envs.lua)). Both set only the cursor size (24).
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -361,7 +361,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 14. File manager (terminal first, plus one graphical fallback)
 *What this job is:* Browsing, copying, moving and opening your files and folders.
-*Omarchy reference:* Omarchy 3 used Nautilus, GNOME's point-and-click file manager (`SUPER+SHIFT+F`), with no terminal file manager installed; Omarchy 4 still uses Nautilus.
+*What Omarchy does:* Omarchy 3 used Nautilus, GNOME's point-and-click file manager (`SUPER+SHIFT+F`), with no terminal file manager installed; Omarchy 4 still uses Nautilus.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -376,7 +376,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 15. Wi-Fi and network settings
 *What this job is:* Choosing a Wi-Fi network, typing its password, and checking the wired connection.
-*Omarchy reference:* Omarchy 3 used impala, a terminal Wi-Fi app that only works with iwd, a different Wi-Fi service ([impala asks you to disable NetworkManager](https://github.com/pythops/impala)); Omarchy 4 does it with NetworkManager and its own Network panel in its Quickshell bar (`SUPER+CTRL+W`).
+*What Omarchy does:* Omarchy 3 used impala, a terminal Wi-Fi app that only works with iwd, a different Wi-Fi service ([impala asks you to disable NetworkManager](https://github.com/pythops/impala)); Omarchy 4 does it with NetworkManager and its own Network panel in its Quickshell bar (`SUPER+CTRL+W`).
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -390,7 +390,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 16. Bluetooth
 *What this job is:* Pairing and connecting headphones, keyboards, game controllers and phones. (The adapter `hci0` is present and `bluetooth.service` is enabled here.)
-*Omarchy reference:* Omarchy 3 used bluetui, a terminal app (`SUPER+CTRL+B`); Omarchy 4 does it with its own Bluetooth panel in the Quickshell bar (same key). Plasma used Bluedevil, which is part of the `plasma` group.
+*What Omarchy does:* Omarchy 3 used bluetui, a terminal app (`SUPER+CTRL+B`); Omarchy 4 does it with its own Bluetooth panel in the Quickshell bar (same key). Plasma used Bluedevil, which is part of the `plasma` group.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -405,7 +405,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 17. Sound mixer and output switching
 *What this job is:* Changing the volume of each app, and choosing speakers, headphones or HDMI.
-*Omarchy reference:* Omarchy 3 used wiremix, a terminal mixer (`SUPER+CTRL+A`); Omarchy 4 does it with its own Audio panel (volume slider, output picker, per-app mixer). Plasma used plasma-pa, which is in the `plasma` group.
+*What Omarchy does:* Omarchy 3 used wiremix, a terminal mixer (`SUPER+CTRL+A`); Omarchy 4 does it with its own Audio panel (volume slider, output picker, per-app mixer). Plasma used plasma-pa, which is in the `plasma` group.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -419,7 +419,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 18. System monitor (with an NVIDIA graphics-card view)
 *What this job is:* Seeing what is using the processor, memory, disk, network and graphics card, and stopping a stuck program.
-*Omarchy reference:* Omarchy 3 used btop (`SUPER+CTRL+T`); Omarchy 4 still ships btop on the same key, plus a Power panel with "system stats".
+*What Omarchy does:* Omarchy 3 used btop (`SUPER+CTRL+T`); Omarchy 4 still ships btop on the same key, plus a Power panel with "system stats".
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -434,7 +434,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 19. Arranging three monitors
 *What this job is:* Telling Hyprland where each screen sits and its resolution, refresh rate (144 Hz) and scale.
-*Omarchy reference:* Omarchy 3 had you edit `~/.config/hypr/monitors.conf` by hand; Omarchy 4 has you edit `monitors.lua` by hand, and its Display panel only covers brightness and laptop-screen controls. On Plasma this was KScreen, which is in the `plasma` group.
+*What Omarchy does:* Omarchy 3 had you edit `~/.config/hypr/monitors.conf` by hand; Omarchy 4 has you edit `monitors.lua` by hand, and its Display panel only covers brightness and laptop-screen controls. On Plasma this was KScreen, which is in the `plasma` group.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -448,7 +448,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 20. Night light (blue-light filter)
 *What this job is:* Warming the screen colours in the evening. (Plasma's Night Light was off on this machine, so this is a new feature, not a replacement.)
-*Omarchy reference:* Omarchy 3 used hyprsunset with a toggle key (`SUPER+CTRL+N`); Omarchy 4 still uses hyprsunset, shows its state on the bar, and re-sends the setting at start-up until it takes effect.
+*What Omarchy does:* Omarchy 3 used hyprsunset with a toggle key (`SUPER+CTRL+N`); Omarchy 4 still uses hyprsunset, shows its state on the bar, and re-sends the setting at start-up until it takes effect.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -462,7 +462,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 21. Colour picker
 *What this job is:* Clicking any dot on the screen to copy its colour code (such as `#1e1e2e`).
-*Omarchy reference:* Omarchy 3 used hyprpicker (`SUPER+PRINT`); Omarchy 4 does the same.
+*What Omarchy does:* Omarchy 3 used hyprpicker (`SUPER+PRINT`); Omarchy 4 does the same.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -475,7 +475,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 22. Text editor (in the terminal)
 *What this job is:* Editing text and settings files inside the terminal.
-*Omarchy reference:* Omarchy 3 used Neovim (its own ready-made setup), and its editor launcher also accepts nvim, vim, nano, micro, helix and **fresh**; Omarchy 4 does the same, with the default chosen through its `omarchy-default-editor` setting.
+*What Omarchy does:* Omarchy 3 used Neovim (its own ready-made setup), and its editor launcher also accepts nvim, vim, nano, micro, helix and **fresh**; Omarchy 4 does the same, with the default chosen through its `omarchy-default-editor` setting.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -490,7 +490,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 23. Image viewer (light)
 *What this job is:* Opening photos and screenshots quickly.
-*Omarchy reference:* Omarchy 3 used imv; Omarchy 4 still uses imv, now moving deleted images to the Trash and adding a key to annotate them.
+*What Omarchy does:* Omarchy 3 used imv; Omarchy 4 still uses imv, now moving deleted images to the Trash and adding a key to annotate them.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -504,7 +504,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 24. PDF and document viewer (light)
 *What this job is:* Reading PDFs, and sometimes filling in PDF forms.
-*Omarchy reference:* Omarchy 3 used Evince (GNOME's "Document Viewer"); Omarchy 4 still uses Evince.
+*What Omarchy does:* Omarchy 3 used Evince (GNOME's "Document Viewer"); Omarchy 4 still uses Evince.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -519,7 +519,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 25. Video and music player (light)
 *What this job is:* Playing video files and music.
-*Omarchy reference:* Omarchy 3 used mpv for video, and Spotify plus cliamp (a terminal music player) for music; Omarchy 4 keeps mpv and cliamp, adds `mpv-mpris` so the media keys control mpv, and makes Spotify an optional install.
+*What Omarchy does:* Omarchy 3 used mpv for video, and Spotify plus cliamp (a terminal music player) for music; Omarchy 4 keeps mpv and cliamp, adds `mpv-mpris` so the media keys control mpv, and makes Spotify an optional install.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -534,7 +534,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 26. How Hyprland is started (session start)
 *What this job is:* What happens between typing your password at the login screen and seeing the desktop. Rows 1–2 are the two ways to *start Hyprland*; rows 3–5 are *login screens*, and each of them can start either one.
-*Omarchy reference:* Omarchy 3 used SDDM with auto-login into a uwsm-managed session ("Omarchy (Hyprland uwsm)"), and its SDDM screen itself ran on Hyprland through `start-hyprland`; Omarchy 4 keeps that same uwsm session, with auto-login now set by its installer.
+*What Omarchy does:* Omarchy 3 used SDDM with auto-login into a uwsm-managed session ("Omarchy (Hyprland uwsm)"), and its SDDM screen itself ran on Hyprland through `start-hyprland`; Omarchy 4 keeps that same uwsm session, with auto-login now set by its installer.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -549,7 +549,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 27. Auto-mounting USB drives and disks
 *What this job is:* Making a plugged-in USB stick or disk appear and open without typing a password. (On this machine Plasma did **not** mount drives by itself: it listed them and mounted one when clicked. See the checks at the top.)
-*Omarchy reference:* Omarchy 3 had no background auto-mounter (Nautilus plus `gvfs` mounted a drive when you clicked it); Omarchy 4 added udiskie, started at login with `--automount --no-notify --no-tray`.
+*What Omarchy does:* Omarchy 3 had no background auto-mounter (Nautilus plus `gvfs` mounted a drive when you clicked it); Omarchy 4 added udiskie, started at login with `--automount --no-notify --no-tray`.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -564,7 +564,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 28. Password wallet / keyring
 *What this job is:* The locked safe where browsers and apps keep saved passwords and keys, unlocked automatically when you log in.
-*Omarchy reference:* Omarchy 3 used GNOME Keyring with a password-less "Default keyring" so it opens without asking; Omarchy 4 keeps that and pins Chrome-family browsers to it "so backend autodetection can't silently log you out of everything".
+*What Omarchy does:* Omarchy 3 used GNOME Keyring with a password-less "Default keyring" so it opens without asking; Omarchy 4 keeps that and pins Chrome-family browsers to it "so backend autodetection can't silently log you out of everything".
 **Important for this machine:** Chrome 154 and Brave have no password-store setting. On Plasma, Chromium's code picks KWallet; on an unrecognised desktop such as Hyprland it switches to the standard "Secret Service" (checked in [Chromium's source](https://github.com/chromium/chromium/blob/main/components/os_crypt/async/browser/freedesktop_secret_key_provider.cc)). [Arch warns](https://wiki.archlinux.org/title/Chromium#Force_a_password_store) this "can lead to you apparently losing your passwords and cookies". So pin the flag whichever option is chosen. The disk here is **not** encrypted, so Omarchy's password-less keyring would leave the secrets unprotected on disk ([Arch](https://wiki.archlinux.org/title/GNOME/Keyring#PAM_step): "stored unencrypted").
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
@@ -579,7 +579,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 29. Power menu (log out / restart / shut down)
 *What this job is:* A menu to log out, restart or shut down safely.
-*Omarchy reference:* Omarchy 3 used a "System" menu inside its Walker launcher (`SUPER+ESC`, and the power button); Omarchy 4 has the same menu rebuilt inside its Quickshell shell.
+*What Omarchy does:* Omarchy 3 used a "System" menu inside its Walker launcher (`SUPER+ESC`, and the power button); Omarchy 4 has the same menu rebuilt inside its Quickshell shell.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -594,7 +594,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 30. Printing
 *What this job is:* Adding and managing printers and print jobs. The HP LaserJet already prints; the print window inside apps comes from GTK and Qt, not from Plasma.
-*Omarchy reference:* Omarchy 3 used CUPS with system-config-printer (plus cups-browsed and a "print to PDF" printer); Omarchy 4 keeps CUPS and system-config-printer, adds cups-pk-helper, ships locked-down cups-browsed settings that only auto-add modern "driverless" printers, and hides the print-status tray icon.
+*What Omarchy does:* Omarchy 3 used CUPS with system-config-printer (plus cups-browsed and a "print to PDF" printer); Omarchy 4 keeps CUPS and system-config-printer, adds cups-pk-helper, ships locked-down cups-browsed settings that only auto-add modern "driverless" printers, and hides the print-status tray icon.
 
 | # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
 |---|---|---|---|---|---|---|---|
@@ -608,7 +608,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 
 ## 31. File-open dialogs and screen sharing ("portals")
 *What this job is:* A *portal* is a hidden helper that apps call when they need something from the desktop: the "open file" and "save as" windows, sharing your screen in a video call, taking a screenshot, or asking whether you prefer dark mode. You never start it yourself; it wakes up when an app asks. On Plasma, `xdg-desktop-portal-kde` does all of this. Under Hyprland the job is split in two: **one helper for screen sharing, and one for the file window**, because Hyprland's own helper has no file window.
-*Omarchy reference:* Omarchy 4.0.4 installs `xdg-desktop-portal-hyprland` and `xdg-desktop-portal-gtk` together ([omarchy-base.packages](https://github.com/basecamp/omarchy/blob/quattro/install/omarchy-base.packages)), with Nautilus as its file manager. It ships no portal settings file of its own, so it relies on the defaults.
+*What Omarchy does:* Omarchy 4.0.4 installs `xdg-desktop-portal-hyprland` and `xdg-desktop-portal-gtk` together ([omarchy-base.packages](https://github.com/basecamp/omarchy/blob/quattro/install/omarchy-base.packages)), with Nautilus as its file manager. It ships no portal settings file of its own, so it relies on the defaults.
 
 **Part A: screen sharing, screenshots, global shortcuts.** There is really one answer here.
 

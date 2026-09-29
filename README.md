@@ -63,7 +63,7 @@ These were decided on the first night. Each one has a dated entry in the [decisi
 | 🔒 | **Updates locked by us** | Hyprland and its helper packages update together, through nog, when we say so. |
 | 🌙 | **Lua from day one** | We write Hyprland's new settings format only. Nothing is built on the format being retired. |
 | 🖥 | **Readable anywhere** | The app runs in Alacritty and stays readable on a plain text screen. |
-| 🧭 | **Omarchy is our reference** | [Omarchy](https://github.com/basecamp/omarchy) is the project we study and measure ourselves against. |
+| 🙏 | **With thanks, not comparison** | We learn from [Omarchy](https://github.com/basecamp/omarchy) and from every developer whose app we use, and we credit them. Our picks are simply ours. |
 
 ---
 
@@ -119,14 +119,16 @@ It is also meant for **any Arch Linux install**. How nog comes along on a plain 
 
 ---
 
-## Our reference: Omarchy
+## With thanks
 
-[**Omarchy**](https://github.com/basecamp/omarchy), by DHH and Basecamp (MIT licence), is the best-known project that turns Arch into a Hyprland desktop, and it is **our definitive reference**. We study it closely and credit it wherever we learn from it. Where we differ, it is on purpose:
+hypeForge is built on other people's work, and we are grateful for it.
 
-- Windows float by default.
-- Updates go through nog's tiers.
-- Every setting lives in one portable folder.
-- The whole thing is a Forge app you can reopen, adjust or undo.
+- [**Omarchy**](https://github.com/basecamp/omarchy), by DHH and Basecamp (MIT licence), taught us a great deal about turning Arch into a Hyprland desktop. Anything we adapt from it is credited and keeps its notice.
+- The **Hyprland** team, for Hyprland and its family of small apps.
+- **Every developer whose app is in the [recipe](docs/RECIPE.md)**: Waybar, Walker, mako, SwayOSD, Midnight Commander, superfile, Krusader, Fresh, mpv, cliamp, uwsm and all the others.
+- The [**Catppuccin**](https://catppuccin.com) team, for the colours everything wears.
+
+We don't compare ourselves with anyone. Our picks are simply our picks.
 
 ---
 
@@ -149,7 +151,7 @@ Full detail: [docs/ROADMAP.md](docs/ROADMAP.md) · History: [docs/CHANGELOG.md](
 
 Everything is tested in **virtual machines first** (a computer running in a window). Before every run, the machine is put back to a clean saved state:
 
-- an **Omarchy** machine, to study the reference hands-on
+- an **Omarchy** machine, a known-good Hyprland setup that proves our test machines can run Hyprland at all
 - a **real KognogOS install**, built from a freshly rebuilt KognogOS installer image
 - a **plain Arch** install, the "any Arch" promise
 

@@ -7,6 +7,15 @@
 
 ## 2026-09-29
 
+### D-27 · We do not compare. We are grateful
+**Decided by Javier:** *"We do not compare ourselves with Omarchy. We are just grateful to them and any other developer for their applications. We do not compare. Our picks are simply picks."*
+**What it means:**
+- **Omarchy is where we learn, not a yardstick.** Nothing in hypeForge is framed as "better than" or "different from" Omarchy or any other project. This refines D-4.
+- **Our picks are simply picks** (D-14 to D-26). They need no justification against what someone else chose.
+- **Credit stays.** Anything adapted from Omarchy (MIT) or another project keeps its notice and is credited, and the README thanks the people whose work we build on.
+- **The Omarchy test machine** stays useful as a known-good Hyprland setup: it proves our test machines can run Hyprland at all. It is not a comparison run in the test matrix.
+- The "comparison note" that issue #3 asked for is dropped, and #3 is closed.
+
 ### D-26 · USB drives, the password wallet, the power menu and printers
 **Decided by Javier**, agreeing with the leans in [RECIPE.md, jobs 27–30](RECIPE.md#27-auto-mounting-usb-drives-and-disks), with job 29 re-read for Walker (D-18).
 - **Job 27, USB drives: udiskie + gvfs.** udiskie mounts removable drives when they are plugged in, with a rule to ignore internal disks, including the Windows NTFS partition. gvfs lets the GTK file window (D-16) list drives. **hypeForge marks `udisks2` as explicitly installed**, because today only KDE's `solid` keeps it and it would leave with Plasma.
@@ -151,7 +160,7 @@ This is where we deliberately part from Omarchy 4, which moved to one Quickshell
 **Decided with Javier (following Hyprland upstream).** From version 0.55, Hyprland's settings are written in **Lua**. The old format is supported for *"1 – 2 releases starting from 0.55. After that, hyprlang will be dropped"* ([Hyprland, 26 April 2026](https://hypr.land/news/26_lua/)). Version 0.56 is already current, so we write Lua only. Omarchy 4 made the same move.
 
 ### D-4 · Omarchy is the reference
-**Decided by Javier:** [Omarchy](https://github.com/basecamp/omarchy) (MIT) is *"our reference, definitive."*
+**Decided by Javier:** [Omarchy](https://github.com/basecamp/omarchy) (MIT) is *"our reference, definitive."* **Refined by [D-27](#d-27--we-do-not-compare-we-are-grateful), 2026-09-29:** we learn from it and are grateful for it; we do not compare ourselves with it.
 **Worth knowing:** Omarchy 4 "Quattro" (14 August 2026) replaced its separate small apps (Waybar, Walker, Mako, SwayOSD, hyprlock, hypridle, swaybg, polkit-gnome) with **one Quickshell-based desktop program**. So "follow Omarchy" and "light, separate apps" now point in different directions. The recipe asks that question first.
 **Decided by Javier, the same night:** build an Omarchy virtual machine. Hyprland needs 3D graphics, even inside a virtual machine, and the virtual machines on this NVIDIA desktop have never had 3D switched on. Omarchy is a known-good Hyprland setup, so if the machine works, we know the test setup works before we test our own work in it.
 

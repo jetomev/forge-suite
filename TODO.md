@@ -17,7 +17,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - **Forge apps run in Alacritty and must be readable on a plain text screen. forgekit#1 gets fixed first** (D-10)
 - **The recipe shows up to 5 researched options per job, and Javier chooses** (D-11)
 - **Testing happens in VMs. The KognogOS installer image gets fully rebuilt first** (D-12)
-- **Omarchy is the reference** (D-4)
+- **We learn from Omarchy and every developer, with thanks; we do not compare** (D-4, refined by D-27)
 - **The desktop is built from separate small apps, not one all-in-one program** (D-14)
 - **The login screen is greetd + tuigreet, proven in a VM first** (D-15)
 - **Portals: Hyprland's own for screen sharing, GTK for the file window** (D-16)
@@ -40,7 +40,6 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] kognogos.org shows hypeForge as coming soon: a feature card, a nav link and a progress tile, deployed and checked live
 - [x] Recipe research: 31 jobs, up to 5 options each, with sources and a lean, in docs/RECIPE.md; personal details removed (#1)
 - [x] Research job 31: portals, meaning file-open dialogs and screen sharing (Plasma's xdg-desktop-portal-kde). Researched 2026-09-29, now in docs/RECIPE.md (#11)
-- [ ] Omarchy comparison note in docs/research/: what we copy, what we deliberately do differently, and why. The last thing #3 asks for (#3)
 - [x] Research: floating-first windows with Win + arrow snapping in Hyprland 0.56 are doable with work; report in docs/research/ (#5)
 - [x] libvirt allowed to use the NVIDIA card for VM 3D: scripts/test-rig/enable-nvidia-vm-3d.sh, applied 2026-09-28 (#2)
 - [x] VM display on NVIDIA: SPICE without OpenGL + egl-headless works (with OpenGL on, the window stays black) (#2)
@@ -82,7 +81,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] How nog comes along on a plain Arch install
 
 ## Phase 4 · Test
-- [ ] Test matrix: Omarchy comparison, KognogOS VM, plain Arch VM, then the test desktop
+- [ ] Test matrix: KognogOS VM, plain Arch VM, then the test desktop (the Omarchy VM only proves the test rig, D-27)
 - [ ] A plain-text-screen run in every matrix
 - [ ] Each finding (F-n) gets an issue, and they ship as one fix batch
 
