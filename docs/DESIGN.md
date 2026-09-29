@@ -4,7 +4,9 @@
 
 ---
 
-## The key map (proposal, 2026-09-29, waiting for Javier)
+## The key map
+
+*Approved by Javier on 2026-09-29 ([D-29](DECISIONS.md#d-29--the-key-map-plasmas-keys-keep-their-jobs)).*
 
 *Read from Plasma's shortcuts on the test desktop on 2026-09-29 (`~/.config/kglobalshortcutsrc`, plus Spectacle's defaults in its app file). **Win** is the key Plasma calls "Meta". The rule: **a key you use in Plasma today does the same thing in hypeForge.** Plasma keys with nothing behind them in hypeForge are listed at the end. Found on the way: this desktop has **one keyboard layout and one virtual desktop** across all three screens, so the layout and desktop-switching keys are little used.*
 
@@ -69,7 +71,7 @@
 
 **The rule ([D-8](DECISIONS.md#d-8--one-portable-folder-system-changes-only-through-the-app)):** every setting lives in one folder. Copying the folder backs everything up. Dropping it onto a new computer and running hypeForge rebuilds the same desktop. Nothing outside the home folder is edited by hand.
 
-**The proposal (2026-09-29, waiting for Javier):**
+**The layout (approved by Javier 2026-09-29, [D-28](DECISIONS.md#d-28--the-portable-folder-holds-a-full-copy)):**
 
 ```
 ~/.config/hypeforge/                 ← the one folder you back up
@@ -94,8 +96,8 @@
 3. **Backups and undo live outside the folder**, in `~/.local/state/hypeforge/`. They belong to one computer and would only clutter a copy.
 4. **System files** sit in `system/` under their real path (for example `system/etc/greetd/config.toml`), and are applied as described under *System pieces* below.
 
-**The one open choice: full copy, or defaults plus your changes?**
-- **A · Full copy (Claude's lean).** The folder holds every setting in full. Copying it alone rebuilds the desktop, even with a different hypeForge version. When a new hypeForge version improves a default, the app **shows the change and asks** before touching your folder.
+**Full copy, or defaults plus your changes? Decided: A, full copy (D-28).**
+- **A · Full copy. ✅ Chosen.** The folder holds every setting in full. Copying it alone rebuilds the desktop, even with a different hypeForge version. When a new hypeForge version improves a default, the app **shows the change and asks** before touching your folder.
 - **B · Defaults plus your changes.** hypeForge installs read-only defaults as a system package, and your folder holds only what you changed. Updates flow in by themselves, but the folder alone is not the whole desktop.
 
 ## Floating-first windows

@@ -7,6 +7,12 @@
 
 ## 2026-09-29
 
+### D-29 · The key map: Plasma's keys keep their jobs
+**Decided by Javier:** the key map in [DESIGN.md](DESIGN.md#the-key-map) is approved as written. Every Plasma key used on the test desktop today does the same job in hypeForge. Four keys are new: Win + E (superfile), Win + Shift + C (colour picker), Ctrl + Esc (btop) and Win + T (floating or tiled). Plasma-only extras are dropped. Minimise, restore, Alt + Tab and the snapping itself are built in Phase 2 (#5). Like every pick (D-23), any key can change later, in the folder.
+
+### D-28 · The portable folder holds a full copy
+**Decided by Javier:** option A in [DESIGN.md](DESIGN.md#one-portable-folder). `~/.config/hypeforge/` holds **every setting in full**, so copying it alone rebuilds the desktop, even with a different hypeForge version. When a new hypeForge version improves a default, the app shows the change and asks before touching the folder. The layout is approved with it: apps reach their settings through links, one computer's details live in `machines/<hostname>/`, backups and undo live outside the folder in `~/.local/state/hypeforge/`, and system files sit in `system/` under their real path. What is still open for #7 is the round-trip test: build, copy to a clean machine, apply, and get the same desktop.
+
 ### D-27 · We do not compare. We are grateful
 **Decided by Javier:** *"We do not compare ourselves with Omarchy. We are just grateful to them and any other developer for their applications. We do not compare. Our picks are simply picks."*
 **What it means:**

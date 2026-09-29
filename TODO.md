@@ -28,6 +28,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - **Monitors written by hypeForge; hyprsunset, hyprpicker, Fresh, imv, Zathura, mpv + cliamp** (D-24)
 - **Hyprland starts through uwsm** (D-25)
 - **udiskie + gvfs, KWallet on its own, a Walker power list, system-config-printer** (D-26)
+- **The folder is a full copy; the key map keeps Plasma's keys** (D-28, D-29)
 - **Every recipe pick is a first try; a misfit becomes a finding and is swapped** (D-23)
 - **Documentation at every step, a full GitHub, and a coming-soon note on kognogos.org** (D-13)
 
@@ -58,9 +59,10 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Test nog's AUR path early: Walker, elephant (D-18) and cliamp (D-24) are AUR only. Every gap is a nog finding
 - [x] Re-read jobs 10 and 29 with Walker in mind: Walker's clipboard (D-21) and a Walker power list (D-26)
 - [ ] Move from `waybar-git` to the regular `waybar` once a release after 0.15.0 reaches `extra` (D-17)
-- [ ] The full key map, starting from Plasma's shortcuts on the test desktop. Proposal written in docs/DESIGN.md 2026-09-29, waiting for Javier
+- [x] The full key map: Plasma's keys keep their jobs, approved 2026-09-29 (D-29)
 - [ ] Minimise and an Alt + Tab switcher, which Hyprland lacks: build them or choose tools (#5)
-- [ ] The portable folder layout decided (#7). Proposal written in docs/DESIGN.md 2026-09-29; one open choice (full copy or defaults + changes), waiting for Javier
+- [x] The portable folder layout decided: a full copy, with machines/<hostname>/ apart (D-28, #7)
+- [ ] The folder round trip: build, copy to a clean VM, apply, same desktop (#7)
 - [ ] The Catppuccin Mocha look for every chosen app. Check Krusader when Qt follows GTK, and whether the 2022 Catppuccin theme for Midnight Commander still fits (D-22)
 
 ## Phase 2 · Build it by hand

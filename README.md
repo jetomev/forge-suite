@@ -73,7 +73,7 @@ These were decided on the first night. Each one has a dated entry in the [decisi
   <img src="assets/how-it-works.svg" alt="How hypeForge works: your hypeForge folder holds every setting; the hypeForge app reads it and applies it. nog installs the apps and locks their updates, your desktop gets Hyprland and the apps you chose, and a few system pieces are applied only by the app. To back up or move to a new PC, copy the folder." width="100%">
 </p>
 
-The folder is the source of truth. The app reads it and applies it, and nog installs what it lists. **Your backup is the folder.** The exact folder layout is designed in Phase 1 ([design notes](docs/DESIGN.md)).
+The folder is the source of truth. The app reads it and applies it, and nog installs what it lists. **Your backup is the folder.** The folder holds a full copy of every setting, and each computer's own details (such as its monitors) sit in a sub-folder of their own ([layout](docs/DESIGN.md#one-portable-folder)).
 
 ---
 
@@ -92,7 +92,7 @@ The folder is the source of truth. The app reads it and applies it, and nog inst
 | **Win + Shift + →** | Move the window to the next screen |
 | **Alt + F4** | Close the window |
 
-*The Win key is the one Plasma calls "Meta". These are read from the shortcuts Plasma uses today on our test desktop. Two of them have to be built, because Hyprland has no **minimise** and no **Alt + Tab switcher with previews** of its own. The full key map is settled in Phase 1 ([research](docs/research/2026-09-28-floating-first-and-omarchy-vm.md)).*
+*The Win key is the one Plasma calls "Meta". Every Plasma key used today keeps its job; the [full key map](docs/DESIGN.md#the-key-map) was approved on 2026-09-29. Some have to be built, because Hyprland has no **minimise** and no **Alt + Tab switcher** of its own.*
 
 ---
 
