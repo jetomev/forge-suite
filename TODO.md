@@ -49,6 +49,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] omarchy-ref VM created (8 GB, 4 threads, 64 GB disk, UEFI, 3D on) and booted into Omarchy's installer (#3)
 - [x] Omarchy 4.0.4 installed in omarchy-ref by Javier. It runs from its own disk: the installer ejected the ISO, and the boot order is now disk only (#3)
 - [x] Clean snapshot `clean-install` of omarchy-ref: internal, taken while shut down, and reverting it tested (#2, #3)
+- [x] SSH into omarchy-ref from the desktop (2026-09-29): its own key `~/.ssh/id_ed25519_omarchy-ref`, user `jetomev`, IP 192.168.122.187, UFW `limit 22/tcp` (6 connections per 30 s, so keep attempts few). It runs Hyprland 0.56.2 with Lua settings
 - [ ] A real KognogOS VM, from a fully rebuilt KognogOS installer image (KognogOS work) (#4)
 - [ ] A clean snapshot on every future test VM too, starting with the KognogOS VM (#4)
 
