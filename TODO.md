@@ -56,7 +56,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 ## Phase 1 · The recipe
 - [x] First choice: separate small apps, decided 2026-09-28 (D-14, #6)
 - [x] Javier picks one option per job: all 32 decided on 2026-09-29, each a first try (D-23). Decided: job 0 (separate small apps, D-14), job 9 (greetd + tuigreet, D-15) job 1 (Waybar, D-17), job 2 (Walker, D-18), job 3 (mako, D-19), jobs 4–8 (SwayOSD, hyprlock, hypridle, hyprpaper, hyprpolkitagent, D-20), jobs 10–13 (Walker clipboard, grim + slurp + Satty, gpu-screen-recorder + OBS, Catppuccin everywhere, D-21), jobs 14–18 (mc + superfile + Krusader, nmtui, bluetui, wiremix, btop + nvtop, D-22), jobs 19–25 (monitor rules + nwg-displays, hyprsunset, hyprpicker, Fresh, imv, Zathura, mpv + cliamp, D-24), job 26 (uwsm, D-25), jobs 27–30 (udiskie + gvfs, KWallet, Walker power list, system-config-printer, D-26) and job 31 (portals: Hyprland's + GTK, D-16)
-- [ ] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua) (#5)
+- [x] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua): `prototype/snap.lua` in omarchy-ref, 2026-09-29. Javier: *"It works amazing!!!!! So cool!"* (#5)
+- [ ] Snapping, still untested: hopping to the next monitor (the VM has one screen), snapping by dragging to an edge, and keeping the remembered size across a settings reload (#5)
 - [ ] Test nog's AUR path early: Walker, elephant (D-18) and cliamp (D-24) are AUR only. Every gap is a nog finding
 - [x] Re-read jobs 10 and 29 with Walker in mind: Walker's clipboard (D-21) and a Walker power list (D-26)
 - [ ] Move from `waybar-git` to the regular `waybar` once a release after 0.15.0 reaches `extra` (D-17)

@@ -21,7 +21,7 @@
 ### Phase 1 · The recipe
 - [x] First choice: separate small apps ([D-14](DECISIONS.md)) · #6
 - [x] One app chosen per job: all 32, on 2026-09-29, each a first try ([D-14 to D-26](DECISIONS.md))
-- [ ] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua) · #5
+- [x] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua) · #5
 - [x] The full key map: Plasma's keys keep their jobs (D-29)
 - [x] The portable folder layout: a full copy (D-28) · #7
 - [ ] The Catppuccin Mocha look for every chosen app
