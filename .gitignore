@@ -1,0 +1,17 @@
+# Nothing personal, ever.
+*.local
+*.local.*
+/local/
+/private/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+build/
+dist/
+
+# Editors and systems
+*.swp
+.DS_Store
