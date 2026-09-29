@@ -38,9 +38,9 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] Omarchy 4.0.4 ISO downloaded to ~/Downloads, SHA256 verified against the release notes (#3)
 - [x] omarchy-ref VM created (8 GB, 4 threads, 64 GB disk, UEFI, 3D on) and booted into Omarchy's installer (#3)
 - [x] Omarchy 4.0.4 installed in omarchy-ref by Javier. It runs from its own disk: the installer ejected the ISO, and the boot order is now disk only (#3)
-- [ ] A clean snapshot of omarchy-ref, taken while it is shut down, because a running VM with 3D can't be snapshotted with its memory (#3)
+- [x] Clean snapshot `clean-install` of omarchy-ref: internal, taken while shut down, and reverting it tested (#2, #3)
 - [ ] A real KognogOS VM, from a fully rebuilt KognogOS installer image (KognogOS work) (#4)
-- [ ] A clean snapshot on every test VM (#2)
+- [ ] A clean snapshot on every future test VM too, starting with the KognogOS VM (#4)
 
 ## Phase 1 · The recipe
 - [x] First choice: separate small apps, decided 2026-09-28 (D-14, #6)
@@ -78,7 +78,6 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 ---
 
 ## Waiting on Javier's hands
-- [ ] Shut omarchy-ref down (from inside Omarchy) when done exploring, so the clean snapshot can be taken (#3)
 - [ ] Keep the name even though it is one letter from "hyprforge"? (D-1, flagged)
 - [ ] Recipe choices for the remaining 29 jobs (docs/RECIPE.md). Jobs 0 and 9 are decided
 

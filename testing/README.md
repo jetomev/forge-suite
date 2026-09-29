@@ -30,6 +30,14 @@ The VM settings that work, used for `omarchy-ref`:
 
 `virsh screenshot` stops working once the guest draws with 3D (`screendump: no surface`). It works during the firmware screens. To see the VM, use Virtual Machine Manager.
 
+## The test machines' clean states
+
+| Machine | Snapshot | Taken | How to go back |
+|---|---|---|---|
+| `omarchy-ref` | `clean-install`: Omarchy 4.0.4 as it was right after installing | 2026-09-28, shut down, internal to its disk; reverting tested | In Virtual Machine Manager, open the VM's snapshots view and run `clean-install`. Or: `virsh -c qemu:///system snapshot-revert omarchy-ref clean-install` |
+
+Snapshots are taken with the machine **shut down**. With 3D on, QEMU can't save a running VM's memory, so a stopped machine is the reliable kind of snapshot.
+
 ## House rules
 
 1. **Start clean every time.** Every virtual machine has a saved clean state (a *snapshot*). Each test run starts by returning to it, so no run inherits leftovers from the one before.
