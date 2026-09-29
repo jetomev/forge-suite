@@ -92,7 +92,7 @@ The folder is the source of truth. The app reads it and applies it, and nog inst
 | **Win + Shift + →** | Move the window to the next screen |
 | **Alt + F4** | Close the window |
 
-*The Win key is the one Plasma calls "Meta". These are read from the shortcuts Plasma uses today on our test desktop. The full key map is settled in Phase 1.*
+*The Win key is the one Plasma calls "Meta". These are read from the shortcuts Plasma uses today on our test desktop. Two of them have to be built, because Hyprland has no **minimise** and no **Alt + Tab switcher with previews** of its own. The full key map is settled in Phase 1 ([research](docs/research/2026-09-28-floating-first-and-omarchy-vm.md)).*
 
 ---
 

@@ -28,7 +28,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] Public GitHub repository: github.com/jetomev/hypeforge, with About, 16 topics, labels, 6 phase milestones and issues #1–#9. The commit is Verified and the license is recognised
 - [x] kognogos.org shows hypeForge as coming soon: a feature card, a nav link and a progress tile, deployed and checked live
 - [ ] Recipe research: up to 5 options per job, with sources, in docs/RECIPE.md (#1)
-- [ ] Research whether floating-first windows with Win + arrow snapping work in Hyprland 0.56 (Lua) (#5)
+- [x] Research: floating-first windows with Win + arrow snapping in Hyprland 0.56 are doable with work; report in docs/research/ (#5)
 - [x] libvirt allowed to use the NVIDIA card for VM 3D: scripts/test-rig/enable-nvidia-vm-3d.sh, applied 2026-09-28 (#2)
 - [ ] Hyprland confirmed running with 3D inside a VM (#2)
 - [x] Omarchy 4.0.4 ISO downloaded to ~/Downloads, SHA256 verified against the release notes (#3)
@@ -42,6 +42,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Javier picks one option per job
 - [ ] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua) (#5)
 - [ ] The full key map, starting from Plasma's shortcuts on the test desktop
+- [ ] Minimise and an Alt + Tab switcher, which Hyprland lacks: build them or choose tools (#5)
 - [ ] The portable folder layout decided (#7)
 - [ ] The Catppuccin Mocha look for every chosen app
 

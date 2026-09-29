@@ -42,7 +42,25 @@
 
 *Meta is the Windows key. The quarter-screen tiles (top-left and so on) have no shortcut assigned on this desktop.*
 
-**Why it needs proving first:** Hyprland is built to tile. Out of the box, a new window takes a slot in a grid. Floating everything by default and snapping on demand means working against that default. It is the first thing proven in Phase 1, before anything else is built on top of it. The feasibility research is tracked in the issues.
+**Why it needs proving first:** Hyprland is built to tile. Out of the box, a new window takes a slot in a grid. Floating everything by default and snapping on demand means working against that default. It is the first thing proven in Phase 1, before anything else is built on top of it.
+
+**Feasibility (research, 2026-09-28): doable with work** ([full report](research/2026-09-28-floating-first-and-omarchy-vm.md), [#5](https://github.com/jetomev/hypeforge/issues/5)):
+- **Float everything:** one documented rule, using the same "match every window" pattern as Hyprland's own example settings.
+- **Win + arrow snapping:** about 150–250 lines of Lua, built from pieces documented for 0.56: key bindings that call our own functions, the active window's size and position, each monitor's size, and the space the bar reserves.
+- **Plasma's rules, read from KDE's source:**
+  - Win + Left/Right snaps to a half, and Win + Up/Down to the top or bottom half.
+  - A second arrow turns a half into a quarter.
+  - Pressing toward the side a window is already on moves it to the next monitor.
+  - Win + PgUp maximises and restores.
+- **Drag a window to a screen edge:** only as "drop it and it jumps into place". A Plasma-style outline *while* dragging would need a compiled plugin that breaks on every Hyprland update, so **it is left out** (proposed; Javier's call).
+- **Not in Hyprland at all:** minimising a window, and an Alt + Tab switcher with previews. Both have to be built or chosen as separate pieces.
+- **Traps the source reading found:**
+  - "set floating" silently *toggles* unless given `"on"`.
+  - Move and resize take whole-screen coordinates, and resizing grows from the centre, so resize first, then move.
+  - Monitor sizes are raw pixels while positions are scaled.
+  - A settings reload wipes Lua's memory, so the "restore" sizes need a file.
+  - Hyprland 0.56.2 has an unreleased-fix bug where a quickly resized window can draw into only part of its frame.
+- **Nothing here has been run yet.** It gets proven on the Omarchy VM and the test desktop.
 
 ## Updates locked by us
 
