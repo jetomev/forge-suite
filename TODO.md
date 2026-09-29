@@ -27,7 +27,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] Project folder, README, decision log, design notes, research notes, roadmap, changelog, test plan
 - [x] Public GitHub repository: github.com/jetomev/hypeforge, with About, 16 topics, labels, 6 phase milestones and issues #1–#9. The commit is Verified and the license is recognised
 - [x] kognogos.org shows hypeForge as coming soon: a feature card, a nav link and a progress tile, deployed and checked live
-- [ ] Recipe research: up to 5 options per job, with sources, in docs/RECIPE.md (#1)
+- [x] Recipe research: 31 jobs, up to 5 options each, with sources and a lean, in docs/RECIPE.md; personal details removed (#1)
+- [ ] Research job 31: portals, meaning file-open dialogs and screen sharing (Plasma's xdg-desktop-portal-kde) (#11)
 - [x] Research: floating-first windows with Win + arrow snapping in Hyprland 0.56 are doable with work; report in docs/research/ (#5)
 - [x] libvirt allowed to use the NVIDIA card for VM 3D: scripts/test-rig/enable-nvidia-vm-3d.sh, applied 2026-09-28 (#2)
 - [ ] Hyprland confirmed running with 3D inside a VM (#2)
@@ -74,7 +75,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 ## Waiting on Javier's hands
 - [ ] Run Omarchy's installer in virt-manager, once the VM is ready (#3)
 - [ ] Keep the name even though it is one letter from "hyprforge"? (D-1, flagged)
-- [ ] Recipe choices, once the options page is ready
+- [ ] Recipe choices: docs/RECIPE.md is ready. Start with job 0 (one program or small apps) and job 9 (login screen: the research halves disagree)
 
 ## Open questions
 - [ ] The test desktop runs nog's stock tier list, not KognogOS's. Is that on purpose? (found 2026-09-28)
