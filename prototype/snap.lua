@@ -30,6 +30,9 @@ hl.window_rule({
     center = true,
 })
 
+-- Space around windows (D-33): 8 between windows, 13 at the screen edges.
+hl.config({ general = { gaps_in = 8, gaps_out = 13 } })
+
 -- 2. Geometry helpers. ------------------------------------------------------------
 local function sides(v, d)
     if type(v) == "number" then return { top = v, right = v, bottom = v, left = v } end

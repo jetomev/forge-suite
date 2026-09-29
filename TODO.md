@@ -66,6 +66,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Minimise: Waybar's taskbar in the top bar, minimised windows on a hidden workspace, a small helper until Hyprland 0.57 (D-31, #5)
 - [ ] Window buttons: `button-layout` set to minimise, maximise, close (proven in the VM); hyprbars for windows without their own title bar, untested with Lua (D-31)
 - [x] Windows open floating at 80 % of the screen, centred; dialogs keep their size (untested); Chromium's "open maximised" undone; Alt + F4 closes (D-32)
+- [x] Gaps: 8 between windows, 13 at the edges (D-33)
+- [ ] Alacritty with its own title bar and three buttons on Hyprland: install Alacritty in the VM and try KognogOS's `decorations = "Full"` (D-33)
 - [ ] An Alt + Tab switcher, which Hyprland lacks (#5)
 - [ ] Five themes from the KognogOS wallpapers (Mocha, Black, Green, Gray, White): a preview page to choose the palettes (Javier, 2026-09-29)
 - [x] The portable folder layout decided: a full copy, with machines/<hostname>/ apart (D-28, #7)
