@@ -7,6 +7,22 @@
 
 ## 2026-09-29
 
+### D-19 · Notifications: mako
+**Decided by Javier**, agreeing with the lean in [RECIPE.md, job 3](RECIPE.md#3-notifications). mako is a tiny notification service with one plain-text settings file and a Catppuccin port, and it was Omarchy 3's choice. History, restore and do-not-disturb work through `makoctl`, bound to keys.
+
+### D-18 · App launcher: Walker
+**Decided by Javier.** This differs from Claude's lean (fuzzel). Walker was Omarchy 3's launcher. It searches apps and also has modules for the calculator, files, clipboard, symbols and more. A small background service called **elephant** feeds it ([RECIPE.md, job 2](RECIPE.md#2-app-launcher--menu)).
+**What it means:**
+- **Walker and elephant are AUR only** (checked 2026-09-29: `walker` 2.17.1, `elephant` 2.22.1, both updated 2026-09-24; neither is in `extra` or chaotic-aur). **This makes nog's AUR path a real requirement**, not an option. It gets tested early, and every gap is a nog finding.
+- Walker's own modules may cover later jobs: clipboard history (job 10, where the lean had fuzzel as the picker) and the power menu (job 29, where the lean was a rofi list). Those jobs get re-read with Walker in mind before they are decided.
+- It is heavier than fuzzel (GTK 4, plus an always-running service). That is accepted.
+
+### D-17 · Top bar: Waybar, on the development build until a release fixes it
+**Decided by Javier**, agreeing with the lean in [RECIPE.md, job 1](RECIPE.md#1-top-bar). Waybar is the best-documented bar, with a Catppuccin port.
+**What it means:**
+- The released Waybar 0.15.0 cannot switch workspaces by click with Hyprland's Lua settings ([#5294](https://github.com/Alexays/Waybar/issues/5294)). The fix is merged but unreleased; checked again 2026-09-29, and the latest release is still 0.15.0.
+- Until a release after 0.15.0 exists, hypeForge uses **`waybar-git` from chaotic-aur**, installed through nog. It moves back to the regular `waybar` as soon as that release reaches `extra`.
+
 ### D-16 · Portals: Hyprland's own for screen sharing, GTK for the file window
 **Decided by Javier**, agreeing with the lean in [RECIPE.md, job 31](RECIPE.md#31-file-open-dialogs-and-screen-sharing-portals). A *portal* is the hidden helper apps call for the "open file" window, screen sharing, screenshots and the dark-mode question.
 - **Screen sharing, screenshots, global shortcuts:** `xdg-desktop-portal-hyprland`.

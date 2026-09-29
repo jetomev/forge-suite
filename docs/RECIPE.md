@@ -11,9 +11,9 @@
 | # | Job | Claude's lean (a suggestion) | Javier's choice |
 |---|---|---|---|
 | 0 | **One all-in-one program, or separate small apps?** | Separate small apps. Noctalia 5 is the all-in-one to try later | ✅ **Separate small apps** (D-14, 2026-09-28) |
-| 1 | Top bar | Waybar, once a release fixes clicking workspaces with the Lua config (or `waybar-git` until then). ironbar is already fixed | |
-| 2 | App launcher | fuzzel | |
-| 3 | Notifications | mako | |
+| 1 | Top bar | Waybar, once a release fixes clicking workspaces with the Lua config (or `waybar-git` until then). ironbar is already fixed | ✅ **Waybar**, `waybar-git` until a release after 0.15.0 (D-17, 2026-09-29) |
+| 2 | App launcher | fuzzel | ✅ **Walker** + elephant, AUR only (D-18, 2026-09-29) |
+| 3 | Notifications | mako | ✅ **mako** (D-19, 2026-09-29) |
 | 4 | Volume and brightness pop-ups | SwayOSD for volume; monitor brightness through ddcutil | |
 | 5 | Lock screen | hyprlock | |
 | 6 | Screen-off and sleep timer | hypridle | |
