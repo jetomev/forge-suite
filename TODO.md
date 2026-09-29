@@ -22,6 +22,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - **The login screen is greetd + tuigreet, proven in a VM first** (D-15)
 - **Portals: Hyprland's own for screen sharing, GTK for the file window** (D-16)
 - **Top bar Waybar (dev build for now), launcher Walker, notifications mako** (D-17, D-18, D-19)
+- **Background helpers: SwayOSD, hyprlock + hypridle, hyprpaper, hyprpolkitagent** (D-20)
 - **Documentation at every step, a full GitHub, and a coming-soon note on kognogos.org** (D-13)
 
 ---
@@ -47,7 +48,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Phase 1 · The recipe
 - [x] First choice: separate small apps, decided 2026-09-28 (D-14, #6)
-- [ ] Javier picks one option per job. Decided so far: job 0 (separate small apps, D-14), job 9 (greetd + tuigreet, D-15) job 1 (Waybar, D-17), job 2 (Walker, D-18), job 3 (mako, D-19) and job 31 (portals: Hyprland's + GTK, D-16)
+- [ ] Javier picks one option per job. Decided so far: job 0 (separate small apps, D-14), job 9 (greetd + tuigreet, D-15) job 1 (Waybar, D-17), job 2 (Walker, D-18), job 3 (mako, D-19), jobs 4–8 (SwayOSD, hyprlock, hypridle, hyprpaper, hyprpolkitagent, D-20) and job 31 (portals: Hyprland's + GTK, D-16)
 - [ ] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua) (#5)
 - [ ] Test nog's AUR path early: Walker and elephant are AUR only (D-18). Every gap is a nog finding
 - [ ] Re-read jobs 10 (clipboard) and 29 (power menu) with Walker's own modules in mind (D-18)
@@ -61,6 +62,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Build the desktop by hand on the test desktop, next to the fallback session
 - [ ] greetd + tuigreet proven in a VM (console font, Catppuccin palette, wallet unlock) before it replaces SDDM here (D-15, #12)
 - [ ] Live in it. Every rough edge becomes a numbered finding
+- [ ] Monitor brightness keys through ddcutil, addressed by I2C bus (3, 4, 5): the three monitors share one name, serial and connector (D-20)
 - [ ] Three monitors at 144 Hz, NVIDIA, the login screen, the password pop-up and the wallet all working
 - [ ] Every setting in the portable folder, and nothing edited by hand outside it
 
@@ -85,7 +87,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Waiting on Javier's hands
 - [ ] Keep the name even though it is one letter from "hyprforge"? (D-1, flagged)
-- [ ] Recipe choices for the remaining 26 jobs (docs/RECIPE.md, jobs 0–31). Jobs 0–3, 9 and 31 are decided
+- [ ] Recipe choices for the remaining 21 jobs (docs/RECIPE.md, jobs 0–31). Jobs 0–9 and 31 are decided
 
 ## Open questions
 - [ ] The test desktop runs nog's stock tier list, not KognogOS's. Is that on purpose? (found 2026-09-28)

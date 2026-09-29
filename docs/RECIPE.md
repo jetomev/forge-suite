@@ -14,11 +14,11 @@
 | 1 | Top bar | Waybar, once a release fixes clicking workspaces with the Lua config (or `waybar-git` until then). ironbar is already fixed | ✅ **Waybar**, `waybar-git` until a release after 0.15.0 (D-17, 2026-09-29) |
 | 2 | App launcher | fuzzel | ✅ **Walker** + elephant, AUR only (D-18, 2026-09-29) |
 | 3 | Notifications | mako | ✅ **mako** (D-19, 2026-09-29) |
-| 4 | Volume and brightness pop-ups | SwayOSD for volume; monitor brightness through ddcutil | |
-| 5 | Lock screen | hyprlock | |
-| 6 | Screen-off and sleep timer | hypridle | |
-| 7 | Wallpaper | hyprpaper | |
-| 8 | Admin-password pop-up | hyprpolkitagent | |
+| 4 | Volume and brightness pop-ups | SwayOSD for volume; monitor brightness through ddcutil |  ✅ **SwayOSD**; monitor brightness via ddcutil (D-20) |
+| 5 | Lock screen | hyprlock |  ✅ **hyprlock** (D-20) |
+| 6 | Screen-off and sleep timer | hypridle |  ✅ **hypridle** (D-20) |
+| 7 | Wallpaper | hyprpaper |  ✅ **hyprpaper** (D-20) |
+| 8 | Admin-password pop-up | hyprpolkitagent |  ✅ **hyprpolkitagent** (D-20) |
 | 9 | Login screen | **The two research halves disagreed.** One suggested greetd + tuigreet (a terminal look, light). The other suggested keeping SDDM (already installed, with the KognogOS theme) | ✅ **greetd + tuigreet** (D-15, 2026-09-28) |
 | 10 | Clipboard history | cliphist, with fuzzel as the picker | |
 | 11 | Screenshots | grim + slurp + Satty | |

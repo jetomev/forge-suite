@@ -7,6 +7,17 @@
 
 ## 2026-09-29
 
+### D-20 · The background helpers: SwayOSD, hyprlock + hypridle, hyprpaper, hyprpolkitagent
+**Decided by Javier**, agreeing with every lean in [RECIPE.md, jobs 4–8](RECIPE.md#4-volume--brightness-pop-ups-osd).
+- **Job 4, volume pop-up: SwayOSD**, Omarchy 3's choice. SwayOSD only drives built-in screen backlights, so **monitor brightness is a separate key binding through `ddcutil`**.
+- **Jobs 5 + 6, lock screen and screen-off timer: hyprlock + hypridle**, the Hyprland team's pair. hypeForge must always ship hyprlock's settings file, because without one it refuses to lock. Commands inside hypridle's file use the new Lua wording.
+- **Job 7, wallpaper: hyprpaper.** A separate picture per monitor, changeable while running.
+- **Job 8, admin-password pop-up: hyprpolkitagent.** `polkit-kde-agent` leaves with Plasma.
+
+Four of the five come from the Hyprland team, so they update with Hyprland inside the nog lock (D-9).
+
+**Checked on the test desktop the same day (read-only):** `ddcutil` 3.0.2 is installed, and all three Sceptre Y27 monitors answer DDC/CI on I2C buses 3, 4 and 5 (brightness read as 75 of 100 on each). **Quirk:** all three report the same model, the same serial and the same connector (`card1-DP-1`), so the brightness binding must address monitors by bus number, not by name.
+
 ### D-19 · Notifications: mako
 **Decided by Javier**, agreeing with the lean in [RECIPE.md, job 3](RECIPE.md#3-notifications). mako is a tiny notification service with one plain-text settings file and a Catppuccin port, and it was Omarchy 3's choice. History, restore and do-not-disturb work through `makoctl`, bound to keys.
 
