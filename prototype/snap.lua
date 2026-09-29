@@ -8,6 +8,9 @@
 --   Win + PageUp               maximise / restore
 --   Win + Backspace            put the window back to its size before the first snap
 --   Win + T                    switch this window between floating and tiled
+--   Alt + F4                   close the window
+-- New windows open floating at 80 % of the screen, centred; an app's "maximise me" in its
+-- first moments is undone (D-32).
 
 local M = {}
 
@@ -16,6 +19,15 @@ hl.window_rule({
     name = "hypeforge-float-everything",
     match = { class = ".*" },
     float = true,
+})
+
+-- Normal windows open at 80 % of the screen, centred (D-32). Dialogs ("modal" windows,
+-- like "Are you sure?") keep the size they ask for.
+hl.window_rule({
+    name = "hypeforge-open-80",
+    match = { class = ".*", modal = false },
+    size = { "(monitor_w*0.8)", "(monitor_h*0.8)" },
+    center = true,
 })
 
 -- 2. Geometry helpers. ------------------------------------------------------------
@@ -171,7 +183,7 @@ end
 
 -- 4. Keys. Unbind first, in case an earlier config (like Omarchy's) uses them. -------
 for _, k in ipairs({ "SUPER + LEFT", "SUPER + RIGHT", "SUPER + UP", "SUPER + DOWN",
-                     "SUPER + Page_Up", "SUPER + BACKSPACE", "SUPER + T" }) do
+                     "SUPER + Page_Up", "SUPER + BACKSPACE", "SUPER + T", "ALT + F4" }) do
     pcall(hl.unbind, k)
 end
 
@@ -185,7 +197,40 @@ hl.bind("SUPER + BACKSPACE", restore, { description = "Restore size before snapp
 hl.bind("SUPER + T", hl.dsp.window.float({ action = "toggle" }),
         { description = "Floating / tiled" })
 
+hl.bind("ALT + F4", hl.dsp.window.close(), { description = "Close window" })
+
 hl.on("window.close", function(w) if w and w.address then state[w.address] = nil end end)
+
+-- 5. New windows open floating, not maximised (D-32). ---------------------------------
+-- Apps like Chromium remember "maximised" and ask for it again right after opening. We undo
+-- that only in a window's first moments, so its maximise button keeps working afterwards.
+-- It then opens like any window: 80 % of the screen, centred.
+local fresh = {}
+
+local function unmaximise_new(win)
+    if not win or (win.fullscreen or 0) ~= 1 then return end
+    local target = "address:" .. win.address
+    hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 0, window = target }))
+    win = hl.get_window(target)
+    if not win or not win.monitor then return end
+    local a = work_area(win.monitor)
+    local w, h = math.floor(a.w * 0.8), math.floor(a.h * 0.8)
+    hl.dispatch(hl.dsp.window.resize({ x = w, y = h, window = target }))
+    hl.dispatch(hl.dsp.window.move({ x = math.floor(a.x + (a.w - w) / 2), y = math.floor(a.y + (a.h - h) / 2), window = target }))
+end
+
+hl.on("window.open", function(w)
+    if not w or not w.address then return end
+    local addr = w.address
+    fresh[addr] = true
+    unmaximise_new(w)
+    hl.timer(function() fresh[addr] = nil end, { timeout = 1500, type = "oneshot" })
+end)
+
+hl.on("window.fullscreen", function(w)
+    w = w or hl.get_active_window()
+    if w and w.address and fresh[w.address] then unmaximise_new(hl.get_window("address:" .. w.address)) end
+end)
 
 -- Test handle: lets `hyprctl repl` drive the same functions the keys use.
 M.snap, M.restore = snap, restore

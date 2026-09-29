@@ -7,6 +7,11 @@
 
 ## 2026-09-29
 
+### D-32 · New windows open floating, at 80 % of the screen, centred
+**Decided by Javier:** *"can we open windows by default floating, 80% of the screen size, centered?"* Every normal window opens floating at 80 % of its screen's width and height, centred. Dialogs ("modal" windows, like "Are you sure?") keep the size they ask for. An app that asks to be maximised in its first moments (Chromium remembers "maximised") is set back to floating at 80 %, while its maximise button keeps working afterwards. **Alt + F4** closes the active window (D-29).
+Found on the way, in the test machine only: its settings force every Chromium-based browser to tile and block every app's maximise request. The test machine's settings are filtered so hypeForge's own behaviour can be tested; hypeForge adds neither rule.
+Proven in the VM 2026-09-29: Chromium and a terminal both opened floating at 1024×640 on a 1280×800 screen, centred. **Not yet proven:** that a real dialog keeps its own size.
+
 ### D-31 · Window buttons, and where minimised windows go
 **Decided by Javier**, after testing snapping in the test machine: *"if I minimize, where do the app goes? there is not a bar showing open apps."*
 - **Every window gets minimise, maximise and close, top right.** Apps that draw their own title bar read one desktop setting, `button-layout`, which hypeForge sets to `:minimize,maximize,close` (it was `appmenu:close`, close only). Windows with no title bar of their own, like terminals, get **hyprbars**, the Hyprland team's title-bar add-on, once it is proven with Lua settings.

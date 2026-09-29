@@ -65,6 +65,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] Win + Up twice maximises, Win + Down comes back; no error notification at a screen edge (26 presses, 0 failures) (D-30, #5)
 - [ ] Minimise: Waybar's taskbar in the top bar, minimised windows on a hidden workspace, a small helper until Hyprland 0.57 (D-31, #5)
 - [ ] Window buttons: `button-layout` set to minimise, maximise, close (proven in the VM); hyprbars for windows without their own title bar, untested with Lua (D-31)
+- [x] Windows open floating at 80 % of the screen, centred; dialogs keep their size (untested); Chromium's "open maximised" undone; Alt + F4 closes (D-32)
 - [ ] An Alt + Tab switcher, which Hyprland lacks (#5)
 - [ ] Five themes from the KognogOS wallpapers (Mocha, Black, Green, Gray, White): a preview page to choose the palettes (Javier, 2026-09-29)
 - [x] The portable folder layout decided: a full copy, with machines/<hostname>/ apart (D-28, #7)
