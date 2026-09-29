@@ -34,10 +34,11 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] Research: floating-first windows with Win + arrow snapping in Hyprland 0.56 are doable with work; report in docs/research/ (#5)
 - [x] libvirt allowed to use the NVIDIA card for VM 3D: scripts/test-rig/enable-nvidia-vm-3d.sh, applied 2026-09-28 (#2)
 - [x] VM display on NVIDIA: SPICE without OpenGL + egl-headless works (with OpenGL on, the window stays black) (#2)
-- [ ] Hyprland confirmed running with 3D inside a VM: the installed Omarchy desktop is the test (#2)
+- [x] Hyprland running with 3D inside a VM: the installed Omarchy 4.0.4 desktop runs well (Javier), and on the host `nvidia-smi` lists the VM's QEMU using 400 MiB of the RTX 3060 (#2)
 - [x] Omarchy 4.0.4 ISO downloaded to ~/Downloads, SHA256 verified against the release notes (#3)
 - [x] omarchy-ref VM created (8 GB, 4 threads, 64 GB disk, UEFI, 3D on) and booted into Omarchy's installer (#3)
-- [ ] Omarchy installed in omarchy-ref, then a clean snapshot saved (#3)
+- [x] Omarchy 4.0.4 installed in omarchy-ref by Javier. It runs from its own disk: the installer ejected the ISO, and the boot order is now disk only (#3)
+- [ ] A clean snapshot of omarchy-ref, taken while it is shut down, because a running VM with 3D can't be snapshotted with its memory (#3)
 - [ ] A real KognogOS VM, from a fully rebuilt KognogOS installer image (KognogOS work) (#4)
 - [ ] A clean snapshot on every test VM (#2)
 
@@ -77,7 +78,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 ---
 
 ## Waiting on Javier's hands
-- [ ] Run Omarchy's installer in virt-manager, once the VM is ready (#3)
+- [ ] Shut omarchy-ref down (from inside Omarchy) when done exploring, so the clean snapshot can be taken (#3)
 - [ ] Keep the name even though it is one letter from "hyprforge"? (D-1, flagged)
 - [ ] Recipe choices for the remaining 29 jobs (docs/RECIPE.md). Jobs 0 and 9 are decided
 
