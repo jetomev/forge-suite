@@ -25,21 +25,21 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 ## Phase 0 · Foundations
 - [x] Name chosen: hypeForge. Free on the AUR and on GitHub (D-1)
 - [x] Project folder, README, decision log, design notes, research notes, roadmap, changelog, test plan
-- [ ] Public GitHub repository with About, topics, labels, milestones and issues
-- [ ] kognogos.org shows hypeForge as coming soon
-- [ ] Recipe research: up to 5 options per job, with sources, in docs/RECIPE.md
-- [ ] Research whether floating-first windows with Win + arrow snapping work in Hyprland 0.56 (Lua)
-- [ ] VM 3D graphics proven on the NVIDIA desktop
-- [ ] Omarchy reference VM (waiting on Javier's go-ahead)
-- [ ] A real KognogOS VM, from a fully rebuilt KognogOS installer image (KognogOS work)
-- [ ] A clean snapshot on every test VM
+- [x] Public GitHub repository: github.com/jetomev/hypeforge, with About, 16 topics, labels, 6 phase milestones and issues #1–#9. The commit is Verified and the license is recognised
+- [x] kognogos.org shows hypeForge as coming soon: a feature card, a nav link and a progress tile, deployed and checked live
+- [ ] Recipe research: up to 5 options per job, with sources, in docs/RECIPE.md (#1)
+- [ ] Research whether floating-first windows with Win + arrow snapping work in Hyprland 0.56 (Lua) (#5)
+- [ ] VM 3D graphics proven on the NVIDIA desktop (#2)
+- [ ] Omarchy reference VM (waiting on Javier's go-ahead) (#3)
+- [ ] A real KognogOS VM, from a fully rebuilt KognogOS installer image (KognogOS work) (#4)
+- [ ] A clean snapshot on every test VM (#2)
 
 ## Phase 1 · The recipe
-- [ ] First choice: one all-in-one desktop program, or separate small apps
+- [ ] First choice: one all-in-one desktop program, or separate small apps (#6)
 - [ ] Javier picks one option per job
-- [ ] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua)
+- [ ] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua) (#5)
 - [ ] The full key map, starting from Plasma's shortcuts on the test desktop
-- [ ] The portable folder layout decided
+- [ ] The portable folder layout decided (#7)
 - [ ] The Catppuccin Mocha look for every chosen app
 
 ## Phase 2 · Build it by hand
@@ -49,9 +49,9 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Every setting in the portable folder, and nothing edited by hand outside it
 
 ## Phase 3 · The app
-- [ ] forgekit#1 fixed first, so the app is readable on a plain text screen
+- [ ] forgekit#1 fixed first, so the app is readable on a plain text screen (#8)
 - [ ] The hypeForge terminal app: install, adjust, remove
-- [ ] The nog lock: a hyprland-family group and its tier
+- [ ] The nog lock: a hyprland-family group and its tier (#9)
 - [ ] System pieces applied only through the app, with a backup and undo
 - [ ] How nog comes along on a plain Arch install
 
