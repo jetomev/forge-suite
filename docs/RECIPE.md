@@ -19,7 +19,7 @@
 | 6 | Screen-off and sleep timer | hypridle | |
 | 7 | Wallpaper | hyprpaper | |
 | 8 | Admin-password pop-up | hyprpolkitagent | |
-| 9 | Login screen | **The two research halves disagree.** One suggests greetd + tuigreet (a terminal look, light). The other suggests keeping SDDM (already installed, with the KognogOS theme) | |
+| 9 | Login screen | **The two research halves disagreed.** One suggested greetd + tuigreet (a terminal look, light). The other suggested keeping SDDM (already installed, with the KognogOS theme) | ✅ **greetd + tuigreet** (D-15, 2026-09-28) |
 | 10 | Clipboard history | cliphist, with fuzzel as the picker | |
 | 11 | Screenshots | grim + slurp + Satty | |
 | 12 | Screen recording | gpu-screen-recorder (the only fit for this NVIDIA card) | |

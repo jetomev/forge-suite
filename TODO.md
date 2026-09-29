@@ -19,6 +19,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - **Testing happens in VMs. The KognogOS installer image gets fully rebuilt first** (D-12)
 - **Omarchy is the reference** (D-4)
 - **The desktop is built from separate small apps, not one all-in-one program** (D-14)
+- **The login screen is greetd + tuigreet, proven in a VM first** (D-15)
 - **Documentation at every step, a full GitHub, and a coming-soon note on kognogos.org** (D-13)
 
 ---
@@ -42,7 +43,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Phase 1 · The recipe
 - [x] First choice: separate small apps, decided 2026-09-28 (D-14, #6)
-- [ ] Javier picks one option per job
+- [ ] Javier picks one option per job. Decided so far: job 0 (separate small apps, D-14) and job 9 (greetd + tuigreet, D-15)
 - [ ] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua) (#5)
 - [ ] The full key map, starting from Plasma's shortcuts on the test desktop
 - [ ] Minimise and an Alt + Tab switcher, which Hyprland lacks: build them or choose tools (#5)
@@ -51,6 +52,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Phase 2 · Build it by hand
 - [ ] Build the desktop by hand on the test desktop, next to the fallback session
+- [ ] greetd + tuigreet proven in a VM (console font, Catppuccin palette, wallet unlock) before it replaces SDDM here (D-15, #12)
 - [ ] Live in it. Every rough edge becomes a numbered finding
 - [ ] Three monitors at 144 Hz, NVIDIA, the login screen, the password pop-up and the wallet all working
 - [ ] Every setting in the portable folder, and nothing edited by hand outside it
@@ -77,7 +79,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 ## Waiting on Javier's hands
 - [ ] Run Omarchy's installer in virt-manager, once the VM is ready (#3)
 - [ ] Keep the name even though it is one letter from "hyprforge"? (D-1, flagged)
-- [ ] Recipe choices: docs/RECIPE.md is ready. Start with job 0 (one program or small apps) and job 9 (login screen: the research halves disagree)
+- [ ] Recipe choices for the remaining 29 jobs (docs/RECIPE.md). Jobs 0 and 9 are decided
 
 ## Open questions
 - [ ] The test desktop runs nog's stock tier list, not KognogOS's. Is that on purpose? (found 2026-09-28)

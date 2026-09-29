@@ -7,6 +7,16 @@
 
 ## 2026-09-28 — the first night
 
+### D-15 · The login screen is greetd + tuigreet
+**Decided by Javier**, after seeing the project's own screenshots and sources: *"terminal look and lighter fits."* **greetd** is a tiny login service that runs whatever login screen it is given. **tuigreet** is a login screen drawn in text, with username and password, the date, and a session picker on F3 (Hyprland, or Plasma while it is still the fallback), plus power actions on F12. The research halves had disagreed, and this settles job 9 ([RECIPE.md, job 9](RECIPE.md#9-login-screen-display-manager)).
+
+**What it means:**
+- **It is proven in a VM before it replaces SDDM on the test desktop.** Arch's greetd has no test mode, so trying it means making it a real login screen.
+- The KognogOS SDDM theme retires when the switch lands.
+- Nothing needs a display server (X11) any more just to log in.
+- tuigreet's colours come from the text screen's 16-colour palette. A Catppuccin palette there is an idea still to be tested, and it would also help the Forge apps on a text screen (forgekit#1).
+- The work list: a bigger console font for the 1440p screens, and greetd's login settings must unlock the password wallet.
+
 ### D-14 · Separate small apps, not one all-in-one program
 **Decided by Javier:** recipe job 0 goes to **separate small apps**: a top bar, a launcher, a notification service and so on, each its own program with its own settings file.
 **Why it fits:**

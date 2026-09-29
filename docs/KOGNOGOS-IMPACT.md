@@ -27,7 +27,8 @@
 | **Default apps: Dolphin, Konsole, Kate, Gwenview, Ark, KCalc, Spectacle** | Reviewed against the recipe's lighter and terminal-first choices | Phase 1 choices, then the editions |
 | **Tier pins for `kwin` and `plasma-workspace`** | Replaced by the `hyprland-family` group ([D-9](DECISIONS.md#d-9--updates-are-locked-by-us-through-nog)) | With hypeForge's nog lock |
 | **Panel launchers and web shortcuts** | Moved to the new launcher and bar | Phase 2 |
-| **Which login screen program** (SDDM, or greetd / Ly; this evaluation was already open) | Decided in the recipe | Phase 1 |
+| **Which login screen program** (SDDM, or greetd / Ly; this evaluation was already open) | **Decided: greetd + tuigreet** ([D-15](DECISIONS.md#d-15--the-login-screen-is-greetd--tuigreet)). The KognogOS SDDM theme retires when the switch lands | After it is proven in a VM |
+| **installForge**, KognogOS's terminal installer | **Its model is Omarchy's installer** (Javier, 2026-09-28), noted in the KognogOS roadmap. It stays an online install on purpose | KognogOS Phase 3 |
 | **Public wording**: the KognogOS README, the `kde-plasma` GitHub topic, kognogos.org | Updated when the switch actually lands, not before | The same day it lands |
 
 ---
