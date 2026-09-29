@@ -4,6 +4,7 @@
 --
 -- Keys (Plasma's defaults, D-29):
 --   Win + Left/Right/Up/Down   snap to halves; combine into quarters (KWin's rules)
+--   Win + Up at the top        maximise; Win + Down on a maximised window: back to its half (D-30)
 --   Win + PageUp               maximise / restore
 --   Win + Backspace            put the window back to its size before the first snap
 --   Win + T                    switch this window between floating and tiled
@@ -89,6 +90,32 @@ local function combine(st, dir)
     if horizontal then return new, v else return h, new end
 end
 
+-- The nearest monitor on one side of this one, or nil. Asking Hyprland to move a window to a
+-- monitor that does not exist fails with "Invalid monitor", shown as an error notification.
+local function neighbour(mon, dir)
+    if not mon then return nil end
+    local function box(m)
+        local s = (m.scale and m.scale > 0) and m.scale or 1
+        local w, h = m.width / s, m.height / s
+        if (m.transform or 0) % 2 == 1 then w, h = h, w end
+        return m.x, m.y, w, h
+    end
+    local mx, my, mw, mh = box(mon)
+    local best, dist
+    for _, m in ipairs(hl.get_monitors() or {}) do
+        if m.name ~= mon.name and not m.is_mirror then
+            local x, y, w, h = box(m)
+            local d
+            if dir == "L" and x + w <= mx then d = mx - (x + w)
+            elseif dir == "R" and x >= mx + mw then d = x - (mx + mw)
+            elseif dir == "T" and y + h <= my then d = my - (y + h)
+            elseif dir == "B" and y >= my + mh then d = y - (my + mh) end
+            if d and (not dist or d < dist) then best, dist = m, d end
+        end
+    end
+    return best
+end
+
 local function snap(dir)
     local win = hl.get_active_window()
     if not win then return end
@@ -97,22 +124,29 @@ local function snap(dir)
         hl.dispatch(hl.dsp.window.float({ action = "on", window = target }))   -- "set" would toggle
         win = hl.get_window(target) or win
     end
+    local st = state[win.address]
     if (win.fullscreen or 0) ~= 0 then                    -- move/resize refuse maximised windows
         hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = -1, window = target }))
         win = hl.get_window(target) or win
+        if dir == "B" then                                -- Win + Down on a maximised window:
+            if st and st.h then place(win, st.h, st.v) end -- back to its half (D-30)
+            return
+        end
     end
-    local st = state[win.address]
     if not st then
         st = { saved = { x = win.at.x, y = win.at.y, w = win.size.x, h = win.size.y } }
         state[win.address] = st
     end
+    if dir == "T" and st.v == "T" then                     -- Win + Up at the top: maximise (D-30).
+        hl.dispatch(hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle", window = target }))
+        return                                             -- The monitors sit side by side, so
+    end                                                    -- Up never needs to hop a monitor.
     local h, v = combine(st.h and st or nil, dir)
     if not h then                                          -- same direction twice: hop monitor
-        local before = win.monitor and win.monitor.name
-        local mdir = ({ L = "l", R = "r", T = "u", B = "d" })[dir]
-        hl.dispatch(hl.dsp.window.move({ monitor = mdir, window = target }))
+        local next_mon = neighbour(win.monitor, dir)
+        if not next_mon then return end                    -- none on that side: do nothing, quietly
+        hl.dispatch(hl.dsp.window.move({ monitor = next_mon.name, window = target }))
         win = hl.get_window(target) or win
-        if not win.monitor or win.monitor.name == before then return end   -- no monitor there
         h, v = st.h, st.v
         if dir == "L" or dir == "R" then h = OPP[dir] else v = OPP[dir] end
     end
@@ -152,5 +186,9 @@ hl.bind("SUPER + T", hl.dsp.window.float({ action = "toggle" }),
         { description = "Floating / tiled" })
 
 hl.on("window.close", function(w) if w and w.address then state[w.address] = nil end end)
+
+-- Test handle: lets `hyprctl repl` drive the same functions the keys use.
+M.snap, M.restore = snap, restore
+_G.hypeforge_snap = M
 
 return M

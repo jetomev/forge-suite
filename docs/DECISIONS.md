@@ -7,6 +7,16 @@
 
 ## 2026-09-29
 
+### D-31 · Window buttons, and where minimised windows go
+**Decided by Javier**, after testing snapping in the test machine: *"if I minimize, where do the app goes? there is not a bar showing open apps."*
+- **Every window gets minimise, maximise and close, top right.** Apps that draw their own title bar read one desktop setting, `button-layout`, which hypeForge sets to `:minimize,maximize,close` (it was `appmenu:close`, close only). Windows with no title bar of their own, like terminals, get **hyprbars**, the Hyprland team's title-bar add-on, once it is proven with Lua settings.
+- **hypeForge never blocks apps' maximise requests.** The test machine's settings block them for every window (`suppress_event = "maximize"`), which would make the maximise button do nothing.
+- **Open apps show in a taskbar inside the top bar** (Waybar's taskbar section). Clicking an app's icon brings it back or minimises it.
+- **Minimised windows park on a hidden workspace** and come back when their icon is clicked. Hyprland 0.56 cannot react to an app's minimise request by itself; Hyprland added a `minimize` event on 2026-09-01 ([#16071](https://github.com/hyprwm/Hyprland/pull/16071)), which ships after 0.56.2. Until then a small hypeForge helper does it.
+
+### D-30 · Win + Up twice maximises, Win + Down comes back
+**Decided by Javier.** Win + Up on a window already at the top (a top half or top quarter) maximises it, and Win + Down on a maximised window returns it to its half. This goes one step past Plasma's rules. It is safe on the test desktop because its three monitors sit side by side, so Up and Down never need to jump to another screen. Win + PgUp still maximises too.
+
 ### D-29 · The key map: Plasma's keys keep their jobs
 **Decided by Javier:** the key map in [DESIGN.md](DESIGN.md#the-key-map) is approved as written. Every Plasma key used on the test desktop today does the same job in hypeForge. Four keys are new: Win + E (superfile), Win + Shift + C (colour picker), Ctrl + Esc (btop) and Win + T (floating or tiled). Plasma-only extras are dropped. Minimise, restore, Alt + Tab and the snapping itself are built in Phase 2 (#5). Like every pick (D-23), any key can change later, in the folder.
 
