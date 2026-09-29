@@ -69,7 +69,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] Gaps: 8 between windows, 13 at the edges (D-33)
 - [x] Alacritty with KognogOS's `decorations = "Full"` tried in the VM, 2026-09-29: opens floating at 80 %, **but draws no title bar on Hyprland** (screenshot checked). Hyprland takes over decorations and draws only a border (D-33)
 - [x] hyprbars built with hyprpm in the VM (needs `cmake` + `meson`; enabling needs sudo) and set up in Lua: `prototype/titlebars.lua`, Catppuccin bar with minimise, maximise and close, double-click maximises; screenshot checked, no config errors (D-31, D-33)
-- [ ] hyprbars, still to prove: button clicks act on the right window; Chromium and GNOME apps keep only their own bar; loading at login (hl.plugin.load or hyprpm reload), since buttons are added only when the plugin is loaded
+- [x] hyprbars proven by Javier 2026-09-29: every button acts on its own window, double-click maximises, minimise parks and Win + Shift + PgDn brings back, Chromium keeps a single bar. *"all buttons work, Chromium has one bar. Great!"*
+- [ ] hyprbars at login: load it from the config (hl.plugin.load) or hyprpm reload in autostart, since buttons are added only when the plugin is loaded; rebuild after each Hyprland update inside the nog lock (D-9)
 - [ ] An Alt + Tab switcher, which Hyprland lacks (#5)
 - [ ] Five themes from the KognogOS wallpapers (Mocha, Black, Green, Gray, White): a preview page to choose the palettes (Javier, 2026-09-29)
 - [x] The portable folder layout decided: a full copy, with machines/<hostname>/ apart (D-28, #7)
