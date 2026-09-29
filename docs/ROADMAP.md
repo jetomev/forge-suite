@@ -14,7 +14,7 @@
 - [x] [kognogos.org](https://kognogos.org/#hypeforge) announces hypeForge as coming soon
 - [ ] Recipe research: up to five options per job, with sources ([RECIPE.md](RECIPE.md)) · #1
 - [ ] Virtual machines that can run Hyprland: 3D graphics switched on and proven on the NVIDIA desktop · #2
-- [ ] Omarchy reference machine *(proposed, awaiting Javier)* · #3
+- [ ] Omarchy reference machine *(approved 2026-09-28)* · #3
 - [ ] A real KognogOS machine, from a fully rebuilt KognogOS installer image *(KognogOS work)* · #4
 - [ ] A saved clean state (snapshot) on every test machine
 

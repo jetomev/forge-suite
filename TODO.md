@@ -10,7 +10,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 ## LOCKED — decided by Javier (details in docs/DECISIONS.md)
 - **Name:** hypeForge, package `hypeforge` (D-1)
 - **Base:** Hyprland, with settings written in Lua only (D-3, D-5)
-- **Plasma is being replaced.** KognogOS moves off it little by little (D-6)
+- **Plasma is being replaced.** KognogOS moves off it little by little. Plasma stays installed as the fallback login until hypeForge works **and Javier is fully daily driving it** (D-6, #10)
 - **Windows float by default. Win + arrows tile them, like Plasma** (D-7)
 - **One portable folder. System changes happen only through the app** (D-8)
 - **The Hyprland family's updates are locked by us, through nog** (D-9)
@@ -29,8 +29,11 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] kognogos.org shows hypeForge as coming soon: a feature card, a nav link and a progress tile, deployed and checked live
 - [ ] Recipe research: up to 5 options per job, with sources, in docs/RECIPE.md (#1)
 - [ ] Research whether floating-first windows with Win + arrow snapping work in Hyprland 0.56 (Lua) (#5)
-- [ ] VM 3D graphics proven on the NVIDIA desktop (#2)
-- [ ] Omarchy reference VM (waiting on Javier's go-ahead) (#3)
+- [x] libvirt allowed to use the NVIDIA card for VM 3D: scripts/test-rig/enable-nvidia-vm-3d.sh, applied 2026-09-28 (#2)
+- [ ] Hyprland confirmed running with 3D inside a VM (#2)
+- [x] Omarchy 4.0.4 ISO downloaded to ~/Downloads, SHA256 verified against the release notes (#3)
+- [x] omarchy-ref VM created (8 GB, 4 threads, 64 GB disk, UEFI, 3D on) and booted into Omarchy's installer (#3)
+- [ ] Omarchy installed in omarchy-ref, then a clean snapshot saved (#3)
 - [ ] A real KognogOS VM, from a fully rebuilt KognogOS installer image (KognogOS work) (#4)
 - [ ] A clean snapshot on every test VM (#2)
 
@@ -68,8 +71,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 ---
 
 ## Waiting on Javier's hands
-- [ ] Go or no-go on the Omarchy reference VM (about a 6 GB download, and he runs its installer)
-- [ ] Confirm that Plasma stays installed as the fallback session until hypeForge passes its tests (D-6, proposed)
+- [ ] Run Omarchy's installer in virt-manager, once the VM is ready (#3)
 - [ ] Keep the name even though it is one letter from "hyprforge"? (D-1, flagged)
 - [ ] Recipe choices, once the options page is ready
 

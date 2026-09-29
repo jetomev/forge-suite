@@ -1,6 +1,6 @@
 # What moving off Plasma changes in KognogOS
 
-*[D-6](DECISIONS.md#d-6--plasma-will-be-replaced): KognogOS moves from KDE Plasma to the hypeForge desktop "little by little". This page lists what that touches, so nothing is forgotten and nothing changes by surprise. **Nothing in KognogOS has changed yet.** Each item gets its own issue in the [KognogOS repository](https://github.com/jetomev/KognogOS) when its turn comes.*
+*[D-6](DECISIONS.md#d-6--plasma-will-be-replaced): KognogOS moves from KDE Plasma to the hypeForge desktop "little by little". This page lists what that touches, so nothing is forgotten and nothing changes by surprise. **Nothing in KognogOS has changed yet.** On the test desktop, Plasma stays installed until hypeForge works and Javier is fully daily driving it; only then is it taken down. Each item gets its own issue in the [KognogOS repository](https://github.com/jetomev/KognogOS) when its turn comes.*
 
 ---
 
