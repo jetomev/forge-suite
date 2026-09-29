@@ -7,6 +7,15 @@
 
 ## 2026-09-29
 
+### D-21 · Clipboard, screenshots, recording and the look of other apps
+**Decided by Javier** ([RECIPE.md, jobs 10–13](RECIPE.md#10-clipboard-history)).
+- **Job 10, clipboard history: Walker's own.** Walker's service, elephant, has a clipboard provider for text and pictures. This is Omarchy 3's setup (Super+Ctrl+V), and nothing extra is installed. It replaces the lean (cliphist + fuzzel), which assumed fuzzel as the launcher (D-18).
+- **Job 11, screenshots: grim + slurp + Satty**, Omarchy 3's trio. A small hypeForge script picks area, window or monitor.
+- **Job 12, screen recording: both gpu-screen-recorder and OBS Studio.** gpu-screen-recorder handles quick recordings from a key, using the RTX 3060's own encoder. OBS handles bigger jobs. Omarchy 3 and 4 install the same pair.
+- **Job 13, the look of other apps: Catppuccin Mocha everywhere.** GTK uses `adw-gtk-theme` (the Arch name for adw-gtk3) plus a Catppuccin Mocha colour file, with dark mode on. Qt apps follow GTK (`QT_QPA_PLATFORMTHEME=gtk3`, Omarchy 4's method). The cursor is the Catppuccin Mocha set that is already installed. The dark-mode setting is also what apps read through the GTK portal (D-16).
+
+All of it is in `extra` (checked with `nog search` 2026-09-29). None of it is installed on the test desktop yet.
+
 ### D-20 · The background helpers: SwayOSD, hyprlock + hypridle, hyprpaper, hyprpolkitagent
 **Decided by Javier**, agreeing with every lean in [RECIPE.md, jobs 4–8](RECIPE.md#4-volume--brightness-pop-ups-osd).
 - **Job 4, volume pop-up: SwayOSD**, Omarchy 3's choice. SwayOSD only drives built-in screen backlights, so **monitor brightness is a separate key binding through `ddcutil`**.

@@ -20,10 +20,10 @@
 | 7 | Wallpaper | hyprpaper |  ✅ **hyprpaper** (D-20) |
 | 8 | Admin-password pop-up | hyprpolkitagent |  ✅ **hyprpolkitagent** (D-20) |
 | 9 | Login screen | **The two research halves disagreed.** One suggested greetd + tuigreet (a terminal look, light). The other suggested keeping SDDM (already installed, with the KognogOS theme) | ✅ **greetd + tuigreet** (D-15, 2026-09-28) |
-| 10 | Clipboard history | cliphist, with fuzzel as the picker | |
-| 11 | Screenshots | grim + slurp + Satty | |
-| 12 | Screen recording | gpu-screen-recorder (the only fit for this NVIDIA card) | |
-| 13 | Look of other apps and the cursor | adw-gtk3 + a Catppuccin colour file; Qt follows GTK; the Catppuccin cursors already installed | |
+| 10 | Clipboard history | cliphist, with fuzzel as the picker |  ✅ **Walker's own clipboard** (D-21) |
+| 11 | Screenshots | grim + slurp + Satty |  ✅ **grim + slurp + Satty** (D-21) |
+| 12 | Screen recording | gpu-screen-recorder (the only fit for this NVIDIA card) |  ✅ **gpu-screen-recorder + OBS Studio** (D-21) |
+| 13 | Look of other apps and the cursor | adw-gtk3 + a Catppuccin colour file; Qt follows GTK; the Catppuccin cursors already installed |  ✅ **Catppuccin everywhere:** adw-gtk-theme + Catppuccin colours, Qt follows GTK, Catppuccin cursor (D-21) |
 | 14 | File manager | Yazi (terminal) + Thunar (add `gvfs`) | |
 | 15 | Wi-Fi | nmtui (already installed); networkmanager-dmenu optional | |
 | 16 | Bluetooth | bluetui | |
