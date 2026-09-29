@@ -7,6 +7,19 @@
 
 ## 2026-09-29
 
+### D-22 · The tools: Midnight Commander + superfile + Krusader, nmtui, bluetui, wiremix, btop + nvtop
+**Decided by Javier** ([RECIPE.md, jobs 14–18](RECIPE.md#14-file-manager-terminal-first-plus-one-graphical-fallback)).
+- **Job 14, file manager: Midnight Commander + superfile + Krusader.** This differs from the lean (Yazi + Thunar). Midnight Commander and Krusader were not among the researched options; they were checked the same day:
+  - **Midnight Commander** (`extra/mc` 4.8.33, **already installed**): the classic two-panel terminal file manager, ★997, commits 2026-09. A Catppuccin theme exists ([catppuccin/mc](https://github.com/catppuccin/mc)) but was last updated 2022.
+  - **superfile** (`extra/superfile` 1.6.0): a terminal file manager with side-by-side panels and an official Catppuccin theme, ★23.5k, release 2026-06.
+  - **Krusader** (`extra/krusader` 2.9.0, 14.7 MiB): a graphical two-panel file manager from KDE. It does **not** need `plasma-workspace`, but it depends on about 30 KDE Frameworks libraries (KIO, KWallet, Solid and others), **so those stay installed after Plasma leaves** (D-6). Today they are all already present, so installing it adds only Krusader itself. Whether it looks right when Qt follows GTK (D-21) is untested.
+  - **Thunar is not part of the recipe.** It stays installed for now and can be removed later.
+  - The terminal file-window idea from job 31 (D-16) would now pair with **superfile**: termfilechooser ships a superfile wrapper, and none for Midnight Commander.
+- **Job 15, Wi-Fi: nmtui**, already installed.
+- **Job 16, Bluetooth: bluetui**, Omarchy 3's choice. `bluetoothctl` stays as the fallback.
+- **Job 17, sound mixer: wiremix**, Omarchy 3's choice. The volume keys use `wpctl`.
+- **Job 18, system monitor: btop + nvtop.** btop is already installed; nvtop adds the per-program graphics-card view.
+
 ### D-21 · Clipboard, screenshots, recording and the look of other apps
 **Decided by Javier** ([RECIPE.md, jobs 10–13](RECIPE.md#10-clipboard-history)).
 - **Job 10, clipboard history: Walker's own.** Walker's service, elephant, has a clipboard provider for text and pictures. This is Omarchy 3's setup (Super+Ctrl+V), and nothing extra is installed. It replaces the lean (cliphist + fuzzel), which assumed fuzzel as the launcher (D-18).

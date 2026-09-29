@@ -24,6 +24,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - **Top bar Waybar (dev build for now), launcher Walker, notifications mako** (D-17, D-18, D-19)
 - **Background helpers: SwayOSD, hyprlock + hypridle, hyprpaper, hyprpolkitagent** (D-20)
 - **Clipboard via Walker, screenshots grim + slurp + Satty, recording gpu-screen-recorder + OBS, Catppuccin everywhere** (D-21)
+- **Files: Midnight Commander + superfile + Krusader; nmtui, bluetui, wiremix, btop + nvtop** (D-22)
 - **Documentation at every step, a full GitHub, and a coming-soon note on kognogos.org** (D-13)
 
 ---
@@ -49,7 +50,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Phase 1 · The recipe
 - [x] First choice: separate small apps, decided 2026-09-28 (D-14, #6)
-- [ ] Javier picks one option per job. Decided so far: job 0 (separate small apps, D-14), job 9 (greetd + tuigreet, D-15) job 1 (Waybar, D-17), job 2 (Walker, D-18), job 3 (mako, D-19), jobs 4–8 (SwayOSD, hyprlock, hypridle, hyprpaper, hyprpolkitagent, D-20), jobs 10–13 (Walker clipboard, grim + slurp + Satty, gpu-screen-recorder + OBS, Catppuccin everywhere, D-21) and job 31 (portals: Hyprland's + GTK, D-16)
+- [ ] Javier picks one option per job. Decided so far: job 0 (separate small apps, D-14), job 9 (greetd + tuigreet, D-15) job 1 (Waybar, D-17), job 2 (Walker, D-18), job 3 (mako, D-19), jobs 4–8 (SwayOSD, hyprlock, hypridle, hyprpaper, hyprpolkitagent, D-20), jobs 10–13 (Walker clipboard, grim + slurp + Satty, gpu-screen-recorder + OBS, Catppuccin everywhere, D-21), jobs 14–18 (mc + superfile + Krusader, nmtui, bluetui, wiremix, btop + nvtop, D-22) and job 31 (portals: Hyprland's + GTK, D-16)
 - [ ] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua) (#5)
 - [ ] Test nog's AUR path early: Walker and elephant are AUR only (D-18). Every gap is a nog finding
 - [ ] Re-read job 29 (power menu) with Walker's own modules in mind before deciding it (D-18). Job 10 done: Walker's own clipboard (D-21)
@@ -57,7 +58,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] The full key map, starting from Plasma's shortcuts on the test desktop
 - [ ] Minimise and an Alt + Tab switcher, which Hyprland lacks: build them or choose tools (#5)
 - [ ] The portable folder layout decided (#7)
-- [ ] The Catppuccin Mocha look for every chosen app
+- [ ] The Catppuccin Mocha look for every chosen app. Check Krusader when Qt follows GTK, and whether the 2022 Catppuccin theme for Midnight Commander still fits (D-22)
 
 ## Phase 2 · Build it by hand
 - [ ] Build the desktop by hand on the test desktop, next to the fallback session
@@ -88,7 +89,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Waiting on Javier's hands
 - [ ] Keep the name even though it is one letter from "hyprforge"? (D-1, flagged)
-- [ ] Recipe choices for the remaining 17 jobs (docs/RECIPE.md, jobs 0–31). Jobs 0–13 and 31 are decided
+- [ ] Recipe choices for the remaining 12 jobs (docs/RECIPE.md, jobs 0–31). Jobs 0–18 and 31 are decided
 
 ## Open questions
 - [ ] The test desktop runs nog's stock tier list, not KognogOS's. Is that on purpose? (found 2026-09-28)

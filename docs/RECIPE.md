@@ -24,11 +24,11 @@
 | 11 | Screenshots | grim + slurp + Satty |  ✅ **grim + slurp + Satty** (D-21) |
 | 12 | Screen recording | gpu-screen-recorder (the only fit for this NVIDIA card) |  ✅ **gpu-screen-recorder + OBS Studio** (D-21) |
 | 13 | Look of other apps and the cursor | adw-gtk3 + a Catppuccin colour file; Qt follows GTK; the Catppuccin cursors already installed |  ✅ **Catppuccin everywhere:** adw-gtk-theme + Catppuccin colours, Qt follows GTK, Catppuccin cursor (D-21) |
-| 14 | File manager | Yazi (terminal) + Thunar (add `gvfs`) | |
-| 15 | Wi-Fi | nmtui (already installed); networkmanager-dmenu optional | |
-| 16 | Bluetooth | bluetui | |
-| 17 | Sound mixer | wiremix | |
-| 18 | System monitor | btop + nvtop | |
+| 14 | File manager | Yazi (terminal) + Thunar (add `gvfs`) |  ✅ **Midnight Commander + superfile + Krusader** (D-22) |
+| 15 | Wi-Fi | nmtui (already installed); networkmanager-dmenu optional |  ✅ **nmtui** (D-22) |
+| 16 | Bluetooth | bluetui |  ✅ **bluetui** (D-22) |
+| 17 | Sound mixer | wiremix |  ✅ **wiremix** (D-22) |
+| 18 | System monitor | btop + nvtop |  ✅ **btop + nvtop** (D-22) |
 | 19 | Three monitors | hypeForge writes `2560x1440@144` itself; nwg-displays as the visual fallback | |
 | 20 | Night light | hyprsunset (optional; it was off on Plasma) | |
 | 21 | Colour picker | hyprpicker + wl-clipboard | |
