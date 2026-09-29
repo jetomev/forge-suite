@@ -7,6 +7,13 @@
 
 ## 2026-09-29
 
+### D-34 · No taskbar, and no minimise
+**Decided by Javier**, after the taskbar and minimise were built in the test machine: *"let's not do a application bar better, and let's forget about the minimizing function, please."*
+- **No list of open apps in the top bar.** Waybar stays the top bar (D-17), without a taskbar section.
+- **No minimise anywhere:** no minimise button on title bars, no Win + PgDn, and apps are told to show only **maximise and close** (`button-layout` = `:maximize,close`).
+- **This replaces the minimise and taskbar parts of D-31**, and drops Win + PgDn (minimise) from the key map (D-29). The title bars (hyprbars) and never blocking apps' maximise requests stay.
+- The taskbar prototype (Waybar's taskbar, the minimise helper and the "bring back" settings) was removed from the test machine and the repository. It is in git history (`bdb244a`) if it is ever wanted again.
+
 ### D-33 · Title bars with three buttons on every app that can have them; a little more space
 **Decided by Javier:** *"our alacritty terminal when opening in KognogOS, it should have buttons to minimize, maximize, and close. Not as Omarchy. Same for all apps, if available."* And: *"Can we add a little more padding to windows, maybe like 3 more points?"*
 - **Alacritty keeps KognogOS's `decorations = "Full"`**, which on Hyprland makes Alacritty draw its own title bar. The test machine's settings use `"None"` (no title bar). Every app that can draw its own title bar gets minimise, maximise and close (`button-layout`, D-31); hyprbars covers the rest.

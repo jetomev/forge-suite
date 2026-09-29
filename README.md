@@ -87,12 +87,12 @@ The folder is the source of truth. The app reads it and applies it, and nog inst
 |---|---|
 | **Win + ← / →** | The window fills the left or right half of the screen |
 | **Win + ↑ / ↓** | The window fills the top or bottom half |
-| **Win + PgUp** / **Win + PgDn** | Maximise / minimise |
+| **Win + PgUp**, or **Win + ↑** twice | Maximise; **Win + ↓** comes back |
 | **Alt + Tab** | Switch between windows |
 | **Win + Shift + →** | Move the window to the next screen |
 | **Alt + F4** | Close the window |
 
-*The Win key is the one Plasma calls "Meta". Every Plasma key used today keeps its job; the [full key map](docs/DESIGN.md#the-key-map) was approved on 2026-09-29. Some have to be built, because Hyprland has no **minimise** and no **Alt + Tab switcher** of its own.*
+*The Win key is the one Plasma calls "Meta". Every Plasma key used today keeps its job; the [full key map](docs/DESIGN.md#the-key-map) was approved on 2026-09-29. Snapping and Win + ↑↑ are built by hypeForge, and an **Alt + Tab switcher** still has to be, because Hyprland has none of its own. There is **no minimise** in hypeForge (D-34).*
 
 ---
 

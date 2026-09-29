@@ -18,7 +18,6 @@
 | Win + ← / → | Snap to the left or right half | same | Lua snapping (#5) | build |
 | Win + ↑ / ↓ | Snap to the top or bottom half | same | Lua snapping (#5) | build |
 | Win + PgUp | Maximise | same | Hyprland's fullscreen-keep-bar mode | ready |
-| Win + PgDn | Minimise | same | a hidden "minimised" workspace (#5) | build |
 | Win + Backspace | Restore the window's previous size and place | same | remembered by the snapping code (#5) | build |
 | Alt + F4 | Close the window | same | Hyprland | ready |
 | Win + Ctrl + Esc | Force-quit a stuck window | same | `hyprctl kill` (click the window) | ready |
@@ -62,9 +61,10 @@
 
 ### Plasma keys with nothing behind them in hypeForge
 - **Overview, grid and "present windows"** (Win + W, Win + G, Ctrl + F7/F9/F10): Hyprland has no overview of its own. An official plugin (hyprexpo) exists; a later choice.
-- **Peek at desktop / show desktop** (Win + D, Ctrl + F12): could be built with the "minimise everything" trick. Later.
+- **Peek at desktop / show desktop** (Win + D, Ctrl + F12): not planned.
+- **Minimise** (Win + PgDn): **no minimise in hypeForge** (D-34).
 - **Desktop switching** (Win + F1–F4, Win + Ctrl + arrows and their Shift versions): there is one desktop today. Each monitor gets its own fixed workspace instead.
-- **Win + 1…9** (open taskbar entry 1–9): Waybar has no taskbar entries to open.
+- **Win + 1…9** (open taskbar entry 1–9): there is no taskbar (D-34).
 - **Activities** (Win + Q, Win + A), **power profile** (Win + B), **keyboard layout** (Win + Alt + K / L), **screen reader** (Win + Alt + S), **window menu** (Alt + F3), **panel focus** (Win + Alt + P), **clipboard actions** (Win + Ctrl + X): Plasma-only features, or not used here.
 
 ## One portable folder
@@ -130,7 +130,7 @@
   - Pressing toward the side a window is already on moves it to the next monitor.
   - Win + PgUp maximises and restores.
 - **Drag a window to a screen edge:** only as "drop it and it jumps into place". A Plasma-style outline *while* dragging would need a compiled plugin that breaks on every Hyprland update, so **it is left out** (proposed; Javier's call).
-- **Not in Hyprland at all:** minimising a window, and an Alt + Tab switcher with previews. Both have to be built or chosen as separate pieces.
+- **Not in Hyprland at all:** an Alt + Tab switcher with previews; it has to be built or chosen. (Minimising is also missing, and hypeForge leaves it out, D-34.)
 - **Traps the source reading found:**
   - "set floating" silently *toggles* unless given `"on"`.
   - Move and resize take whole-screen coordinates, and resizing grows from the centre, so resize first, then move.

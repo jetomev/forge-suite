@@ -29,6 +29,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - **Hyprland starts through uwsm** (D-25)
 - **udiskie + gvfs, KWallet on its own, a Walker power list, system-config-printer** (D-26)
 - **The folder is a full copy; the key map keeps Plasma's keys** (D-28, D-29)
+- **No taskbar and no minimise; title bars show maximise and close** (D-34)
 - **Every recipe pick is a first try; a misfit becomes a finding and is swapped** (D-23)
 - **Documentation at every step, a full GitHub, and a coming-soon note on kognogos.org** (D-13)
 
@@ -63,14 +64,13 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Move from `waybar-git` to the regular `waybar` once a release after 0.15.0 reaches `extra` (D-17)
 - [x] The full key map: Plasma's keys keep their jobs, approved 2026-09-29 (D-29)
 - [x] Win + Up twice maximises, Win + Down comes back; no error notification at a screen edge (26 presses, 0 failures) (D-30, #5)
-- [ ] Minimise: Waybar's taskbar in the top bar, minimised windows on a hidden workspace, a small helper until Hyprland 0.57 (D-31, #5). Built in the VM 2026-09-29: `prototype/waybar/`, `prototype/minimise.lua`, `prototype/minimise-helper.py`; bringing a parked window back tested from the repl (it returns to workspace 1 and the hidden workspace closes); taskbar clicks waiting for Javier's test
-- [ ] An app's own minimise button (Chromium's –) does nothing on Hyprland 0.56.2: the request is dropped (fixed after 0.56.2, hyprwm/Hyprland#16071). Workaround to try: Chromium's "Use system title bar and borders", so it gets our title bar
-- [ ] Window buttons: `button-layout` set to minimise, maximise, close (proven in the VM); hyprbars for windows without their own title bar, untested with Lua (D-31)
+- [x] ~~Minimise and a taskbar~~: built in the VM, then dropped by Javier (D-34); removed from the VM and the repo. Was: Waybar's taskbar in the top bar, minimised windows on a hidden workspace, a small helper until Hyprland 0.57 (D-31, #5). Built in the VM 2026-09-29: `prototype/waybar/`, `prototype/minimise.lua`, `prototype/minimise-helper.py`; bringing a parked window back tested from the repl (it returns to workspace 1 and the hidden workspace closes); taskbar clicks waiting for Javier's test
+- [x] Window buttons: `button-layout` = `:maximize,close` (D-34); hyprbars for windows without their own title bar, proven with Lua (D-31, D-33)
 - [x] Windows open floating at 80 % of the screen, centred; dialogs keep their size (untested); Chromium's "open maximised" undone; Alt + F4 closes (D-32)
 - [x] Gaps: 8 between windows, 13 at the edges (D-33)
 - [x] Alacritty with KognogOS's `decorations = "Full"` tried in the VM, 2026-09-29: opens floating at 80 %, **but draws no title bar on Hyprland** (screenshot checked). Hyprland takes over decorations and draws only a border (D-33)
-- [x] hyprbars built with hyprpm in the VM (needs `cmake` + `meson`; enabling needs sudo) and set up in Lua: `prototype/titlebars.lua`, Catppuccin bar with minimise, maximise and close, double-click maximises; screenshot checked, no config errors (D-31, D-33)
-- [x] hyprbars proven by Javier 2026-09-29: every button acts on its own window, double-click maximises, minimise parks and Win + Shift + PgDn brings back, Chromium keeps a single bar. *"all buttons work, Chromium has one bar. Great!"*
+- [x] hyprbars built with hyprpm in the VM (needs `cmake` + `meson`; enabling needs sudo) and set up in Lua: `prototype/titlebars.lua`, Catppuccin bar with maximise and close (minimise removed, D-34), double-click maximises; screenshot checked, no config errors (D-31, D-33)
+- [x] hyprbars proven by Javier 2026-09-29: every button acts on its own window, double-click maximises, Chromium keeps a single bar. *"all buttons work, Chromium has one bar. Great!"*
 - [ ] hyprbars at login: load it from the config (hl.plugin.load) or hyprpm reload in autostart, since buttons are added only when the plugin is loaded; rebuild after each Hyprland update inside the nog lock (D-9)
 - [ ] An Alt + Tab switcher, which Hyprland lacks (#5)
 - [ ] Five themes from the KognogOS wallpapers (Mocha, Black, Green, Gray, White): a preview page to choose the palettes (Javier, 2026-09-29)
