@@ -2,7 +2,7 @@
 
 *For every job a bare Hyprland desktop needs, this page lists **up to five of the most reviewed and recommended options**, each with links showing how it works. **Javier chooses** ([D-11](DECISIONS.md#d-11--the-recipe-up-to-five-researched-options-per-job-and-javier-chooses)). A line marked "Claude's lean" is a suggestion, not a decision. **Every choice is a first try** ([D-23](DECISIONS.md#d-23--every-recipe-pick-is-a-first-try)): a pick that does not fit in Phase 2 is swapped for another option from its job.*
 
-> **Status: researched on 2026-09-28 (job 31 on 2026-09-29), waiting for Javier's choices.** Job 31 was tracked in [#11](https://github.com/jetomev/hypeforge/issues/11). Two research helpers working for Claude compiled it read-only: nothing was installed, and no system setting was changed. Claude read both halves in full before publishing, and removed personal details about the test desktop's home network and accounts. Each half ends with what it **could not verify**; those lists are kept below.
+> **Status: every job decided by Javier on 2026-09-28/29 (D-14 to D-26). Each pick is a first try (D-23).** Researched on 2026-09-28, job 31 on 2026-09-29. Job 31 was tracked in [#11](https://github.com/jetomev/hypeforge/issues/11). Two research helpers working for Claude compiled it read-only: nothing was installed, and no system setting was changed. Claude read both halves in full before publishing, and removed personal details about the test desktop's home network and accounts. Each half ends with what it **could not verify**; those lists are kept below.
 
 ---
 
@@ -36,11 +36,11 @@
 | 23 | Image viewer | imv |  ✅ **imv** (D-24) |
 | 24 | PDF viewer | Zathura (fill in forms in the browser) |  ✅ **Zathura** (D-24) |
 | 25 | Video and music | mpv + mpv-mpris |  ✅ **mpv + mpv-mpris + cliamp** (D-24) |
-| 26 | How Hyprland starts | start-hyprland (the plain "Hyprland" login entry), not uwsm | |
-| 27 | USB drives | udiskie with a rule to ignore internal disks, + gvfs; keep `udisks2` on purpose | |
-| 28 | Password wallet | KWallet on its own (keep `kwallet-pam`); pin the browsers to it | |
-| 29 | Power menu | A small rofi list that calls hyprshutdown | |
-| 30 | Printers | system-config-printer (already installed) | |
+| 26 | How Hyprland starts | start-hyprland (the plain "Hyprland" login entry), not uwsm |  ✅ **uwsm** ("Hyprland (uwsm-managed)"), login screen greetd + tuigreet (D-25) |
+| 27 | USB drives | udiskie with a rule to ignore internal disks, + gvfs; keep `udisks2` on purpose |  ✅ **udiskie + gvfs**, udisks2 kept on purpose (D-26) |
+| 28 | Password wallet | KWallet on its own (keep `kwallet-pam`); pin the browsers to it |  ✅ **KWallet on its own** (D-26) |
+| 29 | Power menu | A small rofi list that calls hyprshutdown |  ✅ **A Walker list** calling `uwsm stop` / hyprshutdown (D-26) |
+| 30 | Printers | system-config-printer (already installed) |  ✅ **system-config-printer** (D-26) |
 | 31 | File-open dialogs and screen sharing ("portals") | xdg-desktop-portal-hyprland for screen sharing + xdg-desktop-portal-gtk for the file window. A terminal (Yazi) file window can come later | ✅ **Hyprland's portal + GTK file window** (D-16, 2026-09-29) |
 
 ---

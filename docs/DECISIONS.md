@@ -7,6 +7,23 @@
 
 ## 2026-09-29
 
+### D-26 · USB drives, the password wallet, the power menu and printers
+**Decided by Javier**, agreeing with the leans in [RECIPE.md, jobs 27–30](RECIPE.md#27-auto-mounting-usb-drives-and-disks), with job 29 re-read for Walker (D-18).
+- **Job 27, USB drives: udiskie + gvfs.** udiskie mounts removable drives when they are plugged in, with a rule to ignore internal disks, including the Windows NTFS partition. gvfs lets the GTK file window (D-16) list drives. **hypeForge marks `udisks2` as explicitly installed**, because today only KDE's `solid` keeps it and it would leave with Plasma.
+- **Job 28, password wallet: KWallet on its own.** It already holds this machine's secrets. `kwallet-pam` stays, greetd's login settings unlock it (D-15), and Chrome and Brave are pinned to `--password-store=kwallet6`. Only one password safe runs at a time.
+- **Job 29, power menu: a Walker list** (Lock / Log out / Restart / Shut down), drawn the way Omarchy 3 drew its menus (`walker --dmenu`). No extra menu app. Under uwsm (D-25), **Log out calls `uwsm stop`**. How hyprshutdown's polite close fits with uwsm's shutdown is checked in Phase 2.
+- **Job 30, printers: system-config-printer**, already installed and independent of Plasma.
+
+### D-25 · Hyprland starts through uwsm
+**Decided by Javier.** This differs from the lean (Hyprland's own `start-hyprland`). uwsm is Omarchy's path ([RECIPE.md, job 26](RECIPE.md#26-how-hyprland-is-started-session-start)). The login screen stays greetd + tuigreet (D-15), which starts the "Hyprland (uwsm-managed)" session.
+**What it means** (from the [Hyprland wiki's uwsm page](https://github.com/hyprwm/hyprland-wiki/blob/main/content/useful-utilities/uwsm.md), read 2026-09-29, which calls uwsm "for advanced users" with "its issues and additional quirks"):
+- **Background helpers run as systemd user services** (for example `systemctl --user enable hyprpaper.service`), not as start lines in Hyprland's Lua. Apps started from keys and Walker are prefixed `uwsm app --`.
+- **Environment settings** (theme, cursor, NVIDIA and toolkit variables) go in `~/.config/uwsm/env`, and `HYPR*` / `AQ_*` ones in `~/.config/uwsm/env-hyprland`, not in `hyprland.lua`. Both are inside `$HOME`, so the one-folder rule (D-8) holds.
+- **Never quit Hyprland directly.** Log out with `uwsm stop`, or the ordered shutdown is forced.
+- **uwsm runs XDG autostart entries.** Checked on the test desktop the same day: it would also start `nm-applet` and `print-applet` (not wanted, since jobs 15 and 30 chose other tools), plus `input-remapper-autoload` (the G13), `pam_kwallet_init`, Dropbox and Insync (wanted). **hypeForge must switch off unwanted entries** with `Hidden=true` copies in `~/.config/autostart/`.
+- `uwsm` 0.27.0 is in `extra` (★1.2k, commits 2026-09). Not installed yet.
+- **Not verified:** whether a uwsm session keeps start-hyprland's crash recovery (restart into safe mode). It is tested in a VM.
+
 ### D-24 · Monitors, night light, colour picker, editor, viewers and media
 **Decided by Javier** ([RECIPE.md, jobs 19–25](RECIPE.md#19-arranging-three-monitors)).
 - **Job 19, three monitors: hypeForge writes the three monitor rules itself**, with the exact mode `2560x1440@144` and fixed positions, not Hyprland's `preferred` mode. **nwg-displays** is the drag-and-drop fallback. Checked 2026-09-29: the kernel lists `card1-DP-1`, `DP-2` and `DP-3`, each at 2560x1440 (the refresh rate is confirmed in Phase 2). ddcutil reported all three as `DP-1` (D-20), so the kernel's names are the ones hypeForge uses.

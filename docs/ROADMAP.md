@@ -12,15 +12,15 @@
 - [x] Public repository: README, About, topics, labels, milestones, [issues](https://github.com/jetomev/hypeforge/issues)
 - [x] Research notes of the first night ([research/2026-09-28-kickoff.md](research/2026-09-28-kickoff.md))
 - [x] [kognogos.org](https://kognogos.org/#hypeforge) announces hypeForge as coming soon
-- [ ] Recipe research: up to five options per job, with sources ([RECIPE.md](RECIPE.md)) · #1
-- [ ] Virtual machines that can run Hyprland: 3D graphics switched on and proven on the NVIDIA desktop · #2
-- [ ] Omarchy reference machine *(approved 2026-09-28)* · #3
+- [x] Recipe research: up to five options per job, with sources ([RECIPE.md](RECIPE.md)) · #1, #11
+- [x] Virtual machines that can run Hyprland: 3D graphics switched on and proven on the NVIDIA desktop · #2
+- [ ] Omarchy reference machine: installed and snapshotted 2026-09-28; the comparison note is still to write · #3
 - [ ] A real KognogOS machine, from a fully rebuilt KognogOS installer image *(KognogOS work)* · #4
 - [ ] A saved clean state (snapshot) on every test machine
 
 ### Phase 1 · The recipe
-- [ ] First choice: one all-in-one desktop program, or separate small apps · #6
-- [ ] One app chosen per job
+- [x] First choice: separate small apps ([D-14](DECISIONS.md)) · #6
+- [x] One app chosen per job: all 32, on 2026-09-29, each a first try ([D-14 to D-26](DECISIONS.md))
 - [ ] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua) · #5
 - [ ] The full key map, starting from Plasma's shortcuts on the test desktop
 - [ ] The portable folder layout · #7

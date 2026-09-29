@@ -107,7 +107,7 @@ A bare Hyprland needs a small app for each of these jobs. For every job, the [re
 | Volume/brightness pop-ups · admin-password pop-up | Text editor · image, PDF and video viewers |
 | Login screen · clipboard history · screenshots | Password wallet · USB auto-mount · power menu · printing |
 
-> **The first choice is the biggest.** In August 2026 our reference, Omarchy 4, replaced its separate small apps with **one all-in-one desktop program** (built on Quickshell). So the recipe starts by choosing between *one program that does everything* and *a set of small apps that each do one thing*.
+> **Chosen, 2026-09-29.** Separate small apps, not one all-in-one program. The main picks are Waybar (top bar), Walker (launcher, clipboard and power menu), mako (notifications), the Hyprland team's lock screen, idle timer, wallpaper and password pop-up, greetd + tuigreet (login) started through uwsm, and Catppuccin Mocha everywhere. Every pick is a first try: one that does not fit when we live in it gets swapped. The full list and the reasons are in the [recipe page](docs/RECIPE.md) and the [decision log](docs/DECISIONS.md).
 
 ---
 
@@ -135,7 +135,7 @@ It is also meant for **any Arch Linux install**. How nog comes along on a plain 
 | Phase | What happens | Status |
 |---|---|---|
 | **0 · Foundations** | Name, repository, decisions, research; test machines (virtual machines) that can run Hyprland | 🔄 in progress |
-| **1 · The recipe** | Choose one app per job; design the portable folder; prove floating-first windows with Win + arrow snapping | ⬜ |
+| **1 · The recipe** | Choose one app per job ✅; design the portable folder; prove floating-first windows with Win + arrow snapping | 🔄 in progress |
 | **2 · Build it by hand** | Build the desktop by hand on the test desktop and live in it; every rough edge becomes a finding | ⬜ |
 | **3 · The app** | The forgekit terminal app that installs, adjusts and removes it; readable on a plain text screen | ⬜ |
 | **4 · Test** | Fresh virtual machines restored to a clean saved state before every run, then real hardware; published test matrix; numbered findings | ⬜ |

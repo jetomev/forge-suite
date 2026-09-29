@@ -26,6 +26,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - **Clipboard via Walker, screenshots grim + slurp + Satty, recording gpu-screen-recorder + OBS, Catppuccin everywhere** (D-21)
 - **Files: Midnight Commander + superfile + Krusader; nmtui, bluetui, wiremix, btop + nvtop** (D-22)
 - **Monitors written by hypeForge; hyprsunset, hyprpicker, Fresh, imv, Zathura, mpv + cliamp** (D-24)
+- **Hyprland starts through uwsm** (D-25)
+- **udiskie + gvfs, KWallet on its own, a Walker power list, system-config-printer** (D-26)
 - **Every recipe pick is a first try; a misfit becomes a finding and is swapped** (D-23)
 - **Documentation at every step, a full GitHub, and a coming-soon note on kognogos.org** (D-13)
 
@@ -52,10 +54,10 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Phase 1 · The recipe
 - [x] First choice: separate small apps, decided 2026-09-28 (D-14, #6)
-- [ ] Javier picks one option per job. Decided so far: job 0 (separate small apps, D-14), job 9 (greetd + tuigreet, D-15) job 1 (Waybar, D-17), job 2 (Walker, D-18), job 3 (mako, D-19), jobs 4–8 (SwayOSD, hyprlock, hypridle, hyprpaper, hyprpolkitagent, D-20), jobs 10–13 (Walker clipboard, grim + slurp + Satty, gpu-screen-recorder + OBS, Catppuccin everywhere, D-21), jobs 14–18 (mc + superfile + Krusader, nmtui, bluetui, wiremix, btop + nvtop, D-22), jobs 19–25 (monitor rules + nwg-displays, hyprsunset, hyprpicker, Fresh, imv, Zathura, mpv + cliamp, D-24) and job 31 (portals: Hyprland's + GTK, D-16)
+- [x] Javier picks one option per job: all 32 decided on 2026-09-29, each a first try (D-23). Decided: job 0 (separate small apps, D-14), job 9 (greetd + tuigreet, D-15) job 1 (Waybar, D-17), job 2 (Walker, D-18), job 3 (mako, D-19), jobs 4–8 (SwayOSD, hyprlock, hypridle, hyprpaper, hyprpolkitagent, D-20), jobs 10–13 (Walker clipboard, grim + slurp + Satty, gpu-screen-recorder + OBS, Catppuccin everywhere, D-21), jobs 14–18 (mc + superfile + Krusader, nmtui, bluetui, wiremix, btop + nvtop, D-22), jobs 19–25 (monitor rules + nwg-displays, hyprsunset, hyprpicker, Fresh, imv, Zathura, mpv + cliamp, D-24), job 26 (uwsm, D-25), jobs 27–30 (udiskie + gvfs, KWallet, Walker power list, system-config-printer, D-26) and job 31 (portals: Hyprland's + GTK, D-16)
 - [ ] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua) (#5)
 - [ ] Test nog's AUR path early: Walker, elephant (D-18) and cliamp (D-24) are AUR only. Every gap is a nog finding
-- [ ] Re-read job 29 (power menu) with Walker's own modules in mind before deciding it (D-18). Job 10 done: Walker's own clipboard (D-21)
+- [x] Re-read jobs 10 and 29 with Walker in mind: Walker's clipboard (D-21) and a Walker power list (D-26)
 - [ ] Move from `waybar-git` to the regular `waybar` once a release after 0.15.0 reaches `extra` (D-17)
 - [ ] The full key map, starting from Plasma's shortcuts on the test desktop
 - [ ] Minimise and an Alt + Tab switcher, which Hyprland lacks: build them or choose tools (#5)
@@ -65,6 +67,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 ## Phase 2 · Build it by hand
 - [ ] Build the desktop by hand on the test desktop, next to the fallback session
 - [ ] greetd + tuigreet proven in a VM (console font, Catppuccin palette, wallet unlock) before it replaces SDDM here (D-15, #12)
+- [ ] uwsm session in a VM first: crash recovery, `uwsm stop` with hyprshutdown, helpers as user services, and switch off unwanted autostart entries (nm-applet, print-applet) (D-25)
+- [ ] Mark `udisks2` as explicitly installed before Plasma leaves (D-26)
 - [ ] Live in it. Every rough edge becomes a numbered finding
 - [ ] Monitor brightness keys through ddcutil, addressed by I2C bus (3, 4, 5): the three monitors share one name, serial and connector (D-20)
 - [ ] Three monitors at 144 Hz, NVIDIA, the login screen, the password pop-up and the wallet all working
@@ -91,7 +95,6 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Waiting on Javier's hands
 - [ ] Keep the name even though it is one letter from "hyprforge"? (D-1, flagged)
-- [ ] Recipe choices for the remaining 5 jobs (docs/RECIPE.md: 26–30). Jobs 0–25 and 31 are decided
 
 ## Open questions
 - [ ] The test desktop runs nog's stock tier list, not KognogOS's. Is that on purpose? (found 2026-09-28)
