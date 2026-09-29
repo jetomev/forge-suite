@@ -15,7 +15,7 @@
 
 ## 3D graphics on the test desktop — how it works
 
-Solved on 2026-09-28 ([#2](https://github.com/jetomev/hypeforge/issues/2)). VMs on the system-wide connection (**QEMU/KVM** in Virtual Machine Manager) could not use the NVIDIA card: QEMU stopped at start-up with `egl: eglInitialize failed: EGL_NOT_INITIALIZED`. libvirt gives every VM a private set of device files, and NVIDIA's three (`/dev/nvidiactl`, `/dev/nvidia0`, `/dev/nvidia-modeset`) were not on its list. [`scripts/test-rig/enable-nvidia-vm-3d.sh`](../scripts/test-rig/enable-nvidia-vm-3d.sh) adds them. It keeps a backup, is safe to run twice, and restarts libvirtd.
+Solved on 2026-09-28 ([#2](https://github.com/jetomev/hypeforge/issues/2)), in two steps. VMs on the system-wide connection (**QEMU/KVM** in Virtual Machine Manager) could not use the NVIDIA card: QEMU stopped at start-up with `egl: eglInitialize failed: EGL_NOT_INITIALIZED`. libvirt gives every VM a private set of device files, and NVIDIA's three (`/dev/nvidiactl`, `/dev/nvidia0`, `/dev/nvidia-modeset`) were not on its list. [`scripts/test-rig/enable-nvidia-vm-3d.sh`](../scripts/test-rig/enable-nvidia-vm-3d.sh) adds them. It keeps a backup, is safe to run twice, and restarts libvirtd.
 
 The VM settings that work, used for `omarchy-ref`:
 
@@ -23,10 +23,12 @@ The VM settings that work, used for `omarchy-ref`:
 |---|---|
 | Firmware | UEFI, Secure Boot off |
 | Video | Virtio, **3D acceleration on** (`virtio-vga-gl`) |
-| Display | SPICE, **OpenGL on**, listen: none, render node `/dev/dri/by-path/pci-0000:01:00.0-render` |
+| Display | SPICE with OpenGL **off** (listen 127.0.0.1), **plus** a second, invisible `egl-headless` display that does the 3D work on the card (render node `/dev/dri/by-path/pci-0000:01:00.0-render`) |
 | Memory · CPUs · disk | 8 GB · 4 threads, host CPU model · 64 GB qcow2, virtio |
 
-`virsh screenshot` does not work on these VMs (`screendump: no surface`), because the picture lives on the graphics card. Look at them in Virtual Machine Manager instead.
+**Why not SPICE with OpenGL on?** That setting starts, but Virtual Machine Manager's window stays **black** on this NVIDIA card: the picture is drawn on the card and never reaches the window. Checked 2026-09-28. With `egl-headless`, QEMU copies each finished frame into the ordinary SPICE display, and Javier confirmed the Omarchy installer shows up.
+
+`virsh screenshot` stops working once the guest draws with 3D (`screendump: no surface`). It works during the firmware screens. To see the VM, use Virtual Machine Manager.
 
 ## House rules
 

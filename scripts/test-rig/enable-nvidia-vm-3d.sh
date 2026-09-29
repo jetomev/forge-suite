@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Lets libvirt's system-wide VMs (the "QEMU/KVM" connection in Virtual Machine Manager) use an
-# NVIDIA card for 3D graphics: virtio-gpu with 3D acceleration, shown through SPICE with OpenGL.
+# NVIDIA card for 3D graphics: virtio-gpu with 3D acceleration, rendered on the card by an
+# egl-headless display and shown through ordinary SPICE. (SPICE with OpenGL on also starts after
+# this fix, but its window stays black on NVIDIA. See testing/README.md.)
 #
 # Why this is needed: libvirt starts every VM's QEMU in a private /dev that holds only the
 # devices on its allow-list (cgroup_device_acl). NVIDIA's EGL, which QEMU uses to draw with the

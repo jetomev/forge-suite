@@ -18,6 +18,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - **The recipe shows up to 5 researched options per job, and Javier chooses** (D-11)
 - **Testing happens in VMs. The KognogOS installer image gets fully rebuilt first** (D-12)
 - **Omarchy is the reference** (D-4)
+- **The desktop is built from separate small apps, not one all-in-one program** (D-14)
 - **Documentation at every step, a full GitHub, and a coming-soon note on kognogos.org** (D-13)
 
 ---
@@ -31,7 +32,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Research job 31: portals, meaning file-open dialogs and screen sharing (Plasma's xdg-desktop-portal-kde) (#11)
 - [x] Research: floating-first windows with Win + arrow snapping in Hyprland 0.56 are doable with work; report in docs/research/ (#5)
 - [x] libvirt allowed to use the NVIDIA card for VM 3D: scripts/test-rig/enable-nvidia-vm-3d.sh, applied 2026-09-28 (#2)
-- [ ] Hyprland confirmed running with 3D inside a VM (#2)
+- [x] VM display on NVIDIA: SPICE without OpenGL + egl-headless works (with OpenGL on, the window stays black) (#2)
+- [ ] Hyprland confirmed running with 3D inside a VM: the installed Omarchy desktop is the test (#2)
 - [x] Omarchy 4.0.4 ISO downloaded to ~/Downloads, SHA256 verified against the release notes (#3)
 - [x] omarchy-ref VM created (8 GB, 4 threads, 64 GB disk, UEFI, 3D on) and booted into Omarchy's installer (#3)
 - [ ] Omarchy installed in omarchy-ref, then a clean snapshot saved (#3)
@@ -39,7 +41,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] A clean snapshot on every test VM (#2)
 
 ## Phase 1 · The recipe
-- [ ] First choice: one all-in-one desktop program, or separate small apps (#6)
+- [x] First choice: separate small apps, decided 2026-09-28 (D-14, #6)
 - [ ] Javier picks one option per job
 - [ ] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua) (#5)
 - [ ] The full key map, starting from Plasma's shortcuts on the test desktop

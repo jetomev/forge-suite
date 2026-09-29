@@ -7,6 +7,15 @@
 
 ## 2026-09-28 — the first night
 
+### D-14 · Separate small apps, not one all-in-one program
+**Decided by Javier:** recipe job 0 goes to **separate small apps**: a top bar, a launcher, a notification service and so on, each its own program with its own settings file.
+**Why it fits:**
+- It matches "light, with light apps and terminal apps first".
+- A broken piece can be swapped on its own, without taking the bar, notifications, lock screen and password pop-up down together.
+- Every piece takes a "use this settings file" option, so the one portable folder (D-8) stays simple.
+
+This is where we deliberately part from Omarchy 4, which moved to one Quickshell program in August 2026 (D-4). Details: [RECIPE.md, job 0](RECIPE.md#0-one-all-in-one-shell-or-separate-small-apps).
+
 ### D-13 · Documentation is written at every step, starting tonight
 **Decided by Javier.** The project gets its full GitHub presence from the first night. That means the README, About, topics, labels, milestones and issues. Documentation is written as the work happens, not afterwards. The public project page at [kognogos.org](https://kognogos.org) announces hypeForge as coming soon.
 

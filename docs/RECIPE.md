@@ -10,7 +10,7 @@
 
 | # | Job | Claude's lean (a suggestion) | Javier's choice |
 |---|---|---|---|
-| 0 | **One all-in-one program, or separate small apps?** | Separate small apps. Noctalia 5 is the all-in-one to try later | |
+| 0 | **One all-in-one program, or separate small apps?** | Separate small apps. Noctalia 5 is the all-in-one to try later | ✅ **Separate small apps** (D-14, 2026-09-28) |
 | 1 | Top bar | Waybar, once a release fixes clicking workspaces with the Lua config (or `waybar-git` until then). ironbar is already fixed | |
 | 2 | App launcher | fuzzel | |
 | 3 | Notifications | mako | |
@@ -274,7 +274,7 @@
 | 4 | greetd + [ReGreet](https://github.com/rharish101/ReGreet) | A graphical GTK4 login screen for greetd. It runs inside a small helper compositor (Cage, Sway or Hyprland). | Medium (Rust/GTK4; 8.6 MiB) | Graphical | `extra/greetd-regreet 0.5.0-1` | ★825 · 0.5.0 2026-07 | HW: "greetd: Works flawlessly, especially with ReGreet". |
 | 5 | No login manager: log in on the text console | Log in on the plain console; fish then runs `start-hyprland`. Automatic login is possible through the console's login program (getty). | Light (nothing extra) | Terminal | built in | n/a | The [HW tutorial](https://wiki.hypr.land/Getting-Started/Master-Tutorial/): "Hyprland can be executed by typing `start-hyprland` in your TTY". AW Hyprland ("Terminal") notes this wrapper "provides crash recovery and safe mode". |
 
-**How it works — read more:** SDDM: [AW](https://wiki.archlinux.org/title/SDDM). ly: [AW](https://wiki.archlinux.org/title/Ly) · [project page](https://codeberg.org/fairyglade/ly). greetd + tuigreet: [AW Greetd](https://wiki.archlinux.org/title/Greetd) · [tuigreet README](https://github.com/tuigreet/tuigreet). Also on the HW list: plasma-login-manager ("works flawlessly, but depends on systemd"; installed here now, but it belongs to Plasma) and GDM ("crashing Hyprland on the first launch"). Login screens matched to the shells: noctalia-greeter (AUR 1.6.0, ★410) and dank-greeter (AUR `greetd-dms-greeter-git`, ★37).
+**How it works — read more:** SDDM: [AW](https://wiki.archlinux.org/title/SDDM). ly: [AW](https://wiki.archlinux.org/title/Ly) · [project page](https://codeberg.org/fairyglade/ly). greetd + tuigreet: [AW Greetd](https://wiki.archlinux.org/title/Greetd) · [tuigreet README](https://github.com/tuigreet/tuigreet) · screenshots: [plain](https://github.com/tuigreet/tuigreet/blob/master/contrib/assets/screenshot.png), [themed](https://github.com/tuigreet/tuigreet/blob/master/contrib/assets/screenshot-themed.png). Also on the HW list: plasma-login-manager ("works flawlessly, but depends on systemd"; installed here now, but it belongs to Plasma) and GDM ("crashing Hyprland on the first launch"). Login screens matched to the shells: noctalia-greeter (AUR 1.6.0, ★410) and dank-greeter (AUR `greetd-dms-greeter-git`, ★37).
 **Claude's lean:** greetd + tuigreet. It gives a terminal look, it is light, its config is one file hypeForge can write, and a graphical greeter can be swapped in later. SDDM stays the safe fallback because the KognogOS theme already exists, but it keeps Qt6 and the X11 server on the system. (A suggestion; Javier chooses.)
 
 ---
