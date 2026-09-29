@@ -41,7 +41,7 @@
 | 28 | Password wallet | KWallet on its own (keep `kwallet-pam`); pin the browsers to it | |
 | 29 | Power menu | A small rofi list that calls hyprshutdown | |
 | 30 | Printers | system-config-printer (already installed) | |
-| 31 | File-open dialogs and screen sharing ("portals") | xdg-desktop-portal-hyprland for screen sharing + xdg-desktop-portal-gtk for the file window. A terminal (Yazi) file window can come later | |
+| 31 | File-open dialogs and screen sharing ("portals") | xdg-desktop-portal-hyprland for screen sharing + xdg-desktop-portal-gtk for the file window. A terminal (Yazi) file window can come later | ✅ **Hyprland's portal + GTK file window** (D-16, 2026-09-29) |
 
 ---
 

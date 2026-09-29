@@ -5,6 +5,16 @@
 
 ---
 
+## 2026-09-29
+
+### D-16 · Portals: Hyprland's own for screen sharing, GTK for the file window
+**Decided by Javier**, agreeing with the lean in [RECIPE.md, job 31](RECIPE.md#31-file-open-dialogs-and-screen-sharing-portals). A *portal* is the hidden helper apps call for the "open file" window, screen sharing, screenshots and the dark-mode question.
+- **Screen sharing, screenshots, global shortcuts:** `xdg-desktop-portal-hyprland`.
+- **The "open file" / "save as" window:** `xdg-desktop-portal-gtk`, already installed. It is the Hyprland wiki's recommendation and the same pair Omarchy 4 uses.
+- **`xdg-desktop-portal-kde` leaves with Plasma.** It depends on `plasma-workspace`, so keeping it would keep Plasma's core.
+- **Job 13 must set dark mode in the GTK settings**, because under Hyprland the GTK portal is what answers apps asking "is dark mode on?".
+- A terminal (Yazi) file window stays an idea to try in Phase 2, once nog's AUR path is tested. It is not part of this decision.
+
 ## 2026-09-28 — the first night
 
 ### D-15 · The login screen is greetd + tuigreet

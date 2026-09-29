@@ -20,6 +20,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - **Omarchy is the reference** (D-4)
 - **The desktop is built from separate small apps, not one all-in-one program** (D-14)
 - **The login screen is greetd + tuigreet, proven in a VM first** (D-15)
+- **Portals: Hyprland's own for screen sharing, GTK for the file window** (D-16)
 - **Documentation at every step, a full GitHub, and a coming-soon note on kognogos.org** (D-13)
 
 ---
@@ -45,7 +46,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Phase 1 · The recipe
 - [x] First choice: separate small apps, decided 2026-09-28 (D-14, #6)
-- [ ] Javier picks one option per job. Decided so far: job 0 (separate small apps, D-14) and job 9 (greetd + tuigreet, D-15)
+- [ ] Javier picks one option per job. Decided so far: job 0 (separate small apps, D-14), job 9 (greetd + tuigreet, D-15) and job 31 (portals: Hyprland's + GTK, D-16)
 - [ ] Floating-first windows with Win + arrow snapping, proven in Hyprland 0.56 (Lua) (#5)
 - [ ] The full key map, starting from Plasma's shortcuts on the test desktop
 - [ ] Minimise and an Alt + Tab switcher, which Hyprland lacks: build them or choose tools (#5)
@@ -80,7 +81,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Waiting on Javier's hands
 - [ ] Keep the name even though it is one letter from "hyprforge"? (D-1, flagged)
-- [ ] Recipe choices for the remaining 30 jobs (docs/RECIPE.md, jobs 0–31). Jobs 0 and 9 are decided
+- [ ] Recipe choices for the remaining 29 jobs (docs/RECIPE.md, jobs 0–31). Jobs 0, 9 and 31 are decided
 
 ## Open questions
 - [ ] The test desktop runs nog's stock tier list, not KognogOS's. Is that on purpose? (found 2026-09-28)
