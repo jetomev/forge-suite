@@ -63,7 +63,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Move from `waybar-git` to the regular `waybar` once a release after 0.15.0 reaches `extra` (D-17)
 - [x] The full key map: Plasma's keys keep their jobs, approved 2026-09-29 (D-29)
 - [x] Win + Up twice maximises, Win + Down comes back; no error notification at a screen edge (26 presses, 0 failures) (D-30, #5)
-- [ ] Minimise: Waybar's taskbar in the top bar, minimised windows on a hidden workspace, a small helper until Hyprland 0.57 (D-31, #5)
+- [ ] Minimise: Waybar's taskbar in the top bar, minimised windows on a hidden workspace, a small helper until Hyprland 0.57 (D-31, #5). Built in the VM 2026-09-29: `prototype/waybar/`, `prototype/minimise.lua`, `prototype/minimise-helper.py`; bringing a parked window back tested from the repl (it returns to workspace 1 and the hidden workspace closes); taskbar clicks waiting for Javier's test
+- [ ] An app's own minimise button (Chromium's –) does nothing on Hyprland 0.56.2: the request is dropped (fixed after 0.56.2, hyprwm/Hyprland#16071). Workaround to try: Chromium's "Use system title bar and borders", so it gets our title bar
 - [ ] Window buttons: `button-layout` set to minimise, maximise, close (proven in the VM); hyprbars for windows without their own title bar, untested with Lua (D-31)
 - [x] Windows open floating at 80 % of the screen, centred; dialogs keep their size (untested); Chromium's "open maximised" undone; Alt + F4 closes (D-32)
 - [x] Gaps: 8 between windows, 13 at the edges (D-33)

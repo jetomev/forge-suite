@@ -1,0 +1,25 @@
+// hypeForge prototype: the top bar with a taskbar of open apps (D-17, D-31).
+// Click an app in front: minimise it. Click one behind: bring it forward. Middle-click: close.
+{
+  "layer": "top",
+  "position": "top",
+  "height": 30,
+  "spacing": 6,
+  "modules-left": ["wlr/taskbar"],
+  "modules-center": ["clock"],
+  "modules-right": [],
+
+  "wlr/taskbar": {
+    "format": "{icon} {title:.24}",
+    "icon-size": 16,
+    "tooltip-format": "{title}",
+    "on-click": "minimize-raise",
+    "on-click-middle": "close",
+    "active-first": false
+  },
+
+  "clock": {
+    "format": "{:%a %d %b  %H:%M}",
+    "tooltip": false
+  }
+}
