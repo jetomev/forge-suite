@@ -58,9 +58,9 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Test nog's AUR path early: Walker, elephant (D-18) and cliamp (D-24) are AUR only. Every gap is a nog finding
 - [x] Re-read jobs 10 and 29 with Walker in mind: Walker's clipboard (D-21) and a Walker power list (D-26)
 - [ ] Move from `waybar-git` to the regular `waybar` once a release after 0.15.0 reaches `extra` (D-17)
-- [ ] The full key map, starting from Plasma's shortcuts on the test desktop
+- [ ] The full key map, starting from Plasma's shortcuts on the test desktop. Proposal written in docs/DESIGN.md 2026-09-29, waiting for Javier
 - [ ] Minimise and an Alt + Tab switcher, which Hyprland lacks: build them or choose tools (#5)
-- [ ] The portable folder layout decided (#7)
+- [ ] The portable folder layout decided (#7). Proposal written in docs/DESIGN.md 2026-09-29; one open choice (full copy or defaults + changes), waiting for Javier
 - [ ] The Catppuccin Mocha look for every chosen app. Check Krusader when Qt follows GTK, and whether the 2022 Catppuccin theme for Midnight Commander still fits (D-22)
 
 ## Phase 2 · Build it by hand
