@@ -2,7 +2,7 @@
 
 *For every job a bare Hyprland desktop needs, this page lists **up to five of the most reviewed and recommended options**, each with links showing how it works. **Javier chooses** ([D-11](DECISIONS.md#d-11--the-recipe-up-to-five-researched-options-per-job-and-javier-chooses)). A line marked "Claude's lean" is a suggestion, not a decision.*
 
-> **Status: researched on 2026-09-28, waiting for Javier's choices.** Job 31 is tracked in [#11](https://github.com/jetomev/hypeforge/issues/11). Two research helpers working for Claude compiled it read-only: nothing was installed, and no system setting was changed. Claude read both halves in full before publishing, and removed personal details about the test desktop's home network and accounts. Each half ends with what it **could not verify**; those lists are kept below.
+> **Status: researched on 2026-09-28 (job 31 on 2026-09-29), waiting for Javier's choices.** Job 31 was tracked in [#11](https://github.com/jetomev/hypeforge/issues/11). Two research helpers working for Claude compiled it read-only: nothing was installed, and no system setting was changed. Claude read both halves in full before publishing, and removed personal details about the test desktop's home network and accounts. Each half ends with what it **could not verify**; those lists are kept below.
 
 ---
 
@@ -41,7 +41,7 @@
 | 28 | Password wallet | KWallet on its own (keep `kwallet-pam`); pin the browsers to it | |
 | 29 | Power menu | A small rofi list that calls hyprshutdown | |
 | 30 | Printers | system-config-printer (already installed) | |
-| 31 | File-open dialogs and screen sharing ("portals") | **Not researched yet.** Found missing while merging | |
+| 31 | File-open dialogs and screen sharing ("portals") | xdg-desktop-portal-hyprland for screen sharing + xdg-desktop-portal-gtk for the file window. A terminal (Yazi) file window can come later | |
 
 ---
 
@@ -61,7 +61,7 @@
 
 **What follows from it:**
 - **Keep on purpose:** `kwallet-pam` (it unlocks the wallet at login) and `udisks2` (it mounts drives). Both would leave with Plasma today.
-- **Replace:** `polkit-kde-agent` (job 8), `powerdevil` (job 6), `kscreenlocker` (job 5) and `xdg-desktop-portal-kde`. That last one is the file-open dialogs; job 31 is not researched yet.
+- **Replace:** `polkit-kde-agent` (job 8), `powerdevil` (job 6), `kscreenlocker` (job 5) and `xdg-desktop-portal-kde`. That last one is the file-open dialogs (job 31).
 - **Pin the browsers' password store** whichever wallet is chosen (job 28). Otherwise saved passwords can seem to vanish.
 
 ---
@@ -606,6 +606,33 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 **How it works — read more:** system-config-printer: [Arch Wiki](https://wiki.archlinux.org/title/CUPS#GUI_applications) · CUPS web page: [Arch Wiki](https://wiki.archlinux.org/title/CUPS#Web_interface) · CUPS commands: [Arch Wiki](https://wiki.archlinux.org/title/CUPS#CLI_tools) · CUPS itself: [OpenPrinting](https://openprinting.github.io/cups/)
 **Claude's lean:** system-config-printer. It is already installed, Omarchy uses it, and with `cups-pk-helper` it asks through a normal password pop-up. Use `lpstat -v` for quick checks. Nothing in CUPS depends on Plasma. (A suggestion; Javier chooses.)
 
+## 31. File-open dialogs and screen sharing ("portals")
+*What this job is:* A *portal* is a hidden helper that apps call when they need something from the desktop: the "open file" and "save as" windows, sharing your screen in a video call, taking a screenshot, or asking whether you prefer dark mode. You never start it yourself; it wakes up when an app asks. On Plasma, `xdg-desktop-portal-kde` does all of this. Under Hyprland the job is split in two: **one helper for screen sharing, and one for the file window**, because Hyprland's own helper has no file window.
+*Omarchy reference:* Omarchy 4.0.4 installs `xdg-desktop-portal-hyprland` and `xdg-desktop-portal-gtk` together ([omarchy-base.packages](https://github.com/basecamp/omarchy/blob/quattro/install/omarchy-base.packages)), with Nautilus as its file manager. It ships no portal settings file of its own, so it relies on the defaults.
+
+**Part A: screen sharing, screenshots, global shortcuts.** There is really one answer here.
+
+| # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
+|---|---|---|---|---|---|---|---|
+| 1 | [xdg-desktop-portal-hyprland](https://github.com/hyprwm/xdg-desktop-portal-hyprland) (XDPH) | Hyprland's own portal: screen sharing (including single windows), screenshots, global shortcuts | Light (817 KiB; brings Qt 6 for its small "what to share" window) | Background | extra/xdg-desktop-portal-hyprland 1.4.1-2 | ★482 · release 2026-07 · commit 2026-09 | The [HW page](https://wiki.hypr.land/Hypr-Ecosystem/xdg-desktop-portal-hyprland/) calls it "Hyprland's xdg-desktop-portal implementation. It allows for screen sharing, global shortcuts, etc." Used by Omarchy 4. Starts by itself when Hyprland starts. The screenshot part needs `grim`, which job 11 installs anyway. |
+| 2 | [xdg-desktop-portal-wlr](https://github.com/emersion/xdg-desktop-portal-wlr) | The same kind of helper, for Sway and similar desktops | Light | Background | extra/xdg-desktop-portal-wlr 0.8.4-1 | — | Listed only so it is **not** installed by mistake. The HW notes XDPH already covers these desktops, and window sharing is a Hyprland-only feature. Two screen-sharing helpers side by side can conflict. |
+
+**Part B: the "open file" / "save as" window.**
+
+| # | Option | What it is | Weight | Kind | In Arch | Activity | Why it's on the list |
+|---|---|---|---|---|---|---|---|
+| 1 | [xdg-desktop-portal-gtk](https://github.com/flatpak/xdg-desktop-portal-gtk) | The GNOME-style (GTK) file window, plus the dark-mode setting, print dialog and "open with" chooser | Light (428 KiB; GTK 3, already on the system) | Graphical | extra/xdg-desktop-portal-gtk 1.15.3-1 (**installed**) | ★172 · release 2025-03 · commit 2026-09 | The HW says: "XDPH doesn't implement a file picker. For that, it is recommended to install `xdg-desktop-portal-gtk` alongside XDPH." It is also the default: `hyprland-portals.conf` falls back to GTK. Used by Omarchy 4. It follows the Catppuccin GTK look chosen in job 13. |
+| 2 | [xdg-desktop-portal-kde](https://github.com/KDE/xdg-desktop-portal-kde) | The KDE file window we use today | Heavy (2.8 MB **and it depends on `plasma-workspace`**, Plasma's core) | Graphical | extra/xdg-desktop-portal-kde 6.7.5-1 (**installed**, `plasma` group) | ★83 (mirror) · commit 2026-09 | The HW gives a recipe to keep the KDE window under Hyprland (`FileChooser = kde` in `~/.config/xdg-desktop-portal/hyprland-portals.conf`). But checked today with `pacman -Si`: it needs `plasma-workspace`, so **keeping it keeps half of Plasma installed**. That works against D-6 once Plasma leaves. |
+| 3 | [xdg-desktop-portal-termfilechooser](https://github.com/hunkyburrito/xdg-desktop-portal-termfilechooser) | Opens your **terminal file manager** as the file window. It ships a ready-made Yazi wrapper (job 14) | Light | Terminal | **AUR only**: `xdg-desktop-portal-termfilechooser` 1.4.3-1 (2 votes) or the `-hunkyburrito-git` build (21 votes) | ★328 · release 2026-06 · commit 2026-09 | The most terminal-first choice, and it matches Yazi from job 14. It comes with wrappers for yazi, lf, nnn, ranger, vifm and superfile. The catch: it is AUR only (nog's AUR path is not tested, see "Could not verify"), and a terminal file window is a new habit for anyone used to Plasma's. |
+| 4 | [xdg-desktop-portal-gnome](https://gitlab.gnome.org/GNOME/xdg-desktop-portal-gnome) | GNOME's newer (GTK 4) file window | Heavy (brings `nautilus`, `libadwaita`, `gnome-desktop-4`) | Graphical | extra/xdg-desktop-portal-gnome 50.0-1 (`gnome` group) | GNOME GitLab | Listed because it is common, but it pulls in GNOME's file manager and is built for GNOME. Omarchy does not use it. |
+
+**Two things that ride along with this job**
+- **The dark-mode setting.** Apps such as browsers ask the portal "is dark mode on?". Today Plasma answers (`Settings=kde;gtk` in `kde-portals.conf`). Under Hyprland the GTK portal answers from the GTK settings of job 13, so that job must set dark mode, or apps may come up light.
+- **The password wallet.** This desktop also has a KWallet portal (`kwallet.portal`, used for `Secret`). Whether it stays depends on job 28.
+
+**How it works — read more:** XDPH and the KDE-picker recipe: [HW](https://wiki.hypr.land/Hypr-Ecosystem/xdg-desktop-portal-hyprland/) · Portals in general: [Arch Wiki](https://wiki.archlinux.org/title/XDG_Desktop_Portal) · Terminal file window: [README](https://github.com/hunkyburrito/xdg-desktop-portal-termfilechooser)
+**Claude's lean:** XDPH for screen sharing, plus xdg-desktop-portal-gtk for the file window. They are small, the Hyprland wiki recommends the pair, Omarchy uses the same pair, and the GTK one is already installed. `xdg-desktop-portal-kde` leaves with Plasma. The terminal (Yazi) file window is worth trying in Phase 2 as an extra, once nog's AUR path is tested. (A suggestion; Javier chooses.)
+
 ---
 
 ---
@@ -637,6 +664,7 @@ Everything is set by files and commands hypeForge writes, with no settings windo
 - **btop's GPU box:** that btop links NVIDIA's library was checked; the GPU box itself was not opened on screen.
 - **KWallet unlock at login:** it only works if the wallet password equals the login password (Arch). Not checked.
 - **What Chrome and Brave would do on first start under Hyprland:** predicted from Chromium's source, the Arch warning and Omarchy's release note, not tested. Brave is assumed to behave like Chromium. What Chrome stores in KWallet was not read.
+- **Job 31, portals:** nothing was installed or run. Not tested: screen sharing through XDPH with this NVIDIA driver across three monitors, whether Chrome and Brave use the GTK file window under Hyprland without extra settings (the HW warns Firefox may need extra settings for the KDE one), and how smooth the Yazi file window is in daily use. The Arch Wiki portal page refused automated reading today, so the portal facts come from the HW, `pacman -Si` and the files in `/usr/share/xdg-desktop-portal/`.
 - **udiskie and the internal Windows NTFS partition:** udisks marks it "system" and not ignored, and udiskie's built-in rules would not skip it. Whether udiskie would ask for a password or mount it read-write was not tested.
 - **Plasma's automount defaults** were read from KDE's current source code (plasma-desktop master), not from the installed 6.7.5 package, and no USB stick was plugged in to confirm.
 - **hyprshutdown combined with uwsm** (which one should end the session): no source found.
