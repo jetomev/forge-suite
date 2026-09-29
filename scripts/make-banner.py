@@ -97,3 +97,39 @@ svg2 = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1272 260" width=
 '''
 (root / "snap-keys.svg").write_text(svg2)
 print("ok", len(svg), len(svg2))
+
+# --- "How it will work": the folder → the app → nog / your desktop / system pieces
+def box(x, y, w, h, color, title, sub, strong=False):
+    fill = "#313244" if strong else "#181825"
+    return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="12" fill="{fill}" stroke="{color}" stroke-width="2"/>'
+            f'<rect x="{x}" y="{y+14}" width="5" height="{h-28}" rx="2.5" fill="{color}"/>'
+            f'<text x="{x+24}" y="{y+h/2-4}" font-family="{SANS}" font-size="20" font-weight="700" fill="#cdd6f4">{title}</text>'
+            f'<text x="{x+24}" y="{y+h/2+20}" font-family="{SANS}" font-size="15" fill="#a6adc8">{sub}</text>')
+
+arrow = '<path d="{d}" fill="none" stroke="{c}" stroke-width="2.5"{dash} marker-end="url(#ah-{m})"/>'
+flow = [
+    box(24, 120, 290, 100, "#fab387", "Your hypeForge folder", "every setting, in one place"),
+    box(420, 120, 290, 100, "#cba6f7", "hypeForge", "the app, running in Alacritty", strong=True),
+    box(832, 20, 416, 84, "#a6e3a1", "nog", "installs the apps and locks their updates"),
+    box(832, 128, 416, 84, "#89b4fa", "Your desktop", "Hyprland and the apps you chose"),
+    box(832, 236, 416, 84, "#f9e2af", "System pieces", "login screen, update locks — only via the app"),
+    box(24, 262, 290, 76, "#94e2d5", "Backup or next PC", "just copy the folder"),
+    arrow.format(d="M314,170 L408,170", c="#cba6f7", dash="", m="mauve"),
+    arrow.format(d="M710,170 C770,170 770,62 820,62", c="#a6e3a1", dash="", m="green"),
+    arrow.format(d="M710,170 L820,170", c="#89b4fa", dash="", m="blue"),
+    arrow.format(d="M710,170 C770,170 770,278 820,278", c="#f9e2af", dash="", m="yellow"),
+    arrow.format(d="M169,220 L169,250", c="#94e2d5", dash=' stroke-dasharray="6 5"', m="teal"),
+]
+markers = "".join(
+    f'<marker id="ah-{n}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">'
+    f'<path d="M0,0 L10,5 L0,10 z" fill="{c}"/></marker>'
+    for n, c in (("mauve", "#cba6f7"), ("green", "#a6e3a1"), ("blue", "#89b4fa"), ("yellow", "#f9e2af"), ("teal", "#94e2d5")))
+svg3 = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1272 356" width="1272" height="356" role="img" aria-labelledby="t3">
+<title id="t3">How hypeForge works: your hypeForge folder holds every setting. The hypeForge app reads it and applies it: nog installs the apps and locks their updates, your desktop gets Hyprland and the apps you chose, and a few system pieces are applied only by the app. To back up or move to a new PC, copy the folder.</title>
+<defs>{markers}</defs>
+<rect x="1" y="1" width="1270" height="354" rx="20" fill="#11111b" stroke="#313244" stroke-width="2"/>
+<g transform="translate(0,8)">{"".join(flow)}</g>
+</svg>
+'''
+(root / "how-it-works.svg").write_text(svg3)
+print("how-it-works", len(svg3))

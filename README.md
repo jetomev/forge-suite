@@ -69,24 +69,9 @@ These were decided on the first night. Each one has a dated entry in the [decisi
 
 ## How it will work
 
-```mermaid
-flowchart LR
-    F["📁 Your hypeForge folder<br/>every setting, in one place"]
-    A["⚡ hypeForge<br/>the app, running in Alacritty"]
-    N["📦 nog<br/>installs the apps and locks updates"]
-    D["🖥 Your desktop<br/>Hyprland and the apps you chose"]
-    S["🔐 System pieces<br/>login screen, update locks"]
-    B["💾 Backup or next PC<br/>just copy the folder"]
-    F --> A
-    A --> N
-    A --> D
-    A --> S
-    F -.-> B
-    classDef core fill:#313244,stroke:#cba6f7,color:#cdd6f4
-    classDef soft fill:#181825,stroke:#585b70,color:#cdd6f4
-    class A core
-    class F,N,D,S,B soft
-```
+<p align="center">
+  <img src="assets/how-it-works.svg" alt="How hypeForge works: your hypeForge folder holds every setting; the hypeForge app reads it and applies it. nog installs the apps and locks their updates, your desktop gets Hyprland and the apps you chose, and a few system pieces are applied only by the app. To back up or move to a new PC, copy the folder." width="100%">
+</p>
 
 The folder is the source of truth. The app reads it and applies it, and nog installs what it lists. **Your backup is the folder.** The exact folder layout is designed in Phase 1 ([design notes](docs/DESIGN.md)).
 
