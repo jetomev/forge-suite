@@ -7,6 +7,19 @@
 
 ## 2026-09-29
 
+### D-24 · Monitors, night light, colour picker, editor, viewers and media
+**Decided by Javier** ([RECIPE.md, jobs 19–25](RECIPE.md#19-arranging-three-monitors)).
+- **Job 19, three monitors: hypeForge writes the three monitor rules itself**, with the exact mode `2560x1440@144` and fixed positions, not Hyprland's `preferred` mode. **nwg-displays** is the drag-and-drop fallback. Checked 2026-09-29: the kernel lists `card1-DP-1`, `DP-2` and `DP-3`, each at 2560x1440 (the refresh rate is confirmed in Phase 2). ddcutil reported all three as `DP-1` (D-20), so the kernel's names are the ones hypeForge uses.
+- **Job 20, night light: hyprsunset.** New, since Night Light was off on Plasma.
+- **Job 21, colour picker: hyprpicker**, with `wl-clipboard`.
+- **Job 22, text editor: Fresh**, the KognogOS default, already installed.
+- **Job 23, image viewer: imv.**
+- **Job 24, PDF viewer: Zathura** (+ `zathura-pdf-mupdf`). PDF forms are filled in the browser. Okular leaves with Plasma.
+- **Job 25, video and music: mpv + mpv-mpris + cliamp.** mpv plays video and music, and `mpv-mpris` makes the media keys work. **cliamp** is Omarchy's Winamp-style terminal music player. It is **AUR only** (`cliamp` 2.3.0, updated 2026-09-28), the second AUR pick after Walker (D-18).
+
+### D-23 · Every recipe pick is a first try
+**Decided by Javier:** *"We can try them out. If they don't fit what we want to do, we can always replace them."* The recipe choices are the starting set for Phase 2, not a final list. Living in the desktop (Phase 2) is the real test. A pick that does not fit becomes a numbered finding and is swapped for another option from its job in [RECIPE.md](RECIPE.md), with a new decision entry. The portable folder (D-8) keeps a swap cheap.
+
 ### D-22 · The tools: Midnight Commander + superfile + Krusader, nmtui, bluetui, wiremix, btop + nvtop
 **Decided by Javier** ([RECIPE.md, jobs 14–18](RECIPE.md#14-file-manager-terminal-first-plus-one-graphical-fallback)).
 - **Job 14, file manager: Midnight Commander + superfile + Krusader.** This differs from the lean (Yazi + Thunar). Midnight Commander and Krusader were not among the researched options; they were checked the same day:

@@ -1,6 +1,6 @@
 # The recipe — one app per job
 
-*For every job a bare Hyprland desktop needs, this page lists **up to five of the most reviewed and recommended options**, each with links showing how it works. **Javier chooses** ([D-11](DECISIONS.md#d-11--the-recipe-up-to-five-researched-options-per-job-and-javier-chooses)). A line marked "Claude's lean" is a suggestion, not a decision.*
+*For every job a bare Hyprland desktop needs, this page lists **up to five of the most reviewed and recommended options**, each with links showing how it works. **Javier chooses** ([D-11](DECISIONS.md#d-11--the-recipe-up-to-five-researched-options-per-job-and-javier-chooses)). A line marked "Claude's lean" is a suggestion, not a decision. **Every choice is a first try** ([D-23](DECISIONS.md#d-23--every-recipe-pick-is-a-first-try)): a pick that does not fit in Phase 2 is swapped for another option from its job.*
 
 > **Status: researched on 2026-09-28 (job 31 on 2026-09-29), waiting for Javier's choices.** Job 31 was tracked in [#11](https://github.com/jetomev/hypeforge/issues/11). Two research helpers working for Claude compiled it read-only: nothing was installed, and no system setting was changed. Claude read both halves in full before publishing, and removed personal details about the test desktop's home network and accounts. Each half ends with what it **could not verify**; those lists are kept below.
 
@@ -29,13 +29,13 @@
 | 16 | Bluetooth | bluetui |  ✅ **bluetui** (D-22) |
 | 17 | Sound mixer | wiremix |  ✅ **wiremix** (D-22) |
 | 18 | System monitor | btop + nvtop |  ✅ **btop + nvtop** (D-22) |
-| 19 | Three monitors | hypeForge writes `2560x1440@144` itself; nwg-displays as the visual fallback | |
-| 20 | Night light | hyprsunset (optional; it was off on Plasma) | |
-| 21 | Colour picker | hyprpicker + wl-clipboard | |
-| 22 | Text editor | Fresh (already the KognogOS default) | |
-| 23 | Image viewer | imv | |
-| 24 | PDF viewer | Zathura (fill in forms in the browser) | |
-| 25 | Video and music | mpv + mpv-mpris | |
+| 19 | Three monitors | hypeForge writes `2560x1440@144` itself; nwg-displays as the visual fallback |  ✅ **hypeForge writes `2560x1440@144`** + nwg-displays fallback (D-24) |
+| 20 | Night light | hyprsunset (optional; it was off on Plasma) |  ✅ **hyprsunset** (D-24) |
+| 21 | Colour picker | hyprpicker + wl-clipboard |  ✅ **hyprpicker** + wl-clipboard (D-24) |
+| 22 | Text editor | Fresh (already the KognogOS default) |  ✅ **Fresh** (D-24) |
+| 23 | Image viewer | imv |  ✅ **imv** (D-24) |
+| 24 | PDF viewer | Zathura (fill in forms in the browser) |  ✅ **Zathura** (D-24) |
+| 25 | Video and music | mpv + mpv-mpris |  ✅ **mpv + mpv-mpris + cliamp** (D-24) |
 | 26 | How Hyprland starts | start-hyprland (the plain "Hyprland" login entry), not uwsm | |
 | 27 | USB drives | udiskie with a rule to ignore internal disks, + gvfs; keep `udisks2` on purpose | |
 | 28 | Password wallet | KWallet on its own (keep `kwallet-pam`); pin the browsers to it | |
