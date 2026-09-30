@@ -75,7 +75,9 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] hyprbars at login: load it from the config (hl.plugin.load) or hyprpm reload in autostart, since buttons are added only when the plugin is loaded; rebuild after each Hyprland update inside the nog lock (D-9)
 - [x] Alt + Tab: simple, next window brought to the front, Shift goes back, no list (D-35, #5)
 - [x] Five themes from the KognogOS wallpapers, decided 2026-09-29: Mocha (default), Black, Green (light, pastel greens), Gray (dark greys), White (light greys); all 4.5:1 or better (D-36)
-- [ ] Turn the five themes into colour files in `theme/`, and one key to switch between them (D-36)
+- [x] Themes as colour files: `prototype/themes/<id>.lua` generated from the preview page; `prototype/theme.lua` paints borders, hyprbars and Alacritty; Win + Alt + T switches (D-36). Javier: borders and title bars follow; Alacritty's file follows (screenshot)
+- [ ] Themes still to reach: GTK apps + Chromium (adw-gtk-theme + a generated colour file; Chromium's theme colour is a system policy file), the top bar (our Waybar, Phase 2), the wallpaper (hyprpaper, Phase 2)
+- [x] Win + Return opens Alacritty (D-29); the test machine's own terminal (foot) is not part of hypeForge
 - [x] The portable folder layout decided: a full copy, with machines/<hostname>/ apart (D-28, #7)
 - [ ] The folder round trip: build, copy to a clean VM, apply, same desktop (#7)
 - [ ] The Catppuccin Mocha look for every chosen app. Check Krusader when Qt follows GTK, and whether the 2022 Catppuccin theme for Midnight Commander still fits (D-22)

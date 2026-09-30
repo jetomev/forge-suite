@@ -9,6 +9,7 @@
 --   Win + Backspace            put the window back to its size before the first snap
 --   Win + T                    switch this window between floating and tiled
 --   Alt + F4                   close the window
+--   Win + Return               open Alacritty
 --   Alt + Tab / Alt + Shift + Tab   next / previous window, brought to the front (D-35)
 -- New windows open floating at 80 % of the screen, centred; an app's "maximise me" in its
 -- first moments is undone (D-32).
@@ -188,7 +189,7 @@ end
 -- 4. Keys. Unbind first, in case an earlier config (like Omarchy's) uses them. -------
 for _, k in ipairs({ "SUPER + LEFT", "SUPER + RIGHT", "SUPER + UP", "SUPER + DOWN",
                      "SUPER + Page_Up", "SUPER + BACKSPACE", "SUPER + T", "ALT + F4",
-                     "ALT + TAB", "ALT + SHIFT + TAB" }) do
+                     "ALT + TAB", "ALT + SHIFT + TAB", "SUPER + RETURN" }) do
     pcall(hl.unbind, k)
 end
 
@@ -203,6 +204,9 @@ hl.bind("SUPER + T", hl.dsp.window.float({ action = "toggle" }),
         { description = "Floating / tiled" })
 
 hl.bind("ALT + F4", hl.dsp.window.close(), { description = "Close window" })
+
+-- Win + Return: the terminal, Alacritty (D-29).
+hl.bind("SUPER + RETURN", hl.dsp.exec_cmd("alacritty"), { description = "Terminal" })
 
 -- Alt + Tab: jump to the next window and bring it to the front; Shift goes back (D-35).
 -- Simple on purpose: no window list. (Same two keys Omarchy uses, with thanks.)

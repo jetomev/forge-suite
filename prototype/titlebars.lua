@@ -1,11 +1,16 @@
 -- hypeForge prototype: title bars with maximise and close (D-33, D-34: no minimise).
 -- Drawn by hyprbars, the Hyprland team's title-bar plugin (github.com/hyprwm/hyprland-plugins),
 -- for windows that do not draw their own, such as Alacritty and other terminals.
--- Needs the plugin loaded (hyprpm enable hyprbars && hyprpm reload). Colours: Catppuccin Mocha.
+-- Needs the plugin loaded (hyprpm enable hyprbars && hyprpm reload). Colours come from the
+-- chosen theme (hypeforge-theme.lua, D-36), with Catppuccin Mocha as the fallback.
 
-local mocha = {
-    mantle = "rgba(181825ee)", base = "rgba(1e1e2eff)", text = "rgba(cdd6f4ff)",
-    red = "rgba(f38ba8ff)", green = "rgba(a6e3a1ff)",
+local T = (HYPEFORGE_THEME and HYPEFORGE_THEME.c) or {
+    titlebar = "#181825", text = "#cdd6f4", red = "#f38ba8", green = "#a6e3a1", btnIcon = "#1e1e2e",
+}
+local function rgba(hex, alpha) return "rgba(" .. hex:sub(2) .. (alpha or "ff") .. ")" end
+local colours = {
+    bar = rgba(T.titlebar, "ee"), text = rgba(T.text),
+    red = rgba(T.red), green = rgba(T.green), icon = rgba(T.btnIcon),
 }
 
 -- Runs Lua inside Hyprland from a button click (buttons run a shell command).
@@ -17,8 +22,8 @@ hl.config({
     plugin = {
         hyprbars = {
             bar_height = 26,
-            bar_color = mocha.mantle,
-            ["col.text"] = mocha.text,
+            bar_color = colours.bar,
+            ["col.text"] = colours.text,
             bar_text_font = "JetBrainsMono Nerd Font",
             bar_text_size = 10,
             bar_text_align = "left",
@@ -33,9 +38,9 @@ hl.config({
 -- Buttons are listed right to left: close, maximise.
 local hb = hl.plugin and hl.plugin.hyprbars
 if hb and hb.add_button then
-    hb.add_button({ bg_color = mocha.red, fg_color = mocha.base, size = 14, icon = "󰖭",
+    hb.add_button({ bg_color = colours.red, fg_color = colours.icon, size = 14, icon = "󰖭",
                     action = lua_cmd("hl.dispatch(hl.dsp.window.close())") })
-    hb.add_button({ bg_color = mocha.green, fg_color = mocha.base, size = 14, icon = "󰖯",
+    hb.add_button({ bg_color = colours.green, fg_color = colours.icon, size = 14, icon = "󰖯",
                     action = MAXIMISE })
 end
 
