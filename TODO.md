@@ -77,6 +77,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] Five themes from the KognogOS wallpapers, decided 2026-09-29: Mocha (default), Black, Green (light, pastel greens), Gray (dark greys), White (light greys); all 4.5:1 or better (D-36)
 - [x] Themes as colour files: `prototype/themes/<id>.lua` generated from the preview page; `prototype/theme.lua` paints borders, hyprbars and Alacritty; Win + Alt + T switches (D-36). Javier: borders and title bars follow; Alacritty's file follows (screenshot)
 - [x] Themes reach GTK apps: generated gtk-3.0/gtk-4.0 gtk.css (adw-gtk-theme named colours) + light/dark from the theme's kind; verified in the VM (D-36)
+- [x] Theme switching tested by Javier across Alacritty, title bars, borders, GTK apps and Chromium: *"it works pretty well"* (2026-09-29)
 - [ ] Chromium's frame colour is a system policy file (/etc/chromium/policies/managed/): tested through the VM's own helper (password each switch); hypeForge needs its own single-purpose helper for it (D-8), and a ruling on password-or-not
 - [ ] Themes still to reach: the top bar (our Waybar, Phase 2), the wallpaper (hyprpaper, Phase 2)
 - [x] Win + Return opens Alacritty (D-29); the test machine's own terminal (foot) is not part of hypeForge
