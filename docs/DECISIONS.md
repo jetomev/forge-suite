@@ -7,6 +7,21 @@
 
 ## 2026-09-29
 
+### D-36 · Five themes, one per KognogOS wallpaper
+**Decided by Javier** on the theme preview page (`prototype/themes/preview.html`), after one round of changes: *"the gray, let's use pastel greens for a lighter theme. Make the Gray theme the white theme, and the Gray theme, let's use darker grays instead"*, then *"perfect!"*.
+
+| Theme | Wallpaper | Kind | In short |
+|---|---|---|---|
+| **Catppuccin Mocha** (default) | `#1e1e2e` | dark | Catppuccin's own Mocha colours, mauve accent |
+| **Black** | `#000000` | dark | pure black, quiet greys from the logo |
+| **Green** | `#014b27` | light | pastel greens, dark green text |
+| **Gray** | `#a6a6a6` | dark | charcoal greys, light text |
+| **White** | `#ffffff` | light | light grey windows, dark text |
+
+- Dark themes use Catppuccin Mocha's colours in the terminal, light ones Catppuccin Latte's, with Latte's yellow and blue and the maximise button's green darkened so they stay readable.
+- Every graded pair (text, quiet text, title, top bar, active workspace, button icons, terminal red, yellow and blue) reaches **4.5:1 or better**.
+- The exact colours are the proposals in the preview page; each theme becomes one colour file in the portable folder's `theme/` (D-28) that drives every app. A theme can still be adjusted and saved on the page later (D-23).
+
 ### D-35 · Alt + Tab stays simple: next window, no list
 **Decided by Javier**, after trying the test machine's own Alt + Tab: *"Yes, keep it simple."* **Alt + Tab** jumps to the next window and brings it to the front, and **Alt + Shift + Tab** goes back. No window list or previews appear. hypeForge carries the two keys itself (`prototype/snap.lua`), the same ones Omarchy uses, with thanks. hyprshell (a switcher with a window list, 4.10.8, working with Lua settings since May 2026) was considered and not needed.
 

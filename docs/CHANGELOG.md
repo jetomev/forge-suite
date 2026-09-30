@@ -9,6 +9,7 @@
 - 🔎 First research: the test desktop's hardware, Hyprland 0.56 in Arch, the move to Lua, nog's view of the Hyprland family, Omarchy 4
 - 🗺 Roadmap in six phases, from foundations to the AUR
 - 🧪 Test plan: virtual machines restored to a clean saved state before every run, then real hardware, with a plain-text-screen run in every matrix
+- 🎨 Five themes decided, one per KognogOS wallpaper (D-36)
 - ➖ No taskbar and no minimise, by choice (D-34); title bars show maximise and close
 - 🪟 Floating-first windows with Plasma's Win + arrow snapping, proven in a VM (`prototype/snap.lua`)
 - 🗂 The portable folder (a full copy, D-28) and the key map (Plasma's keys keep their jobs, D-29) decided
