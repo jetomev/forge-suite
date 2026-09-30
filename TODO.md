@@ -73,7 +73,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] hyprbars proven by Javier 2026-09-29: every button acts on its own window, double-click maximises, Chromium keeps a single bar. *"all buttons work, Chromium has one bar. Great!"*
 - [ ] hyprbars at login: load it from the config (hl.plugin.load) or hyprpm reload in autostart, since buttons are added only when the plugin is loaded; rebuild after each Hyprland update inside the nog lock (D-9)
 - [x] Alt + Tab: simple, next window brought to the front, Shift goes back, no list (D-35, #5)
-- [ ] Five themes from the KognogOS wallpapers (Mocha, Black, Green, Gray, White): a preview page to choose the palettes (Javier, 2026-09-29)
+- [ ] Five themes from the KognogOS wallpapers (Mocha, Black, Green, Gray, White): preview page published 2026-09-29 (private link, `prototype/themes/preview.html`); every proposed text colour grades 4.5 or better. Waiting for Javier to adjust and save each theme
 - [x] The portable folder layout decided: a full copy, with machines/<hostname>/ apart (D-28, #7)
 - [ ] The folder round trip: build, copy to a clean VM, apply, same desktop (#7)
 - [ ] The Catppuccin Mocha look for every chosen app. Check Krusader when Qt follows GTK, and whether the 2022 Catppuccin theme for Midnight Commander still fits (D-22)

@@ -1,0 +1,345 @@
+<title>KognogOS Wallpaper Themes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a workbench — the live desktop mock on the left, the colour list on the right; stacks on phones. */
+:root {
+  --bg: #f4f4f7;
+  --panel: #ffffff;
+  --ink: #1f2030;
+  --muted: #5d5f73;
+  --line: #d9dae3;
+  --accent: #7c3aed;
+  --ok: #1f7a3a;
+  --warn: #9a5b00;
+  --bad: #b3261e;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15151d; --panel: #1d1d28; --ink: #e7e7f2; --muted: #a3a4b8; --line: #33344a;
+    --accent: #c4a7ff; --ok: #7fd48f; --warn: #f0c070; --bad: #ff8f8a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15151d; --panel: #1d1d28; --ink: #e7e7f2; --muted: #a3a4b8; --line: #33344a;
+  --accent: #c4a7ff; --ok: #7fd48f; --warn: #f0c070; --bad: #ff8f8a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 40px; display: grid; gap: 18px; }
+header h1 { font-size: 1.6rem; margin: 0; text-wrap: balance; }
+header p { margin: 4px 0 0; color: var(--muted); max-width: 70ch; }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.tab { display: flex; align-items: center; gap: 8px; padding: 7px 12px 7px 8px; border: 1px solid var(--line); border-radius: 999px;
+       background: var(--panel); color: var(--ink); font: inherit; cursor: pointer; }
+.tab .sw { width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--line); }
+.tab[aria-selected="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); }
+.tab .st { font-size: 12px; color: var(--muted); }
+.tab .st.saved { color: var(--ok); }
+.tab:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.bench { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 900px) { .bench { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---- the mock desktop ---- */
+.stagebox { display: grid; gap: 10px; min-width: 0; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { font: inherit; padding: 5px 12px; border: 0; background: var(--panel); color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--panel); }
+.stage { position: relative; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 10px; overflow: hidden;
+         background-size: cover; background-position: center; border: 1px solid var(--line);
+         font-family: var(--font-mono); container-type: inline-size; }
+.bar { position: absolute; inset: 0 0 auto 0; height: 4.2cqw; min-height: 18px; display: flex; align-items: center;
+       justify-content: space-between; padding: 0 1.4cqw; font-size: max(9px, 1.35cqw); background: var(--t-bar); color: var(--t-barText); }
+.ws { display: flex; gap: 0.9cqw; }
+.ws span { opacity: 0.55; } .ws span.on { opacity: 1; color: var(--t-accent); font-weight: 600; }
+.win { position: absolute; border-radius: 0.8cqw; overflow: hidden; background: var(--t-window);
+       box-shadow: 0 1.2cqw 3cqw rgba(0,0,0,0.35); border: 0.2cqw solid var(--t-border); }
+.win.main { left: 7%; top: 12%; width: 58%; height: 76%; }
+.win.side { left: 68%; top: 12%; width: 27%; height: 76%; border-color: var(--t-inactive); }
+.tb { height: 3.6cqw; min-height: 16px; display: flex; align-items: center; justify-content: space-between; padding: 0 1.1cqw;
+      background: var(--t-titlebar); color: var(--t-text); font-size: max(8px, 1.15cqw); }
+.btns { display: flex; gap: 0.8cqw; }
+.btns i { width: 1.6cqw; height: 1.6cqw; min-width: 9px; min-height: 9px; border-radius: 50%; display: grid; place-items: center;
+          font-style: normal; font-size: max(6px, 0.95cqw); color: var(--t-btnIcon); font-weight: 600; }
+.btns .mx { background: var(--t-green); } .btns .cl { background: var(--t-red); }
+.term { padding: 1.3cqw 1.6cqw; font-size: max(8px, 1.18cqw); line-height: 1.55; color: var(--t-text); white-space: pre; overflow: hidden; }
+.term .d { color: var(--t-subtext); }
+.c1{color:var(--t-a1)} .c2{color:var(--t-a2)} .c3{color:var(--t-a3)} .c4{color:var(--t-a4)} .c5{color:var(--t-a5)} .c6{color:var(--t-a6)}
+.list { padding: 1cqw 1.2cqw; font-size: max(8px, 1.1cqw); line-height: 1.9; color: var(--t-text); }
+.list .sel { background: var(--t-selection); border-radius: 0.4cqw; padding: 0 0.5cqw; margin: 0 -0.5cqw; }
+.list .dim { color: var(--t-subtext); }
+.caption { font-size: 13px; color: var(--muted); margin: 0; }
+
+/* ---- the colour list ---- */
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 12px; min-width: 0; }
+.panel h2 { font-size: 1.1rem; margin: 0; }
+.panel .sub { margin: 0; color: var(--muted); font-size: 13px; }
+.toks { display: grid; gap: 6px; }
+.tok { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.tok input[type=color] { width: 30px; height: 30px; padding: 0; border: 1px solid var(--line); border-radius: 6px; background: none; cursor: pointer; }
+.tok .nm { min-width: 0; }
+.tok .nm b { font-weight: 700; font-size: 14px; }
+.tok .nm small { display: block; color: var(--muted); font-size: 12px; line-height: 1.3; }
+.tok code { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.grp { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+.checks { display: grid; gap: 4px; font-size: 13px; }
+.chk { display: flex; justify-content: space-between; gap: 8px; }
+.pill { font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; padding: 0 7px; border-radius: 999px; border: 1px solid currentColor; }
+.pill.ok { color: var(--ok); } .pill.warn { color: var(--warn); } .pill.bad { color: var(--bad); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { font: inherit; font-weight: 700; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.note { width: 100%; font: inherit; font-size: 14px; padding: 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); min-height: 60px; resize: vertical; }
+.status { font-size: 13px; color: var(--muted); }
+.status.saved { color: var(--ok); }
+@media (prefers-reduced-motion: no-preference) { .win, .bar, .tb, .stage { transition: background-color .2s, color .2s; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>KognogOS wallpaper themes</h1>
+    <p>One theme per KognogOS wallpaper. Pick a theme, adjust any colour and watch the desktop change. When a theme looks right, press <b>Save this theme</b>: Claude reads the saved colours back and builds the hypeForge theme from them. Every text colour gets a readability grade (4.5 or more is comfortable to read).</p>
+  </header>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+
+  <div class="bench">
+    <div class="stagebox">
+      <div class="row">
+        <div class="seg" role="group" aria-label="Wallpaper design">
+          <button type="button" id="d-arch" aria-pressed="true">Arch logo</button>
+          <button type="button" id="d-semi" aria-pressed="false">Semi logo</button>
+        </div>
+        <span class="status" id="status">Loading saved themes…</span>
+      </div>
+      <div class="stage" id="stage">
+        <div class="bar"><div class="ws"><span class="on">1</span><span>2</span><span>3</span><span>4</span><span>5</span></div><div>Tue 29 Sep  19:40</div><div>󰕾  󰖩  󰂯</div></div>
+        <div class="win main">
+          <div class="tb"><span>jetomev@kognogos: ~</span><span class="btns"><i class="mx">󰖯</i><i class="cl">󰖭</i></span></div>
+          <div class="term"><span class="c2">jetomev</span>@<span class="c4">kognogos</span> <span class="c5">~</span> <span class="d">❯</span> nog status
+<span class="c4">nog 1.4.1</span> <span class="d">· tier-aware pacman</span>
+  <span class="c2">✔</span> Tier 1 · core        <span class="d">48 packages, current</span>
+  <span class="c2">✔</span> Tier 2 · desktop     <span class="d">112 packages, current</span>
+  <span class="c3">⏳</span> Tier 3 · apps        <span class="c3">3 updates held (7d)</span>
+  <span class="c1">✖</span> hyprland 0.57.0      <span class="c1">locked by hypeForge</span>
+
+<span class="c2">jetomev</span>@<span class="c4">kognogos</span> <span class="c5">~</span> <span class="d">❯</span> <span class="c6">hypeforge</span> apply
+<span class="c6">→</span> 14 settings written, 0 changed outside the folder</div>
+        </div>
+        <div class="win side">
+          <div class="tb"><span>Krusader</span><span class="btns"><i class="mx">󰖯</i><i class="cl">󰖭</i></span></div>
+          <div class="list"><div class="dim">~/Programs</div><div>󰉋 grubforge</div><div class="sel">󰉋 hypeforge</div><div>󰉋 kognog</div><div>󰉋 nog</div><div class="dim">󰈙 notes.md</div></div>
+        </div>
+      </div>
+      <p class="caption" id="caption"></p>
+    </div>
+
+    <section class="panel" aria-labelledby="ph">
+      <div>
+        <h2 id="ph">Colours</h2>
+        <p class="sub" id="psub"></p>
+      </div>
+      <div class="toks" id="toks"></div>
+      <div>
+        <div class="grp">Readability</div>
+        <div class="checks" id="checks"></div>
+      </div>
+      <label class="grp" for="note">Your notes for this theme</label>
+      <textarea class="note" id="note" placeholder="Anything to change? For example: warmer grey, stronger accent…"></textarea>
+      <div class="actions">
+        <button type="button" class="btn primary" id="save">Save this theme</button>
+        <button type="button" class="btn" id="reset">Reset to proposal</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+// ---- The five proposals: one per KognogOS wallpaper colour. ----
+// Dark themes use Catppuccin Mocha's colour set; light ones use Catppuccin Latte's.
+const TOKENS = [
+  ["bar", "Top bar", "background of the top bar", "Desktop"],
+  ["barText", "Top bar text", "clock and icons", "Desktop"],
+  ["accent", "Accent", "active workspace, highlights", "Desktop"],
+  ["border", "Active window border", "", "Desktop"],
+  ["inactive", "Other window border", "", "Desktop"],
+  ["titlebar", "Title bar", "hyprbars", "Windows"],
+  ["window", "Window background", "terminal and apps", "Windows"],
+  ["text", "Text", "", "Windows"],
+  ["subtext", "Quiet text", "hints, paths", "Windows"],
+  ["selection", "Selection", "", "Windows"],
+  ["green", "Maximise button", "", "Windows"],
+  ["red", "Close button", "", "Windows"],
+  ["btnIcon", "Button icons", "", "Windows"],
+  ["a1", "Terminal red", "", "Terminal"],
+  ["a2", "Terminal green", "", "Terminal"],
+  ["a3", "Terminal yellow", "", "Terminal"],
+  ["a4", "Terminal blue", "", "Terminal"],
+  ["a5", "Terminal magenta", "", "Terminal"],
+  ["a6", "Terminal cyan", "", "Terminal"],
+];
+const MOCHA_ANSI = { a1: "#f38ba8", a2: "#a6e3a1", a3: "#f9e2af", a4: "#89b4fa", a5: "#f5c2e7", a6: "#94e2d5" };
+// Latte, with yellow and blue darkened so they stay readable on light windows.
+const LATTE_ANSI = { a1: "#d20f39", a2: "#40a02b", a3: "#8f5500", a4: "#1d4fc4", a5: "#ea76cb", a6: "#179299" };
+const THEMES = [
+  { id: "mocha", name: "Catppuccin Mocha", wall: "#1e1e2e", kind: "dark", blurb: "Today's KognogOS look: Catppuccin's own Mocha colours, mauve accent.",
+    c: { bar: "#181825", barText: "#cdd6f4", accent: "#cba6f7", border: "#cba6f7", inactive: "#45475a", titlebar: "#181825", window: "#1e1e2e",
+         text: "#cdd6f4", subtext: "#a6adc8", selection: "#45475a", green: "#a6e3a1", red: "#f38ba8", btnIcon: "#1e1e2e", ...MOCHA_ANSI } },
+  { id: "black", name: "Black", wall: "#000000", kind: "dark", blurb: "Pure black, quiet greys taken from the logo, Mocha colours in the terminal.",
+    c: { bar: "#0a0a0a", barText: "#d4d4d4", accent: "#a3a3a3", border: "#a3a3a3", inactive: "#262626", titlebar: "#050505", window: "#0f0f0f",
+         text: "#e4e4e4", subtext: "#9a9a9a", selection: "#2a2a2a", green: "#a6e3a1", red: "#f38ba8", btnIcon: "#0a0a0a", ...MOCHA_ANSI } },
+  { id: "green", name: "Green", wall: "#014b27", kind: "dark", blurb: "The deep KognogOS green, with the logo's sage as accent.",
+    c: { bar: "#013a1e", barText: "#e3efe8", accent: "#a3beb1", border: "#a3beb1", inactive: "#1d5a3c", titlebar: "#012e18", window: "#06331f",
+         text: "#e6f2ea", subtext: "#a3beb1", selection: "#1d5a3c", green: "#a6e3a1", red: "#f2a2a8", btnIcon: "#013a1e", ...MOCHA_ANSI } },
+  { id: "gray", name: "Gray", wall: "#a6a6a6", kind: "light", blurb: "A mid-grey desktop with light windows and dark text; Latte colours in the terminal.",
+    c: { bar: "#999999", barText: "#111111", accent: "#1a1a1a", border: "#3a3a3a", inactive: "#bdbdbd", titlebar: "#d2d2d2", window: "#ececec",
+         text: "#1c1c1c", subtext: "#555555", selection: "#c8c8c8", green: "#2b7a1c", red: "#d20f39", btnIcon: "#ffffff", ...LATTE_ANSI } },
+  { id: "white", name: "White", wall: "#ffffff", kind: "light", blurb: "White, close to Catppuccin Latte, with Latte's mauve as accent.",
+    c: { bar: "#e6e9ef", barText: "#4c4f69", accent: "#7c2fe0", border: "#8839ef", inactive: "#ccd0da", titlebar: "#e6e9ef", window: "#eff1f5",
+         text: "#4c4f69", subtext: "#5c5f77", selection: "#ccd0da", green: "#2b7a1c", red: "#d20f39", btnIcon: "#ffffff", ...LATTE_ANSI } },
+];
+// The readability pairs worth grading (foreground on background).
+const CHECKS = [
+  ["text", "window", "Text on windows"],
+  ["subtext", "window", "Quiet text on windows"],
+  ["text", "titlebar", "Title on title bar"],
+  ["barText", "bar", "Top bar text"],
+  ["accent", "bar", "Active workspace on bar"],
+  ["btnIcon", "red", "Close icon"],
+  ["btnIcon", "green", "Maximise icon"],
+  ["a1", "window", "Terminal red"],
+  ["a3", "window", "Terminal yellow"],
+  ["a4", "window", "Terminal blue"],
+];
+
+const saved = {};           // id -> { colors, note, savedAt } from the store
+let edits = {};             // id -> working colours (unsaved)
+let notes = {};
+let current = "mocha";
+let design = "arch";
+let db = null;
+
+const $ = (id) => document.getElementById(id);
+const theme = () => THEMES.find((t) => t.id === current);
+const colours = (id) => edits[id] || (saved[id] && saved[id].colors) || THEMES.find((t) => t.id === id).c;
+
+function lum(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return [16, 8, 0].map((s) => (n >> s) & 255).map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); })
+    .reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+}
+function ratio(a, b) { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); }
+
+function renderTabs() {
+  $("tabs").replaceChildren(...THEMES.map((t) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "tab"; b.setAttribute("role", "tab");
+    b.setAttribute("aria-selected", String(t.id === current));
+    const sw = document.createElement("span"); sw.className = "sw"; sw.style.background = t.wall;
+    const nm = document.createElement("span"); nm.textContent = t.name;
+    const st = document.createElement("span"); st.className = "st";
+    if (edits[t.id]) { st.textContent = "· edited"; }
+    else if (saved[t.id]) { st.textContent = "· saved"; st.classList.add("saved"); }
+    b.append(sw, nm, st);
+    b.addEventListener("click", () => { current = t.id; render(); });
+    return b;
+  }));
+}
+
+function render() {
+  const t = theme(); const c = colours(t.id);
+  const stage = $("stage");
+  stage.style.backgroundImage = `url("wall/${t.id}-${design}.jpg")`;
+  stage.style.backgroundColor = t.wall;
+  for (const [k] of TOKENS) stage.style.setProperty(`--t-${k}`, c[k]);
+  $("caption").textContent = `${t.name} · wallpaper ${t.wall} · ${design === "arch" ? "Arch" : "Semi"} logo · ${t.kind} theme`;
+  $("psub").textContent = t.blurb;
+  $("d-arch").setAttribute("aria-pressed", String(design === "arch"));
+  $("d-semi").setAttribute("aria-pressed", String(design === "semi"));
+
+  let group = "";
+  const rows = [];
+  for (const [k, label, hint, grp] of TOKENS) {
+    if (grp !== group) { group = grp; const g = document.createElement("div"); g.className = "grp"; g.textContent = grp; rows.push(g); }
+    const row = document.createElement("div"); row.className = "tok";
+    const inp = document.createElement("input"); inp.type = "color"; inp.id = `c-${k}`; inp.value = c[k];
+    inp.setAttribute("aria-label", label);
+    inp.addEventListener("input", () => {
+      edits[t.id] = { ...colours(t.id), [k]: inp.value };
+      stage.style.setProperty(`--t-${k}`, inp.value);
+      code.textContent = inp.value; renderChecks(); renderTabs(); setStatus();
+    });
+    const nm = document.createElement("div"); nm.className = "nm";
+    const b = document.createElement("b"); b.textContent = label; nm.append(b);
+    if (hint) { const s = document.createElement("small"); s.textContent = hint; nm.append(s); }
+    const code = document.createElement("code"); code.textContent = c[k];
+    row.append(inp, nm, code); rows.push(row);
+  }
+  $("toks").replaceChildren(...rows);
+  $("note").value = notes[t.id] ?? (saved[t.id] && saved[t.id].note) ?? "";
+  renderChecks(); renderTabs(); setStatus();
+}
+
+function renderChecks() {
+  const c = colours(current);
+  $("checks").replaceChildren(...CHECKS.map(([fg, bg, label]) => {
+    const r = ratio(c[fg], c[bg]);
+    const row = document.createElement("div"); row.className = "chk";
+    const l = document.createElement("span"); l.textContent = label;
+    const p = document.createElement("span"); p.className = "pill " + (r >= 4.5 ? "ok" : r >= 3 ? "warn" : "bad");
+    p.textContent = r.toFixed(1) + (r >= 4.5 ? " good" : r >= 3 ? " weak" : " poor");
+    row.append(l, p); return row;
+  }));
+}
+
+function setStatus(msg) {
+  const s = $("status"); s.classList.remove("saved");
+  if (msg) { s.textContent = msg; return; }
+  const sv = saved[current];
+  if (edits[current]) s.textContent = "Unsaved changes";
+  else if (sv) { s.textContent = "Saved " + new Date(sv.savedAt).toLocaleString([], { dateStyle: "medium", timeStyle: "short" }); s.classList.add("saved"); }
+  else s.textContent = db ? "Proposal, not saved yet" : "Proposal · saving is not available in this view";
+}
+
+$("d-arch").addEventListener("click", () => { design = "arch"; render(); });
+$("d-semi").addEventListener("click", () => { design = "semi"; render(); });
+$("note").addEventListener("input", (e) => { notes[current] = e.target.value; });
+$("reset").addEventListener("click", () => {
+  const t = theme(); edits[t.id] = { ...t.c }; render();
+  setStatus("Back to the proposal. Press Save to keep it.");
+});
+$("save").addEventListener("click", async () => {
+  if (!db) { setStatus("Saving is not available in this view."); return; }
+  const id = current; const btn = $("save"); btn.disabled = true; setStatus("Saving…");
+  try {
+    await db.doc("palettes/" + id).set({
+      theme: id, name: theme().name, wallpaper: theme().wall, kind: theme().kind,
+      colors: { ...colours(id) }, note: $("note").value.trim(), savedAt: new Date().toISOString(),
+    });
+    delete edits[id]; delete notes[id];
+  } catch (e) {
+    setStatus(e && e.code === "permission_denied" ? "You can view this page but not save to it." : "Could not save. Try again in a moment.");
+    btn.disabled = false; return;
+  }
+  btn.disabled = false; render();
+});
+
+render();
+
+(async () => {
+  try { db = await (window.claude && window.claude.use ? window.claude.use("db") : null); } catch { db = null; }
+  if (!db) { $("save").disabled = true; setStatus(); return; }
+  setStatus();
+  db.collection("palettes").onSnapshot((snap) => {
+    for (const d of snap.docs) { const v = d.data(); if (v && v.colors) saved[d.id] = v; }
+    render();
+  }, () => setStatus("Could not load saved themes."));
+})();
+</script>
