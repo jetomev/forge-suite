@@ -76,7 +76,9 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] Alt + Tab: simple, next window brought to the front, Shift goes back, no list (D-35, #5)
 - [x] Five themes from the KognogOS wallpapers, decided 2026-09-29: Mocha (default), Black, Green (light, pastel greens), Gray (dark greys), White (light greys); all 4.5:1 or better (D-36)
 - [x] Themes as colour files: `prototype/themes/<id>.lua` generated from the preview page; `prototype/theme.lua` paints borders, hyprbars and Alacritty; Win + Alt + T switches (D-36). Javier: borders and title bars follow; Alacritty's file follows (screenshot)
-- [ ] Themes still to reach: GTK apps + Chromium (adw-gtk-theme + a generated colour file; Chromium's theme colour is a system policy file), the top bar (our Waybar, Phase 2), the wallpaper (hyprpaper, Phase 2)
+- [x] Themes reach GTK apps: generated gtk-3.0/gtk-4.0 gtk.css (adw-gtk-theme named colours) + light/dark from the theme's kind; verified in the VM (D-36)
+- [ ] Chromium's frame colour is a system policy file (/etc/chromium/policies/managed/): tested through the VM's own helper (password each switch); hypeForge needs its own single-purpose helper for it (D-8), and a ruling on password-or-not
+- [ ] Themes still to reach: the top bar (our Waybar, Phase 2), the wallpaper (hyprpaper, Phase 2)
 - [x] Win + Return opens Alacritty (D-29); the test machine's own terminal (foot) is not part of hypeForge
 - [x] The portable folder layout decided: a full copy, with machines/<hostname>/ apart (D-28, #7)
 - [ ] The folder round trip: build, copy to a clean VM, apply, same desktop (#7)
