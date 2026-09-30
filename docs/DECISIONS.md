@@ -7,6 +7,9 @@
 
 ## 2026-09-29
 
+### D-35 · Alt + Tab stays simple: next window, no list
+**Decided by Javier**, after trying the test machine's own Alt + Tab: *"Yes, keep it simple."* **Alt + Tab** jumps to the next window and brings it to the front, and **Alt + Shift + Tab** goes back. No window list or previews appear. hypeForge carries the two keys itself (`prototype/snap.lua`), the same ones Omarchy uses, with thanks. hyprshell (a switcher with a window list, 4.10.8, working with Lua settings since May 2026) was considered and not needed.
+
 ### D-34 · No taskbar, and no minimise
 **Decided by Javier**, after the taskbar and minimise were built in the test machine: *"let's not do a application bar better, and let's forget about the minimizing function, please."*
 - **No list of open apps in the top bar.** Waybar stays the top bar (D-17), without a taskbar section.

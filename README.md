@@ -92,7 +92,7 @@ The folder is the source of truth. The app reads it and applies it, and nog inst
 | **Win + Shift + →** | Move the window to the next screen |
 | **Alt + F4** | Close the window |
 
-*The Win key is the one Plasma calls "Meta". Every Plasma key used today keeps its job; the [full key map](docs/DESIGN.md#the-key-map) was approved on 2026-09-29. Snapping and Win + ↑↑ are built by hypeForge, and an **Alt + Tab switcher** still has to be, because Hyprland has none of its own. There is **no minimise** in hypeForge (D-34).*
+*The Win key is the one Plasma calls "Meta". Every Plasma key used today keeps its job; the [full key map](docs/DESIGN.md#the-key-map) was approved on 2026-09-29. Snapping and Win + ↑↑ are built by hypeForge; **Alt + Tab** simply jumps to the next window, with no list (D-35). There is **no minimise** in hypeForge (D-34).*
 
 ---
 

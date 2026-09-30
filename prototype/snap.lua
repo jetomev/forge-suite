@@ -9,6 +9,7 @@
 --   Win + Backspace            put the window back to its size before the first snap
 --   Win + T                    switch this window between floating and tiled
 --   Alt + F4                   close the window
+--   Alt + Tab / Alt + Shift + Tab   next / previous window, brought to the front (D-35)
 -- New windows open floating at 80 % of the screen, centred; an app's "maximise me" in its
 -- first moments is undone (D-32).
 
@@ -186,7 +187,8 @@ end
 
 -- 4. Keys. Unbind first, in case an earlier config (like Omarchy's) uses them. -------
 for _, k in ipairs({ "SUPER + LEFT", "SUPER + RIGHT", "SUPER + UP", "SUPER + DOWN",
-                     "SUPER + Page_Up", "SUPER + BACKSPACE", "SUPER + T", "ALT + F4" }) do
+                     "SUPER + Page_Up", "SUPER + BACKSPACE", "SUPER + T", "ALT + F4",
+                     "ALT + TAB", "ALT + SHIFT + TAB" }) do
     pcall(hl.unbind, k)
 end
 
@@ -201,6 +203,17 @@ hl.bind("SUPER + T", hl.dsp.window.float({ action = "toggle" }),
         { description = "Floating / tiled" })
 
 hl.bind("ALT + F4", hl.dsp.window.close(), { description = "Close window" })
+
+-- Alt + Tab: jump to the next window and bring it to the front; Shift goes back (D-35).
+-- Simple on purpose: no window list. (Same two keys Omarchy uses, with thanks.)
+hl.bind("ALT + TAB", function()
+    hl.dispatch(hl.dsp.window.cycle_next())
+    hl.dispatch(hl.dsp.window.bring_to_top())
+end, { description = "Next window" })
+hl.bind("ALT + SHIFT + TAB", function()
+    hl.dispatch(hl.dsp.window.cycle_next({ next = false }))
+    hl.dispatch(hl.dsp.window.bring_to_top())
+end, { description = "Previous window" })
 
 hl.on("window.close", function(w) if w and w.address then state[w.address] = nil end end)
 

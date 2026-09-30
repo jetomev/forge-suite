@@ -21,7 +21,7 @@
 | Win + Backspace | Restore the window's previous size and place | same | remembered by the snapping code (#5) | build |
 | Alt + F4 | Close the window | same | Hyprland | ready |
 | Win + Ctrl + Esc | Force-quit a stuck window | same | `hyprctl kill` (click the window) | ready |
-| Alt + Tab / Alt + Shift + Tab | Switch windows, forwards and back | same (also Win + Tab) | a switcher: Walker's window list or a small tool (#5) | build |
+| Alt + Tab / Alt + Shift + Tab | Next / previous window, brought to the front, no list (D-35) | same (also Win + Tab) | Hyprland's `cycle_next` + `bring_to_top` | ready |
 | Win + Alt + arrows | Move focus to the window in that direction | same | Hyprland | ready |
 | Win + Shift + ← / → | Move the window to the previous / next screen | same | Hyprland | ready |
 | Win + T | Switch this window between floating and tiled | *Tiles editor* | Hyprland | ready |
