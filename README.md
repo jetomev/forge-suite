@@ -1,6 +1,6 @@
 # 🔨 forgekit
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-purple.svg)
+![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-purple.svg)
 ![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
 ![Built with Textual](https://img.shields.io/badge/Built%20with-Textual-5a3fd6.svg)
 ![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)
@@ -43,7 +43,7 @@ polish improves every app at once.
   switches to colours and characters that screen can actually show, by itself.
   [More below](#on-a-plain-text-console).
 
-> **Status: 0.4.0 (alpha).** The API may still shift while the Forge apps migrate
+> **Status: 0.4.1 (alpha).** The API may still shift while the Forge apps migrate
 > onto it. Pin a version if you depend on it.
 
 ## Screenshots
@@ -170,7 +170,8 @@ and your terminal insists on keeping it, underline a different letter for that
 option instead.
 
 **Help is also on `F1`** (since 0.4.0). A plain text console always sends `Ctrl+H` as
-Backspace, so there `F1` is the way to Help.
+Backspace, so there `F1` is the way to Help, and the menu bar says so: on a console it
+reads `Help F1` (since 0.4.1).
 
 ## On a plain text console
 
@@ -189,7 +190,10 @@ by itself:
   chosen so the roles stay apart;
 - **characters:** every character the console font lacks is swapped for one it has,
   keeping the same width so columns stay lined up (`╭` → `┌`, `✓` → `+`, `Á` → `A`);
-- **scrollbars** in whole cells, and **F1** for Help.
+- **scrollbars** in whole cells, and **F1** for Help (shown in the menu bar);
+- **focus you can see:** the focused button is blue with white text, a colour no other
+  button uses, so Tab visibly moves (since 0.4.1; a console cannot show the tint a
+  terminal uses).
 
 ![The same app on a text console: forgekit 0.3.0 (black on black, broken corners)](docs/console/v0.3.0-on-a-text-console.png)
 *Before, 0.3.0: bars and work area all black, red boxes where the font has no character.*
