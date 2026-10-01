@@ -13,7 +13,7 @@
 **What it means:**
 - **Why:** Hyprland's maximise puts the window on a layer of its own. A window opened over it is allowed to stay above it, so clicking the maximised window or Alt + Tabbing to it gave it the keyboard but left it underneath.
 - **Now every maximise is ours:** the window stays an ordinary floating window, stretched over the usable screen (inside the 13 px edge gap, above the bar). Clicking it or Alt + Tab brings it to the front like any other window.
-- **The app is not told it is maximised** (F-39): told so, its button offered "restore", and Hyprland drops that request without a word, so the button did nothing. Left alone, the app's button keeps offering "maximise"; **the first press maximises, the next one restores.**
+- **The app is told it is maximised**, so its button offers "restore". Hyprland takes that "restore" without any event (F-39); it only sets the window's client state back to 0. A small watcher in `snap.lua` checks the windows we maximised four times a second and restores any whose app has said so. (Not telling the app was tried first: Chrome decides by itself that it is maximised, so its restore click went nowhere.)
 - It covers **Win + Page Up**, **Win + ↑ at the top** (D-30) and **an app's own maximise** (its button, or a double-click on its title bar), which `snap.lua` catches and converts. **Win + ↓** and Win + Page Up go back to the half or size the window had. Real fullscreen (F11, a video) stays Hyprland's.
 - D-32 (an app's "open maximised" undone in its first moments) is unchanged.
 
@@ -106,7 +106,7 @@
 ### D-33 · Title bars with three buttons on every app that can have them; a little more space
 **Decided by Javier:** *"our alacritty terminal when opening in KognogOS, it should have buttons to minimize, maximize, and close. Not as Omarchy. Same for all apps, if available."* And: *"Can we add a little more padding to windows, maybe like 3 more points?"*
 - **Alacritty keeps KognogOS's `decorations = "Full"`**, which on Hyprland makes Alacritty draw its own title bar. The test machine's settings use `"None"` (no title bar). Every app that can draw its own title bar gets minimise, maximise and close (`button-layout`, D-31); hyprbars covers the rest.
-- **Gaps grow by 3:** 8 between windows (was 5) and 13 at the screen edges (was 10). Applied in the VM 2026-09-29 and read back.
+- **Gaps grow by 3:** 8 between windows (was 5) and 13 at the screen edges (was 10). Applied in the VM 2026-09-29 and read back. *(2026-10-01, Javier: the space between snapped windows halved: `gaps_in` 4, which leaves 8 px between two windows instead of 16. The edges stay 13.)*
 
 ### D-32 · New windows open floating, at 80 % of the screen, centred
 **Decided by Javier:** *"can we open windows by default floating, 80% of the screen size, centered?"* Every normal window opens floating at 80 % of its screen's width and height, centred. Dialogs ("modal" windows, like "Are you sure?") keep the size they ask for. An app that asks to be maximised in its first moments (Chromium remembers "maximised") is set back to floating at 80 %, while its maximise button keeps working afterwards. **Alt + F4** closes the active window (D-29).

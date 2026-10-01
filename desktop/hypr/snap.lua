@@ -15,7 +15,7 @@
 -- first moments is undone (D-32).
 -- Maximise is our own (D-43): the window floats, stretched over the usable screen. Hyprland's
 -- maximise put the window on a layer of its own, so a window opened over it stayed on top even
--- after the maximised one was clicked or Alt + Tabbed. The app's own maximise button toggles.
+-- after the maximised one was clicked or Alt + Tabbed. The app's own buttons work too (F-39).
 
 local M = {}
 
@@ -35,8 +35,9 @@ hl.window_rule({
     center = true,
 })
 
--- Space around windows (D-33): 8 between windows, 13 at the screen edges.
-hl.config({ general = { gaps_in = 8, gaps_out = 13 } })
+-- Space around windows (D-33): gaps_in is taken off each side where two windows meet, so
+-- 4 leaves 8 px between snapped windows (half the earlier 16, Javier, 2026-10-01); 13 at the edges.
+hl.config({ general = { gaps_in = 4, gaps_out = 13 } })
 
 -- 2. Geometry helpers. ------------------------------------------------------------
 local function sides(v, d)
@@ -92,9 +93,10 @@ local function place(win, h, v)
 end
 
 -- Our maximise (D-43). The window stays an ordinary floating window, so clicking it or
--- Alt + Tab brings it to the front. The app is NOT told it is maximised (client = 0): told so,
--- its button offered "restore", and Hyprland drops that request without telling us (F-39).
--- Left alone, the button keeps offering "maximise", which reaches us; a second press restores.
+-- Alt + Tab brings it to the front. The app is told it is maximised (client = 1), so its
+-- button offers "restore". Hyprland takes that "restore" without any event (F-39): it only
+-- sets the window's client state back to 0, so a watcher below looks for exactly that.
+-- (Not telling the app does not work: Chrome decides it is maximised by itself.)
 local function unmax_internal(win)
     if (win.fullscreen or 0) ~= 0 then                    -- Hyprland's own maximise/fullscreen
         hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = -1, window = "address:" .. win.address }))
@@ -120,7 +122,7 @@ local function maximise(win)
     end
     st.max = true
     place(win, "F", "F")
-    hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 0, window = target }))
+    hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 1, window = target }))
 end
 
 -- Back from our maximise: to the half it was snapped to, or the size it had before.
@@ -139,6 +141,18 @@ local function unmaximise(win)
         hl.dispatch(hl.dsp.window.move({ x = b.x, y = b.y, window = target }))
     end
 end
+
+-- The watcher: four times a second, any window we maximised whose app has said "restore"
+-- (client state back to 0, F-39) is restored. Nothing to do when nothing is maximised.
+hl.timer(function()
+    for addr, st in pairs(state) do
+        if st.max then
+            local w = hl.get_window("address:" .. addr)
+            if not w then state[addr] = nil
+            elseif (w.fullscreen or 0) == 0 and (w.fullscreen_client or 0) == 0 then unmaximise(w) end
+        end
+    end
+end, { timeout = 250, type = "repeat" })
 
 local function toggle_maximise()
     local win = hl.get_active_window()
