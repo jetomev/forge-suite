@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img alt="Status: Phase 0 · Foundations" src="https://img.shields.io/badge/status-Phase%200%20·%20Foundations-fab387?style=flat-square&labelColor=313244">
+  <img alt="Status: Phase 2 · testing in a VM" src="https://img.shields.io/badge/status-Phase%202%20·%20testing%20in%20a%20VM-fab387?style=flat-square&labelColor=313244">
   <img alt="Hyprland 0.56+" src="https://img.shields.io/badge/Hyprland-0.56%2B-89b4fa?style=flat-square&labelColor=313244">
   <img alt="Settings in Lua" src="https://img.shields.io/badge/settings-Lua-b4befe?style=flat-square&labelColor=313244">
   <img alt="Any Arch Linux install" src="https://img.shields.io/badge/Arch%20Linux-any%20install-94e2d5?style=flat-square&labelColor=313244">
@@ -16,7 +16,7 @@
 
 > A Forge Suite app that turns any Arch Linux install into the **KognogOS desktop, rebuilt light**. Windows float the way you're used to and snap into place with **Win + arrow keys**. The apps are small, most tools live in the terminal, and **every setting is kept in one folder** you can back up by copying it.
 
-> 🚧 **Coming soon.** hypeForge is in **Phase 0 — Foundations**. The plan, the decisions and the research are public from the first day, but there is no code to install yet. Follow along in [Issues](https://github.com/jetomev/hypeforge/issues) and the [roadmap](#roadmap).
+> 🚧 **Coming soon.** hypeForge is being **built and tested inside a KognogOS virtual machine** (Phase 2): a KognogOS disc with hypeForge as its only desktop installs and runs there today. There is no app to install yet. Follow along in [Issues](https://github.com/jetomev/hypeforge/issues) and the [roadmap](#roadmap).
 
 > 🛡 **Security.** Every commit is GPG-signed and GitHub-Verified, and releases will be signed like the rest of the Forge Suite. **[Where We Stand](https://github.com/jetomev/KognogOS/blob/main/docs/where-we-stand.md)** explains why.
 
@@ -107,7 +107,7 @@ A bare Hyprland needs a small app for each of these jobs. For every job, the [re
 | Volume/brightness pop-ups · admin-password pop-up | Text editor · image, PDF and video viewers |
 | Login screen · clipboard history · screenshots | Password wallet · USB auto-mount · power menu · printing |
 
-> **Chosen, 2026-09-29.** Separate small apps, not one all-in-one program. The main picks are Waybar (top bar), Walker (launcher, clipboard and power menu), mako (notifications), the Hyprland team's lock screen, idle timer, wallpaper and password pop-up, greetd + tuigreet (login) started through uwsm, and Catppuccin Mocha everywhere. Every pick is a first try: one that does not fit when we live in it gets swapped. The full list and the reasons are in the [recipe page](docs/RECIPE.md) and the [decision log](docs/DECISIONS.md).
+> **Chosen, 2026-09-29, then reshaped by testing on 2026-09-30.** The first picks were separate small apps. Living in them in a VM changed the plan: settings get graphical apps, not terminal ones (D-39), and **[Noctalia](https://github.com/noctalia-dev/noctalia)** became the desktop shell (D-40): the top bar, launcher, notifications, sound / network / Bluetooth menus, wallpaper and on-screen pop-ups, with our five themes as its colour schemes. Around it: Hyprland's lock screen, idle timer and password pop-up, hyprbars title bars, Monique for screen settings, the KognogOS SDDM login screen (D-38), all started through uwsm. Every pick is a first try. The reasons are in the [recipe page](docs/RECIPE.md) and the [decision log](docs/DECISIONS.md).
 
 ---
 
@@ -125,7 +125,8 @@ hypeForge is built on other people's work, and we are grateful for it.
 
 - [**Omarchy**](https://github.com/basecamp/omarchy), by DHH and Basecamp (MIT licence), taught us a great deal about turning Arch into a Hyprland desktop. Anything we adapt from it is credited and keeps its notice.
 - The **Hyprland** team, for Hyprland and its family of small apps.
-- **Every developer whose app is in the [recipe](docs/RECIPE.md)**: Waybar, Walker, mako, SwayOSD, Midnight Commander, superfile, Krusader, Fresh, mpv, cliamp, uwsm and all the others.
+- The [**Noctalia**](https://github.com/noctalia-dev/noctalia) team (MIT licence), for the shell that draws most of what you see.
+- **Every developer whose app is in the [recipe](docs/RECIPE.md)**: Monique, hyprbars, udiskie, Midnight Commander, superfile, Krusader, Fresh, mpv, cliamp, uwsm and all the others, and the apps we tried along the way (Waybar, Walker, mako, SwayOSD), which taught us what we needed.
 - The [**Catppuccin**](https://catppuccin.com) team, for the colours everything wears.
 
 We don't compare ourselves with anyone. Our picks are simply our picks.
@@ -136,9 +137,9 @@ We don't compare ourselves with anyone. Our picks are simply our picks.
 
 | Phase | What happens | Status |
 |---|---|---|
-| **0 · Foundations** | Name, repository, decisions, research; test machines (virtual machines) that can run Hyprland | 🔄 in progress |
-| **1 · The recipe** | Choose one app per job ✅; design the portable folder; prove floating-first windows with Win + arrow snapping | 🔄 in progress |
-| **2 · Build it by hand** | Build the desktop by hand on the test desktop and live in it; every rough edge becomes a finding | ⬜ |
+| **0 · Foundations** | Name, repository, decisions, research; test machines (virtual machines) that can run Hyprland, including a real KognogOS install ✅ | 🔄 in progress |
+| **1 · The recipe** | Choose one app per job ✅; the portable folder ✅; floating-first windows with Win + arrow snapping ✅; five themes ✅ | 🔄 in progress |
+| **2 · Build it by hand** | Build the desktop in a KognogOS VM first (D-37), then on the test desktop; live in it; every rough edge becomes a finding (two test rounds so far, issue [#13](https://github.com/jetomev/hypeforge/issues/13)) | 🔄 in progress |
 | **3 · The app** | The forgekit terminal app that installs, adjusts and removes it; readable on a plain text screen | ⬜ |
 | **4 · Test** | Fresh virtual machines restored to a clean saved state before every run, then real hardware; published test matrix; numbered findings | ⬜ |
 | **5 · Release** | GitHub Release first, then the AUR | ⬜ |
@@ -152,7 +153,7 @@ Full detail: [docs/ROADMAP.md](docs/ROADMAP.md) · History: [docs/CHANGELOG.md](
 Everything is tested in **virtual machines first** (a computer running in a window). Before every run, the machine is put back to a clean saved state:
 
 - an **Omarchy** machine, a known-good Hyprland setup that proves our test machines can run Hyprland at all
-- a **real KognogOS install**, built from a freshly rebuilt KognogOS installer image
+- a **real KognogOS install**, built from a freshly rebuilt KognogOS disc with hypeForge as its desktop, installed with KognogOS's own installer (working since 2026-09-30)
 - a **plain Arch** install, the "any Arch" promise
 
 Then comes real hardware: an NVIDIA RTX 3060 driving **three 1440p screens at 144 Hz**. **Every test matrix includes a run on a plain text screen.** Results are published in [`testing/`](testing/), the same way as every Forge app.

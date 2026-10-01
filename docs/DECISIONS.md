@@ -5,6 +5,45 @@
 
 ---
 
+## 2026-09-30
+
+### D-40 · Noctalia is hypeForge's desktop shell
+**Decided by Javier** after bar trial 1 in the KognogOS VM: *"WOW. We found what we are looking for. I did not know about noctalia. It is a beautifully done piece of software. Now we need to see how we make it shine for us. Lots of the things we work are going to be eliminated, but it is ok."* On themes: *"It manages themes, actually, and I like how it works. Let's create our themes using noctalia. Brings several themes, and they rock... with ours added, would be even better."* On the launcher: *"The launcher is amazing. Set!"*
+
+**What it means:**
+- **Noctalia** (`extra/noctalia`, MIT, a native Wayland shell with no Qt or GTK) becomes the layer around Hyprland: the top bar, launcher, notifications, sound / network / Bluetooth drop-downs, control centre, on-screen pop-ups, wallpaper and theme handling. It is in Arch's official repos, so nog installs and locks it like the rest of the Hyprland family (D-9).
+- **The five KognogOS themes (D-36) are rebuilt as Noctalia palettes**, next to Noctalia's own. One theme choice should drive everything: the bar, apps, terminal, title bars, lock screen and the matching KognogOS wallpaper.
+- **Pieces it replaces leave the recipe** once each one is proven covered: Waybar (D-17), mako (D-19), SwayOSD (D-20), hyprpaper, Walker + elephant (D-18, D-21; elephant paused development on 2026-09-29), hyprlauncher, hyprpwcenter and the tray apps for network and Bluetooth. The research and the findings about them stay in the log.
+- Still open from the trial: open-app icons in the bar (*"if not, I don't care for it or minimize"*), the wallpaper picker showing no wallpapers, theme switches not changing the wallpaper, and which lock screen stays (hyprlock *"looks amazing"*, Noctalia has its own).
+- **We learn from Noctalia and credit it; we never compare** (D-27).
+
+### D-39 · Settings get graphical apps, not terminal ones; Forge apps later
+**Decided by Javier** after the first hands-on test of the installed VM: *"The whole hypeForge all terminal phylosophy is going to take time, and following up with our Forge Suite KognogOS phylosophy, we will have to create our own apps until the system becomes a shell for graphic apps, and terminal based for everything else based on Forge Suite. But what we are using terminal, I don't like."*
+
+**What it means:**
+- **The terminal tools picked for settings are out:** wiremix (sound), nmtui (network), bluetui (Bluetooth) and nwg-displays (screens, *"a horrible piece of software"*). Each is replaced by a graphical app that opens from the top bar, as a panel under it where possible (*"one that opens under the bar, and then offers settings to change the audio output, source, etc."*).
+- **Long term, KognogOS grows its own Forge apps** for system settings. Until then, the best graphical apps other Hyprland users rely on fill the gap, chosen the D-11 way: up to 5 researched options per job, Javier picks.
+- Jobs 14–19 and the top-bar part of job 1 in RECIPE.md are reopened.
+
+### D-38 · The login screen is KognogOS's own SDDM greeter, not tuigreet
+**Decided by Javier:** *"I don't like the login screen. I know is "terminal" but does not go with the look of the OS. Let's use the one we already have with plasma."* **This replaces D-15** (greetd + tuigreet).
+
+**What it means:** SDDM comes back as the login manager, with the KognogOS greeter theme built on 2026-08-12 (plain QtQuick only, so it runs without Plasma). It starts the hypeForge session through uwsm. Plasma itself stays out. A graphical login also covers finding F-3 (text messages between login and desktop).
+
+### D-37 · A KognogOS edition with hypeForge only, tested in a VM before this computer
+**Decided by Javier:** *"only our hypeForge or terminal. Nothing else. That is why I want us to create a new ISO with all KognogOS perks, but only with hypeForge as window manager. Then we install the iso on a VM and test it and fix it there."* And: *"I will install it here in this pc once it is tested, and working properly on our own KognogOS+hypeForge."*
+
+**What it means:**
+- **Plasma is not in this edition at all** (it moves D-6's "little by little" to one step for the ISO). The login screen offers two choices only: **hypeForge** or **Terminal**. The live disc logs straight into hypeForge.
+- **Nothing is installed on the test desktop first.** Phase 2 ("build it by hand") happens in the KognogOS VM instead of next to Plasma here. The desktop comes to this computer only after it works in the VM.
+- The login is greetd + tuigreet (D-15), proven in the VM as planned.
+- KognogOS gets its **first installer**, a small script (`installer/tui/kognog-install.sh`, KognogOS #2): it copies the tested live system to the disk and sets up start-up, login and a user. Javier chose it over archinstall, which would install plain Arch first.
+- The KognogOS work happens on the `hypeforge-edition` branch, so today's Plasma ISO still builds until the new one passes.
+- **The desktop is one folder in this repo, `desktop/`**, and `scripts/desktop/install-into.sh <home>` puts it into any home folder. The ISO build, the installer and later the app all use that one script, so there is one source of truth.
+- The title bars are a package (`hyprland-plugin-hyprbars` from the AUR, built into KognogOS's local repo in a clean chroot, so Hyprland is never installed on this computer to build it), loaded with `hl.plugin.load`. No hyprpm, no password at login.
+
+---
+
 ## 2026-09-29
 
 ### D-36 · Five themes, one per KognogOS wallpaper

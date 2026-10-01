@@ -25,7 +25,7 @@ hl.config({
             bar_color = colours.bar,
             ["col.text"] = colours.text,
             bar_text_font = "JetBrainsMono Nerd Font",
-            bar_text_size = 10,
+            bar_text_size = 12,
             bar_text_align = "left",
             bar_padding = 10,
             bar_button_padding = 8,
