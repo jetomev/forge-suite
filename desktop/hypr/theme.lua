@@ -38,12 +38,15 @@ HYPEFORGE_THEME = T
 
 local function rgba(hex, alpha) return "rgba(" .. hex:sub(2) .. (alpha or "ff") .. ")" end
 
--- Window borders.
+-- Window borders: one light grey for every window, active or not, in every theme. The theme's
+-- colours (purple on Mocha, changing tone when a window became active) were "very noisy"
+-- (Javier, 2026-10-01). T.c.border and T.c.inactive still colour the rest of the theme.
+local BORDER = "#bdbdbd"
 hl.config({
     general = {
         col = {
-            active_border = rgba(T.c.border),
-            inactive_border = rgba(T.c.inactive),
+            active_border = rgba(BORDER),
+            inactive_border = rgba(BORDER),
         },
     },
 })
