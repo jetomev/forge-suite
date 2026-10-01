@@ -104,6 +104,11 @@ scale = 1.17
 [widget.session]
 scale = 1.17
 
+# The clock: 12-hour time with AM/PM, then the date (Javier, 2026-10-01). Noctalia's clock
+# uses C++ time codes: %I hour 01-12, %M minutes, %p AM/PM, %a weekday, %b month, %d day.
+[widget.clock]
+format = "{:%I:%M %p  ·  %a %b %d}"
+
 [lockscreen]
 enabled = false   # hyprlock stays the lock screen (Javier, 2026-09-30); hypridle locks on idle
 
