@@ -12,5 +12,5 @@ pinned = [
   "Alacritty", "thunar", "google-chrome",
   "chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Default",   # WhatsApp Web (Chrome web app)
   "onlyoffice-desktopeditors", "obsidian", "org.kde.elisa", "spotify", "org.kde.kcalc",
-  "org.keepassxc.KeePassXC", "com.termius.Termius",
+  "org.keepassxc.KeePassXC", "com.termius.Termius", "fresh",
 ]
