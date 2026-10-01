@@ -17,7 +17,7 @@ from textual.screen import ModalScreen
 from textual.widgets import Button, DataTable, Input, Label, Select, Static, Switch
 from textual import work
 
-from forgekit import ForgeApp, ForgeModal, ConfirmDialog, FORGE_CSS, GPL3_NOTICE
+from forgekit import ForgeApp, ForgeModal, ConfirmDialog, FORGE_CSS, GPL3_NOTICE, glyph
 
 
 MENU = [
@@ -61,12 +61,10 @@ ABOUT = {
 }
 
 DEMO_CSS = """
-.section-h { color: #89b4fa; text-style: bold; padding: 0 0 1 0; }
-.stat { color: #cdd6f4; }
-.muted { color: #a6adc8; }
+.section-h { color: $forge-accent; text-style: bold; padding: 0 0 1 0; }
+.stat { color: $forge-text; }
+.muted { color: $forge-muted; }
 DataTable { height: auto; max-height: 1fr; }
-DataTable > .datatable--cursor { background: #45475a; }
-DataTable > .datatable--header { background: #313244; color: #89b4fa; text-style: bold; }
 .switch-row { height: auto; padding: 1 0 0 0; }
 .switch-label { padding: 1 0 0 1; }
 """
@@ -185,7 +183,7 @@ class BitlaForgeDemo(ForgeApp):
         t = self.query_one("#sec-config", DataTable)
         t.clear()
         for r in self.ROWS:
-            t.add_row(r["name"], r["value"], r["type"], "✓" if r["enabled"] else "—")
+            t.add_row(r["name"], r["value"], r["type"], glyph("ok") if r["enabled"] else glyph("dash"))
 
     def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
         self.on_action("edit")

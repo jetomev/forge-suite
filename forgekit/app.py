@@ -12,18 +12,28 @@ The base provides: the title + menu bar, the content switcher, dropdown
 dispatch, section switching + active highlight, and the Help windows
 (Shortcuts / License / About). Menu-bar order convention: main options, then
 Help (id ``help``), then Quit (id ``quit``).
+
+Console mode (issue #1): on a plain text console (``TERM=linux``, or forced with
+``FORGE_ASCII=1``) the same app switches to the console colour roles, Textual's
+16-colour theme, whole-cell scrollbars and a filter that swaps every character
+the console font lacks. ``self.forge_console`` tells the app which mode it runs in.
 """
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Vertical
+from textual.filter import LineFilter
+from textual.scrollbar import ScrollBar, ScrollBarRender
 from textual.widgets import ContentSwitcher, Static
 
+from .console import ConsoleGlyphFilter, ConsoleScrollBarRender, console_mode, set_console
 from .dialogs import AboutDialog, LicenseDialog, ShortcutsDialog
 from .menu import MenuBar, MenuDropdown
-from .theme import FORGE_CSS
+from .theme import FORGE_CSS, css_variables
 
 
 class ForgeApp(App[None]):
@@ -38,16 +48,41 @@ class ForgeApp(App[None]):
     CSS = FORGE_CSS
 
     # Universal accelerators (apps add their own section bindings). Help lives
-    # on Ctrl+H, Quit on Ctrl+Q by convention.
+    # on Ctrl+H, Quit on Ctrl+Q by convention. F1 opens Help too (F-10): a text
+    # console sends Ctrl+H as the Backspace byte, so there Ctrl+H never arrives.
     BINDINGS = [
         Binding("ctrl+h", "activate('help')", show=False, priority=True),
+        Binding("f1", "activate('help')", show=False, priority=True),
         Binding("ctrl+q", "activate('quit')", show=False, priority=True),
     ]
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args, console: bool | None = None, **kwargs) -> None:
+        # console: None = decide from the environment (TERM / FORGE_ASCII)
+        # (not "self.console": Textual's App already uses that name for its
+        # Rich console, and would overwrite the flag)
+        self.forge_console = console_mode() if console is None else console
+        set_console(self.forge_console)
+        # set either way: the renderer is one class-wide setting
+        ScrollBar.renderer = ConsoleScrollBarRender if self.forge_console else ScrollBarRender
+        if self.forge_console:
+            kwargs.setdefault("ansi_color", True)
         super().__init__(*args, **kwargs)
+        if self.forge_console:
+            self.theme = "ansi-dark"
+        self._glyph_filter = ConsoleGlyphFilter()
         self.title = self.APP_NAME
         self._by_id = {m["id"]: m for m in self.MENU}
+
+    # ── console mode (issue #1) ──────────────────────────────────────────────
+    def get_css_variables(self) -> dict[str, str]:
+        console = getattr(self, "forge_console", False)
+        return {**super().get_css_variables(), **css_variables(console)}
+
+    def get_line_filters(self) -> Sequence[LineFilter]:
+        filters = list(super().get_line_filters())
+        if getattr(self, "forge_console", False):
+            filters.append(self._glyph_filter)
+        return filters
 
     # ── shell composition ────────────────────────────────────────────────────
     def compose(self) -> ComposeResult:

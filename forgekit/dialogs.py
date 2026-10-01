@@ -116,7 +116,7 @@ class ShortcutsDialog(ForgePanelScreen):
         # ("Ctrl+D or 1") keep the descriptions aligned.
         width = max((len(k) for k, _ in self._shortcuts), default=8)
         for key, desc in self._shortcuts:
-            yield Static(f"[#89b4fa b]{key:<{width}}[/]  {desc}")
+            yield Static(f"[$forge-accent b]{key:<{width}}[/]  {desc}")
 
 
 class LicenseDialog(ForgePanelScreen):
@@ -137,16 +137,16 @@ class AboutDialog(ForgePanelScreen):
 
     def compose_body(self) -> ComposeResult:
         a = self._a
-        yield Static(f"[b #cba6f7]{a['name']}[/]   [#a6adc8]v{a['version']}[/]")
+        yield Static(f"[b $forge-title-accent]{a['name']}[/]   [$forge-muted]v{a['version']}[/]")
         if a.get("tagline"):
-            yield Static(f"[i #a6adc8]{a['tagline']}[/]")
+            yield Static(f"[i $forge-muted]{a['tagline']}[/]")
         if a.get("description"):
             yield Static(f"\n{a['description']}\n")
         if a.get("authors"):
-            yield Static(f"[#89b4fa b]Authors[/]   {a['authors']}")
+            yield Static(f"[$forge-accent b]Authors[/]   {a['authors']}")
         if a.get("license"):
-            yield Static(f"[#89b4fa b]License[/]   {a['license']}")
+            yield Static(f"[$forge-accent b]License[/]   {a['license']}")
         if a.get("links"):
-            yield Static("\n[#89b4fa b]Links[/]")
+            yield Static("\n[$forge-accent b]Links[/]")
             for label, url in a["links"]:
-                yield Static(f"  {label}:  [u #89b4fa]{url}[/]")
+                yield Static(f"  {label}:  [u $forge-accent]{url}[/]")
