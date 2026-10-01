@@ -72,8 +72,8 @@ thickness   = 40   # 6 px taller than Noctalia's 34 (Javier, 2026-10-01)
 start  = ["launcher", "taskbar"]   # taskbar: open apps' icons, click to switch; no workspace number (Javier, 2026-10-01)
 center = []
 end    = ["media", "tray", "notifications", "clipboard", "network", "bluetooth",
-          "volume", "brightness", "battery", "control-center", "session",
-          "clock"]   # the clock in the bottom-right corner (Javier, 2026-10-01)
+          "volume", "brightness", "battery", "control-center",
+          "clock", "session"]   # clock near the corner, power button last, after it (Javier, 2026-10-01)
 
 # Icons about 2 px bigger (Javier, 2026-10-01). Noctalia has no icon size in pixels, only a
 # size multiplier per widget; 1.17 takes the ~12 px icons to ~14 px (measured from screenshots).
