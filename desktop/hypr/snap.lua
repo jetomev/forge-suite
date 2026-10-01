@@ -13,6 +13,9 @@
 --   Alt + Tab / Alt + Shift + Tab   next / previous window, brought to the front (D-35)
 -- New windows open floating at 80 % of the screen, centred; an app's "maximise me" in its
 -- first moments is undone (D-32).
+-- Maximise is our own (D-43): the window floats, stretched over the usable screen, and the app
+-- is told it is maximised. Hyprland's maximise put the window on a layer of its own, so a
+-- window opened over it stayed on top even after the maximised one was clicked or Alt + Tabbed.
 
 local M = {}
 
@@ -88,6 +91,60 @@ local function place(win, h, v)
     hl.dispatch(hl.dsp.window.move({ x = math.floor(x0 + b), y = math.floor(y0 + b), window = target }))
 end
 
+-- Our maximise (D-43). The window stays an ordinary floating window, so clicking it or
+-- Alt + Tab brings it to the front; the app is told "maximised" (client = 1), so it draws
+-- itself that way and its own button offers "restore".
+local function unmax_internal(win)
+    if (win.fullscreen or 0) ~= 0 then                    -- Hyprland's own maximise/fullscreen
+        hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = -1, window = "address:" .. win.address }))
+        return hl.get_window("address:" .. win.address) or win
+    end
+    return win
+end
+
+local function maximise(win)
+    local target = "address:" .. win.address
+    if not win.floating then
+        hl.dispatch(hl.dsp.window.float({ action = "on", window = target }))
+        win = hl.get_window(target) or win
+    end
+    win = unmax_internal(win)
+    local st = state[win.address]
+    if not st then
+        st = { saved = { x = win.at.x, y = win.at.y, w = win.size.x, h = win.size.y } }
+        state[win.address] = st
+    end
+    if not st.max then
+        st.before = { h = st.h, v = st.v, x = win.at.x, y = win.at.y, w = win.size.x, ht = win.size.y }
+    end
+    st.max = true
+    place(win, "F", "F")
+    hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 1, window = target }))
+end
+
+-- Back from our maximise: to the half it was snapped to, or the size it had before.
+local function unmaximise(win)
+    local target = "address:" .. win.address
+    local st = state[win.address]
+    hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 0, window = target }))
+    if not st or not st.max then return end
+    st.max = false
+    local b = st.before or {}
+    st.h, st.v = b.h, b.v
+    if b.h then place(win, b.h, b.v)
+    elseif b.w then
+        hl.dispatch(hl.dsp.window.resize({ x = b.w, y = b.ht, window = target }))
+        hl.dispatch(hl.dsp.window.move({ x = b.x, y = b.y, window = target }))
+    end
+end
+
+local function toggle_maximise()
+    local win = hl.get_active_window()
+    if not win then return end
+    local st = state[win.address]
+    if st and st.max then unmaximise(win) else maximise(win) end
+end
+
 -- KWin's combination rules (window.cpp, combineQuickTileMode):
 --   not snapped + arrow        -> that half
 --   left half + Up             -> top-left quarter        (and so on)
@@ -142,20 +199,22 @@ local function snap(dir)
         win = hl.get_window(target) or win
     end
     local st = state[win.address]
-    if (win.fullscreen or 0) ~= 0 then                    -- move/resize refuse maximised windows
-        hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = -1, window = target }))
-        win = hl.get_window(target) or win
+    win = unmax_internal(win)                             -- move/resize refuse maximised windows
+    if st and st.max then
         if dir == "B" then                                -- Win + Down on a maximised window:
-            if st and st.h then place(win, st.h, st.v) end -- back to its half (D-30)
+            unmaximise(win)                               -- back to its half (D-30)
             return
         end
+        st.max = false                                    -- any other arrow snaps from here
+        hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 0, window = target }))
+        st.h, st.v = st.before and st.before.h, st.before and st.before.v
     end
     if not st then
         st = { saved = { x = win.at.x, y = win.at.y, w = win.size.x, h = win.size.y } }
         state[win.address] = st
     end
     if dir == "T" and st.v == "T" then                     -- Win + Up at the top: maximise (D-30).
-        hl.dispatch(hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle", window = target }))
+        maximise(win)
         return                                             -- The monitors sit side by side, so
     end                                                    -- Up never needs to hop a monitor.
     local h, v = combine(st.h and st or nil, dir)
@@ -177,9 +236,8 @@ local function restore()
     local st = state[win.address]
     if not st then return end
     local target = "address:" .. win.address
-    if (win.fullscreen or 0) ~= 0 then
-        hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = -1, window = target }))
-    end
+    win = unmax_internal(win)
+    if st.max then hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 0, window = target })) end
     local s = st.saved
     hl.dispatch(hl.dsp.window.resize({ x = s.w, y = s.h, window = target }))
     hl.dispatch(hl.dsp.window.move({ x = s.x, y = s.y, window = target }))
@@ -197,8 +255,7 @@ hl.bind("SUPER + LEFT",  function() snap("L") end, { description = "Snap window 
 hl.bind("SUPER + RIGHT", function() snap("R") end, { description = "Snap window right" })
 hl.bind("SUPER + UP",    function() snap("T") end, { description = "Snap window to the top" })
 hl.bind("SUPER + DOWN",  function() snap("B") end, { description = "Snap window to the bottom" })
-hl.bind("SUPER + Page_Up", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }),
-        { description = "Maximise / restore" })
+hl.bind("SUPER + Page_Up", toggle_maximise, { description = "Maximise / restore" })
 hl.bind("SUPER + BACKSPACE", restore, { description = "Restore size before snapping" })
 hl.bind("SUPER + T", hl.dsp.window.float({ action = "toggle" }),
         { description = "Floating / tiled" })
@@ -247,13 +304,18 @@ hl.on("window.open", function(w)
     hl.timer(function() fresh[addr] = nil end, { timeout = 1500, type = "oneshot" })
 end)
 
+-- An app's own maximise (its button, a double-click on its title bar) becomes ours (D-43).
+-- Real fullscreen (F11, a video) stays Hyprland's: that is fullscreen = 2.
 hl.on("window.fullscreen", function(w)
     w = w or hl.get_active_window()
-    if w and w.address and fresh[w.address] then unmaximise_new(hl.get_window("address:" .. w.address)) end
+    if not w or not w.address then return end
+    w = hl.get_window("address:" .. w.address) or w
+    if fresh[w.address] then unmaximise_new(w); return end
+    if (w.fullscreen or 0) == 1 then maximise(w) end
 end)
 
 -- Test handle: lets `hyprctl repl` drive the same functions the keys use.
-M.snap, M.restore = snap, restore
+M.snap, M.restore, M.maximise, M.unmaximise = snap, restore, maximise, unmaximise
 _G.hypeforge_snap = M
 
 return M

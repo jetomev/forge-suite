@@ -7,6 +7,15 @@
 
 ## 2026-10-01
 
+### D-43 · Maximise is hypeForge's own, so a maximised window comes to the front
+**Decided by Javier**, from a bug he found: *"If I use alt+tab to switch from the terminal on top to chrome, or click on chrome, it doesn't bring it to the top"* … *"it happens with all maximized windows."*
+
+**What it means:**
+- **Why:** Hyprland's maximise puts the window on a layer of its own. A window opened over it is allowed to stay above it, so clicking the maximised window or Alt + Tabbing to it gave it the keyboard but left it underneath.
+- **Now every maximise is ours:** the window stays an ordinary floating window, stretched over the usable screen (inside the 13 px edge gap, above the bar), and the app is told it is maximised, so it draws itself that way. Clicking it or Alt + Tab brings it to the front like any other window.
+- It covers **Win + Page Up**, **Win + ↑ at the top** (D-30) and **an app's own maximise** (its button, or a double-click on its title bar), which `snap.lua` catches and converts. **Win + ↓** and Win + Page Up go back to the half or size the window had. Real fullscreen (F11, a video) stays Hyprland's.
+- D-32 (an app's "open maximised" undone in its first moments) is unchanged.
+
 ### D-42 · No title bars from hypeForge
 **Decided by Javier**, after a morning in the real session: *"the top bar on the apps. apps with no bar show it, and it is great. other apps that have a bar, may also add it on top or not. weird. Let's just remove it please."* And on snapping: *"on the top it doesn't show well, like it passes the monitor frame, and then snapping between apps it gets under the one on top.... don't like it."*
 
