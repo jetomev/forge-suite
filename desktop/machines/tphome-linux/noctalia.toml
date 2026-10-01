@@ -1,7 +1,4 @@
-# tphome-linux: the bar only on the middle screen, DP-3 (Javier, 2026-09-30).
-# Loaded through the [include] in noctalia/00-hypeforge.toml (D-28).
-[bar.default.monitor."DP-1"]
-enabled = false
+# tphome-linux's own bar settings. Loaded through the [include] in noctalia/00-hypeforge.toml (D-28).
+# The bar is on all three screens again (Javier, 2026-10-01: "now that it is at the bottom,
+# works better to me"); from 2026-09-30 it was on the middle screen, DP-3, only.
 
-[bar.default.monitor."DP-2"]
-enabled = false
