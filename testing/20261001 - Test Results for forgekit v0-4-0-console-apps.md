@@ -36,6 +36,9 @@
 | D.1 | | | |
 | D.2 | | | |
 
+## Re-check of F-12 and F-13 on the VM's real console (Claude, after the fix `df967f2`)
+bitlaForge on tty8 (fixed forgekit copied over the VM's 0.4.0): the menu reads `Help F1`; Tab cycles the focus Start Miner (blue) → Test Miner (blue, Start back to cyan) → the screen (both normal) → Start Miner (blue); menu intact, no undrawable or invisible character. *A first attempt on tty3/tty6 showed a half-erased menu and dead keys: logind's automatic login program took those consoles over (test-setup artifact, now in CLAUDE.md).*
+
 ## Findings
 - **F-12 (Javier): on a text console nothing tells you Help is on F1** (the menu underlines H, promising Ctrl+H, which a console cannot send). Decision: show "F1" next to Help in console mode only. → forgekit issue, fixed for 0.4.1.
 - **F-13 (Javier): Tab does not visibly move focus between buttons on a console** ("color doesn't switch from the one losing color"): Textual marks focus with a tint + bold the console cannot show, and the primary button is coloured all the time. Fix: focused button blue with bright white, a colour no other button state uses. → forgekit issue, fixed for 0.4.1. Same weakness in a normal terminal (primary and focused share `#2B4A7A`), not changed: Javier's call.
