@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img alt="Status: Phase 2 · testing in a VM" src="https://img.shields.io/badge/status-Phase%202%20·%20testing%20in%20a%20VM-fab387?style=flat-square&labelColor=313244">
+  <img alt="Status: Phase 2 · on the test desktop" src="https://img.shields.io/badge/status-Phase%202%20·%20on%20the%20test%20desktop-fab387?style=flat-square&labelColor=313244">
   <img alt="Hyprland 0.56+" src="https://img.shields.io/badge/Hyprland-0.56%2B-89b4fa?style=flat-square&labelColor=313244">
   <img alt="Settings in Lua" src="https://img.shields.io/badge/settings-Lua-b4befe?style=flat-square&labelColor=313244">
   <img alt="Any Arch Linux install" src="https://img.shields.io/badge/Arch%20Linux-any%20install-94e2d5?style=flat-square&labelColor=313244">
@@ -16,7 +16,7 @@
 
 > A Forge Suite app that turns any Arch Linux install into the **KognogOS desktop, rebuilt light**. Windows float the way you're used to and snap into place with **Win + arrow keys**. The apps are small, most tools live in the terminal, and **every setting is kept in one folder** you can back up by copying it.
 
-> 🚧 **Coming soon.** hypeForge is being **built and tested inside a KognogOS virtual machine** (Phase 2): a KognogOS disc with hypeForge as its only desktop installs and runs there today. There is no app to install yet. Follow along in [Issues](https://github.com/jetomev/hypeforge/issues) and the [roadmap](#roadmap).
+> 🚧 **Coming soon.** hypeForge is being **built by hand and lived in** (Phase 2): a KognogOS disc with hypeForge as its only desktop installs and runs in a virtual machine, and since 2026-09-30 hypeForge also runs on the KognogOS test desktop, next to Plasma, where Javier uses it every day and every rough edge becomes a finding. There is no app to install yet. Follow along in [Issues](https://github.com/jetomev/hypeforge/issues) and the [roadmap](#roadmap).
 
 > 🛡 **Security.** Every commit is GPG-signed and GitHub-Verified, and releases will be signed like the rest of the Forge Suite. **[Where We Stand](https://github.com/jetomev/KognogOS/blob/main/docs/where-we-stand.md)** explains why.
 
@@ -87,7 +87,7 @@ The folder is the source of truth. The app reads it and applies it, and nog inst
 |---|---|
 | **Win + ← / →** | The window fills the left or right half of the screen |
 | **Win + ↑ / ↓** | The window fills the top or bottom half |
-| **Win + PgUp**, or **Win + ↑** twice | Maximise; **Win + ↓** comes back |
+| **Win + PgUp**, or **Win + ↑** twice | Maximise; **Win + ↓** comes back. A maximised window comes to the front like any other when clicked (D-43) |
 | **Alt + Tab** | Switch between windows |
 | **Win + Shift + →** | Move the window to the next screen |
 | **Alt + F4** | Close the window |
@@ -139,7 +139,7 @@ We don't compare ourselves with anyone. Our picks are simply our picks.
 |---|---|---|
 | **0 · Foundations** | Name, repository, decisions, research; test machines (virtual machines) that can run Hyprland, including a real KognogOS install ✅ | 🔄 in progress |
 | **1 · The recipe** | Choose one app per job ✅; the portable folder ✅; floating-first windows with Win + arrow snapping ✅; five themes ✅ | 🔄 in progress |
-| **2 · Build it by hand** | Build the desktop in a KognogOS VM first (D-37), then on the test desktop; live in it; every rough edge becomes a finding (two test rounds so far, issue [#13](https://github.com/jetomev/hypeforge/issues/13)) | 🔄 in progress |
+| **2 · Build it by hand** | Build the desktop in a KognogOS VM first (D-37) ✅, then on the test desktop ✅ (2026-09-30, next to Plasma); live in it; every rough edge becomes a finding (VM rounds in issue [#13](https://github.com/jetomev/hypeforge/issues/13); desktop findings from F-33 on) | 🔄 in progress |
 | **3 · The app** | The forgekit terminal app that installs, adjusts and removes it; readable on a plain text screen | ⬜ |
 | **4 · Test** | Fresh virtual machines restored to a clean saved state before every run, then real hardware; published test matrix; numbered findings | ⬜ |
 | **5 · Release** | GitHub Release first, then the AUR | ⬜ |
