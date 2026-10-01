@@ -9,6 +9,8 @@ setup_wizard_enabled = false   # no welcome window: hypeForge has set things up 
 polkit_agent         = false   # hyprpolkitagent, Hyprland's own, stays the password pop-up
 launch_apps_as_systemd_services = true   # restarting Noctalia never closes your apps (uwsm)
 app_icon_colorize    = true    # every app icon tinted to the theme (Javier: "looks cool")
+app_icon_color       = "on_surface"   # tinted with the theme's text colour, not a dimmer one: clear on all five
+                                      # themes, light on dark ones, dark on White and Green (Javier, 2026-10-01)
 
 [theme]
 mode           = "dark"
