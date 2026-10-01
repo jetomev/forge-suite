@@ -82,6 +82,7 @@ end    = ["media", "tray", "notifications", "clipboard", "network", "bluetooth",
 [widget.taskbar]
 show_window_title = false
 scale = 1.17
+pinned_opacity = 1.0   # pinned apps that are not open at full strength, not dimmed; open ones keep their mark (Javier, 2026-10-01)
 
 [widget.tray]
 scale = 1.17
