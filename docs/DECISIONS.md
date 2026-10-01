@@ -5,6 +5,20 @@
 
 ---
 
+## 2026-10-01
+
+### D-41 · The bar: along the bottom, full width, clock in the corner
+**Decided by Javier**, shaped live on this computer in four small steps, then: *"lock the bar information for our KognogOS hypeForge build. It is perfect."*
+
+**What it means:**
+- **Noctalia's bar sits along the bottom of the screen, edge to edge, with square corners** (`position = "bottom"`, `margin_ends = 0`, `radius = 0`).
+- **40 pixels tall** (Noctalia's default is 34).
+- **Icons about 2 pixels bigger.** Noctalia has no icon size in pixels, only a size multiplier per widget, so every icon on the bar gets `scale = 1.17` (measured from screenshots: about 12 → 14–15 px). The clock and the "Nothing Playing" text keep their size.
+- **Left:** the KognogOS emblem (launcher), then the open-app icons. **No workspace number**: Javier read it as the monitor number; workspaces still switch by keyboard.
+- **Right:** media, tray, notifications, clipboard, network, Bluetooth, volume, brightness, battery, control centre, power, and **the clock last, in the corner**. The middle is empty.
+- It lives in `desktop/noctalia/00-hypeforge.toml`, so it is the default for every hypeForge install, and the KognogOS hypeForge edition picks it up at its next ISO build (`build-iso.sh` stages hypeForge from this folder). Anything a user changes in Noctalia's Settings window still wins.
+- This replaces "top bar" wherever hypeForge's earlier decisions and research say it; those entries stay as they were written, as history.
+
 ## 2026-09-30
 
 ### D-40 · Noctalia is hypeForge's desktop shell

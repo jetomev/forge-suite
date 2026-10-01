@@ -102,12 +102,12 @@ A bare Hyprland needs a small app for each of these jobs. For every job, the [re
 
 | Things you see | Tools you use |
 |---|---|
-| Top bar · app launcher · notifications | File manager · Wi-Fi · Bluetooth · sound |
+| Bar · app launcher · notifications | File manager · Wi-Fi · Bluetooth · sound |
 | Lock screen · screen-off timer · wallpaper | System monitor · three-monitor setup · night light |
 | Volume/brightness pop-ups · admin-password pop-up | Text editor · image, PDF and video viewers |
 | Login screen · clipboard history · screenshots | Password wallet · USB auto-mount · power menu · printing |
 
-> **Chosen, 2026-09-29, then reshaped by testing on 2026-09-30.** The first picks were separate small apps. Living in them in a VM changed the plan: settings get graphical apps, not terminal ones (D-39), and **[Noctalia](https://github.com/noctalia-dev/noctalia)** became the desktop shell (D-40): the top bar, launcher, notifications, sound / network / Bluetooth menus, wallpaper and on-screen pop-ups, with our five themes as its colour schemes. Around it: Hyprland's lock screen, idle timer and password pop-up, hyprbars title bars, Monique for screen settings, the KognogOS SDDM login screen (D-38), all started through uwsm. Every pick is a first try. The reasons are in the [recipe page](docs/RECIPE.md) and the [decision log](docs/DECISIONS.md).
+> **Chosen, 2026-09-29, then reshaped by testing on 2026-09-30.** The first picks were separate small apps. Living in them in a VM changed the plan: settings get graphical apps, not terminal ones (D-39), and **[Noctalia](https://github.com/noctalia-dev/noctalia)** became the desktop shell (D-40): the bar (along the bottom, full width, clock in the corner, D-41), launcher, notifications, sound / network / Bluetooth menus, wallpaper and on-screen pop-ups, with our five themes as its colour schemes. Around it: Hyprland's lock screen, idle timer and password pop-up, hyprbars title bars, Monique for screen settings, the KognogOS SDDM login screen (D-38), all started through uwsm. Every pick is a first try. The reasons are in the [recipe page](docs/RECIPE.md) and the [decision log](docs/DECISIONS.md).
 
 ---
 

@@ -31,6 +31,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - **The folder is a full copy; the key map keeps Plasma's keys** (D-28, D-29)
 - **No taskbar and no minimise; title bars show maximise and close** (D-34)
 - **Five themes, one per KognogOS wallpaper; Mocha is the default** (D-36)
+- **The bar: along the bottom, full width, 40 px, bigger icons, clock in the corner** (D-41)
 - **Every recipe pick is a first try; a misfit becomes a finding and is swapped** (D-23)
 - **Documentation at every step, a full GitHub, and a coming-soon note on kognogos.org** (D-13)
 
@@ -178,6 +179,11 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
   - [x] F-37: Win + E did nothing (Javier): it ran `superfile`, but the package's program is `spf`. Fixed in hyprland.lua; every other shortcut's program checked present. **proven by Javier**
   - [x] Win + K opens Thunar instead of Krusader (Javier, 2026-09-30); Krusader stays installed, from the launcher
   - [x] Win + E opens Midnight Commander (`mc`) instead of superfile (Javier, 2026-09-30); superfile stays installed
+  - [x] The bar moves to the bottom, edge to edge, 4 px taller, clock in the bottom-right corner (Javier, 2026-10-01, in two steps: first full width + 36 px at the top, then bottom + 38 px + clock right): `[bar.default]` position "bottom", margin_ends 0, radius 0 (square corners), thickness 38 (Noctalia's default is 34), center empty, `clock` last in `end`. Applies to every hypeForge computer, not only this one. Picked up live without a restart; checked with `noctalia config export` and screenshots (bar at the bottom, nothing left at the top). **Javier to judge by eye, and to check that the drop-downs (sound, network, calendar) open upwards cleanly**
+  - [x] The workspace number ("3", the pill next to the emblem) taken off the bar (Javier, 2026-10-01: he read it as the monitor number; it is the workspace on that screen, DP-3 holds workspace 3). `workspaces` removed from `start`; workspaces still work by keyboard. Checked live with a screenshot
+  - [x] Bar 40 px tall (Javier, 2026-10-01, third step) and icons about 2 px bigger: Noctalia has no icon size in pixels, only a per-widget `scale`, so every icon widget (launcher, taskbar, tray, notifications, clipboard, network, bluetooth, volume, brightness, battery, control-center, session) gets `scale = 1.17`; the clock and the media text keep their size. Measured from screenshots: clipboard ~12 → ~15 px, power ~10 → ~13 px (rough: the theme changed between the two shots, so the edge detection differs). **Javier to judge by eye**
+  - [x] **Bar locked as the KognogOS hypeForge default (D-41, Javier: *"It is perfect."*)**: bottom, full width, 40 px, icons ×1.17, no workspace number, clock in the corner. README updated; the ISO build stages it from this folder, so the next build carries it (checked: `kognog/scripts/build-iso.sh` uses `~/Programs/hypeforge`)
+  - [ ] Next ISO build: confirm the live session shows the bar at the bottom, as on this computer
   - [ ] **Next session:** go through the shortcuts with Javier: many he does not want (Win + F1 lists them all). (Win + E, Win + K, Win + F1 and Lock all proven by Javier, 2026-09-30)
   - [ ] F-36: no app to choose default apps in the hypeForge session (Javier). For now KDE's page works here (`kcmshell6 kcm_componentchooser`; Plasma and Hyprland share `~/.config/mimeapps.list`), but it leaves with Plasma. Research a hypeForge pick (nog finds no `selectdefaultapplication`)
   - [ ] `install-into.sh` must link `autostart/nm-applet.desktop` too (it links every file in autostart/, check) and the machine-name variable needs a fresh login to come from uwsm (set by hand for tonight)

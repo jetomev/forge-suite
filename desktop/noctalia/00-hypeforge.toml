@@ -65,13 +65,44 @@ palette_source = "custom"
 custom_palette = "hypeForge-White"
 
 [bar.default]
-start  = ["launcher", "workspaces", "taskbar"]   # taskbar: open apps' icons, click to switch
-center = ["clock"]
+position    = "bottom"   # along the bottom of the screen (Javier, 2026-10-01)
+margin_ends = 0    # edge to edge, the full width of the screen (Javier, 2026-10-01)
+radius      = 0    # square corners, flush with the screen edges
+thickness   = 40   # 6 px taller than Noctalia's 34 (Javier, 2026-10-01)
+start  = ["launcher", "taskbar"]   # taskbar: open apps' icons, click to switch; no workspace number (Javier, 2026-10-01)
+center = []
 end    = ["media", "tray", "notifications", "clipboard", "network", "bluetooth",
-          "volume", "brightness", "battery", "control-center", "session"]
+          "volume", "brightness", "battery", "control-center", "session",
+          "clock"]   # the clock in the bottom-right corner (Javier, 2026-10-01)
 
+# Icons about 2 px bigger (Javier, 2026-10-01). Noctalia has no icon size in pixels, only a
+# size multiplier per widget; 1.17 takes the ~12 px icons to ~14 px (measured from screenshots).
+# The clock and "Nothing Playing" keep their size; the text inside network and volume grows
+# with their icons.
 [widget.taskbar]
 show_window_title = false
+scale = 1.17
+
+[widget.tray]
+scale = 1.17
+[widget.notifications]
+scale = 1.17
+[widget.clipboard]
+scale = 1.17
+[widget.network]
+scale = 1.17
+[widget.bluetooth]
+scale = 1.17
+[widget.volume]
+scale = 1.17
+[widget.brightness]
+scale = 1.17
+[widget.battery]
+scale = 1.17
+[widget.control-center]
+scale = 1.17
+[widget.session]
+scale = 1.17
 
 [lockscreen]
 enabled = false   # hyprlock stays the lock screen (Javier, 2026-09-30); hypridle locks on idle
@@ -79,6 +110,7 @@ enabled = false   # hyprlock stays the lock screen (Javier, 2026-09-30); hypridl
 [widget.launcher]
 custom_image = "/usr/share/pixmaps/kognogos.png"   # the KognogOS emblem on the launcher button (F-32)
 custom_image_colorize = false
+scale = 1.17   # icons about 2 px bigger, see above
 
 # This computer's own bar settings, if it has any: every *.toml in machines/<hostname>/
 # (D-28). HYPEFORGE_MACHINE is set at login by uwsm/env.
