@@ -29,7 +29,7 @@ Steps:
 - [x] Findings as issues: F-10 #2, F-11 #3 (opened and closed)
 - [x] **Released 2026-10-01:** signed tag `v0.4.0` (`133b835`), signed archive + checksums on GitHub, marked Latest (download matches byte for byte); AUR `python-forgekit` 0.4.0-1 pushed (`656bc2c`): checksum, signature and `.SRCINFO` pre-flight passed, `makepkg` built with the check passing in both modes
 - [x] bitlaForge 0.2.1 and alacrittyForge 0.2.0 (as installed) checked on forgekit 0.4.0 without any change of theirs: both start in both modes, and the console preview finds no undrawable character and no invisible letter
-- [ ] Install `python-forgekit` 0.4.0 on the desktop through nog (the AUR's info page still showed 0.3.0 a few minutes after the push), then run bitlaForge and alacrittyForge once
+- [x] Installed on the desktop by Javier with `nog install python-forgekit` (nog rightly refuses AUR builds with nobody at the keyboard): `python-forgekit 0.4.0-1`; bitlaForge and alacrittyForge start on it in both modes. (The AUR's info service lagged ~15 min after the push while its web page and repository already showed 0.4.0)
 - [x] #1 closed with the full explanation; grubforge#21, alacrittyforge#7, bitlaforge#2, nogforge#1 told what they get by upgrading and what is theirs to do
 
 ## Next
