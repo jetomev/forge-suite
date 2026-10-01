@@ -20,6 +20,8 @@ from textual.screen import ModalScreen
 from textual.widgets import OptionList, Static
 from textual.widgets.option_list import Option
 
+from .console import is_console
+
 
 def accel(entry: dict) -> str:
     """The main-option accelerator letter (defaults to the title's first)."""
@@ -52,6 +54,10 @@ class MenuBar(Horizontal):
             title, a = m["title"], accel(m)
             i = title.lower().find(a)
             markup = f"{title[:i]}[u]{title[i]}[/u]{title[i+1:]}" if i >= 0 else title
+            # F-12: a text console sends Ctrl+H as Backspace, so Help is on F1
+            # there, and the bar says so (console mode only)
+            if m["id"] == "help" and is_console():
+                markup += " [$forge-accent]F1[/]"
             yield Static(f" {markup} ", id=f"menu-{m['id']}", classes="menu-title")
 
 

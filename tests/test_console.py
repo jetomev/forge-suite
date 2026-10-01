@@ -84,6 +84,12 @@ class CharacterSwaps(unittest.TestCase):
 
 
 class ColourRoles(unittest.TestCase):
+    def test_focus_colour_is_unique_on_the_console(self):
+        # F-13: no other button state may share the focused button's colour
+        focus = ROLES["focus-bg"][1]
+        for role in ("button-bg", "primary-bg", "error-bg", "button-hover"):
+            self.assertNotEqual(ROLES[role][1], focus, role)
+
     def test_active_item_is_not_cyan_on_the_console(self):
         # its underlined letter is drawn cyan there, and would disappear
         self.assertNotIn("cyan", ROLES["active-bg"][1])
@@ -137,8 +143,54 @@ class AppInBothModes(unittest.IsolatedAsyncioTestCase):
 
     async def test_layout_is_the_same_in_both_modes(self):
         window, console = await self._layout(False), await self._layout(True)
-        self.assertEqual(window, console)
+        for key in ("title", "menubar", "work"):
+            self.assertEqual(window[key], console[key], key)
         self.assertEqual((window["title"].y, window["menubar"].y, window["work"].y), (0, 1, 2))
+        # menu items: identical up to Help; on the console Help carries " F1"
+        # (F-12), 3 cells wider, and Quit moves right by those 3 cells
+        ids = [m["id"] for m in demo.MENU]
+        h = ids.index("help")
+        self.assertEqual(window["items"][:h], console["items"][:h])
+        self.assertEqual(console["items"][h][1], window["items"][h][1] + 3)
+        for (wx, ww), (cx, cw) in zip(window["items"][h + 1:], console["items"][h + 1:]):
+            self.assertEqual((cx, cw), (wx + 3, ww))
+
+    async def test_help_shows_f1_on_the_console_only(self):
+        # F-12: Ctrl+H never reaches an app on a text console; the bar says F1
+        for console, expected in ((True, True), (False, False)):
+            app = demo.BitlaForgeDemo(console=console)
+            async with app.run_test(size=SIZE):
+                label = str(app.query_one("#menu-help").render())
+                self.assertEqual("F1" in label, expected, label)
+
+    async def test_focus_has_its_own_colour_on_the_console(self):
+        # F-13: Tab must visibly move focus; the primary button must not look focused
+        from textual.app import ComposeResult
+        from textual.containers import Horizontal
+        from textual.widgets import Button
+
+        class TwoButtons(ForgeApp):
+            APP_NAME = "two"
+            MENU = [{"id": "one", "title": "One", "kind": "section"},
+                    {"id": "quit", "title": "Quit", "kind": "action", "action": "quit"}]
+
+            def compose_sections(self) -> ComposeResult:
+                with Horizontal(id="sec-one"):
+                    yield Button("Start", id="a", variant="primary")
+                    yield Button("Test", id="b")
+
+        app = TwoButtons(console=True)
+        async with app.run_test(size=SIZE) as pilot:
+            a, b = app.query_one("#a"), app.query_one("#b")
+            a.focus()
+            await pilot.pause()
+            focus_colour = a.styles.background
+            await pilot.press("tab")
+            await pilot.pause()
+            self.assertTrue(b.has_focus)
+            self.assertEqual(b.styles.background, focus_colour)       # focus moved with its colour
+            self.assertNotEqual(a.styles.background, focus_colour)    # and left the primary button
+            self.assertNotEqual(a.styles.background, b.styles.background)
 
     async def test_console_app_switches_everything_on(self):
         app = demo.BitlaForgeDemo(console=True)

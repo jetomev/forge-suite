@@ -57,6 +57,10 @@ ROLES: dict[str, tuple[str, str]] = {
     "button":        (COLORS["text"],     "ansi_black"),
     "button-hover":  (COLORS["surface2"], "ansi_cyan"),
     "primary-bg":    (COLORS["boxblue"],  "ansi_cyan"),
+    # F-13: on the console, focus needs a colour no other button state uses
+    # (Textual marks focus with a tint + bold, which a console cannot show)
+    "focus-bg":      (COLORS["boxblue"],  "ansi_blue"),
+    "focus":         (COLORS["text"],     "ansi_bright_white"),
     "primary":       (COLORS["text"],     "ansi_black"),
     "on-accent":     (COLORS["crust"],    "ansi_black"),
     "error-bg":      (COLORS["red"],      "ansi_red"),
@@ -171,4 +175,13 @@ DataTable > .datatable--cursor { background: $forge-selected-bg; color: $forge-t
 .forge-buttons Button.-primary:hover { background: $forge-accent; color: $forge-on-accent; }
 .forge-buttons Button.-error { background: $forge-error-bg; color: $forge-on-error; }
 .forge-buttons Button.-error:hover { background: $forge-warn; color: $forge-on-accent; }
+
+/* F-13, console only: every button, in the kit's bar or the app's own rows.
+   normal = grey, primary = cyan, error = red, FOCUSED = blue with bright white
+   (a colour no other state uses), so focus visibly moves on Tab */
+Button:ansi { background: $forge-button-bg; color: $forge-button; text-style: none; }
+Button.-primary:ansi { background: $forge-primary-bg; color: $forge-primary; }
+Button.-error:ansi { background: $forge-error-bg; color: $forge-on-error; }
+Button:hover:ansi { background: $forge-button-hover; }
+Button:focus:ansi, .forge-buttons Button:focus:ansi { background: $forge-focus-bg; color: $forge-focus; text-style: none; }
 """
