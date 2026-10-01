@@ -1,0 +1,17 @@
+[Desktop Entry]
+# hypeForge's copy of Fresh's entry (replaces /usr/share/applications/fresh.desktop by name).
+# Fresh runs in a terminal; started as "Terminal=true" its window is just "Alacritty", so the
+# taskbar files it under the Alacritty pin and Fresh cannot be pinned (Javier, 2026-10-01).
+# Here Alacritty names its window "fresh", which matches this file, so Fresh gets its own icon.
+# TryExec hides the entry on a computer without Fresh.
+Type=Application
+Name=Fresh
+GenericName=Text Editor
+Comment=Fresh, the terminal text editor
+TryExec=fresh
+Exec=alacritty --class fresh -e fresh %F
+Icon=fresh
+Terminal=false
+StartupWMClass=fresh
+Categories=Development;TextEditor;Utility;
+MimeType=text/plain;text/x-csrc;text/x-chdr;text/x-c++src;text/x-c++hdr;text/x-java;text/x-python;text/x-script.python;application/x-python;text/x-rust;text/x-go;text/javascript;application/javascript;text/x-typescript;application/json;text/html;text/css;text/x-shellscript;text/x-lua;text/x-ruby;text/x-php;text/x-csharp;text/markdown;
