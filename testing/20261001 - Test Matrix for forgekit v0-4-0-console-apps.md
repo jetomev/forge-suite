@@ -8,14 +8,14 @@
 
 grubForge is not in this matrix: it is not on forgekit yet, so console mode does not reach it.
 
-**How to get there:** `Ctrl+Alt+F3`, log in, run the app by name. Back to the desktop: `Ctrl+Alt+F1`.
+**How to get there:** on the desktop: `Ctrl+Alt+F3`, log in, run the app by name; back with `Ctrl+Alt+F1`. **In the KognogOS VM** (Javier's choice, 2026-10-01): Virtual Machine Manager → open `kognog-hypeforge` → menu *Send Key* → `Ctrl+Alt+F3`, log in as `javier`, run the app; *Send Key* → `Ctrl+Alt+F1` to leave.
 
 **Do not, during the test:** start the miner (`M`), save in bitlaForge Config (`S`), apply a theme (`A`) or save (`S`) in alacrittyForge. Opening an editor and pressing `Esc` is fine; nothing is written until you save.
 
 **What "pass" means** (the promise): every word readable; frames, menus and buttons visible; the selected item obvious; no diamonds, boxes, blank gaps or stray symbols; every key below does what it says.
 
 ## Known before the test (found by the preview sweep, Claude, 2026-10-01)
-- **K-1 · bitlaForge Log and Config:** the frames around the log box and the input fields are drawn in the same grey as their background, so they cannot be seen; the fields still show as grey blocks with readable text. Cause: bitlaForge's own copy of the form colours (from before forgekit 0.3.0 took forms over). Fix belongs to bitlaForge (bitlaforge#2). **Javier: judge how bad it looks on the real console.**
+- **K-1 · bitlaForge Log and Config:** the frames around the log box and the input fields are drawn in the same grey as their background, so they cannot be seen; the fields still show as grey blocks with readable text. Cause: bitlaForge's own copy of the form colours (from before forgekit 0.3.0 took forms over). Fix belongs to bitlaForge (bitlaforge#2). **Javier: judge how bad it looks on the real console.** *Update after Claude's VM run: **not reproduced on a real console**: the real console does not show the grey (bright) field background, so the fields are black with visible thin frames. The emulation over-states it.*
 
 ## A · bitlaForge on tty3 (`bitlaforge`)
 
@@ -25,7 +25,7 @@ grubForge is not in this matrix: it is not on forgekit yet, so console mode does
 | A.2 | Look at the menu row | Each option's first letter in **cyan** (the console's way of underlining), including the **D** of the active Dashboard | |
 | A.3 | `2` (or `Ctrl+L`) | Log section; the log box (frame: see K-1) with readable lines | |
 | A.4 | `3` (or `Ctrl+C`) | Config section: labels readable, fields as grey blocks with readable values (frames: see K-1); the Algorithm drop-down shows `▼` | |
-| A.5 | In Config, `E`, then `Esc` | First field gets the cursor; Esc leaves without saving | |
+| A.5 | In Config, `E`, then `Esc` | The Pool URL field gets the cursor. **Note:** Esc does *not* take the cursor out (bitlaForge today, in every terminal: B-1), so the next keys type into the field. Nothing is saved without `S`. Switch section with `Ctrl+L` / `Ctrl+D` (not bare digits) after editing | |
 | A.6 | `F1` | Help menu opens: a box with **straight** corners, Shortcuts / Install & Setup / License / About, one highlighted in blue | |
 | A.7 | `S` (in the Help menu) | Shortcuts window: keys in light blue, descriptions readable, Close button readable | |
 | A.8 | `Esc`, `F1`, `I` | Install & Setup window readable, scrolls with ↑↓ if long, Close reachable | |
