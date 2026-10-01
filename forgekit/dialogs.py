@@ -14,6 +14,8 @@ from __future__ import annotations
 from typing import TypeVar
 
 from textual.app import ComposeResult
+
+from .console import is_console
 from textual.binding import Binding
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.screen import ModalScreen
@@ -139,7 +141,8 @@ class AboutDialog(ForgePanelScreen):
         a = self._a
         yield Static(f"[b $forge-title-accent]{a['name']}[/]   [$forge-muted]v{a['version']}[/]")
         if a.get("tagline"):
-            yield Static(f"[i $forge-muted]{a['tagline']}[/]")
+            # italic reads as green on a text console, so plain there
+            yield Static(f"[{'' if is_console() else 'i '}$forge-muted]{a['tagline']}[/]")
         if a.get("description"):
             yield Static(f"\n{a['description']}\n")
         if a.get("authors"):

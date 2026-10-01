@@ -16,6 +16,8 @@ A small Python library on top of [Textual](https://textual.textualize.io): the s
 - Tests: `python -m unittest discover -s tests -v` (Python's built-in runner, nothing to install; headless through Textual's Pilot). **Report the test count at every release**; a drop means something was deleted silently.
 - **Check layout by position, not by existence**: a test that finds a widget proves nothing about where it is drawn (lesson from v0.1.0, where logic tests passed while the bar was visibly broken).
 - **Console preview:** `python tools/console-preview.py <command>` runs any Forge app as if on `tty3` (`TERM=linux`, 16 colours, the console font's character set) and saves a PNG; characters the font cannot draw are marked in red. Needs `python-pyte` (installed through nog). Every release's test matrix includes a console run, and **Javier's run on a real `tty3`** is the final check.
+- **Real console, on a VM** (how v0.4.0 was proven, 2026-10-01): snapshot the KognogOS VM, copy the tree in through the qemu guest agent, start the app on tty3 with `openvt -c 3 -s -f -- runuser -u <user> -- env -i TERM=linux … python3 …`, press keys with `virsh send-key`, copy `/dev/vcsa3` out (`base64` through the agent) and redraw it with `python tools/vcsa-shot.py`. Then revert the VM to its snapshot. (`virsh screenshot` does not work on these VMs' 3D displays.)
+- The real console differs from a terminal in ways the emulation must copy: **underline shows as cyan and italic as green**, bold shows as bright, and only the 8 basic colours are reliable as backgrounds. `console-preview.py` models these and flags any letter drawn in its own background colour.
 - Screenshots for the README: `python docs/screenshots/generate.py`.
 
 ## Documentation, at every step

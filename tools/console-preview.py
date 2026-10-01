@@ -11,8 +11,9 @@ blank or a stray symbol.
     python tools/console-preview.py --keys "wait:2 ctrl+e wait:1" --out menu.png -- python examples/demo.py
 
 It also prints a summary: the colours actually used and every character the font
-lacks, with a count. Exit status 3 if any undrawable character was on screen, so
-a test can fail on it.
+lacks, with a count, and every letter drawn in its own background colour (the
+console shows underline as cyan and italic as green, which can hide a letter).
+Exit status 3 for undrawable characters, 4 for invisible ones, so a test fails.
 
 Needs python-pyte (Arch: `nog install python-pyte`) and Pillow.
 """
@@ -155,7 +156,7 @@ def render(screen: pyte.Screen, drawable: set[int], out: str) -> tuple[Counter, 
     img = Image.new("RGB", (screen.columns * cw, screen.lines * ch), (0, 0, 0))
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype(DRAW_FONT, 16)
-    missing, fg_used, bg_used = Counter(), Counter(), Counter()
+    missing, fg_used, bg_used, invisible = Counter(), Counter(), Counter(), Counter()
     for y in range(screen.lines):
         line = screen.buffer[y]
         for x in range(screen.columns):
@@ -163,6 +164,12 @@ def render(screen: pyte.Screen, drawable: set[int], out: str) -> tuple[Counter, 
             fg, bg = c.fg, c.bg
             if c.bold and fg in CONSOLE_RGB and not fg.startswith("bright"):
                 fg = "bright" + fg  # the console shows bold as the bright colour
+            # the Linux console has no underline or italic: it shows them as
+            # colours (vt.c: ulcolor cyan, itcolor green), keeping brightness
+            if c.underscore:
+                fg = ("bright" if fg.startswith("bright") else "") + "cyan"
+            elif c.italics:
+                fg = ("bright" if fg.startswith("bright") else "") + "green"
             if c.reverse:
                 fg, bg = bg, fg
             f, b = rgb(fg, "white"), rgb(bg, "black")
@@ -178,10 +185,13 @@ def render(screen: pyte.Screen, drawable: set[int], out: str) -> tuple[Counter, 
             draw.rectangle([x0, y0, x0 + cw - 1, y0 + ch - 1], fill=b)
             if char != " ":
                 draw.text((x0, y0 + 1), char, font=font, fill=f)
-            if c.underscore:
-                draw.line([x0, y0 + ch - 2, x0 + cw - 1, y0 + ch - 2], fill=f)
+                # a block in its background colour is just a fill; a letter or a
+                # line in its background colour is something the reader loses
+                if f == b and not "\u2580" <= char <= "\u259f":
+                    invisible[char] += 1
+                    draw.rectangle([x0, y0, x0 + cw - 1, y0 + ch - 1], outline=(255, 0, 255))
     img.save(out)
-    return missing, fg_used, bg_used
+    return missing, fg_used, bg_used, invisible
 
 
 def main() -> int:
@@ -198,15 +208,22 @@ def main() -> int:
         ap.error("give the command to run after --")
     cols, rows = (int(v) for v in a.size.lower().split("x"))
     screen = run(cmd, cols, rows, a.keys.split(), a.settle)
-    missing, fg, bg = render(screen, console_font_chars(a.font), a.out)
+    missing, fg, bg, invisible = render(screen, console_font_chars(a.font), a.out)
     print(f"saved {a.out} ({cols}x{rows}, TERM=linux)")
     print("foreground colours:", ", ".join(f"{k} {v}" for k, v in fg.most_common()))
     print("background colours:", ", ".join(f"{k} {v}" for k, v in bg.most_common()))
+    status = 0
     if missing:
         print("UNDRAWABLE on the console font:", "  ".join(f"{k!r}×{v}" for k, v in missing.most_common()))
-        return 3
-    print("every character on screen is in the console font")
-    return 0
+        status = 3
+    else:
+        print("every character on screen is in the console font")
+    if invisible:
+        print("INVISIBLE (same colour as its background):", "  ".join(f"{k!r}×{v}" for k, v in invisible.most_common()))
+        status = status or 4
+    else:
+        print("every character is visible against its background")
+    return status
 
 
 if __name__ == "__main__":

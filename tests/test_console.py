@@ -84,6 +84,10 @@ class CharacterSwaps(unittest.TestCase):
 
 
 class ColourRoles(unittest.TestCase):
+    def test_active_item_is_not_cyan_on_the_console(self):
+        # its underlined letter is drawn cyan there, and would disappear
+        self.assertNotIn("cyan", ROLES["active-bg"][1])
+
     def test_both_modes_define_the_same_roles(self):
         self.assertEqual(set(css_variables(True)), set(css_variables(False)))
 
@@ -187,6 +191,9 @@ class ConsolePreview(unittest.TestCase):
                 r = self._preview(keys, os.path.join(d, f"{name}.png"))
                 self.assertEqual(r.returncode, 0, f"{name}: {r.stdout}{r.stderr}")
                 self.assertIn("every character on screen is in the console font", r.stdout, name)
+                # the console shows underline as cyan and italic as green: no letter
+                # may vanish into its background (the VM found "D" of an active item)
+                self.assertIn("every character is visible against its background", r.stdout, name)
 
 
 if __name__ == "__main__":

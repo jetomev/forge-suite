@@ -157,6 +157,12 @@ def glyph(name: str) -> str:
     return plain if _console else fancy
 
 
+def is_console() -> bool:
+    """Is the running app in console mode? (The console shows italic as green
+    and underline as cyan, so kit text avoids italic there.)"""
+    return _console
+
+
 def set_console(on: bool) -> None:
     """Switch the glyph table's mode (``ForgeApp`` calls this at start)."""
     global _console

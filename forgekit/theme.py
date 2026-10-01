@@ -36,8 +36,10 @@ ROLES: dict[str, tuple[str, str]] = {
     "menubar-bg":    (COLORS["mantle"],   "ansi_black"),
     "hover":         (COLORS["blue"],     "ansi_bright_cyan"),
     "hover-bg":      (COLORS["surface0"], "ansi_black"),
-    "active-bg":     (COLORS["boxblue"],  "ansi_cyan"),
-    "active":        (COLORS["text"],     "ansi_black"),
+    # blue, not cyan: the console shows underlined letters in cyan, and the
+    # active item's underlined letter vanished on a cyan block (VM test)
+    "active-bg":     (COLORS["boxblue"],  "ansi_blue"),
+    "active":        (COLORS["text"],     "ansi_bright_white"),
     # panels, dialogs, dropdowns
     "surface":       (COLORS["surface0"], "ansi_black"),
     "raised":        (COLORS["surface1"], "ansi_blue"),
