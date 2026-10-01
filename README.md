@@ -1,6 +1,6 @@
 # 🔨 forgekit
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-purple.svg)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-purple.svg)
 ![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
 ![Built with Textual](https://img.shields.io/badge/Built%20with-Textual-5a3fd6.svg)
 ![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)
@@ -39,8 +39,11 @@ polish improves every app at once.
 - **Help windows** — `Shortcuts`, `License` and `About` are built in and work
   from the start.
 - **Toasts** for quick messages that don't need a dialog.
+- **A text-console mode.** On the plain Linux text screen (`Ctrl+Alt+F3`) every app
+  switches to colours and characters that screen can actually show, by itself.
+  [More below](#on-a-plain-text-console).
 
-> **Status: 0.3.0 (alpha).** The API may still shift while the Forge apps migrate
+> **Status: 0.4.0 (alpha).** The API may still shift while the Forge apps migrate
 > onto it. Pin a version if you depend on it.
 
 ## Screenshots
@@ -136,6 +139,9 @@ section with a floating editor and a delete confirmation stacked on top of it.
 | `ForgePanelScreen` | The standard scrolling panel — title, body, and a Close button. Use it for any information window. |
 | `AboutDialog` / `LicenseDialog` / `ShortcutsDialog` | The built-in Help windows. |
 | `FORGE_CSS` / `COLORS` / `GPL3_NOTICE` | The stylesheet, the Catppuccin palette, and a ready-made GPL notice. |
+| `ROLES` / `css_variables()` | The colour roles (`$forge-accent`, `$forge-muted`, `$forge-border`…): one colour for a terminal window, one for a text console. Use the same names in your own CSS. |
+| `glyph()` / `GLYPHS` | Named marks (`ok`, `warn`, `error`, `busy`…) that turn into console-safe ones on a text console: `✓` → `+`, `⚠` → `!`. |
+| `console_mode()` / `console_text()` | Whether the app runs on a text console, and the character swap it applies. Your app reads `self.forge_console`. |
 
 ### How a menu is described
 
@@ -162,6 +168,46 @@ than yours. `Ctrl+C` interrupts, `Ctrl+S` and `Ctrl+Q` are flow control, and
 wherever the terminal allows it — but if a section's first letter is one of those
 and your terminal insists on keeping it, underline a different letter for that
 option instead.
+
+**Help is also on `F1`** (since 0.4.0). A plain text console always sends `Ctrl+H` as
+Backspace, so there `F1` is the way to Help.
+
+## On a plain text console
+
+A text console is where you end up when the desktop is broken, which is exactly when
+you want a bootloader manager or a package manager. So forgekit makes a promise:
+
+> **Every Forge app is readable and usable on a plain text console (`TERM=linux`).**
+> It does not have to look the same as in a terminal window.
+
+That screen has only 16 colours (8 of them reliable as backgrounds) and a font of
+about 256 characters: no rounded corners, no `✓`, no emoji. It also shows underlined
+text in cyan and italic text in green. When an app starts there, forgekit switches,
+by itself:
+
+- **colours by role:** each role (`accent`, `muted`, `border`…) gets a console colour
+  chosen so the roles stay apart;
+- **characters:** every character the console font lacks is swapped for one it has,
+  keeping the same width so columns stay lined up (`╭` → `┌`, `✓` → `+`, `Á` → `A`);
+- **scrollbars** in whole cells, and **F1** for Help.
+
+![The same app on a text console: forgekit 0.3.0 (black on black, broken corners)](docs/console/v0.3.0-on-a-text-console.png)
+*Before, 0.3.0: bars and work area all black, red boxes where the font has no character.*
+
+![The same app on a text console with forgekit 0.4.0: blue title bar, straight frames, readable buttons](docs/console/v0.4.0-on-a-text-console.png)
+*After, 0.4.0: the same app, same screen.*
+
+In a terminal window nothing changes: the four screenshots above regenerate identical
+to 0.3.0.
+
+**Override:** `FORGE_ASCII=1` forces console mode on (for terminals that claim more
+than they can draw), `FORGE_ASCII=0` forces it off.
+
+**Testing it:** `python tools/console-preview.py --out shot.png -- python examples/demo.py`
+shows what an app looks like on a text console and fails on any character the
+console cannot draw or any letter drawn in its own background colour. The 0.4.0
+release was also checked on a real console in a KognogOS virtual machine
+(`tools/vcsa-shot.py` redraws a real console's screen exactly).
 
 ## The Forge Suite
 

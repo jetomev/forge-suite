@@ -24,7 +24,10 @@ Steps:
 - [x] **F-10: Help cannot be opened from the keyboard on a text console** (it sends Ctrl+H as the Backspace byte, `\x08`, and Textual reads that as Backspace) · **fixed:** F1 opens Help too (the console sends `ESC [[A`, which Textual reads as F1); tested in both modes
 - [x] **Real console test on the KognogOS VM** (Javier's choice, 2026-10-01: *"can we test this on a vm instead?"*): `kognog-hypeforge`, snapshot first, demo on tty3 through the guest agent, keys with `virsh send-key`, screen read from `/dev/vcsa3` and redrawn with `tools/vcsa-shot.py`; VM reverted afterwards. **Passed:** menus, edit window, F1 → Help (F-10 proven on a real console), About, no stray characters
 - [x] **F-11 (found by the VM test): the console shows underline as cyan and italic as green.** The active menu item's underlined letter vanished on its cyan block ("ashboard", "onfig"); the About tagline turned green · **fixed:** active item on blue, no italic in console mode; `console-preview.py` now models both and fails on any letter drawn in its own background colour (checked against the old colours: it flags the "D"); re-run on the VM: "Dashboard" whole, tagline grey · 23 tests
-- [ ] README (a "Text console" section, the promise, the override), version 0.4.0 in every surface, test matrix in `testing/`, release, AUR `python-forgekit` 0.4.0
+- [x] README: "On a plain text console" section (the promise, before/after pictures, the override, the tools), F1 in the keyboard model, new objects in "What's in the box"; version 0.4.0 in `pyproject.toml`, `__init__.py`, README
+- [x] `testing/20261001 - Test Matrix / Test Results for forgekit v0-4-0.md`: 23 tests, 0 warnings, screenshots identical, AUR smoke in both modes, real console on the VM
+- [x] Findings as issues: F-10 #2, F-11 #3 (opened and closed)
+- [ ] Release: signed tag, signed archive + checksums on GitHub (Latest), then AUR `python-forgekit` 0.4.0
 - [ ] Close #1 with the full explanation; comment on grubforge#21, alacrittyforge#7, bitlaforge#2, nogforge#1 with how each app adopts it
 
 ## Next
