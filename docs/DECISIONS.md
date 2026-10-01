@@ -12,7 +12,8 @@
 
 **What it means:**
 - **Why:** Hyprland's maximise puts the window on a layer of its own. A window opened over it is allowed to stay above it, so clicking the maximised window or Alt + Tabbing to it gave it the keyboard but left it underneath.
-- **Now every maximise is ours:** the window stays an ordinary floating window, stretched over the usable screen (inside the 13 px edge gap, above the bar), and the app is told it is maximised, so it draws itself that way. Clicking it or Alt + Tab brings it to the front like any other window.
+- **Now every maximise is ours:** the window stays an ordinary floating window, stretched over the usable screen (inside the 13 px edge gap, above the bar). Clicking it or Alt + Tab brings it to the front like any other window.
+- **The app is not told it is maximised** (F-39): told so, its button offered "restore", and Hyprland drops that request without a word, so the button did nothing. Left alone, the app's button keeps offering "maximise"; **the first press maximises, the next one restores.**
 - It covers **Win + Page Up**, **Win + ↑ at the top** (D-30) and **an app's own maximise** (its button, or a double-click on its title bar), which `snap.lua` catches and converts. **Win + ↓** and Win + Page Up go back to the half or size the window had. Real fullscreen (F11, a video) stays Hyprland's.
 - D-32 (an app's "open maximised" undone in its first moments) is unchanged.
 

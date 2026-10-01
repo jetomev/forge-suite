@@ -13,9 +13,9 @@
 --   Alt + Tab / Alt + Shift + Tab   next / previous window, brought to the front (D-35)
 -- New windows open floating at 80 % of the screen, centred; an app's "maximise me" in its
 -- first moments is undone (D-32).
--- Maximise is our own (D-43): the window floats, stretched over the usable screen, and the app
--- is told it is maximised. Hyprland's maximise put the window on a layer of its own, so a
--- window opened over it stayed on top even after the maximised one was clicked or Alt + Tabbed.
+-- Maximise is our own (D-43): the window floats, stretched over the usable screen. Hyprland's
+-- maximise put the window on a layer of its own, so a window opened over it stayed on top even
+-- after the maximised one was clicked or Alt + Tabbed. The app's own maximise button toggles.
 
 local M = {}
 
@@ -92,8 +92,9 @@ local function place(win, h, v)
 end
 
 -- Our maximise (D-43). The window stays an ordinary floating window, so clicking it or
--- Alt + Tab brings it to the front; the app is told "maximised" (client = 1), so it draws
--- itself that way and its own button offers "restore".
+-- Alt + Tab brings it to the front. The app is NOT told it is maximised (client = 0): told so,
+-- its button offered "restore", and Hyprland drops that request without telling us (F-39).
+-- Left alone, the button keeps offering "maximise", which reaches us; a second press restores.
 local function unmax_internal(win)
     if (win.fullscreen or 0) ~= 0 then                    -- Hyprland's own maximise/fullscreen
         hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = -1, window = "address:" .. win.address }))
@@ -119,13 +120,14 @@ local function maximise(win)
     end
     st.max = true
     place(win, "F", "F")
-    hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 1, window = target }))
+    hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 0, window = target }))
 end
 
 -- Back from our maximise: to the half it was snapped to, or the size it had before.
 local function unmaximise(win)
     local target = "address:" .. win.address
     local st = state[win.address]
+    win = unmax_internal(win)                             -- the app's button: Hyprland maximised it
     hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 0, window = target }))
     if not st or not st.max then return end
     st.max = false
@@ -304,14 +306,18 @@ hl.on("window.open", function(w)
     hl.timer(function() fresh[addr] = nil end, { timeout = 1500, type = "oneshot" })
 end)
 
--- An app's own maximise (its button, a double-click on its title bar) becomes ours (D-43).
+-- An app's own maximise (its button, a double-click on its title bar) becomes ours (D-43);
+-- pressed on a window we maximised, it restores (F-39).
 -- Real fullscreen (F11, a video) stays Hyprland's: that is fullscreen = 2.
 hl.on("window.fullscreen", function(w)
     w = w or hl.get_active_window()
     if not w or not w.address then return end
     w = hl.get_window("address:" .. w.address) or w
     if fresh[w.address] then unmaximise_new(w); return end
-    if (w.fullscreen or 0) == 1 then maximise(w) end
+    if (w.fullscreen or 0) == 1 then                       -- the app's maximise button toggles
+        local st = state[w.address]
+        if st and st.max then unmaximise(w) else maximise(w) end
+    end
 end)
 
 -- Test handle: lets `hyprctl repl` drive the same functions the keys use.
