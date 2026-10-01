@@ -2,7 +2,7 @@
 
 *The live work list and the handoff between sessions. Newest work first. Updated after every step.*
 
-## Now · v0.4.0 · console mode (issue #1)
+## Now · v0.4.0 · console mode (issue #1) · released 2026-10-01
 
 **The promise (Javier, 2026-10-01):** every Forge app is **readable and usable on a plain text console (`TERM=linux`)**. It does not have to look the same as in a terminal window.
 
@@ -27,8 +27,10 @@ Steps:
 - [x] README: "On a plain text console" section (the promise, before/after pictures, the override, the tools), F1 in the keyboard model, new objects in "What's in the box"; version 0.4.0 in `pyproject.toml`, `__init__.py`, README
 - [x] `testing/20261001 - Test Matrix / Test Results for forgekit v0-4-0.md`: 23 tests, 0 warnings, screenshots identical, AUR smoke in both modes, real console on the VM
 - [x] Findings as issues: F-10 #2, F-11 #3 (opened and closed)
-- [ ] Release: signed tag, signed archive + checksums on GitHub (Latest), then AUR `python-forgekit` 0.4.0
-- [ ] Close #1 with the full explanation; comment on grubforge#21, alacrittyforge#7, bitlaforge#2, nogforge#1 with how each app adopts it
+- [x] **Released 2026-10-01:** signed tag `v0.4.0` (`133b835`), signed archive + checksums on GitHub, marked Latest (download matches byte for byte); AUR `python-forgekit` 0.4.0-1 pushed (`656bc2c`): checksum, signature and `.SRCINFO` pre-flight passed, `makepkg` built with the check passing in both modes
+- [x] bitlaForge 0.2.1 and alacrittyForge 0.2.0 (as installed) checked on forgekit 0.4.0 without any change of theirs: both start in both modes, and the console preview finds no undrawable character and no invisible letter
+- [ ] Install `python-forgekit` 0.4.0 on the desktop through nog (the AUR's info page still showed 0.3.0 a few minutes after the push), then run bitlaForge and alacrittyForge once
+- [x] #1 closed with the full explanation; grubforge#21, alacrittyforge#7, bitlaforge#2, nogforge#1 told what they get by upgrading and what is theirs to do
 
 ## Next
 - [ ] grubForge v2.0.0 moves onto forgekit, inheriting console mode (grubforge#21)
