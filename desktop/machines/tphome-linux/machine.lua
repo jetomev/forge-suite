@@ -14,3 +14,7 @@ local function ddc(delta)
 end
 hl.bind("XF86MonBrightnessUp",   ddc("+"), { locked = true, repeating = true })
 hl.bind("XF86MonBrightnessDown", ddc("-"), { locked = true, repeating = true })
+
+-- Keyboard: US International, the layout this computer's system setting already uses
+-- (localectl: us / intl). ' + a gives á, ~ + n gives ñ (Javier, 2026-10-01).
+hl.config({ input = { kb_layout = "us", kb_variant = "intl" } })
