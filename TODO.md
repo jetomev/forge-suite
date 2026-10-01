@@ -2,7 +2,7 @@
 
 *The live work list and the handoff between sessions. Newest work first. Updated after every step.*
 
-## Now · v0.4.0 · console mode (issue #1) · released 2026-10-01
+## Done · v0.4.0 + v0.4.1 · console mode (issue #1) · released 2026-10-01
 
 **The promise (Javier, 2026-10-01):** every Forge app is **readable and usable on a plain text console (`TERM=linux`)**. It does not have to look the same as in a terminal window.
 
@@ -33,7 +33,9 @@ Steps:
 - [x] #1 closed with the full explanation; grubforge#21, alacrittyforge#7, bitlaforge#2, nogforge#1 told what they get by upgrading and what is theirs to do
 
 ## Next
-- [x] **Javier tested console mode himself in the apps we already ship** (bitlaForge 0.2.1, alacrittyForge 0.2.0), in the KognogOS VM on 2026-10-01, after Claude's own run of the same matrix there. Found **F-12 #4** (nothing shows Help is on F1) and **F-13 #5** (Tab focus not visible on a console): both fixed, re-tested by Javier (*"all tested and good!"*), shipped as **v0.4.1**. Also from his run: KognogOS #8 (greetForge on tty), bitlaforge#3 (Esc stays in the field). K-1 not reproduced on a real console
+- [ ] Javier installs `python-forgekit` 0.4.1 on the desktop with `nog install python-forgekit`
+- [ ] Decide (Javier): in a normal terminal the primary and the focused button share `#2B4A7A` (bold is the only difference); give focus its own colour there too?
+- [x] **Javier tested console mode himself in the apps we already ship** (bitlaForge 0.2.1, alacrittyForge 0.2.0), in the KognogOS VM on 2026-10-01, after Claude's own run of the same matrix there. Found **F-12 #4** (nothing shows Help is on F1) and **F-13 #5** (Tab focus not visible on a console): both fixed, re-tested by Javier (*"all tested and good!"*), shipped as **v0.4.1**: GitHub Latest (signed), AUR `b889e67`, #4 and #5 closed, the VM reverted to its snapshot. Also from his run: KognogOS #8 (greetForge on tty), bitlaforge#3 (Esc stays in the field). K-1 not reproduced on a real console
 - [ ] grubForge v2.0.0 moves onto forgekit, inheriting console mode (grubforge#21) — **after the test above**
 - [ ] alacrittyForge and bitlaForge move their own colours and glyphs to the roles and the glyph table (alacrittyforge#7, bitlaforge#2)
 - [ ] Promotion candidates from alacrittyForge: `FilterPickerModal` (type-to-filter long lists) and ListView styling
