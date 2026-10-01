@@ -9,3 +9,9 @@ export GDK_BACKEND="wayland,x11,*"
 export SDL_VIDEODRIVER="wayland,x11"
 export MOZ_ENABLE_WAYLAND=1
 export ELECTRON_OZONE_PLATFORM_HINT=auto
+
+# This computer's own settings, if any (machines/<hostname>/env, D-28).
+export HYPEFORGE_MACHINE="$(cat /etc/hostname 2>/dev/null)"
+_hf_machine="$HOME/.config/hypeforge/machines/$HYPEFORGE_MACHINE/env"
+[ -f "$_hf_machine" ] && . "$_hf_machine"
+unset _hf_machine

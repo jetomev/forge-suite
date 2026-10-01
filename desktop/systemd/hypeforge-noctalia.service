@@ -5,6 +5,8 @@ Description=hypeForge: Noctalia, the desktop shell (bar, launcher, notifications
 PartOf=graphical-session.target
 After=graphical-session.target
 Requisite=graphical-session.target
+# Only in the hypeForge session: Plasma can stay installed next to it (D-6).
+ConditionEnvironment=XDG_CURRENT_DESKTOP=Hyprland
 
 [Service]
 ExecStart=/usr/bin/noctalia

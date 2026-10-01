@@ -75,3 +75,32 @@ show_window_title = false
 
 [lockscreen]
 enabled = false   # hyprlock stays the lock screen (Javier, 2026-09-30); hypridle locks on idle
+
+[widget.launcher]
+custom_image = "/usr/share/pixmaps/kognogos.png"   # the KognogOS emblem on the launcher button (F-32)
+custom_image_colorize = false
+
+# This computer's own bar settings, if it has any: every *.toml in machines/<hostname>/
+# (D-28). HYPEFORGE_MACHINE is set at login by uwsm/env.
+[include]
+files = ["~/.config/hypeforge/machines/${HYPEFORGE_MACHINE}/"]
+
+# Power menu. Noctalia hides its own Lock while its lock screen is off, so Lock is a
+# custom entry: "lock now" for the session, which hypridle answers with hyprlock (F-35).
+[[shell.session.actions]]
+action  = "command"
+label   = "Lock"
+glyph   = "lock"
+command = "loginctl lock-session"
+
+[[shell.session.actions]]
+action = "logout"
+
+[[shell.session.actions]]
+action = "suspend"
+
+[[shell.session.actions]]
+action = "reboot"
+
+[[shell.session.actions]]
+action = "shutdown"

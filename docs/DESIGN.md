@@ -32,8 +32,8 @@
 | Win (tap alone) | App launcher | same | Walker, bound to the key's release | test |
 | Win + Return | Terminal | same | Alacritty | ready |
 | Win + V | Clipboard history | same | Walker's clipboard | ready |
-| Win + K | File manager window | *Krusader to front* | Krusader | ready |
-| Win + E | Terminal file manager | *(new)* | superfile in Alacritty | ready |
+| Win + K | File manager window | *Krusader to front* | Thunar (Javier, 2026-09-30; was Krusader) | ready |
+| Win + E | Terminal file manager | *(new)* | Midnight Commander in Alacritty (Javier, 2026-09-30; was superfile) | ready |
 | Win + L | Lock the screen | same | hyprlock | ready |
 | Ctrl + Alt + Del | Power menu | *Logout screen* | the Walker power list (D-26) | ready |
 | Ctrl + Esc | System monitor | *(Plasma's default)* | btop in Alacritty | ready |

@@ -80,8 +80,8 @@ hl.bind("SUPER + SHIFT + RIGHT", hl.dsp.window.move({ monitor = "r" }), { descri
 local function noctalia(cmd) return hl.dsp.exec_cmd("noctalia msg " .. cmd) end
 hl.bind("SUPER + SUPER_L", noctalia("panel-toggle launcher"), { release = true, description = "Launcher" })
 hl.bind("SUPER + V", noctalia("panel-toggle clipboard"), { description = "Clipboard history" })
-hl.bind("SUPER + K", app("krusader"), { description = "File manager" })
-hl.bind("SUPER + E", app(terminal .. " -e superfile"), { description = "Terminal file manager" })
+hl.bind("SUPER + K", app("thunar"), { description = "File manager" })
+hl.bind("SUPER + E", app(terminal .. " -e mc"), { description = "Terminal file manager (Midnight Commander)" })
 hl.bind("SUPER + L", hl.dsp.exec_cmd("loginctl lock-session"), { description = "Lock the screen" })
 hl.bind("CTRL + ALT + DELETE", noctalia("panel-toggle session"), { description = "Power menu" })
 hl.bind("SUPER + ALT + T", hl.dsp.exec_cmd("bash " .. HYPEFORGE_DIR .. "/bin/hypeforge-theme-next"), { description = "Next theme" })

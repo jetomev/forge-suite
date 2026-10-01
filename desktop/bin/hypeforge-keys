@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# hypeforge-keys: every hypeForge keyboard shortcut, listed in the launcher (F-9).
+# hypeforge-keys: every hypeForge keyboard shortcut, listed in Noctalia's launcher (F-9, D-40).
 # Read live from Hyprland, so the list can never drift from the real keys:
 # every key in hyprland.lua carries a description, and only those are shown.
 # The idea of a searchable shortcut list comes from Omarchy, with thanks.
@@ -13,4 +13,4 @@ hyprctl binds -j | jq -r '
    else ((.modmask | mods) + [ .key | ascii_upcase ] | join(" + ")) end) as $k |
   "\($k)\t\(.description)"' |
   sort -u | column -t -s $'\t' |
-  walker --dmenu --placeholder "Keyboard shortcuts" >/dev/null
+  noctalia dmenu --prompt "Keyboard shortcuts" >/dev/null
