@@ -61,10 +61,8 @@ hl.animation({ leaf = "workspaces", enabled = true, speed = 2, bezier = "almostL
 require("theme")
 -- Floating-first windows, Win + arrow snapping, Alt + Tab, Alt + F4, Win + Return (D-7, D-30..D-35).
 require("snap")
--- Title bars for windows that do not draw their own (D-31, D-33). The plugin is a package
--- (hyprland-plugin-hyprbars), locked to this Hyprland version through nog (D-9).
-local ok, err = pcall(hl.plugin.load, "/usr/lib/libhyprbars.so")
-if ok then require("titlebars") else print("hypeForge: title bars not loaded: " .. tostring(err)) end
+-- No hyprbars title bars (D-42): some apps showed two bars, and snapping did not leave room
+-- for them. Close with Alt + F4, maximise with Win + Page Up or Win + Up twice.
 
 -- Keys (D-29: Plasma's keys keep their jobs) --------------------------------------------------
 -- Windows: snapping, maximise, restore, Alt + F4, Alt + Tab and Win + T live in snap.lua.

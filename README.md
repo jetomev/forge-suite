@@ -107,7 +107,7 @@ A bare Hyprland needs a small app for each of these jobs. For every job, the [re
 | Volume/brightness pop-ups · admin-password pop-up | Text editor · image, PDF and video viewers |
 | Login screen · clipboard history · screenshots | Password wallet · USB auto-mount · power menu · printing |
 
-> **Chosen, 2026-09-29, then reshaped by testing on 2026-09-30.** The first picks were separate small apps. Living in them in a VM changed the plan: settings get graphical apps, not terminal ones (D-39), and **[Noctalia](https://github.com/noctalia-dev/noctalia)** became the desktop shell (D-40): the bar (along the bottom, full width, clock in the corner, D-41), launcher, notifications, sound / network / Bluetooth menus, wallpaper and on-screen pop-ups, with our five themes as its colour schemes. Around it: Hyprland's lock screen, idle timer and password pop-up, hyprbars title bars, Monique for screen settings, the KognogOS SDDM login screen (D-38), all started through uwsm. Every pick is a first try. The reasons are in the [recipe page](docs/RECIPE.md) and the [decision log](docs/DECISIONS.md).
+> **Chosen, 2026-09-29, then reshaped by testing on 2026-09-30.** The first picks were separate small apps. Living in them in a VM changed the plan: settings get graphical apps, not terminal ones (D-39), and **[Noctalia](https://github.com/noctalia-dev/noctalia)** became the desktop shell (D-40): the bar (along the bottom, full width, clock in the corner, D-41), launcher, notifications, sound / network / Bluetooth menus, wallpaper and on-screen pop-ups, with our five themes as its colour schemes. Around it: Hyprland's lock screen, idle timer and password pop-up, no extra title bars (D-42), Monique for screen settings, the KognogOS SDDM login screen (D-38), all started through uwsm. Every pick is a first try. The reasons are in the [recipe page](docs/RECIPE.md) and the [decision log](docs/DECISIONS.md).
 
 ---
 
@@ -126,7 +126,7 @@ hypeForge is built on other people's work, and we are grateful for it.
 - [**Omarchy**](https://github.com/basecamp/omarchy), by DHH and Basecamp (MIT licence), taught us a great deal about turning Arch into a Hyprland desktop. Anything we adapt from it is credited and keeps its notice.
 - The **Hyprland** team, for Hyprland and its family of small apps.
 - The [**Noctalia**](https://github.com/noctalia-dev/noctalia) team (MIT licence), for the shell that draws most of what you see.
-- **Every developer whose app is in the [recipe](docs/RECIPE.md)**: Monique, hyprbars, udiskie, Midnight Commander, superfile, Krusader, Fresh, mpv, cliamp, uwsm and all the others, and the apps we tried along the way (Waybar, Walker, mako, SwayOSD), which taught us what we needed.
+- **Every developer whose app is in the [recipe](docs/RECIPE.md)**: Monique, udiskie, Midnight Commander, superfile, Krusader, Fresh, mpv, cliamp, uwsm and all the others, and the apps we tried along the way (Waybar, Walker, mako, SwayOSD, hyprbars), which taught us what we needed.
 - The [**Catppuccin**](https://catppuccin.com) team, for the colours everything wears.
 
 We don't compare ourselves with anyone. Our picks are simply our picks.

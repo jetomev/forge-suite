@@ -7,6 +7,14 @@
 
 ## 2026-10-01
 
+### D-42 · No title bars from hypeForge
+**Decided by Javier**, after a morning in the real session: *"the top bar on the apps. apps with no bar show it, and it is great. other apps that have a bar, may also add it on top or not. weird. Let's just remove it please."* And on snapping: *"on the top it doesn't show well, like it passes the monitor frame, and then snapping between apps it gets under the one on top.... don't like it."*
+
+**What it means:**
+- **hyprbars is no longer loaded.** Apps that draw their own title bar keep it; apps that do not (Alacritty and other terminals) have none. Close with **Alt + F4**, maximise with **Win + Page Up** or **Win + ↑ twice**, move with **Win + drag**.
+- **Why snapping looked wrong:** hyprbars draws its 26 px bar *above* the window, and `snap.lua` places windows by their own edges. A window snapped to the top had its bar pushed past the screen edge, and a window snapped below slid its bar under the one above. With no bar the problem is gone, so `snap.lua` is unchanged.
+- **This replaces the title-bar parts of D-31 and D-33**; those entries stay as they were written, as history. `hypr/titlebars.lua` is removed from the desktop folder (the prototype keeps its copy). The `hyprland-plugin-hyprbars` package is no longer needed; taking it off this computer and out of the KognogOS build list is a separate, later step.
+
 ### D-41 · The bar: along the bottom, full width, clock in the corner
 **Decided by Javier**, shaped live on this computer in four small steps, then: *"lock the bar information for our KognogOS hypeForge build. It is perfect."*
 
