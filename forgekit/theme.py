@@ -22,6 +22,7 @@ COLORS = {
     "overlay0": "#7f849c", "subtext": "#a6adc8", "text": "#cdd6f4",
     "blue": "#89b4fa", "sapphire": "#74c7ec", "mauve": "#cba6f7",
     "green": "#a6e3a1", "yellow": "#f9e2af", "red": "#f38ba8",
+    "peach": "#fab387",
     "boxblue": "#2b4a7a",
 }
 
@@ -50,6 +51,13 @@ ROLES: dict[str, tuple[str, str]] = {
     "warn":          (COLORS["yellow"],   "ansi_bright_yellow"),
     "danger":        (COLORS["red"],      "ansi_bright_red"),
     "ok":            (COLORS["green"],    "ansi_bright_green"),
+    # v0.5.0: a value changed but not saved yet (peach; magenta on the console,
+    # where yellow is already "warn") and plain information (blue)
+    "changed":       (COLORS["peach"],    "ansi_bright_magenta"),
+    "info":          (COLORS["blue"],     "ansi_bright_cyan"),
+    # v0.5.0: the hint bar — keys in the accent colour, words muted
+    "hint-bg":       (COLORS["crust"],    "ansi_black"),
+    "hint-key":      (COLORS["blue"],     "ansi_bright_cyan"),
     "selected-bg":   (COLORS["surface1"], "ansi_blue"),
     "selected":      (COLORS["blue"],     "ansi_bright_white"),
     # buttons: on the console a button is a coloured block with dark text
@@ -150,8 +158,11 @@ ConfirmDialog, ForgePanelScreen, ForgeModal { align: center middle; background: 
 Label { color: $forge-muted; padding: 1 0 0 0; }
 Input { background: $forge-surface; color: $forge-text; border: solid $forge-field-border; }
 Input:focus { border: solid $forge-accent; }
-Select { background: $forge-surface; color: $forge-text; border: solid $forge-field-border; }
-Select:focus { border: solid $forge-accent; }
+/* v0.5.0: one border, on the visible box — Select's outer frame drew a
+   second one around it (five rows for one value) */
+Select { background: $forge-bg; border: none; height: 3; }
+Select > SelectCurrent { background: $forge-surface; color: $forge-text; border: solid $forge-field-border; }
+Select:focus > SelectCurrent { border: solid $forge-accent; }
 /* console only (":ansi" = the app runs on basic colours): Select's inner box
    and Switch draw Textual's "tall" border from thin edge blocks the console
    font lacks, so there they get none / a plain line instead */
@@ -184,4 +195,103 @@ Button.-primary:ansi { background: $forge-primary-bg; color: $forge-primary; }
 Button.-error:ansi { background: $forge-error-bg; color: $forge-on-error; }
 Button:hover:ansi { background: $forge-button-hover; }
 Button:focus:ansi, .forge-buttons Button:focus:ansi { background: $forge-focus-bg; color: $forge-focus; text-style: none; }
+
+/* ── v0.5.0 ─────────────────────────────────────────────────────────────── */
+
+/* bottom bars: changes (unsaved work + its buttons) over hints (keys) */
+#forge-footer { dock: bottom; height: auto; }
+#forge-changes { height: 1; background: $forge-menubar-bg; }
+#forge-changes-msg { width: 1fr; height: 1; }
+#forge-changes-actions { width: auto; height: 1; padding: 0 1 0 0; }
+#forge-hints { height: 1; background: $forge-hint-bg; color: $forge-muted; }
+
+/* the designed notice: exactly one blank line before and after */
+.forge-notice { height: auto; margin: 1 0; }
+
+/* a setting in a form: label, control, changed mark; a muted line under it */
+.forge-setting { height: auto; margin: 0 0 1 0; }
+.forge-setting-line { height: auto; }
+.forge-setting-label { width: 26; height: 3; content-align: left middle; color: $forge-text; }
+.forge-setting-line > Select { width: 48; }
+.forge-setting-line > Input { width: 48; }
+.forge-setting-line > Switch { width: auto; }
+.forge-setting-mark { width: auto; min-width: 12; height: 3; padding: 0 0 0 2; content-align: left middle; }
+.forge-setting-note { height: auto; padding: 0 0 0 26; }
+/* fields in a form are outlines on the screen's own background: one colour
+   inside and out, the border carries the shape (and the focus) */
+.forge-setting Input, .forge-setting .forge-toggle, .forge-setting Select,
+.forge-setting SelectCurrent, .forge-setting SelectionList, .forge-setting .forge-choices,
+.forge-setting .forge-number { background: $forge-bg; background-tint: transparent 0%; }
+.forge-setting Input:focus { background: $forge-bg; background-tint: transparent 0%; }
+.forge-setting SelectionList > .option-list--option { background: $forge-bg; }
+
+/* a number with preset buttons */
+.forge-number { height: 3; width: auto; }
+.forge-number-input { width: 9; }
+.forge-number-unit { width: auto; height: 3; padding: 0 2 0 1; content-align: left middle; color: $forge-muted; }
+.forge-preset {
+    height: 1; min-width: 3; margin: 1 0 0 1; padding: 0 1; border: none;
+    background: $forge-button-bg; color: $forge-button; text-style: none;
+}
+.forge-preset:hover { background: $forge-button-hover; }
+.forge-preset.-selected { background: $forge-selected-bg; color: $forge-selected; text-style: $forge-strong; }
+.forge-preset:focus { background: $forge-focus-bg; color: $forge-focus; }
+
+/* v0.5.0 controls that say their state in words */
+.forge-toggle { width: auto; height: 3; border: solid $forge-field-border; background: $forge-surface; color: $forge-text; padding: 0 1; }
+.forge-toggle:focus { border: solid $forge-accent; }
+.forge-choices { width: auto; height: 3; border: solid $forge-field-border; background: $forge-bg; color: $forge-text; }
+.forge-choices:focus { border: solid $forge-accent; }
+
+/* choice widgets, both modes */
+Input.-invalid { border: solid $forge-danger; }
+Input.-invalid:focus { border: solid $forge-danger; }
+RadioSet { layout: horizontal; height: auto; width: auto; background: $forge-bg; border: solid $forge-field-border; padding: 0 1; }
+RadioSet:focus { border: solid $forge-accent; }
+RadioButton { background: $forge-bg; color: $forge-text; padding: 0 2 0 0; }
+SelectionList { background: $forge-surface; color: $forge-text; border: solid $forge-field-border; height: auto; max-height: 14; }
+SelectionList:focus { border: solid $forge-accent; }
+SelectionList > .option-list--option-highlighted { background: $forge-selected-bg; color: $forge-selected; }
+/* an unticked box is empty: the faint X read as "ticked" */
+SelectionList > .selection-list--button { color: $forge-surface; background: $forge-surface; }
+SelectionList > .selection-list--button-highlighted { color: $forge-selected-bg; background: $forge-surface; }
+SelectionList > .selection-list--button-selected { color: $forge-ok; background: $forge-surface; text-style: bold; }
+SelectionList > .selection-list--button-selected-highlighted { color: $forge-ok; background: $forge-surface; text-style: bold; }
+OptionList { background: $forge-surface; color: $forge-text; border: solid $forge-field-border; }
+OptionList:focus { border: solid $forge-accent; }
+OptionList > .option-list--option-highlighted { background: $forge-selected-bg; color: $forge-selected; text-style: $forge-strong; }
+SelectOverlay { background: $forge-surface; color: $forge-text; border: solid $forge-accent; }
+SelectOverlay > .option-list--option-highlighted { background: $forge-selected-bg; color: $forge-selected; }
+ListView { background: $forge-bg; border: solid $forge-field-border; }
+ListView:focus { border: solid $forge-accent; }
+ListItem { background: $forge-bg; color: $forge-text; }
+ListView > ListItem.-highlight { background: $forge-selected-bg; color: $forge-selected; }
+TextArea { background: $forge-surface; color: $forge-text; border: solid $forge-field-border; }
+TextArea:focus { border: solid $forge-accent; }
+Toast { background: $forge-surface; color: $forge-text; }
+Toast.-information { border-left: outer $forge-info; }
+Toast.-warning { border-left: outer $forge-warn; }
+Toast.-error { border-left: outer $forge-danger; }
+
+/* floating windows */
+.forge-picker { width: 64; }
+#picker-list { height: auto; max-height: 16; }
+#picker-count { height: 1; padding: 0 0 0 1; }
+.forge-picker-hint { padding: 0 0 1 0; }
+.forge-review { width: 84; }
+.forge-progress { width: 64; }
+#progress-log { padding: 1 0 0 0; }
+
+/* the manual */
+ManualScreen { background: $forge-bg; }
+#forge-manual { height: 1fr; }
+#forge-manual-title { height: 1; background: $forge-title-bg; color: $forge-title; text-style: bold; }
+#forge-manual-body { height: 1fr; }
+#forge-manual-contents { width: 32; height: 1fr; border: none; border-right: solid $forge-border; background: $forge-bg; padding: 1 1 0 1; }
+#forge-manual-page { width: 1fr; height: 1fr; padding: 0 2; }
+#forge-manual-md { background: $forge-bg; }
+#forge-manual-md MarkdownH1 { color: $forge-title-accent; text-style: bold; background: $forge-bg; border: none; content-align: left top; }
+#forge-manual-md MarkdownH2 { color: $forge-accent; text-style: bold; background: $forge-bg; border: none; }
+#forge-manual-md MarkdownH3 { color: $forge-text; text-style: bold; background: $forge-bg; }
+#forge-manual-md MarkdownFence { background: $forge-surface; }
 """

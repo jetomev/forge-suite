@@ -17,6 +17,15 @@ Console mode (issue #1): on a plain text console (``TERM=linux``, or forced with
 ``FORGE_ASCII=1``) the same app switches to the console colour roles, Textual's
 16-colour theme, whole-cell scrollbars and a filter that swaps every character
 the console font lacks. ``self.forge_console`` tells the app which mode it runs in.
+
+v0.5.0, all opt-in so existing apps look the same:
+
+    SHOW_HINT_BAR = True      # bottom row: the keys for what has focus
+                              #   (widgets declare FORGE_HINTS; else app HINTS)
+    SHOW_CHANGES_BAR = True   # row above it: unsaved work + finishing buttons
+                              #   (self.changes_bar.show(...) / .hide())
+    set_title_status("…")     # muted text at the right end of the title bar
+    def before_quit(self) -> bool:  # False = not now (e.g. ask first, then exit)
 """
 
 from __future__ import annotations
@@ -34,6 +43,38 @@ from .console import ConsoleGlyphFilter, ConsoleScrollBarRender, console_mode, s
 from .dialogs import AboutDialog, LicenseDialog, ShortcutsDialog
 from .menu import MenuBar, MenuDropdown
 from .theme import FORGE_CSS, css_variables
+from .widgets import ChangesBar, HintBar, hints_for
+
+
+class TitleText(Static):
+    """The title row: the app's name centred, an optional muted status at the
+    right edge (dropped when the row is too narrow for both)."""
+
+    def __init__(self, title: str, **kw) -> None:
+        super().__init__(title, **kw)
+        self._title, self._status = title, ""
+
+    @property
+    def status(self) -> str:
+        return self._status
+
+    @status.setter
+    def status(self, text: str) -> None:
+        self._status = text
+        self.refresh()
+
+    def render(self):
+        w = self.size.width
+        if not self._status or w <= 0:
+            return self._title
+        left = max(0, (w - len(self._title)) // 2)
+        right_start = w - len(self._status) - 1
+        if right_start <= left + len(self._title) + 2:
+            return self._title
+        gap = right_start - left - len(self._title)
+        from rich.markup import escape
+        return (" " * left + escape(self._title) + " " * gap
+                + f"[not bold $forge-muted]{escape(self._status)}[/] ")
 
 
 class ForgeApp(App[None]):
@@ -44,6 +85,9 @@ class ForgeApp(App[None]):
     ABOUT: dict = {}
     LICENSE_NAME: str = "GPL-3.0-or-later"
     LICENSE_NOTICE: str = ""
+    SHOW_HINT_BAR: bool = False
+    SHOW_CHANGES_BAR: bool = False
+    HINTS: list[tuple[str, str]] = []
 
     CSS = FORGE_CSS
 
@@ -72,6 +116,7 @@ class ForgeApp(App[None]):
         self._glyph_filter = ConsoleGlyphFilter()
         self.title = self.APP_NAME
         self._by_id = {m["id"]: m for m in self.MENU}
+        self._title_status = ""
 
     # ── console mode (issue #1) ──────────────────────────────────────────────
     def get_css_variables(self) -> dict[str, str]:
@@ -87,16 +132,55 @@ class ForgeApp(App[None]):
     # ── shell composition ────────────────────────────────────────────────────
     def compose(self) -> ComposeResult:
         with Vertical(id="forge-header"):
-            yield Static(self.APP_NAME, id="forge-title")
+            yield TitleText(self.APP_NAME, id="forge-title")
             yield MenuBar(self.MENU)
         with ContentSwitcher(initial=f"sec-{self._first_section()}", id="forge-work"):
             yield from self.compose_sections()
+        # after the work area, so Tab reaches the screen's own fields first and
+        # the bar's buttons last (it is docked to the bottom either way)
+        if self.SHOW_HINT_BAR or self.SHOW_CHANGES_BAR:
+            with Vertical(id="forge-footer"):
+                if self.SHOW_CHANGES_BAR:
+                    yield ChangesBar()
+                if self.SHOW_HINT_BAR:
+                    yield HintBar()
 
     def compose_sections(self) -> ComposeResult:
         yield from ()
 
     def on_mount(self) -> None:
         self._mark_active(self._first_section())
+        self.refresh_hints()
+
+    # ── v0.5.0: title status, hint bar, changes bar ──────────────────────────
+    def set_title_status(self, text: str) -> None:
+        """Muted text at the right end of the title bar ("" to clear)."""
+        self._title_status = text
+        self.query_one("#forge-title", TitleText).status = text
+
+    @property
+    def changes_bar(self) -> ChangesBar:
+        return self.query_one(ChangesBar)
+
+    def refresh_hints(self) -> None:
+        """Show the keys for whatever has focus on the main screen."""
+        if not self.SHOW_HINT_BAR:
+            return
+        try:
+            bar = self.query_one(HintBar)
+        except Exception:
+            return
+        if self.screen is not bar.screen:
+            return
+        bar.set_hints(hints_for(self.screen.focused, self.HINTS))
+
+    def on_descendant_focus(self, event) -> None:
+        self.refresh_hints()
+
+    def before_quit(self) -> bool:
+        """Hook: return False to stay (and, for example, ask first, then call
+        ``self.exit()`` yourself)."""
+        return True
 
     def _first_section(self) -> str:
         for m in self.MENU:
@@ -126,6 +210,7 @@ class ForgeApp(App[None]):
         self.query_one("#forge-work", ContentSwitcher).current = f"sec-{section_id}"
         self._mark_active(section_id)
         self.on_section_shown(section_id)
+        self.refresh_hints()
 
     def on_section_shown(self, section_id: str) -> None:
         """Hook: called after a section becomes visible."""
@@ -140,7 +225,8 @@ class ForgeApp(App[None]):
 
     def action_act(self, action_id: str) -> None:
         if action_id == "quit":
-            self.exit()
+            if self.before_quit():
+                self.exit()
         elif action_id == "shortcuts":
             self.push_screen(ShortcutsDialog(self.SHORTCUTS))
         elif action_id == "license":

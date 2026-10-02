@@ -32,6 +32,18 @@ Steps:
 - [x] Installed on the desktop by Javier with `nog install python-forgekit` (nog rightly refuses AUR builds with nobody at the keyboard): `python-forgekit 0.4.0-1`; bitlaForge and alacrittyForge start on it in both modes. (The AUR's info service lagged ~15 min after the push while its web page and repository already showed 0.4.0)
 - [x] #1 closed with the full explanation; grubforge#21, alacrittyforge#7, bitlaforge#2, nogforge#1 told what they get by upgrading and what is theirs to do
 
+## Now · v0.5.0 — the pieces grubForge v2.0.0 needs (2 Oct 2026, not released yet)
+Design approved by Javier: grubforge `docs/design/v2.0.0-screens.html`. Proven in grubForge before release (*"a library proves its API through apps"*).
+- [x] Roles `changed` (peach / console magenta), `info`, `hint-bg`, `hint-key`; glyphs changed, new, fixed, info, default, down, check-on, radio-on
+- [x] `Notice` (designed message, one blank line around), `HintBar` (keys follow focus via `FORGE_HINTS`), `ChangesBar`, `SettingRow`, `NumberPresets` (one Tab stop, ↑↓ presets), `Toggle` ("● On / ○ Off" in words), `Choices` ("( ) / (•)" row, ←→)
+- [x] `FilterPicker` (promoted from alacrittyForge: current marked + highlighted, count, typed value), `ReviewDialog` (old → new), `ProgressDialog`, `ManualScreen` (+ `load_pages`)
+- [x] `closing.py`: `session_banner`, `closing_notice`, `runs_log_row` — the start and end printed in the terminal (Javier's rule from nog)
+- [x] Shell, opt-in: `SHOW_HINT_BAR`, `SHOW_CHANGES_BAR`, `set_title_status`, `before_quit`
+- [x] Styles: one-border Select; fields as outlines in forms; lists, checklists, text areas, toasts, the manual
+- [x] `examples/gallery.py`; tests 26 → 48, incl. the gallery on a real console preview; alacrittyForge and bitlaForge still mount and switch sections
+- Found while building: a method named `log` hid Textual's own (crash on focus); the filter field selected its first letter (lost when typing on the list); the SVG→PNG converter collapsed spaces (screens are now checked through Chrome)
+- [ ] Release after grubForge v2.0.0 proves it; README + docs + AUR then
+
 ## Next
 - [x] Installed on the desktop by Javier through nog: `python-forgekit 0.4.1-1`; bitlaForge and alacrittyForge start on it, "Help F1" in console mode only. (First try reinstalled 0.4.0: the AUR info service lagged right after the push and yay reused its cached build; the second run got 0.4.1)
 - [x] Decided (Javier, 2026-10-01): in a normal terminal the focus colour stays as it is (primary and focused share `#2B4A7A`, bold tells them apart): *"focus color, as is it's ok."*

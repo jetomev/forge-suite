@@ -146,6 +146,16 @@ GLYPHS: dict[str, tuple[str, str]] = {
     "dash": ("—", "-"),
     "ellipsis": ("…", "..."),
     "arrow": ("→", "→"),
+    # v0.5.0 — marks for settings and lists (every plain form is in the
+    # console font, and both forms are one cell wide)
+    "changed": ("●", "*"),
+    "new": ("+", "+"),
+    "fixed": ("■", "■"),
+    "info": ("i", "i"),
+    "default": ("★", "*"),
+    "down": ("▾", "v"),
+    "check-on": ("x", "x"),
+    "radio-on": ("•", "*"),
 }
 
 _console = console_mode()
