@@ -18,3 +18,14 @@ hl.bind("XF86MonBrightnessDown", ddc("-"), { locked = true, repeating = true })
 -- Keyboard: US International, the layout this computer's system setting already uses
 -- (localectl: us / intl). ' + a gives á, ~ + n gives ñ (Javier, 2026-10-01).
 hl.config({ input = { kb_layout = "us", kb_variant = "intl" } })
+
+-- World of Warcraft 3.3.5a under Wine (pi-kognog-azerothcore client): open it full-screen on the
+-- middle screen, so the window is exactly the 2560x1440 the game draws at. Left tiled, the window
+-- came out a different size from the picture: the view jumped when moving the mouse and clicks
+-- landed in the wrong place (2026-10-01).
+hl.window_rule({
+    name = "wow-fullscreen",
+    match = { class = "(?i)^wow.*\\.exe$" },
+    monitor = "DP-3",
+    fullscreen = true,
+})
