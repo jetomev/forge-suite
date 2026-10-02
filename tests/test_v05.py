@@ -366,3 +366,30 @@ class NumberDecimals(unittest.IsolatedAsyncioTestCase):
             await pilot.pause()
             self.assertEqual(got, [7])
             self.assertIsInstance(got[0], int)
+
+
+class NumberWidth(unittest.IsolatedAsyncioTestCase):
+    """0.5.1: the field is as wide as its longest number, plus the cursor."""
+
+    async def test_a_long_number_fits_without_scrolling(self):
+        from textual.app import App
+        from textual.widgets import Input
+        from forgekit import FORGE_CSS, NumberPresets, css_variables
+
+        class A(App):
+            CSS = FORGE_CSS            # where the field's width is set
+
+            def get_css_variables(self):
+                return {**super().get_css_variables(), **css_variables(False)}
+
+            def compose(self):
+                yield NumberPresets(150, [("1000", 1000), ("100000", 100000)], maximum=100000)
+
+        app = A()
+        async with app.run_test(size=(100, 10)) as pilot:
+            await pilot.pause()
+            inp = app.query_one(Input)
+            self.assertFalse(inp.show_horizontal_scrollbar)
+            inp.value = "100000"
+            await pilot.pause()
+            self.assertFalse(inp.show_horizontal_scrollbar)

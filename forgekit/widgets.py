@@ -235,8 +235,15 @@ class NumberPresets(Horizontal):
         return str(v)
 
     def compose(self) -> ComposeResult:
-        yield Input(self._text(self.value), type="number" if self.decimals else "integer",
+        inp = Input(self._text(self.value), type="number" if self.decimals else "integer",
                     classes="forge-number-input")
+        # wide enough for the longest number it may hold, plus the cursor: a
+        # fixed 9 left 3 digits, so alacrittyForge's 150 columns filled it and
+        # 100000 lines would have been cut (0.5.1)
+        longest = [self._text(v) for _l, v in self.presets] + [self._text(self.value)]
+        longest += [self._text(v) for v in (self.minimum, self.maximum) if v is not None]
+        inp.styles.width = max(9, max(len(t) for t in longest) + 1 + 6)
+        yield inp
         if self.unit:
             yield Static(self.unit, classes="forge-number-unit")
         # one Tab stop for the whole setting: the presets are clicked, or
