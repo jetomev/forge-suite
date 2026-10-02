@@ -51,21 +51,43 @@ def notice_markup(heading: str, lines: Iterable[str] = (), level: str = "info") 
     return "\n".join(out)
 
 
-class Notice(Static):
-    """A designed message. ``level``: ok, info, warn, error, changed, muted."""
+class Notice(Vertical):
+    """A designed message. ``level``: ok, info, warn, error, changed, muted.
+
+    The heading and the indented lines are separate blocks, so a line too long
+    for the window wraps under its own indent instead of back to the edge
+    (found at 100 columns in grubForge). ``notice_markup`` still gives the same
+    text as one string, for a terminal print."""
 
     DEFAULT_CLASSES = "forge-notice"
 
     def __init__(self, heading: str = "", lines: Sequence[str] = (), level: str = "info", **kw) -> None:
-        super().__init__(notice_markup(heading, lines, level) if heading else "", **kw)
+        super().__init__(**kw)
+        self._head = Static("", classes="forge-notice-head")
+        self._body = Static("", classes="forge-notice-body")
+        self._set(heading, lines, level)
         self.display = bool(heading)
 
+    def compose(self) -> ComposeResult:
+        yield self._head
+        yield self._body
+
+    def _set(self, heading: str, lines: Sequence[str], level: str) -> None:
+        role = LEVELS.get(level, "info")
+        self._head.update(f"[b $forge-{role}]==> {escape(heading)}[/]" if heading else "")
+        self._body.update("\n".join(lines))
+        self._body.display = bool(lines)
+
     def show(self, heading: str, lines: Sequence[str] = (), level: str = "info") -> None:
-        self.update(notice_markup(heading, lines, level))
+        self._set(heading, lines, level)
         self.display = True
 
     def hide(self) -> None:
         self.display = False
+
+    def render_text(self) -> str:
+        """The notice as plain text (for tests and screen readers of the code)."""
+        return f"{self._head.render()}\n{self._body.render()}"
 
 
 def hints_markup(hints: Sequence[tuple[str, str]]) -> str:
@@ -135,11 +157,13 @@ class ChangesBar(Horizontal):
 
 
 class SettingRow(Vertical):
-    """One setting: ``label  [control]  ● changed`` with a muted line under it.
+    """One setting: ``label  [control]`` with a line under it.
 
     ``note`` is the second line when the value is unchanged (a hint, or "");
-    ``mark_changed(was)`` switches it to "was: <old value>" with the changed
-    mark, ``mark_unchanged()`` switches back. ``help`` is shown by the app's help
+    ``mark_changed(was)`` switches it to "● changed · was: <old value>",
+    ``mark_unchanged()`` switches back. The mark lives on that second line, which
+    has the row's full width: beside a wide control it was cut off at 120 columns
+    and gone at 100 (found in grubForge's presets row). ``help`` is shown by the app's help
     panel when the row has focus.
     """
 
@@ -157,7 +181,6 @@ class SettingRow(Vertical):
         with Horizontal(classes="forge-setting-line"):
             yield Static(self.label, classes="forge-setting-label")
             yield self.control
-            yield Static("", classes="forge-setting-mark")
         note = Static(self._note_markup(), classes="forge-setting-note")
         note.display = bool(self.note)      # no empty line under a row without one
         yield note
@@ -167,14 +190,12 @@ class SettingRow(Vertical):
 
     def mark_changed(self, was: str) -> None:
         self.changed = True
-        self.query_one(".forge-setting-mark", Static).update(f"[$forge-changed]{glyph('changed')} changed[/]")
         note = self.query_one(".forge-setting-note", Static)
-        note.update(f"[$forge-muted]was: {escape(was)}[/]")
+        note.update(f"[$forge-changed]{glyph('changed')} changed[/] [$forge-muted]· was: {escape(was)}[/]")
         note.display = True
 
     def mark_unchanged(self) -> None:
         self.changed = False
-        self.query_one(".forge-setting-mark", Static).update("")
         note = self.query_one(".forge-setting-note", Static)
         note.update(self._note_markup())
         note.display = bool(self.note)

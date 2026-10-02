@@ -210,6 +210,8 @@ Button:focus:ansi, .forge-buttons Button:focus:ansi { background: $forge-focus-b
 
 /* the designed notice: exactly one blank line before and after */
 .forge-notice { height: auto; margin: 1 0; }
+.forge-notice-head, .forge-notice-body { height: auto; }
+.forge-notice-body { padding: 0 0 0 4; }
 
 /* a setting in a form: label, control, changed mark; a muted line under it */
 .forge-setting { height: auto; margin: 0 0 1 0; }
@@ -218,13 +220,11 @@ Button:focus:ansi, .forge-buttons Button:focus:ansi { background: $forge-focus-b
 .forge-setting-line > Select { width: 48; }
 .forge-setting-line > Input { width: 48; }
 .forge-setting-line > Switch { width: auto; }
-.forge-setting-mark { width: auto; min-width: 12; height: 3; padding: 0 0 0 2; content-align: left middle; }
 .forge-setting-note { height: auto; padding: 0 0 0 24; }
 /* stacked: the label on its own line, the control the full width under it
    (for wide controls such as checklists) */
 .forge-setting.-stacked .forge-setting-line { layout: vertical; }
 .forge-setting.-stacked .forge-setting-label { height: 1; width: 1fr; }
-.forge-setting.-stacked .forge-setting-mark { height: 1; padding: 0; }
 .forge-setting.-stacked .forge-setting-note { padding: 0; }
 /* fields in a form are outlines on the screen's own background: one colour
    inside and out, the border carries the shape (and the focus) */
@@ -239,7 +239,7 @@ Button:focus:ansi, .forge-buttons Button:focus:ansi { background: $forge-focus-b
 .forge-number-input { width: 9; }
 .forge-number-unit { width: auto; height: 3; padding: 0 1; content-align: left middle; color: $forge-muted; }
 .forge-preset {
-    height: 1; width: auto; min-width: 3; margin: 1 0 0 1; padding: 0 1; border: none;
+    height: 1; width: auto; min-width: 3; margin: 1 0 0 1; padding: 0; border: none;  /* Textual adds one space each side */
     background: $forge-button-bg; color: $forge-button; text-style: none;
 }
 .forge-preset:hover { background: $forge-button-hover; }

@@ -197,11 +197,11 @@ class Controls(unittest.IsolatedAsyncioTestCase):
         async with app.run_test(size=SIZE) as pilot:
             await pilot.pause()
             row = app.query_one("#row-default")
-            self.assertIn("changed", str(row.query_one(".forge-setting-mark").render()))
+            self.assertIn("changed", str(row.query_one(".forge-setting-note").render()))
             self.assertIn("was: the first entry", str(row.query_one(".forge-setting-note").render()))
             row.mark_unchanged()
             await pilot.pause()
-            self.assertEqual(str(row.query_one(".forge-setting-mark").render()).strip(), "")
+            self.assertNotIn("changed", str(row.query_one(".forge-setting-note").render()))
 
 
 class Windows(unittest.IsolatedAsyncioTestCase):
