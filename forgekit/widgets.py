@@ -202,10 +202,12 @@ class SettingRow(Vertical):
 
 
 class NumberPresets(Horizontal):
-    """A whole-number field with preset buttons. Posts ``NumberPresets.Changed``.
+    """A number field with preset buttons. Posts ``NumberPresets.Changed``.
 
     ``presets``: list of ``(label, value)``, e.g. ``[("0", 0), ("wait forever", -1)]``.
-    The preset matching the value is shown selected.
+    The preset matching the value is shown selected. Whole numbers by default;
+    ``decimals=True`` accepts 11.25 (0.5.1, for alacrittyForge's font size) and
+    shows 12.0 as 12.
     """
 
     DEFAULT_CLASSES = "forge-number"
@@ -220,14 +222,21 @@ class NumberPresets(Horizontal):
         def control(self) -> "NumberPresets":
             return self.number
 
-    def __init__(self, value: int, presets: Sequence[tuple[str, int]], *, unit: str = "",
-                 minimum: int | None = None, maximum: int | None = None, **kw) -> None:
+    def __init__(self, value: float, presets: Sequence[tuple[str, float]], *, unit: str = "",
+                 minimum: float | None = None, maximum: float | None = None, decimals: bool = False,
+                 **kw) -> None:
         super().__init__(**kw)
         self.value, self.presets, self.unit = value, list(presets), unit
-        self.minimum, self.maximum = minimum, maximum
+        self.minimum, self.maximum, self.decimals = minimum, maximum, decimals
+
+    def _text(self, v: float) -> str:
+        if self.decimals and float(v).is_integer():
+            return str(int(v))
+        return str(v)
 
     def compose(self) -> ComposeResult:
-        yield Input(str(self.value), type="integer", classes="forge-number-input")
+        yield Input(self._text(self.value), type="number" if self.decimals else "integer",
+                    classes="forge-number-input")
         if self.unit:
             yield Static(self.unit, classes="forge-number-unit")
         # one Tab stop for the whole setting: the presets are clicked, or
@@ -244,11 +253,15 @@ class NumberPresets(Horizontal):
         for i, (_l, v) in enumerate(self.presets):
             self.query_one(f"#preset-{i}", Button).set_class(v == self.value, "-selected")
 
-    def set_value(self, value: int, announce: bool = True) -> None:
+    def set_value(self, value: float, announce: bool = True) -> None:
         self.value = value
         inp = self.query_one(Input)
-        if inp.value != str(value):
-            inp.value = str(value)
+        try:
+            same = (float(inp.value) if self.decimals else int(inp.value)) == value
+        except ValueError:
+            same = False
+        if not same:
+            inp.value = self._text(value)
         self._mark()
         if announce:
             self.post_message(self.Changed(self, value))
@@ -274,7 +287,7 @@ class NumberPresets(Horizontal):
     def _typed(self, e: Input.Changed) -> None:
         e.stop()
         try:
-            v = int(e.value)
+            v = float(e.value) if self.decimals else int(e.value)
         except ValueError:
             return
         if (self.minimum is not None and v < self.minimum) or (self.maximum is not None and v > self.maximum):

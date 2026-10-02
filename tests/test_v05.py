@@ -318,3 +318,51 @@ class ConsoleGallery(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class NumberDecimals(unittest.IsolatedAsyncioTestCase):
+    """0.5.1: alacrittyForge's font size (11.25 pt, 12.0 shown as 12)."""
+
+    async def test_decimals_are_accepted_and_whole_numbers_stay_plain(self):
+        from textual.app import App
+        from textual.widgets import Input
+        from forgekit import NumberPresets
+        got = []
+
+        class A(App):
+            def compose(self):
+                yield NumberPresets(12.0, [("11", 11), ("12", 12)], unit="pt", decimals=True)
+
+            def on_number_presets_changed(self, e):
+                got.append(e.value)
+
+        app = A()
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            inp = app.query_one(Input)
+            self.assertEqual(inp.value, "12")
+            self.assertTrue(app.query_one("#preset-1").has_class("-selected"))
+            inp.value = "11.25"
+            await pilot.pause()
+            self.assertEqual(got[-1], 11.25)
+
+    async def test_whole_number_fields_still_refuse_decimals(self):
+        from textual.app import App
+        from textual.widgets import Input
+        from forgekit import NumberPresets
+        got = []
+
+        class A(App):
+            def compose(self):
+                yield NumberPresets(5, [("5", 5)])
+
+            def on_number_presets_changed(self, e):
+                got.append(e.value)
+
+        app = A()
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            app.query_one(Input).value = "7"
+            await pilot.pause()
+            self.assertEqual(got, [7])
+            self.assertIsInstance(got[0], int)
