@@ -51,6 +51,9 @@ class ManualScreen(ModalScreen[None]):
         self._start = start if start in self._pages else (self._order[0] if self._order else None)
         self._history: list[str] = []
         self.current: str | None = None
+        # the contents list reports its own first highlight late; until the
+        # requested page has settled, its highlights are not someone browsing
+        self._settled = False
 
     def compose(self) -> ComposeResult:
         with Vertical(id="forge-manual"):
@@ -68,6 +71,12 @@ class ManualScreen(ModalScreen[None]):
         if self._start:
             self.open_page(self._start, remember=False)
         self.query_one("#forge-manual-contents", OptionList).focus()
+        self.call_after_refresh(self._settle)
+
+    def _settle(self) -> None:
+        if self.current:
+            self.query_one("#forge-manual-contents", OptionList).highlighted = self._order.index(self.current)
+        self.call_after_refresh(lambda: setattr(self, "_settled", True))
 
     def open_page(self, page_id: str, remember: bool = True) -> None:
         if page_id not in self._pages:
@@ -85,7 +94,7 @@ class ManualScreen(ModalScreen[None]):
 
     def on_option_list_option_highlighted(self, e: OptionList.OptionHighlighted) -> None:
         # browsing the contents is not a step to go back to; links are
-        if e.option.id != self.current:
+        if self._settled and e.option.id != self.current:
             self.open_page(e.option.id, remember=False)
 
     def on_markdown_link_clicked(self, e: Markdown.LinkClicked) -> None:

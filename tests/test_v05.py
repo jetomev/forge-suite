@@ -277,9 +277,14 @@ class Windows(unittest.IsolatedAsyncioTestCase):
         app = gallery.Gallery()
         async with app.run_test(size=SIZE) as pilot:
             await pilot.pause()
-            m = ManualScreen("Manual", gallery.PAGES)
+            m = ManualScreen("Manual", gallery.PAGES, start="backups")
             app.push_screen(m)
-            await pilot.pause()
+            await pilot.pause(0.3)
+            # opened where asked, and stays there (the list's own first
+            # highlight once sent it back to the first page)
+            self.assertEqual(m.current, "backups")
+            m.open_page("start", remember=False)
+            await pilot.pause(0.3)
             self.assertEqual(m.current, "start")
             m.open_page("backups")
             await pilot.pause()

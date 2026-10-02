@@ -166,8 +166,11 @@ Select:focus > SelectCurrent { border: solid $forge-accent; }
 /* console only (":ansi" = the app runs on basic colours): Select's inner box
    and Switch draw Textual's "tall" border from thin edge blocks the console
    font lacks, so there they get none / a plain line instead */
-SelectCurrent:ansi { border: none; background: $forge-surface; color: $forge-text; }
-Select:focus > SelectCurrent:ansi { border: none; }
+/* v0.5.0: a plain line, which the console font has (only Textual's "tall"
+   edge blocks are missing); with no border at all the value floated a line
+   above its own label */
+Select > SelectCurrent:ansi { border: solid $forge-field-border; background: $forge-bg; color: $forge-text; }
+Select:focus > SelectCurrent:ansi { border: solid $forge-accent; }
 Checkbox { background: $forge-bg; color: $forge-text; }
 Switch.-on { color: $forge-accent; }
 Switch:focus { border: tall $forge-accent; }
@@ -211,12 +214,18 @@ Button:focus:ansi, .forge-buttons Button:focus:ansi { background: $forge-focus-b
 /* a setting in a form: label, control, changed mark; a muted line under it */
 .forge-setting { height: auto; margin: 0 0 1 0; }
 .forge-setting-line { height: auto; }
-.forge-setting-label { width: 26; height: 3; content-align: left middle; color: $forge-text; }
+.forge-setting-label { width: 24; height: 3; content-align: left middle; color: $forge-text; }
 .forge-setting-line > Select { width: 48; }
 .forge-setting-line > Input { width: 48; }
 .forge-setting-line > Switch { width: auto; }
 .forge-setting-mark { width: auto; min-width: 12; height: 3; padding: 0 0 0 2; content-align: left middle; }
-.forge-setting-note { height: auto; padding: 0 0 0 26; }
+.forge-setting-note { height: auto; padding: 0 0 0 24; }
+/* stacked: the label on its own line, the control the full width under it
+   (for wide controls such as checklists) */
+.forge-setting.-stacked .forge-setting-line { layout: vertical; }
+.forge-setting.-stacked .forge-setting-label { height: 1; width: 1fr; }
+.forge-setting.-stacked .forge-setting-mark { height: 1; padding: 0; }
+.forge-setting.-stacked .forge-setting-note { padding: 0; }
 /* fields in a form are outlines on the screen's own background: one colour
    inside and out, the border carries the shape (and the focus) */
 .forge-setting Input, .forge-setting .forge-toggle, .forge-setting Select,
@@ -261,8 +270,8 @@ SelectionList > .option-list--option-highlighted { background: transparent; colo
 SelectionList:blur > .option-list--option-highlighted { background: transparent; color: $forge-text; text-style: none; }
 SelectionList:focus > .option-list--option-highlighted { background: $forge-selected-bg; color: $forge-selected; }
 /* an unticked box is empty: the faint X read as "ticked" */
-SelectionList > .selection-list--button { color: $forge-surface; background: $forge-surface; }
-SelectionList > .selection-list--button-highlighted { color: $forge-surface; background: $forge-surface; }
+SelectionList > .selection-list--button { color: $forge-muted; background: $forge-surface; }
+SelectionList > .selection-list--button-highlighted { color: $forge-muted; background: $forge-surface; }
 SelectionList > .selection-list--button-selected { color: $forge-ok; background: $forge-surface; text-style: bold; }
 SelectionList > .selection-list--button-selected-highlighted { color: $forge-ok; background: $forge-surface; text-style: bold; }
 OptionList { background: $forge-surface; color: $forge-text; border: solid $forge-field-border; }

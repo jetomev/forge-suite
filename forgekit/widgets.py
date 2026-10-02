@@ -146,8 +146,10 @@ class SettingRow(Vertical):
     DEFAULT_CLASSES = "forge-setting"
 
     def __init__(self, label: str, control: Widget, *, note: str = "", help: str = "",
-                 setting: str = "", **kw) -> None:
+                 setting: str = "", stacked: bool = False, **kw) -> None:
         super().__init__(**kw)
+        if stacked:
+            self.add_class("-stacked")
         self.label, self.control, self.note, self.help, self.setting = label, control, note, help, setting
         self.changed = False
 
@@ -371,3 +373,32 @@ class Choices(Static, can_focus=True):
             if start <= event.x < end:
                 self.set_value(v)
                 return
+
+
+from textual.strip import Strip as _Strip
+from textual.widgets import SelectionList as _SelectionList
+
+
+class CheckList(_SelectionList):
+    """A checklist whose unticked boxes are empty (v0.5.0).
+
+    Textual draws an X in every box and greys out the unticked ones; hiding
+    that X by colouring it like its box still leaves a character drawn in its
+    own background, which a text console check rightly flags. Here an unticked
+    box has no character in it at all."""
+
+    def render_line(self, y: int) -> _Strip:
+        strip = super().render_line(y)
+        _, scroll_y = self.scroll_offset
+        try:
+            option = self.get_option_at_index(scroll_y + y)
+        except Exception:
+            return strip
+        if option.value in self._selected:
+            return strip
+        segs = list(strip)
+        if len(segs) >= 2 and segs[1].text == "X":
+            from rich.segment import Segment
+            segs[1] = Segment(" ", segs[1].style)
+            return _Strip(segs, strip.cell_length)
+        return strip
