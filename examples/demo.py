@@ -1,4 +1,4 @@
-"""examples/demo.py — a BitlaForge-shaped app built on forgekit.
+"""examples/demo.py — a bitlaForge-shaped app built on forgekit.
 
 Run:  python examples/demo.py   (from the repo root, or after `pip install -e .`)
 
@@ -44,11 +44,11 @@ SHORTCUTS = [
 ]
 
 ABOUT = {
-    "name": "BitlaForge",
+    "name": "bitlaForge",
     "version": "0.1.3",
     "tagline": "Solo Bitcoin mining, the lottery way — a Textual TUI over minerd.",
     "description": (
-        "BitlaForge is a Catppuccin-Mocha terminal UI for solo mining to a pool "
+        "bitlaForge is a Catppuccin-Mocha terminal UI for solo mining to a pool "
         "like ckpool: configure wallet, pool and threads, launch the miner, and "
         "watch the log. Part of the Forge Suite for KognogOS."
     ),
@@ -130,7 +130,7 @@ class EditDialog(ForgeModal[dict | None]):
 
 
 class BitlaForgeDemo(ForgeApp):
-    APP_NAME = "BitlaForge"
+    APP_NAME = "bitlaForge"
     MENU = MENU
     SHORTCUTS = SHORTCUTS
     ABOUT = ABOUT

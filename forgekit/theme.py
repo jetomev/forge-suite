@@ -153,7 +153,7 @@ ConfirmDialog, ForgePanelScreen, ForgeModal { align: center middle; background: 
    air underneath). Definite height so layout reserves its rows. */
 .forge-panel-footer { height: 2; padding: 0; border-top: solid $forge-border; }
 
-/* form widgets (F-9, promoted from BitlaForge/alacrittyForge app CSS —
+/* form widgets (F-9, promoted from bitlaForge/alacrittyForge app CSS —
    every Forge app edits config, so forms are kit territory) */
 Label { color: $forge-muted; padding: 1 0 0 0; }
 Input { background: $forge-surface; color: $forge-text; border: solid $forge-field-border; }
