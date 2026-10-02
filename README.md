@@ -1,6 +1,6 @@
 # 🔨 forgekit
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-purple.svg)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-purple.svg)
 ![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
 ![Built with Textual](https://img.shields.io/badge/Built%20with-Textual-5a3fd6.svg)
 ![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)
@@ -43,12 +43,13 @@ polish improves every app at once.
   switches to colours and characters that screen can actually show, by itself.
   [More below](#on-a-plain-text-console).
 
-> **Status: 0.4.1 (alpha).** The API may still shift while the Forge apps migrate
-> onto it. Pin a version if you depend on it.
+> **Status: 0.5.0 (alpha).** The API may still shift while the Forge apps migrate
+> onto it. Pin a version if you depend on it. 0.5.0 adds the pieces for settings
+> forms and save flows, built with and proven by [grubForge 2.0](https://github.com/jetomev/grubforge).
 
 ## Screenshots
 
-*Generated from `examples/demo.py`. Run `PYTHONPATH=. python docs/screenshots/generate.py` to re-render them.*
+*Generated from `examples/demo.py` and `examples/gallery.py`. Run `PYTHONPATH=. python docs/screenshots/generate.py` to re-render them.*
 
 **The shell** — title bar, menu bar, and a section
 ![Shell](docs/screenshots/01-shell.svg)
@@ -61,6 +62,9 @@ polish improves every app at once.
 
 **The About window**
 ![About](docs/screenshots/04-about-window.svg)
+
+**A settings form** (0.5.0), from `examples/gallery.py`: a changed setting, presets, worded switches, the changes bar and the hint line
+![Settings form](docs/screenshots/05-settings-form.svg)
 
 ## Install
 
@@ -143,6 +147,25 @@ section with a floating editor and a delete confirmation stacked on top of it.
 | `glyph()` / `GLYPHS` | Named marks (`ok`, `warn`, `error`, `busy`…) that turn into console-safe ones on a text console: `✓` → `+`, `⚠` → `!`. |
 | `console_mode()` / `console_text()` | Whether the app runs on a text console, and the character swap it applies. Your app reads `self.forge_console`. |
 
+### Forms and flows (0.5.0)
+
+Everything a settings screen needs, so known values are picked rather than typed, and every
+change is seen before it is written. `examples/gallery.py` shows them all on one screen.
+
+| Object | What it is |
+| --- | --- |
+| `SettingRow` | One setting: label, control, and a line under it with a hint, or "● changed · was: …" once changed (the mark always fits, at any width). `stacked=True` puts the control under the label. |
+| `Toggle` / `Choices` / `CheckList` / `NumberPresets` | Worded On/Off switch · radio choices in one box · a ticklist (unticked boxes stay empty) · a number with one-key presets. |
+| `FilterPicker` | A list you narrow by typing, optionally accepting your own value. |
+| `ChangesBar` | The bar at the bottom: "3 changes not saved yet" with its buttons. |
+| `HintBar` | The keys that work right now, from the focused widget's `FORGE_HINTS`. |
+| `Notice` / `notice_markup()` | A designed message: a heading and indented lines that wrap under their own indent. |
+| `ReviewDialog` / `ChangeGroup` / `review_markup()` | Every change as old → new, grouped, before anything is written. |
+| `ProgressDialog` | Steps with their state and a live log, for saves that take a while. |
+| `ManualScreen` / `load_pages()` | A manual inside the app, from Markdown pages; F1 can open the right page. |
+| `session_banner()` / `closing_notice()` / `runs_log_row()` | The same start and end on every run: a banner, a closing note in the terminal, and one line per run in a log. |
+| `ConfirmDialog(default_no=True)` | For risky steps: the window starts on Cancel. |
+
 ### How a menu is described
 
 ```python
@@ -201,8 +224,9 @@ by itself:
 ![The same app on a text console with forgekit 0.4.0: blue title bar, straight frames, readable buttons](docs/console/v0.4.0-on-a-text-console.png)
 *After, 0.4.0: the same app, same screen.*
 
-In a terminal window nothing changes: the four screenshots above regenerate identical
-to 0.3.0.
+In a terminal window nothing changed in 0.4.0: the four screenshots above regenerated
+identical to 0.3.0. (0.5.0 then gave fields a plain single border, which the current
+pictures show.)
 
 **Override:** `FORGE_ASCII=1` forces console mode on (for terminals that claim more
 than they can draw), `FORGE_ASCII=0` forces it off.

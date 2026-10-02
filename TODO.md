@@ -2,6 +2,18 @@
 
 *The live work list and the handoff between sessions. Newest work first. Updated after every step.*
 
+## Done · v0.5.0 · forms and flows, built with grubForge 2.0 · released 2026-10-02
+
+- [x] Settings pieces: SettingRow (changed mark on its own line), Toggle, Choices, CheckList, NumberPresets, FilterPicker, ChangesBar, HintBar, Notice
+- [x] Flows: ReviewDialog/ChangeGroup, ProgressDialog, ConfirmDialog(default_no), ManualScreen, session banner / closing note / runs log
+- [x] Fits at 100 columns (`dcafa19`); 48 tests, 0 warnings; `testing/20261002 - Test Results for forgekit v0-5-0.md`
+- [x] README (Forms and flows, gallery picture), version 0.5.0 everywhere
+- [x] Released: signed tag, signed archive + checksums, GitHub release, AUR `python-forgekit` 0.5.0-1 (before grubForge 2.0, which needs it)
+
+## Next
+
+- [ ] alacrittyForge and bitlaForge onto the 0.5.0 pieces (one design language across the suite)
+
 ## Done · v0.4.0 + v0.4.1 · console mode (issue #1) · released 2026-10-01
 
 **The promise (Javier, 2026-10-01):** every Forge app is **readable and usable on a plain text console (`TERM=linux`)**. It does not have to look the same as in a terminal window.

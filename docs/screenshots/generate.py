@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Regenerate the README screenshot gallery from examples/demo.py.
+"""Regenerate the README screenshots from examples/demo.py (and, since 0.5.0,
+the settings form from examples/gallery.py).
 
 Run from the repo root:  PYTHONPATH=. python docs/screenshots/generate.py
 """
@@ -45,6 +46,13 @@ async def main() -> None:
         # About window
         app.action_act("about"); await pilot.pause()
         shot(app, "04-about-window")
+
+    # 0.5.0: a settings form, from the gallery
+    from examples.gallery import Gallery
+    app = Gallery()
+    async with app.run_test(size=(110, 34)) as pilot:
+        await pilot.pause(0.8)
+        shot(app, "05-settings-form")
 
     print("forgekit gallery done.")
 
