@@ -106,20 +106,28 @@ class ChangesBar(Horizontal):
     def __init__(self, **kw) -> None:
         super().__init__(id="forge-changes", **kw)
         self.display = False
+        self._actions: tuple = ()
+        self._box: Horizontal | None = None
 
     def compose(self) -> ComposeResult:
         yield Static("", id="forge-changes-msg")
-        yield Horizontal(id="forge-changes-actions", classes="forge-buttons")
 
     def show(self, message: str, level: str = "changed",
              actions: Sequence[tuple[str, str, bool]] = ()) -> None:
         role = LEVELS.get(level, "changed")
         mark = glyph("changed") if level == "changed" else glyph("warn") if level == "warn" else glyph("ok")
         self.query_one("#forge-changes-msg", Static).update(f" [$forge-{role}]{mark} {escape(message)}[/]")
-        box = self.query_one("#forge-changes-actions", Horizontal)
-        box.remove_children()
-        box.mount_all(Button(label, id=bid, variant="primary" if primary else "default")
-                      for label, bid, primary in actions)
+        actions = tuple(actions)
+        if actions != self._actions or self._box is None:
+            # a fresh row each time: removing children finishes later, and new
+            # buttons with the same ids beside the old ones would clash
+            if self._box is not None:
+                self._box.remove()
+            self._box = Horizontal(*(Button(label, id=bid, variant="primary" if primary else "default")
+                                     for label, bid, primary in actions),
+                                   classes="forge-buttons forge-changes-actions")
+            self.mount(self._box)
+            self._actions = actions
         self.display = True
 
     def hide(self) -> None:
@@ -148,7 +156,9 @@ class SettingRow(Vertical):
             yield Static(self.label, classes="forge-setting-label")
             yield self.control
             yield Static("", classes="forge-setting-mark")
-        yield Static(self._note_markup(), classes="forge-setting-note")
+        note = Static(self._note_markup(), classes="forge-setting-note")
+        note.display = bool(self.note)      # no empty line under a row without one
+        yield note
 
     def _note_markup(self) -> str:
         return f"[$forge-muted]{escape(self.note)}[/]" if self.note else ""
@@ -156,12 +166,16 @@ class SettingRow(Vertical):
     def mark_changed(self, was: str) -> None:
         self.changed = True
         self.query_one(".forge-setting-mark", Static).update(f"[$forge-changed]{glyph('changed')} changed[/]")
-        self.query_one(".forge-setting-note", Static).update(f"[$forge-muted]was: {escape(was)}[/]")
+        note = self.query_one(".forge-setting-note", Static)
+        note.update(f"[$forge-muted]was: {escape(was)}[/]")
+        note.display = True
 
     def mark_unchanged(self) -> None:
         self.changed = False
         self.query_one(".forge-setting-mark", Static).update("")
-        self.query_one(".forge-setting-note", Static).update(self._note_markup())
+        note = self.query_one(".forge-setting-note", Static)
+        note.update(self._note_markup())
+        note.display = bool(self.note)
 
 
 class NumberPresets(Horizontal):

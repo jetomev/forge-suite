@@ -70,7 +70,10 @@ class TitleText(Static):
         left = max(0, (w - len(self._title)) // 2)
         right_start = w - len(self._status) - 1
         if right_start <= left + len(self._title) + 2:
-            return self._title
+            # no room beside a centred title: title at the left, status right
+            left = 1
+            if right_start <= left + len(self._title) + 2:
+                return self._title
         gap = right_start - left - len(self._title)
         from rich.markup import escape
         return (" " * left + escape(self._title) + " " * gap

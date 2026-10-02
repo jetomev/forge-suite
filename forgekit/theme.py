@@ -202,7 +202,7 @@ Button:focus:ansi, .forge-buttons Button:focus:ansi { background: $forge-focus-b
 #forge-footer { dock: bottom; height: auto; }
 #forge-changes { height: 1; background: $forge-menubar-bg; }
 #forge-changes-msg { width: 1fr; height: 1; }
-#forge-changes-actions { width: auto; height: 1; padding: 0 1 0 0; }
+.forge-changes-actions { width: auto; height: 1; padding: 0 1 0 0; }
 #forge-hints { height: 1; background: $forge-hint-bg; color: $forge-muted; }
 
 /* the designed notice: exactly one blank line before and after */
@@ -228,9 +228,9 @@ Button:focus:ansi, .forge-buttons Button:focus:ansi { background: $forge-focus-b
 /* a number with preset buttons */
 .forge-number { height: 3; width: auto; }
 .forge-number-input { width: 9; }
-.forge-number-unit { width: auto; height: 3; padding: 0 2 0 1; content-align: left middle; color: $forge-muted; }
+.forge-number-unit { width: auto; height: 3; padding: 0 1; content-align: left middle; color: $forge-muted; }
 .forge-preset {
-    height: 1; min-width: 3; margin: 1 0 0 1; padding: 0 1; border: none;
+    height: 1; width: auto; min-width: 3; margin: 1 0 0 1; padding: 0 1; border: none;
     background: $forge-button-bg; color: $forge-button; text-style: none;
 }
 .forge-preset:hover { background: $forge-button-hover; }
@@ -244,6 +244,10 @@ Button:focus:ansi, .forge-buttons Button:focus:ansi { background: $forge-focus-b
 .forge-choices:focus { border: solid $forge-accent; }
 
 /* choice widgets, both modes */
+Input > .input--placeholder { color: $forge-muted; background: transparent; }
+/* a one-row field must never get the kit's horizontal scrollbar: with a value
+   longer than the field, the bar took the field's only row and hid the text */
+Input { scrollbar-size-horizontal: 0; }
 Input.-invalid { border: solid $forge-danger; }
 Input.-invalid:focus { border: solid $forge-danger; }
 RadioSet { layout: horizontal; height: auto; width: auto; background: $forge-bg; border: solid $forge-field-border; padding: 0 1; }
@@ -251,10 +255,14 @@ RadioSet:focus { border: solid $forge-accent; }
 RadioButton { background: $forge-bg; color: $forge-text; padding: 0 2 0 0; }
 SelectionList { background: $forge-surface; color: $forge-text; border: solid $forge-field-border; height: auto; max-height: 14; }
 SelectionList:focus { border: solid $forge-accent; }
-SelectionList > .option-list--option-highlighted { background: $forge-selected-bg; color: $forge-selected; }
+/* the highlight shows only where the keyboard is: an unfocused list with a
+   highlighted row looked like a second cursor */
+SelectionList > .option-list--option-highlighted { background: transparent; color: $forge-text; text-style: none; }
+SelectionList:blur > .option-list--option-highlighted { background: transparent; color: $forge-text; text-style: none; }
+SelectionList:focus > .option-list--option-highlighted { background: $forge-selected-bg; color: $forge-selected; }
 /* an unticked box is empty: the faint X read as "ticked" */
 SelectionList > .selection-list--button { color: $forge-surface; background: $forge-surface; }
-SelectionList > .selection-list--button-highlighted { color: $forge-selected-bg; background: $forge-surface; }
+SelectionList > .selection-list--button-highlighted { color: $forge-surface; background: $forge-surface; }
 SelectionList > .selection-list--button-selected { color: $forge-ok; background: $forge-surface; text-style: bold; }
 SelectionList > .selection-list--button-selected-highlighted { color: $forge-ok; background: $forge-surface; text-style: bold; }
 OptionList { background: $forge-surface; color: $forge-text; border: solid $forge-field-border; }
