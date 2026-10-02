@@ -43,9 +43,16 @@ class ConfirmDialog(ModalScreen[bool]):
     ]
 
     def __init__(self, message: str, confirm_label: str = "Confirm",
-                 danger: bool = False) -> None:
+                 danger: bool = False, default_no: bool = False) -> None:
         super().__init__()
         self._message, self._confirm_label, self._danger = message, confirm_label, danger
+        # v0.5.0: for risky steps (restore, delete) Enter means Cancel until
+        # the person moves to the other button themselves
+        self._default_no = default_no
+
+    def on_mount(self) -> None:
+        if self._default_no:
+            self.query_one("#cancel", Button).focus()
 
     def compose(self) -> ComposeResult:
         with Vertical(classes="forge-confirm"):
