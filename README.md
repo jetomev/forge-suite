@@ -1,6 +1,6 @@
 # 🔨 forgekit
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-purple.svg)
+![Version: 0.5.1](https://img.shields.io/badge/Version-0.5.1-purple.svg)
 ![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
 ![Built with Textual](https://img.shields.io/badge/Built%20with-Textual-5a3fd6.svg)
 ![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)
@@ -43,9 +43,11 @@ polish improves every app at once.
   switches to colours and characters that screen can actually show, by itself.
   [More below](#on-a-plain-text-console).
 
-> **Status: 0.5.0 (alpha).** The API may still shift while the Forge apps migrate
-> onto it. Pin a version if you depend on it. 0.5.0 adds the pieces for settings
+> **Status: 0.5.1 (alpha).** The API may still shift while the Forge apps migrate
+> onto it. Pin a version if you depend on it. 0.5.0 added the pieces for settings
 > forms and save flows, built with and proven by [grubForge 2.0](https://github.com/jetomev/grubforge).
+> 0.5.1: number fields take decimals (`NumberPresets(decimals=True)`) and are as
+> wide as the longest number they hold, both found by [alacrittyForge 1.0](https://github.com/jetomev/alacrittyforge).
 
 ## Screenshots
 

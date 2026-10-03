@@ -2,6 +2,10 @@
 
 *The live work list and the handoff between sessions. Newest work first. Updated after every step.*
 
+## Done · v0.5.1 · number fields for alacrittyForge · released 2026-10-02
+
+- [x] `NumberPresets(decimals=True)` (`66874fe`) and the field as wide as its longest number (`c8967b2`); the example app named bitlaForge (`3b647ec`). 51 tests, 0 warnings. Released before alacrittyForge 1.0, which needs it.
+
 ## Done · v0.5.0 · forms and flows, built with grubForge 2.0 · released 2026-10-02
 
 - [x] Settings pieces: SettingRow (changed mark on its own line), Toggle, Choices, CheckList, NumberPresets, FilterPicker, ChangesBar, HintBar, Notice
