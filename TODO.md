@@ -2,6 +2,8 @@
 
 *The live work list and the handoff between sessions. Newest work first. Updated after every step.*
 
+
+- [ ] **Next version — button labels in Javier's format (3 Oct 2026):** "Words In Title Case (k)", e.g. "Review Updates (u)": the key in brackets after the words, for every Forge Suite app. What shipped stays until this app's next version.
 ## Done · v0.5.1 · number fields for alacrittyForge · released 2026-10-02
 
 - [x] `NumberPresets(decimals=True)` (`66874fe`) and the field as wide as its longest number (`c8967b2`); the example app named bitlaForge (`3b647ec`). 51 tests, 0 warnings. Released before alacrittyForge 1.0, which needs it.
