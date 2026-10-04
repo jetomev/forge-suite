@@ -169,16 +169,18 @@ class PasswordDialog(ForgeModal[str | None]):
 
     BINDINGS = [Binding("escape", "cancel", "", show=False)]
 
-    def __init__(self, prompt: str, attempt: int = 1, title: str = "Password") -> None:
+    def __init__(self, prompt: str, attempt: int = 1, title: str = "Password", words: str | None = None) -> None:
         super().__init__()
         self._prompt, self._attempt, self._title = prompt, attempt, title
+        self._words = words
 
     def compose(self) -> ComposeResult:
         with Vertical(classes="forge-confirm forge-password"):
             yield Static(f"[b]{self._title}[/]", classes="forge-panel-title")
             if self._attempt > 1:
                 yield Static("[$forge-warn]That password didn't work. Try again.[/]", id="pw-again")
-            yield Static(prompt_words(self._prompt), classes="forge-confirm-msg")
+            from .console import literal
+            yield Static(literal(self._words or prompt_words(self._prompt)), classes="forge-confirm-msg")
             yield Input(password=True, id="pw-input", placeholder="password")
             with Horizontal(classes="forge-buttons"):
                 yield Button("Cancel", id="pw-cancel")

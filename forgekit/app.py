@@ -149,7 +149,31 @@ class ForgeApp(App[None]):
         e.update(bridge.env())
         self.push_screen(RunWindow(title, cmd, e, **window), callback=callback)
 
+    def polkit_agent(self):
+        """Make this app polkit's password asker for its own process (pkexec
+        then asks in the app's own box, desktop or text console). Started once;
+        returns the agent (``.active`` False and ``.reason`` if it could not)."""
+        if getattr(self, "_forge_polkit", None) is None:
+            import asyncio
+            import getpass
+            from .askpass import PasswordDialog
+            from .polkit_agent import InAppPolkitAgent
+            who = getpass.getuser()
+
+            async def ask(message: str, attempt: int) -> str | None:
+                fut = asyncio.get_running_loop().create_future()
+                words = f"{message.rstrip('.')}.\nYour password ({who})."
+                self.push_screen(PasswordDialog("", attempt, self.PASSWORD_TITLE, words=words),
+                                 callback=lambda v: fut.done() or fut.set_result(v))
+                return await fut
+            self._forge_polkit = InAppPolkitAgent(ask, self.call_from_thread)
+            self._forge_polkit.start()
+        return self._forge_polkit
+
     async def on_unmount(self) -> None:
+        agent = getattr(self, "_forge_polkit", None)
+        if agent is not None:
+            agent.stop()
         bridge = getattr(self, "_forge_bridge", None)
         if bridge is not None:
             await bridge.close()

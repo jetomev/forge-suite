@@ -302,6 +302,7 @@ Toast.-error { border-left: outer $forge-danger; }
 .forge-run.-screen-open, RunWindow.-screen-open .forge-run { height: 90%; }
 #run-steps { height: auto; padding: 0 0 1 0; }
 #run-progress { width: 100%; height: 1; margin: 0 0 1 0; }
+#run-progress Bar { width: 1fr; }
 #run-question { height: auto; padding: 0 0 1 0; }
 #run-question-text { width: 1fr; height: auto; color: $forge-warn; }
 #run-question Button { height: 1; min-width: 10; border: none; padding: 0 2; margin: 0 0 0 2; }

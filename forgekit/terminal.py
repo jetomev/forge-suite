@@ -162,6 +162,11 @@ QUESTION = re.compile(
     r"|\(default=[^)]*\):|Proceed with|\?\s*$|:\s*$)")
 
 
+YAY_PROMPT = re.compile(r"^==>\s*$")
+# a question answered with yes or no (others are typed: yay's menus, numbers)
+YES_NO = re.compile(r"\[[Yy]/[Nn]\]|\[[Nn]/[Yy]\]")
+
+
 class TerminalPane(ScrollView, can_focus=True):
     """A program in a pseudo-terminal, drawn inside the app. Keys go to it."""
 
@@ -241,7 +246,9 @@ class TerminalPane(ScrollView, can_focus=True):
             self._fd = None
         code = self.proc.wait() if self.proc else 0
         self.status = code
+        self._follow = True              # the end of the run is what matters now
         self._sync()
+        self.call_after_refresh(self.scroll_end, animate=False)
         self.post_message(self.Exited(self, code))
 
     def on_unmount(self) -> None:
@@ -293,7 +300,20 @@ class TerminalPane(ScrollView, can_focus=True):
 
     def waiting_question(self) -> str | None:
         line = self.last_line()
-        if line and QUESTION.search(line) and self.screen_vt.cursor.x >= len(line.rstrip()) - 1:
+        if not line or self.screen_vt.cursor.x < len(line.rstrip()) - 1:
+            return None
+        if YAY_PROMPT.match(line):
+            # yay asks on the lines above and waits at a bare "==>" (its menus:
+            # clean build, diffs, edit): the question is what it printed before
+            y = self.screen_vt.cursor.y
+            above = []
+            for i in range(y - 1, max(-1, y - 4), -1):
+                prev = self.screen_vt.display[i].strip()
+                if not prev.startswith("==>"):
+                    break
+                above.insert(0, prev.removeprefix("==>").strip())
+            return " ".join(above) or None
+        if QUESTION.search(line):
             return line.strip()
         return None
 
@@ -313,6 +333,8 @@ class TerminalPane(ScrollView, can_focus=True):
     def on_resize(self, event: events.Resize) -> None:
         if not self.display or self.size.width < 10:
             return                       # folded away: the program keeps the size it has
+        if self._follow:
+            self.call_after_refresh(self.scroll_end, animate=False)
         cols, lines = self._term_size()
         if (cols, lines) != (self.screen_vt.columns, self.screen_vt.lines):
             self.screen_vt.resize(lines, cols)

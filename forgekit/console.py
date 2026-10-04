@@ -73,6 +73,8 @@ FALLBACKS: dict[str, str] = {
     "━": "─", "┃": "│", "┏": "┌", "┓": "┐", "┗": "└", "┛": "┘",
     "┣": "├", "┫": "┤", "┳": "┬", "┻": "┴", "╋": "┼",
     "╴": "─", "╶": "─", "╵": "│", "╷": "│", "┄": "─", "┅": "─", "┆": "│", "┈": "─",
+    # v0.6.0: the progress bar's half-line ends (it showed "?" on the console)
+    "╸": "─", "╺": "─", "╹": "│", "╻": "│",
     # thin edge and partial blocks (Textual's "tall"/"wide" borders, sparklines)
     "▔": "▀", "▁": "▄", "▂": "▄", "▃": "▄", "▅": "▄", "▆": "█", "▇": "█",
     "▏": "▌", "▎": "▌", "▍": "▌", "▋": "▌", "▊": "█", "▉": "█", "▕": "▐",
@@ -85,6 +87,13 @@ FALLBACKS: dict[str, str] = {
     "…": ".", "—": "-", "–": "-", "‒": "-", "‘": "'", "’": "'", "“": '"', "”": '"',
     "⏳": "~", "⌛": "~", "⌨": "k", "⚙": "*", "⚡": "!", "⛏": "*",
 }
+
+def literal(text: str) -> str:
+    """Text from outside the app (a tool's question, polkit's message) shown as
+    it is: every "[" escaped. Rich's and Textual's own escapes leave "[N]one
+    [A]ll" alone, and the markup then swallowed yay's choices (VM, 4 Oct 2026)."""
+    return text.replace("\\", "\\\\").replace("[", "\\[")
+
 
 UNKNOWN = "?"
 # Characters swapped by the generic fallback ("?" or blanks) since start-up.

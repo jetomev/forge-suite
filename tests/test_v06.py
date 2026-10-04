@@ -102,6 +102,24 @@ echo; printf ":: Proceed with installation? [Y/n] "; read a; echo "answer=$a"; e
             await pilot.press("enter")
             self.assertTrue(await until(pilot, lambda: result == [0]))
 
+    async def test_a_menu_question_is_typed_in_the_tools_screen(self):
+        # yay asks on the lines above and waits at a bare "==>" (VM, 4 Oct)
+        cmd = script(r'''echo "  1 pfetch-git    (Build Files Exist)"; echo "==> Packages to cleanBuild?"
+echo "==> [N]one [A]ll [Ab]ort [I]nstalled [No]tInstalled or (1 2 3, 1-3, ^4)"; printf "==> "; read a; echo "got=[$a]"''')
+        app = Host()
+        async with app.run_test(size=(100, 32)) as pilot:
+            win, _ = await self.run_window(pilot, app, cmd, tool="nog")
+            self.assertTrue(await until(pilot, lambda: win.query_one("#run-question").display))
+            text = str(win.query_one("#run-question-text", Static).render())
+            self.assertIn("Packages to cleanBuild?", text)
+            self.assertIn("[N]one [A]ll [Ab]ort", text, "yay's choices keep their brackets")
+            self.assertIn("Type your answer in nog's screen", text)
+            self.assertFalse(win.query_one("#run-yes").display, "not a yes/no question: no Yes/No buttons")
+            self.assertTrue(win.query_one(TerminalPane).has_focus, "the keys go to the screen")
+            await pilot.press("N", "enter")
+            self.assertTrue(await until(pilot, lambda: win.status is not None))
+            self.assertIn("got=[N]", win.query_one(TerminalPane).lines_plain())
+
     async def test_the_password_is_asked_in_the_app(self):
         out = Path(tempfile.mkdtemp()) / "got"
         # a stand-in for sudo -A: runs the helper sudo would, with sudo's prompt
@@ -224,6 +242,27 @@ echo "error: failed to commit transaction"; exit 1''')
             self.assertLessEqual(yes.region.right, 80, "the Yes button is on screen at 80 columns")
             await pilot.press("y")
             self.assertTrue(await until(pilot, lambda: win.status is not None))
+
+
+class ReviewKeys(unittest.IsolatedAsyncioTestCase):
+    async def test_the_key_in_a_buttons_label_presses_it(self):
+        # nogForge on a text console, 4 Oct: "Install (i)" did nothing on i
+        from forgekit import ChangeGroup, ReviewDialog
+        app = Host()
+        async with app.run_test(size=(100, 32)) as pilot:
+            got = []
+            app.push_screen(ReviewDialog("Review", [ChangeGroup("Install", "", [("botsay", "-", "1.4.4")])],
+                                         buttons=[("Install (i)", "go", True)]), callback=got.append)
+            await pilot.pause(0.3)
+            await pilot.press("i")
+            self.assertTrue(await until(pilot, lambda: got == ["go"]))
+
+
+class ConsoleGlyphs(unittest.TestCase):
+    def test_the_progress_bar_draws_on_the_console(self):
+        from forgekit.console import FALLBACKS
+        for ch in "╸╺━":
+            self.assertIn(ch, FALLBACKS, f"{ch!r} has no console fallback (it showed as ?)")
 
 
 if __name__ == "__main__":

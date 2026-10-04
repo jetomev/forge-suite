@@ -27,7 +27,7 @@ import os
 import re
 from typing import Sequence
 
-from rich.markup import escape
+from .console import literal as escape
 from textual import on
 from textual.app import ComposeResult
 from textual.binding import Binding
@@ -37,7 +37,7 @@ from textual.widgets import Button, ProgressBar, Static
 from .console import glyph
 from .dialogs import ForgeModal
 from .flows import _STATES
-from .terminal import TerminalPane
+from .terminal import YES_NO, TerminalPane
 
 # pacman's "(3/12) upgrading foo" and yay's "(1/3) building" — progress inside a step
 _COUNT = re.compile(r"^\((\d+)/(\d+)\)\s")
@@ -191,17 +191,37 @@ class RunWindow(ForgeModal[int]):
             self._draw_progress()
 
     def _look_for_question(self) -> None:
-        q = self.query_one(TerminalPane).waiting_question()
+        pane = self.query_one(TerminalPane)
+        if pane.screen_vt.in_alternate:
+            # a full-screen program (an editor, a pager): it has the keys, no question bar
+            self._hide_question()
+            if not self._screen_open:
+                self._show_screen(True)
+            pane.focus()
+            return
+        q = pane.waiting_question()
         if q and q != self._question and q != self._answered:
             self._ask(q)
 
     def _ask(self, question: str) -> None:
         self._question = question
-        self.query_one("#run-question-text", Static).update(f"[b]{escape(question)}[/]")
+        yes_no = bool(YES_NO.search(question))
+        text = f"[b]{escape(question)}[/]"
+        if not yes_no:
+            # a menu or a number (yay's clean-build and diff menus): typed in
+            # the tool's own screen, where its choices are listed
+            text += f"\n[$forge-muted]Type your answer in {escape(self._tool)}'s screen below, then Enter " \
+                    f"(Enter alone takes its default).[/]"
+        self.query_one("#run-question-text", Static).update(text)
+        self.query_one("#run-yes").display = yes_no
+        self.query_one("#run-no").display = yes_no
         self.query_one("#run-question").display = True
         if not self._screen_open:
             self._show_screen(True)                       # the table the question is about
-        self.query_one("#run-yes", Button).focus()
+        if yes_no:
+            self.query_one("#run-yes", Button).focus()
+        else:
+            self.query_one(TerminalPane).focus()
 
     def _hide_question(self) -> None:
         self._answered, self._question = self._question, None
@@ -255,8 +275,9 @@ class RunWindow(ForgeModal[int]):
             self.action_close()
 
     def on_key(self, event) -> None:
-        # y / n answer the question when the screen isn't taking the keys
-        if self._question and not self.query_one(TerminalPane).has_focus and event.key in ("y", "n"):
+        # y / n answer a yes/no question when the screen isn't taking the keys
+        if self._question and self.query_one("#run-yes").display and \
+                not self.query_one(TerminalPane).has_focus and event.key in ("y", "n"):
             event.stop()
             self.answer(event.key == "y")
 

@@ -91,6 +91,15 @@ class ReviewDialog(ForgeModal[str | None]):
         e.stop()
         self.dismiss(None if e.button.id == "cancel" else e.button.id)
 
+    def on_key(self, event) -> None:
+        # v0.6.0 (found in nogForge on a text console, 4 Oct 2026): a label
+        # "Install (i)" promises the key i; until now only a click or Enter worked
+        for label, bid, _primary in self._buttons:
+            if label.endswith(")") and label.rsplit("(", 1)[-1][:-1].lower() == event.key:
+                event.stop()
+                self.dismiss(bid)
+                return
+
     def action_cancel(self) -> None:
         self.dismiss(None)
 

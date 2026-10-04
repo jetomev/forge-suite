@@ -10,6 +10,7 @@ from .flows import ChangeGroup, ProgressDialog, ReviewDialog, review_markup
 from .manual import ManualScreen, load_pages
 from .askpass import PasswordBridge, PasswordDialog
 from .run import RunWindow
+from .polkit_agent import InAppPolkitAgent
 from .terminal import TerminalPane
 from .pickers import FilterPicker
 from .widgets import (
@@ -35,6 +36,6 @@ __all__ = [
     "Notice", "notice_markup", "HintBar", "hints_markup", "ChangesBar", "SettingRow", "NumberPresets", "Toggle", "Choices", "CheckList",
     "FilterPicker", "ReviewDialog", "ChangeGroup", "review_markup", "ProgressDialog",
     "ManualScreen", "load_pages", "session_banner", "closing_notice", "runs_log_row",
-    "PasswordBridge", "PasswordDialog", "RunWindow", "TerminalPane",
+    "PasswordBridge", "PasswordDialog", "RunWindow", "TerminalPane", "InAppPolkitAgent",
     "__version__",
 ]
