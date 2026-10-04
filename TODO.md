@@ -4,8 +4,9 @@
 
 
 - [ ] **Next version — button labels in Javier's format (3 Oct 2026):** "Words In Title Case (k)", e.g. "Review Updates (u)": the key in brackets after the words, for every Forge Suite app. What shipped stays until this app's next version.
-- [x] **Bottom bar follows the screen shown (3 Oct, `8f14c39`, unreleased)** — Javier, nogForge: Update → Dashboard kept Update's keys. All four apps had it; all consistent with the fix. Tests 51 → 52.
-- [ ] **Release 0.5.2** (GitHub + AUR) so installed apps get the fix — waits on Javier's go; then grubForge/alacrittyForge/bitlaForge need no change of their own (they use the installed forgekit).
+## Done · v0.5.2 · the bottom bar follows the screen shown · released 2026-10-03
+- [x] Javier, nogForge: Update → Dashboard kept Update's keys in the bottom bar. A screen with nothing to select left focus in the hidden one. All four apps had it on their first screen; all consistent with the fix (`8f14c39`). Tests 51 → 52; grubForge 53, alacrittyForge 80, bitlaForge 64, nogForge 33 pass on it; console check clean. Javier's go: 3 Oct ("yes release forgekit 0.5.2").
+
 ## Done · v0.5.1 · number fields for alacrittyForge · released 2026-10-02
 
 - [x] `NumberPresets(decimals=True)` (`66874fe`) and the field as wide as its longest number (`c8967b2`); the example app named bitlaForge (`3b647ec`). 51 tests, 0 warnings. Released before alacrittyForge 1.0, which needs it.
