@@ -175,7 +175,17 @@ class ForgeApp(App[None]):
             return
         if self.screen is not bar.screen:
             return
-        bar.set_hints(hints_for(self.screen.focused, self.HINTS))
+        # v0.5.2 (Javier, nogForge 3 Oct): the keys follow the SECTION on show.
+        # Switching to a section with nothing focusable left focus in the one
+        # just hidden, and the bar kept that section's keys.
+        widget = self.screen.focused
+        try:
+            shown = self.query_one("#forge-work", ContentSwitcher).visible_content
+        except Exception:
+            shown = None
+        if shown is not None and (widget is None or shown not in widget.ancestors_with_self):
+            widget = shown
+        bar.set_hints(hints_for(widget, self.HINTS))
 
     def on_descendant_focus(self, event) -> None:
         self.refresh_hints()
@@ -214,6 +224,7 @@ class ForgeApp(App[None]):
         self._mark_active(section_id)
         self.on_section_shown(section_id)
         self.refresh_hints()
+        self.call_after_refresh(self.refresh_hints)   # again once the section has set its focus
 
     def on_section_shown(self, section_id: str) -> None:
         """Hook: called after a section becomes visible."""

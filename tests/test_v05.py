@@ -121,6 +121,48 @@ class Shell(unittest.IsolatedAsyncioTestCase):
             await pilot.pause()
             self.assertIn("presets", str(app.query_one("#forge-hints").render()))
 
+    async def test_hints_follow_the_section_shown_even_with_nothing_to_focus(self):
+        # nogForge, Javier 3 Oct: Update → Dashboard kept Update's keys, because the
+        # Dashboard has nothing to focus and focus stayed in the hidden section.
+        from textual.containers import Vertical
+        from textual.widgets import Input
+        from forgekit import ForgeApp
+
+        class Busy(Vertical):
+            FORGE_HINTS = [("x", "busy keys")]
+
+            def compose(self):
+                yield Input(id="field")
+
+        class Quiet(Vertical):
+            FORGE_HINTS = [("y", "quiet keys")]
+
+            def compose(self):
+                yield Static("nothing to focus here")
+
+        class Two(ForgeApp):
+            APP_NAME, APP_VERSION, SHOW_HINT_BAR = "Two", "0", True
+            MENU = [{"id": "quiet", "title": "Quiet", "kind": "section"},
+                    {"id": "busy", "title": "Busy", "kind": "section"}]
+
+            def compose_sections(self):
+                yield Quiet(id="sec-quiet")
+                yield Busy(id="sec-busy")
+
+        app = Two()
+        async with app.run_test(size=SIZE) as pilot:
+            await pilot.pause()
+            bar = lambda: str(app.query_one("#forge-hints").render())
+            self.assertIn("quiet keys", bar())
+            app._switch_section("busy")
+            app.query_one("#field").focus()
+            await pilot.pause()
+            self.assertIn("busy keys", bar())
+            app._switch_section("quiet")
+            await pilot.pause()
+            self.assertIn("quiet keys", bar(), "the shown section's keys, not the hidden one's")
+            self.assertNotIn("busy keys", bar())
+
     async def test_title_status_sits_at_the_right_edge(self):
         app = gallery.Gallery()
         async with app.run_test(size=SIZE) as pilot:
