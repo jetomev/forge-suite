@@ -76,35 +76,35 @@ end    = ["media", "tray", "notifications", "clipboard", "network", "bluetooth",
           "volume", "brightness", "battery", "control-center",
           "clock", "session"]   # clock near the corner, power button last, after it (Javier, 2026-10-01)
 
-# Icons about 2 px bigger (Javier, 2026-10-01). Noctalia has no icon size in pixels, only a
-# size multiplier per widget; 1.17 takes the ~12 px icons to ~14 px (measured from screenshots).
-# The clock and "Nothing Playing" keep their size; the text inside network and volume grows
-# with their icons.
+# Icons about 6 px bigger than Noctalia's own (Javier: +2 px on 2026-10-01, +4 more on 2026-10-04).
+# Noctalia has no icon size in pixels, only a size multiplier per widget; 1.5 takes the ~12 px
+# icons to ~18 px (measured from screenshots: power 14 -> 18 px). The clock and "Nothing Playing"
+# keep their size; the text inside network and volume grows with their icons.
 [widget.taskbar]
 show_window_title = false
-scale = 1.17
+scale = 1.5
 pinned_opacity = 1.0   # pinned apps that are not open at full strength, not dimmed; open ones keep their mark (Javier, 2026-10-01)
 
 [widget.tray]
-scale = 1.17
+scale = 1.5
 [widget.notifications]
-scale = 1.17
+scale = 1.5
 [widget.clipboard]
-scale = 1.17
+scale = 1.5
 [widget.network]
-scale = 1.17
+scale = 1.5
 [widget.bluetooth]
-scale = 1.17
+scale = 1.5
 [widget.volume]
-scale = 1.17
+scale = 1.5
 [widget.brightness]
-scale = 1.17
+scale = 1.5
 [widget.battery]
-scale = 1.17
+scale = 1.5
 [widget.control-center]
-scale = 1.17
+scale = 1.5
 [widget.session]
-scale = 1.17
+scale = 1.5
 
 # The clock: 12-hour time with AM/PM, then the date (Javier, 2026-10-01). Noctalia's clock
 # uses C++ time codes: %I hour 01-12, %M minutes, %p AM/PM, %a weekday, %b month, %d day.
@@ -117,7 +117,7 @@ enabled = false   # hyprlock stays the lock screen (Javier, 2026-09-30); hypridl
 [widget.launcher]
 custom_image = "/usr/share/pixmaps/kognogos.png"   # the KognogOS emblem on the launcher button (F-32)
 custom_image_colorize = false
-scale = 1.17   # icons about 2 px bigger, see above
+scale = 1.5    # icons about 6 px bigger, see above
 
 # This computer's own bar settings, if it has any: every *.toml in machines/<hostname>/
 # (D-28). HYPEFORGE_MACHINE is set at login by uwsm/env.
