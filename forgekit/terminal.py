@@ -192,9 +192,10 @@ class TerminalPane(ScrollView, can_focus=True):
         self.transcript: deque[str] = deque(maxlen=200)   # the last lines, plain (for reasons and tests)
 
     # ── running ──────────────────────────────────────────────────────────────
-    def start(self, cmd: Sequence[str], env: dict | None = None) -> None:
-        """Run ``cmd`` in a new pseudo-terminal the size of the pane."""
-        cols, lines = self._term_size()
+    def start(self, cmd: Sequence[str], env: dict | None = None, size: tuple[int, int] | None = None) -> None:
+        """Run ``cmd`` in a new pseudo-terminal the size of the pane (or ``size``,
+        columns × lines, when the pane is folded away and has no size yet)."""
+        cols, lines = size if size else self._term_size()
         self.screen_vt.resize(lines, cols)
         master, slave = pty.openpty()
         _set_size(master, lines, cols)
@@ -310,6 +311,8 @@ class TerminalPane(ScrollView, can_focus=True):
         self.refresh()
 
     def on_resize(self, event: events.Resize) -> None:
+        if not self.display or self.size.width < 10:
+            return                       # folded away: the program keeps the size it has
         cols, lines = self._term_size()
         if (cols, lines) != (self.screen_vt.columns, self.screen_vt.lines):
             self.screen_vt.resize(lines, cols)

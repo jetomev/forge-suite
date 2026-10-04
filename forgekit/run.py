@@ -89,7 +89,10 @@ class RunWindow(ForgeModal[int]):
         if self._events:
             self.set_interval(0.15, self._read_events)
         pane = self.query_one(TerminalPane)
-        self.call_after_refresh(pane.start, self._cmd, self._env)
+        # the window's width, less its frame: the size the screen will have when opened
+        cols = max(40, int(self.app.size.width * 0.9) - 8)
+        lines = max(8, int(self.app.size.height * 0.9) - 14)
+        self.call_after_refresh(pane.start, self._cmd, self._env, None if self._screen_open else (cols, lines))
 
     # ── the two views ────────────────────────────────────────────────────────
     def _show_screen(self, on: bool) -> None:
@@ -126,7 +129,9 @@ class RunWindow(ForgeModal[int]):
     def event(self, ev: dict) -> None:
         kind = ev.get("ev")
         if kind == "steps":
-            self._steps = [[s.get("id", ""), s.get("label", s.get("id", "")), "waiting", ""] for s in ev.get("steps", [])]
+            known = {s[0]: s for s in self._steps}          # a step already under way keeps its state
+            self._steps = [known.get(s.get("id", "")) or [s.get("id", ""), s.get("label", s.get("id", "")), "waiting", ""]
+                           for s in ev.get("steps", [])]
         elif kind == "step":
             sid = ev.get("id", "")
             row = next((s for s in self._steps if s[0] == sid), None)
