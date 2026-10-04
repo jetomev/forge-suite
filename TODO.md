@@ -19,7 +19,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - **Testing happens in VMs. The KognogOS installer image gets fully rebuilt first** (D-12)
 - **We learn from Omarchy and every developer, with thanks; we do not compare** (D-4, refined by D-27)
 - **The desktop is built from separate small apps, not one all-in-one program** (D-14)
-- **The login screen is greetd + tuigreet, proven in a VM first** (D-15)
+- **The login screen is KognogOS's own SDDM greeter** (D-38; it replaced greetd + tuigreet, D-15, #12 closed)
 - **Portals: Hyprland's own for screen sharing, GTK for the file window** (D-16)
 - **Top bar Waybar (dev build for now), launcher Walker, notifications mako** (D-17, D-18, D-19)
 - **Background helpers: SwayOSD, hyprlock + hypridle, hyprpaper, hyprpolkitagent** (D-20)
@@ -217,7 +217,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
   - [ ] `install-into.sh` must link `autostart/nm-applet.desktop` too (it links every file in autostart/, check) and the machine-name variable needs a fresh login to come from uwsm (set by hand for tonight)
   - [ ] Later, not today (Javier): this computer still carries every KDE app, so a clean install will come; and the home folder is a mess of things put there openly. Both are their own topics
 - [ ] "Hyprland (uwsm-managed)" is a long, unclear name at the login screen; greetd (D-15) will replace it anyway
-- [ ] greetd + tuigreet proven in a VM (console font, Catppuccin palette, wallet unlock) before it replaces SDDM here (D-15, #12)
+- [x] ~~greetd + tuigreet proven in a VM before it replaces SDDM here (D-15, #12)~~ replaced by D-38: KognogOS's own SDDM greeter, confirmed in the VM (build 3); #12 closed 4 Oct
 - [ ] uwsm session in a VM first: crash recovery, `uwsm stop` with hyprshutdown, helpers as user services, and switch off unwanted autostart entries (nm-applet, print-applet) (D-25)
 - [ ] Mark `udisks2` as explicitly installed before Plasma leaves (D-26)
 - [ ] Live in it. Every rough edge becomes a numbered finding
