@@ -31,7 +31,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - **The folder is a full copy; the key map keeps Plasma's keys** (D-28, D-29)
 - **No taskbar and no minimise; title bars show maximise and close** (D-34)
 - **Five themes, one per KognogOS wallpaper; Mocha is the default** (D-36)
-- **The bar: along the bottom, full width, 40 px, bigger icons, clock in the corner** (D-41)
+- **The bar: along the bottom, full width, 45 px, bigger icons, clock in the corner** (D-41)
 - **Every recipe pick is a first try; a misfit becomes a finding and is swapped** (D-23)
 - **Documentation at every step, a full GitHub, and a coming-soon note on kognogos.org** (D-13)
 
@@ -195,6 +195,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
   - [x] Pinned apps that are not open were dimmed, "barely visible" (Javier, 2026-10-01): `pinned_opacity = 1.0` in `[widget.taskbar]` of `noctalia/00-hypeforge.toml`, every hypeForge computer. Open apps keep their dot. Picked up live (`noctalia config export` shows 1.0); screenshot: all icons at full strength, Chrome with its dot. **Javier to judge by eye**
   - [x] Still too dark (Javier): the cause was the tint, not the dimming. Noctalia recolours every app icon to one theme colour (`app_icon_colorize`, Javier's earlier pick) and used a dim one. Now `app_icon_color = "on_surface"`, the theme's text colour, every hypeForge computer. Contrast against the bar, measured from the five palettes: Black 15.1, White 14.4, Mocha 11.3, Gray 11.2, Green 11.1 (4.5 is the usual "easy to read" line), so light themes get dark icons automatically. Picked up live; screenshot: icons clearly brighter on Mocha. **Javier: "yes, a lot better!"** Still to see on White or Green some time
   - [x] **Icons in their own colours** (Javier, 2026-10-04: *"make look with their colors instead of gray"*): `app_icon_colorize = false` in `noctalia/00-hypeforge.toml`, every hypeForge computer; the tint colour stays written in case it is switched back on. Picked up live, no restart; screenshot: Chrome, WhatsApp, Spotify and the rest in their own colours. **Javier to judge by eye**
+  - [x] **Bar 5 px taller, 40 → 45 px** (Javier, 2026-10-04): `thickness = 45` in `noctalia/00-hypeforge.toml`, every hypeForge computer; icons keep their size. Picked up live; measured from a screenshot: 45 px. **Javier to judge by eye**
   - [x] Pushed to GitHub (`ac41c87..4eb7d5a`, 19 commits, all signed with the co-author line); README brought current first (runs on the test desktop since 30 Sep); issues #14 (F-38, opened and closed) and #15 (F-39, open); Vault entry (5) written (2026-10-01)
   - [x] Issues for the first desktop evening's findings, which had none (F-31/F-32 were already in #13's comment): F-33 #16, F-34 #17, F-36 #19 open; F-35 #18 and F-37 #20 opened and closed with Javier's proof (2026-10-01)
   - [x] **Title bars removed (D-42, Javier, 2026-10-01):** some apps showed two bars, and snapping placed windows without room for the 26 px bar, so a top-snapped window's bar went past the screen edge and a lower window's bar slid under the one above. `hyprland.lua` no longer loads hyprbars; `hypr/titlebars.lua` removed. Applied with `hyprctl reload`, no config errors; screenshot shows the three snapped terminals with no bar and even gaps. **Javier to try snapping top/bottom again**

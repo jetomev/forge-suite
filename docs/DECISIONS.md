@@ -30,7 +30,7 @@
 
 **What it means:**
 - **Noctalia's bar sits along the bottom of the screen, edge to edge, with square corners** (`position = "bottom"`, `margin_ends = 0`, `radius = 0`).
-- **40 pixels tall** (Noctalia's default is 34).
+- **45 pixels tall** (Noctalia's default is 34). *(40 when locked; Javier raised it 5 px on 2026-10-04.)*
 - **Icons about 2 pixels bigger.** Noctalia has no icon size in pixels, only a size multiplier per widget, so every icon on the bar gets `scale = 1.17` (measured from screenshots: about 12 → 14–15 px). The clock and the "Nothing Playing" text keep their size.
 - **Left:** the KognogOS emblem (launcher), then the open-app icons. **No workspace number**: Javier read it as the monitor number; workspaces still switch by keyboard.
 - **Right:** media, tray, notifications, clipboard, network, Bluetooth, volume, brightness, battery, control centre, power, and **the clock last, in the corner**. The middle is empty. *(Later on 2026-10-01, Javier: the clock shows 12-hour time with AM/PM and the date, the power button moved after it to the very end, unopened pinned apps show at full strength, and app icons are tinted with the theme's text colour so they read on every theme.)* *(2026-10-04, Javier: app icons show in their own colours, no tint.)*
