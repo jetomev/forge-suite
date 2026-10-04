@@ -121,6 +121,39 @@ class ForgeApp(App[None]):
         self._by_id = {m["id"]: m for m in self.MENU}
         self._title_status = ""
 
+    # ── v0.6.0: a tool's run and its password, inside the app ────────────────
+    PASSWORD_TITLE: str = "Password"
+
+    async def password_bridge(self):
+        """The app's ``PasswordBridge``: started once, the first time it's needed."""
+        from .askpass import PasswordBridge, PasswordDialog
+        if getattr(self, "_forge_bridge", None) is None:
+            import asyncio
+
+            async def ask(prompt: str, attempt: int) -> str | None:
+                fut = asyncio.get_running_loop().create_future()
+                self.push_screen(PasswordDialog(prompt, attempt, self.PASSWORD_TITLE),
+                                 callback=lambda v: fut.done() or fut.set_result(v))
+                return await fut
+            self._forge_bridge = PasswordBridge(ask)
+            await self._forge_bridge.start()
+        return self._forge_bridge
+
+    async def run_in_app(self, title: str, cmd, env: dict | None = None, *, callback=None, **window) -> None:
+        """Run ``cmd`` in a ``RunWindow`` over the app, sudo's password asked in
+        the app; ``callback(status)`` when the window closes."""
+        import os
+        from .run import RunWindow
+        bridge = await self.password_bridge()
+        e = dict(env if env is not None else os.environ)
+        e.update(bridge.env())
+        self.push_screen(RunWindow(title, cmd, e, **window), callback=callback)
+
+    async def on_unmount(self) -> None:
+        bridge = getattr(self, "_forge_bridge", None)
+        if bridge is not None:
+            await bridge.close()
+
     # ── console mode (issue #1) ──────────────────────────────────────────────
     def get_css_variables(self) -> dict[str, str]:
         console = getattr(self, "forge_console", False)

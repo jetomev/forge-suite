@@ -297,6 +297,20 @@ Toast.-error { border-left: outer $forge-danger; }
 .forge-picker-hint { padding: 0 0 1 0; }
 .forge-review { width: 84; }
 .forge-progress { width: 64; }
+/* v0.6.0: a tool's run inside the app — steps + progress, or its own screen */
+.forge-run { width: 90%; height: auto; max-height: 100%; }
+.forge-run.-screen-open, RunWindow.-screen-open .forge-run { height: 90%; }
+#run-steps { height: auto; padding: 0 0 1 0; }
+#run-progress { width: 100%; height: 1; padding: 0 0 1 0; }
+#run-question { height: auto; padding: 0 0 1 0; }
+#run-question-text { width: 1fr; height: auto; color: $forge-warn; }
+#run-question Button { height: 1; min-width: 10; border: none; padding: 0 2; margin: 0 0 0 2; }
+#run-screen { height: 1fr; min-height: 8; border: solid $forge-field-border; }
+#run-screen:focus { border: solid $forge-accent; }
+#run-status { height: auto; padding: 1 0 0 0; }
+.forge-password { width: 60; }
+#pw-input { margin: 0 0 1 0; }
+#pw-again { padding: 0 0 1 0; }
 #progress-log { padding: 1 0 0 0; }
 
 /* the manual */
