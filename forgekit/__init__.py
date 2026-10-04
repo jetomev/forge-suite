@@ -25,7 +25,7 @@ from .licenses import GPL3_NOTICE
 from .menu import MenuBar, MenuDropdown, accel, underline_label
 from .theme import COLORS, FORGE_CSS, ROLES, css_variables
 
-__version__ = "0.5.2"
+__version__ = "0.6.0"
 
 __all__ = [
     "ForgeApp",
