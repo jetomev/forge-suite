@@ -4,6 +4,11 @@
 
 
 - [ ] **Next version — button labels in Javier's format (3 Oct 2026):** "Words In Title Case (k)", e.g. "Review Updates (u)": the key in brackets after the words, for every Forge Suite app. What shipped stays until this app's next version.
+## Now · v0.6.0 — a tool's run and its password inside the app · issue #6
+- [x] TerminalPane, RunWindow, PasswordBridge/PasswordDialog, InAppPolkitAgent; ReviewDialog keys; console glyphs; `literal()`. 67 tests; all four apps pass on it
+- [x] Proven on a real text console in the KognogOS VM (nogForge + grubForge)
+- [ ] Javier's desktop test (nogForge matrix §2) → release 0.6.0 first (the apps need it): README, CHANGELOG, AUR (`python-pyte` dep added locally in aur-python-forgekit, not pushed)
+
 ## Done · v0.5.2 · the bottom bar follows the screen shown · released 2026-10-03
 - [x] Javier, nogForge: Update → Dashboard kept Update's keys in the bottom bar. A screen with nothing to select left focus in the hidden one. All four apps had it on their first screen; all consistent with the fix (`8f14c39`). Tests 51 → 52; grubForge 53, alacrittyForge 80, bitlaForge 64, nogForge 33 pass on it; console check clean. Javier's go: 3 Oct ("yes release forgekit 0.5.2").
 
