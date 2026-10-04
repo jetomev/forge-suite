@@ -22,7 +22,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Application Frameworks",
     "Topic :: Terminals",
 ]
-dependencies = ["textual>=8.0"]
+dependencies = ["textual>=8.0", "pyte>=0.8"]
 
 [project.urls]
 Homepage = "https://github.com/jetomev/forgekit"

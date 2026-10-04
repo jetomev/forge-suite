@@ -1,6 +1,6 @@
 # 🔨 forgekit
 
-![Version: 0.5.1](https://img.shields.io/badge/Version-0.5.2-purple.svg)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-purple.svg)
 ![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
 ![Built with Textual](https://img.shields.io/badge/Built%20with-Textual-5a3fd6.svg)
 ![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)
@@ -39,17 +39,23 @@ polish improves every app at once.
 - **Help windows** — `Shortcuts`, `License` and `About` are built in and work
   from the start.
 - **Toasts** for quick messages that don't need a dialog.
+- **A tool's run inside the app** *(0.6.0)*. Hand a real program (a package manager,
+  a helper) to a window over your app: its steps and a progress bar, its own screen
+  when it asks something, Yes/No for its questions. The app never leaves its screen.
+- **The password inside the app** *(0.6.0)*. sudo's and polkit's password questions are
+  asked in the app's own box, on a desktop and on a text console alike.
 - **A text-console mode.** On the plain Linux text screen (`Ctrl+Alt+F3`) every app
   switches to colours and characters that screen can actually show, by itself.
   [More below](#on-a-plain-text-console).
 
-> **Status: 0.5.2 (alpha).** The API may still shift while the Forge apps migrate
+> **Status: 0.6.0 (alpha).** The API may still shift while the Forge apps migrate
 > onto it. Pin a version if you depend on it.
-> 0.5.2: the bottom bar shows the keys of the screen you're on. Coming back to a
-> screen with nothing to select kept the last screen's keys; found by Javier in
-> [nogForge](https://github.com/jetomev/nogforge), and present in every app.
-> 0.5.1: number fields take decimals (`NumberPresets(decimals=True)`) and are as
-> wide as the longest number they hold, both found by [alacrittyForge 1.0](https://github.com/jetomev/alacrittyforge).
+> 0.6.0: a tool's run and its password inside the app: `RunWindow`, `TerminalPane`,
+> `PasswordBridge`, `InAppPolkitAgent` ([#6](https://github.com/jetomev/forgekit/issues/6)).
+> Javier, about nogForge leaving its screen for nog: *"it is not beautiful, it is
+> disrupting."* nogForge 1.1 and grubForge 2.1 are built on it.
+> 0.5.2: the bottom bar shows the keys of the screen you're on, found by Javier in
+> [nogForge](https://github.com/jetomev/nogforge). Earlier versions: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 ## Screenshots
 
@@ -93,7 +99,9 @@ pip install -e .
 python examples/demo.py
 ```
 
-Requires Python 3.10 or newer, and `textual>=8.0`.
+Requires Python 3.10 or newer, `textual>=8.0`, and `pyte` (0.6.0: it draws a program's
+screen inside the app). `InAppPolkitAgent` also needs PyGObject with polkit's libraries
+(`python-gobject`, `polkit`); without them it says so and the app keeps the desktop's way.
 
 ## Quickstart
 
@@ -150,6 +158,18 @@ section with a floating editor and a delete confirmation stacked on top of it.
 | `ROLES` / `css_variables()` | The colour roles (`$forge-accent`, `$forge-muted`, `$forge-border`…): one colour for a terminal window, one for a text console. Use the same names in your own CSS. |
 | `glyph()` / `GLYPHS` | Named marks (`ok`, `warn`, `error`, `busy`…) that turn into console-safe ones on a text console: `✓` → `+`, `⚠` → `!`. |
 | `console_mode()` / `console_text()` | Whether the app runs on a text console, and the character swap it applies. Your app reads `self.forge_console`. |
+
+### A tool's run and its password (0.6.0)
+
+For apps that hand work to a real program and must not leave their screen while it runs
+(nogForge with nog, grubForge with polkit). Proven on a real text console.
+
+| Object | What it is |
+| --- | --- |
+| `ForgeApp.run_in_app()` / `RunWindow` | Run a program in a window over the app. Steps and a progress bar from a JSON-lines events file; the program's own screen folded until it asks something or fails (F12 anytime); **Yes (y) / No (n)** for yes/no questions; menus (yay's `==>`) are typed in the screen; an editor or pager simply gets the keys. Returns the exit status. |
+| `TerminalPane` | A program in a pseudo-terminal, drawn inside the app (pyte, plus the alternate screen and a capped scrollback). Keys and Ctrl+C go to it. |
+| `PasswordBridge` / `PasswordDialog` | `sudo -A`'s helper asks the running app over a private socket (a folder only you can open, a one-time token); the app shows its password box; "try again" after a wrong one. Nothing is written to disk or put on a command line. |
+| `ForgeApp.polkit_agent()` / `InAppPolkitAgent` | The app becomes polkit's password asker **for its own process only**: `pkexec` asks in the app's box, and polkit's own helper checks the password. Three tries; Cancel cancels. |
 
 ### Forms and flows (0.5.0)
 
