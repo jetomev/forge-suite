@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img alt="Status: Phase 2 · on the test desktop" src="https://img.shields.io/badge/status-Phase%202%20·%20on%20the%20test%20desktop-fab387?style=flat-square&labelColor=313244">
+  <img alt="Status: starting again (D-44)" src="https://img.shields.io/badge/status-starting%20again%20(D--44)-fab387?style=flat-square&labelColor=313244">
   <img alt="Hyprland 0.56+" src="https://img.shields.io/badge/Hyprland-0.56%2B-89b4fa?style=flat-square&labelColor=313244">
   <img alt="Settings in Lua" src="https://img.shields.io/badge/settings-Lua-b4befe?style=flat-square&labelColor=313244">
   <img alt="Any Arch Linux install" src="https://img.shields.io/badge/Arch%20Linux-any%20install-94e2d5?style=flat-square&labelColor=313244">
@@ -16,7 +16,9 @@
 
 > A Forge Suite app that turns any Arch Linux install into the **KognogOS desktop, rebuilt light**. Windows float the way you're used to and snap into place with **Win + arrow keys**. The apps are small, most tools live in the terminal, and **every setting is kept in one folder** you can back up by copying it.
 
-> 🚧 **Coming soon.** hypeForge is being **built by hand and lived in** (Phase 2): a KognogOS disc with hypeForge as its only desktop installs and runs in a virtual machine, and since 2026-09-30 hypeForge also runs on the KognogOS test desktop, next to Plasma, where Javier uses it every day and every rough edge becomes a finding. There is no app to install yet. Follow along in [Issues](https://github.com/jetomev/hypeforge/issues) and the [roadmap](#roadmap).
+> 🔄 **Starting again (4 October 2026, [D-44](docs/DECISIONS.md), [#22](https://github.com/jetomev/hypeforge/issues/22)).** Javier: *"I want something that it's us, as everything we are building."* The new path: choose a barebones **tiling** base from research (Hyprland, Sway, i3, dwm, river, niri…), then add each piece one at a time with **terminal apps first**, turn every gap into a new Forge Suite app, and build **our own look** from the KognogOS brand. Everything below describes the **first attempt** (floating Hyprland with Noctalia), kept as history and material until the new path replaces it.
+
+> 🚧 **First attempt.** hypeForge was **built by hand and lived in** (Phase 2): a KognogOS disc with hypeForge as its only desktop installs and runs in a virtual machine, and since 2026-09-30 hypeForge also runs on the KognogOS test desktop, next to Plasma, where Javier uses it every day and every rough edge becomes a finding. There is no app to install yet. Follow along in [Issues](https://github.com/jetomev/hypeforge/issues) and the [roadmap](#roadmap).
 
 > 🛡 **Security.** Every commit is GPG-signed and GitHub-Verified, and releases will be signed like the rest of the Forge Suite. **[Where We Stand](https://github.com/jetomev/KognogOS/blob/main/docs/where-we-stand.md)** explains why.
 
