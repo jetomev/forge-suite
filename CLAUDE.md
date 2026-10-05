@@ -3,15 +3,17 @@
 *How this project is built, tested and shipped. Written for the AI co-developer, and public on purpose: it is part of how the human + AI method is documented.*
 
 ## What it is
-A [forgekit](https://github.com/jetomev/forgekit) (Python/Textual) terminal app that installs and manages the KognogOS Hyprland desktop on any Arch install. **Phase 0: there is no app code yet.**
+The KognogOS desktop on **Sway** (D-45): tiling, terminal apps first. Each feature is a small applet (`applets/`, D-47); every setting becomes its own Forge Suite app, held by **hypeForge Settings**, the control centre (D-59). The Hyprland attempt (28 Sep – 3 Oct 2026) is history in `desktop/` and the decision log (D-44). **There is no installer app yet.**
 
 ## Non-negotiables (from docs/DECISIONS.md)
-- **Hyprland settings are Lua only** (Hyprland 0.55+). Never write the retired `.conf` format for Hyprland itself.
-- **Windows float by default**, and Win + arrows snap them, like Plasma.
-- **One portable folder is the source of truth.** Nothing outside `$HOME` is ever edited by hand. System pieces are applied by the app, with a backup and an undo, through polkit and a fixed-purpose helper (grubForge's pattern). Never put a password field inside the terminal app.
-- **Packages go through nog.** The Hyprland family is a nog group (D-9).
-- **Must be readable on a plain text screen** (`TERM=linux`), which depends on forgekit#1.
-- **We learn from Omarchy (MIT) and every app we use, and we never compare** (D-27). No "better than" or "unlike X" framing anywhere. Credit anything adapted and keep its notice.
+- **The three-part rule (D-57):** terminal apps first (1), Sway-compatible (2), smallest install (3). Nothing that brings KDE, GNOME or Hyprland pieces back (D-56): **KognogOS ships with Sway only.**
+- **Every configurable thing is its own Forge app** on forgekit, with the same look; apps that connect read each other's settings files, never each other's code (D-59).
+- **Any number of screens.** This desktop has three; hypeForge must work for one to six or more. Never hard-code three.
+- **Packages go through nog.** Raw pacman/AUR only when strictly needed, and say why.
+- **System pieces are applied by the app**, with a backup and an undo. Nothing outside `$HOME` is edited by hand.
+- **The key chart is checked on every commit** (`scripts/check-keys.py`, the pre-commit hook): a key added in `sway/config` must be in `applets/help/keys.toml`.
+- **Must be readable on a plain text screen** (`TERM=linux`).
+- **We learn from every project we use, and we never compare** (D-27). No "better than" or "unlike X" framing anywhere. Credit anything adapted and keep its notice.
 
 ## Documentation, at every step
 - A new decision goes in `docs/DECISIONS.md`: newest first, numbered D-n, dated, with who decided.
