@@ -31,7 +31,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Later (Javier, 10-04, "for when we get there"): **Alt + Tab** across the apps of the workspace on all 3 screens, with window pictures (applet candidate)
 - [ ] Later (Javier, 10-04): **drag and drop** of windows — explore: swapping apps, dropping one onto another to tab/stack
 - [x] **Applet 5 · Window Rules** (D-53): small tools float (`applets/rules/`); Alt + F4 closes; the launcher's first screen searches every app — Javier: "everything is working. Excellent!"
-- [ ] F-44: no admin-password helper (polkit agent) runs in the Sway session — apps that ask for admin rights through a pop-up cannot (RECIPE job 8)
+- [ ] F-44 (#26): no admin-password helper (polkit agent) runs in the Sway session — apps that ask for admin rights through a pop-up cannot (RECIPE job 8)
 - [ ] **Applet 6 · Help** (Javier, 10-04: "a good help for all the functionalities, applets, and also the key combos chart"): Win + F1 + a launcher line → a searchable key chart from one file, checked against Sway's real keys on every save; a plain-words guide to every applet
 - [ ] Apps that draw their own minimise/maximise/close bar (Chrome…): switch it off where the app allows
 - [ ] Try SwayFX for rounded corners (`chaotic-aur/swayfx` 0.6, same config) — later, separate trial
