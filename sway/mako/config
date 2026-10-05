@@ -40,6 +40,10 @@ on-button-left=dismiss
 on-button-right=dismiss-all
 on-button-middle=invoke-default-action
 
+# a notification that offers something (a screenshot: "Draw on it"): a left click does it
+[actionable]
+on-button-left=invoke-default-action
+
 [urgency=low]
 border-color=#313244
 text-color=#a6adc8

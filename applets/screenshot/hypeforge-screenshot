@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+"""hypeForge applet 8 · Screenshots (Javier, 2026-10-05).
+
+    hypeforge-screenshot area     drag a box (Print)            — Esc cancels
+    hypeforge-screenshot screen   the screen you are on (Shift + Print)
+    hypeforge-screenshot all      every screen (Ctrl + Print)
+    hypeforge-screenshot window   the window you are in (Alt + Print)
+
+Every picture is saved to ~/Pictures/Screenshots (date and time in the name), copied to the
+clipboard, and announced by a notification; clicking it opens the picture in swappy to draw
+on it. Tools: grim (the picture), slurp (the box), wl-copy, notify-send, swappy.
+"""
+
+import os
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
+from hfsway import GET_TREE, Sway  # noqa: E402
+
+GET_OUTPUTS = 3
+
+
+def pictures():
+    try:
+        base = subprocess.run(["xdg-user-dir", "PICTURES"], capture_output=True, text=True).stdout.strip()
+    except OSError:
+        base = ""
+    folder = Path(base or Path.home() / "Pictures") / "Screenshots"
+    folder.mkdir(parents=True, exist_ok=True)
+    return folder
+
+
+def rect(r):
+    return f"{r['x']},{r['y']} {r['width']}x{r['height']}"
+
+
+def focused_window(node):
+    if node.get("focused") and node.get("type") in ("con", "floating_con"):
+        return node
+    for child in node.get("nodes", []) + node.get("floating_nodes", []):
+        found = focused_window(child)
+        if found:
+            return found
+    return None
+
+
+def grim_args(mode):
+    """What to hand grim, or None when there is nothing to take (Esc in the box, no window)."""
+    if mode == "all":
+        return []
+    if mode == "area":
+        box = subprocess.run(["slurp", "-d"], capture_output=True, text=True)
+        return ["-g", box.stdout.strip()] if box.returncode == 0 and box.stdout.strip() else None
+    sway = Sway()
+    if mode == "screen":
+        outputs = sway.ask(GET_OUTPUTS, "")
+        name = next((o["name"] for o in outputs if o.get("focused")), None)
+        return ["-o", name] if name else []
+    if mode == "window":
+        window = focused_window(sway.ask(GET_TREE, ""))
+        return ["-g", rect(window["rect"])] if window else None
+    sys.exit(__doc__)
+
+
+def main():
+    mode = sys.argv[1] if len(sys.argv) > 1 else ""
+    if mode not in ("area", "screen", "all", "window"):
+        sys.exit(__doc__)
+    args = grim_args(mode)
+    if args is None:
+        return
+    path = pictures() / time.strftime("Screenshot %Y-%m-%d %H-%M-%S.png")
+    if subprocess.run(["grim", *args, str(path)]).returncode != 0:
+        subprocess.run(["notify-send", "-u", "critical", "Screenshot failed", "grim could not take it"])
+        return
+    with open(path, "rb") as picture:
+        subprocess.run(["wl-copy", "--type", "image/png"], stdin=picture)
+    # The notification waits in the background for a click ("default" = open it in swappy).
+    if os.fork() == 0:
+        os.setsid()
+        answer = subprocess.run(
+            ["notify-send", "-a", "Screenshot", "-i", str(path), "-A", "default=Draw on it",
+             "Screenshot saved", f"{path.name}\nCopied to the clipboard · click to draw on it"],
+            capture_output=True, text=True).stdout.strip()
+        if answer == "default":
+            subprocess.run(["swappy", "-f", str(path)])
+        os._exit(0)
+
+
+if __name__ == "__main__":
+    main()

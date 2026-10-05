@@ -276,8 +276,12 @@ bindsym $mod+r mode "resize"
     bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
     bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 
-    # Special key to take a screenshot with grim
-    bindsym Print exec grim
+    # hypeForge: screenshots (applet 8, Javier 2026-10-05) — saved to ~/Pictures/Screenshots,
+    # copied to the clipboard, a notification; click it to draw on the picture (swappy)
+    bindsym Print exec ~/Programs/hypeforge/applets/screenshot/hypeforge-screenshot area
+    bindsym Shift+Print exec ~/Programs/hypeforge/applets/screenshot/hypeforge-screenshot screen
+    bindsym Ctrl+Print exec ~/Programs/hypeforge/applets/screenshot/hypeforge-screenshot all
+    bindsym Alt+Print exec ~/Programs/hypeforge/applets/screenshot/hypeforge-screenshot window
 
 #
 # Status Bar:

@@ -31,6 +31,10 @@ name = "Calculator (galculator, until our own Forge calculator; its own size)"
 app_id = '^galculator$'
 
 [[float]]
+name = "Drawing on a screenshot (swappy)"
+app_id = '^swappy$'
+
+[[float]]
 name = "Network Connections"
 app_id = '^nm-connection-editor$'
 

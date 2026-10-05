@@ -1,0 +1,12 @@
+# hypeForge — swappy, for drawing on a screenshot (applet 8). Copied to ~/.config/swappy/config.
+# Ctrl + S saves the drawn copy next to the screenshot; Ctrl + C copies it.
+[Default]
+save_dir=$HOME/Pictures/Screenshots
+save_filename_format=Screenshot %Y-%m-%d %H-%M-%S (drawn).png
+show_panel=true
+line_size=5
+text_size=20
+text_font=sans-serif
+paint_mode=arrow
+early_exit=false
+fill_shape=false
