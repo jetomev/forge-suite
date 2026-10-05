@@ -12,9 +12,10 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] D-44 recorded (the restart; replaces D-39's "graphical settings apps" and D-40's Noctalia)
 - [x] Research done (4 Oct): top pick **Sway** 1.12, runner-up **niri** 26.04; i3 the X11 safety net; Hyprland, dwm, river, MangoWC, Qtile not now. Hyprland, Sway, i3, dwm, river, niri… on NVIDIA (RTX 3060, 3 × 144 Hz), maturity, ease, tiling, terminal ecosystem, theming, community (`docs/research/2026-10-04-tiling-base-choice.md`)
 - [x] Javier chose **Sway** (D-45): a new login session; the current one stays the main desktop meanwhile
-- [ ] Barebones session next to Plasma on this computer: tiling, a terminal, three monitors at 144 Hz, NVIDIA right, nothing else
+- [ ] Barebones session next to Plasma on this computer: tiling, a terminal, three monitors at 144 Hz, NVIDIA right, nothing else — **10-04: Javier logged in to "Sway (hypeForge)"; Claude confirmed all three screens at 144 Hz in the right order (matrix 1.4 ✅). Javier: 1.1–1.3 + 1.5 ✅ (section 1 complete). Next: §2 (Chrome video, Discord share, WoW, brightness)**
 
 ## Phase 11 · The jobs, one by one, terminal first
+- [ ] Tiling order: how a new window splits the screen (Javier, 10-04: "we will work on the tiling order later")
 - [ ] Go through `docs/RECIPE.md`'s ~31 jobs again with Javier, one at a time: a terminal (CLI/TUI) app first wherever one exists
 - [ ] Keep a list of **Forge Suite candidates**: every job with no good terminal app
 

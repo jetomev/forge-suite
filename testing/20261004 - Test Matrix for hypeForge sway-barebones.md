@@ -24,11 +24,11 @@
 ## 1 · Javier: the first look
 | ID | Do | Expect | Result |
 |---|---|---|---|
-| 1.1 | Choose "Sway (hypeForge)", log in | a plain grey desktop with a bar at the bottom of each screen (date and time on the right) | |
-| 1.2 | Look at the three screens | left / middle / right in the right order; the mouse moves smoothly across all three | |
-| 1.3 | Win + Enter twice | two terminals side by side, filling the screen (tiling) | |
-| 1.4 | In a terminal: `claude --continue` | this conversation back; Claude checks the screens are at 144 Hz (`swaymsg -t get_outputs`) | |
-| 1.5 | Type `'` then `a` | á (US-International as before) | |
+| 1.1 | Choose "Sway (hypeForge)", log in | a black desktop with a grey bar at the top (date and time on the right) — *expectation corrected 10-04: the sheet first said grey + bottom; Sway's example config has `position top` and no wallpaper = black* | ✅ PASS (Javier): black background, top grey bar with date and clock |
+| 1.2 | Look at the three screens | left / middle / right in the right order; the mouse moves smoothly across all three | ✅ PASS (Javier): right order — workspace 2 left, 1 middle (main), 3 right; mouse smooth |
+| 1.3 | Win + Enter twice | two terminals side by side, filling the screen (tiling) | ✅ PASS (Javier): 3 side by side (Claude's terminal + 2). Note: how new windows split → later (Phase 11/12) |
+| 1.4 | In a terminal: `claude --continue` | this conversation back; Claude checks the screens are at 144 Hz (`swaymsg -t get_outputs`) | ✅ PASS (Claude, 10-04): conversation back; DP-2 left (0,0), DP-3 middle (2560,0), DP-1 right (5120,0), all 2560x1440 @ 144.000 Hz; keyboard layout reads US-International with dead keys; live config = repo `sway/config` (no difference) |
+| 1.5 | Type `'` then `a` | á (US-International as before) | ✅ PASS (Javier): keys work as expected |
 
 ## 2 · Claude + Javier, from inside Sway (next)
 Chrome with a video · Discord screen share · WoW full screen · brightness (ddcutil) · anything that flickers or stutters → a finding.
