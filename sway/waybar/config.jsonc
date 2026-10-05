@@ -9,7 +9,17 @@
   "spacing": 0,
   // "modules-left" (the workspace buttons) comes from the included file
   "modules-center": [],
-  "modules-right": ["clock"],
+  "modules-right": ["custom/notifications", "clock"],
+  // The bell: applet 7 (applets/notifications/). Left click lists recent notifications,
+  // right click switches Do Not Disturb. Redrawn on SIGRTMIN+9 (mako's on-notify), and every 30 s.
+  "custom/notifications": {
+    "exec": "~/Programs/hypeforge/applets/notifications/hypeforge-notifications bar",
+    "return-type": "json",
+    "interval": 30,
+    "signal": 9,
+    "on-click": "~/Programs/hypeforge/applets/notifications/hypeforge-notifications list",
+    "on-click-right": "~/Programs/hypeforge/applets/notifications/hypeforge-notifications dnd"
+  },
   "clock": {
     "format": "{:%a %d %b   %I:%M %p}",
     "tooltip": false

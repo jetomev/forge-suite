@@ -76,6 +76,9 @@ gaps outer 0
 # hypeForge (Javier, 2026-10-05, D-57): lock after 30 minutes untouched, screens off after
 # 60, back on at the first touch. No sleep or suspend: nothing here puts the computer to sleep.
 # The lock screen's look: ~/.config/gtklock/ (style.css).
+# hypeForge: notifications (RECIPE job 3, Javier 2026-10-05): mako, styled in ~/.config/mako/config
+exec mako
+
 exec swayidle -w \
          timeout 1800 'gtklock -d' \
          timeout 3600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"'
@@ -116,6 +119,9 @@ input type:keyboard {
     # hypeForge: Alt + F4 closes the window too, the standard combination (Javier, 2026-10-04)
     bindsym Mod1+F4 kill
     # hypeForge: Win + F1 = help: the key chart and the guide, applet 6 (D-54)
+    # hypeForge: notifications (mako) — close them all / bring back the last one closed
+    bindsym $mod+n exec makoctl dismiss --all
+    bindsym $mod+Shift+n exec makoctl restore
     # hypeForge: lock the screen (Javier, 2026-10-05)
     bindsym $mod+Escape exec gtklock -d
     bindsym $mod+F1 exec ~/Programs/hypeforge/applets/help/hypeforge-help

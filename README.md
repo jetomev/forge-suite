@@ -46,7 +46,8 @@ A full desktop like KDE Plasma does everything for you, and it carries a lot of 
 | **Window rules** | Small tools (the calculator, settings windows, picture-in-picture video) float above the tiled windows. |
 | **Help & Keys** (Win + F1) | A small Forge app with tabs: the key chart and a plain-words guide to every piece. The chart is checked against Sway's real keys before every change is saved. |
 | **Lock screen** (Win + Escape) | A big clock and a password box over the blurred KognogOS wallpaper. Locks by itself after 30 minutes; the screens turn off after 60. |
-| **Top bar** | The six workspaces, always shown and clickable, and the clock. |
+| **Top bar** | The six workspaces, always shown and clickable, a notification bell with the count of new ones (right click: Do Not Disturb), and the clock. |
+| **Notifications** | Small pop-ups at the top right of the screen you're using; **Win + N** closes them all. |
 | **Terminal apps** | Alacritty for the terminal, Midnight Commander for files, Fresh for text, numbat for sums, cliamp for music (from the media server). |
 
 The look is **Catppuccin Mocha** with the KognogOS wallpaper: thin borders, no title bars, windows that share a space become tabs, 10 px between windows.
@@ -108,7 +109,7 @@ We don't compare ourselves with anyone. Our picks are simply our picks.
 | Step | What happens | Status |
 |---|---|---|
 | **Choose the base** | Research, then **Sway** chosen ([D-45](docs/DECISIONS.md)); runs on the test desktop | ✅ |
-| **The jobs, one by one** | Workspaces, placement, launcher, rules, help, lock screen ✅ · next: notifications, screenshots, sound and network, the password pop-up | 🔄 in progress |
+| **The jobs, one by one** | Workspaces, placement, launcher, rules, help, lock screen, notifications ✅ · next: screenshots, sound and network, the password pop-up | 🔄 in progress |
 | **Our own look** | Folder-style tabs, our own top bar, a palette from the KognogOS brand | ⬜ |
 | **The Forge apps** | One Forge Suite app per setting, and **hypeForge Settings** to hold them all. Screens, workspaces and window placement become **flexible for any number of screens**, from one to six or more | ⬜ |
 | **The first KognogOS release** | KognogOS ships with hypeForge as its only desktop | ⬜ |
@@ -133,6 +134,7 @@ Every step is tested on the KognogOS test desktop first, where Javier lives in i
 | [TODO](TODO.md) | What is done and what comes next, step by step |
 | [DESIGN](docs/DESIGN.md) | How it works (written for the first attempt; being brought up to date) |
 | [RECIPE](docs/RECIPE.md) | The options for every job, with sources |
+| [FONTS](docs/FONTS.md) | Every font hypeForge needs, and which package brings it |
 | [KOGNOGOS-IMPACT](docs/KOGNOGOS-IMPACT.md) | What moving off Plasma changes in KognogOS |
 | [Research notes](docs/research/) | What was checked, how, and the sources |
 | [ROADMAP](docs/ROADMAP.md) · [CHANGELOG](docs/CHANGELOG.md) | Where it's going; where it's been |

@@ -12,6 +12,8 @@ name = "Apps and windows"
 keys = [
   { keys = "Win + Space", does = "Open the launcher (sections, search every app, lock, log out, reboot, shut down)", sway = ["$mod+space"] },
   { keys = "Win + Escape", does = "Lock the screen (it also locks by itself after 30 minutes)", sway = ["$mod+Escape"] },
+  { keys = "Win + N", does = "Close every notification on screen", sway = ["$mod+n"] },
+  { keys = "Win + Shift + N", does = "Bring back the last notification closed", sway = ["$mod+Shift+n"] },
   { keys = "Win + D", does = "Plain app search (the launcher without sections)", sway = ["$mod+d"] },
   { keys = "Win + Enter", does = "Open a terminal", sway = ["$mod+Return"] },
   { keys = "Alt + F4", does = "Close the window", sway = ["Mod1+F4"] },

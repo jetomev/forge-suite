@@ -1,0 +1,112 @@
+#!/usr/bin/env python3
+"""hypeForge applet 7 · Notifications on the bar (Javier, 2026-10-05).
+
+A bell on the top bar for mako's notifications:
+    hypeforge-notifications bar      the bell, as Waybar JSON (icon, unseen count, tooltip)
+    hypeforge-notifications list     recent notifications in a fuzzel list; marks them all seen
+    hypeforge-notifications dnd      Do Not Disturb on / off (pop-ups hidden, still kept)
+    hypeforge-notifications changed  tell the bar to redraw (mako's on-notify runs this)
+
+"Seen" is the newest notification number shown in the list, kept in $XDG_RUNTIME_DIR.
+Settings for mako itself: ~/.config/mako/config. A notifications Forge app sets them later (D-59).
+"""
+
+import json
+import os
+import signal
+import subprocess
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
+from hfbar import signal_bar  # noqa: E402
+
+RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
+SEEN = RUNTIME / "hypeforge-notifications.seen"
+BAR_SIGNAL = 9          # Waybar redraws the bell on SIGRTMIN+9
+DND = "do-not-disturb"  # mako mode; [mode=do-not-disturb] in its config hides pop-ups
+FUZZEL = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+
+BELL, BELL_NEW, BELL_OFF = "\U000f009a", "\U000f009e", "\U000f009b"  # 󰂚 󰂞 󰂛 (Nerd Font)
+
+
+def makoctl(*args):
+    try:
+        return subprocess.run(["makoctl", *args], capture_output=True, text=True, timeout=3).stdout
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+
+
+def everything():
+    """On screen now + history, newest first, without repeats."""
+    seen_ids, out = set(), []
+    for cmd in (("list", "-j"), ("history", "-j")):
+        try:
+            items = json.loads(makoctl(*cmd) or "[]")
+        except json.JSONDecodeError:
+            items = []
+        for n in items:
+            if n.get("id") not in seen_ids:
+                seen_ids.add(n.get("id"))
+                out.append(n)
+    return sorted(out, key=lambda n: n.get("id", 0), reverse=True)
+
+
+def seen():
+    try:
+        return int(SEEN.read_text())
+    except (OSError, ValueError):
+        return 0
+
+
+def dnd_on():
+    return DND in makoctl("mode").split()
+
+
+def bar():
+    notes = everything()
+    unseen = [n for n in notes if n.get("id", 0) > seen()]
+    if dnd_on():
+        icon, cls, tip = BELL_OFF, "dnd", "Do Not Disturb is on: pop-ups are hidden"
+    elif unseen:
+        icon, cls = BELL_NEW, "unseen"
+        tip = f"{len(unseen)} new: " + " · ".join(n.get("summary", "") for n in unseen[:3])
+    else:
+        icon, cls, tip = BELL, "none", "No new notifications"
+    text = f"{icon} {len(unseen)}" if unseen else icon
+    tip += "\nLeft click: recent notifications · Right click: Do Not Disturb"
+    print(json.dumps({"text": text, "class": cls, "tooltip": tip}))
+
+
+def show_list():
+    notes = everything()
+    if notes:
+        SEEN.write_text(str(notes[0].get("id", 0)))
+    changed()
+    lines = [f"{n.get('app_name') or 'app'} · {n.get('summary', '')}"
+             + (f" — {n['body']}" if n.get("body") else "") for n in notes] or ["No notifications yet"]
+    cmd = ["fuzzel", "--dmenu", "--prompt", "Notifications  ", "--width", "70",
+           "--lines", str(min(len(lines), 15))]
+    if os.path.isfile(FUZZEL):
+        cmd[1:1] = ["--config", FUZZEL]
+    subprocess.run(cmd, input="\n".join(l.replace("\n", " ") for l in lines), text=True,
+                   capture_output=True)
+
+
+def toggle_dnd():
+    makoctl("mode", "-t", DND)
+    changed()
+
+
+def changed():
+    signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
+
+
+def main():
+    action = sys.argv[1] if len(sys.argv) > 1 else ""
+    {"bar": bar, "list": show_list, "dnd": toggle_dnd, "changed": changed}.get(
+        action, lambda: sys.exit(__doc__))()
+
+
+if __name__ == "__main__":
+    main()

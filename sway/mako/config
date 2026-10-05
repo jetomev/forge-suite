@@ -1,0 +1,53 @@
+# hypeForge — notifications in the Sway session: mako (RECIPE job 3, D-57; Javier 2026-10-05).
+# Copied to ~/.config/mako/config. Top right, under the bar, on the screen in use; 5 seconds;
+# urgent ones stay until clicked. Catppuccin Mocha. Click: close it. Win + N closes them all,
+# Win + Shift + N brings back the last one closed (sway/config). A notifications Forge app
+# will set this file later (D-59).
+
+# where: top right of the screen in use (output empty = the focused screen)
+anchor=top-right
+output=
+layer=top
+outer-margin=10
+margin=6
+width=420
+height=200
+max-visible=5
+max-history=20
+sort=-time
+
+# how long
+default-timeout=5000
+ignore-timeout=0
+
+# look
+font=sans 12
+background-color=#1e1e2ef2
+text-color=#cdd6f4
+border-color=#45475a
+border-size=2
+border-radius=10
+padding=12
+icons=1
+max-icon-size=48
+progress-color=over #313244
+
+# the bell on the bar redraws when a notification arrives (applet 7)
+on-notify=exec ~/Programs/hypeforge/applets/notifications/hypeforge-notifications changed
+
+# what a click does
+on-button-left=dismiss
+on-button-right=dismiss-all
+on-button-middle=invoke-default-action
+
+[urgency=low]
+border-color=#313244
+text-color=#a6adc8
+
+[urgency=critical]
+border-color=#f38ba8
+default-timeout=0
+
+# Do Not Disturb (right click on the bell): pop-ups hidden, still kept in the list
+[mode=do-not-disturb]
+invisible=1

@@ -40,3 +40,25 @@ window#waybar {
   padding: 0 14px;
   color: @hf_text;
 }
+
+/* The bell (applet 7): grey when nothing is new, light with a count when something is,
+   red-crossed when Do Not Disturb is on */
+#custom-notifications {
+  padding: 0 10px;
+  font-family: "Symbols Nerd Font", sans-serif;
+  font-size: 15px;
+  color: @hf_subtext;
+}
+
+#custom-notifications:hover {
+  background: @hf_inactive;
+  color: @hf_text;
+}
+
+#custom-notifications.unseen {
+  color: #f9e2af;
+}
+
+#custom-notifications.dnd {
+  color: #f38ba8;
+}
