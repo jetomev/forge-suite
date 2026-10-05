@@ -49,6 +49,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
   - Outside programs set up only by a config file: cliamp (music folders, providers… **needs a long conversation first**) · Waybar · fuzzel · gtklock · Alacritty (= alacrittyForge ✅) · GRUB (= grubForge ✅)
   - **Password helper** (D-56): the admin pop-up (polkit) + the `sudo`/`nog` password window; closes F-44 (#26) + F-42 (#24)
   - First: a spike — a full Forge app inside forgekit's terminal pane (colours, mouse, keys)
+  - **Any number of screens** (Javier, 10-05): "not everyone has 3 screens… 1, and others 6" — a flexible matrix of monitors × workspaces × window placement, designed when the Monitors / Workspaces / Placement apps are built (today's settings assume this desktop's three)
 - [ ] **hypeForge Settings = the control centre** (D-59): list on the left, the chosen Forge app running in a terminal pane on the right
 
 ## Phase 12 · Our own look

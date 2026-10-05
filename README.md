@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="hypeForge — the KognogOS Hyprland desktop, rebuilt light: floating-first, terminal-first, one portable folder" width="100%">
+  <img src="assets/banner.svg" alt="hypeForge — the KognogOS desktop: Sway tiling, terminal apps first, every setting a Forge app" width="100%">
 </p>
 
 <p align="center">
-  <img alt="Status: starting again (D-44)" src="https://img.shields.io/badge/status-starting%20again%20(D--44)-fab387?style=flat-square&labelColor=313244">
-  <img alt="Hyprland 0.56+" src="https://img.shields.io/badge/Hyprland-0.56%2B-89b4fa?style=flat-square&labelColor=313244">
-  <img alt="Settings in Lua" src="https://img.shields.io/badge/settings-Lua-b4befe?style=flat-square&labelColor=313244">
+  <img alt="Status: building on Sway" src="https://img.shields.io/badge/status-building%20on%20Sway-fab387?style=flat-square&labelColor=313244">
+  <img alt="Sway 1.12" src="https://img.shields.io/badge/Sway-1.12-89b4fa?style=flat-square&labelColor=313244">
+  <img alt="Terminal apps first" src="https://img.shields.io/badge/apps-terminal%20first-b4befe?style=flat-square&labelColor=313244">
   <img alt="Any Arch Linux install" src="https://img.shields.io/badge/Arch%20Linux-any%20install-94e2d5?style=flat-square&labelColor=313244">
   <img alt="Catppuccin Mocha" src="https://img.shields.io/badge/theme-Catppuccin%20Mocha-cba6f7?style=flat-square&labelColor=313244">
   <img alt="License: GPLv3" src="https://img.shields.io/badge/license-GPLv3-a6e3a1?style=flat-square&labelColor=313244">
@@ -14,13 +14,9 @@
 
 # ⚡ hypeForge
 
-> A Forge Suite app that turns any Arch Linux install into the **KognogOS desktop, rebuilt light**. Windows float the way you're used to and snap into place with **Win + arrow keys**. The apps are small, most tools live in the terminal, and **every setting is kept in one folder** you can back up by copying it.
+> **The KognogOS desktop: slim, quick, low on memory.** hypeForge turns any Arch Linux install into a **tiling** desktop on **[Sway](https://swaywm.org)**: windows arrange themselves side by side instead of piling up, all your screens move together as one, and **terminal apps come first**. Every feature is a small piece of its own, and every setting will have its own **Forge Suite app**, all opened from one control centre: **hypeForge Settings**.
 
-> 🔄 **Starting again (4 October 2026, [D-44](docs/DECISIONS.md), [#22](https://github.com/jetomev/hypeforge/issues/22)).** Javier: *"I want something that it's us, as everything we are building."* The new path: choose a barebones **tiling** base from research (Hyprland, Sway, i3, dwm, river, niri…), then add each piece one at a time with **terminal apps first**, turn every gap into a new Forge Suite app, and build **our own look** from the KognogOS brand. Everything below describes the **first attempt** (floating Hyprland with Noctalia), kept as history and material until the new path replaces it.
->
-> **The new path so far:** the base is **Sway** ([D-45](docs/DECISIONS.md)), tried as an extra login choice next to the current desktop. On this computer it passed its first test (three screens at 144 Hz, video, Discord screen share, WoW, brightness per screen). Windows have a thin border and no title bar, share a space as tabs, and keep 10 px apart ([D-46](docs/DECISIONS.md)). Every feature hypeForge adds is a separate **applet** that a future hypeForge Settings switches on and off ([D-47](docs/DECISIONS.md)). The first one works: **Workspaces Management** (`applets/workspaces/`) gives six workspaces (Daily, Work, Entertainment, Gaming, Monitoring, Settings) that switch all three screens together, from Win + 1…6 or a click on the top bar (Waybar for now). A screen can also **share** one space between several workspaces, so its apps stay put while the other screens change ([D-49](docs/DECISIONS.md)). The second applet, **Window Placement** (`applets/placement/`), sends every new window to the next spot of a fixed order across the three screens, then adds tabs ([D-50](docs/DECISIONS.md)). The launcher (**Win + Space**, fuzzel) opens on the workspaces as sections, so an app picked from "Work" opens in Work, with Lock Screen, Log Out, Reboot and Shutdown at the bottom ([D-51, D-52](docs/DECISIONS.md)). Small tools float above the tiled windows (**Window Rules**, [D-53](docs/DECISIONS.md)), and Alt + F4 closes a window. **Win + F1** opens **Help & Keys**, a small Forge app with tabs: the key chart and a plain-words guide to every applet ([D-54, D-55](docs/DECISIONS.md)).
-
-> 🚧 **First attempt.** hypeForge was **built by hand and lived in** (Phase 2): a KognogOS disc with hypeForge as its only desktop installs and runs in a virtual machine, and since 2026-09-30 hypeForge also runs on the KognogOS test desktop, next to Plasma, where Javier uses it every day and every rough edge becomes a finding. There is no app to install yet. Follow along in [Issues](https://github.com/jetomev/hypeforge/issues) and the [roadmap](#roadmap).
+> 🚧 **Being built, and lived in.** Since 4 October 2026 hypeForge runs as its own login on the KognogOS test desktop, next to the old desktop, and Javier works in it every day. There is no app to install yet. Follow along in [Issues](https://github.com/jetomev/hypeforge/issues), the [to-do list](TODO.md) and the [decision log](docs/DECISIONS.md).
 
 > 🛡 **Security.** Every commit is GPG-signed and GitHub-Verified, and releases will be signed like the rest of the Forge Suite. **[Where We Stand](https://github.com/jetomev/KognogOS/blob/main/docs/where-we-stand.md)** explains why.
 
@@ -28,98 +24,69 @@
 
 ## Why hypeForge?
 
-A full desktop like KDE Plasma does everything for you, and it carries a lot of weight to do it. KognogOS started on Plasma. **We are moving to something lighter.**
+A full desktop like KDE Plasma does everything for you, and it carries a lot of weight to do it. KognogOS started on Plasma. **KognogOS will ship with hypeForge only** ([D-56](docs/DECISIONS.md)).
 
-**Hyprland** is a *compositor*: the program that draws your windows and moves them around. It is fast, good-looking and endlessly adjustable. On its own, though, it is an empty screen. There is no top bar, no app launcher, no notifications and no lock screen. You have to pick a dozen small apps, write their settings by hand, and hope the guide you followed is still current. That hope got weaker in 2026, when Hyprland [changed its settings language to Lua](https://hypr.land/news/26_lua/) (a small, simple programming language), so most guides online now describe the old way.
+**Sway** is a *tiling window manager*: the program that draws your windows and places them for you, side by side, so nothing hides behind anything else. It is fast, stable, light on memory and works well on NVIDIA. On its own, though, it is a bare screen: no top bar, no launcher, no lock screen. hypeForge builds the rest, one small piece at a time, under one rule ([D-57](docs/DECISIONS.md)):
 
-**hypeForge does that assembly for you, the KognogOS way:**
-
-- **Familiar.** Windows float by default, and **Win + arrow keys** snap them to half the screen, the same keys as Plasma.
-- **Light.** Small apps and terminal tools come first.
-- **Portable.** Every setting lives in **one folder**. Copying the folder backs it up, and dropping it onto a new PC sets that PC up the same way.
-- **Safe.** Nothing on the system changes without the app showing you first, and everything it does can be undone.
-- **Honest.** The decisions, the research and the test results are published here, including the parts that go badly.
-
----
-
-## What it will do
-
-- **Install the whole desktop through [nog](https://github.com/jetomev/nog)**, KognogOS's tier-aware package manager. It will also **lock Hyprland's family of packages together**, so they update as one group, when *we* decide they should.
-- **Write every setting from your one folder.** That includes Hyprland's own Lua settings and each app's settings.
-- **Make system-level changes only through the app, using our config files.** Examples are the login screen and the update locks. Nothing on the system is edited by hand.
-- **Let you choose the app for each job** (top bar, launcher, notifications and so on) from a short, researched list of the most recommended options.
-- **Dress everything in Catppuccin Mocha**, with the KognogOS emblem and wallpapers.
-- **Undo.** It can remove what it installed and put back what was there before.
-- **Run in Alacritty like every Forge app**, and **stay readable on a plain text screen**. A fresh Arch install has no desktop yet, so a text screen is where you will often start.
-
----
-
-## Design principles
-
-These were decided on the first night. Each one has a dated entry in the [decision log](docs/DECISIONS.md).
-
-| | Principle | In plain words |
+| | The rule | In plain words |
 |---|---|---|
-| 🪟 | **Floating first, tiling on demand** | Windows open floating, like on Windows or Plasma. **Win + arrows** snap them into place. |
-| 📁 | **One portable folder** | All settings live in one folder: copy it to back up, move it to a new PC. |
-| 🔐 | **System changes only through the app** | Anything outside your home folder is done by hypeForge, from our config files, never by hand. |
-| 🪶 | **Light apps, terminal first** | Small, fast tools; the terminal wherever it does the job well. |
-| 🔒 | **Updates locked by us** | Hyprland and its helper packages update together, through nog, when we say so. |
-| 🌙 | **Lua from day one** | We write Hyprland's new settings format only. Nothing is built on the format being retired. |
-| 🖥 | **Readable anywhere** | The app runs in Alacritty and stays readable on a plain text screen. |
-| 🙏 | **With thanks, not comparison** | We learn from [Omarchy](https://github.com/basecamp/omarchy) and from every developer whose app we use, and we credit them. Our picks are simply ours. |
+| 1 | **Terminal first** | If a job can be done by a terminal app (a text-based app), that is the one we use. |
+| 2 | **Works with Sway** | Sway's own tools first; nothing that brings a whole other desktop along with it. |
+| 3 | **Smallest install** | The fewest packages and the smallest download that do the job well. |
 
 ---
 
-## How it will work
+## What works today
 
-<p align="center">
-  <img src="assets/how-it-works.svg" alt="How hypeForge works: your hypeForge folder holds every setting; the hypeForge app reads it and applies it. nog installs the apps and locks their updates, your desktop gets Hyprland and the apps you chose, and a few system pieces are applied only by the app. To back up or move to a new PC, copy the folder." width="100%">
-</p>
+| Piece | What it does |
+|---|---|
+| **Workspaces** | Six workspaces (Daily, Work, Entertainment, Gaming, Monitoring, Settings). **Win + 1…6**, or a click on the top bar, switches every screen together. A screen can also keep one space for several workspaces, so its apps stay put. |
+| **Window placement** | Every new window goes to the next spot of a fixed order across your screens, then becomes a tab. |
+| **Launcher** (Win + Space) | Your favourites first, then the workspaces as sections: an app picked from "Work" opens in Work. Lock, log out, reboot and shut down at the bottom (they ask first). |
+| **Window rules** | Small tools (the calculator, settings windows, picture-in-picture video) float above the tiled windows. |
+| **Help & Keys** (Win + F1) | A small Forge app with tabs: the key chart and a plain-words guide to every piece. The chart is checked against Sway's real keys before every change is saved. |
+| **Lock screen** (Win + Escape) | A big clock and a password box over the blurred KognogOS wallpaper. Locks by itself after 30 minutes; the screens turn off after 60. |
+| **Top bar** | The six workspaces, always shown and clickable, and the clock. |
+| **Terminal apps** | Alacritty for the terminal, Midnight Commander for files, Fresh for text, numbat for sums, cliamp for music (from the media server). |
 
-The folder is the source of truth. The app reads it and applies it, and nog installs what it lists. **Your backup is the folder.** The folder holds a full copy of every setting, and each computer's own details (such as its monitors) sit in a sub-folder of their own ([layout](docs/DESIGN.md#one-portable-folder)).
+The look is **Catppuccin Mocha** with the KognogOS wallpaper: thin borders, no title bars, windows that share a space become tabs, 10 px between windows.
 
 ---
 
-## Keys — the same as Plasma
-
-<p align="center">
-  <img src="assets/snap-keys.svg" alt="Win plus Left or Right snaps a window to the left or right half; Win plus Up or Down to the top or bottom half; Win plus Page Up maximises" width="100%">
-</p>
+## Keys
 
 | Keys | What happens |
 |---|---|
-| **Win + ← / →** | The window fills the left or right half of the screen |
-| **Win + ↑ / ↓** | The window fills the top or bottom half |
-| **Win + PgUp**, or **Win + ↑** twice | Maximise; **Win + ↓** comes back. A maximised window comes to the front like any other when clicked (D-43) |
-| **Alt + Tab** | Switch between windows |
-| **Win + Shift + →** | Move the window to the next screen |
+| **Win + Space** | The launcher |
+| **Win + Enter** | A terminal |
+| **Win + 1 … 6** | Switch every screen to that workspace |
+| **Win + Shift + 1 … 6** | Send the window to that workspace |
+| **Win + arrows** | Move between windows (also across screens); add **Shift** to move the window |
+| **Win + W / S / E** | Tabs · stacked · side by side |
+| **Win + F** | Full screen |
+| **Win + Shift + Space** | Float the window, or put it back in its spot |
 | **Alt + F4** | Close the window |
+| **Win + Escape** | Lock the screen |
+| **Win + F1** | Help & Keys: every key, and the guide |
 
-*The Win key is the one Plasma calls "Meta". Every Plasma key used today keeps its job; the [full key map](docs/DESIGN.md#the-key-map) was approved on 2026-09-29. Snapping and Win + ↑↑ are built by hypeForge; **Alt + Tab** simply jumps to the next window, with no list (D-35). There is **no minimise** in hypeForge (D-34).*
+*The Win key is the one Plasma calls "Meta". The full chart lives in [`applets/help/keys.toml`](applets/help/keys.toml) and in Win + F1.*
 
 ---
 
-## The recipe — one app per job, and you choose
+## How it fits together
 
-A bare Hyprland needs a small app for each of these jobs. For every job, the [recipe page](docs/RECIPE.md) lists **up to five of the most recommended options**. Each option has links showing how it works. Javier picks one per job.
+1. **The pieces.** Each feature (workspaces, placement, launcher, rules, help, lock…) is its own small piece ([D-47](docs/DECISIONS.md)), with its own settings file in `~/.config/hypeforge/applets/`.
+2. **A Forge app for every setting.** Everything that today can only be set up by editing a file gets its own **Forge Suite app**: our own pieces, and outside programs like the music player, the top bar and the launcher's look ([D-59](docs/DECISIONS.md)). Each is a full app that also runs on its own, built on [forgekit](https://github.com/jetomev/forgekit) so they all look and work the same.
+3. **hypeForge Settings, the control centre.** One window, like KDE's System Settings: the list on the left, and the chosen Forge app running on the right. Replace one app and nothing else has to change.
+4. **nog** installs everything and decides when it updates, and system changes are made only through the apps, never by hand.
 
-| Things you see | Tools you use |
-|---|---|
-| Bar · app launcher · notifications | File manager · Wi-Fi · Bluetooth · sound |
-| Lock screen · screen-off timer · wallpaper | System monitor · three-monitor setup · night light |
-| Volume/brightness pop-ups · admin-password pop-up | Text editor · image, PDF and video viewers |
-| Login screen · clipboard history · screenshots | Password wallet · USB auto-mount · power menu · printing |
-
-> **Chosen, 2026-09-29, then reshaped by testing on 2026-09-30.** The first picks were separate small apps. Living in them in a VM changed the plan: settings get graphical apps, not terminal ones (D-39), and **[Noctalia](https://github.com/noctalia-dev/noctalia)** became the desktop shell (D-40): the bar (along the bottom, full width, clock in the corner, D-41), launcher, notifications, sound / network / Bluetooth menus, wallpaper and on-screen pop-ups, with our five themes as its colour schemes. Around it: Hyprland's lock screen, idle timer and password pop-up, no extra title bars (D-42), Monique for screen settings, the KognogOS SDDM login screen (D-38), all started through uwsm. Every pick is a first try. The reasons are in the [recipe page](docs/RECIPE.md) and the [decision log](docs/DECISIONS.md).
+The Forge apps already shipped, [grubForge](https://github.com/jetomev/grubforge) and [alacrittyForge](https://github.com/jetomev/alacrittyforge), will be opened from hypeForge Settings too. The full list of upcoming apps is in the [to-do list](TODO.md).
 
 ---
 
 ## Built for KognogOS, works on any Arch
 
-hypeForge becomes **the KognogOS desktop**. KognogOS moves off Plasma little by little, and [what that changes](docs/KOGNOGOS-IMPACT.md) is tracked in the open. Some things carry over unchanged: nog and its tiers, the Forge apps, Alacritty with fish and Tide, the boot splash, the GRUB theme and the Catppuccin look.
-
-It is also meant for **any Arch Linux install**. How nog comes along on a plain Arch system is designed in Phase 3.
+hypeForge becomes **the KognogOS desktop**, and KognogOS will ship with it alone. What moving off Plasma changes is tracked in the open ([KOGNOGOS-IMPACT](docs/KOGNOGOS-IMPACT.md)). Some things carry over unchanged: nog and its tiers, the Forge apps, Alacritty with fish, the boot splash, the GRUB theme and the Catppuccin look. It is also meant for **any Arch Linux install**.
 
 ---
 
@@ -127,10 +94,9 @@ It is also meant for **any Arch Linux install**. How nog comes along on a plain 
 
 hypeForge is built on other people's work, and we are grateful for it.
 
-- [**Omarchy**](https://github.com/basecamp/omarchy), by DHH and Basecamp (MIT licence), taught us a great deal about turning Arch into a Hyprland desktop. Anything we adapt from it is credited and keeps its notice.
-- The **Hyprland** team, for Hyprland and its family of small apps.
-- The [**Noctalia**](https://github.com/noctalia-dev/noctalia) team (MIT licence), for the shell that draws most of what you see.
-- **Every developer whose app is in the [recipe](docs/RECIPE.md)**: Monique, udiskie, Midnight Commander, superfile, Krusader, Fresh, mpv, cliamp, uwsm and all the others, and the apps we tried along the way (Waybar, Walker, mako, SwayOSD, hyprbars), which taught us what we needed.
+- The **[Sway](https://swaywm.org)** team and the wlroots developers, for the ground everything stands on.
+- **Every developer whose app hypeForge uses**: Waybar, fuzzel, gtklock, swayidle, swaybg, Alacritty, Midnight Commander, Fresh, numbat, cliamp, and all the others.
+- [**Omarchy**](https://github.com/basecamp/omarchy), by DHH and Basecamp, and the **Hyprland** and [**Noctalia**](https://github.com/noctalia-dev/noctalia) teams, whose work taught us a great deal in hypeForge's first attempt.
 - The [**Catppuccin**](https://catppuccin.com) team, for the colours everything wears.
 
 We don't compare ourselves with anyone. Our picks are simply our picks.
@@ -139,28 +105,23 @@ We don't compare ourselves with anyone. Our picks are simply our picks.
 
 ## Roadmap
 
-| Phase | What happens | Status |
+| Step | What happens | Status |
 |---|---|---|
-| **0 · Foundations** | Name, repository, decisions, research; test machines (virtual machines) that can run Hyprland, including a real KognogOS install ✅ | 🔄 in progress |
-| **1 · The recipe** | Choose one app per job ✅; the portable folder ✅; floating-first windows with Win + arrow snapping ✅; five themes ✅ | 🔄 in progress |
-| **2 · Build it by hand** | Build the desktop in a KognogOS VM first (D-37) ✅, then on the test desktop ✅ (2026-09-30, next to Plasma); live in it; every rough edge becomes a finding (VM rounds in issue [#13](https://github.com/jetomev/hypeforge/issues/13); desktop findings from F-33 on) | 🔄 in progress |
-| **3 · The app** | The forgekit terminal app that installs, adjusts and removes it; readable on a plain text screen | ⬜ |
-| **4 · Test** | Fresh virtual machines restored to a clean saved state before every run, then real hardware; published test matrix; numbered findings | ⬜ |
-| **5 · Release** | GitHub Release first, then the AUR | ⬜ |
+| **Choose the base** | Research, then **Sway** chosen ([D-45](docs/DECISIONS.md)); runs on the test desktop | ✅ |
+| **The jobs, one by one** | Workspaces, placement, launcher, rules, help, lock screen ✅ · next: notifications, screenshots, sound and network, the password pop-up | 🔄 in progress |
+| **Our own look** | Folder-style tabs, our own top bar, a palette from the KognogOS brand | ⬜ |
+| **The Forge apps** | One Forge Suite app per setting, and **hypeForge Settings** to hold them all. Screens, workspaces and window placement become **flexible for any number of screens**, from one to six or more | ⬜ |
+| **The first KognogOS release** | KognogOS ships with hypeForge as its only desktop | ⬜ |
 
 Full detail: [docs/ROADMAP.md](docs/ROADMAP.md) · History: [docs/CHANGELOG.md](docs/CHANGELOG.md)
+
+> **The first attempt** (28 Sep – 3 Oct 2026) built a floating Hyprland desktop with Noctalia. It worked, and it was not *us*, so on 4 October Javier started again ([D-44](docs/DECISIONS.md)). Everything from it stays in the [decision log](docs/DECISIONS.md), [RECIPE](docs/RECIPE.md) and [`desktop/`](desktop/) as history and material.
 
 ---
 
 ## Testing
 
-Everything is tested in **virtual machines first** (a computer running in a window). Before every run, the machine is put back to a clean saved state:
-
-- an **Omarchy** machine, a known-good Hyprland setup that proves our test machines can run Hyprland at all
-- a **real KognogOS install**, built from a freshly rebuilt KognogOS disc with hypeForge as its desktop, installed with KognogOS's own installer (working since 2026-09-30)
-- a **plain Arch** install, the "any Arch" promise
-
-Then comes real hardware: an NVIDIA RTX 3060 driving **three 1440p screens at 144 Hz**. **Every test matrix includes a run on a plain text screen.** Results are published in [`testing/`](testing/), the same way as every Forge app.
+Every step is tested on the KognogOS test desktop first, where Javier lives in it daily: an NVIDIA RTX 3060 driving three 1440p screens at 144 Hz. That is one setup among many: hypeForge is meant for **one screen or many**, and the screen setups people really use (one, two, four, six…) will be tested as the screen and workspace apps are built. Each finding gets a number (F-1, F-2…) and an [issue](https://github.com/jetomev/hypeforge/issues). Test plans and results are published in [`testing/`](testing/). Virtual machines (a KognogOS install, a plain Arch install) follow before any release.
 
 ---
 
@@ -169,12 +130,13 @@ Then comes real hardware: an NVIDIA RTX 3060 driving **three 1440p screens at 14
 | Document | What's in it |
 |---|---|
 | [DECISIONS](docs/DECISIONS.md) | Every decision, dated, with who made it and why |
-| [DESIGN](docs/DESIGN.md) | How it will work: the folder, the windows, the update locks |
+| [TODO](TODO.md) | What is done and what comes next, step by step |
+| [DESIGN](docs/DESIGN.md) | How it works (written for the first attempt; being brought up to date) |
 | [RECIPE](docs/RECIPE.md) | The options for every job, with sources |
 | [KOGNOGOS-IMPACT](docs/KOGNOGOS-IMPACT.md) | What moving off Plasma changes in KognogOS |
 | [Research notes](docs/research/) | What was checked, how, and the sources |
 | [ROADMAP](docs/ROADMAP.md) · [CHANGELOG](docs/CHANGELOG.md) | Where it's going; where it's been |
-| [testing/](testing/) | The test plan, then every test matrix and its results |
+| [testing/](testing/) | Every test plan and its results |
 
 ---
 
@@ -208,12 +170,12 @@ Built as a collaboration between a human with a clear picture of the desktop he 
 
 ## License
 
-hypeForge is free software, released under the **GNU General Public License v3.0**. See [LICENSE](LICENSE) for the full text. Anything we adapt from Omarchy keeps Omarchy's MIT notice.
+hypeForge is free software, released under the **GNU General Public License v3.0**. See [LICENSE](LICENSE) for the full text. Anything we adapt from another project keeps that project's notice.
 
 ---
 
 ## Contributing
 
-hypeForge is in its first phase, and ideas and experience are welcome. Open an issue. It is especially useful to hear from people running **Hyprland with floating windows by default**, **Hyprland on NVIDIA**, or a **light, terminal-first desktop** they love.
+hypeForge is being built in the open, and ideas and experience are welcome. Open an issue. It is especially useful to hear from people running **Sway on NVIDIA**, **Sway across several screens**, or a **light, terminal-first desktop** they love.
 
 If the idea interests you, a star helps others find it.
