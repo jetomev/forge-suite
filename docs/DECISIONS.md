@@ -7,6 +7,17 @@
 
 ## 2026-10-04
 
+### D-52 · App Sections (applet 4): the launcher's first screen is the workspaces
+**Decided by Javier:** the sketch — Favourites, one section per workspace, All apps — *"Your proposal is perfect. We can start with that one."* Then: every line aligned to the left; *"Under All Apps, still show a list of all apps available, it shouldn't"*; and at the bottom, *"In this order top-down: Lock Screen, Log Out, Reboot, Shutdown."* Favourites get pinned later; apps get added to sections from the applet (the Board).
+
+**What it means:**
+- `applets/sections/` — settings `~/.config/hypeforge/applets/sections.toml` (`enabled`, `favourites`, one `[[section]]` per workspace with `icon`, `workspace`, `apps`, `categories`; `[power]` commands) + `hypeforge-sections`, on **Win + Space** (Win + D stays the plain fuzzel search). Read every time it opens; switched off, Win + Space is the plain search.
+- **fuzzel draws the menus** (its list mode, with icons); the routine only decides what is in them. Every line carries an icon from the icon theme, so all line up.
+- **A section pick opens the app in that section's workspace** (through applet 1), where applet 2 places it. Apps named in a section come first; every other app falls into a section by its own kind (its desktop entry's categories), so the menu works before anything is sorted.
+- **Power:** Lock Screen (hyprlock for now; the Sway lock screen is a later job), Log Out, Reboot, Shutdown — the last three ask first with "No" selected.
+- **For the Board:** the launcher's look, its colours tied to the active theme, adding/editing/removing sections, adding apps to sections, pinning favourites, every option on/off.
+- Javier: *"all aligned now, lock screen works. Looking great so far!"*
+
 ### D-51 · The launcher is fuzzel, on Win + Space
 **Decided by Javier:** option A first (*"A, Win only if possible, if not Win+Space"*); the Win key alone *"started opening terminals"*, so Win + Space; the terminal launcher showed every program (*"just show applications, not everything?"*), looked like a terminal and could not open btop, so fuzzel: *"Works very well."* And: *"remove the one we aren't using, let's not keep things installed we do not need."*
 

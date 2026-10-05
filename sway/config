@@ -119,7 +119,8 @@ input type:keyboard {
 
     # Start your launcher
     bindsym $mod+d $menu
-    bindsym $mod+space $menu
+    # hypeForge: Win + Space = the launcher with sections, applet 4 (D-52); Win + D = plain search
+    bindsym $mod+space exec ~/Programs/hypeforge/applets/sections/hypeforge-sections
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.

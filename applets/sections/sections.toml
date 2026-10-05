@@ -1,0 +1,75 @@
+# hypeForge applet 4 · App Sections (D-47, D-52)
+#
+# The launcher (Win + Space) opens on a first screen: Favourites, one section per workspace,
+# All apps, then Lock Screen · Log Out · Reboot · Shutdown. Picking an app from a section opens
+# it IN THAT SECTION'S WORKSPACE. The hypeForge Settings Board will edit this file; until then,
+# edit it by hand (it is read every time the launcher opens).
+#
+# Copied to ~/.config/hypeforge/applets/sections.toml, which is the one that is read.
+# Apps are named by their desktop-entry name: the file name in /usr/share/applications or
+# ~/.local/share/applications without ".desktop" (google-chrome, Alacritty, btop…).
+
+# false = Win + Space opens the plain fuzzel search instead.
+enabled = true
+
+# fuzzel's look (colours, size, corners): the same file as the plain launcher
+fuzzel_config = "~/.config/sway/fuzzel/fuzzel.ini"
+
+# Always at the top of Favourites, in this order. Empty = the Favourites line is hidden.
+favourites = []
+
+# One block per section, in the order shown. `icon` is an icon name from the icon theme.
+# `workspace` is the workspace number it opens apps
+# in (Win + that number; empty = the workspace on screen). `apps` are placed here on purpose;
+# `categories` catch every other app of that kind (from the app's own desktop entry), so the
+# menu is useful before anything is sorted. An app shows in the first section that claims it.
+[[section]]
+name = "Daily"
+icon = "internet-web-browser"
+workspace = 1
+apps = ["google-chrome", "brave-browser"]
+categories = ["WebBrowser", "Email", "Network", "Chat", "InstantMessaging"]
+
+[[section]]
+name = "Work"
+icon = "applications-development"
+workspace = 2
+apps = ["Alacritty", "com.anthropic.Claude", "fresh", "onlyoffice-desktopeditors", "obsidian"]
+categories = ["Development", "Office", "TextEditor", "TerminalEmulator"]
+
+[[section]]
+name = "Entertainment"
+icon = "applications-multimedia"
+workspace = 3
+apps = ["spotify", "mpv"]
+categories = ["AudioVideo", "Audio", "Video", "Player"]
+
+[[section]]
+name = "Gaming"
+icon = "applications-games"
+workspace = 4
+apps = ["steam", "net.lutris.battlenet-1", "World_of_Warcraft_Pi5", "net.lutris.Lutris"]
+categories = ["Game"]
+
+[[section]]
+name = "Monitoring"
+icon = "utilities-system-monitor"
+workspace = 5
+apps = ["btop", "nvtop"]
+categories = ["Monitor"]
+
+[[section]]
+name = "Settings"
+icon = "preferences-system"
+workspace = 6
+apps = ["system-config-printer"]
+categories = ["Settings", "System", "HardwareSettings", "Printing"]
+
+# The bottom of the first screen, top to bottom. Log Out, Reboot and Shutdown ask first
+# ("No" is selected, so a stray Enter does nothing). Lock: hyprlock for now (the Sway lock
+# screen is a later job).
+[power]
+lock = "hyprlock"
+logout = "swaymsg exit"
+reboot = "systemctl reboot"
+shutdown = "systemctl poweroff"

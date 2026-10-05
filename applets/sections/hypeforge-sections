@@ -1,0 +1,178 @@
+#!/usr/bin/env python3
+"""hypeForge applet 4 · App Sections (D-47, D-52).
+
+The launcher with sections. Win + Space opens a first screen:
+
+    Favourites · 1. Daily · 2. Work · … · All apps · Lock Screen · Log Out · Reboot · Shutdown
+
+Picking a section shows its apps; picking one of those switches to the section's workspace
+(through applet 1 when it is on) and opens the app there, where applet 2 places it. An app
+picked from the first screen or All apps opens in the workspace on screen.
+
+    hypeforge-sections            open the launcher
+
+Settings: ~/.config/hypeforge/applets/sections.toml (enabled, favourites, sections).
+fuzzel draws the menus (its --dmenu mode); this file only decides what is in them.
+"""
+
+import os
+import re
+import subprocess
+import sys
+import tomllib
+from configparser import ConfigParser
+from pathlib import Path
+
+HOME = Path.home()
+CONFIG_HOME = Path(os.environ.get("XDG_CONFIG_HOME", HOME / ".config"))
+CONFIG = CONFIG_HOME / "hypeforge/applets/sections.toml"
+WORKSPACES = Path(__file__).resolve().parent.parent / "workspaces/hypeforge-workspaces"
+TERMINAL = "alacritty -e"  # for apps that run in a terminal (btop…); the session has no $TERMINAL
+DESKTOP_NAMES = {"sway", "wlroots"}
+
+
+# ---- The apps on this computer ---------------------------------------------------------------
+
+def application_dirs():
+    data_home = Path(os.environ.get("XDG_DATA_HOME", HOME / ".local/share"))
+    data_dirs = os.environ.get("XDG_DATA_DIRS", "/usr/local/share:/usr/share").split(":")
+    return [data_home / "applications"] + [Path(d) / "applications" for d in data_dirs if d]
+
+
+def apps():
+    """{desktop id: {name, icon, exec, terminal, categories}} — what a start menu would show."""
+    found = {}
+    for folder in application_dirs():  # the first folder wins (your own entries over the system's)
+        if not folder.is_dir():
+            continue
+        for path in sorted(folder.rglob("*.desktop")):
+            app_id = str(path.relative_to(folder))[:-len(".desktop")].replace("/", "-")
+            if app_id in found:
+                continue
+            parser = ConfigParser(interpolation=None, strict=False)
+            parser.optionxform = str
+            try:
+                parser.read(path, encoding="utf-8")
+                entry = parser["Desktop Entry"]
+            except Exception:
+                continue
+            found[app_id] = None  # seen: a hidden copy still hides the system one
+            only = set(entry.get("OnlyShowIn", "").lower().split(";")) - {""}
+            never = set(entry.get("NotShowIn", "").lower().split(";")) - {""}
+            if (entry.get("Type") != "Application" or entry.get("NoDisplay") == "true"
+                    or entry.get("Hidden") == "true" or not entry.get("Exec")
+                    or (only and not only & DESKTOP_NAMES) or never & DESKTOP_NAMES):
+                continue
+            found[app_id] = {
+                "name": entry.get("Name", app_id),
+                "icon": entry.get("Icon", "application-x-executable"),
+                "exec": entry.get("Exec"),
+                "terminal": entry.get("Terminal") == "true",
+                "categories": set(entry.get("Categories", "").split(";")) - {""},
+            }
+    return {k: v for k, v in found.items() if v}
+
+
+def command_for(app):
+    """The app's Exec line without the %f/%u… placeholders, in a terminal if it needs one."""
+    cmd = re.sub(r"\s*%[fFuUdDnNickvm]", "", app["exec"]).replace("%%", "%").strip()
+    return f"{TERMINAL} {cmd}" if app["terminal"] else cmd
+
+
+# ---- Settings --------------------------------------------------------------------------------
+
+def load():
+    with open(CONFIG, "rb") as f:
+        return tomllib.load(f)
+
+
+def sort_into_sections(cfg, everything):
+    """[(section, [app ids])] — explicit apps first, then the rest by their categories."""
+    sections = cfg.get("section", [])
+    claimed, out = set(), []
+    for s in sections:
+        chosen = [a for a in s.get("apps", []) if a in everything]
+        claimed.update(chosen)
+        out.append([s, chosen])
+    for app_id in sorted(everything, key=lambda a: everything[a]["name"].lower()):
+        if app_id in claimed:
+            continue
+        for pair in out:
+            if everything[app_id]["categories"] & set(pair[0].get("categories", [])):
+                pair[1].append(app_id)
+                claimed.add(app_id)
+                break
+    return out
+
+
+# ---- The menus -------------------------------------------------------------------------------
+
+def pick(cfg, lines, prompt, icons=True):
+    """Show `lines` [(text, icon)] in fuzzel; the chosen index, or None (Esc)."""
+    fuzzel = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", prompt]
+    look = Path(os.path.expanduser(cfg.get("fuzzel_config", "")))
+    if look.is_file():
+        fuzzel += ["--config", str(look)]
+    text = "\n".join(f"{t}\0icon\x1f{i}" if icons and i else t for t, i in lines) + "\n"
+    result = subprocess.run(fuzzel, input=text.encode(), capture_output=True)
+    if result.returncode != 0 or not result.stdout.strip():
+        return None
+    return int(result.stdout.strip())
+
+
+def launch(app, workspace=None):
+    if workspace and WORKSPACES.is_file():
+        subprocess.run([str(WORKSPACES), "go", str(workspace)])
+    subprocess.run(["swaymsg", "exec", command_for(app)], capture_output=True)
+
+
+def main():
+    cfg = load()
+    if not cfg.get("enabled", False):
+        look = os.path.expanduser(cfg.get("fuzzel_config", ""))
+        os.execvp("fuzzel", ["fuzzel"] + (["--config", look] if os.path.isfile(look) else []))
+
+    everything = apps()
+    by_name = sorted(everything, key=lambda a: everything[a]["name"].lower())
+    favourites = [a for a in cfg.get("favourites", []) if a in everything]
+    sections = sort_into_sections(cfg, everything)
+
+    power = cfg.get("power", {})
+    # First screen: the menus, then the power actions. Every line has an icon, so all line up.
+    first = []  # (text, icon, action)
+    if favourites:
+        first.append(("Favourites", "favorites", ("menu", "Favourites", favourites, None)))
+    for s, members in sections:
+        n = s.get("workspace")
+        first.append((f"{f'{n}. ' if n else ''}{s['name']}", s.get("icon", "applications-other"),
+                      ("menu", s["name"], members, n)))
+    first.append(("All apps", "applications-all", ("menu", "All apps", by_name, None)))
+    for key, label, icon, ask in (("lock", "Lock Screen", "system-lock-screen", None),
+                                  ("logout", "Log Out", "system-log-out", "Log out now?"),
+                                  ("reboot", "Reboot", "system-reboot", "Reboot now?"),
+                                  ("shutdown", "Shutdown", "system-shutdown", "Shut down now?")):
+        if power.get(key):
+            first.append((label, icon, ("power", power[key], ask, label)))
+
+    choice = pick(cfg, [(t, i) for t, i, _ in first], "❯  ")
+    while choice is not None:
+        action = first[choice][2]
+        if action[0] == "power":
+            _, command, ask, label = action
+            if ask and pick(cfg, [("No", "go-home"), (f"Yes, {label.lower()}", first[choice][1])], f"{ask}  ") != 1:
+                choice = pick(cfg, [(t, i) for t, i, _ in first], "❯  ")
+                continue
+            subprocess.run(["swaymsg", "exec", command], capture_output=True)
+            return
+        _, title, members, workspace = action
+        lines = [("Back", "go-home")] + [(everything[a]["name"], everything[a]["icon"]) for a in members]
+        sub = pick(cfg, lines, f"{title}  ❯  ")
+        if sub is None:
+            return
+        if sub > 0:
+            return launch(everything[members[sub - 1]], workspace)
+        choice = pick(cfg, [(t, i) for t, i, _ in first], "❯  ")  # Back
+
+
+if __name__ == "__main__":
+    main()

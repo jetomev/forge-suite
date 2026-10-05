@@ -23,7 +23,9 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] **Top bar = Waybar** 0.15.0 (nog, `extra`; RECIPE job 1): all workspaces always shown as "1. Daily"…, clickable, active one coloured; the applet writes its workspace list (`workspaces.waybar.json`). Waybar started by `exec` (Sway's `swaybar_command` did not start it on reload); `mouse_warping none` so a bar click leaves the pointer where it is
 - [ ] Bring `CLAUDE.md`, the README badges and the banner up to the new path (they still describe Hyprland + Lua, the first attempt)
 - [x] **Launcher = fuzzel** (D-51) on Win + Space, apps only, terminal apps in Alacritty; sway-launcher-desktop tried and removed — Javier: "Works very well"
-- [ ] **Applet 4 · App sections** (D-47): a list of apps, each thrown into a workspace; the same sections become the launcher's sections
+- [x] **Applet 4 · App Sections** (D-52): `applets/sections/` on Win + Space — first screen = the workspaces + All apps + Lock Screen · Log Out · Reboot · Shutdown (asks first); a section pick opens the app in that workspace — Javier: "Looking great so far!"
+- [ ] Favourites: Javier pins them (the `favourites` list in `sections.toml`)
+- [ ] Lock screen for Sway (RECIPE job 5): hyprlock is the stand-in, and it works under Sway
 - [x] **Applet 1, matrix** (D-49): a screen can share one space between workspaces (`[share]` in `workspaces.toml`; all own for now); bar buttons drawn by the applet; windows follow when the grid changes — Javier: "everything works, the highlight follows on all three"
 - [x] **Applet 2 · Window Placement** (D-50): `applets/placement/` — fill order 1 middle → 2 beside → 3 left → 4 beside → 5 right → 6 beside → 7 under 4 → 8 under 6, in every workspace, counting a shared screen too; 9+ go round again as tabs — Javier: "all works perfect!"
 - [ ] Later (Javier, 10-04, "for when we get there"): **Alt + Tab** across the apps of the workspace on all 3 screens, with window pictures (applet candidate)
@@ -38,6 +40,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] **Applet 3 · Folder tabs** (D-47): small left-aligned tabs like folders in a holder, rounded tops, our colours; replaces Sway's even tab row
 - [ ] **Our own bar** (Javier, 10-04): Waybar for now; once the setup is done, our own bar as a hypeForge applet — a Waybar fork or a small one of our own, decided then
 - [ ] **hypeForge Settings Board** (D-47): every applet switched on/off, its behaviour and look changed in one place
+  - Launcher / App Sections on the Board (Javier, 10-04): modify its look · tie its colours to the active theme · add, edit, remove sections · add apps to sections · pin favourites · switch its other options on and off
+  - Workspaces on the Board: add, edit, delete workspaces; the sharing grid as switches
 - [ ] From the KognogOS brand (logo, colours): a palette with contrast between elements on purpose — connected, not fused, not monotone
 - [ ] Each visual step designed and approved before it is built (bar, borders, launcher, notifications, lock screen, terminal, wallpaper…)
 
