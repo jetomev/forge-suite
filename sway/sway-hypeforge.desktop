@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Sway (hypeForge)
+Comment=hypeForge's barebones tiling session (D-45) — Sway, started for the NVIDIA driver
+Exec=sway --unsupported-gpu
+Type=Application
+DesktopNames=sway;wlroots
