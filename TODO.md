@@ -15,14 +15,21 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] Barebones session next to Plasma on this computer: tiling, a terminal, three monitors at 144 Hz, NVIDIA right, nothing else — **10-04: Javier logged in to "Sway (hypeForge)"; Claude confirmed all three screens at 144 Hz in the right order (matrix 1.4 ✅). Javier: 1.1–1.3 + 1.5 ✅ (section 1 complete). §2: 2.1 Chrome video ✅ (F-41 found); 2.2 Discord share ✅ (installed xdg-desktop-portal-wlr; F-42 found); 2.3 WoW via XWayland ❌ (F-43, pointer escapes); 2.3b WoW with Wine's Wayland driver ✅ ("runs and looks amazing"); 2.4 brightness ✅ (bus 3 = right, 4 = middle, 5 = left). **Matrix sections 1–2 complete**
 
 ## Phase 11 · The jobs, one by one, terminal first
-- [ ] F-41 (#23): hardware video decoding — Chrome decodes video on the processor (no `nvidia-vaapi-driver`); smooth, low priority, machine-wide
-- [ ] F-42 (#24): the Sway session sets no `SUDO_ASKPASS` — the password window only works when it is passed by hand; set it for the session (with the password/polkit job)
-- [ ] F-43 (#25): WoW through XWayland on Sway — pointer escapes while turning the camera, focus lost; windowed mode tiles to half the screen. Wine's Wayland driver works (2.3b ✅); the launcher (pi-kognog-azerothcore) only picks it on Hyprland
-- [ ] Tiling order: how a new window splits the screen (Javier, 10-04: "we will work on the tiling order later")
+- [ ] F-41 (#23) — deferred, stays open (Javier 10-04: works; not needed for the window setup): hardware video decoding — Chrome decodes video on the processor (no `nvidia-vaapi-driver`); smooth, low priority, machine-wide
+- [ ] F-42 (#24) — deferred, stays open: the Sway session sets no `SUDO_ASKPASS` — the password window only works when it is passed by hand; set it for the session (with the password/polkit job)
+- [ ] F-43 (#25) — deferred, stays open (launcher fix not now): WoW through XWayland on Sway — pointer escapes while turning the camera, focus lost; windowed mode tiles to half the screen. Wine's Wayland driver works (2.3b ✅); the launcher (pi-kognog-azerothcore) only picks it on Hyprland
+- [x] Windows look (D-46): border only (2 px, palette white active / dark grey inactive), tabs when windows share a space, 10 px gaps — Javier: "Border only + tabs works wonders"
+- [ ] **Applet 1 · Linked workspaces** (D-47): 4 workspaces across all 3 screens (1 Day-to-Day · 2 Work · 3 Gaming · 4 Settings/Monitoring), Win + 1…4 switches all three; the bar shows each once
+- [ ] **Applet 2 · Window placement** (D-47): fill order 1 middle → 2 beside → 3 left → 4 beside → 5 right → 6 beside → 7 under 4 → 8 under 6, the same in every workspace (replaces "tiling order")
+- [ ] Floating: dialogs and small tools (list grows as we find them)
+- [ ] Apps that draw their own minimise/maximise/close bar (Chrome…): switch it off where the app allows
+- [ ] Try SwayFX for rounded corners (`chaotic-aur/swayfx` 0.6, same config) — later, separate trial
 - [ ] Go through `docs/RECIPE.md`'s ~31 jobs again with Javier, one at a time: a terminal (CLI/TUI) app first wherever one exists
 - [ ] Keep a list of **Forge Suite candidates**: every job with no good terminal app
 
 ## Phase 12 · Our own look
+- [ ] **Applet 3 · Folder tabs** (D-47): small left-aligned tabs like folders in a holder, rounded tops, our colours; replaces Sway's even tab row
+- [ ] **hypeForge Settings Board** (D-47): every applet switched on/off, its behaviour and look changed in one place
 - [ ] From the KognogOS brand (logo, colours): a palette with contrast between elements on purpose — connected, not fused, not monotone
 - [ ] Each visual step designed and approved before it is built (bar, borders, launcher, notifications, lock screen, terminal, wallpaper…)
 

@@ -7,6 +7,28 @@
 
 ## 2026-10-04
 
+### D-47 · Every hypeForge feature is its own applet, switched on and off from one Settings Board
+**Decided by Javier:** *"Each functionality we say we are going to develop, let's make it separate so later we can tie them all to a Settings board, to activate, deactivate, and manipulate how it behaves or looks. Like little applets or widgets we can offer using our main hypeForge Settings Board."*
+
+**What it means:**
+- **One feature, one applet.** Each piece hypeForge adds on top of Sway is built separately, with its own settings, and can be switched off without breaking the others.
+- **The hypeForge Settings Board** is where they all come together: turn each applet on or off, change how it behaves, change how it looks.
+- **The first applets** (all from this session):
+  1. **Linked workspaces** — four workspaces that span all three screens: Win + 1…4 (or a click on the bar) switches all three together. Sway gives each screen its own workspaces, so each of ours is three Sway workspaces kept in step.
+  2. **Window placement** — the same fill order in every workspace (screen 1 = middle, 2 = left, 3 = right): 1 fills screen 1, 2 beside it, 3 fills screen 2, 4 beside it, 5 fills screen 3, 6 beside it, 7 under 4, 8 under 6.
+  3. **Folder tabs** — small tabs lined up on the left like folders in a document holder, rounded tops, KognogOS colours, replacing Sway's even tab row (Sway has no setting for that; patching Sway was rejected as a fork to maintain forever). Built in the look phase.
+  - Candidate: **apps open in their own workspace** (btop → Settings/Monitoring…), decided with the launcher.
+- **The four workspaces:** 1 Day-to-Day (email, browsers, light things) · 2 Work (terminal, AI desktop apps, Fresh, OnlyOffice) · 3 Gaming · 4 Settings/Monitoring (btop, settings apps).
+
+### D-46 · Windows: border only, tabs when they share a space, 10 px gaps, colours from the palette
+**Decided by Javier**, after seeing the looks one by one on the real desktop: title bars *"kind of noise"*; border only *"I like it better"*; a stack *"would have been better… like tabs"*; tabs → **"Border only + tabs works wonders."**
+
+**What it means:**
+- **No title bars; a 2-pixel border.** Active window: the palette's white; the others: the palette's dark grey. The colours are named once at the top of `sway/config` (`$hf_active`, `$hf_inactive`…) so the KognogOS brand palette (Phase 12) replaces them in one place; for now Catppuccin Mocha (#cdd6f4 / #45475a).
+- **10 px gaps** between windows and at every screen edge (measured: 10 at the edges, under the bar, at the bottom and between windows).
+- **Windows that share a space are tabbed** (Win + W), not stacked; Sway's tab row is the stand-in for the folder-tabs applet (D-47).
+- **Still open, from Javier's notes:** rounded corners to soften the straight lines (SwayFX, `chaotic-aur/swayfx` 0.6, reads the same config — a later, separate trial); apps that draw their own minimise / maximise / close bar (Chrome…) get tidied one by one; dialogs and small tools float (to build).
+
 ### D-45 · Sway is the new base, tried as an extra login session
 **Decided by Javier:** *"A, let's go with Sway"* (from the research, `docs/research/2026-10-04-tiling-base-choice.md`), and *"new session then.... excellent to keep using this one as main."*
 
