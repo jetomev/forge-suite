@@ -41,7 +41,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
   - **Workspaces as one dropdown** "1. Daily ▾" instead of six buttons; click or a key opens the list in order (Waybar 0.15 has popup menus; or a fuzzel list placed under the button). **Key: Win + Tab** (Javier, 10-05; Win + W stays tabs)
   - **Favourites as icons** right of the workspace button (from `sections.toml`)
   - **Open apps as icons** (Waybar's taskbar: click to focus, middle click to close) — test 10-05: the taskbar found the open windows (log), not yet seen on screen
-  - **Built first (Javiers order):** a **clipboard** icon next to the bell (cliphist, 2.4 MB, terminal, extra): the history in a list; a screenshot in it opens in swappy — Javier: better than a screenshot icon
+  - [x] **Built first (Javier's order): the clipboard** — **applet 9** (`applets/clipboard/`) + cliphist (2.3 MB, nog, last 200 copies): an icon left of the bell, blue with the count of new copies (seen mark in ~/.local/state, survives restarts), redrawn at every copy (Sway's watchers run `hypeforge-clipboard store`); left click / **Win + C** = the history (text copied again, a picture opens in swappy), right click = empty it (asks). Secret copies (CLIPBOARD_STATE=sensitive) tested twice: not kept. Icons 5 px apart. Javier: "tested! works well"
+  - [ ] The clipboard and notification lists (fuzzel pop-ups) need their own look later (Javier) → Theme manager / the Forge apps
 - [ ] Later (Javier, 10-04, "for when we get there"): **Alt + Tab** across the apps of the workspace on all 3 screens, with window pictures (applet candidate)
 - [ ] Later (Javier, 10-04): **drag and drop** of windows — explore: swapping apps, dropping one onto another to tab/stack
 - [x] **Applet 5 · Window Rules** (D-53): small tools float (`applets/rules/`); Alt + F4 closes; the launcher's first screen searches every app — Javier: "everything is working. Excellent!"
