@@ -1,0 +1,245 @@
+#!/usr/bin/env python3
+"""hypeForge applet 1 · Workspaces Management (D-47).
+
+Workspaces that span every screen. Sway gives each screen its own workspaces, so each of ours
+is one Sway workspace per screen, kept in step:
+
+    screen 1 (main)  "1:Daily"   "2:Work"   ...
+    screen 2         "11:Daily"  "12:Work"  ...
+    screen 3         "21:Daily"  "22:Work"  ...
+
+The bar hides the numbers (strip_workspace_numbers), so each screen shows "Daily Work ...".
+
+    hypeforge-workspaces            run: set up Sway, then keep the screens in step
+    hypeforge-workspaces go N       switch every screen to workspace N   (Win + N)
+    hypeforge-workspaces move N     send the focused window to workspace N, same screen
+    hypeforge-workspaces reload     re-read the settings file
+
+Settings: ~/.config/hypeforge/applets/workspaces.toml (enabled, screens, workspace names).
+Only Python's standard library: it talks to Sway over Sway's own socket (the i3 IPC protocol).
+"""
+
+import json
+import os
+import shlex
+import signal
+import socket
+import struct
+import sys
+import tomllib
+from pathlib import Path
+
+CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets/workspaces.toml"
+BAR_FRAGMENT = CONFIG.with_name("workspaces.waybar.json")  # read by the bar (Waybar "include")
+PIDFILE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-workspaces.pid"
+MOD = "Mod4"  # the Windows key
+
+MAGIC = b"i3-ipc"
+RUN_COMMAND, GET_WORKSPACES, SUBSCRIBE = 0, 1, 2
+EVENT_WORKSPACE = 0x80000000
+
+
+# ---- Sway's socket ---------------------------------------------------------------------------
+
+class Sway:
+    def __init__(self):
+        path = os.environ.get("SWAYSOCK")
+        if not path:
+            sys.exit("hypeforge-workspaces: SWAYSOCK is not set — is this running inside Sway?")
+        self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        self.sock.connect(path)
+
+    def _read(self, n):
+        data = b""
+        while len(data) < n:
+            chunk = self.sock.recv(n - len(data))
+            if not chunk:
+                raise ConnectionError("Sway closed the connection")
+            data += chunk
+        return data
+
+    def send(self, kind, payload=""):
+        body = payload.encode()
+        self.sock.sendall(MAGIC + struct.pack("=II", len(body), kind) + body)
+
+    def receive(self):
+        header = self._read(len(MAGIC) + 8)
+        length, kind = struct.unpack("=II", header[len(MAGIC):])
+        return kind, json.loads(self._read(length))
+
+    def ask(self, kind, payload=""):
+        self.send(kind, payload)
+        return self.receive()[1]
+
+    def run(self, *commands):
+        return self.ask(RUN_COMMAND, "; ".join(commands))
+
+
+# ---- Settings --------------------------------------------------------------------------------
+
+def load():
+    with open(CONFIG, "rb") as f:
+        cfg = tomllib.load(f)
+    names = [w["name"] for w in cfg.get("workspace", [])][:9]
+    return bool(cfg.get("enabled", False)), list(cfg.get("screens", [])), names
+
+
+def member(index, screen_pos, name):
+    """Sway's name for workspace `index` (1-based) on screen `screen_pos` (0-based)."""
+    return f"{index + 10 * screen_pos}:{name}"
+
+
+def quoted(s):
+    return '"' + s.replace('"', '\\"') + '"'
+
+
+# ---- What the keys call ----------------------------------------------------------------------
+
+def focused_screen(sway, screens):
+    for ws in sway.ask(GET_WORKSPACES):
+        if ws["focused"]:
+            return screens.index(ws["output"]) if ws["output"] in screens else 0
+    return 0
+
+
+def go(sway, screens, names, index):
+    """Every screen to workspace `index`; the keyboard stays on the screen it was on."""
+    if not 1 <= index <= len(names):
+        return
+    here = focused_screen(sway, screens)
+    name = names[index - 1]
+    others = [quoted(member(index, p, name)) for p in range(len(screens)) if p != here]
+    sway.run(*[f"workspace {w}" for w in others], f"workspace {quoted(member(index, here, name))}")
+
+
+def move(sway, screens, names, index):
+    if not 1 <= index <= len(names):
+        return
+    here = focused_screen(sway, screens)
+    sway.run(f"move container to workspace {quoted(member(index, here, names[index - 1]))}")
+
+
+# ---- The bar --------------------------------------------------------------------------------
+
+def write_bar(screens, names):
+    """Waybar's workspace buttons: every workspace always shown, as "1. Daily", on each screen."""
+    persistent, labels = {}, {}
+    for i, name in enumerate(names, 1):
+        for p, screen in enumerate(screens):
+            persistent[member(i, p, name)] = [screen]
+            labels[member(i, p, name)] = f"{i}. {name}"
+    fragment = {"sway/workspaces": {
+        "all-outputs": False,
+        "disable-scroll": True,
+        "persistent-workspaces": persistent,
+        "format": "{icon}",
+        "format-icons": {"high-priority-named": list(labels), **labels},
+    }}
+    text = json.dumps(fragment, indent=2) + "\n"
+    if not BAR_FRAGMENT.exists() or BAR_FRAGMENT.read_text() != text:
+        BAR_FRAGMENT.write_text(text)
+        os.system("pkill -USR2 -x waybar")  # Waybar reloads its settings on SIGUSR2
+
+
+# ---- Setting Sway up -------------------------------------------------------------------------
+
+def setup(sway, screens, names):
+    write_bar(screens, names)
+    me = shlex.quote(os.path.abspath(sys.argv[0]))
+    commands = []
+    for i, name in enumerate(names, 1):
+        for p, screen in enumerate(screens):
+            commands.append(f"workspace {quoted(member(i, p, name))} output {screen}")
+        commands.append(f"bindsym --no-warn {MOD}+{i} exec {me} go {i}")
+        commands.append(f"bindsym --no-warn {MOD}+Shift+{i} exec {me} move {i}")
+    sway.run(*commands)
+
+    # Bring what is open into workspace 1: the workspace each screen shows now is renamed, so
+    # its windows come along. Anything already one of ours is left alone.
+    ours = {member(i, p, n) for i, n in enumerate(names, 1) for p in range(len(screens))}
+    existing = {ws["name"] for ws in sway.ask(GET_WORKSPACES)}
+    for ws in sway.ask(GET_WORKSPACES):
+        if ws["visible"] and ws["name"] not in ours and ws["output"] in screens:
+            target = member(1, screens.index(ws["output"]), names[0])
+            if target not in existing:
+                sway.run(f"rename workspace {quoted(ws['name'])} to {quoted(target)}")
+                existing.add(target)
+    go(sway, screens, names, 1)
+
+
+def group_of(name):
+    """Workspace index (1-based) of one of our Sway workspace names, or None."""
+    number = name.split(":", 1)[0]
+    return int(number) % 10 if number.isdigit() and ":" in name else None
+
+
+def keep_in_step(screens, names):
+    """Whenever a screen shows another workspace (a key, a bar click), pull the others along."""
+    events = Sway()
+    events.ask(SUBSCRIBE, json.dumps(["workspace"]))
+    control = Sway()
+    while True:
+        kind, event = events.receive()
+        if kind != EVENT_WORKSPACE:
+            continue
+        if event.get("change") == "reload":  # `swaymsg reload` drops our keys: set them again
+            enabled, screens, names = load()
+            if not enabled:
+                return
+            setup(control, screens, names)
+            continue
+        if event.get("change") != "focus":
+            continue
+        index = group_of(event["current"]["name"])
+        if index is None or index > len(names):
+            continue
+        shown = {ws["output"]: group_of(ws["name"]) for ws in control.ask(GET_WORKSPACES) if ws["visible"]}
+        if any(shown.get(s) != index for s in screens if s in shown):
+            go(control, screens, names, index)
+
+
+# ---- One copy at a time ----------------------------------------------------------------------
+
+def already_running():
+    try:
+        pid = int(PIDFILE.read_text())
+        os.kill(pid, 0)
+        return pid
+    except (OSError, ValueError):
+        return None
+
+
+def main():
+    args = sys.argv[1:]
+    enabled, screens, names = load()
+    if args and args[0] in ("go", "move") and len(args) == 2:
+        if enabled and names:
+            (go if args[0] == "go" else move)(Sway(), screens, names, int(args[1]))
+        return
+    if args == ["reload"]:
+        pid = already_running()
+        if pid:
+            os.kill(pid, signal.SIGHUP)
+        return
+    if args:
+        sys.exit(__doc__)
+
+    if not enabled or not names or not screens:
+        print("hypeforge-workspaces: switched off in", CONFIG)
+        return
+    if already_running():
+        print("hypeforge-workspaces: already running")
+        return
+    PIDFILE.write_text(str(os.getpid()))
+    # A reload request (SIGHUP) starts the whole program again, so it reads the file afresh.
+    signal.signal(signal.SIGHUP, lambda *_: (PIDFILE.unlink(missing_ok=True),
+                                             os.execv(sys.executable, [sys.executable] + sys.argv)))
+    try:
+        setup(Sway(), screens, names)
+        keep_in_step(screens, names)
+    finally:
+        PIDFILE.unlink(missing_ok=True)
+
+
+if __name__ == "__main__":
+    main()

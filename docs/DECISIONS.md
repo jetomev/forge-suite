@@ -7,6 +7,16 @@
 
 ## 2026-10-04
 
+### D-48 · Workspaces Management (applet 1) and Waybar as the bar for now
+**Decided by Javier:** six names, *"Daily, Work, Entertainment, Gaming, Monitoring, Settings (for now — but later we should be able to add, edit, delete workspaces)"*, with *"a flag to switch it on and off"*, shaped as *"a config file with variables, and a routine that reads them and delivers to sway"*, so the Board later becomes *"the visual handler of the config file."* The bar: *"can the workspaces name appear in the top bar, one next to the other, for me to click on them… we can color the active workspace"*, numbered *"1. Daily, 2. Work"*. Our own bar later: *"we can start using one that exist, and then when the setup is done, include it as one of our hypeForge development."*
+
+**What it means:**
+- **Settings file** `~/.config/hypeforge/applets/workspaces.toml` (`enabled`, `screens` in order, one `[[workspace]]` block per name, up to 9); **routine** `applets/workspaces/hypeforge-workspaces`, started by Sway, Python standard library only (talks to Sway over its socket). Switched off, it does nothing.
+- Each workspace is one Sway workspace per screen (`1:Daily` middle, `11:Daily` left, `21:Daily` right), kept in step: **Win + 1…6** switches all three, **Win + Shift + 1…6** sends a window on its own screen, and a switch from anywhere (a bar click) pulls the other screens along. It re-applies itself after a Sway reload.
+- **The bar is Waybar** (`extra`, nog) until our own: all workspaces always shown, "1. Daily"…, active one in the palette's white; the routine writes Waybar's workspace list from the same settings file, so a rename shows on the bar.
+- **The mouse stays where it is** when the focus changes screen (`mouse_warping none`): a bar click had dragged it to the middle of screen 1.
+- Javier's test: *"the mouse stays put now, everything works."*
+
 ### D-47 · Every hypeForge feature is its own applet, switched on and off from one Settings Board
 **Decided by Javier:** *"Each functionality we say we are going to develop, let's make it separate so later we can tie them all to a Settings board, to activate, deactivate, and manipulate how it behaves or looks. Like little applets or widgets we can offer using our main hypeForge Settings Board."*
 

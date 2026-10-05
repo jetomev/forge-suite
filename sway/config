@@ -60,6 +60,10 @@ client.urgent           $hf_urgent      $hf_titlebar $hf_text  $hf_urgent  $hf_u
 default_border pixel 2
 default_floating_border pixel 2
 
+# The mouse stays where it is when the focus moves to another screen (Javier, 2026-10-04:
+# clicking a workspace on the bar dragged the pointer to the middle of screen 1)
+mouse_warping none
+
 # 10 px between windows and at the screen edges
 gaps inner 10
 gaps outer 0
@@ -265,18 +269,13 @@ bindsym $mod+r mode "resize"
 # Status Bar:
 #
 # Read `man 5 sway-bar` for more information about this section.
-bar {
-    position top
-
-    # When the status_command prints a new line to stdout, swaybar updates.
-    # The default just shows the current date and time.
-    status_command while date +'%Y-%m-%d %X'; do sleep 1; done
-
-    colors {
-        statusline #ffffff
-        background #323232
-        inactive_workspace #32323200 #32323200 #5c5c5c
-    }
-}
+# hypeForge: the top bar is Waybar (RECIPE job 1): every workspace always shown and clickable,
+# the active one coloured (Javier, 2026-10-04). Its settings: ~/.config/sway/waybar/.
+# Started directly (no bar { } block, so Sway's own bar stays off).
+exec waybar -c ~/.config/sway/waybar/config.jsonc -s ~/.config/sway/waybar/style.css
 
 include /etc/sway/config.d/*
+
+# hypeForge: applet 1 · Workspaces Management (D-47) — workspaces across all three screens.
+# Switched on and off in ~/.config/hypeforge/applets/workspaces.toml (enabled = true/false).
+exec ~/Programs/hypeforge/applets/workspaces/hypeforge-workspaces

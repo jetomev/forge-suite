@@ -1,0 +1,46 @@
+/* hypeForge — the top bar's look. Catppuccin Mocha until the KognogOS palette (Phase 12, D-46). */
+@define-color hf_bar      #181825;
+@define-color hf_text     #cdd6f4;
+@define-color hf_subtext  #a6adc8;
+@define-color hf_active   #cdd6f4;
+@define-color hf_inactive #45475a;
+
+* {
+  font-family: sans-serif;
+  font-size: 14px;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+
+window#waybar {
+  background: @hf_bar;
+  color: @hf_text;
+}
+
+#workspaces button {
+  padding: 0 12px;
+  color: @hf_subtext;
+  background: transparent;
+}
+
+#workspaces button:hover {
+  background: @hf_inactive;
+  color: @hf_text;
+}
+
+/* The workspace on screen now: it is "visible" on all three screens at once */
+#workspaces button.visible {
+  background: @hf_active;
+  color: @hf_bar;
+}
+
+#workspaces button.urgent {
+  background: #f38ba8;
+  color: @hf_bar;
+}
+
+#clock {
+  padding: 0 14px;
+  color: @hf_text;
+}

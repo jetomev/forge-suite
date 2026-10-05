@@ -19,7 +19,10 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] F-42 (#24) — deferred, stays open: the Sway session sets no `SUDO_ASKPASS` — the password window only works when it is passed by hand; set it for the session (with the password/polkit job)
 - [ ] F-43 (#25) — deferred, stays open (launcher fix not now): WoW through XWayland on Sway — pointer escapes while turning the camera, focus lost; windowed mode tiles to half the screen. Wine's Wayland driver works (2.3b ✅); the launcher (pi-kognog-azerothcore) only picks it on Hyprland
 - [x] Windows look (D-46): border only (2 px, palette white active / dark grey inactive), tabs when windows share a space, 10 px gaps — Javier: "Border only + tabs works wonders"
-- [ ] **Applet 1 · Linked workspaces** (D-47): 4 workspaces across all 3 screens (1 Day-to-Day · 2 Work · 3 Gaming · 4 Settings/Monitoring), Win + 1…4 switches all three; the bar shows each once
+- [x] **Applet 1 · Workspaces Management** (D-47): `applets/workspaces/` — settings file `~/.config/hypeforge/applets/workspaces.toml` (enabled, screens, names) + routine `hypeforge-workspaces`; 6 workspaces across all 3 screens (1 Daily · 2 Work · 3 Entertainment · 4 Gaming · 5 Monitoring · 6 Settings), Win + 1…6 / Win + Shift + 1…6. **10-04: built and tested — Javier: "the mouse stays put now, everything works" (D-48).** Later: add/edit/delete workspaces from the Board
+- [x] **Top bar = Waybar** 0.15.0 (nog, `extra`; RECIPE job 1): all workspaces always shown as "1. Daily"…, clickable, active one coloured; the applet writes its workspace list (`workspaces.waybar.json`). Waybar started by `exec` (Sway's `swaybar_command` did not start it on reload); `mouse_warping none` so a bar click leaves the pointer where it is
+- [ ] Bring `CLAUDE.md`, the README badges and the banner up to the new path (they still describe Hyprland + Lua, the first attempt)
+- [ ] **Applet 4 · App sections** (D-47): a list of apps, each thrown into a workspace; the same sections become the launcher's sections
 - [ ] **Applet 2 · Window placement** (D-47): fill order 1 middle → 2 beside → 3 left → 4 beside → 5 right → 6 beside → 7 under 4 → 8 under 6, the same in every workspace (replaces "tiling order")
 - [ ] Floating: dialogs and small tools (list grows as we find them)
 - [ ] Apps that draw their own minimise/maximise/close bar (Chrome…): switch it off where the app allows
@@ -29,6 +32,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Phase 12 · Our own look
 - [ ] **Applet 3 · Folder tabs** (D-47): small left-aligned tabs like folders in a holder, rounded tops, our colours; replaces Sway's even tab row
+- [ ] **Our own bar** (Javier, 10-04): Waybar for now; once the setup is done, our own bar as a hypeForge applet — a Waybar fork or a small one of our own, decided then
 - [ ] **hypeForge Settings Board** (D-47): every applet switched on/off, its behaviour and look changed in one place
 - [ ] From the KognogOS brand (logo, colours): a palette with contrast between elements on purpose — connected, not fused, not monotone
 - [ ] Each visual step designed and approved before it is built (bar, borders, launcher, notifications, lock screen, terminal, wallpaper…)

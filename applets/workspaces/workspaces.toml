@@ -1,0 +1,34 @@
+# hypeForge applet 1 · Workspaces Management (D-47)
+#
+# Workspaces that span all three screens: switching one switches every screen together.
+# The hypeForge Settings Board will edit this file; until then, edit it by hand and run
+#   hypeforge-workspaces reload
+#
+# Copied to ~/.config/hypeforge/applets/workspaces.toml, which is the one that is read.
+
+# false = the applet does nothing and Sway keeps its own one-screen workspaces.
+enabled = true
+
+# The screens in order: the first is screen 1 (the main one). Names as Sway reports them
+# (swaymsg -t get_outputs). This computer: DP-3 middle, DP-2 left, DP-1 right.
+screens = ["DP-3", "DP-2", "DP-1"]
+
+# One block per workspace, in order: the first is Win + 1, the second Win + 2, and so on
+# (at most 9). Add, rename, reorder or delete blocks freely.
+[[workspace]]
+name = "Daily"
+
+[[workspace]]
+name = "Work"
+
+[[workspace]]
+name = "Entertainment"
+
+[[workspace]]
+name = "Gaming"
+
+[[workspace]]
+name = "Monitoring"
+
+[[workspace]]
+name = "Settings"
