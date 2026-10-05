@@ -25,6 +25,8 @@
 **Moving in, one at a time** (each keeps its own version and AUR package; its old repository is archived with a pointer):
 [forgekit](https://github.com/jetomev/forgekit) (the shared foundation) · [alacrittyForge](https://github.com/jetomev/alacrittyforge) · [bitlaForge](https://github.com/jetomev/bitlaforge) · [nogForge](https://github.com/jetomev/nogforge) · [grubForge](https://github.com/jetomev/grubforge) (last: it has the most users).
 
+**Staying outside, on purpose:** [nog](https://github.com/jetomev/nog) (the heart of KognogOS) and [mindForge](https://github.com/jetomev/mindforge) (the working agreement between the human and the AI, kept on its own for now).
+
 **Coming, born here:** one Forge app for every setting of the desktop — workspaces, monitors, window placement, the launcher, window rules, notifications, the lock screen, the music player, the top bar, a calculator, a password helper, a theme manager… — all held by **hypeForge Settings**, the control centre ([D-59](hypeforge/docs/DECISIONS.md); the list: [hypeForge's TODO](hypeforge/TODO.md)).
 
 ---

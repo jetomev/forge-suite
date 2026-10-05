@@ -12,7 +12,7 @@
 
 **What it means:**
 - `jetomev/hypeforge` is renamed **`jetomev/forge-suite`** (GitHub redirects every old link; the issues and history stay). hypeForge moves into its own section, `hypeforge/`; every new Forge app is born in a section next to it — no new repositories.
-- **Phased:** forgekit and the shipped apps (alacrittyForge, bitlaForge, nogForge, grubForge last — it has the most users and outside contributors) move in later, one at a time, each tested; their old repositories are archived with a pointer. **nog stays its own repository**: KognogOS = **nog + the Forge Suite**.
+- **Phased:** forgekit and the shipped apps (alacrittyForge, bitlaForge, nogForge, grubForge last — it has the most users and outside contributors) move in later, one at a time, each tested; their old repositories are archived with a pointer. **nog stays its own repository**: KognogOS = **nog + the Forge Suite**. **mindForge stays outside too, for now** (Javier, 2026-10-05: *"mindForge, the only one thing we keep out of the Forge Suite for now"*).
 - Each app keeps **its own version, tags (`<app>-vX.Y.Z`) and AUR package**; the release rules are adapted when the first shipped app moves in.
 - On the test desktop the folder is `~/Programs/forge-suite/`, with `~/Programs/hypeforge` left as a shortcut so the running desktop keeps working.
 
