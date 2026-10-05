@@ -156,6 +156,10 @@ def setup(sway, grid):
         commands.append(f"bindsym --no-warn {MOD}+{i} exec {me} go {i}")
         commands.append(f"bindsym --no-warn {MOD}+Shift+{i} exec {me} move {i}")
     sway.run(*commands)
+    # Number keys beyond our workspaces would open stray one-screen workspaces: switch them off
+    for key in [str(i) for i in range(len(grid.names) + 1, 10)] + ["0"]:
+        sway.run(f"unbindsym {MOD}+{key}")
+        sway.run(f"unbindsym {MOD}+Shift+{key}")
 
     # Nothing gets stranded: a Sway workspace the grid no longer uses (Sway's own "1" from before
     # the applet, "1:Daily" once screen 1 shares Daily, "101:Shared" once it stops sharing)

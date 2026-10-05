@@ -46,7 +46,11 @@ def actions(rule):
         todo.append("sticky enable")
     if rule.get("size"):
         todo.append(f"resize set {rule['size']}")
+    if rule.get("border"):
+        todo.append(f"border pixel {int(rule['border'])}")
     todo.append("move position center")
+    if rule.get("focus"):
+        todo.append("focus")
     return ", ".join(todo)
 
 

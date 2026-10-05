@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+"""hypeForge applet 6 · Help (D-47, D-54).
+
+Win + F1 (and "Help & Keys" in the launcher): the key chart, searchable, and the guide, one page
+per applet. The same files are what the hypeForge Settings Board shows:
+
+    applets/help/keys.toml      the one list of key combinations (checked against sway/config)
+    applets/help/guide/*.md     the guide pages (the first line is the title)
+
+    hypeforge-help              open the help menu
+    hypeforge-help keys         open the key chart directly
+"""
+
+import os
+import subprocess
+import sys
+import tomllib
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+KEYS = HERE / "keys.toml"
+GUIDE = HERE / "guide"
+LOOK = Path.home() / ".config/sway/fuzzel/fuzzel.ini"  # the launcher's look
+RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
+
+
+def pick(lines, prompt):
+    """Show `lines` [(text, icon)] in fuzzel; the chosen index, or None (Esc)."""
+    fuzzel = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", prompt]
+    if LOOK.is_file():
+        fuzzel += ["--config", str(LOOK)]
+    text = "\n".join(f"{t}\0icon\x1f{i}" if i else t for t, i in lines) + "\n"
+    result = subprocess.run(fuzzel, input=text.encode(), capture_output=True)
+    if result.returncode != 0 or not result.stdout.strip():
+        return None
+    return int(result.stdout.strip())
+
+
+def key_chart():
+    """The key chart as a page like the guide (Javier: "the same as the rest of the help"),
+    written from keys.toml every time, so it always matches the one list."""
+    with open(KEYS, "rb") as f:
+        groups = tomllib.load(f).get("group", [])
+    out = ["# Key chart", "",
+           "Every key combination of the hypeForge desktop. *Win* is the Windows key.", ""]
+    for g in groups:
+        out += [f"## {g['name']}", "", "| Keys | What it does |", "|---|---|"]
+        out += [f"| **{e['keys']}** | {e['does']} |" for e in g.get("keys", [])]
+        out.append("")
+    page = RUNTIME / "hypeforge-key-chart.md"
+    page.write_text("\n".join(out))
+    show(page)
+
+
+def pages():
+    out = []
+    for path in sorted(GUIDE.glob("*.md")):
+        title = path.read_text().splitlines()[0].lstrip("# ").strip()
+        out.append((title, path))
+    return out
+
+
+def show(path):
+    page = HERE / "show-page"  # glow, with a bottom line saying how to read and how to close
+    subprocess.run(["swaymsg", "exec",
+                    f"alacritty --class hypeforge-help --title 'hypeForge Help' -e '{page}' '{path}'"],
+                   capture_output=True)
+
+
+def main():
+    if sys.argv[1:] == ["keys"]:
+        return key_chart()
+    guide = pages()
+    lines = [("Key chart — every key combination", "input-keyboard")] + \
+            [(f"Guide · {title}", "help-browser") for title, _ in guide]
+    choice = pick(lines, "Help  ❯  ")
+    if choice == 0:
+        key_chart()
+    elif choice:
+        show(guide[choice - 1][1])
+
+
+if __name__ == "__main__":
+    main()

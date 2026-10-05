@@ -7,6 +7,17 @@
 
 ## 2026-10-04
 
+### D-54 · Help (applet 6): one source, shown on Win + F1 and on the Board; the KognogOS wallpaper
+**Decided by Javier:** *"We need to have a good help for all the functionalities, applets, and also the key combos chart"*; *"the help has to be both accessible with Win+F1 and part of the hypeForge Board app."* On the first look: the help pages *"need a border and an instruction telling people how to exit the screen (q)"*, and *"I would prefer the Key combos screen is the same as the rest of the help, it looks different and disruptive."* Also: *"can you add our KognogOS background."*
+
+**What it means:**
+- **One source, two readers:** `applets/help/keys.toml` (the key chart: groups of keys + plain words + the exact Sway key names covered) and `applets/help/guide/*.md` (one page per applet). Win + F1 shows them now; the hypeForge Settings Board will read the same files.
+- **Win + F1** (and **Help & Keys** in the launcher) opens a small menu: Key chart, then Guide · one page per applet. Every page — the key chart too, written from `keys.toml` each time — opens in the same floating window (white 3 px border, focused) with a bottom line: *↑ ↓ Page Up / Down to read — / to search — q to close*.
+- **The chart cannot go stale:** `scripts/check-keys.py` compares it with every key in `sway/config` (minus the number keys applet 1 switches off) and runs as the git pre-commit hook (`git config core.hooksPath scripts/hooks`). Tested in the failing direction: a fake extra key stopped it and was named.
+- **Found while collecting the keys:** Sway's own Win + 7…0 still opened stray one-screen workspaces; applet 1 now switches off the number keys beyond its workspaces.
+- **Window Rules** gained `border` and `focus` options (the help window uses both).
+- **Wallpaper:** "Kognog OS Semi – Logo Catpuccin Mocha" on all three screens, through **swaybg** (installed with nog; Sway's own wallpaper helper).
+
 ### D-53 · Window Rules (applet 5): small tools float; Alt + F4 closes
 **Decided by Javier:** floating for *"dialogs, small tools, and we will see"*; *"ALT+F4 should close the apps, very standard key combination"*; and in the launcher, *"Can be fixed so the search always look for all apps?"* Then: *"everything is working. Excellent!"*
 

@@ -1,7 +1,7 @@
 # hypeForge applet 4 · App Sections (D-47, D-52)
 #
 # The launcher (Win + Space) opens on a first screen: Favourites, one section per workspace,
-# All apps, then Lock Screen · Log Out · Reboot · Shutdown. Picking an app from a section opens
+# All apps, Help & Keys, then Lock Screen · Log Out · Reboot · Shutdown. Picking an app from a section opens
 # it IN THAT SECTION'S WORKSPACE. The hypeForge Settings Board will edit this file; until then,
 # edit it by hand (it is read every time the launcher opens).
 #

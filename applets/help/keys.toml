@@ -1,0 +1,74 @@
+# hypeForge applet 6 · Help — the key chart (D-47, D-54)
+#
+# The ONE list of key combinations. Win + F1 shows it (searchable), and the hypeForge Settings
+# Board will show it too. `keys` and `does` are what people read; `sway` lists the exact key
+# names in sway/config (and the applets) that the entry covers.
+#
+# scripts/check-keys.py compares this file with sway/config on every commit, so a key added,
+# changed or removed in one place and not the other stops the commit and says which.
+
+[[group]]
+name = "Apps and windows"
+keys = [
+  { keys = "Win + Space", does = "Open the launcher (sections, search every app, lock, log out, reboot, shut down)", sway = ["$mod+space"] },
+  { keys = "Win + D", does = "Plain app search (the launcher without sections)", sway = ["$mod+d"] },
+  { keys = "Win + Enter", does = "Open a terminal", sway = ["$mod+Return"] },
+  { keys = "Alt + F4", does = "Close the window", sway = ["Mod1+F4"] },
+  { keys = "Win + Shift + Q", does = "Close the window", sway = ["$mod+Shift+q"] },
+  { keys = "Win + F1", does = "This help: the key chart and the guide", sway = ["$mod+F1"] },
+]
+
+[[group]]
+name = "Workspaces"
+keys = [
+  { keys = "Win + 1 … 6", does = "Switch all three screens to that workspace (1 Daily, 2 Work, 3 Entertainment, 4 Gaming, 5 Monitoring, 6 Settings)", sway = ["$mod+1", "$mod+2", "$mod+3", "$mod+4", "$mod+5", "$mod+6"] },
+  { keys = "Win + Shift + 1 … 6", does = "Send the window to that workspace, on the same screen", sway = ["$mod+Shift+1", "$mod+Shift+2", "$mod+Shift+3", "$mod+Shift+4", "$mod+Shift+5", "$mod+Shift+6"] },
+  { keys = "Click a name on the top bar", does = "Switch all three screens to that workspace", sway = [] },
+]
+
+[[group]]
+name = "Moving around"
+keys = [
+  { keys = "Win + ← ↓ ↑ →  (or H J K L)", does = "Move the focus to the window in that direction (also across screens)", sway = ["$mod+Left", "$mod+Down", "$mod+Up", "$mod+Right", "$mod+$left", "$mod+$down", "$mod+$up", "$mod+$right"] },
+  { keys = "Win + Shift + ← ↓ ↑ →  (or H J K L)", does = "Move the window in that direction", sway = ["$mod+Shift+Left", "$mod+Shift+Down", "$mod+Shift+Up", "$mod+Shift+Right", "$mod+Shift+$left", "$mod+Shift+$down", "$mod+Shift+$up", "$mod+Shift+$right"] },
+  { keys = "Win + A", does = "Focus the group the window is in (to move or resize a whole group)", sway = ["$mod+a"] },
+]
+
+[[group]]
+name = "Layout"
+keys = [
+  { keys = "Win + W", does = "Tabs: the windows in this space become tabs", sway = ["$mod+w"] },
+  { keys = "Win + S", does = "Stack: the windows in this space are stacked, names on top", sway = ["$mod+s"] },
+  { keys = "Win + E", does = "Side by side again (press again: above each other)", sway = ["$mod+e"] },
+  { keys = "Win + B", does = "The next window opens beside this one", sway = ["$mod+b"] },
+  { keys = "Win + V", does = "The next window opens below this one", sway = ["$mod+v"] },
+  { keys = "Win + F", does = "Full screen on / off", sway = ["$mod+f"] },
+  { keys = "Win + R", does = "Resize mode: arrows (or H J K L) change the size, Enter or Esc to finish", sway = ["$mod+r", "resize:Left", "resize:Down", "resize:Up", "resize:Right", "resize:$left", "resize:$down", "resize:$up", "resize:$right", "resize:Return", "resize:Escape"] },
+]
+
+[[group]]
+name = "Floating windows"
+keys = [
+  { keys = "Win + Shift + Space", does = "Float the window, or put it back in its spot", sway = ["$mod+Shift+space"] },
+  { keys = "Win + Shift + Tab", does = "Switch the focus between floating and tiled windows", sway = ["$mod+Shift+Tab"] },
+  { keys = "Win + left mouse button", does = "Drag a window (floating or tiled)", sway = [] },
+  { keys = "Win + right mouse button", does = "Resize a window", sway = [] },
+  { keys = "Win + Shift + −", does = "Put the window away in the scratchpad (a hidden drawer)", sway = ["$mod+Shift+minus"] },
+  { keys = "Win + −", does = "Bring the scratchpad window back (press again to cycle or hide)", sway = ["$mod+minus"] },
+]
+
+[[group]]
+name = "Session"
+keys = [
+  { keys = "Win + Shift + C", does = "Reload Sway's settings", sway = ["$mod+Shift+c"] },
+  { keys = "Win + Shift + E", does = "Leave Sway (asks first)", sway = ["$mod+Shift+e"] },
+]
+
+[[group]]
+name = "Keyboard media keys"
+keys = [
+  { keys = "Volume keys", does = "Volume down / up / mute; microphone mute", sway = ["XF86AudioMute", "XF86AudioLowerVolume", "XF86AudioRaiseVolume", "XF86AudioMicMute"] },
+  { keys = "Play / pause / next / previous / stop", does = "Control the music or video that is playing", sway = ["XF86AudioPlay", "XF86AudioPause", "XF86AudioPrev", "XF86AudioNext", "XF86AudioStop"] },
+  { keys = "Brightness keys", does = "Screen brightness down / up (laptop screens)", sway = ["XF86MonBrightnessDown", "XF86MonBrightnessUp"] },
+  { keys = "Print Screen", does = "Screenshot of everything, saved in Pictures (a proper screenshot tool comes later)", sway = ["Print"] },
+]

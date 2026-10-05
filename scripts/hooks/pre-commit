@@ -1,0 +1,4 @@
+#!/bin/sh
+# hypeForge: the key chart must match Sway's real keys (D-54). Installed with:
+#   git config core.hooksPath scripts/hooks
+exec python3 "$(git rev-parse --show-toplevel)/scripts/check-keys.py"

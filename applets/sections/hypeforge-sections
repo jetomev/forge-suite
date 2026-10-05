@@ -3,7 +3,7 @@
 
 The launcher with sections. Win + Space opens a first screen:
 
-    Favourites · 1. Daily · 2. Work · … · All apps · Lock Screen · Log Out · Reboot · Shutdown
+    Favourites · 1. Daily · 2. Work · … · All apps · Help & Keys · Lock Screen · Log Out · Reboot · Shutdown
 
 and typing there searches every app (they sit below the fold, out of sight until you type).
 
@@ -29,6 +29,7 @@ HOME = Path.home()
 CONFIG_HOME = Path(os.environ.get("XDG_CONFIG_HOME", HOME / ".config"))
 CONFIG = CONFIG_HOME / "hypeforge/applets/sections.toml"
 WORKSPACES = Path(__file__).resolve().parent.parent / "workspaces/hypeforge-workspaces"
+HELP = Path(__file__).resolve().parent.parent / "help/hypeforge-help"
 TERMINAL = "alacritty -e"  # for apps that run in a terminal (btop…); the session has no $TERMINAL
 DESKTOP_NAMES = {"sway", "wlroots"}
 
@@ -151,6 +152,7 @@ def main():
         first.append((f"{f'{n}. ' if n else ''}{s['name']}", s.get("icon", "applications-other"),
                       ("menu", s["name"], members, n)))
     first.append(("All apps", "applications-all", ("menu", "All apps", by_name, None)))
+    first.append(("Help & Keys", "help-browser", ("help",)))
     for key, label, icon, ask in (("lock", "Lock Screen", "system-lock-screen", None),
                                   ("logout", "Log Out", "system-log-out", "Log out now?"),
                                   ("reboot", "Reboot", "system-reboot", "Reboot now?"),
@@ -169,6 +171,9 @@ def main():
         action = first[choice][2]
         if action[0] == "app":
             return launch(everything[action[1]])
+        if action[0] == "help":
+            subprocess.run(["swaymsg", "exec", str(HELP)], capture_output=True)
+            return
         if action[0] == "power":
             _, command, ask, label = action
             if ask and pick(cfg, [("No", "go-home"), (f"Yes, {label.lower()}", first[choice][1])], f"{ask}  ") != 1:

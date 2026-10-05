@@ -14,7 +14,7 @@ enabled = true
 
 # One block per rule. Match on any of: app_id, class, title, window_role, window_type
 # (each a pattern; ^…$ = exactly). Options: sticky = true (shows on every workspace),
-# size = "40 ppt 50 ppt" (percent of the screen).
+# size = "40 ppt 50 ppt" (percent of the screen), border = 3 (pixels), focus = true.
 
 # ---- Older (X11) apps that label their small windows ----
 [[float]]
@@ -56,3 +56,10 @@ sticky = true
 name = "Steam's side windows (friends, news, settings)"
 class = '^steam$'
 title = '^(Friends List|Steam - News.*|Steam Settings|Special Offers)$'
+
+[[float]]
+name = "hypeForge Help pages"
+app_id = '^hypeforge-help$'
+size = "45 ppt 75 ppt"
+border = 3
+focus = true

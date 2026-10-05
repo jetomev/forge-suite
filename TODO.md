@@ -32,7 +32,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Later (Javier, 10-04): **drag and drop** of windows — explore: swapping apps, dropping one onto another to tab/stack
 - [x] **Applet 5 · Window Rules** (D-53): small tools float (`applets/rules/`); Alt + F4 closes; the launcher's first screen searches every app — Javier: "everything is working. Excellent!"
 - [ ] F-44 (#26): no admin-password helper (polkit agent) runs in the Sway session — apps that ask for admin rights through a pop-up cannot (RECIPE job 8)
-- [ ] **Applet 6 · Help** (Javier, 10-04: "a good help for all the functionalities, applets, and also the key combos chart"): Win + F1 + a launcher line → a searchable key chart from one file, checked against Sway's real keys on every save; a plain-words guide to every applet
+- [x] **Applet 6 · Help** (D-54): Win + F1 + Help & Keys in the launcher → key chart + guide pages in one floating viewer (border, "q to close" line); one source (`applets/help/`) for Win + F1 and the Board; the chart checked against Sway's keys before every commit
+- [x] Wallpaper (RECIPE job 7): the KognogOS Semi Mocha wallpaper on all three screens, via swaybg (D-54)
 - [ ] Apps that draw their own minimise/maximise/close bar (Chrome…): switch it off where the app allows
 - [ ] Try SwayFX for rounded corners (`chaotic-aur/swayfx` 0.6, same config) — later, separate trial
 - [ ] Go through `docs/RECIPE.md`'s ~31 jobs again with Javier, one at a time: a terminal (CLI/TUI) app first wherever one exists
@@ -44,6 +45,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] **hypeForge Settings Board** (D-47): every applet switched on/off, its behaviour and look changed in one place
   - Launcher / App Sections on the Board (Javier, 10-04): modify its look · tie its colours to the active theme · add, edit, remove sections · add apps to sections · pin favourites · switch its other options on and off
   - Workspaces on the Board: add, edit, delete workspaces; the sharing grid as switches
+  - Help on the Board: the same key chart and guide pages as Win + F1 (`applets/help/`)
 - [ ] From the KognogOS brand (logo, colours): a palette with contrast between elements on purpose — connected, not fused, not monotone
 - [ ] Each visual step designed and approved before it is built (bar, borders, launcher, notifications, lock screen, terminal, wallpaper…)
 
