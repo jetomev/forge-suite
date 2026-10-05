@@ -1,9 +1,0 @@
-#!/bin/sh
-# hypeForge Help: show one page — glow formats it, less scrolls it, with a bottom line that
-# always says how to read, search and close (Javier, 2026-10-04: "an instruction telling
-# people how to exit"). The status text is ONE argument: split up, less would choke on it.
-# Sway resizes the window to its floating size just after it opens: measure after that
-sleep 0.3
-width=$(tput cols 2>/dev/null || echo 100)
-CLICOLOR_FORCE=1 glow -s dark -w "$((width - 4))" "$1" |
-    less -R "-Ps hypeForge Help   —   ↑ ↓  Page Up / Down to read   —   / to search   —   q to close"

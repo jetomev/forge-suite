@@ -21,7 +21,7 @@ keys = [
 [[group]]
 name = "Workspaces"
 keys = [
-  { keys = "Win + 1 … 6", does = "Switch all three screens to that workspace (1 Daily, 2 Work, 3 Entertainment, 4 Gaming, 5 Monitoring, 6 Settings)", sway = ["$mod+1", "$mod+2", "$mod+3", "$mod+4", "$mod+5", "$mod+6"] },
+  { keys = "Win + 1 … 6", does = "Switch all three screens to that workspace (the names are on the top bar)", sway = ["$mod+1", "$mod+2", "$mod+3", "$mod+4", "$mod+5", "$mod+6"] },
   { keys = "Win + Shift + 1 … 6", does = "Send the window to that workspace, on the same screen", sway = ["$mod+Shift+1", "$mod+Shift+2", "$mod+Shift+3", "$mod+Shift+4", "$mod+Shift+5", "$mod+Shift+6"] },
   { keys = "Click a name on the top bar", does = "Switch all three screens to that workspace", sway = [] },
 ]

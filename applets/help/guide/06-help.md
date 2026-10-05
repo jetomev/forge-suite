@@ -1,4 +1,4 @@
-# Help (applet 6)
+# Using this help (applet 6)
 
 **What it does:** **Win + F1** (or *Help & Keys* in the launcher) opens this help: the **key
 chart**, searchable — type *close* and you get *Alt + F4* — and this **guide**, one page per

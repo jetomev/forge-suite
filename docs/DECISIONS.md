@@ -7,6 +7,16 @@
 
 ## 2026-10-04
 
+### D-55 · Help & Keys is a small Forge app: tabs, one look, text that wraps
+**Decided by Javier:** *"They need a holder with tabs, which is going to become a theme in our setup… And let's just access it using the Help & Keys app, instead of a whole section for it"*; *"Let's use forgeKit to create this app, please, so we keep consistency with our other apps"*; no Help menu inside it; the key chart as tables *"with the same look of the other apps… rows with two alternate colors"*; the same design on every page; text that wraps on a small screen (*"the horizontal scrolls do not make lot of sense"*); and the tab names *Keys · Start · Workspaces · Windows · Apps · About · Quit*. Then: *"Everything works! Great job."*
+
+**What it means:**
+- `applets/help/hypeforge-help` is a **forgekit app** (title bar, menu-bar sections as tabs, hint bar, Quit), version 0.1.0. Win + F1 and the launcher's Help & Keys open it **directly** in its own floating window (no fuzzel menu any more); `hypeforge-help <page>` opens it on one page.
+- **The tabs** come from `applets/help/guide/pages.toml` (tab name → guide files, in order); Keys is always first. Windows = Window Placement + Window Rules.
+- **One look on every page:** the guide's Markdown is turned into the same widgets as the key chart — accent title and headings, text, list items, and **our own wrapping tables** (rows of cells: first column fixed, at most 40 % of the window; the last wraps; forgekit's header colours, two alternating row colours). No sideways scrolling anywhere.
+- **Keys:** ← → or 1–6 change page, ↑ ↓ / Page Up / Page Down scroll, Q or Esc close. forgekit's own Help (F1 / Ctrl+H) is switched off in this window.
+- The old page viewer (glow + less, `show-page`) is gone. Found for forgekit: its menu bar does not wrap and is cut off on a narrow window (every Forge app) — short tab names solve it here.
+
 ### D-54 · Help (applet 6): one source, shown on Win + F1 and on the Board; the KognogOS wallpaper
 **Decided by Javier:** *"We need to have a good help for all the functionalities, applets, and also the key combos chart"*; *"the help has to be both accessible with Win+F1 and part of the hypeForge Board app."* On the first look: the help pages *"need a border and an instruction telling people how to exit the screen (q)"*, and *"I would prefer the Key combos screen is the same as the rest of the help, it looks different and disruptive."* Also: *"can you add our KognogOS background."*
 

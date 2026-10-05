@@ -33,6 +33,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] **Applet 5 · Window Rules** (D-53): small tools float (`applets/rules/`); Alt + F4 closes; the launcher's first screen searches every app — Javier: "everything is working. Excellent!"
 - [ ] F-44 (#26): no admin-password helper (polkit agent) runs in the Sway session — apps that ask for admin rights through a pop-up cannot (RECIPE job 8)
 - [x] **Applet 6 · Help** (D-54): Win + F1 + Help & Keys in the launcher → key chart + guide pages in one floating viewer (border, "q to close" line); one source (`applets/help/`) for Win + F1 and the Board; the chart checked against Sway's keys before every commit
+- [x] **Help & Keys as a forgekit app** (D-55): tabs Keys · Start · Workspaces · Windows · Apps · About · Quit, the same look on every page, wrapping tables with alternating rows — Javier: "Everything works! Great job."
+- [ ] forgekit (its own repo): the menu bar does not wrap and is cut off on a narrow window — affects every Forge app (found 10-05)
 - [x] Wallpaper (RECIPE job 7): the KognogOS Semi Mocha wallpaper on all three screens, via swaybg (D-54)
 - [ ] Apps that draw their own minimise/maximise/close bar (Chrome…): switch it off where the app allows
 - [ ] Try SwayFX for rounded corners (`chaotic-aur/swayfx` 0.6, same config) — later, separate trial

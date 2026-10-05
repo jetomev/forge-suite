@@ -58,8 +58,8 @@ class = '^steam$'
 title = '^(Friends List|Steam - News.*|Steam Settings|Special Offers)$'
 
 [[float]]
-name = "hypeForge Help pages"
+name = "hypeForge Help & Keys"
 app_id = '^hypeforge-help$'
-size = "45 ppt 75 ppt"
+size = "60 ppt 80 ppt"
 border = 3
 focus = true
