@@ -7,6 +7,21 @@
 
 ## 2026-10-05
 
+### D-58 · "hypeForge Settings" is the name; the lock screen and idle timers are set there
+**Decided by Javier:** *"Add this one to be set up using hypeForge Board — let's call it better 'hypeForge Settings', another to the bag, same for the screen idle and lock, to be configured using hypeForge Settings."*
+
+**What it means:**
+- The place where every applet is switched on/off and set up (D-47's "Settings Board") is called **hypeForge Settings**. Renamed in every current file; older entries in this log keep their wording.
+- Two more pages for it: **Lock screen** (gtklock's background, blur strength and darkness, clock and date, password box, colours) and **Idle and lock** (minutes to lock, minutes to screens off, the lock key).
+- The lock screen as Javier approved it (2026-10-05, *"it is perfect my friend"*): **gtklock** — a rounded password box with a dot per key, a big 12-hour clock and the date, Catppuccin Mocha, over the KognogOS wallpaper blurred once (GaussianBlur 18, 20 % darker; GTK3 cannot blur live). swaylock was tried first; its ring was not wanted. Locks on Win + Escape, Lock Screen in Win + Space, and after 30 minutes; screens off after 60; no sleep.
+
+### D-57 · The three-part rule: terminal first, Sway-compatible, smallest footprint
+**Decided by Javier:** *"Rule: Everything we do has to be CLI/TUI (1), SWAY compatible (2), or minimum installation and dependencies as possible (3). I want a slim, quick, low memory, fast window tiling/manager system."*
+
+**What it means:**
+- Every pick is measured in this order: **(1)** a terminal app (CLI or TUI) wherever one exists; **(2)** it works under Sway (Sway's own family first: swaylock, swayidle, swaybg…); **(3)** the fewest packages and the smallest install. A choice that brings back KDE, GNOME or Hyprland pieces fails (2) and (3) — see D-56.
+- Applied first on 2026-10-05: the lock screen moves from Hyprland's hyprlock to **swaylock + swayidle** (87 KiB + 36 KiB, Arch `extra`); KCalc and Elisa (KDE apps) get terminal replacements; options are compared with their size and dependencies written out.
+
 ### D-56 · KognogOS ships with Sway only; the password helper is our own Forge app
 **Decided by Javier:** *"Remember right now we have KDE installed, but the idea is not to have it in KognogOS. KognogOS will ship only with Sway. The password handler needs to be either something Sway can handle, or something developed by us (which we will have to place in our list of self-developed apps)."* Then, from the options: **our own, nothing meanwhile**.
 

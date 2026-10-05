@@ -1,7 +1,7 @@
 # hypeForge applet 6 · Help — the key chart (D-47, D-54)
 #
 # The ONE list of key combinations. Win + F1 shows it (searchable), and the hypeForge Settings
-# Board will show it too. `keys` and `does` are what people read; `sway` lists the exact key
+# app will show it too. `keys` and `does` are what people read; `sway` lists the exact key
 # names in sway/config (and the applets) that the entry covers.
 #
 # scripts/check-keys.py compares this file with sway/config on every commit, so a key added,
@@ -11,6 +11,7 @@
 name = "Apps and windows"
 keys = [
   { keys = "Win + Space", does = "Open the launcher (sections, search every app, lock, log out, reboot, shut down)", sway = ["$mod+space"] },
+  { keys = "Win + Escape", does = "Lock the screen (it also locks by itself after 30 minutes)", sway = ["$mod+Escape"] },
   { keys = "Win + D", does = "Plain app search (the launcher without sections)", sway = ["$mod+d"] },
   { keys = "Win + Enter", does = "Open a terminal", sway = ["$mod+Return"] },
   { keys = "Alt + F4", does = "Close the window", sway = ["Mod1+F4"] },

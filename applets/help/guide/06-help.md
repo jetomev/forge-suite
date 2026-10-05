@@ -2,7 +2,7 @@
 
 **What it does:** **Win + F1** (or *Help & Keys* in the launcher) opens this help: the **key
 chart**, searchable — type *close* and you get *Alt + F4* — and this **guide**, one page per
-applet. The hypeForge Settings Board will show the same pages.
+applet. The hypeForge Settings will show the same pages.
 
 ## Where it comes from
 

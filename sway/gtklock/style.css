@@ -1,0 +1,55 @@
+/* hypeForge — gtklock's look: the KognogOS wallpaper, a big clock, and one rounded password
+   box in Catppuccin Mocha (base 1e1e2e, surface 313244, text cdd6f4, mauve cba6f7). */
+
+window {
+    /* The KognogOS wallpaper, blurred and darkened 20 % (assets/lock/, made once with Pillow:
+       GaussianBlur 18). GTK3 cannot blur live, so the lock screen uses this copy. */
+    background-image: url("background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-color: #1e1e2e;
+}
+
+label {
+    color: #cdd6f4;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+#clock-label {
+    font-size: 72pt;
+    font-weight: bold;
+}
+
+#date-label {
+    font-size: 18pt;
+    margin-bottom: 24px;
+}
+
+entry {
+    min-width: 320px;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 22px;
+    border: 2px solid #45475a;
+    background: rgba(30, 30, 46, 0.85);
+    color: #cdd6f4;
+    caret-color: #cba6f7;
+    font-size: 16pt;
+    box-shadow: none;
+}
+
+entry:focus {
+    border-color: #cba6f7;
+}
+
+button {
+    border-radius: 22px;
+    border: 2px solid #45475a;
+    background: rgba(30, 30, 46, 0.85);
+    color: #cdd6f4;
+    box-shadow: none;
+}
+
+#error-label, #warning-label {
+    color: #f38ba8;
+}

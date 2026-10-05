@@ -5,7 +5,7 @@
 # spot is taken, the next windows go round the same order again as TABS on those spots.
 # Dialogs and floating windows are left alone.
 #
-# The hypeForge Settings Board will edit this file; until then, edit it by hand and run
+# The hypeForge Settings will edit this file; until then, edit it by hand and run
 #   hypeforge-placement reload
 # Copied to ~/.config/hypeforge/applets/placement.toml, which is the one that is read.
 

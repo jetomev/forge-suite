@@ -2,7 +2,7 @@
 #
 # The launcher (Win + Space) opens on a first screen: Favourites, one section per workspace,
 # All apps, Help & Keys, then Lock Screen · Log Out · Reboot · Shutdown. Picking an app from a section opens
-# it IN THAT SECTION'S WORKSPACE. The hypeForge Settings Board will edit this file; until then,
+# it IN THAT SECTION'S WORKSPACE. The hypeForge Settings will edit this file; until then,
 # edit it by hand (it is read every time the launcher opens).
 #
 # Copied to ~/.config/hypeforge/applets/sections.toml, which is the one that is read.
@@ -66,10 +66,10 @@ apps = ["system-config-printer"]
 categories = ["Settings", "System", "HardwareSettings", "Printing"]
 
 # The bottom of the first screen, top to bottom. Log Out, Reboot and Shutdown ask first
-# ("No" is selected, so a stray Enter does nothing). Lock: hyprlock for now (the Sway lock
-# screen is a later job).
+# ("No" is selected, so a stray Enter does nothing). Lock: gtklock (its look:
+# ~/.config/gtklock/style.css).
 [power]
-lock = "hyprlock"
+lock = "gtklock -d"
 logout = "swaymsg exit"
 reboot = "systemctl reboot"
 shutdown = "systemctl poweroff"

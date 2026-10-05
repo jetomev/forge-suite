@@ -3,6 +3,8 @@
 **Target: no date set — started 28 Sep 2026; started again 4 Oct 2026 (D-44).** A Forge Suite app that installs the KognogOS tiling desktop onto any Arch install.
 The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. This file only lists what gets done.
 
+**The order from here (Javier, 2026-10-05):** finish the Sway setup → then every pending Forge Suite app → the first KognogOS release. Every pick follows D-57: terminal first (1), Sway-compatible (2), smallest install (3).
+
 **Updated after every step.** Run `bash scripts/status.sh` for the short version.
 
 ---
@@ -19,13 +21,14 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] F-42 (#24) — waits for our own password helper (D-56): the Sway session sets no `SUDO_ASKPASS` — the password window only works when it is passed by hand; set it for the session (with the password/polkit job)
 - [ ] F-43 (#25) — deferred, stays open (launcher fix not now): WoW through XWayland on Sway — pointer escapes while turning the camera, focus lost; windowed mode tiles to half the screen. Wine's Wayland driver works (2.3b ✅); the launcher (pi-kognog-azerothcore) only picks it on Hyprland
 - [x] Windows look (D-46): border only (2 px, palette white active / dark grey inactive), tabs when windows share a space, 10 px gaps — Javier: "Border only + tabs works wonders"
-- [x] **Applet 1 · Workspaces Management** (D-47): `applets/workspaces/` — settings file `~/.config/hypeforge/applets/workspaces.toml` (enabled, screens, names) + routine `hypeforge-workspaces`; 6 workspaces across all 3 screens (1 Daily · 2 Work · 3 Entertainment · 4 Gaming · 5 Monitoring · 6 Settings), Win + 1…6 / Win + Shift + 1…6. **10-04: built and tested — Javier: "the mouse stays put now, everything works" (D-48).** Later: add/edit/delete workspaces from the Board
+- [x] **Applet 1 · Workspaces Management** (D-47): `applets/workspaces/` — settings file `~/.config/hypeforge/applets/workspaces.toml` (enabled, screens, names) + routine `hypeforge-workspaces`; 6 workspaces across all 3 screens (1 Daily · 2 Work · 3 Entertainment · 4 Gaming · 5 Monitoring · 6 Settings), Win + 1…6 / Win + Shift + 1…6. **10-04: built and tested — Javier: "the mouse stays put now, everything works" (D-48).** Later: add/edit/delete workspaces from hypeForge Settings
 - [x] **Top bar = Waybar** 0.15.0 (nog, `extra`; RECIPE job 1): all workspaces always shown as "1. Daily"…, clickable, active one coloured; the applet writes its workspace list (`workspaces.waybar.json`). Waybar started by `exec` (Sway's `swaybar_command` did not start it on reload); `mouse_warping none` so a bar click leaves the pointer where it is
 - [ ] Bring `CLAUDE.md`, the README badges and the banner up to the new path (they still describe Hyprland + Lua, the first attempt)
 - [x] **Launcher = fuzzel** (D-51) on Win + Space, apps only, terminal apps in Alacritty; sway-launcher-desktop tried and removed — Javier: "Works very well"
 - [x] **Applet 4 · App Sections** (D-52): `applets/sections/` on Win + Space — first screen = the workspaces + All apps + Lock Screen · Log Out · Reboot · Shutdown (asks first); a section pick opens the app in that workspace — Javier: "Looking great so far!"
-- [x] Favourites (Javier, 10-05): 18 apps in his order in `~/.config/hypeforge/applets/sections.toml`, all 18 found by the launcher; new entries `desktop/applications/mc.desktop` (Midnight Commander) + `claude-terminal.desktop` (Claude Code in Alacritty); "hypeForge Settings" added when the Board exists. Javier: "Yes, perfect!"
-- [ ] Lock screen for Sway (RECIPE job 5): hyprlock is the stand-in, and it works under Sway
+- [x] Favourites (Javier, 10-05): 18 apps in his order in `~/.config/hypeforge/applets/sections.toml`, all 18 found by the launcher; new entries `desktop/applications/mc.desktop` (Midnight Commander) + `claude-terminal.desktop` (Claude Code in Alacritty); "hypeForge Settings" added when hypeForge Settings exists. Javier: "Yes, perfect!"
+- [x] Lock screen (RECIPE job 5, D-57): **gtklock + swayidle**: swaylock tried first (its ring was not wanted), then gtklock (password box with dots, big clock; 100 KiB, GTK3 already here), background = the wallpaper blurred once (`assets/lock/`); Win + Escape and Lock Screen in Win + Space lock; locks after 30 min, screens off after 60, no sleep (Javier); KognogOS wallpaper; Javier wanted a password box, not the ring → **gtklock** (100 KiB, GTK3 already here) (`sway/swaylock/config`). Javier: "it is perfect my friend". Then remove hyprlock + swaylock (nog)
+- [ ] Replace the KDE apps (D-57): calculator (KCalc) → a terminal calculator; music (Elisa) → a terminal Winamp-style player (cliamp installed, untried)
 - [x] **Applet 1, matrix** (D-49): a screen can share one space between workspaces (`[share]` in `workspaces.toml`; all own for now); bar buttons drawn by the applet; windows follow when the grid changes — Javier: "everything works, the highlight follows on all three"
 - [x] **Applet 2 · Window Placement** (D-50): `applets/placement/` — fill order 1 middle → 2 beside → 3 left → 4 beside → 5 right → 6 beside → 7 under 4 → 8 under 6, in every workspace, counting a shared screen too; 9+ go round again as tabs — Javier: "all works perfect!"
 - [ ] Later (Javier, 10-04, "for when we get there"): **Alt + Tab** across the apps of the workspace on all 3 screens, with window pictures (applet candidate)
@@ -33,7 +36,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] **Applet 5 · Window Rules** (D-53): small tools float (`applets/rules/`); Alt + F4 closes; the launcher's first screen searches every app — Javier: "everything is working. Excellent!"
 - [x] **F-45 (#27): no top bar after login** (found 10-05) — the Workspaces applet's first "redraw" signal reached Waybar before it was listening, which ends the program. Fixed: signal only once the bar listens (`SigCgt`), wait up to 5 s; tested 0/5 → 5/5; Javier logged out and in: the bar appeared ✅
 - [ ] F-44 (#26) — waits for our own password helper (D-56; no KDE, nothing installed meanwhile): no admin-password helper (polkit agent) runs in the Sway session — apps that ask for admin rights through a pop-up cannot (RECIPE job 8)
-- [x] **Applet 6 · Help** (D-54): Win + F1 + Help & Keys in the launcher → key chart + guide pages in one floating viewer (border, "q to close" line); one source (`applets/help/`) for Win + F1 and the Board; the chart checked against Sway's keys before every commit
+- [x] **Applet 6 · Help** (D-54): Win + F1 + Help & Keys in the launcher → key chart + guide pages in one floating viewer (border, "q to close" line); one source (`applets/help/`) for Win + F1 and hypeForge Settings; the chart checked against Sway's keys before every commit
 - [x] **Help & Keys as a forgekit app** (D-55): tabs Keys · Start · Workspaces · Windows · Apps · About · Quit, the same look on every page, wrapping tables with alternating rows — Javier: "Everything works! Great job."
 - [ ] forgekit (its own repo): the menu bar does not wrap and is cut off on a narrow window — affects every Forge app (found 10-05)
 - [x] Wallpaper (RECIPE job 7): the KognogOS Semi Mocha wallpaper on all three screens, via swaybg (D-54)
@@ -46,10 +49,12 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 ## Phase 12 · Our own look
 - [ ] **Applet 3 · Folder tabs** (D-47): small left-aligned tabs like folders in a holder, rounded tops, our colours; replaces Sway's even tab row
 - [ ] **Our own bar** (Javier, 10-04): Waybar for now; once the setup is done, our own bar as a hypeForge applet — a Waybar fork or a small one of our own, decided then
-- [ ] **hypeForge Settings Board** (D-47): every applet switched on/off, its behaviour and look changed in one place
-  - Launcher / App Sections on the Board (Javier, 10-04): modify its look · tie its colours to the active theme · add, edit, remove sections · add apps to sections · pin favourites · switch its other options on and off
-  - Workspaces on the Board: add, edit, delete workspaces; the sharing grid as switches
-  - Help on the Board: the same key chart and guide pages as Win + F1 (`applets/help/`)
+- [ ] **hypeForge Settings** (D-47): every applet switched on/off, its behaviour and look changed in one place
+  - Launcher / App Sections in hypeForge Settings (Javier, 10-04): modify its look · tie its colours to the active theme · add, edit, remove sections · add apps to sections · pin favourites · switch its other options on and off
+  - Workspaces in hypeForge Settings: add, edit, delete workspaces; the sharing grid as switches
+  - Help in hypeForge Settings: the same key chart and guide pages as Win + F1 (`applets/help/`)
+  - Lock screen in hypeForge Settings (Javier, 10-05): gtklock's look — background (and its blur strength / darkness), clock and date format, password box, colours (`sway/gtklock/`)
+  - Idle and lock in hypeForge Settings (Javier, 10-05): minutes until the screen locks (30 now), minutes until the screens turn off (60 now), the lock key (Win + Escape)
 - [ ] From the KognogOS brand (logo, colours): a palette with contrast between elements on purpose — connected, not fused, not monotone
 - [ ] Each visual step designed and approved before it is built (bar, borders, launcher, notifications, lock screen, terminal, wallpaper…)
 

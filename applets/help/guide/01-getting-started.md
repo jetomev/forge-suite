@@ -18,7 +18,7 @@ It runs on **Sway** and adds small pieces of its own, called **applets**.
 ## The applets
 
 Each applet does one job and can be switched on or off on its own. Every one has a small
-settings file in `~/.config/hypeforge/applets/`. The **hypeForge Settings Board** will be the
+settings file in `~/.config/hypeforge/applets/`. The **hypeForge Settings** will be the
 place to change them; until then the files can be edited by hand.
 
 1. **Workspaces Management** — six workspaces across all three screens

@@ -3,7 +3,7 @@
 
 A small Forge app (forgekit, like every Forge Suite app): the key chart and one guide page per
 applet, each a section of the menu bar — a holder with tabs. Win + F1 and the launcher's
-"Help & Keys" open it. The pages are plain files, so the hypeForge Settings Board shows the
+"Help & Keys" open it. The pages are plain files, so the hypeForge Settings shows the
 same ones:
 
     applets/help/keys.toml      the one list of key combinations (checked against sway/config)
