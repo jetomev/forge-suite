@@ -20,6 +20,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
 from hfbar import signal_bar  # noqa: E402
+import hfmenu  # noqa: E402
 
 RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
 SEEN = RUNTIME / "hypeforge-notifications.seen"
@@ -79,6 +80,8 @@ def bar():
 
 
 def show_list():
+    if hfmenu.close_open("notifications"):  # a second click closes the list
+        return
     notes = everything()
     if notes:
         SEEN.write_text(str(notes[0].get("id", 0)))
@@ -89,8 +92,7 @@ def show_list():
            "--lines", str(min(len(lines), 15))]
     if os.path.isfile(FUZZEL):
         cmd[1:1] = ["--config", FUZZEL]
-    subprocess.run(cmd, input="\n".join(l.replace("\n", " ") for l in lines), text=True,
-                   capture_output=True)
+    hfmenu.run("notifications", cmd, "\n".join(l.replace("\n", " ") for l in lines))
 
 
 def toggle_dnd():

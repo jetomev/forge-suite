@@ -33,6 +33,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
 from hfsway import GET_WORKSPACES, SUBSCRIBE, EVENT_WORKSPACE, Sway, quoted  # noqa: E402
 from hfbar import signal_bar  # noqa: E402
+import hfmenu  # noqa: E402
 
 CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets/workspaces.toml"
 BAR_FRAGMENT = CONFIG.with_name("workspaces.waybar.json")  # read by the bar (Waybar "include")
@@ -120,29 +121,47 @@ def move(sway, grid, index):
 # ---- The bar ---------------------------------------------------------------------------------
 
 def write_bar(grid):
-    """Waybar's buttons: every workspace, always, as "1. Daily", the one on screen marked
-    "active". Drawn by us (not Waybar's own Sway buttons), so a shared screen still shows all."""
+    """Waybar's workspace button (Javier, 2026-10-05): one dropdown, "1. Daily ▾", showing the
+    workspace on screen. A click (or Win + Tab) opens the list of all of them (`menu`)."""
     me = shlex.quote(os.path.abspath(sys.argv[0]))
     # A group the bar's own settings place where they want it ("group/workspaces" in modules-left)
-    fragment = {"group/workspaces": {"orientation": "inherit", "modules": []}}
-    for i, name in enumerate(grid.names, 1):
-        label = f"{i}. {name}"
-        on = shlex.quote(json.dumps({"text": label, "class": "active"}))
-        off = shlex.quote(json.dumps({"text": label, "class": "idle"}))
-        module = f"custom/ws#w{i}"
-        fragment["group/workspaces"]["modules"].append(module)
-        fragment[module] = {
-            "exec": f'[ "$(cat {shlex.quote(str(CURRENT))} 2>/dev/null)" = {i} ] && echo {on} || echo {off}',
+    fragment = {
+        "group/workspaces": {"orientation": "inherit", "modules": ["custom/ws"]},
+        "custom/ws": {
+            "exec": f"{me} label",
             "return-type": "json",
             "interval": "once",
             "signal": BAR_SIGNAL,
-            "on-click": f"{me} go {i}",
+            "on-click": f"{me} menu",
             "tooltip": False,
-        }
+        },
+    }
     text = json.dumps(fragment, indent=2) + "\n"
     if not BAR_FRAGMENT.exists() or BAR_FRAGMENT.read_text() != text:
         BAR_FRAGMENT.write_text(text)
         signal_bar(signal.SIGUSR2)  # Waybar reloads its settings on SIGUSR2
+
+
+def label(grid):
+    """The button's text: the workspace on screen, and the arrow that says 'there is a list'."""
+    i = current() if 1 <= current() <= len(grid.names) else 1
+    print(json.dumps({"text": f"{i}. {grid.names[i - 1]}  \u25be", "class": "active"}))
+
+
+def menu(grid):
+    """The dropdown: every workspace in order, the one on screen selected. Opens under the button."""
+    if hfmenu.close_open("workspaces"):  # a second click (or Win + Tab) closes it
+        return
+    names = [f"{i}. {n}" for i, n in enumerate(grid.names, 1)]
+    look = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+    cmd = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", "Workspace  ",
+           "--anchor", "top-left", "--x-margin", "44", "--y-margin", "4",
+           "--width", "28", "--lines", str(len(names)), "--select-index", str(current() - 1)]
+    if os.path.isfile(look):
+        cmd[1:1] = ["--config", look]
+    picked = hfmenu.run("workspaces", cmd, "\n".join(names))
+    if picked is not None and picked.strip().isdigit():
+        go(Sway(), grid, int(picked) + 1)
 
 
 # ---- Setting Sway up -------------------------------------------------------------------------
@@ -218,6 +237,9 @@ def already_running():
 def main():
     args = sys.argv[1:]
     grid = Grid()
+    if args in (["label"], ["menu"]):
+        (label if args[0] == "label" else menu)(grid)
+        return
     if args and args[0] in ("go", "move") and len(args) == 2:
         if grid.usable():
             (go if args[0] == "go" else move)(Sway(), grid, int(args[1]))

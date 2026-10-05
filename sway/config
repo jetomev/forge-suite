@@ -126,6 +126,8 @@ input type:keyboard {
     # hypeForge: notifications (mako) — close them all / bring back the last one closed
     bindsym $mod+n exec makoctl dismiss --all
     bindsym $mod+Shift+n exec makoctl restore
+    # hypeForge: the workspace dropdown (applet 1; also a click on the bar's workspace button)
+    bindsym $mod+Tab exec ~/Programs/hypeforge/applets/workspaces/hypeforge-workspaces menu
     # hypeForge: the clipboard history (applet 9)
     bindsym $mod+c exec ~/Programs/hypeforge/applets/clipboard/hypeforge-clipboard list
     # hypeForge: lock the screen (Javier, 2026-10-05)

@@ -1,7 +1,9 @@
 # App Sections — the launcher (applet 4)
 
-**What it does:** **Win + Space** opens the launcher. Its first screen lists your workspaces as
-**sections**, then **All apps**, then **Lock Screen · Log Out · Reboot · Shutdown**.
+**What it does:** **Win + Space**, or a click on the **KognogOS emblem** at the left of the bar,
+opens the launcher; press again to close it. Its first screen lists **Favourites**, your
+workspaces as **sections**, then **All apps**, then **Lock Screen · Log Out · Reboot ·
+Shutdown**.
 
 ## How to use it
 
@@ -20,7 +22,9 @@ Apps you put in a section come first; every other app falls into a section by it
 `~/.config/hypeforge/applets/sections.toml`
 
 - `enabled = true / false` (off: Win + Space is the plain search)
-- `favourites` — apps pinned at the top
+- `favourites` — your apps at the top, in your order
+
+The emblem's picture: `~/.config/hypeforge/bar/launcher.png` — put any picture there to change it.
 - one `[[section]]` per section: `name`, `icon`, `workspace`, `apps`, `categories`
 - `[power]` — what Lock Screen, Log Out, Reboot and Shutdown run
 

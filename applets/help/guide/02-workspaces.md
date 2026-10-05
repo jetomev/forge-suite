@@ -1,13 +1,15 @@
 # Workspaces Management (applet 1)
 
 **What it does:** gives you six workspaces — **1 Daily · 2 Work · 3 Entertainment · 4 Gaming ·
-5 Monitoring · 6 Settings** — that cover **all three screens at once**. Switching workspace
+5 Monitoring · 6 Settings** — that cover **all your screens at once**. Switching workspace
 switches every screen together, so each workspace is a whole desk of its own.
 
 ## How to use it
 
-- **Win + 1 … 6**, or **click a name** on the top bar: all three screens switch. The name in
-  white is the workspace you are on.
+- **Win + 1 … 6** switches every screen at once.
+- **The workspace button** on the bar (for example **1. Daily ▾**) shows where you are.
+  **Click it, or press Win + Tab**, and the list drops down: pick one and every screen
+  switches. Press again (or **Esc**) to close it.
 - **Win + Shift + 1 … 6**: send the window you are in to another workspace (it stays on the
   same screen).
 - The mouse stays where it is when you switch.

@@ -26,6 +26,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
 from hfbar import signal_bar  # noqa: E402
+import hfmenu  # noqa: E402
 
 RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
 FUZZEL = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
@@ -46,7 +47,7 @@ def fuzzel(lines, prompt):
            "--lines", str(max(1, min(len(lines), 15)))]
     if os.path.isfile(FUZZEL):
         cmd[1:1] = ["--config", FUZZEL]
-    return subprocess.run(cmd, input="\n".join(lines), text=True, capture_output=True).stdout.rstrip("\n")
+    return hfmenu.run("clipboard", cmd, "\n".join(lines)) or ""
 
 
 def number(line):
@@ -88,6 +89,8 @@ def store():
 
 
 def show_list():
+    if hfmenu.close_open("clipboard"):  # a second click (or Win + C) closes the list
+        return
     lines = history()
     mark_seen(lines)
     if not lines:

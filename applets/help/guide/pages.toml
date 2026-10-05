@@ -19,5 +19,9 @@ tab = "Apps"
 files = ["04-launcher.md"]
 
 [[page]]
+tab = "Tools"
+files = ["07-notifications.md", "08-screenshots.md", "09-clipboard.md", "10-lock.md"]
+
+[[page]]
 tab = "About"
 files = ["06-help.md"]

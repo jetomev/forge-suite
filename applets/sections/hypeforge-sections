@@ -19,7 +19,6 @@ fuzzel draws the menus (its --dmenu mode); this file only decides what is in the
 
 import os
 import re
-import signal
 import subprocess
 import sys
 import tomllib
@@ -29,10 +28,11 @@ from pathlib import Path
 HOME = Path.home()
 CONFIG_HOME = Path(os.environ.get("XDG_CONFIG_HOME", HOME / ".config"))
 CONFIG = CONFIG_HOME / "hypeforge/applets/sections.toml"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
+import hfmenu  # noqa: E402
+
 WORKSPACES = Path(__file__).resolve().parent.parent / "workspaces/hypeforge-workspaces"
 HELP = Path(__file__).resolve().parent.parent / "help/hypeforge-help"
-# The menu on screen now, so a second press (Win + Space, the bar's button) closes it (Javier, 10-05)
-OPEN_MENU = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-sections.fuzzel.pid"
 TERMINAL = "alacritty -e"  # for apps that run in a terminal (btop…); the session has no $TERMINAL
 DESKTOP_NAMES = {"sway", "wlroots"}
 
@@ -122,25 +122,8 @@ def pick(cfg, lines, prompt, icons=True, lines_shown=None):
     if look.is_file():
         fuzzel += ["--config", str(look)]
     text = "\n".join(f"{t}\0icon\x1f{i}" if icons and i else t for t, i in lines) + "\n"
-    menu = subprocess.Popen(fuzzel, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-    OPEN_MENU.write_text(str(menu.pid))
-    out, _ = menu.communicate(text.encode())
-    OPEN_MENU.unlink(missing_ok=True)
-    if menu.returncode != 0 or not out.strip():
-        return None
-    return int(out.strip())
-
-
-def close_open_menu():
-    """If our menu is on screen, close it and say so: the press was meant to close it."""
-    try:
-        pid = int(OPEN_MENU.read_text())
-        if Path(f"/proc/{pid}/comm").read_text().strip() != "fuzzel":
-            return False
-        os.kill(pid, signal.SIGTERM)
-        return True
-    except (OSError, ValueError):
-        return False
+    out = hfmenu.run("launcher", fuzzel, text)  # a second press closes it (main)
+    return None if out is None else int(out.strip())
 
 
 def launch(app, workspace=None):
@@ -150,7 +133,7 @@ def launch(app, workspace=None):
 
 
 def main():
-    if close_open_menu():
+    if hfmenu.close_open("launcher"):
         return
     cfg = load()
     if not cfg.get("enabled", False):
