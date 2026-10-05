@@ -1,26 +1,30 @@
 #!/usr/bin/env python3
-"""hypeForge applet 1 · Workspaces Management (D-47).
+"""hypeForge applet 1 · Workspaces Management (D-47, D-48, D-49).
 
 Workspaces that span every screen. Sway gives each screen its own workspaces, so each of ours
-is one Sway workspace per screen, kept in step:
+is one Sway workspace per screen — a "cell" of a grid, workspaces down, screens across:
 
-    screen 1 (main)  "1:Daily"   "2:Work"   ...
-    screen 2         "11:Daily"  "12:Work"  ...
-    screen 3         "21:Daily"  "22:Work"  ...
+                     screen 1 (main)   screen 2     screen 3
+    1. Daily         "1:Daily"         "11:Daily"   "21:Daily"
+    2. Work          "2:Work"          "12:Work"    "22:Work"
+    ...
 
-The bar hides the numbers (strip_workspace_numbers), so each screen shows "Daily Work ...".
+A screen can SHARE one space between several workspaces (the matrix, D-49): those cells all
+point to one Sway workspace on that screen ("101:Shared"), so switching between them leaves
+that screen as it is while the others change.
 
     hypeforge-workspaces            run: set up Sway, then keep the screens in step
-    hypeforge-workspaces go N       switch every screen to workspace N   (Win + N)
+    hypeforge-workspaces go N       switch every screen to workspace N   (Win + N, a bar click)
     hypeforge-workspaces move N     send the focused window to workspace N, same screen
     hypeforge-workspaces reload     re-read the settings file
 
-Settings: ~/.config/hypeforge/applets/workspaces.toml (enabled, screens, workspace names).
+Settings: ~/.config/hypeforge/applets/workspaces.toml (enabled, screens, names, sharing).
 Only Python's standard library: it talks to Sway over Sway's own socket (the i3 IPC protocol).
 """
 
 import json
 import os
+import re
 import shlex
 import signal
 import socket
@@ -31,8 +35,11 @@ from pathlib import Path
 
 CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets/workspaces.toml"
 BAR_FRAGMENT = CONFIG.with_name("workspaces.waybar.json")  # read by the bar (Waybar "include")
-PIDFILE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-workspaces.pid"
-MOD = "Mod4"  # the Windows key
+RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
+PIDFILE = RUNTIME / "hypeforge-workspaces.pid"
+CURRENT = RUNTIME / "hypeforge-workspaces.current"  # the workspace on screen now (1, 2, …)
+MOD = "Mod4"        # the Windows key
+BAR_SIGNAL = 8      # Waybar redraws the workspace buttons on SIGRTMIN+8
 
 MAGIC = b"i3-ipc"
 RUN_COMMAND, GET_WORKSPACES, SUBSCRIBE = 0, 1, 2
@@ -75,66 +82,105 @@ class Sway:
         return self.ask(RUN_COMMAND, "; ".join(commands))
 
 
-# ---- Settings --------------------------------------------------------------------------------
+# ---- Settings: the grid ----------------------------------------------------------------------
 
-def load():
-    with open(CONFIG, "rb") as f:
-        cfg = tomllib.load(f)
-    names = [w["name"] for w in cfg.get("workspace", [])][:9]
-    return bool(cfg.get("enabled", False)), list(cfg.get("screens", [])), names
+class Grid:
+    """Which Sway workspace each (workspace, screen) cell shows."""
 
+    def __init__(self):
+        with open(CONFIG, "rb") as f:
+            cfg = tomllib.load(f)
+        self.enabled = bool(cfg.get("enabled", False))
+        self.screens = list(cfg.get("screens", []))
+        self.names = [w["name"] for w in cfg.get("workspace", [])][:9]
+        # share: { "DP-3" = [["Daily", "Work"], …] } — each inner list shares one space
+        self.cells = {}  # (index, screen position) -> Sway workspace name
+        for p, screen in enumerate(self.screens):
+            groups = cfg.get("share", {}).get(screen, [])
+            for i, name in enumerate(self.names, 1):
+                self.cells[i, p] = f"{i + 10 * p}:{name}"
+            for g, group in enumerate(groups, 1):
+                members = [self.names.index(n) + 1 for n in group if n in self.names]
+                if len(members) > 1:
+                    for i in members:
+                        self.cells[i, p] = f"{100 + 10 * p + g}:Shared"
+        # Sway workspace name -> the workspace index it means (None for a shared one)
+        self.index_of = {}
+        for (i, p), ws in self.cells.items():
+            self.index_of[ws] = None if ws in self.index_of or ws.endswith(":Shared") else i
 
-def member(index, screen_pos, name):
-    """Sway's name for workspace `index` (1-based) on screen `screen_pos` (0-based)."""
-    return f"{index + 10 * screen_pos}:{name}"
+    def usable(self):
+        return self.enabled and self.names and self.screens
 
 
 def quoted(s):
     return '"' + s.replace('"', '\\"') + '"'
 
 
-# ---- What the keys call ----------------------------------------------------------------------
+def current():
+    try:
+        return int(CURRENT.read_text())
+    except (OSError, ValueError):
+        return 1
 
-def focused_screen(sway, screens):
+
+def set_current(index):
+    if current() != index or not CURRENT.exists():
+        CURRENT.write_text(str(index))
+        os.system(f"pkill -RTMIN+{BAR_SIGNAL} -x waybar")  # the buttons redraw
+
+
+# ---- What the keys and the bar call ----------------------------------------------------------
+
+def focused_screen(sway, grid):
     for ws in sway.ask(GET_WORKSPACES):
         if ws["focused"]:
-            return screens.index(ws["output"]) if ws["output"] in screens else 0
+            return grid.screens.index(ws["output"]) if ws["output"] in grid.screens else 0
     return 0
 
 
-def go(sway, screens, names, index):
-    """Every screen to workspace `index`; the keyboard stays on the screen it was on."""
-    if not 1 <= index <= len(names):
+def go(sway, grid, index):
+    """Every screen to workspace `index`; a shared screen stays; the keyboard stays put."""
+    if not 1 <= index <= len(grid.names):
         return
-    here = focused_screen(sway, screens)
-    name = names[index - 1]
-    others = [quoted(member(index, p, name)) for p in range(len(screens)) if p != here]
-    sway.run(*[f"workspace {w}" for w in others], f"workspace {quoted(member(index, here, name))}")
+    here = focused_screen(sway, grid)
+    shown = {ws["output"]: ws["name"] for ws in sway.ask(GET_WORKSPACES) if ws["visible"]}
+    commands = [f"workspace {quoted(grid.cells[index, p])}"
+                for p, screen in enumerate(grid.screens)
+                if p != here and shown.get(screen) != grid.cells[index, p]]
+    commands.append(f"workspace {quoted(grid.cells[index, here])}")
+    sway.run(*commands)
+    set_current(index)
 
 
-def move(sway, screens, names, index):
-    if not 1 <= index <= len(names):
+def move(sway, grid, index):
+    if not 1 <= index <= len(grid.names):
         return
-    here = focused_screen(sway, screens)
-    sway.run(f"move container to workspace {quoted(member(index, here, names[index - 1]))}")
+    here = focused_screen(sway, grid)
+    sway.run(f"move container to workspace {quoted(grid.cells[index, here])}")
 
 
-# ---- The bar --------------------------------------------------------------------------------
+# ---- The bar ---------------------------------------------------------------------------------
 
-def write_bar(screens, names):
-    """Waybar's workspace buttons: every workspace always shown, as "1. Daily", on each screen."""
-    persistent, labels = {}, {}
-    for i, name in enumerate(names, 1):
-        for p, screen in enumerate(screens):
-            persistent[member(i, p, name)] = [screen]
-            labels[member(i, p, name)] = f"{i}. {name}"
-    fragment = {"sway/workspaces": {
-        "all-outputs": False,
-        "disable-scroll": True,
-        "persistent-workspaces": persistent,
-        "format": "{icon}",
-        "format-icons": {"high-priority-named": list(labels), **labels},
-    }}
+def write_bar(grid):
+    """Waybar's buttons: every workspace, always, as "1. Daily", the one on screen marked
+    "active". Drawn by us (not Waybar's own Sway buttons), so a shared screen still shows all."""
+    me = shlex.quote(os.path.abspath(sys.argv[0]))
+    fragment = {"modules-left": []}
+    for i, name in enumerate(grid.names, 1):
+        label = f"{i}. {name}"
+        on = shlex.quote(json.dumps({"text": label, "class": "active"}))
+        off = shlex.quote(json.dumps({"text": label, "class": "idle"}))
+        module = f"custom/ws#w{i}"
+        fragment["modules-left"].append(module)
+        fragment[module] = {
+            "exec": f'[ "$(cat {shlex.quote(str(CURRENT))} 2>/dev/null)" = {i} ] && echo {on} || echo {off}',
+            "return-type": "json",
+            "interval": "once",
+            "signal": BAR_SIGNAL,
+            "on-click": f"{me} go {i}",
+            "tooltip": False,
+        }
     text = json.dumps(fragment, indent=2) + "\n"
     if not BAR_FRAGMENT.exists() or BAR_FRAGMENT.read_text() != text:
         BAR_FRAGMENT.write_text(text)
@@ -143,38 +189,35 @@ def write_bar(screens, names):
 
 # ---- Setting Sway up -------------------------------------------------------------------------
 
-def setup(sway, screens, names):
-    write_bar(screens, names)
+def setup(sway, grid):
+    write_bar(grid)
     me = shlex.quote(os.path.abspath(sys.argv[0]))
     commands = []
-    for i, name in enumerate(names, 1):
-        for p, screen in enumerate(screens):
-            commands.append(f"workspace {quoted(member(i, p, name))} output {screen}")
+    for (i, p), ws in grid.cells.items():
+        commands.append(f"workspace {quoted(ws)} output {grid.screens[p]}")
+    for i in range(1, len(grid.names) + 1):
         commands.append(f"bindsym --no-warn {MOD}+{i} exec {me} go {i}")
         commands.append(f"bindsym --no-warn {MOD}+Shift+{i} exec {me} move {i}")
     sway.run(*commands)
 
-    # Bring what is open into workspace 1: the workspace each screen shows now is renamed, so
-    # its windows come along. Anything already one of ours is left alone.
-    ours = {member(i, p, n) for i, n in enumerate(names, 1) for p in range(len(screens))}
-    existing = {ws["name"] for ws in sway.ask(GET_WORKSPACES)}
+    # Nothing gets stranded: a Sway workspace the grid no longer uses (Sway's own "1" from before
+    # the applet, "1:Daily" once screen 1 shares Daily, "101:Shared" once it stops sharing)
+    # hands its windows to the cell that now stands in its place.
+    start = current() if current() <= len(grid.names) else 1
     for ws in sway.ask(GET_WORKSPACES):
-        if ws["visible"] and ws["name"] not in ours and ws["output"] in screens:
-            target = member(1, screens.index(ws["output"]), names[0])
-            if target not in existing:
-                sway.run(f"rename workspace {quoted(ws['name'])} to {quoted(target)}")
-                existing.add(target)
-    go(sway, screens, names, 1)
+        if ws["name"] in grid.index_of or ws["output"] not in grid.screens:
+            continue
+        p = grid.screens.index(ws["output"])
+        number = ws["name"].split(":", 1)[0]
+        i = int(number) % 10 if number.isdigit() and int(number) < 100 and ":" in ws["name"] else start
+        target = grid.cells.get((i, p), grid.cells[start, p])
+        sway.run(f'[workspace="^{re.escape(ws["name"])}$"] move container to workspace {quoted(target)}')
+    CURRENT.unlink(missing_ok=True)  # so set_current redraws the bar
+    go(sway, grid, start)
 
 
-def group_of(name):
-    """Workspace index (1-based) of one of our Sway workspace names, or None."""
-    number = name.split(":", 1)[0]
-    return int(number) % 10 if number.isdigit() and ":" in name else None
-
-
-def keep_in_step(screens, names):
-    """Whenever a screen shows another workspace (a key, a bar click), pull the others along."""
+def keep_in_step(grid):
+    """A screen switched some other way (a command, an old binding): pull the others along."""
     events = Sway()
     events.ask(SUBSCRIBE, json.dumps(["workspace"]))
     control = Sway()
@@ -183,19 +226,20 @@ def keep_in_step(screens, names):
         if kind != EVENT_WORKSPACE:
             continue
         if event.get("change") == "reload":  # `swaymsg reload` drops our keys: set them again
-            enabled, screens, names = load()
-            if not enabled:
+            grid = Grid()
+            if not grid.usable():
                 return
-            setup(control, screens, names)
+            setup(control, grid)
             continue
         if event.get("change") != "focus":
             continue
-        index = group_of(event["current"]["name"])
-        if index is None or index > len(names):
+        index = grid.index_of.get(event["current"]["name"])
+        if index is None:  # a shared space, or not ours: it belongs to no single workspace
             continue
-        shown = {ws["output"]: group_of(ws["name"]) for ws in control.ask(GET_WORKSPACES) if ws["visible"]}
-        if any(shown.get(s) != index for s in screens if s in shown):
-            go(control, screens, names, index)
+        shown = {ws["output"]: ws["name"] for ws in control.ask(GET_WORKSPACES) if ws["visible"]}
+        if index != current() or any(shown.get(s) != grid.cells[index, p]
+                                     for p, s in enumerate(grid.screens) if s in shown):
+            go(control, grid, index)
 
 
 # ---- One copy at a time ----------------------------------------------------------------------
@@ -211,10 +255,10 @@ def already_running():
 
 def main():
     args = sys.argv[1:]
-    enabled, screens, names = load()
+    grid = Grid()
     if args and args[0] in ("go", "move") and len(args) == 2:
-        if enabled and names:
-            (go if args[0] == "go" else move)(Sway(), screens, names, int(args[1]))
+        if grid.usable():
+            (go if args[0] == "go" else move)(Sway(), grid, int(args[1]))
         return
     if args == ["reload"]:
         pid = already_running()
@@ -224,7 +268,7 @@ def main():
     if args:
         sys.exit(__doc__)
 
-    if not enabled or not names or not screens:
+    if not grid.usable():
         print("hypeforge-workspaces: switched off in", CONFIG)
         return
     if already_running():
@@ -235,8 +279,8 @@ def main():
     signal.signal(signal.SIGHUP, lambda *_: (PIDFILE.unlink(missing_ok=True),
                                              os.execv(sys.executable, [sys.executable] + sys.argv)))
     try:
-        setup(Sway(), screens, names)
-        keep_in_step(screens, names)
+        setup(Sway(), grid)
+        keep_in_step(grid)
     finally:
         PIDFILE.unlink(missing_ok=True)
 

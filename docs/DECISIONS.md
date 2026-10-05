@@ -7,6 +7,18 @@
 
 ## 2026-10-04
 
+### D-49 · The workspace matrix: a screen can share one space between workspaces
+**Decided by Javier:** *"I want to have the possibility to tell the screens exactly which workspace they will share… Screen 1… part of all workspaces with the apps I have open… while the other 2 screen will hold different apps on each workspace… It is kind of a matricial relationship, to activate and deactivate at will by the user using our hypeForge Board."* Then: *"matrix first, all screens own for now."*
+
+**What it means:**
+- **A grid:** workspaces down, screens across; each cell is either the workspace's own space on that screen, or a space **shared** with other workspaces on the same screen. Switching between workspaces that share a screen leaves that screen as it is.
+- **Settings:** a `[share]` section in `workspaces.toml`, one line per screen, each `[ … ]` a group (`"DP-3" = [["Daily", "Work", "Entertainment"]]`). All empty for now ("all own"). The Board will show it as a grid of switches.
+- **Sharing works down a screen, never across screens:** a window can only be in one place.
+- **Nothing gets stranded:** when the grid changes, windows in a space no longer used move to the cell that replaced it (tested on and off).
+- **The bar's buttons are drawn by the applet** (one Waybar module per workspace), so every screen always shows all of them whatever the grid says; the routine keeps the workspace on screen in `$XDG_RUNTIME_DIR/hypeforge-workspaces.current` and signals Waybar to redraw.
+- **Window placement (applet 2) must respect shared cells**, so it comes after this.
+- Javier's test: *"everything works, the highlight follows on all three. Both clicking and Win+numbers."*
+
 ### D-48 · Workspaces Management (applet 1) and Waybar as the bar for now
 **Decided by Javier:** six names, *"Daily, Work, Entertainment, Gaming, Monitoring, Settings (for now — but later we should be able to add, edit, delete workspaces)"*, with *"a flag to switch it on and off"*, shaped as *"a config file with variables, and a routine that reads them and delivers to sway"*, so the Board later becomes *"the visual handler of the config file."* The bar: *"can the workspaces name appear in the top bar, one next to the other, for me to click on them… we can color the active workspace"*, numbered *"1. Daily, 2. Work"*. Our own bar later: *"we can start using one that exist, and then when the setup is done, include it as one of our hypeForge development."*
 

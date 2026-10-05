@@ -1,5 +1,5 @@
 // hypeForge — the top bar in the Sway session (Waybar; RECIPE job 1, D-17).
-// The workspace buttons are written by applet 1 (Workspaces Management, D-47) from
+// The workspace buttons are drawn by applet 1 (Workspaces Management, D-47–D-49) from
 // ~/.config/hypeforge/applets/workspaces.toml, into the file included below.
 {
   "include": ["~/.config/hypeforge/applets/workspaces.waybar.json"],
@@ -7,7 +7,7 @@
   "position": "top",
   "height": 32,
   "spacing": 0,
-  "modules-left": ["sway/workspaces"],
+  // "modules-left" (the workspace buttons) comes from the included file
   "modules-center": [],
   "modules-right": ["clock"],
   "clock": {

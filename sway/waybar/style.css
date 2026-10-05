@@ -18,25 +18,21 @@ window#waybar {
   color: @hf_text;
 }
 
-#workspaces button {
+/* The workspace buttons, drawn by applet 1 (one module per workspace: custom/ws#w1 …) */
+#custom-ws {
   padding: 0 12px;
   color: @hf_subtext;
   background: transparent;
 }
 
-#workspaces button:hover {
+#custom-ws:hover {
   background: @hf_inactive;
   color: @hf_text;
 }
 
-/* The workspace on screen now: it is "visible" on all three screens at once */
-#workspaces button.visible {
+/* The workspace on screen now */
+#custom-ws.active {
   background: @hf_active;
-  color: @hf_bar;
-}
-
-#workspaces button.urgent {
-  background: #f38ba8;
   color: @hf_bar;
 }
 

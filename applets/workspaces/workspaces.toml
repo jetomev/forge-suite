@@ -32,3 +32,16 @@ name = "Monitoring"
 
 [[workspace]]
 name = "Settings"
+
+# Sharing — the matrix (D-49). A screen can share ONE space between several workspaces:
+# switching between them leaves that screen as it is (same apps), while the other screens
+# change. One line per screen; each [ … ] is a group that shares one space. Empty = every
+# workspace has its own space on that screen. Sharing works down a screen, never across
+# screens (a window can only be in one place).
+#
+# Example — screen 1 keeps the same apps in Daily, Work and Entertainment:
+#   "DP-3" = [["Daily", "Work", "Entertainment"]]
+[share]
+"DP-3" = []
+"DP-2" = []
+"DP-1" = []
