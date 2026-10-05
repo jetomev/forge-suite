@@ -7,6 +7,16 @@
 
 ## 2026-10-04
 
+### D-45 · Sway is the new base, tried as an extra login session
+**Decided by Javier:** *"A, let's go with Sway"* (from the research, `docs/research/2026-10-04-tiling-base-choice.md`), and *"new session then.... excellent to keep using this one as main."*
+
+**What it means:**
+- **Sway** (from Arch `extra`, installed with nog): mature, plain-text settings, explicit sync for NVIDIA since 1.11, the widest set of terminal companion tools. Started with `--unsupported-gpu` (the developers' label for closed drivers, not a missing feature).
+- **A new login choice next to the others.** The current session stays Javier's main desktop meanwhile; Plasma stays the fallback (D-6). Sway replaces them only when it is ready.
+- **Barebones first:** tiling, a terminal, the three screens at 144 Hz (by connector: DP-2 left, DP-3 middle, DP-1 right — the three share one name and serial), nothing else. Then the first test: Chrome with a video, a Discord screen share, WoW full screen, brightness.
+- **Plain looks are accepted for now:** no blur, rounded corners or animations; our identity comes from colour, contrast, fonts, the bar and the terminal (Phase 12). SwayFX (same settings, adds effects) stays a later option.
+- **If Sway fails the test on this card:** niri next, then i3 (the research's fallbacks).
+
 ### D-44 · Start again: barebones tiling, terminal apps first, our own look
 **Decided by Javier:** *"I know we invested time on setting up the setup we have right now, but, honest. I do not like it. I want to start again"* … *"I want something that it's us, as everything we are building. We have come too far to use standard stuff that doesn't differentiate you but just makes you look like everyone else."* … *"let's take it one step at a time, let's build it slowly, take our time to select, customize, and make things work."*
 

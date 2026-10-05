@@ -11,7 +11,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 *D-44 (Javier, 4 Oct 2026): "I want to start again" — barebones tiling, terminal apps first, our own look, one step at a time. Phases 10–14 are the new path; everything below them is the first attempt, kept as history and material.*
 - [x] D-44 recorded (the restart; replaces D-39's "graphical settings apps" and D-40's Noctalia)
 - [x] Research done (4 Oct): top pick **Sway** 1.12, runner-up **niri** 26.04; i3 the X11 safety net; Hyprland, dwm, river, MangoWC, Qtile not now. Hyprland, Sway, i3, dwm, river, niri… on NVIDIA (RTX 3060, 3 × 144 Hz), maturity, ease, tiling, terminal ecosystem, theming, community (`docs/research/2026-10-04-tiling-base-choice.md`)
-- [ ] Javier chooses the base
+- [x] Javier chose **Sway** (D-45): a new login session; the current one stays the main desktop meanwhile
 - [ ] Barebones session next to Plasma on this computer: tiling, a terminal, three monitors at 144 Hz, NVIDIA right, nothing else
 
 ## Phase 11 · The jobs, one by one, terminal first
