@@ -27,9 +27,9 @@ window_type = '^(dialog|utility|toolbar|splash)$'
 
 # ---- Small tools on this computer ----
 [[float]]
-name = "Calculator (KCalc)"
-app_id = '^org\.kde\.kcalc$'
-size = "16 ppt 40 ppt"
+name = "Calculator (Numbat, in its own terminal window)"
+app_id = '^numbat$'
+size = "25 ppt 45 ppt"
 
 [[float]]
 name = "Network Connections"

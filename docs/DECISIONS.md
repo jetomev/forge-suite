@@ -7,6 +7,16 @@
 
 ## 2026-10-05
 
+### D-59 · Every setting is a Forge app; hypeForge Settings is the control centre that holds them
+**Decided by Javier:** *"All apps that we use that can only be configured by touching a config file should be part of the Forge Suite… the workspace manager = Forge app, monitor(s) manager = Forge app, window snap manager = Forge app, launcher = Forge app… same for all rules, help, idle, lock… cliamp settings, Waybar settings, fuzzel settings, Alacritty, etc. Then hypeForge Settings is a Control Center from where we can open the apps, like the KDE Settings window. A list of configurable functionalities and apps on a menu to the left, and then in the display area to the right, the apps open (an inside terminal, where we will run the apps)… If we modify the Forge app, it is transparent for the rest, especially for the holder… unless they connect."*
+
+**What it means:**
+- **Each configurable thing is its own Forge Suite app** — our applets (workspaces, monitors, window placement/snap, launcher, rules, help, idle, lock) and every outside program set up only by a config file (cliamp, Waybar, fuzzel, gtklock, Alacritty → alacrittyForge, GRUB → grubForge…). Each is a full application: own repo, package, version; runs on its own too.
+- **hypeForge Settings** is the control centre: a list on the left, and on the right a terminal pane where the chosen Forge app runs, with its own forgekit menu bar. It holds the apps; it does not copy them.
+- **forgekit is the visual standard** every app follows (same look, widgets, settings handling), so swapping one app is invisible to the rest.
+- **Proposed by Claude, to settle as we build:** (1) the settings file is the contract between apps that connect (they read each other's files, never each other's code); (2) a running helper (e.g. the workspaces helper) stays separate from the Forge app that sets it up; (3) the release cost of many small apps — decide later whether the smallest share one repository; (4) a spike first: a full Forge app inside forgekit's terminal pane (colours, mouse, keys).
+- The Forge Suite candidate list becomes the **roadmap**, published on kognogos.org with the upcoming apps. hypeForge's description, README, banner and images, on GitHub and on kognogos.org, are rewritten for the Sway path (order: text first, then the banner, each shown to Javier before it goes public).
+
 ### D-58 · "hypeForge Settings" is the name; the lock screen and idle timers are set there
 **Decided by Javier:** *"Add this one to be set up using hypeForge Board — let's call it better 'hypeForge Settings', another to the bag, same for the screen idle and lock, to be configured using hypeForge Settings."*
 

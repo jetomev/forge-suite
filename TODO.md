@@ -28,7 +28,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] **Applet 4 · App Sections** (D-52): `applets/sections/` on Win + Space — first screen = the workspaces + All apps + Lock Screen · Log Out · Reboot · Shutdown (asks first); a section pick opens the app in that workspace — Javier: "Looking great so far!"
 - [x] Favourites (Javier, 10-05): 18 apps in his order in `~/.config/hypeforge/applets/sections.toml`, all 18 found by the launcher; new entries `desktop/applications/mc.desktop` (Midnight Commander) + `claude-terminal.desktop` (Claude Code in Alacritty); "hypeForge Settings" added when hypeForge Settings exists. Javier: "Yes, perfect!"
 - [x] Lock screen (RECIPE job 5, D-57): **gtklock + swayidle**: swaylock tried first (its ring was not wanted), then gtklock (password box with dots, big clock; 100 KiB, GTK3 already here), background = the wallpaper blurred once (`assets/lock/`); Win + Escape and Lock Screen in Win + Space lock; locks after 30 min, screens off after 60, no sleep (Javier); KognogOS wallpaper; Javier wanted a password box, not the ring → **gtklock** (100 KiB, GTK3 already here) (`sway/swaylock/config`). Javier: "it is perfect my friend". Then remove hyprlock + swaylock (nog)
-- [ ] Replace the KDE apps (D-57): calculator (KCalc) → a terminal calculator; music (Elisa) → a terminal Winamp-style player (cliamp installed, untried)
+- [ ] Replace the KDE apps (D-57): **numbat** (calculator, 5.7 MB, floats) in KCalc's place (**Javier to confirm**); **cliamp** (Winamp-style) in Elisa's, with the playlist "Music (tphome00)" → `/mnt/tphome00/media2/music` (1,209 songs, read-only) — Javier: "It works well". Own entries `desktop/applications/{numbat,cliamp}.desktop`
+- [ ] **Public update (D-59, order agreed):** (1) GitHub description + topics + README text and badges for the Sway path → shown to Javier; (2) new banner + images, designed and approved first; (3) kognogos.org hypeForge section + "In the pipeline" with the upcoming Forge apps, shown before it goes live
 - [x] **Applet 1, matrix** (D-49): a screen can share one space between workspaces (`[share]` in `workspaces.toml`; all own for now); bar buttons drawn by the applet; windows follow when the grid changes — Javier: "everything works, the highlight follows on all three"
 - [x] **Applet 2 · Window Placement** (D-50): `applets/placement/` — fill order 1 middle → 2 beside → 3 left → 4 beside → 5 right → 6 beside → 7 under 4 → 8 under 6, in every workspace, counting a shared screen too; 9+ go round again as tabs — Javier: "all works perfect!"
 - [ ] Later (Javier, 10-04, "for when we get there"): **Alt + Tab** across the apps of the workspace on all 3 screens, with window pictures (applet candidate)
@@ -43,8 +44,12 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Apps that draw their own minimise/maximise/close bar (Chrome…): switch it off where the app allows
 - [ ] Try SwayFX for rounded corners (`chaotic-aur/swayfx` 0.6, same config) — later, separate trial
 - [ ] Go through `docs/RECIPE.md`'s ~31 jobs again with Javier, one at a time: a terminal (CLI/TUI) app first wherever one exists
-- [ ] Keep a list of **Forge Suite candidates**: every job with no good terminal app
-  - **Password helper** (D-56, Javier 10-05): the admin pop-up (polkit) + the `sudo`/`nog` password window, in a floating terminal with forgekit's password box; closes F-44 (#26) + F-42 (#24). Name: Javier's call
+- [ ] **Forge Suite roadmap (D-59)** — every configurable thing becomes its own Forge app, held by hypeForge Settings (names: Javier's call):
+  - Our applets as apps: Workspaces · Monitors · Window placement / snap · Launcher (App Sections) · Window Rules · Help & Keys · Idle · Lock screen
+  - Outside programs set up only by a config file: cliamp (music folders, providers… **needs a long conversation first**) · Waybar · fuzzel · gtklock · Alacritty (= alacrittyForge ✅) · GRUB (= grubForge ✅)
+  - **Password helper** (D-56): the admin pop-up (polkit) + the `sudo`/`nog` password window; closes F-44 (#26) + F-42 (#24)
+  - First: a spike — a full Forge app inside forgekit's terminal pane (colours, mouse, keys)
+- [ ] **hypeForge Settings = the control centre** (D-59): list on the left, the chosen Forge app running in a terminal pane on the right
 
 ## Phase 12 · Our own look
 - [ ] **Applet 3 · Folder tabs** (D-47): small left-aligned tabs like folders in a holder, rounded tops, our colours; replaces Sway's even tab row

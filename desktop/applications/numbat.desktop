@@ -1,0 +1,14 @@
+[Desktop Entry]
+# hypeForge's copy of Numbat's entry (replaces /usr/share/applications/numbat.desktop by name).
+# The calculator in place of KCalc (Javier, 2026-10-05, D-57: terminal first). Alacritty names
+# its window "numbat", so it gets its own icon and the Window Rules applet can float it.
+Type=Application
+Name=Numbat
+GenericName=Calculator
+Comment=Numbat, the terminal calculator that understands units
+TryExec=numbat
+Exec=alacritty --class numbat -e numbat
+Icon=numbat
+Terminal=false
+StartupWMClass=numbat
+Categories=Utility;Calculator;Math;

@@ -1,0 +1,14 @@
+[Desktop Entry]
+# hypeForge's copy of cliamp's entry (replaces /usr/share/applications/cliamp.desktop by name).
+# The music player in place of Elisa (Javier, 2026-10-05, D-57: terminal first) — a Winamp
+# 2.x style player. Alacritty names its window "cliamp", so it gets its own icon.
+Type=Application
+Name=cliamp
+GenericName=Music Player
+Comment=cliamp, the retro terminal music player
+TryExec=cliamp
+Exec=alacritty --class cliamp -e cliamp
+Icon=cliamp
+Terminal=false
+StartupWMClass=cliamp
+Categories=Audio;Music;Player;AudioVideo;
