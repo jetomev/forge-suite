@@ -1,4 +1,4 @@
-// hypeForge — the top bar in the Sway session (Waybar; RECIPE job 1, D-17).
+// hypeForge — the top bar in the Sway session (Waybar).
 // The workspace buttons are drawn by applet 1 (Workspaces Management, D-47–D-49) from
 // ~/.config/hypeforge/applets/workspaces.toml, into the file included below.
 {

@@ -20,7 +20,7 @@ set $right l
 # Your preferred terminal emulator
 set $term alacritty    # hypeForge: Alacritty (foot is not installed)
 # Your preferred application launcher
-# hypeForge: fuzzel (RECIPE job 2; Javier 2026-10-04), a small graphical search box of apps.
+# hypeForge: fuzzel (Javier 2026-10-04), a small graphical search box of apps.
 # Win + Space, and Win + D as before. (The first try, sway-launcher-desktop, was a list inside a
 # terminal: it felt like a terminal, and terminal apps did not open.) Settings: sway/fuzzel/.
 set $menu exec fuzzel --config ~/.config/sway/fuzzel/fuzzel.ini
@@ -28,7 +28,7 @@ set $menu exec fuzzel --config ~/.config/sway/fuzzel/fuzzel.ini
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-# hypeForge: the KognogOS wallpaper (Javier, 2026-10-04; RECIPE job 7), shown by swaybg.
+# hypeForge: the KognogOS wallpaper (Javier, 2026-10-04), shown by swaybg.
 # The Semi logo in Catppuccin Mocha, the palette in use; the others: /usr/share/wallpapers/kognog/
 output * bg "/usr/share/wallpapers/kognog/Kognog OS Semi - Logo Catpuccin Mocha.png" fill
 # hypeForge: the three Sceptre Y27 screens share one name and serial, so they are named by
@@ -76,7 +76,7 @@ gaps outer 0
 # hypeForge (Javier, 2026-10-05, D-57): lock after 30 minutes untouched, screens off after
 # 60, back on at the first touch. No sleep or suspend: nothing here puts the computer to sleep.
 # The lock screen's look: ~/.config/gtklock/ (style.css).
-# hypeForge: notifications (RECIPE job 3, Javier 2026-10-05): mako, styled in ~/.config/mako/config
+# hypeForge: notifications (Javier 2026-10-05): mako, styled in ~/.config/mako/config
 exec mako
 
 # hypeForge: clipboard history (applet 9, Javier 2026-10-05) — every copy is kept by cliphist
@@ -295,7 +295,7 @@ bindsym $mod+r mode "resize"
 # Status Bar:
 #
 # Read `man 5 sway-bar` for more information about this section.
-# hypeForge: the top bar is Waybar (RECIPE job 1): every workspace always shown and clickable,
+# hypeForge: the top bar is Waybar : every workspace always shown and clickable,
 # the active one coloured (Javier, 2026-10-04). Its settings: ~/.config/sway/waybar/.
 # Started directly (no bar { } block, so Sway's own bar stays off).
 exec waybar -c ~/.config/sway/waybar/config.jsonc -s ~/.config/sway/waybar/style.css

@@ -21,11 +21,11 @@ window#waybar {
 /* The launcher button: the KognogOS emblem as the button's background (Javier, 2026-10-05).
    Swap the picture at ~/.config/hypeforge/bar/launcher.png. */
 #custom-launcher {
-  min-width: 24px;
+  min-width: 19px;
   margin: 0 6px 0 10px;
   padding: 0 4px;
   background-image: url("../../hypeforge/bar/launcher.png");
-  background-size: 22px 22px;
+  background-size: 17px 17px;
   background-repeat: no-repeat;
   background-position: center;
 }

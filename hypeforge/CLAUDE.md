@@ -3,7 +3,7 @@
 *How this project is built, tested and shipped. Written for the AI co-developer, and public on purpose: it is part of how the human + AI method is documented.*
 
 ## What it is
-The KognogOS desktop on **Sway** (D-45): tiling, terminal apps first. Each feature is a small applet (`applets/`, D-47); every setting becomes its own Forge Suite app, held by **hypeForge Settings**, the control centre (D-59). The Hyprland attempt (28 Sep – 3 Oct 2026) is history in `desktop/` and the decision log (D-44). **There is no installer app yet.**
+The KognogOS desktop on **Sway** (D-45): tiling, terminal apps first. Each feature is a small applet (`applets/`, D-47); every setting becomes its own Forge Suite app, held by **hypeForge Settings**, the control centre (D-59). **There is no installer app yet.**
 
 ## Non-negotiables (from docs/DECISIONS.md)
 - **The three-part rule (D-57):** terminal apps first (1), Sway-compatible (2), smallest install (3). Nothing that brings KDE, GNOME or Hyprland pieces back (D-56): **KognogOS ships with Sway only.**
@@ -14,7 +14,7 @@ The KognogOS desktop on **Sway** (D-45): tiling, terminal apps first. Each featu
 - **Help moves with the desktop** (Javier, 2026-10-05): every new or changed feature updates its guide page in `applets/help/guide/` (and `pages.toml`) in the same commit — the key chart is checked by a script, the guide is not.
 - **The key chart is checked on every commit** (`scripts/check-keys.py`, the pre-commit hook): a key added in `sway/config` must be in `applets/help/keys.toml`.
 - **Must be readable on a plain text screen** (`TERM=linux`).
-- **We learn from every project we use, and we never compare** (D-27). No "better than" or "unlike X" framing anywhere. Credit anything adapted and keep its notice.
+- **We learn from every project we use, and we never compare** . No "better than" or "unlike X" framing anywhere. Credit anything adapted and keep its notice.
 
 ## Documentation, at every step
 - A new decision goes in `docs/DECISIONS.md`: newest first, numbered D-n, dated, with who decided.
@@ -31,4 +31,4 @@ The KognogOS desktop on **Sway** (D-45): tiling, terminal apps first. Each featu
 - The GitHub Release goes out before the AUR package.
 
 ## Assets
-`python3 scripts/make-banner.py` regenerates `assets/banner.svg` and `assets/snap-keys.svg`. Render them with `rsvg-convert` and look at the result before committing.
+`assets/kognogos-emblem.png` (the bar's launcher button, the README), `assets/lock/` (the lock screen's blurred wallpaper). The new banner and social preview come with the public update, designed and approved first.

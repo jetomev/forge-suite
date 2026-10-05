@@ -1,4 +1,4 @@
-# hypeForge — notifications in the Sway session: mako (RECIPE job 3, D-57; Javier 2026-10-05).
+# hypeForge — notifications in the Sway session: mako (D-57, Javier 2026-10-05).
 # Copied to ~/.config/mako/config. Top right, under the bar, on the screen in use; 5 seconds;
 # urgent ones stay until clicked. Catppuccin Mocha. Click: close it. Win + N closes them all,
 # Win + Shift + N brings back the last one closed (sway/config). A notifications Forge app

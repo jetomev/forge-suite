@@ -1,5 +1,0 @@
-# tphome-linux: NVIDIA RTX 3060 settings for the hypeForge session, read by uwsm at login
-# (D-25, D-28). From the Hyprland wiki's NVIDIA page; nvidia_drm.modeset=1 is already on.
-export LIBVA_DRIVER_NAME=nvidia
-export __GLX_VENDOR_LIBRARY_NAME=nvidia
-export NVD_BACKEND=direct

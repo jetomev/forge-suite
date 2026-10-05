@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="hypeForge — the KognogOS desktop: Sway tiling, terminal apps first, every setting a Forge app" width="100%">
+  <img src="assets/kognogos-emblem.png" alt="KognogOS emblem" width="96">
 </p>
 
 <p align="center">
@@ -90,7 +90,7 @@ The Forge apps already shipped, [grubForge](https://github.com/jetomev/grubforge
 
 ## Built for KognogOS, works on any Arch
 
-hypeForge becomes **the KognogOS desktop**, and KognogOS will ship with it alone. What moving off Plasma changes is tracked in the open ([KOGNOGOS-IMPACT](docs/KOGNOGOS-IMPACT.md)). Some things carry over unchanged: nog and its tiers, the Forge apps, Alacritty with fish, the boot splash, the GRUB theme and the Catppuccin look. It is also meant for **any Arch Linux install**.
+hypeForge becomes **the KognogOS desktop**, and KognogOS will ship with it alone. Some things carry over unchanged: nog and its tiers, the Forge apps, Alacritty with fish, the boot splash, the GRUB theme and the Catppuccin look. It is also meant for **any Arch Linux install**.
 
 ---
 
@@ -100,7 +100,6 @@ hypeForge is built on other people's work, and we are grateful for it.
 
 - The **[Sway](https://swaywm.org)** team and the wlroots developers, for the ground everything stands on.
 - **Every developer whose app hypeForge uses**: Waybar, fuzzel, gtklock, swayidle, swaybg, Alacritty, Midnight Commander, Fresh, numbat, cliamp, and all the others.
-- [**Omarchy**](https://github.com/basecamp/omarchy), by DHH and Basecamp, and the **Hyprland** and [**Noctalia**](https://github.com/noctalia-dev/noctalia) teams, whose work taught us a great deal in hypeForge's first attempt.
 - The [**Catppuccin**](https://catppuccin.com) team, for the colours everything wears.
 
 We don't compare ourselves with anyone. Our picks are simply our picks.
@@ -119,7 +118,6 @@ We don't compare ourselves with anyone. Our picks are simply our picks.
 
 Full detail: [docs/ROADMAP.md](docs/ROADMAP.md) · History: [docs/CHANGELOG.md](docs/CHANGELOG.md)
 
-> **The first attempt** (28 Sep – 3 Oct 2026) built a floating Hyprland desktop with Noctalia. It worked, and it was not *us*, so on 4 October Javier started again ([D-44](docs/DECISIONS.md)). Everything from it stays in the [decision log](docs/DECISIONS.md), [RECIPE](docs/RECIPE.md) and [`desktop/`](desktop/) as history and material.
 
 ---
 
@@ -135,10 +133,7 @@ Every step is tested on the KognogOS test desktop first, where Javier lives in i
 |---|---|
 | [DECISIONS](docs/DECISIONS.md) | Every decision, dated, with who made it and why |
 | [TODO](TODO.md) | What is done and what comes next, step by step |
-| [DESIGN](docs/DESIGN.md) | How it works (written for the first attempt; being brought up to date) |
-| [RECIPE](docs/RECIPE.md) | The options for every job, with sources |
 | [FONTS](docs/FONTS.md) | Every font hypeForge needs, and which package brings it |
-| [KOGNOGOS-IMPACT](docs/KOGNOGOS-IMPACT.md) | What moving off Plasma changes in KognogOS |
 | [Research notes](docs/research/) | What was checked, how, and the sources |
 | [ROADMAP](docs/ROADMAP.md) · [CHANGELOG](docs/CHANGELOG.md) | Where it's going; where it's been |
 | [testing/](testing/) | Every test plan and its results |
