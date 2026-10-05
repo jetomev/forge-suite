@@ -7,6 +7,17 @@
 
 ## 2026-10-04
 
+### D-53 · Window Rules (applet 5): small tools float; Alt + F4 closes
+**Decided by Javier:** floating for *"dialogs, small tools, and we will see"*; *"ALT+F4 should close the apps, very standard key combination"*; and in the launcher, *"Can be fixed so the search always look for all apps?"* Then: *"everything is working. Excellent!"*
+
+**What it means:**
+- `applets/rules/` — settings `~/.config/hypeforge/applets/rules.toml` (`enabled`, one `[[float]]` block per rule: match on app_id / class / title / window_role / window_type, options `sticky`, `size`) + `hypeforge-rules`, started by Sway. Applied to new windows, to open ones, and again after every Sway reload.
+- **Floating now:** older apps' pop-ups, dialogs, utility and splash windows; KCalc (16 × 40 % of the screen: KDE apps remember their last size); Network Connections; Print Settings; About windows; password windows; picture-in-picture video (also sticky); Steam's side windows. Sway's own dialog floating stays; **Win + Shift + Space** floats or un-floats any window.
+- **Two lessons about Sway's socket:** a `for_window` swallows the rest of its message (so one rule per message), and its actions must be quoted (a comma ends the rule and the rest hits the focused window — which floated this terminal once; fixed).
+- **Alt + F4 closes the window** (with Win + Shift + Q).
+- **The launcher's first screen searches every app:** the apps sit below the menus, out of sight until you type.
+- Found on the way: **no admin-password helper (polkit agent) runs in the Sway session** (F-44, RECIPE job 8).
+
 ### D-52 · App Sections (applet 4): the launcher's first screen is the workspaces
 **Decided by Javier:** the sketch — Favourites, one section per workspace, All apps — *"Your proposal is perfect. We can start with that one."* Then: every line aligned to the left; *"Under All Apps, still show a list of all apps available, it shouldn't"*; and at the bottom, *"In this order top-down: Lock Screen, Log Out, Reboot, Shutdown."* Favourites get pinned later; apps get added to sections from the applet (the Board).
 

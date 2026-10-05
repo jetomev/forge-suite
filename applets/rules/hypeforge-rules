@@ -1,0 +1,118 @@
+#!/usr/bin/env python3
+"""hypeForge applet 5 · Window Rules (D-47, D-53).
+
+Hands Sway the per-window rules from the settings file: for now, which windows float (centred,
+above the tiled ones) instead of taking a spot. Applied to windows that open from now on and to
+the ones already open, and again after every Sway reload (a reload forgets them).
+
+    hypeforge-rules            run: apply the rules, then re-apply after each Sway reload
+    hypeforge-rules reload     re-read the settings file
+
+Switching a rule OFF takes effect for new windows after `swaymsg reload` (Sway cannot forget a
+single rule while running).
+
+Settings: ~/.config/hypeforge/applets/rules.toml (enabled, [[float]] rules).
+"""
+
+import json
+import os
+import signal
+import sys
+import tomllib
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
+from hfsway import SUBSCRIBE, EVENT_WORKSPACE, Sway  # noqa: E402
+
+CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets/rules.toml"
+PIDFILE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-rules.pid"
+MATCH_KEYS = ("app_id", "class", "title", "window_role", "window_type")
+
+
+def load():
+    with open(CONFIG, "rb") as f:
+        cfg = tomllib.load(f)
+    return bool(cfg.get("enabled", False)), cfg.get("float", [])
+
+
+def criteria(rule):
+    parts = [f'{k}="{rule[k]}"' for k in MATCH_KEYS if rule.get(k)]
+    return f"[{' '.join(parts)}]" if parts else None
+
+
+def actions(rule):
+    todo = ["floating enable"]
+    if rule.get("sticky"):
+        todo.append("sticky enable")
+    if rule.get("size"):
+        todo.append(f"resize set {rule['size']}")
+    todo.append("move position center")
+    return ", ".join(todo)
+
+
+def apply(sway, rules):
+    for rule in rules:
+        crit = criteria(rule)
+        if not crit:
+            continue
+        # Windows that open from now on. One rule per message: a for_window swallows the rest of
+        # its message (a "; for_window …" after it would become part of its action), and the
+        # actions are quoted, or a comma would end the rule and hit the focused window instead.
+        sway.run(f'for_window {crit} "{actions(rule)}"')
+    for rule in rules:  # windows already open (one at a time: no match is not an error worth stopping for)
+        crit = criteria(rule)
+        if crit:
+            sway.run(f"{crit} {actions(rule)}")
+
+
+def watch(rules):
+    events = Sway()
+    events.ask(SUBSCRIBE, json.dumps(["workspace"]))
+    control = Sway()
+    apply(control, rules)
+    while True:
+        kind, event = events.receive()
+        if kind == EVENT_WORKSPACE and event.get("change") == "reload":
+            enabled, rules = load()
+            if not enabled:
+                return
+            apply(control, rules)
+
+
+def already_running():
+    try:
+        pid = int(PIDFILE.read_text())
+        os.kill(pid, 0)
+        return pid
+    except (OSError, ValueError):
+        return None
+
+
+def main():
+    args = sys.argv[1:]
+    if args == ["reload"]:
+        pid = already_running()
+        if pid:
+            os.kill(pid, signal.SIGHUP)
+        return
+    if args:
+        sys.exit(__doc__)
+    enabled, rules = load()
+    if not enabled:
+        print("hypeforge-rules: switched off in", CONFIG)
+        return
+    if already_running():
+        print("hypeforge-rules: already running")
+        return
+    PIDFILE.write_text(str(os.getpid()))
+    # A reload request (SIGHUP) starts the whole program again, so it reads the file afresh.
+    signal.signal(signal.SIGHUP, lambda *_: (PIDFILE.unlink(missing_ok=True),
+                                             os.execv(sys.executable, [sys.executable] + sys.argv)))
+    try:
+        watch(rules)
+    finally:
+        PIDFILE.unlink(missing_ok=True)
+
+
+if __name__ == "__main__":
+    main()

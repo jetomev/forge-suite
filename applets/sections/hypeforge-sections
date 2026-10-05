@@ -5,6 +5,8 @@ The launcher with sections. Win + Space opens a first screen:
 
     Favourites · 1. Daily · 2. Work · … · All apps · Lock Screen · Log Out · Reboot · Shutdown
 
+and typing there searches every app (they sit below the fold, out of sight until you type).
+
 Picking a section shows its apps; picking one of those switches to the section's workspace
 (through applet 1 when it is on) and opens the app there, where applet 2 places it. An app
 picked from the first screen or All apps opens in the workspace on screen.
@@ -107,9 +109,11 @@ def sort_into_sections(cfg, everything):
 
 # ---- The menus -------------------------------------------------------------------------------
 
-def pick(cfg, lines, prompt, icons=True):
+def pick(cfg, lines, prompt, icons=True, lines_shown=None):
     """Show `lines` [(text, icon)] in fuzzel; the chosen index, or None (Esc)."""
     fuzzel = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", prompt]
+    if lines_shown:
+        fuzzel += ["--lines", str(lines_shown)]
     look = Path(os.path.expanduser(cfg.get("fuzzel_config", "")))
     if look.is_file():
         fuzzel += ["--config", str(look)]
@@ -154,13 +158,21 @@ def main():
         if power.get(key):
             first.append((label, icon, ("power", power[key], ask, label)))
 
-    choice = pick(cfg, [(t, i) for t, i, _ in first], "❯  ")
+    # Then every app, below the fold: the window is exactly as tall as the menus, so the apps
+    # stay out of sight until you type — and typing always searches every app (Javier, 10-04).
+    shown = len(first)
+    for a in by_name:
+        first.append((everything[a]["name"], everything[a]["icon"], ("app", a, None)))
+
+    choice = pick(cfg, [(t, i) for t, i, _ in first], "❯  ", lines_shown=shown)
     while choice is not None:
         action = first[choice][2]
+        if action[0] == "app":
+            return launch(everything[action[1]])
         if action[0] == "power":
             _, command, ask, label = action
             if ask and pick(cfg, [("No", "go-home"), (f"Yes, {label.lower()}", first[choice][1])], f"{ask}  ") != 1:
-                choice = pick(cfg, [(t, i) for t, i, _ in first], "❯  ")
+                choice = pick(cfg, [(t, i) for t, i, _ in first], "❯  ", lines_shown=shown)
                 continue
             subprocess.run(["swaymsg", "exec", command], capture_output=True)
             return
@@ -171,7 +183,7 @@ def main():
             return
         if sub > 0:
             return launch(everything[members[sub - 1]], workspace)
-        choice = pick(cfg, [(t, i) for t, i, _ in first], "❯  ")  # Back
+        choice = pick(cfg, [(t, i) for t, i, _ in first], "❯  ", lines_shown=shown)  # Back
 
 
 if __name__ == "__main__":

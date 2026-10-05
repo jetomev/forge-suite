@@ -1,0 +1,58 @@
+# hypeForge applet 5 · Window Rules (D-47, D-53)
+#
+# Which windows float (above the tiled ones, centred) instead of taking a spot. Sway already
+# floats windows that call themselves dialogs; these rules catch the small tools that do not.
+# Win + Shift + Space floats or un-floats any window by hand.
+#
+# The hypeForge Settings Board will edit this file; until then, edit it by hand and run
+#   hypeforge-rules reload
+# Copied to ~/.config/hypeforge/applets/rules.toml, which is the one that is read.
+# A window's names: swaymsg -t get_tree (app_id for Wayland apps; class/title for older X11 apps).
+
+# false = no rules from hypeForge (Sway's own dialog floating stays).
+enabled = true
+
+# One block per rule. Match on any of: app_id, class, title, window_role, window_type
+# (each a pattern; ^…$ = exactly). Options: sticky = true (shows on every workspace),
+# size = "40 ppt 50 ppt" (percent of the screen).
+
+# ---- Older (X11) apps that label their small windows ----
+[[float]]
+name = "Pop-ups, bubbles and dialogs of older apps"
+window_role = '^(pop-up|bubble|dialog|task_dialog|Preferences)$'
+
+[[float]]
+name = "Utility, toolbar and splash windows of older apps"
+window_type = '^(dialog|utility|toolbar|splash)$'
+
+# ---- Small tools on this computer ----
+[[float]]
+name = "Calculator (KCalc)"
+app_id = '^org\.kde\.kcalc$'
+size = "16 ppt 40 ppt"
+
+[[float]]
+name = "Network Connections"
+app_id = '^nm-connection-editor$'
+
+[[float]]
+name = "Print Settings"
+app_id = '^system-config-printer$'
+
+[[float]]
+name = "About windows"
+app_id = '^xfce4-about$'
+
+[[float]]
+name = "Password windows (ksshaskpass, polkit)"
+app_id = '(ksshaskpass|polkit)'
+
+[[float]]
+name = "Video in a small window (Chrome / Brave Picture-in-Picture)"
+title = '^Picture[- ]in[- ][Pp]icture$'
+sticky = true
+
+[[float]]
+name = "Steam's side windows (friends, news, settings)"
+class = '^steam$'
+title = '^(Friends List|Steam - News.*|Steam Settings|Special Offers)$'

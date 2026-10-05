@@ -116,6 +116,8 @@ input type:keyboard {
 
     # Kill focused window
     bindsym $mod+Shift+q kill
+    # hypeForge: Alt + F4 closes the window too, the standard combination (Javier, 2026-10-04)
+    bindsym Mod1+F4 kill
 
     # Start your launcher
     bindsym $mod+d $menu
@@ -288,3 +290,7 @@ exec ~/Programs/hypeforge/applets/workspaces/hypeforge-workspaces
 # hypeForge: applet 2 · Window Placement (D-50) — new windows fill a fixed order of spots.
 # Switched on and off in ~/.config/hypeforge/applets/placement.toml (enabled = true/false).
 exec ~/Programs/hypeforge/applets/placement/hypeforge-placement
+
+# hypeForge: applet 5 · Window Rules (D-53) — which windows float instead of taking a spot.
+# Switched on and off in ~/.config/hypeforge/applets/rules.toml (enabled = true/false).
+exec ~/Programs/hypeforge/applets/rules/hypeforge-rules
