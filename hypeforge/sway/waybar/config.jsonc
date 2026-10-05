@@ -16,29 +16,29 @@
   "custom/launcher": {
     "format": " ",
     "tooltip-format": "Apps (Win + Space)",
-    "on-click": "~/Programs/hypeforge/applets/sections/hypeforge-sections"
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections"
   },
   "modules-center": [],
   "modules-right": ["custom/clipboard", "custom/notifications", "clock"],
   // The clipboard: applet 9 (applets/clipboard/), with the count of new copies. Left click: the
   // history (the count goes away); right click: empty it. Redrawn on SIGRTMIN+10 at every copy.
   "custom/clipboard": {
-    "exec": "~/Programs/hypeforge/applets/clipboard/hypeforge-clipboard bar",
+    "exec": "~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard bar",
     "return-type": "json",
     "interval": 60,
     "signal": 10,
-    "on-click": "~/Programs/hypeforge/applets/clipboard/hypeforge-clipboard list",
-    "on-click-right": "~/Programs/hypeforge/applets/clipboard/hypeforge-clipboard clear"
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard list",
+    "on-click-right": "~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard clear"
   },
   // The bell: applet 7 (applets/notifications/). Left click lists recent notifications,
   // right click switches Do Not Disturb. Redrawn on SIGRTMIN+9 (mako's on-notify), and every 30 s.
   "custom/notifications": {
-    "exec": "~/Programs/hypeforge/applets/notifications/hypeforge-notifications bar",
+    "exec": "~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications bar",
     "return-type": "json",
     "interval": 30,
     "signal": 9,
-    "on-click": "~/Programs/hypeforge/applets/notifications/hypeforge-notifications list",
-    "on-click-right": "~/Programs/hypeforge/applets/notifications/hypeforge-notifications dnd"
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications list",
+    "on-click-right": "~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications dnd"
   },
   "clock": {
     "format": "{:%a %d %b   %I:%M %p}",

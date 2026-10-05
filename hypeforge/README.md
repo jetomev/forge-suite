@@ -14,9 +14,11 @@
 
 # ⚡ hypeForge
 
+> 🧰 **Part of the [Forge Suite](../README.md)** — one repository for every Forge app; hypeForge is its first section ([D-60](docs/DECISIONS.md)).
+
 > **The KognogOS desktop: slim, quick, low on memory.** hypeForge turns any Arch Linux install into a **tiling** desktop on **[Sway](https://swaywm.org)**: windows arrange themselves side by side instead of piling up, all your screens move together as one, and **terminal apps come first**. Every feature is a small piece of its own, and every setting will have its own **Forge Suite app**, all opened from one control centre: **hypeForge Settings**.
 
-> 🚧 **Being built, and lived in.** Since 4 October 2026 hypeForge runs as its own login on the KognogOS test desktop, next to the old desktop, and Javier works in it every day. There is no app to install yet. Follow along in [Issues](https://github.com/jetomev/hypeforge/issues), the [to-do list](TODO.md) and the [decision log](docs/DECISIONS.md).
+> 🚧 **Being built, and lived in.** Since 4 October 2026 hypeForge runs as its own login on the KognogOS test desktop, next to the old desktop, and Javier works in it every day. There is no app to install yet. Follow along in [Issues](https://github.com/jetomev/forge-suite/issues), the [to-do list](TODO.md) and the [decision log](docs/DECISIONS.md).
 
 > 🛡 **Security.** Every commit is GPG-signed and GitHub-Verified, and releases will be signed like the rest of the Forge Suite. **[Where We Stand](https://github.com/jetomev/KognogOS/blob/main/docs/where-we-stand.md)** explains why.
 
@@ -123,7 +125,7 @@ Full detail: [docs/ROADMAP.md](docs/ROADMAP.md) · History: [docs/CHANGELOG.md](
 
 ## Testing
 
-Every step is tested on the KognogOS test desktop first, where Javier lives in it daily: an NVIDIA RTX 3060 driving three 1440p screens at 144 Hz. That is one setup among many: hypeForge is meant for **one screen or many**, and the screen setups people really use (one, two, four, six…) will be tested as the screen and workspace apps are built. Each finding gets a number (F-1, F-2…) and an [issue](https://github.com/jetomev/hypeforge/issues). Test plans and results are published in [`testing/`](testing/). Virtual machines (a KognogOS install, a plain Arch install) follow before any release.
+Every step is tested on the KognogOS test desktop first, where Javier lives in it daily: an NVIDIA RTX 3060 driving three 1440p screens at 144 Hz. That is one setup among many: hypeForge is meant for **one screen or many**, and the screen setups people really use (one, two, four, six…) will be tested as the screen and workspace apps are built. Each finding gets a number (F-1, F-2…) and an [issue](https://github.com/jetomev/forge-suite/issues). Test plans and results are published in [`testing/`](testing/). Virtual machines (a KognogOS install, a plain Arch install) follow before any release.
 
 ---
 

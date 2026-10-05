@@ -186,7 +186,7 @@ def run_app():
                 "description": "Part of hypeForge, the KognogOS desktop (Forge Suite).",
                 "authors": "jetomev (Javier) · Claude (Anthropic), co-developer",
                 "license": "GPL-3.0-or-later",
-                "links": [("Code", "https://github.com/jetomev/hypeforge")],
+                "links": [("Code", "https://github.com/jetomev/forge-suite/tree/main/hypeforge")],
             }
             super().__init__(**kw)
 

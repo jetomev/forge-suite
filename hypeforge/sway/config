@@ -80,8 +80,8 @@ gaps outer 0
 exec mako
 
 # hypeForge: clipboard history (applet 9, Javier 2026-10-05) — every copy is kept by cliphist
-exec wl-paste --type text --watch ~/Programs/hypeforge/applets/clipboard/hypeforge-clipboard store
-exec wl-paste --type image --watch ~/Programs/hypeforge/applets/clipboard/hypeforge-clipboard store
+exec wl-paste --type text --watch ~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard store
+exec wl-paste --type image --watch ~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard store
 
 exec swayidle -w \
          timeout 1800 'gtklock -d' \
@@ -127,17 +127,17 @@ input type:keyboard {
     bindsym $mod+n exec makoctl dismiss --all
     bindsym $mod+Shift+n exec makoctl restore
     # hypeForge: the workspace dropdown (applet 1; also a click on the bar's workspace button)
-    bindsym $mod+Tab exec ~/Programs/hypeforge/applets/workspaces/hypeforge-workspaces menu
+    bindsym $mod+Tab exec ~/Programs/forge-suite/hypeforge/applets/workspaces/hypeforge-workspaces menu
     # hypeForge: the clipboard history (applet 9)
-    bindsym $mod+c exec ~/Programs/hypeforge/applets/clipboard/hypeforge-clipboard list
+    bindsym $mod+c exec ~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard list
     # hypeForge: lock the screen (Javier, 2026-10-05)
     bindsym $mod+Escape exec gtklock -d
-    bindsym $mod+F1 exec ~/Programs/hypeforge/applets/help/hypeforge-help
+    bindsym $mod+F1 exec ~/Programs/forge-suite/hypeforge/applets/help/hypeforge-help
 
     # Start your launcher
     bindsym $mod+d $menu
     # hypeForge: Win + Space = the launcher with sections, applet 4 (D-52); Win + D = plain search
-    bindsym $mod+space exec ~/Programs/hypeforge/applets/sections/hypeforge-sections
+    bindsym $mod+space exec ~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -286,10 +286,10 @@ bindsym $mod+r mode "resize"
 
     # hypeForge: screenshots (applet 8, Javier 2026-10-05) — saved to ~/Pictures/Screenshots,
     # copied to the clipboard, a notification; click it to draw on the picture (swappy)
-    bindsym Print exec ~/Programs/hypeforge/applets/screenshot/hypeforge-screenshot area
-    bindsym Shift+Print exec ~/Programs/hypeforge/applets/screenshot/hypeforge-screenshot screen
-    bindsym Ctrl+Print exec ~/Programs/hypeforge/applets/screenshot/hypeforge-screenshot all
-    bindsym Alt+Print exec ~/Programs/hypeforge/applets/screenshot/hypeforge-screenshot window
+    bindsym Print exec ~/Programs/forge-suite/hypeforge/applets/screenshot/hypeforge-screenshot area
+    bindsym Shift+Print exec ~/Programs/forge-suite/hypeforge/applets/screenshot/hypeforge-screenshot screen
+    bindsym Ctrl+Print exec ~/Programs/forge-suite/hypeforge/applets/screenshot/hypeforge-screenshot all
+    bindsym Alt+Print exec ~/Programs/forge-suite/hypeforge/applets/screenshot/hypeforge-screenshot window
 
 #
 # Status Bar:
@@ -304,12 +304,12 @@ include /etc/sway/config.d/*
 
 # hypeForge: applet 1 · Workspaces Management (D-47) — workspaces across all three screens.
 # Switched on and off in ~/.config/hypeforge/applets/workspaces.toml (enabled = true/false).
-exec ~/Programs/hypeforge/applets/workspaces/hypeforge-workspaces
+exec ~/Programs/forge-suite/hypeforge/applets/workspaces/hypeforge-workspaces
 
 # hypeForge: applet 2 · Window Placement (D-50) — new windows fill a fixed order of spots.
 # Switched on and off in ~/.config/hypeforge/applets/placement.toml (enabled = true/false).
-exec ~/Programs/hypeforge/applets/placement/hypeforge-placement
+exec ~/Programs/forge-suite/hypeforge/applets/placement/hypeforge-placement
 
 # hypeForge: applet 5 · Window Rules (D-53) — which windows float instead of taking a spot.
 # Switched on and off in ~/.config/hypeforge/applets/rules.toml (enabled = true/false).
-exec ~/Programs/hypeforge/applets/rules/hypeforge-rules
+exec ~/Programs/forge-suite/hypeforge/applets/rules/hypeforge-rules

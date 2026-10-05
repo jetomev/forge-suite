@@ -7,6 +7,15 @@
 
 ## 2026-10-05
 
+### D-60 · One Forge Suite repository; hypeForge is its first section
+**Decided by Javier:** *"So we do not have 100,000 repositories of Forge Suite apps, let's add them all inside the Forge Suite repository, each with its own section… Then hypeForge is part of the Forge Suite, and now KognogOS is about nog and the Forge Suite of apps… which sounds very strong!"* Then, from the options: **phased**, and **A — rename this repository**.
+
+**What it means:**
+- `jetomev/hypeforge` is renamed **`jetomev/forge-suite`** (GitHub redirects every old link; the issues and history stay). hypeForge moves into its own section, `hypeforge/`; every new Forge app is born in a section next to it — no new repositories.
+- **Phased:** forgekit and the shipped apps (alacrittyForge, bitlaForge, nogForge, grubForge last — it has the most users and outside contributors) move in later, one at a time, each tested; their old repositories are archived with a pointer. **nog stays its own repository**: KognogOS = **nog + the Forge Suite**.
+- Each app keeps **its own version, tags (`<app>-vX.Y.Z`) and AUR package**; the release rules are adapted when the first shipped app moves in.
+- On the test desktop the folder is `~/Programs/forge-suite/`, with `~/Programs/hypeforge` left as a shortcut so the running desktop keeps working.
+
 ### D-59 · Every setting is a Forge app; hypeForge Settings is the control centre that holds them
 **Decided by Javier:** *"All apps that we use that can only be configured by touching a config file should be part of the Forge Suite… the workspace manager = Forge app, monitor(s) manager = Forge app, window snap manager = Forge app, launcher = Forge app… same for all rules, help, idle, lock… cliamp settings, Waybar settings, fuzzel settings, Alacritty, etc. Then hypeForge Settings is a Control Center from where we can open the apps, like the KDE Settings window. A list of configurable functionalities and apps on a menu to the left, and then in the display area to the right, the apps open (an inside terminal, where we will run the apps)… If we modify the Forge app, it is transparent for the rest, especially for the holder… unless they connect."*
 

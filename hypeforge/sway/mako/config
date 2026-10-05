@@ -33,7 +33,7 @@ max-icon-size=48
 progress-color=over #313244
 
 # the bell on the bar redraws when a notification arrives (applet 7)
-on-notify=exec ~/Programs/hypeforge/applets/notifications/hypeforge-notifications changed
+on-notify=exec ~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications changed
 
 # what a click does
 on-button-left=dismiss
