@@ -27,9 +27,8 @@ window_type = '^(dialog|utility|toolbar|splash)$'
 
 # ---- Small tools on this computer ----
 [[float]]
-name = "Calculator (Numbat, in its own terminal window)"
-app_id = '^numbat$'
-size = "25 ppt 45 ppt"
+name = "Calculator (galculator, until our own Forge calculator; its own size)"
+app_id = '^galculator$'
 
 [[float]]
 name = "Network Connections"
