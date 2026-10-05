@@ -5,6 +5,17 @@
 
 ---
 
+## 2026-10-05
+
+### D-56 · KognogOS ships with Sway only; the password helper is our own Forge app
+**Decided by Javier:** *"Remember right now we have KDE installed, but the idea is not to have it in KognogOS. KognogOS will ship only with Sway. The password handler needs to be either something Sway can handle, or something developed by us (which we will have to place in our list of self-developed apps)."* Then, from the options: **our own, nothing meanwhile**.
+
+**What it means:**
+- **KDE is not part of KognogOS.** Plasma stays on this computer only as the fallback login while hypeForge is built (D-6). No hypeForge pick may lean on a KDE piece: KDE's password pop-up (polkit-kde-agent) and password window (ksshaskpass) are out, and so is anything that pulls KDE, GNOME or Hyprland libraries back in.
+- **Options looked at (2026-10-05):** polkit-gnome (GTK3, legacy), mate-polkit (GTK3), lxqt-policykit (Qt + KDE's kwindowsystem), hyprpolkitagent (four Hyprland libraries), soteria (not found by `nog search`). Sway itself has no password helper.
+- **Our own:** a new Forge Suite app (name: Javier's call) that runs for the whole Sway session. When an app asks the system for admin rights (polkit) — and when `sudo` or `nog` needs the password (askpass) — it opens a small floating terminal window with forgekit's password box. Built from what forgekit 0.6.0 already has (its polkit agent and password box), so one tool answers both F-44 (#26) and F-42 (#24).
+- **Nothing installed meanwhile.** Forge apps already ask for the password inside the app; terminals ask in the terminal. F-44 and F-42 stay open, pointing at the new app.
+
 ## 2026-10-04
 
 ### D-55 · Help & Keys is a small Forge app: tabs, one look, text that wraps

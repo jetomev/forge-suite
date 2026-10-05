@@ -16,7 +16,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Phase 11 · The jobs, one by one, terminal first
 - [ ] F-41 (#23) — deferred, stays open (Javier 10-04: works; not needed for the window setup): hardware video decoding — Chrome decodes video on the processor (no `nvidia-vaapi-driver`); smooth, low priority, machine-wide
-- [ ] F-42 (#24) — deferred, stays open: the Sway session sets no `SUDO_ASKPASS` — the password window only works when it is passed by hand; set it for the session (with the password/polkit job)
+- [ ] F-42 (#24) — waits for our own password helper (D-56): the Sway session sets no `SUDO_ASKPASS` — the password window only works when it is passed by hand; set it for the session (with the password/polkit job)
 - [ ] F-43 (#25) — deferred, stays open (launcher fix not now): WoW through XWayland on Sway — pointer escapes while turning the camera, focus lost; windowed mode tiles to half the screen. Wine's Wayland driver works (2.3b ✅); the launcher (pi-kognog-azerothcore) only picks it on Hyprland
 - [x] Windows look (D-46): border only (2 px, palette white active / dark grey inactive), tabs when windows share a space, 10 px gaps — Javier: "Border only + tabs works wonders"
 - [x] **Applet 1 · Workspaces Management** (D-47): `applets/workspaces/` — settings file `~/.config/hypeforge/applets/workspaces.toml` (enabled, screens, names) + routine `hypeforge-workspaces`; 6 workspaces across all 3 screens (1 Daily · 2 Work · 3 Entertainment · 4 Gaming · 5 Monitoring · 6 Settings), Win + 1…6 / Win + Shift + 1…6. **10-04: built and tested — Javier: "the mouse stays put now, everything works" (D-48).** Later: add/edit/delete workspaces from the Board
@@ -32,7 +32,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Later (Javier, 10-04): **drag and drop** of windows — explore: swapping apps, dropping one onto another to tab/stack
 - [x] **Applet 5 · Window Rules** (D-53): small tools float (`applets/rules/`); Alt + F4 closes; the launcher's first screen searches every app — Javier: "everything is working. Excellent!"
 - [x] **F-45 (#27): no top bar after login** (found 10-05) — the Workspaces applet's first "redraw" signal reached Waybar before it was listening, which ends the program. Fixed: signal only once the bar listens (`SigCgt`), wait up to 5 s; tested 0/5 → 5/5; Javier logged out and in: the bar appeared ✅
-- [ ] F-44 (#26): no admin-password helper (polkit agent) runs in the Sway session — apps that ask for admin rights through a pop-up cannot (RECIPE job 8)
+- [ ] F-44 (#26) — waits for our own password helper (D-56; no KDE, nothing installed meanwhile): no admin-password helper (polkit agent) runs in the Sway session — apps that ask for admin rights through a pop-up cannot (RECIPE job 8)
 - [x] **Applet 6 · Help** (D-54): Win + F1 + Help & Keys in the launcher → key chart + guide pages in one floating viewer (border, "q to close" line); one source (`applets/help/`) for Win + F1 and the Board; the chart checked against Sway's keys before every commit
 - [x] **Help & Keys as a forgekit app** (D-55): tabs Keys · Start · Workspaces · Windows · Apps · About · Quit, the same look on every page, wrapping tables with alternating rows — Javier: "Everything works! Great job."
 - [ ] forgekit (its own repo): the menu bar does not wrap and is cut off on a narrow window — affects every Forge app (found 10-05)
@@ -41,6 +41,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Try SwayFX for rounded corners (`chaotic-aur/swayfx` 0.6, same config) — later, separate trial
 - [ ] Go through `docs/RECIPE.md`'s ~31 jobs again with Javier, one at a time: a terminal (CLI/TUI) app first wherever one exists
 - [ ] Keep a list of **Forge Suite candidates**: every job with no good terminal app
+  - **Password helper** (D-56, Javier 10-05): the admin pop-up (polkit) + the `sudo`/`nog` password window, in a floating terminal with forgekit's password box; closes F-44 (#26) + F-42 (#24). Name: Javier's call
 
 ## Phase 12 · Our own look
 - [ ] **Applet 3 · Folder tabs** (D-47): small left-aligned tabs like folders in a holder, rounded tops, our colours; replaces Sway's even tab row
