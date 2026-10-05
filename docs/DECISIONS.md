@@ -5,6 +5,19 @@
 
 ---
 
+## 2026-10-04
+
+### D-44 · Start again: barebones tiling, terminal apps first, our own look
+**Decided by Javier:** *"I know we invested time on setting up the setup we have right now, but, honest. I do not like it. I want to start again"* … *"I want something that it's us, as everything we are building. We have come too far to use standard stuff that doesn't differentiate you but just makes you look like everyone else."* … *"let's take it one step at a time, let's build it slowly, take our time to select, customize, and make things work."*
+
+**What it means:**
+- **The base is chosen again, from research.** Barebones Hyprland, or something more mature and proven, kinder to NVIDIA, easy to set up, rich in terminal (TUI) options and liked by the community: Sway, i3, dwm and others are compared (`docs/research/2026-10-04-tiling-base-choice.md`); Claude recommends, Javier chooses. **Tiling first**, as first intended.
+- **Then the ~31 jobs of `docs/RECIPE.md`, one by one, again**, each chosen with Javier, **command-line and terminal apps first**. This replaces D-39 ("settings get graphical apps, not terminal ones; Forge apps later") and the shell choice of D-40 (Noctalia).
+- **A job with no good terminal app becomes a new Forge Suite app** (forgekit, Python/Textual). The gaps are listed as they are found.
+- **Our own look, built little by little** from the KognogOS brand: its logo and its colours. Elements connected but not fused: contrast between them on purpose, so the desktop is neither a monotone mash nor stock Catppuccin. Each visual step is designed and approved before it is built (the grubForge 2.0 method).
+- **Later, once everything is set up:** terminal apps of our own for what we use that is not Forge Suite, by forking the one we use, or writing one from zero.
+- **Kept meanwhile:** Plasma stays the fallback login (D-6); the current hypeForge session stays usable on this computer until the new one replaces it; everything built so far (decisions, research, scripts, findings) stays as history and as material.
+
 ## 2026-10-01
 
 ### D-43 · Maximise is hypeForge's own, so a maximised window comes to the front

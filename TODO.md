@@ -1,9 +1,32 @@
 # hypeForge — the list
 
-**Target: no date set — started 28 Sep 2026.** A Forge Suite app that installs the KognogOS Hyprland desktop onto any Arch install.
+**Target: no date set — started 28 Sep 2026; started again 4 Oct 2026 (D-44).** A Forge Suite app that installs the KognogOS tiling desktop onto any Arch install.
 The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. This file only lists what gets done.
 
 **Updated after every step.** Run `bash scripts/status.sh` for the short version.
+
+---
+
+## Phase 10 · The restart: choose the base — **in progress**
+*D-44 (Javier, 4 Oct 2026): "I want to start again" — barebones tiling, terminal apps first, our own look, one step at a time. Phases 10–14 are the new path; everything below them is the first attempt, kept as history and material.*
+- [x] D-44 recorded (the restart; replaces D-39's "graphical settings apps" and D-40's Noctalia)
+- [ ] Research: Hyprland, Sway, i3, dwm, river, niri… on NVIDIA (RTX 3060, 3 × 144 Hz), maturity, ease, tiling, terminal ecosystem, theming, community (`docs/research/2026-10-04-tiling-base-choice.md`)
+- [ ] Javier chooses the base
+- [ ] Barebones session next to Plasma on this computer: tiling, a terminal, three monitors at 144 Hz, NVIDIA right, nothing else
+
+## Phase 11 · The jobs, one by one, terminal first
+- [ ] Go through `docs/RECIPE.md`'s ~31 jobs again with Javier, one at a time: a terminal (CLI/TUI) app first wherever one exists
+- [ ] Keep a list of **Forge Suite candidates**: every job with no good terminal app
+
+## Phase 12 · Our own look
+- [ ] From the KognogOS brand (logo, colours): a palette with contrast between elements on purpose — connected, not fused, not monotone
+- [ ] Each visual step designed and approved before it is built (bar, borders, launcher, notifications, lock screen, terminal, wallpaper…)
+
+## Phase 13 · Forge apps for the gaps
+- [ ] New Forge Suite apps for the jobs with no terminal app (one at a time, each its own project)
+
+## Phase 14 · Our own terminal apps for the rest
+- [ ] Once everything is set up: our own TUI versions of the apps we use that are not Forge Suite (fork the one we use, or write one from zero)
 
 ---
 

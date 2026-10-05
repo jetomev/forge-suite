@@ -34,7 +34,7 @@ try:
 except Exception:
     head, dirty = "", ""
 
-print("\n╭─ hypeForge · Forge Suite · the KognogOS Hyprland desktop")
+print("\n╭─ hypeForge · Forge Suite · the KognogOS tiling desktop")
 # The target is read from TODO.md's own **Target:** line, so there is only one copy of it.
 tgt = next((m.group(1).rstrip(".") for ln in t for m in [re.match(r"^\*\*Target:\s*(.+?)\*\*", ln)] if m),
            "(no **Target:** line in TODO.md)")
