@@ -1,0 +1,124 @@
+#!/usr/bin/env python3
+"""hypeForge applet 9 · Clipboard history (Javier, 2026-10-05).
+
+    hypeforge-clipboard bar     the clipboard icon, as Waybar JSON, with the count of new copies
+    hypeforge-clipboard store   what Sway's watchers run on every copy: hand it to cliphist,
+                                then tell the bar (the copy arrives on stdin)
+    hypeforge-clipboard list    the history in a fuzzel list (Win + C, or a click on the icon):
+                                text is copied again; a picture opens in swappy to draw on it.
+                                Opening it marks every copy as seen, so the count goes away
+    hypeforge-clipboard clear   empty the history (right click on the icon; asks first)
+
+cliphist keeps the history (~/.cache/cliphist/db); Sway starts two watchers that store every
+copy (sway/config). What a password manager marks as secret is not stored by cliphist
+(it reads CLIPBOARD_STATE, which reaches it through `store`). "Seen" is the newest copy's number
+when the list was last opened, kept in ~/.local/state/hypeforge/ because the history outlives a
+restart.
+"""
+
+import json
+import os
+import re
+import signal
+import subprocess
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
+from hfbar import signal_bar  # noqa: E402
+
+RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
+FUZZEL = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+STATE = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "hypeforge"
+SEEN = STATE / "clipboard.seen"
+BAR_SIGNAL = 10  # Waybar redraws the clipboard icon on SIGRTMIN+10
+ICON = "\U000f0147"  # 󰅇 clipboard (Nerd Font)
+PICTURE = re.compile(r"^\[\[ binary data .* (png|jpe?g|bmp|webp|gif) ")
+
+
+def history():
+    out = subprocess.run(["cliphist", "list"], capture_output=True, text=True).stdout
+    return [line for line in out.splitlines() if "\t" in line]
+
+
+def fuzzel(lines, prompt):
+    cmd = ["fuzzel", "--dmenu", "--prompt", prompt, "--width", "70",
+           "--lines", str(max(1, min(len(lines), 15)))]
+    if os.path.isfile(FUZZEL):
+        cmd[1:1] = ["--config", FUZZEL]
+    return subprocess.run(cmd, input="\n".join(lines), text=True, capture_output=True).stdout.rstrip("\n")
+
+
+def number(line):
+    try:
+        return int(line.split("\t", 1)[0])
+    except ValueError:
+        return 0
+
+
+def seen():
+    try:
+        return int(SEEN.read_text())
+    except (OSError, ValueError):
+        return 0
+
+
+def mark_seen(lines):
+    STATE.mkdir(parents=True, exist_ok=True)
+    SEEN.write_text(str(max((number(l) for l in lines), default=0)))
+    changed()
+
+
+def changed():
+    signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
+
+
+def bar():
+    lines = history()
+    new = sum(1 for l in lines if number(l) > seen())
+    print(json.dumps({"text": f"{ICON} {new}" if new else ICON,
+                      "class": "new" if new else ("has" if lines else "empty"),
+                      "tooltip": f"Clipboard: {new} new, {len(lines)} kept\n"
+                                 "Left click (or Win + C): the history · Right click: empty it"}))
+
+
+def store():
+    subprocess.run(["cliphist", "store"], stdin=sys.stdin.buffer)
+    changed()
+
+
+def show_list():
+    lines = history()
+    mark_seen(lines)
+    if not lines:
+        fuzzel(["The clipboard history is empty"], "Clipboard  ")
+        return
+    picked = fuzzel([l.replace("[[ binary data", "🖼 picture").replace(" ]]", "") for l in lines], "Clipboard  ")
+    if not picked:
+        return
+    entry = next((l for l in lines if l.split("\t", 1)[0] == picked.split("\t", 1)[0]), None)
+    if entry is None:
+        return
+    data = subprocess.run(["cliphist", "decode"], input=entry.encode(), capture_output=True).stdout
+    kind = PICTURE.match(entry.split("\t", 1)[1])
+    if kind:
+        path = RUNTIME / f"hypeforge-clipboard-{entry.split(chr(9))[0]}.{kind.group(1)}"
+        path.write_bytes(data)
+        subprocess.Popen(["swappy", "-f", str(path)], start_new_session=True)
+    else:
+        subprocess.run(["wl-copy"], input=data)
+
+
+def clear():
+    if fuzzel(["No, keep it", "Yes, empty the clipboard history"], "Empty the history?  ").startswith("Yes"):
+        subprocess.run(["cliphist", "wipe"])
+        mark_seen([])
+
+
+def main():
+    action = sys.argv[1] if len(sys.argv) > 1 else ""
+    {"bar": bar, "store": store, "list": show_list, "clear": clear}.get(action, lambda: sys.exit(__doc__))()
+
+
+if __name__ == "__main__":
+    main()

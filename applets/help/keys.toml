@@ -14,6 +14,7 @@ keys = [
   { keys = "Win + Escape", does = "Lock the screen (it also locks by itself after 30 minutes)", sway = ["$mod+Escape"] },
   { keys = "Win + N", does = "Close every notification on screen", sway = ["$mod+n"] },
   { keys = "Win + Shift + N", does = "Bring back the last notification closed", sway = ["$mod+Shift+n"] },
+  { keys = "Win + C", does = "The clipboard history: pick text to copy it again, or a picture to draw on it", sway = ["$mod+c"] },
   { keys = "Win + D", does = "Plain app search (the launcher without sections)", sway = ["$mod+d"] },
   { keys = "Win + Enter", does = "Open a terminal", sway = ["$mod+Return"] },
   { keys = "Alt + F4", does = "Close the window", sway = ["Mod1+F4"] },

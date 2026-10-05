@@ -38,10 +38,10 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] **Screenshots** (RECIPE job 11, Javier 10-05): grim + slurp + **applet 8** (`applets/screenshot/`): Print = drag a box, Shift = this screen, Ctrl = all screens, Alt = this window; saved to ~/Pictures/Screenshots, copied, a notification — click it → **swappy** (0.12 MB; satty removed: GTK4 + GNOME's libadwaita). Javier: "Works great"
 - [ ] **The bar, redesigned (Javier, 10-05)** — design first, approved, then built one piece at a time:
   - Left: a **launcher button** (the KognogOS emblem; the picture a setting) → Win + Space's launcher
-  - **Workspaces as one dropdown** "1. Daily ▾" instead of six buttons; click or a key opens the list in order (Waybar 0.15 has popup menus; or a fuzzel list placed under the button). **Key: Win + W is taken (tabbed layout)** → Javier picks another
+  - **Workspaces as one dropdown** "1. Daily ▾" instead of six buttons; click or a key opens the list in order (Waybar 0.15 has popup menus; or a fuzzel list placed under the button). **Key: Win + Tab** (Javier, 10-05; Win + W stays tabs)
   - **Favourites as icons** right of the workspace button (from `sections.toml`)
   - **Open apps as icons** (Waybar's taskbar: click to focus, middle click to close) — test 10-05: the taskbar found the open windows (log), not yet seen on screen
-  - Right: a **clipboard** icon next to the bell (cliphist, 2.4 MB, terminal, extra): the history in a list; a screenshot in it opens in swappy — Javier: better than a screenshot icon
+  - **Built first (Javiers order):** a **clipboard** icon next to the bell (cliphist, 2.4 MB, terminal, extra): the history in a list; a screenshot in it opens in swappy — Javier: better than a screenshot icon
 - [ ] Later (Javier, 10-04, "for when we get there"): **Alt + Tab** across the apps of the workspace on all 3 screens, with window pictures (applet candidate)
 - [ ] Later (Javier, 10-04): **drag and drop** of windows — explore: swapping apps, dropping one onto another to tab/stack
 - [x] **Applet 5 · Window Rules** (D-53): small tools float (`applets/rules/`); Alt + F4 closes; the launcher's first screen searches every app — Javier: "everything is working. Excellent!"

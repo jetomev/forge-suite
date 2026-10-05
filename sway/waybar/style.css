@@ -41,10 +41,27 @@ window#waybar {
   color: @hf_text;
 }
 
+/* The clipboard (applet 9) */
+#custom-clipboard {
+  padding: 0 5px;
+  font-family: "Symbols Nerd Font", sans-serif;
+  font-size: 15px;
+  color: @hf_subtext;
+}
+
+#custom-clipboard:hover {
+  background: @hf_inactive;
+  color: @hf_text;
+}
+
+#custom-clipboard.new {
+  color: #89b4fa;
+}
+
 /* The bell (applet 7): grey when nothing is new, light with a count when something is,
    red-crossed when Do Not Disturb is on */
 #custom-notifications {
-  padding: 0 10px;
+  padding: 0 5px;
   font-family: "Symbols Nerd Font", sans-serif;
   font-size: 15px;
   color: @hf_subtext;

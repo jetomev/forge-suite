@@ -9,7 +9,17 @@
   "spacing": 0,
   // "modules-left" (the workspace buttons) comes from the included file
   "modules-center": [],
-  "modules-right": ["custom/notifications", "clock"],
+  "modules-right": ["custom/clipboard", "custom/notifications", "clock"],
+  // The clipboard: applet 9 (applets/clipboard/), with the count of new copies. Left click: the
+  // history (the count goes away); right click: empty it. Redrawn on SIGRTMIN+10 at every copy.
+  "custom/clipboard": {
+    "exec": "~/Programs/hypeforge/applets/clipboard/hypeforge-clipboard bar",
+    "return-type": "json",
+    "interval": 60,
+    "signal": 10,
+    "on-click": "~/Programs/hypeforge/applets/clipboard/hypeforge-clipboard list",
+    "on-click-right": "~/Programs/hypeforge/applets/clipboard/hypeforge-clipboard clear"
+  },
   // The bell: applet 7 (applets/notifications/). Left click lists recent notifications,
   // right click switches Do Not Disturb. Redrawn on SIGRTMIN+9 (mako's on-notify), and every 30 s.
   "custom/notifications": {
