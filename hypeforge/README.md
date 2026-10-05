@@ -51,7 +51,7 @@ A full desktop like KDE Plasma does everything for you, and it carries a lot of 
 | **Top bar** | The six workspaces, always shown and clickable, a clipboard icon with the count of new copies (**Win + C**: the history), a notification bell with the count of new ones (right click: Do Not Disturb), and the clock. |
 | **Notifications** | Small pop-ups at the top right of the screen you're using; **Win + N** closes them all. |
 | **Screenshots** | **Print** drags a box; Shift / Ctrl / Alt + Print take this screen, every screen, this window. Saved, copied, and one click away from drawing on them. |
-| **Terminal apps** | Alacritty for the terminal, Midnight Commander for files, Fresh for text, numbat for sums, cliamp for music (from the media server). |
+| **Terminal apps** | Alacritty for the terminal, Midnight Commander for files (in our own KognogOS Mocha look), Fresh for text, numbat for sums, cliamp for music (from the media server). |
 
 The look is **Catppuccin Mocha** with the KognogOS wallpaper: thin borders, no title bars, windows that share a space become tabs, 10 px between windows.
 
