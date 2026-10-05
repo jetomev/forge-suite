@@ -18,6 +18,22 @@ window#waybar {
   color: @hf_text;
 }
 
+/* The launcher button: the KognogOS emblem as the button's background (Javier, 2026-10-05).
+   Swap the picture at ~/.config/hypeforge/bar/launcher.png. */
+#custom-launcher {
+  min-width: 24px;
+  margin: 0 6px 0 10px;
+  padding: 0 4px;
+  background-image: url("../../hypeforge/bar/launcher.png");
+  background-size: 22px 22px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#custom-launcher:hover {
+  background-color: @hf_inactive;
+}
+
 /* The workspace buttons, drawn by applet 1 (one module per workspace: custom/ws#w1 …) */
 #custom-ws {
   padding: 0 12px;

@@ -7,7 +7,17 @@
   "position": "top",
   "height": 32,
   "spacing": 0,
-  // "modules-left" (the workspace buttons) comes from the included file
+  // Left: the launcher button, then the workspace buttons (the group comes from the included file)
+  "modules-left": ["custom/launcher", "group/workspaces"],
+
+  // The launcher button (Javier, 2026-10-05): the KognogOS emblem, or any picture put at
+  // ~/.config/hypeforge/bar/launcher.png (drawn by style.css as the button's background:
+  // Waybar 0.15's image module stops the bar from appearing here). Click: the launcher.
+  "custom/launcher": {
+    "format": " ",
+    "tooltip-format": "Apps (Win + Space)",
+    "on-click": "~/Programs/hypeforge/applets/sections/hypeforge-sections"
+  },
   "modules-center": [],
   "modules-right": ["custom/clipboard", "custom/notifications", "clock"],
   // The clipboard: applet 9 (applets/clipboard/), with the count of new copies. Left click: the

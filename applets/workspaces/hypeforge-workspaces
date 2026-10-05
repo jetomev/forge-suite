@@ -123,13 +123,14 @@ def write_bar(grid):
     """Waybar's buttons: every workspace, always, as "1. Daily", the one on screen marked
     "active". Drawn by us (not Waybar's own Sway buttons), so a shared screen still shows all."""
     me = shlex.quote(os.path.abspath(sys.argv[0]))
-    fragment = {"modules-left": []}
+    # A group the bar's own settings place where they want it ("group/workspaces" in modules-left)
+    fragment = {"group/workspaces": {"orientation": "inherit", "modules": []}}
     for i, name in enumerate(grid.names, 1):
         label = f"{i}. {name}"
         on = shlex.quote(json.dumps({"text": label, "class": "active"}))
         off = shlex.quote(json.dumps({"text": label, "class": "idle"}))
         module = f"custom/ws#w{i}"
-        fragment["modules-left"].append(module)
+        fragment["group/workspaces"]["modules"].append(module)
         fragment[module] = {
             "exec": f'[ "$(cat {shlex.quote(str(CURRENT))} 2>/dev/null)" = {i} ] && echo {on} || echo {off}',
             "return-type": "json",
