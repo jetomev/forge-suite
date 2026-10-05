@@ -28,6 +28,7 @@ import re
 import shlex
 import signal
 import sys
+import time
 import tomllib
 from pathlib import Path
 
@@ -84,7 +85,7 @@ def current():
 def set_current(index):
     if current() != index or not CURRENT.exists():
         CURRENT.write_text(str(index))
-        os.system(f"pkill -RTMIN+{BAR_SIGNAL} -x waybar")  # the buttons redraw
+        signal_bar(signal.SIGRTMIN + BAR_SIGNAL)  # the buttons redraw
 
 
 # ---- What the keys and the bar call ----------------------------------------------------------
@@ -119,6 +120,32 @@ def move(sway, grid, index):
 
 # ---- The bar ---------------------------------------------------------------------------------
 
+def bar_listens(pid, sig):
+    """True once Waybar has set up its handler for `sig`. Before that, the signal's default
+    action ends the program: at login our first redraw reached a bar still starting, and killed it."""
+    try:
+        status = Path(f"/proc/{pid}/status").read_text()
+    except OSError:
+        return False
+    caught = int(re.search(r"^SigCgt:\s*([0-9a-f]+)", status, re.M).group(1), 16)
+    return bool(caught >> (sig - 1) & 1)
+
+
+def signal_bar(sig, wait=5.0):
+    """Send `sig` to every running Waybar, each only once it listens for it (up to `wait` s)."""
+    for pid in (int(p) for p in os.popen("pgrep -x waybar").read().split()):
+        deadline = time.monotonic() + wait
+        while not bar_listens(pid, sig):
+            if time.monotonic() > deadline or not Path(f"/proc/{pid}").exists():
+                break
+            time.sleep(0.05)
+        else:
+            try:
+                os.kill(pid, sig)
+            except ProcessLookupError:
+                pass
+
+
 def write_bar(grid):
     """Waybar's buttons: every workspace, always, as "1. Daily", the one on screen marked
     "active". Drawn by us (not Waybar's own Sway buttons), so a shared screen still shows all."""
@@ -141,7 +168,7 @@ def write_bar(grid):
     text = json.dumps(fragment, indent=2) + "\n"
     if not BAR_FRAGMENT.exists() or BAR_FRAGMENT.read_text() != text:
         BAR_FRAGMENT.write_text(text)
-        os.system("pkill -USR2 -x waybar")  # Waybar reloads its settings on SIGUSR2
+        signal_bar(signal.SIGUSR2)  # Waybar reloads its settings on SIGUSR2
 
 
 # ---- Setting Sway up -------------------------------------------------------------------------

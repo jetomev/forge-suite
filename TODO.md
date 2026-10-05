@@ -31,6 +31,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Later (Javier, 10-04, "for when we get there"): **Alt + Tab** across the apps of the workspace on all 3 screens, with window pictures (applet candidate)
 - [ ] Later (Javier, 10-04): **drag and drop** of windows — explore: swapping apps, dropping one onto another to tab/stack
 - [x] **Applet 5 · Window Rules** (D-53): small tools float (`applets/rules/`); Alt + F4 closes; the launcher's first screen searches every app — Javier: "everything is working. Excellent!"
+- [x] **F-45 (#27): no top bar after login** (found 10-05) — the Workspaces applet's first "redraw" signal reached Waybar before it was listening, which ends the program. Fixed: signal only once the bar listens (`SigCgt`), wait up to 5 s; tested 0/5 → 5/5; Javier logged out and in: the bar appeared ✅
 - [ ] F-44 (#26): no admin-password helper (polkit agent) runs in the Sway session — apps that ask for admin rights through a pop-up cannot (RECIPE job 8)
 - [x] **Applet 6 · Help** (D-54): Win + F1 + Help & Keys in the launcher → key chart + guide pages in one floating viewer (border, "q to close" line); one source (`applets/help/`) for Win + F1 and the Board; the chart checked against Sway's keys before every commit
 - [x] **Help & Keys as a forgekit app** (D-55): tabs Keys · Start · Workspaces · Windows · Apps · About · Quit, the same look on every page, wrapping tables with alternating rows — Javier: "Everything works! Great job."
