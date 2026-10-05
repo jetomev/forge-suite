@@ -27,11 +27,12 @@ import os
 import re
 import shlex
 import signal
-import socket
-import struct
 import sys
 import tomllib
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
+from hfsway import GET_WORKSPACES, SUBSCRIBE, EVENT_WORKSPACE, Sway, quoted  # noqa: E402
 
 CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets/workspaces.toml"
 BAR_FRAGMENT = CONFIG.with_name("workspaces.waybar.json")  # read by the bar (Waybar "include")
@@ -40,46 +41,6 @@ PIDFILE = RUNTIME / "hypeforge-workspaces.pid"
 CURRENT = RUNTIME / "hypeforge-workspaces.current"  # the workspace on screen now (1, 2, …)
 MOD = "Mod4"        # the Windows key
 BAR_SIGNAL = 8      # Waybar redraws the workspace buttons on SIGRTMIN+8
-
-MAGIC = b"i3-ipc"
-RUN_COMMAND, GET_WORKSPACES, SUBSCRIBE = 0, 1, 2
-EVENT_WORKSPACE = 0x80000000
-
-
-# ---- Sway's socket ---------------------------------------------------------------------------
-
-class Sway:
-    def __init__(self):
-        path = os.environ.get("SWAYSOCK")
-        if not path:
-            sys.exit("hypeforge-workspaces: SWAYSOCK is not set — is this running inside Sway?")
-        self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        self.sock.connect(path)
-
-    def _read(self, n):
-        data = b""
-        while len(data) < n:
-            chunk = self.sock.recv(n - len(data))
-            if not chunk:
-                raise ConnectionError("Sway closed the connection")
-            data += chunk
-        return data
-
-    def send(self, kind, payload=""):
-        body = payload.encode()
-        self.sock.sendall(MAGIC + struct.pack("=II", len(body), kind) + body)
-
-    def receive(self):
-        header = self._read(len(MAGIC) + 8)
-        length, kind = struct.unpack("=II", header[len(MAGIC):])
-        return kind, json.loads(self._read(length))
-
-    def ask(self, kind, payload=""):
-        self.send(kind, payload)
-        return self.receive()[1]
-
-    def run(self, *commands):
-        return self.ask(RUN_COMMAND, "; ".join(commands))
 
 
 # ---- Settings: the grid ----------------------------------------------------------------------
@@ -111,10 +72,6 @@ class Grid:
 
     def usable(self):
         return self.enabled and self.names and self.screens
-
-
-def quoted(s):
-    return '"' + s.replace('"', '\\"') + '"'
 
 
 def current():

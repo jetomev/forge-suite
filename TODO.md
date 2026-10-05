@@ -24,7 +24,9 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Bring `CLAUDE.md`, the README badges and the banner up to the new path (they still describe Hyprland + Lua, the first attempt)
 - [ ] **Applet 4 · App sections** (D-47): a list of apps, each thrown into a workspace; the same sections become the launcher's sections
 - [x] **Applet 1, matrix** (D-49): a screen can share one space between workspaces (`[share]` in `workspaces.toml`; all own for now); bar buttons drawn by the applet; windows follow when the grid changes — Javier: "everything works, the highlight follows on all three"
-- [ ] **Applet 2 · Window placement** (D-47, after the matrix — must skip shared cells): fill order 1 middle → 2 beside → 3 left → 4 beside → 5 right → 6 beside → 7 under 4 → 8 under 6, the same in every workspace (replaces "tiling order")
+- [x] **Applet 2 · Window Placement** (D-50): `applets/placement/` — fill order 1 middle → 2 beside → 3 left → 4 beside → 5 right → 6 beside → 7 under 4 → 8 under 6, in every workspace, counting a shared screen too; 9+ go round again as tabs — Javier: "all works perfect!"
+- [ ] Later (Javier, 10-04, "for when we get there"): **Alt + Tab** across the apps of the workspace on all 3 screens, with window pictures (applet candidate)
+- [ ] Later (Javier, 10-04): **drag and drop** of windows — explore: swapping apps, dropping one onto another to tab/stack
 - [ ] Floating: dialogs and small tools (list grows as we find them)
 - [ ] Apps that draw their own minimise/maximise/close bar (Chrome…): switch it off where the app allows
 - [ ] Try SwayFX for rounded corners (`chaotic-aur/swayfx` 0.6, same config) — later, separate trial

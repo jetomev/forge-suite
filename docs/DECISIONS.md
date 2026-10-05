@@ -7,6 +7,16 @@
 
 ## 2026-10-04
 
+### D-50 · Window Placement (applet 2): a fixed fill order, then tabs
+**Decided by Javier:** the order — *"Window 1: Screen 1 full screen · Window 2: Screen 1 right to w1 · Window 3: Screen 2 full screen · Window 4: Screen 2 right to w3 · Window 5: Screen 3 full screen · Window 6: Screen 3 right to w5 · Window 7: Screen 2 under w4 · Window 8: Screen 3 under w6"*; beyond that, *"9 and beyond follow the same pattern but stacking with existing windows"*; and with a shared screen, *"they should open following the flow, based on the open windows, shared screen included."*
+
+**What it means:**
+- **Its own applet**, separate from Workspaces Management: `applets/placement/` — settings `~/.config/hypeforge/applets/placement.toml` (`enabled`, `screens`, `order` as screen + spot: `fill`, `right`, `under-right`) + routine `hypeforge-placement`, started by Sway.
+- **Counts everything visible** on every screen in the workspace on screen (a shared screen included) and puts the new window in the first free spot of the order. Once all 8 are taken, the next go round the order again **as tabs** (9 on window 1's spot, 10 on window 2's…).
+- **Left alone:** floating windows and dialogs, and windows that open on a workspace not on screen.
+- **Shared code:** both applets talk to Sway through `applets/common/hfsway.py` (Python standard library only).
+- Tested by Claude with ten terminals (exact pattern, 10 px gaps, tabs on spots 1 and 2), then by Javier: *"all works perfect!"*
+
 ### D-49 · The workspace matrix: a screen can share one space between workspaces
 **Decided by Javier:** *"I want to have the possibility to tell the screens exactly which workspace they will share… Screen 1… part of all workspaces with the apps I have open… while the other 2 screen will hold different apps on each workspace… It is kind of a matricial relationship, to activate and deactivate at will by the user using our hypeForge Board."* Then: *"matrix first, all screens own for now."*
 
