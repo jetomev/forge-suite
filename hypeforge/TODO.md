@@ -54,6 +54,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] **Help & Keys as a forgekit app** (D-55): tabs Keys · Start · Workspaces · Windows · Apps · About · Quit, the same look on every page, wrapping tables with alternating rows — Javier: "Everything works! Great job."
 - [ ] forgekit (its own repo): the menu bar does not wrap and is cut off on a narrow window — affects every Forge app (found 10-05)
 - [x] Wallpaper : the KognogOS Semi Mocha wallpaper on all three screens, via swaybg (D-54)
+- [ ] **KognogOS Mocha skin for Midnight Commander** (Javier, 10-05, while he was out): `themes/mc/kognogos-mocha.ini` — full colour (truecolors, Catppuccin Mocha + the emblem's blue/peach, mauve accents, rounded corners); installed to `~/.local/share/mc/skins/` but **not made the default**; tested in a hidden terminal (panels, marked files, menu, dialog, help, error, editor, viewer) and in a real Alacritty window (`themes/mc/preview.png`). **Waiting: Javier tries `mc -S kognogos-mocha`**; if he likes it → `skin=kognogos-mocha` in `~/.config/mc/ini` + Help page → later a Theme manager job
 - [ ] Apps that draw their own minimise/maximise/close bar (Chrome…): switch it off where the app allows
 - [ ] Try SwayFX for rounded corners (`chaotic-aur/swayfx` 0.6, same config) — later, separate trial
 - [ ] The remaining jobs, one at a time with Javier (sound, network, Bluetooth, files, monitors, USB, printing…): a terminal (CLI/TUI) app first wherever one exists
