@@ -1,0 +1,14 @@
+[Desktop Entry]
+# hypeForge's entry for Claude Code in a terminal: a launcher favourite (Javier, 2026-10-05),
+# next to the Claude Desktop app. Alacritty names its window "claude-terminal", which matches
+# this file. TryExec hides it where Claude Code is not installed.
+Type=Application
+Name=Claude Terminal
+GenericName=AI Assistant
+Comment=Claude Code, in a terminal
+TryExec=claude
+Exec=alacritty --class claude-terminal -e claude
+Icon=claude-desktop
+Terminal=false
+StartupWMClass=claude-terminal
+Categories=Development;

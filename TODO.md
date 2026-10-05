@@ -24,7 +24,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Bring `CLAUDE.md`, the README badges and the banner up to the new path (they still describe Hyprland + Lua, the first attempt)
 - [x] **Launcher = fuzzel** (D-51) on Win + Space, apps only, terminal apps in Alacritty; sway-launcher-desktop tried and removed — Javier: "Works very well"
 - [x] **Applet 4 · App Sections** (D-52): `applets/sections/` on Win + Space — first screen = the workspaces + All apps + Lock Screen · Log Out · Reboot · Shutdown (asks first); a section pick opens the app in that workspace — Javier: "Looking great so far!"
-- [ ] Favourites: Javier pins them (the `favourites` list in `sections.toml`)
+- [x] Favourites (Javier, 10-05): 18 apps in his order in `~/.config/hypeforge/applets/sections.toml`, all 18 found by the launcher; new entries `desktop/applications/mc.desktop` (Midnight Commander) + `claude-terminal.desktop` (Claude Code in Alacritty); "hypeForge Settings" added when the Board exists. Javier: "Yes, perfect!"
 - [ ] Lock screen for Sway (RECIPE job 5): hyprlock is the stand-in, and it works under Sway
 - [x] **Applet 1, matrix** (D-49): a screen can share one space between workspaces (`[share]` in `workspaces.toml`; all own for now); bar buttons drawn by the applet; windows follow when the grid changes — Javier: "everything works, the highlight follows on all three"
 - [x] **Applet 2 · Window Placement** (D-50): `applets/placement/` — fill order 1 middle → 2 beside → 3 left → 4 beside → 5 right → 6 beside → 7 under 4 → 8 under 6, in every workspace, counting a shared screen too; 9+ go round again as tabs — Javier: "all works perfect!"

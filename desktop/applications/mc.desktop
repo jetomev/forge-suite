@@ -1,0 +1,14 @@
+[Desktop Entry]
+# hypeForge's entry for Midnight Commander (the mc package ships none): a launcher favourite
+# (Javier, 2026-10-05). Alacritty names its window "mc", which matches this file, so it gets
+# its own icon instead of being filed under Alacritty. TryExec hides it where mc is missing.
+Type=Application
+Name=Midnight Commander
+GenericName=File Manager
+Comment=Midnight Commander, the terminal file manager
+TryExec=mc
+Exec=alacritty --class mc -e mc
+Icon=system-file-manager
+Terminal=false
+StartupWMClass=mc
+Categories=Utility;FileTools;FileManager;
