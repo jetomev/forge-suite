@@ -20,8 +20,10 @@ set $right l
 # Your preferred terminal emulator
 set $term alacritty    # hypeForge: Alacritty (foot is not installed)
 # Your preferred application launcher
-# hypeForge: no launcher yet (Phase 11, job 2); Win + Enter opens a terminal
-set $menu true
+# hypeForge: fuzzel (RECIPE job 2; Javier 2026-10-04), a small graphical search box of apps.
+# Win + Space, and Win + D as before. (The first try, sway-launcher-desktop, was a list inside a
+# terminal: it felt like a terminal, and terminal apps did not open.) Settings: sway/fuzzel/.
+set $menu exec fuzzel --config ~/.config/sway/fuzzel/fuzzel.ini
 
 ### Output configuration
 #
@@ -116,7 +118,8 @@ input type:keyboard {
     bindsym $mod+Shift+q kill
 
     # Start your launcher
-    bindsym $mod+d exec $menu
+    bindsym $mod+d $menu
+    bindsym $mod+space $menu
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -202,7 +205,8 @@ input type:keyboard {
     bindsym $mod+Shift+space floating toggle
 
     # Swap focus between the tiling area and the floating area
-    bindsym $mod+space focus mode_toggle
+    # hypeForge: Win + Space opens the launcher now; this moved to Win + Shift + Tab
+    bindsym $mod+Shift+Tab focus mode_toggle
 
     # Move focus to the parent container
     bindsym $mod+a focus parent

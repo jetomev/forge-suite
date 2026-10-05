@@ -7,6 +7,15 @@
 
 ## 2026-10-04
 
+### D-51 · The launcher is fuzzel, on Win + Space
+**Decided by Javier:** option A first (*"A, Win only if possible, if not Win+Space"*); the Win key alone *"started opening terminals"*, so Win + Space; the terminal launcher showed every program (*"just show applications, not everything?"*), looked like a terminal and could not open btop, so fuzzel: *"Works very well."* And: *"remove the one we aren't using, let's not keep things installed we do not need."*
+
+**What it means:**
+- **fuzzel** (`extra`, nog): a small graphical search box of applications with icons, settings in `sway/fuzzel/fuzzel.ini` (Mocha colours, candy-icons, a 10 px corner radius as a first try of softer shapes). Win + Space (and Win + D); Sway's floating/tiled focus switch moved to Win + Shift + Tab.
+- **Terminal apps open in Alacritty** (`terminal=alacritty -e`): the Sway session sets no `$TERMINAL`, which is why btop did not open from the first launcher.
+- **sway-launcher-desktop was removed** (nog), with its settings and history files. Rule from Javier: nothing stays installed that we do not use.
+- Sections, favourites and our look for the launcher: applet 4 (App Sections), next.
+
 ### D-50 · Window Placement (applet 2): a fixed fill order, then tabs
 **Decided by Javier:** the order — *"Window 1: Screen 1 full screen · Window 2: Screen 1 right to w1 · Window 3: Screen 2 full screen · Window 4: Screen 2 right to w3 · Window 5: Screen 3 full screen · Window 6: Screen 3 right to w5 · Window 7: Screen 2 under w4 · Window 8: Screen 3 under w6"*; beyond that, *"9 and beyond follow the same pattern but stacking with existing windows"*; and with a shared screen, *"they should open following the flow, based on the open windows, shared screen included."*
 
