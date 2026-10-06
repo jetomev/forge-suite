@@ -1,0 +1,48 @@
+# hypeForge — wiremix, the sound mixer (right click on the bar's volume icon). Copied to
+# ~/.config/wiremix/wiremix.toml. KognogOS Mocha colours and straight borders, like the bar
+# (Javier, 2026-10-05). wiremix keeps its tab row at the bottom: it has no setting to move it.
+
+theme = "kognogos"
+char_set = "kognogos"
+tab = "playback"
+
+# Full device names: "SteelSeries Arctis 5 Chat" and "… Game" instead of the short
+# "SteelSeries Arctis 5" twice (Javier: "they aren't differentiated").
+[names]
+stream = [ "{node:node.name}: {node:media.name}" ]
+endpoint = [ "{node:node.description}" ]
+device = [ "{device:device.description}", "{device:device.nick}" ]
+
+[themes.kognogos]
+default_device = { fg = "#cba6f7" }
+default_stream = { fg = "#cba6f7" }
+selector = { fg = "#cba6f7" }
+tab = { fg = "#a6adc8" }
+tab_selected = { fg = "#cdd6f4", add_modifier = "BOLD" }
+tab_marker = { fg = "#cba6f7" }
+list_more = { fg = "#585b70" }
+node_title = { fg = "#cdd6f4" }
+node_target = { fg = "#a6adc8" }
+volume = { fg = "#cdd6f4" }
+volume_empty = { fg = "#45475a" }
+volume_filled = { fg = "#89b4fa" }
+meter_inactive = { fg = "#45475a" }
+meter_active = { fg = "#a6e3a1" }
+meter_overload = { fg = "#f38ba8" }
+meter_center_inactive = { fg = "#45475a" }
+meter_center_active = { fg = "#a6e3a1" }
+config_device = { fg = "#cdd6f4" }
+config_profile = { fg = "#a6adc8" }
+dropdown_icon = { fg = "#cba6f7" }
+dropdown_border = { fg = "#45475a" }
+dropdown_item = { fg = "#cdd6f4" }
+dropdown_selected = { fg = "#1e1e2e", bg = "#cba6f7" }
+dropdown_more = { fg = "#585b70" }
+help_border = { fg = "#45475a" }
+help_item = { fg = "#cdd6f4" }
+help_more = { fg = "#585b70" }
+
+[char_sets.kognogos]
+inherit = "default"
+dropdown_border = "Plain"
+help_border = "Plain"

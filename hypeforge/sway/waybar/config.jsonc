@@ -35,11 +35,53 @@
   },
   "modules-right": ["group/indicators"],
 
-  // The right side: background apps, the clipboard, the bell, then a line and the date and
-  // time — one group with its own shade (Javier, 2026-10-05)
+  // The right side, left to right (Javier, 2026-10-05): background apps, the clipboard,
+  // Bluetooth, network, volume | the date and time | the bell, the power menu — one shade
   "group/indicators": {
     "orientation": "inherit",
-    "modules": ["tray", "custom/clipboard", "custom/notifications", "clock"]
+    "modules": ["tray", "custom/clipboard", "bluetooth", "network", "wireplumber", "clock", "custom/notifications", "custom/power"]
+  },
+  // Network, Bluetooth, volume (Javier, 2026-10-05). Network: click = the network menu
+  // (networkmanager_dmenu in fuzzel), right click = nmtui. Bluetooth: click = bluetui, right
+  // click = on / off. Volume: click = mute, right click = wiremix. Terminal apps float.
+  "network": {
+    "format-ethernet": "󰈀",
+    "format-wifi": "{icon}",
+    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+    "format-disconnected": "󰤭",
+    "format-disabled": "󰤮",
+    "tooltip-format-ethernet": "Wired: {ifname}\n{ipaddr}",
+    "tooltip-format-wifi": "Wi-Fi: {essid} ({signalStrength} %)\n{ipaddr}",
+    "tooltip-format-disconnected": "Not connected",
+    "on-click": "networkmanager_dmenu",
+    "on-click-right": "alacritty --class hf-network -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e nmtui"
+  },
+  "bluetooth": {
+    "format": "󰂯",
+    "format-off": "󰂲",
+    "format-disabled": "󰂲",
+    "format-connected": "󰂱 {num_connections}",
+    "tooltip-format": "Bluetooth {status}",
+    "tooltip-format-connected": "Bluetooth: {device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}",
+    "on-click": "alacritty --class hf-bluetooth -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e bluetui",
+    "on-click-right": "sh -c 'bluetoothctl show | grep -q \"Powered: yes\" && bluetoothctl power off || bluetoothctl power on'"
+  },
+  "wireplumber": {
+    "format": "{icon} {volume}",
+    "format-muted": "󰝟",
+    "format-icons": ["󰕿", "󰖀", "󰕾"],
+    "scroll-step": 5,
+    "max-volume": 100,
+    "tooltip-format": "{node_name}: {volume} %\nScroll: louder / quieter · click: mute · right click: the mixer",
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-click-right": "alacritty --class hf-mixer -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e wiremix"
+  },
+  // The power menu: Lock · Log Out · Reboot · Shut Down (applet 4, `hypeforge-sections power`)
+  "custom/power": {
+    "format": "󰐥",
+    "tooltip-format": "Lock · Log Out · Reboot · Shut Down",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections power"
   },
   // The tray (Javier, 2026-10-05): apps that keep running in the background — Steam, Discord,
   // Dropbox, Insync… Left click opens the app, right click its menu.

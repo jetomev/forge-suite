@@ -57,7 +57,7 @@ Which package brings each font: [FONTS.md](FONTS.md).
 | **Left** — KognogOS emblem · <u>W</u>orkspaces · <u>F</u>avorites | the **shade**, straight edges; menu titles in subtext, key letter underlined | "a visual distinction"; "let's keep it straight for now"; menu titles like a menu bar |
 | Emblem | 17 px, drawn as the button's background from `~/.config/hypeforge/bar/launcher.png` (swap the picture to change it) | same size as the other icons; Waybar 0.15's image module stops the bar here |
 | **Centre** — open apps | the **shade**; 18 px icons from candy-icons; the window in use underlined in text colour; hover grey | Javier, 2026-10-05 |
-| **Right** — tray · clipboard · bell · ┃ · date and time | the **shade**, straight edges; tray icons 16 px, clipboard and bell 16 px; a 1 px hover-grey line before the clock | "1 px at a time"; "add a separator… paint the date/time area the same colour" |
+| **Right** — tray · clipboard · Bluetooth · network · volume ┃ date and time ┃ bell · ⏻ power | the **shade**, straight edges; tray icons 16 px; network, Bluetooth, volume, clipboard and bell 16 px (Symbols Nerd Font, subtext colour, red when off / muted / disconnected); a 1 px hover-grey line on each side of the clock; the ⏻ turns red on hover | "1 px at a time"; "add a separator… paint the date/time area the same colour" |
 | Hover on any button | `#45475a` | — |
 | Clock | `Mon 05 Oct   08:13 PM` | — |
 
@@ -97,6 +97,16 @@ Matched to the bar on 2026-10-05 (Javier: "match the notification pop-ups to the
 | Hide the box | after 30 s idle (`idle-hide`) |
 
 D-58: "it is perfect my friend".
+
+## The pop-up apps from the bar
+
+| App | Look | File |
+|---|---|---|
+| Every fuzzel list (also the network menu) | our list look is **fuzzel's default**: `~/.config/fuzzel/fuzzel.ini` → `sway/fuzzel/fuzzel.ini` | — |
+| Network menu (networkmanager_dmenu) | fuzzel, under the bar's right end, Noto Sans 10 pt, ● for the active connection, Wi-Fi signal icons, password as dots | `themes/networkmanager-dmenu/config.ini` → `~/.config/networkmanager-dmenu/` |
+| Mixer (wiremix) | KognogOS Mocha theme (mauve selection, blue volume bars, green / red meters), straight borders; full device names (Arctis **Chat** / **Game**); tab row stays at the bottom (no setting) | `themes/wiremix/wiremix.toml` → `~/.config/wiremix/` |
+| Bluetooth (bluetui) | no colour settings — it uses the terminal's (Alacritty's KognogOS theme); Esc quits | `themes/bluetui/config.toml` → `~/.config/bluetui/` |
+| nmtui | the terminal's colours | — |
 
 ## Midnight Commander — `themes/mc/kognogos-mocha.ini` → `~/.local/share/mc/skins/`
 

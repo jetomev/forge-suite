@@ -35,6 +35,11 @@ name = "Drawing on a screenshot (swappy)"
 app_id = '^swappy$'
 
 [[float]]
+name = "Sound, network and Bluetooth (wiremix, nmtui, bluetui — opened from the bar)"
+app_id = '^hf-(mixer|network|bluetooth)$'
+focus = true
+
+[[float]]
 name = "Network Connections"
 app_id = '^nm-connection-editor$'
 

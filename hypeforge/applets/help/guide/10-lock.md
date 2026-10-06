@@ -5,7 +5,7 @@ KognogOS wallpaper.
 
 ## How to use it
 
-- **Win + Escape** locks, or **Lock Screen** in the launcher (Win + Space).
+- **Win + Escape** locks, or **Lock** in the bar's **⏻** menu (top right).
 - Type your password — a dot appears for each key — and press **Enter**. A wrong password
   shows a red message; just type it again.
 - **By itself:** the screen locks after **30 minutes** untouched, and the screens turn off after

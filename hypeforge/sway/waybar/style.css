@@ -75,11 +75,26 @@ window#waybar {
 }
 
 /* The date and time, after a thin line that separates them from the icons */
+/* The date and time, between two thin lines: the icons on its left, the bell and power on its right */
 #clock {
   padding: 0 14px;
-  margin-left: 6px;
+  margin: 0 6px;
   color: @hf_text;
   border-left: 1px solid @hf_inactive;
+  border-right: 1px solid @hf_inactive;
+}
+
+/* The power menu (⏻) at the bar's right end */
+#custom-power {
+  padding: 0 12px 0 8px;
+  font-family: "Symbols Nerd Font", sans-serif;
+  font-size: 16px;
+  color: @hf_subtext;
+}
+
+#custom-power:hover {
+  background: @hf_inactive;
+  color: #f38ba8;
 }
 
 /* The right side — the tray, the clipboard, the bell, a line, the date and time — wears the
@@ -121,6 +136,23 @@ window#waybar {
 
 #tray > .needs-attention {
   background-color: #f38ba8;
+}
+
+/* Network, Bluetooth, volume: icons like the clipboard's; the volume shows its number */
+#network, #bluetooth, #wireplumber {
+  padding: 0 5px;
+  font-family: "Symbols Nerd Font", sans-serif;
+  font-size: 16px;
+  color: @hf_subtext;
+}
+
+#network:hover, #bluetooth:hover, #wireplumber:hover {
+  background: @hf_inactive;
+  color: @hf_text;
+}
+
+#network.disconnected, #bluetooth.off, #bluetooth.disabled, #wireplumber.muted {
+  color: #f38ba8;
 }
 
 /* The clipboard (applet 9) */

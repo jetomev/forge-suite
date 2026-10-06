@@ -8,7 +8,7 @@ It runs on **Sway** and adds small pieces of its own, called **applets**.
 
 | Keys | What it does |
 |---|---|
-| **Win + Space** | The launcher: open apps, lock, log out, reboot, shut down (or click the KognogOS emblem) |
+| **Win + Space** | The launcher: open apps (or click the KognogOS emblem) |
 | **Win + 1 … 6** | Switch workspace — every screen together |
 | **Win + W** | The list of workspaces (or click **Workspaces** on the bar) |
 | **Win + F** | Your favorite apps (or click **Favorites** on the bar) |
@@ -40,11 +40,16 @@ place to change them; until then the files can be edited by hand.
 
 ## The top bar
 
-From the left — on a slightly lighter background — the **KognogOS emblem** (the launcher),
-the menus **Workspaces** and **Favorites** (the underlined letter is the key: Win + W, Win + F).
-On the right, on the same shade: the **tray** (apps running in the
-background — Steam, Discord, Dropbox, Insync…: click to open, right click for their menu), the
-**clipboard icon**, the **bell**, a thin line, and the date and time.
+**Left** (a lighter shade): the **KognogOS emblem** (the launcher), then the menus
+**<u>W</u>orkspaces** and **<u>F</u>avorites** — the underlined letter is the key: Win + W, Win + F.
+
+**Centre:** the apps that are open, one icon per window — click to go to it, middle click to
+close it.
+
+**Right**, left to right: the **tray** (apps running in the background — Steam, Discord,
+Dropbox, Insync…), the **clipboard**, **Bluetooth**, **network**, **volume** | the **date and
+time** | the **bell** and the **⏻ power menu** (Lock · Log Out · Reboot · Shut Down — the last
+three ask first).
 
 ## No title bars
 

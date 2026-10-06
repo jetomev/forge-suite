@@ -3,7 +3,7 @@
 
 The launcher with sections. Win + Space opens a first screen:
 
-    Favorites · 1. Daily · 2. Work · … · All apps · Help & Keys · Lock Screen · Log Out · Reboot · Shutdown
+    Favorites · 1. Daily · 2. Work · … · All apps · Help & Keys  (power: the bar's ⏻ button)
 
 and typing there searches every app (they sit below the fold, out of sight until you type).
 
@@ -192,9 +192,40 @@ def favorites_menu():
         launch(everything[shown[choice]])
 
 
+# ---- The power menu on the bar (Javier, 2026-10-05) -----------------------------------------
+# The ⏻ button at the bar's right end: Lock · Log Out · Reboot · Shut Down, top to bottom.
+# The last three ask first, with "No" selected, like the launcher's own power lines.
+
+UNDER_RIGHT_END = ("--anchor", "top-right", "--x-margin", "4", "--y-margin", "4")
+
+
+def power_menu():
+    if hfmenu.close_open("power"):  # a second click closes it
+        return
+    power = load().get("power", {})
+    items = [(key, label, icon, ask) for key, label, icon, ask in (
+        ("lock", "Lock", "system-lock-screen", None),
+        ("logout", "Log Out", "system-log-out", "Log out now?"),
+        ("reboot", "Reboot", "system-reboot", "Reboot now?"),
+        ("shutdown", "Shut Down", "system-shutdown", "Shut down now?")) if power.get(key)]
+    cfg = load()
+    choice = pick(cfg, [(label, icon) for _, label, icon, _ in items], "Power  ",
+                  lines_shown=len(items), menu="power", extra=UNDER_RIGHT_END + ("--width", "22"))
+    if choice is None:
+        return
+    key, label, icon, ask = items[choice]
+    if ask and pick(cfg, [("No", "go-home"), (f"Yes, {label.lower()}", icon)], f"{ask}  ",
+                    lines_shown=2, menu="power", extra=UNDER_RIGHT_END + ("--width", "22")) != 1:
+        return
+    subprocess.run(["swaymsg", "exec", power[key]], capture_output=True)
+
+
 def main():
     if sys.argv[1:] == ["bar"]:
         print(f"hypeforge-sections: {write_bar()} favourites on the bar")
+        return
+    if sys.argv[1:] == ["power"]:
+        power_menu()
         return
     if sys.argv[1:] == ["favorites"]:
         favorites_menu()
@@ -216,8 +247,7 @@ def main():
     favourites = [a for a in cfg.get("favourites", []) if a in everything]
     sections = sort_into_sections(cfg, everything)
 
-    power = cfg.get("power", {})
-    # First screen: the menus, then the power actions. Every line has an icon, so all line up.
+    # First screen: the menus. Every line has an icon, so all line up.
     first = []  # (text, icon, action)
     if favourites:
         first.append(("Favorites", "favorites", ("menu", "Favorites", favourites, None)))
@@ -227,12 +257,7 @@ def main():
                       ("menu", s["name"], members, n)))
     first.append(("All apps", "applications-all", ("menu", "All apps", by_name, None)))
     first.append(("Help & Keys", "help-browser", ("help",)))
-    for key, label, icon, ask in (("lock", "Lock Screen", "system-lock-screen", None),
-                                  ("logout", "Log Out", "system-log-out", "Log out now?"),
-                                  ("reboot", "Reboot", "system-reboot", "Reboot now?"),
-                                  ("shutdown", "Shutdown", "system-shutdown", "Shut down now?")):
-        if power.get(key):
-            first.append((label, icon, ("power", power[key], ask, label)))
+    # Power lives on the bar's ⏻ button now; the launcher is for apps only (Javier, 2026-10-05)
 
     # Then every app, below the fold: the window is exactly as tall as the menus, so the apps
     # stay out of sight until you type — and typing always searches every app (Javier, 10-04).
@@ -247,13 +272,6 @@ def main():
             return launch(everything[action[1]])
         if action[0] == "help":
             subprocess.run(["swaymsg", "exec", str(HELP)], capture_output=True)
-            return
-        if action[0] == "power":
-            _, command, ask, label = action
-            if ask and pick(cfg, [("No", "go-home"), (f"Yes, {label.lower()}", first[choice][1])], f"{ask}  ") != 1:
-                choice = pick(cfg, [(t, i) for t, i, _ in first], "❯  ", lines_shown=shown)
-                continue
-            subprocess.run(["swaymsg", "exec", command], capture_output=True)
             return
         _, title, members, workspace = action
         lines = [("Back", "go-home")] + [(everything[a]["name"], everything[a]["icon"]) for a in members]

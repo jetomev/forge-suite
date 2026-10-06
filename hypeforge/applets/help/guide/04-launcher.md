@@ -2,8 +2,8 @@
 
 **What it does:** **Win + Space**, or a click on the **KognogOS emblem** at the left of the bar,
 opens the launcher, right under the emblem; press again to close it. Its first screen lists **Favorites**, your
-workspaces as **sections**, then **All apps**, then **Lock Screen · Log Out · Reboot ·
-Shutdown**.
+workspaces as **sections**, then **All apps** and **Help & Keys** — apps only. Lock, log out,
+reboot and shut down are on the bar's **⏻** button.
 
 ## How to use it
 
@@ -11,7 +11,6 @@ Shutdown**.
 - **Pick a section** (for example *2. Work*) to see its apps. An app picked there opens **in
   that workspace**, and window placement puts it in its spot.
 - **All apps** lists everything. **Back** returns to the first screen; **Esc** closes.
-- Log Out, Reboot and Shutdown ask first, with **No** selected.
 - **Win + D** is the plain search, without sections.
 
 ## Favorites on the bar
@@ -30,6 +29,6 @@ The list follows the `favourites` setting below — after changing it by hand, r
 
 The emblem's picture: `~/.config/hypeforge/bar/launcher.png` — put any picture there to change it.
 - one `[[section]]` per section: `name`, `icon`, `workspace`, `apps`, `categories`
-- `[power]` — what Lock Screen, Log Out, Reboot and Shutdown run
+- `[power]` — what the bar's ⏻ menu runs for Lock, Log Out, Reboot and Shut Down
 
 The launcher's look (colours, size, corners): `~/.config/sway/fuzzel/fuzzel.ini`.
