@@ -21,3 +21,5 @@ Settings, password windows, picture-in-picture video, Steam's side windows and m
 
 A window's names: run `swaymsg -t get_tree` while it is open. After editing:
 `hypeforge-rules reload` (switching a rule *off* needs **Win + Shift + C** as well).
+
+The **passphrase box** for your signing key (pinentry) floats too, centred with a light border.

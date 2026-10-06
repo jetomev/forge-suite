@@ -42,6 +42,18 @@ border = 3
 focus = true
 
 [[float]]
+name = "Passphrase windows (pinentry — the signing key, GnuPG; Javier: it opened full screen)"
+class = '(?i)^pinentry'
+border = 3
+focus = true
+
+[[float]]
+name = "Passphrase windows (pinentry, Wayland builds)"
+app_id = '(?i)^pinentry'
+border = 3
+focus = true
+
+[[float]]
 name = "Network Connections"
 app_id = '^nm-connection-editor$'
 
