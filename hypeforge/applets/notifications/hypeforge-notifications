@@ -89,7 +89,8 @@ def show_list():
     lines = [f"{n.get('app_name') or 'app'} · {n.get('summary', '')}"
              + (f" — {n['body']}" if n.get("body") else "") for n in notes] or ["No notifications yet"]
     # Under the bar's right end, where its icon is (Javier, 2026-10-05)
-    cmd = ["fuzzel", "--dmenu", "--anchor", "top-right", "--x-margin", "4", "--y-margin", "4", "--prompt", "Notifications  ", "--width", "70",
+    cmd = ["fuzzel", "--dmenu", "--anchor", "top-right", "--x-margin", "4", "--y-margin", "4",
+           "--font", "Noto Sans:size=9",  # two points under the other lists (Javier, 2026-10-05) "--prompt", "Notifications  ", "--width", "70",
            "--lines", str(min(len(lines), 15))]
     if os.path.isfile(FUZZEL):
         cmd[1:1] = ["--config", FUZZEL]

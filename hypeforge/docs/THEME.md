@@ -29,8 +29,8 @@ Catppuccin Mocha ([catppuccin.com](https://catppuccin.com) — thank you) until 
 |---|---|---|
 | The bar's text | `sans-serif` → Noto Sans | 14 px |
 | The bar's icons (clipboard, bell) | Symbols Nerd Font | 16 px |
-| The pop-up lists | Noto Sans | 11 pt (≈ the bar's 14 px) |
-| Notifications | sans | 12 |
+| The pop-up lists | Noto Sans | 11 pt (≈ the bar's 14 px); the clipboard and notification lists 9 pt |
+| Notifications | Noto Sans | 10.5 (≈ the bar's 14 px) |
 | Lock screen clock / date / password box | sans-serif | 72 pt / 18 pt / 16 pt |
 | Terminal (Alacritty) and terminal apps | JetBrainsMono Nerd Font | 12 |
 | GTK apps (swappy, galculator…) | Noto Sans; monospace JetBrainsMono Nerd Font | 10 |
@@ -67,7 +67,7 @@ The launcher, Workspaces, Favorites, the clipboard list and the notification lis
 
 | Setting | Value |
 |---|---|
-| Font | Noto Sans 11 pt |
+| Font | Noto Sans 11 pt; the clipboard and notification lists 9 pt (set in their applets, Javier: "reduce them a couple points") |
 | Background / text | the shade `#262637` / `#cdd6f4` |
 | Border | 1 px `#45475a`, straight corners |
 | Highlighted row | `#45475a`, white text; typed letters mauve |
@@ -81,11 +81,11 @@ The launcher, Workspaces, Favorites, the clipboard list and the notification lis
 | Setting | Value |
 |---|---|
 | Place | top right of the screen in use, under the bar; 420 × up to 200 px; 5 at a time |
-| Look | `sans 12`, background `#1e1e2e` (95 %), text `#cdd6f4`, 2 px border `#45475a`, **10 px rounded corners**, 12 px padding, 48 px icons |
+| Look | the bar's: Noto Sans 10.5 (≈ the bar's 14 px), background the shade `#262637`, text `#cdd6f4`, 1 px border `#45475a`, **straight corners**, 10 px padding, 40 px icons |
 | Low / critical | quieter grey border and text / red border, stays until clicked |
 | Timing | 5 seconds |
 
-⚠️ **Not yet matching the bar and the lists** (rounded, darker, a bigger font). Javier's call whether they follow.
+Matched to the bar on 2026-10-05 (Javier: "match the notification pop-ups to the bar too"); before: sans 12, `#1e1e2e` at 95 %, 2 px border, 10 px rounded corners.
 
 ## Lock screen — `sway/gtklock/config.ini`, `style.css` → `~/.config/gtklock/`
 
