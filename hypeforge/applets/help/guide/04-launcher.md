@@ -1,7 +1,7 @@
 # App Sections — the launcher (applet 4)
 
 **What it does:** **Win + Space**, or a click on the **KognogOS emblem** at the left of the bar,
-opens the launcher; press again to close it. Its first screen lists **Favourites**, your
+opens the launcher; press again to close it. Its first screen lists **Favorites**, your
 workspaces as **sections**, then **All apps**, then **Lock Screen · Log Out · Reboot ·
 Shutdown**.
 
@@ -14,8 +14,12 @@ Shutdown**.
 - Log Out, Reboot and Shutdown ask first, with **No** selected.
 - **Win + D** is the plain search, without sections.
 
-Apps you put in a section come first; every other app falls into a section by its own kind
-(a game into Gaming, a settings tool into Settings…).
+## Favorites on the bar
+
+**Favorites ▾** on the top bar (right of the workspace button) drops down the same apps, each
+with its icon: **click one** to open it; click the button again (or **Esc**) to close the list.
+The list follows the `favourites` setting below — after changing it by hand, run
+`hypeforge-sections bar` (it also runs at every login).
 
 ## Settings
 

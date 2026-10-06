@@ -127,7 +127,11 @@ input type:keyboard {
     bindsym $mod+n exec makoctl dismiss --all
     bindsym $mod+Shift+n exec makoctl restore
     # hypeForge: the workspace dropdown (applet 1; also a click on the bar's workspace button)
-    bindsym $mod+Tab exec ~/Programs/forge-suite/hypeforge/applets/workspaces/hypeforge-workspaces menu
+    bindsym $mod+Tab # hypeForge: start-at-login apps from ~/.config/autostart (applet 10; Sway does not read that folder)
+exec ~/Programs/forge-suite/hypeforge/applets/autostart/hypeforge-autostart
+# hypeForge: your favourites as icons on the bar (applet 4 writes them; Javier 2026-10-05)
+exec ~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections bar
+exec ~/Programs/forge-suite/hypeforge/applets/workspaces/hypeforge-workspaces menu
     # hypeForge: the clipboard history (applet 9)
     bindsym $mod+c exec ~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard list
     # hypeForge: lock the screen (Javier, 2026-10-05)

@@ -2,13 +2,15 @@
 // The workspace buttons are drawn by applet 1 (Workspaces Management, D-47–D-49) from
 // ~/.config/hypeforge/applets/workspaces.toml, into the file included below.
 {
-  "include": ["~/.config/hypeforge/applets/workspaces.waybar.json"],
+  "include": ["~/.config/hypeforge/applets/workspaces.waybar.json",
+              "~/.config/hypeforge/applets/favourites.waybar.json"],
   "layer": "top",
   "position": "top",
   "height": 32,
   "spacing": 0,
-  // Left: the launcher button, then the workspace buttons (the group comes from the included file)
-  "modules-left": ["custom/launcher", "group/workspaces"],
+  // Left: the launcher button, the workspace dropdown, then the Favorites dropdown (the two
+  // groups come from the included files: applet 1 and applet 4, `hypeforge-sections bar`)
+  "modules-left": ["custom/launcher", "group/workspaces", "group/favourites"],
 
   // The launcher button (Javier, 2026-10-05): the KognogOS emblem, or any picture put at
   // ~/.config/hypeforge/bar/launcher.png (drawn by style.css as the button's background:
@@ -19,7 +21,13 @@
     "on-click": "~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections"
   },
   "modules-center": [],
-  "modules-right": ["custom/clipboard", "custom/notifications", "clock"],
+  "modules-right": ["tray", "custom/clipboard", "custom/notifications", "clock"],
+  // The tray (Javier, 2026-10-05): apps that keep running in the background — Steam, Discord,
+  // Dropbox, Insync… Left click opens the app, right click its menu.
+  "tray": {
+    "icon-size": 16,
+    "spacing": 10
+  },
   // The clipboard: applet 9 (applets/clipboard/), with the count of new copies. Left click: the
   // history (the count goes away); right click: empty it. Redrawn on SIGRTMIN+10 at every copy.
   "custom/clipboard": {

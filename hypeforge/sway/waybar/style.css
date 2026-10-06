@@ -1,3 +1,6 @@
+/* The favourites' icons, written by `hypeforge-sections bar` (applet 4) — @import comes first */
+@import url("../../hypeforge/applets/favourites.css");
+
 /* hypeForge — the top bar's look. Catppuccin Mocha until the KognogOS palette (Phase 12, D-46). */
 @define-color hf_bar      #181825;
 @define-color hf_text     #cdd6f4;
@@ -34,6 +37,26 @@ window#waybar {
   background-color: @hf_inactive;
 }
 
+/* The left side — the emblem, the workspace button, Favorites — is a shade lighter than the
+   right, with a rounded end where they meet (Javier, 2026-10-05: "a visual distinction"). */
+.modules-left {
+  background-color: #262637;
+  border-radius: 0 12px 12px 0;
+  padding-right: 6px;
+}
+
+/* Favorites ▾: the dropdown of your apps (applet 4) */
+#custom-favorites {
+  padding: 0 12px;
+  margin-left: 4px;
+  color: @hf_subtext;
+}
+
+#custom-favorites:hover {
+  background: @hf_inactive;
+  color: @hf_text;
+}
+
 /* The workspace buttons, drawn by applet 1 (one module per workspace: custom/ws#w1 …) */
 #custom-ws {
   padding: 0 12px;
@@ -57,11 +80,25 @@ window#waybar {
   color: @hf_text;
 }
 
+/* The tray: background apps (Steam, Discord, Dropbox…) */
+#tray {
+  padding: 0 8px;
+}
+
+#tray menu {
+  background: @hf_bar;
+  color: @hf_text;
+}
+
+#tray > .needs-attention {
+  background-color: #f38ba8;
+}
+
 /* The clipboard (applet 9) */
 #custom-clipboard {
   padding: 0 5px;
   font-family: "Symbols Nerd Font", sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: @hf_subtext;
 }
 
@@ -79,7 +116,7 @@ window#waybar {
 #custom-notifications {
   padding: 0 5px;
   font-family: "Symbols Nerd Font", sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: @hf_subtext;
 }
 

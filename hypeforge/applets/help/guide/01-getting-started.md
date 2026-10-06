@@ -35,11 +35,14 @@ place to change them; until then the files can be edited by hand.
 7. **Notifications** — the bell on the bar, Do Not Disturb
 8. **Screenshots** — Print Screen, saved, copied, ready to draw on
 9. **Clipboard** — the history of what you copied
+10. **Start-at-login apps** — starts the apps in your autostart folder (Sway does not by itself)
 
 ## The top bar
 
-From the left: the **KognogOS emblem** (the launcher), the **workspace button**, then on the
-right the **clipboard icon**, the **bell** and the clock.
+From the left — on a slightly lighter background — the **KognogOS emblem** (the launcher),
+the **workspace button** and **Favorites ▾**. On the right: the **tray** (apps running in the
+background — Steam, Discord, Dropbox, Insync…: click to open, right click for their menu), the
+**clipboard icon**, the **bell** and the clock.
 
 ## No title bars
 

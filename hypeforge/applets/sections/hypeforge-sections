@@ -3,7 +3,7 @@
 
 The launcher with sections. Win + Space opens a first screen:
 
-    Favourites · 1. Daily · 2. Work · … · All apps · Help & Keys · Lock Screen · Log Out · Reboot · Shutdown
+    Favorites · 1. Daily · 2. Work · … · All apps · Help & Keys · Lock Screen · Log Out · Reboot · Shutdown
 
 and typing there searches every app (they sit below the fold, out of sight until you type).
 
@@ -18,7 +18,10 @@ fuzzel draws the menus (its --dmenu mode); this file only decides what is in the
 """
 
 import os
+import json
 import re
+import shlex
+import signal
 import subprocess
 import sys
 import tomllib
@@ -30,6 +33,7 @@ CONFIG_HOME = Path(os.environ.get("XDG_CONFIG_HOME", HOME / ".config"))
 CONFIG = CONFIG_HOME / "hypeforge/applets/sections.toml"
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
 import hfmenu  # noqa: E402
+from hfbar import signal_bar  # noqa: E402
 
 WORKSPACES = Path(__file__).resolve().parent.parent / "workspaces/hypeforge-workspaces"
 HELP = Path(__file__).resolve().parent.parent / "help/hypeforge-help"
@@ -113,16 +117,16 @@ def sort_into_sections(cfg, everything):
 
 # ---- The menus -------------------------------------------------------------------------------
 
-def pick(cfg, lines, prompt, icons=True, lines_shown=None):
+def pick(cfg, lines, prompt, icons=True, lines_shown=None, menu="launcher", extra=()):
     """Show `lines` [(text, icon)] in fuzzel; the chosen index, or None (Esc)."""
-    fuzzel = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", prompt]
+    fuzzel = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", prompt, *extra]
     if lines_shown:
         fuzzel += ["--lines", str(lines_shown)]
     look = Path(os.path.expanduser(cfg.get("fuzzel_config", "")))
     if look.is_file():
         fuzzel += ["--config", str(look)]
     text = "\n".join(f"{t}\0icon\x1f{i}" if icons and i else t for t, i in lines) + "\n"
-    out = hfmenu.run("launcher", fuzzel, text)  # a second press closes it (main)
+    out = hfmenu.run(menu, fuzzel, text)  # a second press closes it (main)
     return None if out is None else int(out.strip())
 
 
@@ -132,7 +136,77 @@ def launch(app, workspace=None):
     subprocess.run(["swaymsg", "exec", command_for(app)], capture_output=True)
 
 
+# ---- Favorites on the bar (Javier, 2026-10-05) ---------------------------------------------
+# One dropdown button, "Favorites ▾"; its list shows each app with its icon (fuzzel finds the
+# icons itself). `hypeforge-sections bar` writes the button for the bar.
+
+CONFIG_DIR = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets"
+BAR_FRAGMENT = CONFIG_DIR / "favourites.waybar.json"   # read by the bar (Waybar "include")
+BAR_STYLE = CONFIG_DIR / "favourites.css"              # @import-ed by the bar's style.css (kept for
+                                                       # later per-app styling; empty for now)
+
+
+def write_bar():
+    """The favourites group for the bar, and its icons' style. Redraws the bar if anything changed."""
+    cfg = load()
+    everything = apps()
+    me = shlex.quote(os.path.abspath(sys.argv[0]))
+    fragment = {"group/favourites": {"orientation": "inherit", "modules": []}}
+    style = ["/* Written by hypeforge-sections bar. Do not edit by hand. */"]
+    # One dropdown button, "Favorites ▾" (Javier, 2026-10-05: like a menu bar, not a row of icons).
+    # The list it opens shows each app with its icon (`favorites`, below).
+    shown = [a for a in cfg.get("favourites", []) if a in everything]
+    if shown:
+        fragment["group/favourites"]["modules"].append("custom/favorites")
+        fragment["custom/favorites"] = {"format": "Favorites  \u25be", "tooltip": False,
+                                        "on-click": f"{me} favorites"}
+    text = json.dumps(fragment, indent=2) + "\n"
+    css = "\n".join(style) + "\n"
+    changed = not BAR_FRAGMENT.exists() or BAR_FRAGMENT.read_text() != text \
+        or not BAR_STYLE.exists() or BAR_STYLE.read_text() != css
+    if changed:
+        BAR_FRAGMENT.write_text(text)
+        BAR_STYLE.write_text(css)
+        signal_bar(signal.SIGUSR2)  # Waybar reloads its settings and style on SIGUSR2
+    return len(shown)
+
+
+def favorites_menu():
+    """The Favorites dropdown: your apps with their icons, under the bar button; pick one to open it."""
+    if hfmenu.close_open("favorites"):  # a second click closes it
+        return
+    cfg = load()
+    everything = apps()
+    shown = [a for a in cfg.get("favourites", []) if a in everything]
+    if not shown:
+        return
+    # Under the button: the emblem (~44 px) plus the workspace button, whose width follows its name
+    try:
+        current = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "hypeforge-workspaces.current").read_text().strip()
+        names = tomllib.load(open(CONFIG_DIR / "workspaces.toml", "rb"))
+        label = f"{current}. {[w['name'] for w in names.get('workspace', [])][int(current) - 1]}  ▾"
+    except Exception:
+        label = "1. Daily  ▾"
+    x = 44 + 24 + len(label) * 8 + 8
+    choice = pick(cfg, [(everything[a]["name"], everything[a]["icon"]) for a in shown], "Favorites  ",
+                  lines_shown=len(shown), menu="favorites",
+                  extra=("--anchor", "top-left", "--x-margin", str(x), "--y-margin", "4", "--width", "30"))
+    if choice is not None:
+        launch(everything[shown[choice]])
+
+
 def main():
+    if sys.argv[1:] == ["bar"]:
+        print(f"hypeforge-sections: {write_bar()} favourites on the bar")
+        return
+    if sys.argv[1:] == ["favorites"]:
+        favorites_menu()
+        return
+    if len(sys.argv) == 3 and sys.argv[1] == "launch":
+        app = apps().get(sys.argv[2])
+        if app:
+            launch(app)
+        return
     if hfmenu.close_open("launcher"):
         return
     cfg = load()
@@ -149,7 +223,7 @@ def main():
     # First screen: the menus, then the power actions. Every line has an icon, so all line up.
     first = []  # (text, icon, action)
     if favourites:
-        first.append(("Favourites", "favorites", ("menu", "Favourites", favourites, None)))
+        first.append(("Favorites", "favorites", ("menu", "Favorites", favourites, None)))
     for s, members in sections:
         n = s.get("workspace")
         first.append((f"{f'{n}. ' if n else ''}{s['name']}", s.get("icon", "applications-other"),
