@@ -1,0 +1,674 @@
+[
+ {
+  "name": "DP-3",
+  "make": "Sceptre Tech Inc",
+  "model": "Sceptre Y27",
+  "serial": "SERIAL-BLANKED",
+  "active": true,
+  "power": true,
+  "primary": false,
+  "current_mode": {
+   "width": 2560,
+   "height": 1440,
+   "refresh": 144000,
+   "picture_aspect_ratio": "none"
+  },
+  "rect": {
+   "x": 2560,
+   "y": 0,
+   "width": 2560,
+   "height": 1440
+  },
+  "scale": 1.0,
+  "transform": "normal",
+  "adaptive_sync_status": "disabled",
+  "hdr": false,
+  "features": {
+   "adaptive_sync": true,
+   "hdr": false
+  },
+  "modes": [
+   {
+    "width": 2560,
+    "height": 1440,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 2560,
+    "height": 1440,
+    "refresh": 144000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 2560,
+    "height": 1440,
+    "refresh": 120001,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 2560,
+    "height": 1080,
+    "refresh": 59939,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1920,
+    "height": 1080,
+    "refresh": 119879,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1920,
+    "height": 1080,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1920,
+    "height": 1080,
+    "refresh": 59939,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1920,
+    "height": 1080,
+    "refresh": 50000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 1440,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1680,
+    "height": 1050,
+    "refresh": 59954,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1600,
+    "height": 900,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 1024,
+    "refresh": 75025,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 1024,
+    "refresh": 60020,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1440,
+    "height": 900,
+    "refresh": 59887,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 960,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1152,
+    "height": 864,
+    "refresh": 75000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 720,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 720,
+    "refresh": 59943,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 720,
+    "refresh": 50000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1024,
+    "height": 768,
+    "refresh": 75029,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1024,
+    "height": 768,
+    "refresh": 70069,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1024,
+    "height": 768,
+    "refresh": 60004,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 800,
+    "height": 600,
+    "refresh": 75000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 800,
+    "height": 600,
+    "refresh": 72188,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 800,
+    "height": 600,
+    "refresh": 60317,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 800,
+    "height": 600,
+    "refresh": 56250,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 720,
+    "height": 576,
+    "refresh": 50000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 720,
+    "height": 480,
+    "refresh": 59940,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 640,
+    "height": 480,
+    "refresh": 75000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 640,
+    "height": 480,
+    "refresh": 72809,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 640,
+    "height": 480,
+    "refresh": 59940,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 640,
+    "height": 480,
+    "refresh": 59929,
+    "picture_aspect_ratio": "none"
+   }
+  ],
+  "non_desktop": false
+ },
+ {
+  "name": "DP-2",
+  "make": "Sceptre Tech Inc",
+  "model": "Sceptre Y27",
+  "serial": "SERIAL-BLANKED",
+  "active": true,
+  "power": true,
+  "primary": false,
+  "current_mode": {
+   "width": 2560,
+   "height": 1440,
+   "refresh": 144000,
+   "picture_aspect_ratio": "none"
+  },
+  "rect": {
+   "x": 0,
+   "y": 0,
+   "width": 2560,
+   "height": 1440
+  },
+  "scale": 1.0,
+  "transform": "normal",
+  "adaptive_sync_status": "disabled",
+  "hdr": false,
+  "features": {
+   "adaptive_sync": true,
+   "hdr": false
+  },
+  "modes": [
+   {
+    "width": 2560,
+    "height": 1440,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 2560,
+    "height": 1440,
+    "refresh": 144000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 2560,
+    "height": 1440,
+    "refresh": 120001,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 2560,
+    "height": 1080,
+    "refresh": 59939,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1920,
+    "height": 1080,
+    "refresh": 119879,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1920,
+    "height": 1080,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1920,
+    "height": 1080,
+    "refresh": 59939,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1920,
+    "height": 1080,
+    "refresh": 50000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 1440,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1680,
+    "height": 1050,
+    "refresh": 59954,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1600,
+    "height": 900,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 1024,
+    "refresh": 75025,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 1024,
+    "refresh": 60020,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1440,
+    "height": 900,
+    "refresh": 59887,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 960,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1152,
+    "height": 864,
+    "refresh": 75000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 720,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 720,
+    "refresh": 59943,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 720,
+    "refresh": 50000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1024,
+    "height": 768,
+    "refresh": 75029,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1024,
+    "height": 768,
+    "refresh": 70069,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1024,
+    "height": 768,
+    "refresh": 60004,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 800,
+    "height": 600,
+    "refresh": 75000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 800,
+    "height": 600,
+    "refresh": 72188,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 800,
+    "height": 600,
+    "refresh": 60317,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 800,
+    "height": 600,
+    "refresh": 56250,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 720,
+    "height": 576,
+    "refresh": 50000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 720,
+    "height": 480,
+    "refresh": 59940,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 640,
+    "height": 480,
+    "refresh": 75000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 640,
+    "height": 480,
+    "refresh": 72809,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 640,
+    "height": 480,
+    "refresh": 59940,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 640,
+    "height": 480,
+    "refresh": 59929,
+    "picture_aspect_ratio": "none"
+   }
+  ],
+  "non_desktop": false
+ },
+ {
+  "name": "DP-1",
+  "make": "Sceptre Tech Inc",
+  "model": "Sceptre Y27",
+  "serial": "SERIAL-BLANKED",
+  "active": true,
+  "power": true,
+  "primary": false,
+  "current_mode": {
+   "width": 2560,
+   "height": 1440,
+   "refresh": 144000,
+   "picture_aspect_ratio": "none"
+  },
+  "rect": {
+   "x": 5120,
+   "y": 0,
+   "width": 2560,
+   "height": 1440
+  },
+  "scale": 1.0,
+  "transform": "normal",
+  "adaptive_sync_status": "disabled",
+  "hdr": false,
+  "features": {
+   "adaptive_sync": true,
+   "hdr": false
+  },
+  "modes": [
+   {
+    "width": 2560,
+    "height": 1440,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 2560,
+    "height": 1440,
+    "refresh": 144000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 2560,
+    "height": 1440,
+    "refresh": 120001,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 2560,
+    "height": 1080,
+    "refresh": 59939,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1920,
+    "height": 1080,
+    "refresh": 119879,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1920,
+    "height": 1080,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1920,
+    "height": 1080,
+    "refresh": 59939,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1920,
+    "height": 1080,
+    "refresh": 50000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 1440,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1680,
+    "height": 1050,
+    "refresh": 59954,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1600,
+    "height": 900,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 1024,
+    "refresh": 75025,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 1024,
+    "refresh": 60020,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1440,
+    "height": 900,
+    "refresh": 59887,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 960,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1152,
+    "height": 864,
+    "refresh": 75000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 720,
+    "refresh": 60000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 720,
+    "refresh": 59943,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1280,
+    "height": 720,
+    "refresh": 50000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1024,
+    "height": 768,
+    "refresh": 75029,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1024,
+    "height": 768,
+    "refresh": 70069,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 1024,
+    "height": 768,
+    "refresh": 60004,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 800,
+    "height": 600,
+    "refresh": 75000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 800,
+    "height": 600,
+    "refresh": 72188,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 800,
+    "height": 600,
+    "refresh": 60317,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 800,
+    "height": 600,
+    "refresh": 56250,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 720,
+    "height": 576,
+    "refresh": 50000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 720,
+    "height": 480,
+    "refresh": 59940,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 640,
+    "height": 480,
+    "refresh": 75000,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 640,
+    "height": 480,
+    "refresh": 72809,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 640,
+    "height": 480,
+    "refresh": 59940,
+    "picture_aspect_ratio": "none"
+   },
+   {
+    "width": 640,
+    "height": 480,
+    "refresh": 59929,
+    "picture_aspect_ratio": "none"
+   }
+  ],
+  "non_desktop": false
+ }
+]
