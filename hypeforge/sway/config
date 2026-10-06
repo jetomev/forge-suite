@@ -36,6 +36,9 @@ output * bg "/usr/share/wallpapers/kognog/Kognog OS Semi - Logo Catpuccin Mocha.
 output DP-2 mode 2560x1440@144Hz position 0 0
 output DP-3 mode 2560x1440@144Hz position 2560 0
 output DP-1 mode 2560x1440@144Hz position 5120 0
+# hypeForge: what displayForge saves (resolution, refresh rate, position, size, rotation) —
+# read after the lines above, so a save there wins. Skipped quietly until the first save.
+include ~/.config/sway/outputs
 #
 # Example configuration:
 #
