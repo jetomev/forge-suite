@@ -2,7 +2,7 @@
 
 *Newest first. The README's status box carries the two most recent versions; everything else is here.*
 
-### 0.7.0 — on `main` since October 6, 2026, release pending Javier's run · the shared start-up check ([#33](https://github.com/jetomev/forge-suite/issues/33))
+### 0.7.0 — October 6, 2026 · the shared start-up check ([#33](https://github.com/jetomev/forge-suite/issues/33))
 
 Javier, the night displayForge 1.0.0 shipped: it must say clearly it works on Sway only, and check
 at launch — if not Sway, say why, with only a Close button. No check existed in any Forge app; the
@@ -24,7 +24,9 @@ the shipped apps move onto it at their next versions.
   visible).
 
 Tests 67 → 93 (every check fed a known-bad input as well as a good one; the screen checked by
-position: footer under the body, Continue left of Close). Warnings: 0 (was 0).
+position: footer under the body, Continue left of Close). Warnings: 0 (was 0). Javier's run on the
+desktop: PASS. The first release from the Forge Suite repository: the signed assets live under the tag
+`forgekit-v0.7.0` there, and the AUR recipe (`462ecef`) fetches them from it.
 
 ### 0.6.0 — October 4, 2026 · a tool's run and its password, inside the app ([#6](https://github.com/jetomev/forgekit/issues/6))
 

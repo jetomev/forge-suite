@@ -54,7 +54,7 @@ polish improves every app at once.
   switches to colours and characters that screen can actually show, by itself.
   [More below](#on-a-plain-text-console).
 
-> **Status: 0.7.0 (alpha) — on `main`, the release follows Javier's run.** The API may still
+> **Status: 0.7.0 (alpha), released 6 October 2026** — the first release from the Forge Suite repository. The API may still
 > shift while the Forge apps migrate onto it. Pin a version if you depend on it.
 > 0.7.0: the shared start-up check — `start_check`, `Need`, `NeedsApp`
 > ([#33](https://github.com/jetomev/forge-suite/issues/33)). Javier, from displayForge:
