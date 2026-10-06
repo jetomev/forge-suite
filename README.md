@@ -28,7 +28,7 @@
 
 **Staying outside, on purpose:** [nog](https://github.com/jetomev/nog) (the heart of KognogOS) and [mindForge](https://github.com/jetomev/mindforge) (the working agreement between the human and the AI, kept on its own for now).
 
-**Coming, born here:** one Forge app for every setting of the desktop — workspaces, monitors, window placement, the launcher, window rules, notifications, the lock screen, the music player, the top bar, a calculator, a password helper, a theme manager… — all held by **hypeForge Settings**, the control centre ([D-59](hypeforge/docs/DECISIONS.md); the list: [hypeForge's TODO](hypeforge/TODO.md)).
+**Coming, born here:** one Forge app for every setting of the desktop — a password helper, sound, network, Bluetooth, a theme manager, notifications, workspaces and windows, lock and idle, default and startup apps, USB drives, a calculator — all held by **hypeForge Settings**, the control centre ([D-59](hypeforge/docs/DECISIONS.md)); for installing, **installForge** and **welcomeForge**; later, **fileForge**, **cloneForge**, **greetForge** and **promptForge**. Most names are still to come. The same list is on [kognogos.org](https://kognogos.org/#forge); the detail is in [hypeForge's TODO](hypeforge/TODO.md).
 
 ---
 
@@ -40,7 +40,6 @@
 
 ([D-57](hypeforge/docs/DECISIONS.md)) And every app is built on **[forgekit](forgekit/)**, so they all look and work the same.
 
-**Coming later:** **fileForge**, our own file manager, with full mouse support as well as keys.
 
 ---
 
