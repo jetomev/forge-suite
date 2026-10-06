@@ -133,6 +133,7 @@ Every step is tested on the KognogOS test desktop first, where Javier lives in i
 |---|---|
 | [DECISIONS](docs/DECISIONS.md) | Every decision, dated, with who made it and why |
 | [TODO](TODO.md) | What is done and what comes next, step by step |
+| [THEME](docs/THEME.md) | The look, piece by piece: every file, its values, and why |
 | [FONTS](docs/FONTS.md) | Every font hypeForge needs, and which package brings it |
 | [Research notes](docs/research/) | What was checked, how, and the sources |
 | [ROADMAP](docs/ROADMAP.md) · [CHANGELOG](docs/CHANGELOG.md) | Where it's going; where it's been |

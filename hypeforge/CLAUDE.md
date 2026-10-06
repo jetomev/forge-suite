@@ -11,6 +11,7 @@ The KognogOS desktop on **Sway** (D-45): tiling, terminal apps first. Each featu
 - **Any number of screens.** This desktop has three; hypeForge must work for one to six or more. Never hard-code three.
 - **Packages go through nog.** Raw pacman/AUR only when strictly needed, and say why.
 - **System pieces are applied by the app**, with a backup and an undo. Nothing outside `$HOME` is edited by hand.
+- **The look is written down** (Javier, 2026-10-05): every change to colours, fonts, sizes, corners, shades or themes updates `docs/THEME.md` in the same commit — it is the Theme manager's blueprint.
 - **Help moves with the desktop** (Javier, 2026-10-05): every new or changed feature updates its guide page in `applets/help/guide/` (and `pages.toml`) in the same commit — the key chart is checked by a script, the guide is not.
 - **The key chart is checked on every commit** (`scripts/check-keys.py`, the pre-commit hook): a key added in `sway/config` must be in `applets/help/keys.toml`.
 - **Must be readable on a plain text screen** (`TERM=linux`).

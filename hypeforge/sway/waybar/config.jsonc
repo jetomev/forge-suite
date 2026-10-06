@@ -20,7 +20,19 @@
     "tooltip-format": "Apps (Win + Space)",
     "on-click": "~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections"
   },
-  "modules-center": [],
+  "modules-center": ["wlr/taskbar"],
+
+  // The centre: every open app, one icon per window, on every screen (Javier, 2026-10-05).
+  // WhatsApp (a Chrome web app) shows here while it is open.
+  "wlr/taskbar": {
+    "format": "{icon}",
+    "icon-size": 18,
+    "icon-theme": "candy-icons",
+    "all-outputs": true,
+    "tooltip-format": "{title}",
+    "on-click": "activate",
+    "on-click-middle": "close"
+  },
   "modules-right": ["group/indicators"],
 
   // The right side: background apps, the clipboard, the bell, then a line and the date and

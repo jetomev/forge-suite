@@ -37,11 +37,10 @@ window#waybar {
   background-color: @hf_inactive;
 }
 
-/* The left side — the emblem, the workspace button, Favorites — is a shade lighter than the
-   right, with a rounded end where they meet (Javier, 2026-10-05: "a visual distinction"). */
+/* The left side — the emblem, Workspaces, Favorites — wears a lighter shade (Javier,
+   2026-10-05: "a visual distinction"); straight edges for now. */
 .modules-left {
   background-color: #262637;
-  border-radius: 0 12px 12px 0;
   padding-right: 6px;
 }
 
@@ -83,12 +82,31 @@ window#waybar {
   border-left: 1px solid @hf_inactive;
 }
 
-/* The right side — the tray, the clipboard, the bell, a line, the date and time — wears its
-   own shade, the mirror of the left side (Javier, 2026-10-05). */
+/* The right side — the tray, the clipboard, the bell, a line, the date and time — wears the
+   same shade, straight edges (Javier, 2026-10-05). */
 #indicators {
   background-color: #262637;
-  border-radius: 12px 0 0 12px;
   padding-left: 6px;
+}
+
+/* The centre: the open apps, one icon per window, on the same shade (Javier, 2026-10-05).
+   Click: go to it · middle click: close it. The one in use is lit. */
+#taskbar {
+  background-color: #262637;
+  padding: 0 6px;
+}
+
+#taskbar button {
+  padding: 0 5px;
+  border-bottom: 2px solid transparent;
+}
+
+#taskbar button:hover {
+  background: @hf_inactive;
+}
+
+#taskbar button.active {
+  border-bottom: 2px solid @hf_text;
 }
 
 /* The tray: background apps (Steam, Discord, Dropbox…) */
