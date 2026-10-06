@@ -20,6 +20,7 @@
 - [x] **1.0.0 released** (2026-10-06): README with pictures (`scripts/make-screenshots.py`), CHANGELOG, ROADMAP, D-3 + D-4, testing/ matrix + results, tag `displayforge-v1.0.0`, GitHub Release, issues for F-1..F-3. **50 tests, 0 warnings**
 
 ## 1.0.x · the tests not run yet
+- [ ] **FIRST — Sway only, said and checked** (Javier, 2026-10-06; https://github.com/jetomev/forge-suite/issues/32): a check at launch (Sway running and answering?) → if not, one plain screen: works only on Sway, what was found, why, what to use instead, **Close**; nothing touched. Say "works on Sway only" everywhere (README, manual, About, Release notes, launcher entry, suite README, kognogos.org, KognogOS README). Tests: no SWAYSOCK, Sway not answering, Hyprland / KDE / GNOME
 - [ ] Javier: the rest of Arrange on the real screens; Identify again (F-2 re-run)
 - [ ] One and two screens (test VM)
 - [ ] Sizes 80 / 90 % on real apps (X11 apps blur at non-whole sizes)
