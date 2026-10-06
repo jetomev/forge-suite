@@ -23,7 +23,7 @@ the shipped apps move onto it at their next versions.
 - `examples/needs.py`; console preview clean (every character in the console font, every letter
   visible).
 
-Tests 67 → 92 (every check fed a known-bad input as well as a good one; the screen checked by
+Tests 67 → 93 (every check fed a known-bad input as well as a good one; the screen checked by
 position: footer under the body, Continue left of Close). Warnings: 0 (was 0).
 
 ### 0.6.0 — October 4, 2026 · a tool's run and its password, inside the app ([#6](https://github.com/jetomev/forgekit/issues/6))
