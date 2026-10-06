@@ -36,8 +36,14 @@ app_id = '^swappy$'
 
 [[float]]
 name = "Sound, network and Bluetooth (wiremix, nmtui, bluetui — opened from the bar)"
-app_id = '^(hf-(mixer|network|bluetooth)|displayforge)$'
+app_id = '^hf-(mixer|network|bluetooth)$'
 # a light 3 px border, so they stand out from what is around them (Javier, 2026-10-05)
+border = 3
+focus = true
+
+[[float]]
+name = "Forge Suite apps (displayForge, nogForge, grubForge, alacrittyForge, bitlaForge — from the launcher)"
+app_id = '^(display|nog|grub|alacritty|bitla)forge$'
 border = 3
 focus = true
 

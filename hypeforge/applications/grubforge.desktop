@@ -1,0 +1,13 @@
+[Desktop Entry]
+# hypeForge's entry for grubForge (Forge Suite): its package does not ship one yet. Opens in its own
+# floating Alacritty window (class "grubforge"; window rule: rules.toml, "Forge Suite apps").
+Type=Application
+Name=grubForge
+GenericName=Boot menu settings
+Comment=The boot menu (GRUB): its look, the default system, the timeout, kernel options
+TryExec=grubforge
+Exec=alacritty --class grubforge -o window.dimensions.columns=110 -o window.dimensions.lines=34 -e grubforge
+Icon=preferences-system
+Terminal=false
+StartupWMClass=grubforge
+Categories=Settings;System;

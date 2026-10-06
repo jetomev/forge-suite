@@ -1,0 +1,13 @@
+[Desktop Entry]
+# hypeForge's entry for alacrittyForge (Forge Suite): its package does not ship one yet. Opens in its own
+# floating Alacritty window (class "alacrittyforge"; window rule: rules.toml, "Forge Suite apps").
+Type=Application
+Name=alacrittyForge
+GenericName=Terminal settings
+Comment=Alacritty, your terminal: its look, font, cursor, colours and shortcuts
+TryExec=alacrittyforge
+Exec=alacritty --class alacrittyforge -o window.dimensions.columns=110 -o window.dimensions.lines=34 -e alacrittyforge
+Icon=utilities-terminal
+Terminal=false
+StartupWMClass=alacrittyforge
+Categories=Settings;System;

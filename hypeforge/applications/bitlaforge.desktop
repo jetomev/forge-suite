@@ -1,0 +1,13 @@
+[Desktop Entry]
+# hypeForge's entry for bitlaForge (Forge Suite): its package does not ship one yet. Opens in its own
+# floating Alacritty window (class "bitlaforge"; window rule: rules.toml, "Forge Suite apps").
+Type=Application
+Name=bitlaForge
+GenericName=Solo Bitcoin mining
+Comment=Solo Bitcoin mining, honestly framed: the real odds, and the miner never outlives the app
+TryExec=bitlaforge
+Exec=alacritty --class bitlaforge -o window.dimensions.columns=110 -o window.dimensions.lines=34 -e bitlaforge
+Icon=utilities-system-monitor
+Terminal=false
+StartupWMClass=bitlaforge
+Categories=Utility;Monitor;

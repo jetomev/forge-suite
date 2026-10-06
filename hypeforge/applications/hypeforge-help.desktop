@@ -1,0 +1,11 @@
+[Desktop Entry]
+# hypeForge Help & Keys (applet 6) in the launcher — the same as Win + F1.
+Type=Application
+Name=hypeForge Help & Keys
+GenericName=Help
+Comment=Every key of the desktop, and a plain-words guide to every piece
+Exec=/home/jetomev/Programs/forge-suite/hypeforge/applets/help/hypeforge-help
+Icon=help-browser
+Terminal=false
+StartupWMClass=hypeforge-help
+Categories=Utility;Documentation;

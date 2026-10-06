@@ -1,0 +1,13 @@
+[Desktop Entry]
+# hypeForge's entry for nogForge (Forge Suite): its package does not ship one yet. Opens in its own
+# floating Alacritty window (class "nogforge"; window rule: rules.toml, "Forge Suite apps").
+Type=Application
+Name=nogForge
+GenericName=Packages
+Comment=Install, update and remove apps through nog, with its tiers
+TryExec=nogforge
+Exec=alacritty --class nogforge -o window.dimensions.columns=110 -o window.dimensions.lines=34 -e nogforge
+Icon=system-software-install
+Terminal=false
+StartupWMClass=nogforge
+Categories=Settings;System;PackageManager;
