@@ -19,7 +19,7 @@ from textual.widgets.option_list import Option
 
 from forgekit import (
     FORGE_CSS, GPL3_NOTICE, ChangeGroup, Choices, ForgeApp, ForgeModal, ManualScreen, Notice, NumberPresets,
-    ReviewDialog, SettingRow, Toggle, load_pages,
+    ReviewDialog, SettingRow, Toggle, load_pages, program, start_check, sway_session,
 )
 
 from . import __version__, brightness as B, drawing, saving as V, screens as S, trial as T
@@ -620,7 +620,7 @@ class DisplayForgeApp(ForgeApp):
         self.swaymsg, self.ddcutil = swaymsg, ddcutil
         self.ABOUT = {
             "name": "displayForge", "version": __version__,
-            "tagline": "Your screens: arrange, resolution, refresh rate, size, rotation, brightness",
+            "tagline": "Your screens: arrange, resolution, refresh rate, size, rotation, brightness. Sway only.",
             "description": "Part of the Forge Suite for KognogOS.",
             "authors": "jetomev (Javier) · Claude (Anthropic), co-developer",
             "license": "GPL-3.0-or-later",
@@ -770,6 +770,22 @@ class DisplayForgeApp(ForgeApp):
         return True
 
 
-def main() -> int:
+def needs(*, environ=None, swaymsg: str = "swaymsg", ddcutil: str = "ddcutil") -> list:
+    """What displayForge needs to run here (1.0.1, forge-suite #32): a Sway session, full
+    stop; ddcutil only for Brightness and Identify, so it is optional."""
+    return [
+        sway_session("displayForge sets up your screens by talking to Sway, and only Sway.",
+                     "Use your desktop's own display settings; on KognogOS, log in to Sway (hypeForge).",
+                     environ=environ, swaymsg=swaymsg),
+        program(ddcutil, "Brightness and Identify talk to the screens through ddcutil.",
+                "Install it (on KognogOS: nog install ddcutil), or continue without those two views.",
+                optional=True),
+    ]
+
+
+def main(*, ask=None) -> int:
+    """2 = could not start here (the start-up screen was shown and closed); 0 = ran."""
+    if not start_check("displayForge", needs(), ask=ask):
+        return 2
     DisplayForgeApp().run()
     return 0

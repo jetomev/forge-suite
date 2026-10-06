@@ -243,3 +243,51 @@ class NoNameClashes(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class StartUp(unittest.TestCase):
+    """1.0.1 (forge-suite #32): Sway only, said and checked at launch."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+
+    def test_sway_is_required_and_ddcutil_optional(self):
+        from displayforge.app import needs
+        ns = needs(environ={"XDG_CURRENT_DESKTOP": "KDE", "WAYLAND_DISPLAY": "w"}, swaymsg="swaymsg")
+        self.assertEqual(ns[0].what, "a Sway session")
+        self.assertFalse(ns[0].optional)
+        self.assertTrue(ns[1].optional, "ddcutil is optional: only Brightness and Identify need it")
+        met, found = ns[0].check()
+        self.assertFalse(met)
+        self.assertEqual(found, "KDE Plasma (Wayland)")
+        self.assertIn("only Sway", ns[0].why)
+        self.assertIn("Sway (hypeForge)", ns[0].instead)
+
+    def test_sway_not_answering_is_not_sway(self):
+        from displayforge.app import needs
+        dead = tool(self.tmp, "swaymsg", "exit 1\n")
+        met, found = needs(environ={"SWAYSOCK": "/tmp/nowhere.sock"}, swaymsg=dead)[0].check()
+        self.assertFalse(met)
+        self.assertEqual(found, "a Sway socket that doesn't answer")
+
+    def test_sway_answering_is_met(self):
+        from displayforge.app import needs
+        live = tool(self.tmp, "swaymsg", "exit 0\n")
+        met, found = needs(environ={"SWAYSOCK": "/tmp/x.sock"}, swaymsg=live)[0].check()
+        self.assertTrue(met)
+
+    def test_main_closes_without_starting_the_app_when_not_sway(self):
+        import io
+        from contextlib import redirect_stdout
+        from unittest import mock
+        import displayforge.app as A
+        started = []
+        with mock.patch.object(A.DisplayForgeApp, "run", lambda self: started.append(1)), \
+             mock.patch.dict("os.environ", {"SWAYSOCK": ""}, clear=False):
+            out = io.StringIO()
+            with redirect_stdout(out):
+                rc = A.main(ask=lambda name, miss: "close")
+        self.assertEqual(rc, 2)
+        self.assertEqual(started, [], "the app must not start")
+        self.assertIn("displayForge can't run here: it needs a Sway session", out.getvalue())
+        self.assertIn("Nothing was changed.", out.getvalue())
