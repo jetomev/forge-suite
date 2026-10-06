@@ -54,7 +54,7 @@
     "tooltip-format-wifi": "Wi-Fi: {essid} ({signalStrength} %)\n{ipaddr}",
     "tooltip-format-disconnected": "Not connected",
     "on-click": "networkmanager_dmenu",
-    "on-click-right": "alacritty --class hf-network -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e nmtui"
+    "on-click-right": "hypeforge-nmtui"
   },
   "bluetooth": {
     "format": "󰂯",

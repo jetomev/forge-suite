@@ -1,0 +1,10 @@
+#!/bin/sh
+# hypeForge — nmtui (network settings) in a floating Alacritty, in the closest KognogOS colours
+# (Javier, 2026-10-05). nmtui can only use the terminal's basic colour names; in Alacritty's
+# KognogOS theme those are Mocha shades: default = the background, white = text, brightblack =
+# the grey, magenta = pink (the closest to our mauve), blue = blue.
+# Used by the bar (right click on the network icon) and the network menu's "Launch Connection
+# Manager" (it calls this with "-e nmtui", which is ignored). Linked from ~/.local/bin/.
+NEWT_COLORS='root=white,default;roottext=white,default;helpline=brightblack,default;window=white,default;border=brightblack,default;shadow=default,default;title=magenta,default;label=white,default;textbox=white,default;acttextbox=black,magenta;entry=white,brightblack;disentry=brightblack,default;button=white,brightblack;actbutton=black,magenta;compactbutton=white,default;checkbox=white,default;actcheckbox=black,magenta;listbox=white,default;actlistbox=black,magenta;sellistbox=magenta,default;actsellistbox=black,magenta;emptyscale=,brightblack;fullscale=,blue'
+export NEWT_COLORS
+exec alacritty --class hf-network -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e nmtui

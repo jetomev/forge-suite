@@ -106,7 +106,7 @@ D-58: "it is perfect my friend".
 | Network menu (networkmanager_dmenu) | fuzzel, under the bar's right end, Noto Sans 10 pt, ● for the active connection, Wi-Fi signal icons, password as dots | `themes/networkmanager-dmenu/config.ini` → `~/.config/networkmanager-dmenu/` |
 | Mixer (wiremix) | KognogOS Mocha theme (mauve selection, blue volume bars, green / red meters), straight borders; full device names (Arctis **Chat** / **Game**); tab row stays at the bottom (no setting) | `themes/wiremix/wiremix.toml` → `~/.config/wiremix/` |
 | Bluetooth (bluetui) | no colour settings — it uses the terminal's (Alacritty's KognogOS theme); Esc quits | `themes/bluetui/config.toml` → `~/.config/bluetui/` |
-| nmtui | the terminal's colours | — |
+| nmtui | the closest KognogOS colours it can take (the terminal's basic colour names → Alacritty's Mocha shades): dark background, light text, grey borders, **pink** title and highlight (the nearest to mauve), dark text on the highlight; opens floating | `themes/nmtui/hypeforge-nmtui` (linked as `~/.local/bin/hypeforge-nmtui`; used by the bar and the network menu) |
 
 ## Midnight Commander — `themes/mc/kognogos-mocha.ini` → `~/.local/share/mc/skins/`
 
