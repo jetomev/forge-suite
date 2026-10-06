@@ -5,13 +5,15 @@
 ## Phase 0 · Research and design
 - [x] Name: **displayForge** (Javier, 2026-10-05)
 - [x] Research: `docs/research/2026-10-05-displayforge.md` — Sway's per-screen settings, brightness via ddcutil without a password, **identical screens can't be told apart by software → an Identify step**, keep-or-revert countdown
-- [ ] Screen designs (100-column terminal drawings, the alacrittyForge / grubForge pattern) → **approved by Javier screen by screen before any code** — drawn 2026-10-05: `docs/design/v0.1.0-screens.html` (published privately: https://claude.ai/artifact/NX3YSPKvbcgL7dayRnLoHg), seven screens (Screens, Settings, Keep or go back, Arrange, Brightness, Identify, Save) + seven questions for Javier. **Waiting: Javier's answers**
+- [x] Screen designs (100-column terminal drawings, the alacrittyForge / grubForge pattern) → **approved by Javier** (D-2: "Wow!!!! I love what you have done! Let's go!" — with any arrangement, sizes 80/90 %, brightness in tens, HDR only where supported, screen names) — drawn 2026-10-05: `docs/design/v0.1.0-screens.html` (published privately: https://claude.ai/artifact/NX3YSPKvbcgL7dayRnLoHg), seven screens (Screens, Settings, Keep or go back, Arrange, Brightness, Identify, Save) + seven questions for Javier.
 
 ## Phase 1 · Build (after the design is approved)
 - [ ] forgekit app skeleton; read screens (`swaymsg -t get_outputs`)
 - [ ] Screens drawing + list; per-screen settings form
 - [ ] Apply live with keep-or-revert countdown; save to `~/.config/sway/outputs` with a backup
-- [ ] Identify + brightness (ddcutil)
+- [ ] Identify + brightness (ddcutil, 10–100 % in tens) + screen names
+- [ ] Sizes 80 / 90 % proven in the test VM first (Sway's manual: X11 apps blur at fractional sizes)
+- [ ] HDR switch only where Sway reports the screen supports it
 - [ ] Tests (1, 2, 3 screens in a VM; 100 columns; text console)
 
 ## Later

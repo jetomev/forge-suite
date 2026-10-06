@@ -12,24 +12,23 @@ body = f'''
 <header class="stack">
   <div class="eyebrow">displayForge · design proposal · 5 October 2026</div>
   <h1>displayForge, screen by screen</h1>
-  <p class="lede prose">Screen settings for the KognogOS desktop, in the terminal: arrange your screens, pick resolution and refresh rate, size, rotation, the main screen and brightness. Every screen is drawn here before any code is written. Your answers below decide what gets built.</p>
+  <p class="lede prose">Screen settings for the KognogOS desktop, in the terminal: arrange your screens, pick resolution and refresh rate, size, rotation, the main screen and brightness. Every screen is drawn here before any code is written. Javier approved it on 5 October, with the changes listed below.</p>
   <p class="prose">It follows grubForge 2.0 and alacrittyForge on purpose: the same frame, the same menu bar with underlined letters, a form for settings, and a review before every save. Every drawing is exactly <b>100 columns</b> wide, the size of a small text console. The drawings show <b>your</b> three Sceptre Y27 screens, numbered the way your workspaces already number them: <b>1 is the middle one</b> (the main one, ★), 2 the left, 3 the right.</p>
   <nav class="toc" aria-label="Contents">
-    <a href="#questions">Your call</a><a href="#screens">Screens</a><a href="#settings">Settings</a><a href="#keep">Keep or go back</a><a href="#arrange">Arrange</a><a href="#brightness">Brightness</a><a href="#identify">Identify</a><a href="#save">Save</a><a href="#keys">Keys</a><a href="#plan">How it gets built</a>
+    <a href="#questions">Decided</a><a href="#screens">Screens</a><a href="#settings">Settings</a><a href="#keep">Keep or go back</a><a href="#arrange">Arrange</a><a href="#brightness">Brightness</a><a href="#identify">Identify</a><a href="#save">Save</a><a href="#keys">Keys</a><a href="#plan">How it gets built</a>
   </nav>
 </header>
 
 <section id="questions">
   <div class="decide">
-    <h3>Your call · before any code</h3>
+    <h3>Decided · Javier, 5 October</h3>
     <ol>
-      <li><b>Five screens for 0.1.0</b>: Screens, Settings, Arrange, Brightness, Identify. Profiles (layouts that switch when you plug a screen in or out) come in a later version. <span class="rec">Recommended.</span></li>
-      <li><b>Try first, then save.</b> Changes stay on screen only until you press <kbd>F9</kbd> "Try it", which applies them with the keep-or-go-back countdown; <kbd>F10</kbd> saves what you kept. <span class="rec">Recommended</span>: nothing risky happens by moving through the form.</li>
-      <li><b>"Main screen" means the screen your workspaces start on</b> (screen 1, ★). Sway itself has no main screen; hypeForge does, through the workspaces. Moving a screen left or right does not renumber it.</li>
-      <li><b>Brightness changes at once and is not saved</b>: the screens keep it themselves, so it survives a restart without displayForge.</li>
-      <li><b>Only real options are offered</b>: resolutions and refresh rates come from what each screen reports (yours offer 7 sizes and up to 144 Hz); size is 100, 125, 150 or 200 %.</li>
-      <li><b>Saving writes one file</b>, <code>~/.config/sway/outputs</code>, which hypeForge's Sway settings will read (one line added there). A backup comes first; the last 20 are kept.</li>
-      <li><b>Night light</b> (warmer colours in the evening) shows as "a later version". Yes, or leave it out of displayForge entirely?</li>
+      <li><b>Approved, with changes</b>: <em>"Wow!!!! I love what you have done! Let's go!"</em> The seven open questions go with the recommendations: five screens for 0.1.0 (profiles later); try first with <kbd>F9</kbd> and the countdown, save with <kbd>F10</kbd>; "main screen" is where the workspaces start; brightness is not saved; only real options are offered; saved to <code>~/.config/sway/outputs</code> with a backup; night light a later version.</li>
+      <li><b>Any arrangement</b>: four in a row, three over three, a fourth under screen 1. Sway places screens anywhere; Arrange handles every layout.</li>
+      <li><b>Size below 100 %</b>: 80 % and 90 % added, with a note that older X11 apps look slightly blurry at non-whole sizes. Proven in the test machine before it is offered.</li>
+      <li><b>Brightness in tens</b>, 10 % to 100 %, per screen and for all screens.</li>
+      <li><b>HDR</b> only for screens that support it. Sway reports it per screen; your Sceptre Y27s report no HDR, so for them it reads "not supported by this screen".</li>
+      <li><b>Names</b>: name your screens in Identify (Main, Left, Right…); displayForge shows the names everywhere.</li>
     </ol>
   </div>
 </section>
