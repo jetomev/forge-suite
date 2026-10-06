@@ -1,6 +1,6 @@
 # 🔨 forgekit
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-purple.svg)
+![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-purple.svg)
 ![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
 ![Built with Textual](https://img.shields.io/badge/Built%20with-Textual-5a3fd6.svg)
 ![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)
@@ -46,18 +46,23 @@ polish improves every app at once.
   when it asks something, Yes/No for its questions. The app never leaves its screen.
 - **The password inside the app** *(0.6.0)*. sudo's and polkit's password questions are
   asked in the app's own box, on a desktop and on a text console alike.
+- **A start-up check** *(0.7.0)*. An app says what it needs (a Sway session, a program
+  and its version, a running service, a file). When something is missing it shows one
+  plain screen — what it needs, what was found instead, why, what to use — and closes.
+  Nothing is touched, nothing crashes.
 - **A text-console mode.** On the plain Linux text screen (`Ctrl+Alt+F3`) every app
   switches to colours and characters that screen can actually show, by itself.
   [More below](#on-a-plain-text-console).
 
-> **Status: 0.6.0 (alpha).** The API may still shift while the Forge apps migrate
-> onto it. Pin a version if you depend on it.
+> **Status: 0.7.0 (alpha) — on `main`, the release follows Javier's run.** The API may still
+> shift while the Forge apps migrate onto it. Pin a version if you depend on it.
+> 0.7.0: the shared start-up check — `start_check`, `Need`, `NeedsApp`
+> ([#33](https://github.com/jetomev/forge-suite/issues/33)). Javier, from displayForge:
+> an app that can't do its job here must say so in plain words and close, not crash.
+> displayForge 1.0.1 is its first user.
 > 0.6.0: a tool's run and its password inside the app: `RunWindow`, `TerminalPane`,
 > `PasswordBridge`, `InAppPolkitAgent` ([#6](https://github.com/jetomev/forgekit/issues/6)).
-> Javier, about nogForge leaving its screen for nog: *"it is not beautiful, it is
-> disrupting."* nogForge 1.1 and grubForge 2.1 are built on it.
-> 0.5.2: the bottom bar shows the keys of the screen you're on, found by Javier in
-> [nogForge](https://github.com/jetomev/nogforge). Earlier versions: [docs/CHANGELOG.md](docs/CHANGELOG.md).
+> nogForge 1.1 and grubForge 2.1 are built on it. Earlier versions: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 ## Screenshots
 
@@ -160,6 +165,18 @@ section with a floating editor and a delete confirmation stacked on top of it.
 | `ROLES` / `css_variables()` | The colour roles (`$forge-accent`, `$forge-muted`, `$forge-border`…): one colour for a terminal window, one for a text console. Use the same names in your own CSS. |
 | `glyph()` / `GLYPHS` | Named marks (`ok`, `warn`, `error`, `busy`…) that turn into console-safe ones on a text console: `✓` → `+`, `⚠` → `!`. |
 | `console_mode()` / `console_text()` | Whether the app runs on a text console, and the character swap it applies. Your app reads `self.forge_console`. |
+
+### A start-up check (0.7.0)
+
+One call at the top of `main()`; the app declares its needs in words a person reads.
+`examples/needs.py` shows the screen anywhere.
+
+| Object | What it is |
+| --- | --- |
+| `start_check(app_name, needs)` | Checks every need. All met: returns True at once, nothing shown. Something missing: the screen below, then the same words printed to the terminal as the run's record; returns False (the app closes), or True after **Continue Anyway (a)** when everything missing is optional. |
+| `Need` / `Finding` / `check_needs()` | A need is **what** ("a Sway session"), a check, **why** the app needs it, and what to use **instead**; `optional=True` for a need the app can do without. A check that fails counts as not met. |
+| `sway_session()` · `program()` · `service()` · `a_file()` | The ready-made needs: Sway running and answering (otherwise it names what *is* running: "KDE Plasma (Wayland)", "a text console…"); a program installed and at least a version; a systemd service active; a file present. |
+| `NeedsApp` | The screen: a heading, one notice per missing need (Needs · Found · Why · Instead), "Nothing has been changed.", **Close (c)**. Looks the same on a text console. |
 
 ### A tool's run and its password (0.6.0)
 

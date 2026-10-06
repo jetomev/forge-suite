@@ -2,6 +2,30 @@
 
 *Newest first. The README's status box carries the two most recent versions; everything else is here.*
 
+### 0.7.0 — on `main` since October 6, 2026, release pending Javier's run · the shared start-up check ([#33](https://github.com/jetomev/forge-suite/issues/33))
+
+Javier, the night displayForge 1.0.0 shipped: it must say clearly it works on Sway only, and check
+at launch — if not Sway, say why, with only a Close button. No check existed in any Forge app; the
+four shipped ones each check their own needs their own way (grubForge GRUB + polkit, nogForge
+nog ≥ 1.7, bitlaForge minerd). This is the shared part; displayForge 1.0.1 is its first user, and
+the shipped apps move onto it at their next versions.
+
+- **`start_check(app_name, needs)`**: one call at the top of `main()`. All met: nothing shown.
+  Something missing: one plain screen (Needs · Found · Why · Instead per need, "Nothing has been
+  changed.", **Close (c)**; **Continue Anyway (a)** only when every missing need is optional), then
+  the same words printed to the terminal as the run's record.
+- **`Need` / `Finding` / `check_needs()`**, and the ready-made **`sway_session()`** (SWAYSOCK set and
+  `swaymsg` answering; otherwise it names what is running — "KDE Plasma (Wayland)", "Hyprland
+  (Wayland)", "a text console, no graphical session", "a terminal over SSH…"), **`program()`**
+  (installed, and at least a version read from `--version`), **`service()`** (systemd unit active,
+  user or system), **`a_file()`**. A check that raises counts as not met: the screen must appear.
+- Button labels in Javier's format from the start: "Close (c)", "Continue Anyway (a)".
+- `examples/needs.py`; console preview clean (every character in the console font, every letter
+  visible).
+
+Tests 67 → 92 (every check fed a known-bad input as well as a good one; the screen checked by
+position: footer under the body, Continue left of Close). Warnings: 0 (was 0).
+
 ### 0.6.0 — October 4, 2026 · a tool's run and its password, inside the app ([#6](https://github.com/jetomev/forgekit/issues/6))
 
 Javier, about nogForge handing the terminal to nog: *"it is not beautiful, it is disrupting"*, and a
