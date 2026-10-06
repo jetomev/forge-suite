@@ -21,10 +21,10 @@
 | Section | What it is | Status |
 |---|---|---|
 | **[hypeForge](hypeforge/)** | The KognogOS desktop: a slim, quick tiling desktop on Sway, built from small applets | 🔄 being built, lived in daily |
-| **[displayForge](displayforge/)** | Screen settings in the terminal: arrange, resolution, refresh rate, scale, rotation, brightness — with a keep-or-revert safety countdown | 📐 designing |
+| **[displayForge](displayforge/)** | Screen settings in the terminal: arrange, resolution, refresh rate, size, rotation, brightness — with a countdown that undoes a change by itself | ✅ **1.0.0** (2026-10-06) |
+| **[forgekit](forgekit/)** | The shared foundation every Forge app is built on: title bar, menu bar, dialogs, one look | ✅ 0.6.0 · moved in 2026-10-06, `python-forgekit` on the AUR |
 
-**Moving in, one at a time** (each keeps its own version and AUR package; its old repository is archived with a pointer):
-[forgekit](https://github.com/jetomev/forgekit) (the shared foundation) · [alacrittyForge](https://github.com/jetomev/alacrittyforge) · [bitlaForge](https://github.com/jetomev/bitlaforge) · [nogForge](https://github.com/jetomev/nogforge) · [grubForge](https://github.com/jetomev/grubforge) (last: it has the most users).
+**Moving in, one at a time** (each keeps its own version, tags `<app>-vX.Y.Z` and AUR package; its old repository is archived with a pointer). **Moved in:** forgekit (2026-10-06, with its full history). **Next:** [alacrittyForge](https://github.com/jetomev/alacrittyforge) · [bitlaForge](https://github.com/jetomev/bitlaforge) · [nogForge](https://github.com/jetomev/nogforge) · [grubForge](https://github.com/jetomev/grubforge) (last: it has the most users).
 
 **Staying outside, on purpose:** [nog](https://github.com/jetomev/nog) (the heart of KognogOS) and [mindForge](https://github.com/jetomev/mindforge) (the working agreement between the human and the AI, kept on its own for now).
 
@@ -38,7 +38,9 @@
 2. **Works with Sway** — nothing that brings a whole other desktop along.
 3. **Smallest install** — the fewest packages that do the job well.
 
-([D-57](hypeforge/docs/DECISIONS.md)) And every app is built on **[forgekit](https://github.com/jetomev/forgekit)**, so they all look and work the same.
+([D-57](hypeforge/docs/DECISIONS.md)) And every app is built on **[forgekit](forgekit/)**, so they all look and work the same.
+
+**Coming later:** **fileForge**, our own file manager, with full mouse support as well as keys.
 
 ---
 
