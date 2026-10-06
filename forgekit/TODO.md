@@ -3,6 +3,8 @@
 *The live work list and the handoff between sessions. Newest work first. Updated after every step.*
 
 
+- [x] **Moved into the Forge Suite (2026-10-06, D-60)**: full history, tags renamed `forgekit-v0.1.0 … v0.6.0`, pyproject / README / CLAUDE.md point at `jetomev/forge-suite`; old repo archived with a pointer; `~/Programs/forgekit` is now a shortcut to `forge-suite/forgekit`. 67 tests, 0 warnings in the new home
+- [ ] **At the next release:** the AUR recipe (`aur-python-forgekit`) fetches the signed asset from `jetomev/forge-suite` releases (tag `forgekit-vX.Y.Z`), not the archived repo; the release rules adapted for per-app tags
 - [ ] **Next version — button labels in Javier's format (3 Oct 2026):** "Words In Title Case (k)", e.g. "Review Updates (u)": the key in brackets after the words, for every Forge Suite app. What shipped stays until this app's next version.
 ## Done · v0.6.0 — a tool's run and its password inside the app · released 2026-10-04 (GitHub + AUR 82bfe89, #6 closed)
 - [x] TerminalPane, RunWindow, PasswordBridge/PasswordDialog, InAppPolkitAgent; ReviewDialog keys; console glyphs; `literal()`. 67 tests; all four apps pass on it

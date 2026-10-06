@@ -25,9 +25,9 @@ classifiers = [
 dependencies = ["textual>=8.0", "pyte>=0.8"]
 
 [project.urls]
-Homepage = "https://github.com/jetomev/forgekit"
-Repository = "https://github.com/jetomev/forgekit"
-Issues = "https://github.com/jetomev/forgekit/issues"
+Homepage = "https://github.com/jetomev/forge-suite/tree/main/forgekit"
+Repository = "https://github.com/jetomev/forge-suite"
+Issues = "https://github.com/jetomev/forge-suite/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["forgekit"]

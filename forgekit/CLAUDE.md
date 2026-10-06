@@ -1,9 +1,11 @@
 # forgekit — project rules
 
+*A section of the **Forge Suite** repository since 2026-10-06 (D-60) — read the suite's `CLAUDE.md` too. Tags: `forgekit-vX.Y.Z`; issues in `jetomev/forge-suite`.*
+
 *How this project is built, tested and shipped. Written for the AI co-developer, and public on purpose: it is part of how the human + AI method is documented.*
 
 ## What it is
-A small Python library on top of [Textual](https://textual.textualize.io): the shared window shell of the Forge Suite (title bar, menu bar, full-width workspace, floating dialogs, Catppuccin colours). Apps subclass `ForgeApp`. **Adopters:** bitlaForge, alacrittyForge; **next:** grubForge v2.0.0, nogForge, hypeForge, welcomeForge. A change here lands in every app, so it is made carefully and tested in more than one of them.
+A small Python library on top of [Textual](https://textual.textualize.io): the shared window shell of the Forge Suite (title bar, menu bar, full-width workspace, floating dialogs, Catppuccin colours). Apps subclass `ForgeApp`. **Adopters:** bitlaForge, alacrittyForge, grubForge, nogForge, hypeForge (Help & Keys), displayForge; **next:** welcomeForge, fileForge. A change here lands in every app, so it is made carefully and tested in more than one of them.
 
 ## Non-negotiables
 - **Readable and usable on a plain text console (`TERM=linux`)**, not only in a terminal window (issue #1, the promise written down 2026-10-01). It does not have to look the same there; it must stay readable and usable. Every new piece of styling goes through the semantic colour roles and the glyph table, never a literal colour or a fancy character on its own.
