@@ -37,6 +37,8 @@ app_id = '^swappy$'
 [[float]]
 name = "Sound, network and Bluetooth (wiremix, nmtui, bluetui — opened from the bar)"
 app_id = '^hf-(mixer|network|bluetooth)$'
+# a light 3 px border, so they stand out from what is around them (Javier, 2026-10-05)
+border = 3
 focus = true
 
 [[float]]
