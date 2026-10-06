@@ -5,7 +5,7 @@
 ## Phase 0 · Research and design
 - [x] Name: **displayForge** (Javier, 2026-10-05)
 - [x] Research: `docs/research/2026-10-05-displayforge.md` — Sway's per-screen settings, brightness via ddcutil without a password, **identical screens can't be told apart by software → an Identify step**, keep-or-revert countdown
-- [ ] Screen designs (100-column terminal drawings, the alacrittyForge / grubForge pattern) → **approved by Javier screen by screen before any code**
+- [ ] Screen designs (100-column terminal drawings, the alacrittyForge / grubForge pattern) → **approved by Javier screen by screen before any code** — drawn 2026-10-05: `docs/design/v0.1.0-screens.html` (published privately: https://claude.ai/artifact/NX3YSPKvbcgL7dayRnLoHg), seven screens (Screens, Settings, Keep or go back, Arrange, Brightness, Identify, Save) + seven questions for Javier. **Waiting: Javier's answers**
 
 ## Phase 1 · Build (after the design is approved)
 - [ ] forgekit app skeleton; read screens (`swaymsg -t get_outputs`)
