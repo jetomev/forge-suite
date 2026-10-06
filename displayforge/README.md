@@ -92,7 +92,7 @@ Said plainly, so nobody finds out the hard way:
 | Version | What | Status |
 |---|---|---|
 | **1.0.x** | The tests above: 1 and 2 screens, 80 / 90 %, text console; Javier's Arrange run | ⬜ next |
-| **1.0.1** | Sway only, said everywhere and checked at launch (on forgekit 0.7.0's start-up check) | 🔄 on `main`, release follows Javier's run |
+| **1.0.1** | Sway only, said everywhere and checked at launch (on forgekit 0.7.0's start-up check) | ✅ 2026-10-06 |
 | **1.1** | Profiles · a page in hypeForge Settings · an AUR package | ⬜ |
 | **1.0.0** | Screens, Settings, Arrange, Brightness, Identify, names; try with a countdown, save with a backup; the manual | ✅ 2026-10-06 |
 

@@ -21,7 +21,7 @@
 | Section | What it is | Status |
 |---|---|---|
 | **[hypeForge](hypeforge/)** | The KognogOS desktop: a slim, quick tiling desktop on Sway, built from small applets | 🔄 being built, lived in daily |
-| **[displayForge](displayforge/)** | Screen settings in the terminal: arrange, resolution, refresh rate, size, rotation, brightness — with a countdown that undoes a change by itself. **Sway only**, and it says so at launch anywhere else | ✅ **1.0.0** (2026-10-06) · 1.0.1 on `main` |
+| **[displayForge](displayforge/)** | Screen settings in the terminal: arrange, resolution, refresh rate, size, rotation, brightness — with a countdown that undoes a change by itself. **Sway only**, and it says so at launch anywhere else | ✅ **1.0.1** (2026-10-06) |
 | **[forgekit](forgekit/)** | The shared foundation every Forge app is built on: title bar, menu bar, dialogs, one look — and, from 0.7.0, the start-up check that explains when an app can't run here | ✅ **0.7.0** (2026-10-06) · `python-forgekit` on the AUR |
 
 **Moving in, one at a time** (each keeps its own version, tags `<app>-vX.Y.Z` and AUR package; its old repository is archived with a pointer). **Moved in:** forgekit (2026-10-06, with its full history). **Next:** [alacrittyForge](https://github.com/jetomev/alacrittyforge) · [bitlaForge](https://github.com/jetomev/bitlaforge) · [nogForge](https://github.com/jetomev/nogforge) · [grubForge](https://github.com/jetomev/grubforge) (last: it has the most users).
