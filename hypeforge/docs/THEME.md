@@ -57,7 +57,7 @@ Which package brings each font: [FONTS.md](FONTS.md).
 | **Left** — KognogOS emblem · <u>W</u>orkspaces · <u>F</u>avorites | the **shade**, straight edges; menu titles in subtext, key letter underlined | "a visual distinction"; "let's keep it straight for now"; menu titles like a menu bar |
 | Emblem | 17 px, drawn as the button's background from `~/.config/hypeforge/bar/launcher.png` (swap the picture to change it) | same size as the other icons; Waybar 0.15's image module stops the bar here |
 | **Centre** — open apps | the **shade**; 18 px icons from candy-icons; the window in use underlined in text colour; hover grey | Javier, 2026-10-05 |
-| **Right** — tray · clipboard · Bluetooth · network · volume ┃ date and time ┃ bell · ⏻ power | the **shade**, straight edges; tray icons 16 px; network, Bluetooth, volume, clipboard and bell 16 px (Symbols Nerd Font, subtext colour, red when off / muted / disconnected); a 1 px hover-grey line on each side of the clock; the ⏻ turns red on hover | "1 px at a time"; "add a separator… paint the date/time area the same colour" |
+| **Right** — tray · clipboard · USB drives · Bluetooth · network · volume ┃ date and time ┃ bell · ⏻ power | the **shade**, straight edges; tray icons 16 px; USB drives (blue with a count when mounted), network, Bluetooth, volume, clipboard and bell 16 px (Symbols Nerd Font, subtext colour, red when off / muted / disconnected); a 1 px hover-grey line on each side of the clock; the ⏻ turns red on hover | "1 px at a time"; "add a separator… paint the date/time area the same colour" |
 | Hover on any button | `#45475a` | — |
 | Clock | `Mon 05 Oct   08:13 PM` | — |
 

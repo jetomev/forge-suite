@@ -1,0 +1,28 @@
+# hypeForge — udiskie, the auto-mount helper for USB drives and discs (Javier, 2026-10-05).
+# Copied to ~/.config/udiskie/config.yml. Started at login by sway/config.
+#
+# SAFETY FIRST (HomeLab rule: Windows / NTFS partitions are mounted READ-ONLY, never
+# read-write — a hibernated Windows filesystem mounted read-write corrupts). This computer has
+# Windows on two INTERNAL drives, so:
+#   1. internal drives are ignored completely — udiskie never mounts them;
+#   2. any NTFS drive it does mount (an external one) is mounted read-only.
+# The bar's drives applet (applet 11) only offers Eject for drives mounted under /run/media,
+# so the system's own mounts (like /mnt/backup) are never touched.
+
+program_options:
+  automount: true
+  notify: true
+  tray: false
+  # tell the bar's drives icon to redraw on every mount, unmount, add or remove
+  event_hook: "hypeforge-drives changed"
+
+device_config:
+  # 1. never touch an internal drive (Windows lives on two of them)
+  - is_external: false
+    ignore: true
+  # 2. NTFS (Windows) drives: read-only, always
+  - id_type: ntfs
+    options: [ro]
+
+notifications:
+  timeout: 5

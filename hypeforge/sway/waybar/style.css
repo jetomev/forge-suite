@@ -139,16 +139,20 @@ window#waybar {
 }
 
 /* Network, Bluetooth, volume: icons like the clipboard's; the volume shows its number */
-#network, #bluetooth, #wireplumber {
+#custom-drives, #network, #bluetooth, #wireplumber {
   padding: 0 5px;
   font-family: "Symbols Nerd Font", sans-serif;
   font-size: 16px;
   color: @hf_subtext;
 }
 
-#network:hover, #bluetooth:hover, #wireplumber:hover {
+#custom-drives:hover, #network:hover, #bluetooth:hover, #wireplumber:hover {
   background: @hf_inactive;
   color: @hf_text;
+}
+
+#custom-drives.has {
+  color: #89b4fa;
 }
 
 #network.disconnected, #bluetooth.off, #bluetooth.disabled, #wireplumber.muted {

@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+"""hypeForge applet 11 · USB drives on the bar (Javier, 2026-10-05).
+
+    hypeforge-drives bar       the drives icon, as Waybar JSON (the count of USB drives mounted)
+    hypeforge-drives menu      the list: Open (Midnight Commander) · Eject · Mount, per drive
+    hypeforge-drives changed   tell the bar to redraw (udiskie's event hook runs this)
+
+udiskie mounts USB drives and discs by itself (~/.config/udiskie/config.yml): internal drives
+are never touched, NTFS is mounted read-only. This applet only ever ejects what is mounted under
+/run/media — the system's own mounts (like /mnt/backup) are shown, never offered for Eject.
+"""
+
+import json
+import os
+import signal
+import subprocess
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
+from hfbar import signal_bar  # noqa: E402
+import hfmenu  # noqa: E402
+
+BAR_SIGNAL = 11
+ICON = "\U000f0553"  # 󰕓 USB (Nerd Font)
+FUZZEL = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+OURS = "/run/media/"
+
+
+def drives():
+    """USB / hot-plugged partitions with a filesystem: (device, label, fstype, mountpoint, disk)."""
+    out = subprocess.run(["lsblk", "-J", "-o", "NAME,PATH,LABEL,FSTYPE,MOUNTPOINT,HOTPLUG,TRAN,SIZE"],
+                         capture_output=True, text=True).stdout
+    found = []
+    for disk in json.loads(out or '{"blockdevices": []}')["blockdevices"]:
+        if not disk.get("hotplug") or (disk.get("name") or "").startswith(("loop", "zram")):
+            continue
+        for part in disk.get("children") or [disk]:
+            if part.get("fstype"):
+                label = part.get("label") or f"{part.get('size', '')} {part.get('fstype')}".strip()
+                found.append((part["path"], label, part["fstype"], part.get("mountpoint"), disk["path"]))
+    return found
+
+
+def bar():
+    ours = [d for d in drives() if (d[3] or "").startswith(OURS)]
+    tip = "\n".join(f"{d[1]} — {d[3] or 'not mounted'}" for d in drives()) or "No USB drives"
+    print(json.dumps({"text": f"{ICON} {len(ours)}" if ours else ICON,
+                      "class": "has" if ours else "none",
+                      "tooltip": tip + "\nClick: open · eject · mount"}))
+
+
+def notify(title, body=""):
+    subprocess.run(["notify-send", "-a", "Drives", "-i", "drive-removable-media", title, body])
+
+
+def menu():
+    if hfmenu.close_open("drives"):  # a second click closes it
+        return
+    items = []  # (text, action, drive)
+    for dev, label, fstype, mnt, disk in drives():
+        if mnt and mnt.startswith(OURS):
+            items.append((f"Open   {label}", "open", (dev, label, mnt, disk)))
+            items.append((f"Eject   {label}", "eject", (dev, label, mnt, disk)))
+        elif mnt:
+            items.append((f"{label} — a system mount ({mnt})", None, None))
+        else:
+            items.append((f"Mount   {label}", "mount", (dev, label, mnt, disk)))
+    lines = [t for t, _, _ in items] or ["No USB drives plugged in"]
+    cmd = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", "Drives  ",
+           "--anchor", "top-right", "--x-margin", "4", "--y-margin", "4", "--width", "48",
+           "--font", "Noto Sans:size=10", "--lines", str(max(1, len(lines)))]
+    if os.path.isfile(FUZZEL):
+        cmd[1:1] = ["--config", FUZZEL]
+    picked = hfmenu.run("drives", cmd, "\n".join(lines))
+    if picked is None or not picked.strip().isdigit() or not items:
+        return
+    _, action, drive = items[int(picked)]
+    if action == "open":
+        subprocess.run(["swaymsg", "exec", f"alacritty -e mc '{drive[2]}'"])
+    elif action == "eject":
+        dev, label, mnt, disk = drive
+        if subprocess.run(["udisksctl", "unmount", "-b", dev], capture_output=True).returncode != 0:
+            notify(f"{label} is busy", "Close what is using it, then eject again.")
+            return
+        subprocess.run(["udisksctl", "power-off", "-b", disk], capture_output=True)
+        notify(f"{label} can be unplugged")
+    elif action == "mount":
+        dev, label, _, _ = drive
+        if subprocess.run(["udisksctl", "mount", "-b", dev], capture_output=True).returncode != 0:
+            notify(f"{label} could not be mounted")
+    changed()
+
+
+def changed():
+    signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
+
+
+def main():
+    action = sys.argv[1] if len(sys.argv) > 1 else ""   # udiskie's hook adds more words: ignored
+    {"bar": bar, "menu": menu, "changed": changed}.get(action, lambda: sys.exit(__doc__))()
+
+
+if __name__ == "__main__":
+    main()

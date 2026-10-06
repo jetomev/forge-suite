@@ -39,7 +39,7 @@
   // Bluetooth, network, volume | the date and time | the bell, the power menu — one shade
   "group/indicators": {
     "orientation": "inherit",
-    "modules": ["tray", "custom/clipboard", "bluetooth", "network", "wireplumber", "clock", "custom/notifications", "custom/power"]
+    "modules": ["tray", "custom/clipboard", "custom/drives", "bluetooth", "network", "wireplumber", "clock", "custom/notifications", "custom/power"]
   },
   // Network, Bluetooth, volume (Javier, 2026-10-05). Network: click = the network menu
   // (networkmanager_dmenu in fuzzel), right click = nmtui. Bluetooth: click = bluetui, right
@@ -76,6 +76,15 @@
     "tooltip-format": "{node_name}: {volume} %\nScroll: louder / quieter · click: mute · right click: the mixer",
     "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
     "on-click-right": "alacritty --class hf-mixer -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e wiremix"
+  },
+  // USB drives (applet 11): the count of USB drives mounted; click = Open · Eject · Mount.
+  // udiskie mounts them (never internal drives; NTFS read-only) and redraws this on every event.
+  "custom/drives": {
+    "exec": "~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives bar",
+    "return-type": "json",
+    "interval": 60,
+    "signal": 11,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives menu"
   },
   // The power menu: Lock · Log Out · Reboot · Shut Down (applet 4, `hypeforge-sections power`)
   "custom/power": {

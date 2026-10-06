@@ -311,6 +311,9 @@ include /etc/sway/config.d/*
 
 # hypeForge: applet 1 · Workspaces Management (D-47) — workspaces across all three screens.
 # Switched on and off in ~/.config/hypeforge/applets/workspaces.toml (enabled = true/false).
+# hypeForge: USB drives and discs mount by themselves (udiskie; internal drives never, NTFS
+# read-only — ~/.config/udiskie/config.yml). The bar's drives icon is applet 11.
+exec udiskie
 # hypeForge: start-at-login apps from ~/.config/autostart (applet 10; Sway does not read that folder)
 exec ~/Programs/forge-suite/hypeforge/applets/autostart/hypeforge-autostart
 # hypeForge: the Favorites menu on the bar (applet 4 writes it)

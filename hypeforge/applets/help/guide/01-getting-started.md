@@ -37,6 +37,7 @@ place to change them; until then the files can be edited by hand.
 8. **Screenshots** — Print Screen, saved, copied, ready to draw on
 9. **Clipboard** — the history of what you copied
 10. **Start-at-login apps** — starts the apps in your autostart folder (Sway does not by itself)
+11. **USB drives** — mounted by themselves; open or eject them from the bar
 
 ## The top bar
 
@@ -47,7 +48,7 @@ place to change them; until then the files can be edited by hand.
 close it.
 
 **Right**, left to right: the **tray** (apps running in the background — Steam, Discord,
-Dropbox, Insync…), the **clipboard**, **Bluetooth**, **network**, **volume** | the **date and
+Dropbox, Insync…), the **clipboard**, **USB drives**, **Bluetooth**, **network**, **volume** | the **date and
 time** | the **bell** and the **⏻ power menu** (Lock · Log Out · Reboot · Shut Down — the last
 three ask first).
 
