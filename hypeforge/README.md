@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/kognogos-emblem.png" alt="KognogOS emblem" width="96">
+  <img src="assets/banner.svg" alt="hypeForge — the KognogOS desktop on Sway: tiles by itself, terminal-first, every setting an app" width="100%">
 </p>
 
 <p align="center">
@@ -42,18 +42,23 @@ A full desktop like KDE Plasma does everything for you, and it carries a lot of 
 
 | Piece | What it does |
 |---|---|
-| **Workspaces** | Six workspaces (Daily, Work, Entertainment, Gaming, Monitoring, Settings). **Win + 1…6**, or a click on the top bar, switches every screen together. A screen can also keep one space for several workspaces, so its apps stay put. |
+| **The top bar** | A menu bar on every screen. Left: the **KognogOS emblem** (the launcher), **Workspaces** and **Favorites** menus. Middle: your open apps (click to jump to one). Right: tray · clipboard (with a count of new copies) · USB drives · Bluetooth · network · volume, then the clock, the notification bell (with a count; right click: Do Not Disturb) and **⏻** for lock, log out, reboot and shut down. |
+| **Workspaces** | Six workspaces (Daily, Work, Entertainment, Gaming, Monitoring, Settings). **Win + 1…6** or the **Workspaces** menu (Win + W) switches every screen together. A screen can keep one space for several workspaces, so its apps stay put. |
 | **Window placement** | Every new window goes to the next spot of a fixed order across your screens, then becomes a tab. |
-| **Launcher** (Win + Space) | Your favourites first, then the workspaces as sections: an app picked from "Work" opens in Work. Lock, log out, reboot and shut down at the bottom (they ask first). |
-| **Window rules** | Small tools (the calculator, settings windows, picture-in-picture video) float above the tiled windows. |
+| **Launcher** (Win + Space, or the emblem) | Apps only: your favourites first, then the workspaces as sections; an app picked from "Work" opens in Work. Press again to close. |
+| **Favorites** (Win + F) | Your favourite apps with their icons, one click away. |
+| **Screens** — [displayForge](../displayforge/README.md) | Arrange your screens, resolution, refresh rate, size, rotation, brightness, with a countdown that undoes a bad change by itself. The first Forge app built for hypeForge. |
+| **Sound, network, Bluetooth** | Click the bar: **wiremix** (volume per app and device), a network list (with **nmtui** for the details), **bluetui**. Each opens floating, in the KognogOS colours. |
+| **USB drives** | Plugged-in drives mount by themselves (Windows drives read-only, the computer's own disks never); the bar icon lists them, to open in Midnight Commander or eject. |
+| **Window rules** | Small tools (the calculator, settings windows, picture-in-picture video, password boxes) float above the tiled windows. |
 | **Help & Keys** (Win + F1) | A small Forge app with tabs: the key chart and a plain-words guide to every piece. The chart is checked against Sway's real keys before every change is saved. |
 | **Lock screen** (Win + Escape) | A big clock and a password box over the blurred KognogOS wallpaper. Locks by itself after 30 minutes; the screens turn off after 60. |
-| **Top bar** | The six workspaces, always shown and clickable, a clipboard icon with the count of new copies (**Win + C**: the history), a notification bell with the count of new ones (right click: Do Not Disturb), and the clock. |
 | **Notifications** | Small pop-ups at the top right of the screen you're using; **Win + N** closes them all. |
+| **Clipboard history** (Win + C) | Everything you copy, text and pictures; passwords from password managers are skipped. |
 | **Screenshots** | **Print** drags a box; Shift / Ctrl / Alt + Print take this screen, every screen, this window. Saved, copied, and one click away from drawing on them. |
-| **Terminal apps** | Alacritty for the terminal, Midnight Commander for files (in our own KognogOS Mocha look), Fresh for text, numbat for sums, cliamp for music (from the media server). |
+| **Terminal apps** | Alacritty for the terminal, Midnight Commander for files (in our KognogOS Mocha look, editing in Fresh), Fresh for text, cliamp for music (from the media server); galculator for sums until our own calculator. |
 
-The look is **Catppuccin Mocha** with the KognogOS wallpaper: thin borders, no title bars, windows that share a space become tabs, 10 px between windows.
+The look is **Catppuccin Mocha** with the KognogOS wallpaper: thin borders, no title bars, windows that share a space become tabs, 10 px between windows. Every colour and file is written down in [THEME.md](docs/THEME.md).
 
 ---
 
@@ -63,12 +68,15 @@ The look is **Catppuccin Mocha** with the KognogOS wallpaper: thin borders, no t
 |---|---|
 | **Win + Space** | The launcher |
 | **Win + Enter** | A terminal |
+| **Win + W** · **Win + F** | The Workspaces menu · the Favorites menu |
 | **Win + 1 … 6** | Switch every screen to that workspace |
 | **Win + Shift + 1 … 6** | Send the window to that workspace |
 | **Win + arrows** | Move between windows (also across screens); add **Shift** to move the window |
-| **Win + W / S / E** | Tabs · stacked · side by side |
-| **Win + F** | Full screen |
+| **Win + T / S / E** | Tabs · stacked · side by side |
+| **Win + Shift + F** | Full screen |
 | **Win + Shift + Space** | Float the window, or put it back in its spot |
+| **Win + C** · **Win + N** | Clipboard history · close the notifications |
+| **Print** | Screenshot (Shift, Ctrl, Alt + Print: screen, all screens, window) |
 | **Alt + F4** | Close the window |
 | **Win + Escape** | Lock the screen |
 | **Win + F1** | Help & Keys: every key, and the guide |
@@ -80,7 +88,7 @@ The look is **Catppuccin Mocha** with the KognogOS wallpaper: thin borders, no t
 ## How it fits together
 
 1. **The pieces.** Each feature (workspaces, placement, launcher, rules, help, lock…) is its own small piece ([D-47](docs/DECISIONS.md)), with its own settings file in `~/.config/hypeforge/applets/`.
-2. **A Forge app for every setting.** Everything that today can only be set up by editing a file gets its own **Forge Suite app**: our own pieces, and outside programs like the music player, the top bar and the launcher's look ([D-59](docs/DECISIONS.md)). Each is a full app that also runs on its own, built on [forgekit](https://github.com/jetomev/forgekit) so they all look and work the same.
+2. **A Forge app for every setting.** Everything that today can only be set up by editing a file gets its own **Forge Suite app**: our own pieces, and outside programs like the music player, the top bar and the launcher's look ([D-59](docs/DECISIONS.md)). Each is a full app that also runs on its own, built on [forgekit](https://github.com/jetomev/forgekit) so they all look and work the same. The first one, **[displayForge](../displayforge/README.md)** (screens), is done.
 3. **hypeForge Settings, the control centre.** One window, like KDE's System Settings: the list on the left, and the chosen Forge app running on the right. Replace one app and nothing else has to change.
 4. **nog** installs everything and decides when it updates, and system changes are made only through the apps, never by hand.
 
@@ -99,7 +107,7 @@ hypeForge becomes **the KognogOS desktop**, and KognogOS will ship with it alone
 hypeForge is built on other people's work, and we are grateful for it.
 
 - The **[Sway](https://swaywm.org)** team and the wlroots developers, for the ground everything stands on.
-- **Every developer whose app hypeForge uses**: Waybar, fuzzel, gtklock, swayidle, swaybg, Alacritty, Midnight Commander, Fresh, numbat, cliamp, and all the others.
+- **Every developer whose app hypeForge uses**: Waybar, fuzzel, mako, gtklock, swayidle, swaybg, cliphist, grim, slurp, swappy, udiskie, wiremix, bluetui, networkmanager-dmenu, ddcutil, Alacritty, Midnight Commander, Fresh, cliamp, galculator, and all the others.
 - The [**Catppuccin**](https://catppuccin.com) team, for the colours everything wears.
 
 We don't compare ourselves with anyone. Our picks are simply our picks.
@@ -111,9 +119,9 @@ We don't compare ourselves with anyone. Our picks are simply our picks.
 | Step | What happens | Status |
 |---|---|---|
 | **Choose the base** | Research, then **Sway** chosen ([D-45](docs/DECISIONS.md)); runs on the test desktop | ✅ |
-| **The jobs, one by one** | Workspaces, placement, launcher, rules, help, lock screen, notifications, screenshots, clipboard history ✅ · next: the bar's new layout, sound and network, the password pop-up | 🔄 in progress |
+| **The jobs, one by one** | Workspaces, placement, launcher, rules, help, lock screen, notifications, screenshots, clipboard history, the menu bar, sound, network, Bluetooth, USB drives ✅ · next: the password pop-up, printing, night light | 🔄 in progress |
 | **Our own look** | Folder-style tabs, our own top bar, a palette from the KognogOS brand | ⬜ |
-| **The Forge apps** | One Forge Suite app per setting, and **hypeForge Settings** to hold them all. Screens, workspaces and window placement become **flexible for any number of screens**, from one to six or more | ⬜ |
+| **The Forge apps** | One Forge Suite app per setting, and **hypeForge Settings** to hold them all. **displayForge 1.0 (screens) ✅** · next: workspaces and window placement, flexible for any number of screens | 🔄 in progress |
 | **The first KognogOS release** | KognogOS ships with hypeForge as its only desktop | ⬜ |
 
 Full detail: [docs/ROADMAP.md](docs/ROADMAP.md) · History: [docs/CHANGELOG.md](docs/CHANGELOG.md)
@@ -151,6 +159,7 @@ hypeForge is a human and AI collaboration. Decisions are written down the day th
 
 - **[KognogOS](https://github.com/jetomev/KognogOS)** — the distribution hypeForge becomes the desktop of
 - **[nog](https://github.com/jetomev/nog)** — tier-aware package manager
+- **[displayForge](../displayforge/README.md)** — screen settings, in this repository
 - **[forgekit](https://github.com/jetomev/forgekit)** — the shared foundation for the Forge apps
 - **[grubForge](https://github.com/jetomev/grubforge)** — bootloader manager
 - **[alacrittyForge](https://github.com/jetomev/alacrittyforge)** — terminal configurator
