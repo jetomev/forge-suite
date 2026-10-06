@@ -754,6 +754,10 @@ class DisplayForgeApp(ForgeApp):
         self.changes_bar.hide()
         self.refresh_state()
         self.notify(f"Saved to {path}" + (" (old one backed up)." if backup else "."), title="Saved", timeout=6)
+        if not V.included(V.SWAY_CONFIG):
+            self.notify("Sway doesn't read this file yet, so the screens go back at your next login. "
+                        f"Add this line to {V.SWAY_CONFIG}:\ninclude ~/.config/sway/outputs",
+                        title="One line missing", severity="warning", timeout=20)
 
     def before_quit(self) -> bool:
         if self.session.change_count:

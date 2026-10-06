@@ -10,6 +10,7 @@ from . import screens as S
 
 HOME = Path.home()
 OUTPUTS = Path(os.environ.get("XDG_CONFIG_HOME", HOME / ".config")) / "sway/outputs"
+SWAY_CONFIG = HOME / ".config/sway/config"   # where the include line has to be
 BACKUPS = Path(os.environ.get("XDG_CONFIG_HOME", HOME / ".config")) / "displayforge/backups"
 KEEP = 20
 

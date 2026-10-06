@@ -38,14 +38,16 @@ class App(unittest.TestCase):
                         '  *getvcp*) echo "VCP 10 C 75 100";;\n'
                         f'  *setvcp*) echo "$*" >> {self.tmp}/ddc.log;;\n'
                         'esac\n')
-        self.saved = (V.OUTPUTS, V.BACKUPS, B.CONFIG)
+        self.saved = (V.OUTPUTS, V.BACKUPS, B.CONFIG, V.SWAY_CONFIG)
         V.OUTPUTS, V.BACKUPS, B.CONFIG = self.tmp / "outputs", self.tmp / "backups", self.tmp / "screens.toml"
+        V.SWAY_CONFIG = self.tmp / "sway-config"
+        V.SWAY_CONFIG.write_text("output DP-1 mode 2560x1440@144Hz\ninclude ~/.config/sway/outputs\n")
         self.real = [Path.home() / ".config/sway/outputs", Path.home() / ".config/displayforge"]
         self.real_before = [p.exists() for p in self.real]
         self.session = Session(S.parse(json.loads(DATA.read_text())), {"names": {}, "bus": {}}, main="DP-3")
 
     def tearDown(self):
-        V.OUTPUTS, V.BACKUPS, B.CONFIG = self.saved
+        V.OUTPUTS, V.BACKUPS, B.CONFIG, V.SWAY_CONFIG = self.saved
         self.assertEqual([p.exists() for p in self.real], self.real_before, "a real file was touched")
 
     def lines(self, name):
@@ -86,6 +88,43 @@ class App(unittest.TestCase):
         self.assertEqual(len(self.lines("sway.log")), 1)            # one change, kept: no undo
         self.assertIn("@120.", self.lines("sway.log")[0])
         self.assertIn("output DP-3 mode 2560x1440@120.001Hz", (self.tmp / "outputs").read_text())
+
+    def test_save_warns_when_sway_does_not_read_the_file(self):
+        V.SWAY_CONFIG.write_text("output DP-1 mode 2560x1440@144Hz\n")    # no include line
+        seen = []
+
+        async def steps(app, pilot):
+            se = self.session
+            se.change("DP-1", scale=0.9)
+            await pilot.press("f9")
+            await pilot.pause(0.6)
+            await pilot.press("enter")
+            await pilot.pause(0.4)
+            await pilot.press("f10")
+            await pilot.pause(0.5)
+            await pilot.click("#save")
+            await pilot.pause(0.6)
+            seen.extend(n.title for n in app._notifications)
+        self.run_app(steps)
+        self.assertIn("One line missing", seen)
+
+    def test_save_quiet_when_sway_reads_the_file(self):
+        seen = []
+
+        async def steps(app, pilot):
+            self.session.change("DP-1", scale=0.9)
+            await pilot.press("f9")
+            await pilot.pause(0.6)
+            await pilot.press("enter")
+            await pilot.pause(0.4)
+            await pilot.press("f10")
+            await pilot.pause(0.5)
+            await pilot.click("#save")
+            await pilot.pause(0.6)
+            seen.extend(n.title for n in app._notifications)
+        self.run_app(steps)
+        self.assertIn("Saved", seen)
+        self.assertNotIn("One line missing", seen)
 
     def test_go_back_now_undoes(self):
         async def steps(app, pilot):
