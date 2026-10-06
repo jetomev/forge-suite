@@ -2,6 +2,16 @@
 
 *Newest first. Who decided, when, and why.*
 
+## 2026-10-06
+
+### D-4 · displayForge 1.0.0 is done
+**Decided by Javier** (2026-10-06): *"great tool my friend! looks and works wonders. I still have to test a little more the arrange section, but so far good. Let's say v1.0 is done! make it official, full documentation."*
+**What that rests on:** Javier's own run on the three Sceptres (Screens, Settings with try-and-keep, Identify, Brightness, names), which found F-1, F-2 and F-3, all fixed; 48 automatic tests. **Not yet tested, said in the release notes:** one- and two-screen setups (a VM), the 80 / 90 % sizes on real apps, a plain text console, and the rest of Arrange on the real screens. Findings from those become 1.0.x fixes.
+**Version:** the planned 0.1.0 became 1.0.0 — the scope of the approved design is complete. Tag `displayforge-v1.0.0` (Forge Suite: every app keeps its own version and tags).
+
+### D-3 · Identify without the big numbers on the screens
+**Decided by Claude, told to Javier** (2026-10-06): the design showed a big number drawn on each screen during Identify. Left out: it needs a window placed on every monitor, and the Screens drawing already shows which number is which. Identify instead **dims one screen at a time** and asks which went dark — the screens tell themselves apart. Javier ran it and kept it.
+
 ## 2026-10-05
 
 ### D-2 · The design is approved, with Javier's changes

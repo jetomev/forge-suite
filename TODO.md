@@ -12,6 +12,7 @@
 - [ ] Release rules (`~/.claude/rules/release.md`) adapted for per-app tags in one repository
 
 ## Ideas
+- [ ] **fileForge** (Javier, 2026-10-06) — our own file manager, **later**: forgekit look, **full mouse support** (what superfile lacks for him), keyboard too. Replaces the mcForge question below.
 - [ ] **mcForge?** (Javier, 2026-10-06) — Midnight Commander is free software (GPLv3, written in C, github.com/MidnightCommander/mc), so a fork is allowed, and GPLv3 matches ours. Honest size: ~300,000 lines of C, 30 years old — a fork means maintaining all of it. Lighter path that fits D-59: an **mcForge settings app** (look, editor, panels, keys) over the stock mc. Decide later.
 - [ ] mc: Left → Tree reported not working (2026-10-06) — not yet reproduced; waiting on what Javier sees
 
