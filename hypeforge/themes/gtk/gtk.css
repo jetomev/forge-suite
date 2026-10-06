@@ -1,0 +1,56 @@
+/* hypeForge — KognogOS Mocha for GTK apps (swappy, galculator, gtklock's widgets, dialogs…).
+   The theme underneath is adw-gtk3 (dark), which reads these named colours; GTK 4 apps
+   (libadwaita) read the same names. Catppuccin Mocha with the bar's own shades and mauve as the
+   accent. Copied to ~/.config/gtk-3.0/gtk.css and ~/.config/gtk-4.0/gtk.css (Javier,
+   2026-10-05: replace KDE's look before KDE goes). The Theme manager will write this later. */
+
+/* accent */
+@define-color accent_color #cba6f7;
+@define-color accent_bg_color #cba6f7;
+@define-color accent_fg_color #1e1e2e;
+
+/* windows and content */
+@define-color window_bg_color #1e1e2e;
+@define-color window_fg_color #cdd6f4;
+@define-color view_bg_color #1e1e2e;
+@define-color view_fg_color #cdd6f4;
+
+/* title bars, side panels — the bar's colour */
+@define-color headerbar_bg_color #181825;
+@define-color headerbar_fg_color #cdd6f4;
+@define-color headerbar_border_color #45475a;
+@define-color headerbar_backdrop_color #181825;
+@define-color headerbar_shade_color rgba(0, 0, 0, 0.36);
+@define-color sidebar_bg_color #181825;
+@define-color sidebar_fg_color #cdd6f4;
+@define-color sidebar_backdrop_color #181825;
+@define-color sidebar_shade_color rgba(0, 0, 0, 0.36);
+
+/* cards, menus, pop-ups, dialogs — the bar's shade */
+@define-color card_bg_color #262637;
+@define-color card_fg_color #cdd6f4;
+@define-color card_shade_color rgba(0, 0, 0, 0.36);
+@define-color popover_bg_color #262637;
+@define-color popover_fg_color #cdd6f4;
+@define-color popover_shade_color rgba(0, 0, 0, 0.36);
+@define-color dialog_bg_color #262637;
+@define-color dialog_fg_color #cdd6f4;
+@define-color thumbnail_bg_color #262637;
+@define-color thumbnail_fg_color #cdd6f4;
+
+/* states */
+@define-color destructive_color #f38ba8;
+@define-color destructive_bg_color #f38ba8;
+@define-color destructive_fg_color #1e1e2e;
+@define-color success_color #a6e3a1;
+@define-color success_bg_color #a6e3a1;
+@define-color success_fg_color #1e1e2e;
+@define-color warning_color #f9e2af;
+@define-color warning_bg_color #f9e2af;
+@define-color warning_fg_color #1e1e2e;
+@define-color error_color #f38ba8;
+@define-color error_bg_color #f38ba8;
+@define-color error_fg_color #1e1e2e;
+@define-color borders #45475a;
+@define-color shade_color rgba(0, 0, 0, 0.36);
+@define-color scrollbar_outline_color rgba(0, 0, 0, 0.5);

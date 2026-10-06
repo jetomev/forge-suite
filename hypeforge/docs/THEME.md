@@ -33,7 +33,7 @@ Catppuccin Mocha ([catppuccin.com](https://catppuccin.com) — thank you) until 
 | Notifications | sans | 12 |
 | Lock screen clock / date / password box | sans-serif | 72 pt / 18 pt / 16 pt |
 | Terminal (Alacritty) and terminal apps | JetBrainsMono Nerd Font | 12 |
-| GTK apps (swappy, galculator…) | Noto Sans | 10 |
+| GTK apps (swappy, galculator…) | Noto Sans; monospace JetBrainsMono Nerd Font | 10 |
 
 Which package brings each font: [FONTS.md](FONTS.md).
 
@@ -106,15 +106,25 @@ Full colour; Catppuccin Mocha with the emblem's blue folders and peach marked fi
 
 `~/.config/alacritty/alacritty.toml`: JetBrainsMono Nerd Font 12; colours from `themes/KognogOS-theme.toml`. Set with **alacrittyForge**, which the Theme manager will open.
 
-## GTK apps, icons, mouse pointer — `~/.config/gtk-3.0/settings.ini`
+## GTK apps, icons, mouse pointer — `themes/gtk/` → `~/.config/gtk-3.0/` and `~/.config/gtk-4.0/`
 
-| Setting | Value today | Note |
+Replaced on 2026-10-05 (Javier: "we will remove KDE eventually, and it will break if not fixed"). In the Sway session GTK apps take their settings from **gsettings** (through the settings portal), and older apps from `settings.ini`; both now say the same thing. Backups of the old files: `logs/20261005-gtk-before.tar.gz`, `logs/20261005-gsettings-interface-before.txt`.
+
+| Setting | Value | Was |
 |---|---|---|
-| GTK theme | **Breeze** (KDE's), dark preferred | ⚠️ a KDE leftover (D-56) — swappy, galculator and gtklock's widgets wear it. To change: a non-KDE dark theme + our colours |
-| Icon theme | candy-icons | also used by the bar, the lists |
-| Mouse pointer | breeze_cursors, 24 | ⚠️ KDE's — and Sway sets no pointer theme of its own yet (no `seat * xcursor_theme`) |
-| Font | Noto Sans 10 | |
-| Window buttons layout | icon:minimize,maximize,close | hypeForge has no title bars |
+| GTK theme | **adw-gtk3-dark** (package adw-gtk-theme — not KDE, not GNOME's desktop) | `settings.ini` said Breeze (KDE); gsettings already said adw-gtk3-dark |
+| GTK colours | **KognogOS Mocha** in `gtk.css` (GTK 3 and 4): window `#1e1e2e`, title bars and side panels `#181825` (the bar), cards / menus / pop-ups / dialogs `#262637` (the shade), accent mauve `#cba6f7`, borders `#45475a`, red / green / yellow for errors, success, warnings | a leftover grey `gtk.css` from the Hyprland days (D-36 "Gray") |
+| Mouse pointer | **catppuccin-mocha-dark-cursors**, 24 px — gsettings, `settings.ini`, and Sway's own (`seat * xcursor_theme` in `sway/config`) | breeze_cursors (KDE) |
+| Icon theme | candy-icons | unchanged |
+| Font / monospace font | Noto Sans 10 / **JetBrainsMono Nerd Font 10** | monospace was Hack (KDE's default) |
+| Window buttons | close only (`gtk-decoration-layout=:close`) | minimize, maximize, close — hypeForge has no title bars |
+| KDE add-ons | `gtk-modules` (colorreload, window-decorations) removed | — |
+
+⚠️ Logging in to **Plasma** (the fallback) may write KDE's choices back into `settings.ini` and `colors.css`; the Sway session reads gsettings first, so it keeps this look. Re-apply from `themes/gtk/` if needed.
+
+### galculator — `~/.config/galculator/galculator.conf`
+
+Its number display has colours of its own: background `#181825`, result `#cdd6f4` (Noto Sans Bold 26), history `#a6adc8`, active labels mauve `#cba6f7`, inactive `#585b70`. Before: white with black numbers (`logs/20261005-galculator-before.conf`).
 
 ---
 
