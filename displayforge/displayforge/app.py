@@ -285,6 +285,279 @@ class SettingsView(Horizontal):
         self.app.refresh_state()
 
 
+class ArrangeView(VerticalScroll):
+    """3 · Arrange: the layout; arrows move the picked screen (the others make room)."""
+
+    BINDINGS = [Binding("left", "move('left')", show=False), Binding("right", "move('right')", show=False),
+                Binding("up", "move('above')", show=False), Binding("down", "move('below')", show=False),
+                Binding("tab", "next_screen", show=False)]
+    can_focus = True
+
+    def __init__(self, session: Session, **kw) -> None:
+        super().__init__(**kw)
+        self.session = session
+        self.picked = next((s.name for s in session.pending if s.name != session.main), session.main)
+
+    def compose(self) -> ComposeResult:
+        yield Static("[$forge-muted]Move the picked screen with the arrow keys; the others make room. "
+                     "Edges snap together. Tab picks the next screen.[/]")
+        d = Static("", id="df-arr-drawing")
+        d.border_title = "Your screens"
+        yield d
+        yield Static("", id="df-arr-picked")
+        yield SettingRow("Put it", Choices([("left", "left of"), ("right", "right of"), ("above", "above"),
+                                            ("below", "below")], "right", id="a-where"), setting="where")
+        yield SettingRow("Of", Select([], allow_blank=True, id="a-of"), setting="of")
+        yield SettingRow("Line up", Choices([("start", "tops / left edges"), ("centre", "centres"),
+                                             ("end", "bottoms / right edges")], "start", id="a-align"),
+                         setting="align")
+        yield Static("[$forge-muted]Moving a screen does not change its number: workspaces still start "
+                     "on the main one (★).[/]")
+
+    def on_mount(self) -> None:
+        self.refresh_view()
+
+    def refresh_view(self) -> None:
+        se = self.session
+        labels = self.app.query_one(ScreensView).labels()
+        self.query_one("#df-arr-drawing", Static).update("\n".join(drawing.draw(se.pending, labels, self.picked)))
+        s = se.screen(self.picked)
+        self.query_one("#df-arr-picked", Static).update(
+            f"[$forge-accent b]{escape(se.label(s.name))}[/]  [$forge-muted]now: [/]{se.place_words(s.name)}"
+            f"   [$forge-muted]position [/]{s.x}, {s.y}")
+        of = self.query_one("#a-of", Select)
+        others = [(se.label(o.name), o.name) for o in se.pending if o.name != self.picked and o.on]
+        keep = of.value if of.value in [v for _, v in others] else (
+            se.main if any(v == se.main for _, v in others) else (others[0][1] if others else Select.BLANK))
+        with of.prevent(Select.Changed):
+            of.set_options(others)
+            of.value = keep
+
+    def _apply(self, where: str, of: str | None = None) -> None:
+        se = self.session
+        if not of:
+            v = self.query_one("#a-of", Select).value
+            of = None if v is Select.BLANK else str(v)
+        if not of or of == self.picked:
+            return
+        se.arrange(self.picked, where, of, self.query_one("#a-align", Choices).value)
+        self.refresh_view()
+        self.app.refresh_state()
+
+    def action_move(self, where: str) -> None:
+        """Arrows: next to the neighbour in that direction (or the chosen screen)."""
+        se = self.session
+        me = se.screen(self.picked)
+        others = [o for o in se.pending if o.on and o.name != me.name]
+        if not others:
+            return
+        if where in ("left", "right"):
+            row = sorted([o for o in others if abs(o.y - me.y) < max(1, me.extent[1])] or others, key=lambda o: o.x)
+            ahead = [o for o in row if (o.x < me.x if where == "left" else o.x > me.x)]
+            if not ahead:
+                return
+            ref = ahead[-1] if where == "left" else ahead[0]
+        else:
+            ref = min(others, key=lambda o: abs(o.x - me.x))
+        self._apply(where, ref.name)
+
+    def action_next_screen(self) -> None:
+        names = [s.name for s in sorted(self.session.pending, key=lambda s: (s.y, s.x)) if s.on]
+        if names:
+            self.picked = names[(names.index(self.picked) + 1) % len(names)] if self.picked in names else names[0]
+            self.refresh_view()
+
+    def on_choices_changed(self, e: Choices.Changed) -> None:
+        if (e.control.id or "") == "a-where":
+            self._apply(e.value)
+
+
+class BrightnessView(VerticalScroll):
+    """4 · Brightness: changes at once, in tens; the screens keep it (nothing to save)."""
+
+    def __init__(self, session: Session, ddcutil: str = "ddcutil", **kw) -> None:
+        super().__init__(**kw)
+        self.session, self.ddcutil = session, ddcutil
+
+    def compose(self) -> ComposeResult:
+        yield Static("[$forge-muted]Brightness changes at once and is kept by the screen itself — nothing to save.[/]")
+        yield Vertical(id="df-bright-rows")
+        yield SettingRow("All screens", NumberPresets(70, [(str(v), v) for v in B.STEPS], unit="%",
+                                                      minimum=10, maximum=100, id="b-all"),
+                         setting="all", note="the same on every screen")
+        yield Static("[$forge-muted]Night light (warmer colours in the evening) comes in a later version.[/]")
+
+    def on_mount(self) -> None:
+        self.refresh_view()
+
+    @work(exclusive=True, group="df-bright")
+    async def refresh_view(self) -> None:
+        box = self.query_one("#df-bright-rows", Vertical)
+        await box.remove_children()
+        bus = self.session.remembered["bus"]
+        if not bus:
+            await box.mount(Notice("Which control is which screen?",
+                                   ["Your screens look identical to the computer, so brightness works for all "
+                                    "screens together until Identify (5) has asked you which is which."],
+                                   level="info"))
+            return
+        rows, readings = [], []
+        for s in sorted(self.session.live, key=lambda s: (s.y, s.x)):
+            if s.name in bus:
+                now = B.get(bus[s.name], self.ddcutil)
+                if now is not None:
+                    readings.append(now)
+                rows.append(SettingRow(self.session.label(s.name) + f" · {self.session.place_words(s.name, False)}",
+                                       NumberPresets(B.tens(now or 70), [(str(v), v) for v in B.STEPS],
+                                                     unit="%", minimum=10, maximum=100, id=f"b-{s.name}"),
+                                       setting=s.name))
+        await box.mount(*rows)
+        if readings:
+            self.query_one("#b-all", NumberPresets).value = B.tens(round(sum(readings) / len(readings)))
+            self.query_one("#b-all", NumberPresets).refresh(recompose=True)
+
+    def on_number_presets_changed(self, e: NumberPresets.Changed) -> None:
+        cid = e.control.id or ""
+        value = B.tens(int(e.value))
+        bus = self.session.remembered["bus"]
+        if cid == "b-all":
+            targets = list(bus.values()) or B.buses(self.ddcutil)
+        elif cid.startswith("b-") and cid[2:] in bus:
+            targets = [bus[cid[2:]]]
+        else:
+            return
+        self.set_bright(targets, value)
+
+    @work(group="df-bright-set")
+    async def set_bright(self, targets: list[int], value: int) -> None:
+        import asyncio
+        ok = all(await asyncio.gather(*[asyncio.to_thread(B.set_, b, value, self.ddcutil) for b in targets]))
+        if not ok:
+            self.app.notify("A screen did not take the new brightness.", severity="warning")
+
+
+class IdentifyView(VerticalScroll):
+    """5 · Identify: which brightness control is which screen (asked once), and their names."""
+
+    def __init__(self, session: Session, ddcutil: str = "ddcutil", **kw) -> None:
+        super().__init__(**kw)
+        self.session, self.ddcutil = session, ddcutil
+        self.todo: list[int] = []
+        self.answers: dict[str, int] = {}
+
+    def compose(self) -> ComposeResult:
+        yield Static("[$forge-muted]Screens that are the same model look identical to the computer, so it "
+                     "can't tell which brightness control belongs to which screen. This asks you once, and "
+                     "remembers.[/]")
+        yield Static("", id="df-id-step")
+        yield Horizontal(id="df-id-answers", classes="df-actions")
+        with Horizontal(classes="df-actions"):
+            yield Button("Start", id="id-start", variant="primary")
+        yield Static("\n[b]Names[/] [$forge-muted]— shown everywhere in displayForge[/]")
+        yield Vertical(id="df-id-names")
+
+    def on_mount(self) -> None:
+        self.show_names()
+        bus = self.session.remembered["bus"]
+        self.query_one("#df-id-step", Static).update(
+            "[$forge-ok]✓[/] Already done: brightness knows which screen is which. Start to ask again."
+            if bus else "Press Start: one screen at a time goes dark for 3 seconds, and you say which.")
+
+    def show_names(self) -> None:
+        from textual.widgets import Input
+        box = self.query_one("#df-id-names", Vertical)
+        box.remove_children()
+        rows = []
+        for s in sorted(self.session.live, key=lambda s: (s.y, s.x)):
+            rows.append(SettingRow(f"Screen {self.session.number(s.name)} · {s.name} · "
+                                   f"{self.session.place_words(s.name, False)}",
+                                   Input(self.session.remembered["names"].get(s.name, ""),
+                                         placeholder="a name, like Main", id=f"n-{s.name}"),
+                                   setting=s.name))
+        box.mount(*rows)
+
+    def on_input_submitted(self, e) -> None:
+        self._name(e.input)
+
+    def on_input_changed(self, e) -> None:
+        self._name(e.input, save=False)
+
+    def _name(self, inp, save: bool = True) -> None:
+        cid = inp.id or ""
+        if not cid.startswith("n-"):
+            return
+        name, value = cid[2:], inp.value.strip()
+        names = self.session.remembered["names"]
+        if value:
+            names[name] = value
+        else:
+            names.pop(name, None)
+        if save:
+            B.save(self.session.remembered)
+            self.app.notify(f"Named {name}: {value or '(no name)'}")
+            self.app.query_one(ScreensView).refresh_view()
+
+    def on_button_pressed(self, e: Button.Pressed) -> None:
+        bid = e.button.id or ""
+        if bid == "id-start":
+            e.stop()
+            self.start()
+        elif bid.startswith("id-is-"):
+            e.stop()
+            self.answer(bid[6:])
+
+    @work(exclusive=True, group="df-identify")
+    async def start(self) -> None:
+        import asyncio
+        self.todo = await asyncio.to_thread(B.buses, self.ddcutil)
+        self.answers = {}
+        if not self.todo:
+            self.query_one("#df-id-step", Static).update("[$forge-warn]No screen answered on its control "
+                                                        "channel (DDC/CI may be off in the screen's own menu).[/]")
+            return
+        await self.dim_next()
+
+    async def dim_next(self) -> None:
+        import asyncio
+        if not self.todo:
+            self.session.remembered["bus"] = dict(self.answers)
+            B.save(self.session.remembered)
+            self.query_one("#df-id-step", Static).update("[$forge-ok]✓ Done.[/] Brightness now knows which "
+                                                        "screen is which (Brightness, 4).")
+            await self.query_one("#df-id-answers", Horizontal).remove_children()
+            return
+        bus = self.todo[0]
+        done = len(self.answers) + 1
+        total = done + len(self.todo) - 1
+        step = self.query_one("#df-id-step", Static)
+        step.update(f"[b]{done} of {total}[/] · one screen goes [b]dark for 3 seconds[/] now…")
+        before = await asyncio.to_thread(B.get, bus, self.ddcutil)
+        await asyncio.to_thread(B.set_, bus, 0, self.ddcutil)
+        await asyncio.sleep(3)
+        await asyncio.to_thread(B.set_, bus, before if before is not None else 70, self.ddcutil)
+        step.update(f"[b]{done} of {total}[/] · Which screen went dark?")
+        box = self.query_one("#df-id-answers", Horizontal)
+        await box.remove_children()
+        # the screens where they physically are now — that is what the person sees go dark
+        buttons = [Button(f"{self.session.place_words(s.name, False).capitalize()} "
+                          f"({self.session.label(s.name).split(' · ')[0]})",
+                          id=f"id-is-{s.name}") for s in sorted(self.session.live, key=lambda s: (s.y, s.x))
+                   if s.name not in self.answers]
+        buttons += [Button("None of them", id="id-is-none"), Button("Dim it again", id="id-is-again")]
+        await box.mount(*buttons)
+
+    @work(exclusive=True, group="df-identify")
+    async def answer(self, name: str) -> None:
+        bus = self.todo[0]
+        if name == "again":
+            await self.dim_next()
+            return
+        self.todo.pop(0)
+        if name != "none":
+            self.answers[name] = bus
+        await self.dim_next()
+
+
 class LaterView(Vertical):
     def __init__(self, what: str, **kw) -> None:
         super().__init__(**kw)
@@ -333,9 +606,10 @@ class DisplayForgeApp(ForgeApp):
         Binding("q", "act('quit')", show=False),
     ]
 
-    def __init__(self, session: Session | None = None, *, swaymsg: str = "swaymsg", **kw) -> None:
+    def __init__(self, session: Session | None = None, *, swaymsg: str = "swaymsg", ddcutil: str = "ddcutil",
+                 **kw) -> None:
         self.session = session or Session.load()
-        self.swaymsg = swaymsg
+        self.swaymsg, self.ddcutil = swaymsg, ddcutil
         self.ABOUT = {
             "name": "displayForge", "version": __version__,
             "tagline": "Your screens: arrange, resolution, refresh rate, size, rotation, brightness",
@@ -349,9 +623,9 @@ class DisplayForgeApp(ForgeApp):
     def compose_sections(self) -> ComposeResult:
         yield ScreensView(self.session, id="sec-screens")
         yield SettingsView(self.session, id="sec-settings")
-        yield LaterView("Arrange", id="sec-arrange")
-        yield LaterView("Brightness", id="sec-brightness")
-        yield LaterView("Identify", id="sec-identify")
+        yield ArrangeView(self.session, id="sec-arrange")
+        yield BrightnessView(self.session, self.ddcutil, id="sec-brightness")
+        yield IdentifyView(self.session, self.ddcutil, id="sec-identify")
 
     def on_mount(self) -> None:
         super().on_mount()
@@ -361,6 +635,15 @@ class DisplayForgeApp(ForgeApp):
 
     def action_go(self, section: str) -> None:
         self._switch_section(section)
+
+    def on_section_shown(self, section_id: str) -> None:
+        if section_id == "arrange":
+            self.query_one(ArrangeView).refresh_view()
+            self.query_one(ArrangeView).focus()
+        elif section_id == "brightness":
+            self.query_one(BrightnessView).refresh_view()
+        elif section_id == "screens":
+            self.query_one(ScreensView).refresh_view()
 
     def action_pick(self, step: int) -> None:
         if self.current_section == "screens":
@@ -382,6 +665,10 @@ class DisplayForgeApp(ForgeApp):
         else:
             self.changes_bar.hide()
         self.query_one(ScreensView).refresh_view()
+        try:
+            self.query_one(ArrangeView).refresh_view()
+        except Exception:
+            pass
 
     def on_button_pressed(self, e: Button.Pressed) -> None:
         if e.button.id == "df-try":

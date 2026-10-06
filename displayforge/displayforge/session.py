@@ -48,15 +48,16 @@ class Session:
         n = self.remembered["names"].get(name)
         return f"Screen {self.number(name)}" + (f" · {n}" if n else f" · {name}")
 
-    def place_words(self, name: str) -> str:
-        """left / middle / right … by position, for one row of screens; otherwise "x, y"."""
-        on = sorted((s for s in self.pending if s.on), key=lambda s: (s.y, s.x))
+    def place_words(self, name: str, pending: bool = True) -> str:
+        """left / middle / right … by position, for one row of screens; otherwise "x, y".
+        `pending=False`: where the screens physically are now (Identify, Brightness)."""
+        on = sorted((s for s in (self.pending if pending else self.live) if s.on), key=lambda s: (s.y, s.x))
         if on and all(s.y == on[0].y for s in on) and len(on) <= 3:
             order = [s.name for s in sorted(on, key=lambda s: s.x)]
             if name in order:
                 return PLACES[order.index(name)] if len(order) == 3 else (
                     ["left", "right"][order.index(name)] if len(order) == 2 else "")
-        s = self.screen(name)
+        s = self.screen(name, pending)
         return f"at {s.x}, {s.y}"
 
     # -- changing --------------------------------------------------------------------------------
