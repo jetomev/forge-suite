@@ -21,8 +21,8 @@
 
 ## 1.0.x · the tests not run yet
 - [x] **Sway only, said and checked — built 2026-10-06** (Javier; https://github.com/jetomev/forge-suite/issues/32) on forgekit 0.7.0's start-up check (#33): `needs()` = a Sway session (required) + ddcutil (optional: Brightness and Identify); `main()` shows the shared screen and returns 2 when it can't start. Said everywhere: README, manual page 1, About, launcher entry, suite README, KognogOS README; kognogos.org at the release. **54 tests (was 50), 0 warnings.** Version 1.0.1 on main
-- [x] **1.0.1 released 2026-10-06 evening**: Javier's run of the check screen (forgekit's example, 17:57) PASS; `python-forgekit` 0.7.0 installed from the AUR (18:37); tag `displayforge-v1.0.1`, GitHub Release, suite README, KognogOS README, kognogos.org; the launcher entry back on the installed forgekit. Still to run by Javier: the launcher from a KDE login (expect the screen)
-- [ ] Javier: the rest of Arrange on the real screens; Identify again (F-2 re-run)
+- [x] **1.0.1 released 2026-10-06 evening**: Javier's run of the check screen (forgekit's example, 17:57) PASS; `python-forgekit` 0.7.0 installed from the AUR (18:37); tag `displayforge-v1.0.1`, GitHub Release, suite README, KognogOS README, kognogos.org; the launcher entry back on the installed forgekit. Still to run by Javier: the launcher from a KDE login (expect the screen) — not tonight, he did not want to close everything
+- [x] **Javier, 2026-10-06 evening, on the real screens:** Arrange "worked as I expected, no issues"; Identify "worked wonders" (the F-2 re-run: the screens come back) — the last piece of his own 1.0 testing
 - [ ] One and two screens (test VM)
 - [ ] Sizes 80 / 90 % on real apps (X11 apps blur at non-whole sizes)
 - [ ] Plain text console, 100 columns; the drawing's right edge in a real terminal
