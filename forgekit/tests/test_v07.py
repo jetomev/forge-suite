@@ -86,6 +86,12 @@ class SwayNeed(unittest.TestCase):
         self.assertFalse(f.met)
         self.assertEqual(f.found, "KDE Plasma (Wayland)")
 
+    def test_sway_desktop_without_its_socket(self):
+        env = {"XDG_CURRENT_DESKTOP": "sway:wlroots", "WAYLAND_DISPLAY": "wayland-1"}
+        f = check_needs([sway_session("why", environ=env)])[0]
+        self.assertFalse(f.met)
+        self.assertEqual(f.found, "a Sway desktop, but no way to reach it (SWAYSOCK isn't set)")
+
     def test_text_console(self):
         f = check_needs([sway_session("why", environ=CONSOLE)])[0]
         self.assertEqual(f.found, "a text console, no graphical session")

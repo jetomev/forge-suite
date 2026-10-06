@@ -119,7 +119,11 @@ def sway_session(why: str, instead: str = "", *, optional: bool = False,
         env = os.environ if environ is None else environ
         sock = env.get("SWAYSOCK", "")
         if not sock:
-            return False, describe_session(env)
+            here = describe_session(env)
+            if here.startswith("Sway "):
+                # inside Sway, but started without its environment (a service, a bare tty)
+                return False, "a Sway desktop, but no way to reach it (SWAYSOCK isn't set)"
+            return False, here
         exe = shutil.which(swaymsg) if not os.path.sep in swaymsg else swaymsg
         if not exe:
             return False, f"a Sway socket, but no `{swaymsg}` program to talk to it"
