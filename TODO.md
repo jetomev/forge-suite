@@ -20,3 +20,8 @@
 - **displayForge** — **1.0.0 released 2026-10-06**; next: the 1.0.x tests → [displayforge/TODO.md](displayforge/TODO.md)
 - **forgekit** — 0.6.0; next: button labels "Words (k)" → [forgekit/TODO.md](forgekit/TODO.md)
 - **hypeForge** — the bar, launcher (with a Forge Suite section), sound / network / Bluetooth / USB done; next: password helper, printing, night light → [hypeforge/TODO.md](hypeforge/TODO.md)
+
+
+## 2026-10-06 evening — the first releases from the suite
+- [x] **forgekit 0.7.0** (`forgekit-v0.7.0`, GitHub Release with signed assets, AUR `python-forgekit` fetching from this repository) and **displayForge 1.0.1** (`displayforge-v1.0.1`, Latest): the per-app tag release works end to end. Details in each section's TODO
+- [ ] Write the per-app release recipe (archive a section at its tag, sign, Release, AUR) into `forgekit/CLAUDE.md` and this file, now that it is proven
