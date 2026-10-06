@@ -4,6 +4,10 @@
 
 ## 2026-10-06
 
+### D-5 · Sway only — said everywhere, and checked at launch
+**Decided by Javier** (2026-10-06, the night 1.0.0 shipped): displayForge must say clearly it works on Sway only, and check at launch; if not Sway, say why, with only a Close button.
+**How:** not a displayForge-only check but forgekit's shared one (#33), so every Forge app explains itself the same way; displayForge 1.0.1 (#32) is its first user. ddcutil is declared optional: the two views that need it say so, the rest works without it.
+
 ### D-4 · displayForge 1.0.0 is done
 **Decided by Javier** (2026-10-06): *"great tool my friend! looks and works wonders. I still have to test a little more the arrange section, but so far good. Let's say v1.0 is done! make it official, full documentation."*
 **What that rests on:** Javier's own run on the three Sceptres (Screens, Settings with try-and-keep, Identify, Brightness, names), which found F-1, F-2 and F-3, all fixed; 48 automatic tests. **Not yet tested, said in the release notes:** one- and two-screen setups (a VM), the 80 / 90 % sizes on real apps, a plain text console, and the rest of Arrange on the real screens. Findings from those become 1.0.x fixes.

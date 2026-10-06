@@ -2,6 +2,14 @@
 
 *Newest first.*
 
+## 1.0.1 — on `main` since 2026-10-06, release pending Javier's run · Sway only, said and checked ([forge-suite #32](https://github.com/jetomev/forge-suite/issues/32))
+
+Javier, the night 1.0.0 shipped: displayForge must say clearly it works on Sway only, and check at launch — if not Sway, say why, with only a Close button. Until now it would have crashed on KDE with an error dump.
+- **A start-up check**, on forgekit 0.7.0's shared one ([#33](https://github.com/jetomev/forge-suite/issues/33)): a Sway session, required; `ddcutil`, optional (Brightness and Identify need it; the screen offers Continue Anyway). On anything else — KDE, GNOME, Hyprland, a text console, a terminal over SSH — one plain screen: what it needs, what was found instead ("KDE Plasma (Wayland)"), why, what to use; **Close (c)**; the same words in the terminal afterwards. Nothing touched.
+- **"Sway only" said everywhere:** README, the manual's first page, About, the launcher entry, the suite README, the KognogOS README.
+- **Needs forgekit 0.7.0 or newer** (the installed `python-forgekit` must be 0.7.0 before this runs from the launcher).
+- **Tests: 54 (was 50), warnings: 0** (was 0): a fake KDE session, a Sway socket that doesn't answer, a live one, and `main()` closing without starting the app.
+
 ## 1.0.0 — 2026-10-06 · the first release
 
 **Everything the approved design asked for** ([D-2](DECISIONS.md)), declared done by Javier ([D-4](DECISIONS.md)).

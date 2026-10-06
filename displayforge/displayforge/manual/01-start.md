@@ -1,6 +1,6 @@
 # Getting started
 
-displayForge changes how your **screens** are set up: where each one sits, its resolution and refresh rate, how big things look, its rotation, and its brightness. It works on Sway, the KognogOS desktop.
+displayForge changes how your **screens** are set up: where each one sits, its resolution and refresh rate, how big things look, its rotation, and its brightness. It works on **Sway only**, the KognogOS desktop: it sets up screens by talking to Sway. Started anywhere else, it shows one screen saying what it found instead and closes, touching nothing.
 
 ## The three steps for a change
 

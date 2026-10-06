@@ -3,17 +3,17 @@
 </p>
 
 <p align="center">
-  <img alt="Version 1.0.0" src="https://img.shields.io/badge/version-1.0.0-a6e3a1?style=flat-square&labelColor=313244">
+  <img alt="Version 1.0.1" src="https://img.shields.io/badge/version-1.0.1-a6e3a1?style=flat-square&labelColor=313244">
   <img alt="Sway" src="https://img.shields.io/badge/for-Sway-89b4fa?style=flat-square&labelColor=313244">
   <img alt="Terminal app" src="https://img.shields.io/badge/app-terminal-b4befe?style=flat-square&labelColor=313244">
-  <img alt="Tests: 50" src="https://img.shields.io/badge/tests-50-94e2d5?style=flat-square&labelColor=313244">
+  <img alt="Tests: 54" src="https://img.shields.io/badge/tests-54-94e2d5?style=flat-square&labelColor=313244">
   <img alt="License: GPLv3" src="https://img.shields.io/badge/license-GPLv3-a6e3a1?style=flat-square&labelColor=313244">
   <img alt="Built by a human and an AI" src="https://img.shields.io/badge/built%20by-human%20%2B%20AI-f9e2af?style=flat-square&labelColor=313244">
 </p>
 
 # 🖥 displayForge
 
-> **Screen settings for the KognogOS desktop, in the terminal.** Arrange your screens, pick the resolution and refresh rate, make things bigger or smaller, rotate a screen, switch one off, set the brightness, and give your screens names. Every change comes with a **safety countdown**: if a change leaves you staring at a black screen, it goes back by itself. Part of the **[Forge Suite](../README.md)**, made for **[hypeForge](../hypeforge/README.md)** on Sway.
+> **Screen settings for the KognogOS desktop, in the terminal.** Arrange your screens, pick the resolution and refresh rate, make things bigger or smaller, rotate a screen, switch one off, set the brightness, and give your screens names. Every change comes with a **safety countdown**: if a change leaves you staring at a black screen, it goes back by itself. Part of the **[Forge Suite](../README.md)**, made for **[hypeForge](../hypeforge/README.md)**. **Works on Sway only**, and says so at launch anywhere else.
 
 > 🛡 **Security.** Every commit is GPG-signed and GitHub-Verified. displayForge needs no password: it only writes your own files, with a backup first.
 
@@ -52,7 +52,8 @@
 
 displayForge is not packaged yet; it runs from this repository.
 
-- **Needs:** Sway, Python 3.11 or newer, [forgekit](https://github.com/jetomev/forgekit) (`python-forgekit` in the AUR) and `ddcutil` (for brightness; your screens need **DDC/CI** switched on in their own menu).
+- **Sway only.** displayForge sets up screens by talking to Sway, and only Sway. It checks at launch *(1.0.1)*: on any other desktop (KDE, GNOME, Hyprland…) or on a text console it shows one plain screen — what it needs, what it found instead, why, what to use — and closes. Nothing is touched.
+- **Needs:** Sway, Python 3.11 or newer, [forgekit](../forgekit/) 0.7.0 or newer (`python-forgekit` in the AUR) and `ddcutil` (for brightness; your screens need **DDC/CI** switched on in their own menu). Without `ddcutil` the launch screen says so and lets you continue; Brightness and Identify are the two views that need it.
 - **Run:** `python3 displayforge/main.py` from the Forge Suite folder. In hypeForge it's in the launcher (Win + Space → "display"), opening in its own floating window.
 - **Sway must read the saved file:** hypeForge's Sway settings include the line `include ~/.config/sway/outputs` after its own screen lines. displayForge warns you if that line is missing.
 
@@ -77,7 +78,7 @@ displayForge is not packaged yet; it runs from this repository.
 
 ---
 
-## Known limits in 1.0.0
+## Known limits in 1.0.1
 
 Said plainly, so nobody finds out the hard way:
 - **Tested on one setup:** three identical 1440p screens on NVIDIA. One- and two-screen setups, the 80 / 90 % sizes on real apps and a plain text console are **not tested yet**; they come next, and anything they find becomes a 1.0.x fix.
@@ -91,6 +92,7 @@ Said plainly, so nobody finds out the hard way:
 | Version | What | Status |
 |---|---|---|
 | **1.0.x** | The tests above: 1 and 2 screens, 80 / 90 %, text console; Javier's Arrange run | ⬜ next |
+| **1.0.1** | Sway only, said everywhere and checked at launch (on forgekit 0.7.0's start-up check) | 🔄 on `main`, release follows Javier's run |
 | **1.1** | Profiles · a page in hypeForge Settings · an AUR package | ⬜ |
 | **1.0.0** | Screens, Settings, Arrange, Brightness, Identify, names; try with a countdown, save with a backup; the manual | ✅ 2026-10-06 |
 

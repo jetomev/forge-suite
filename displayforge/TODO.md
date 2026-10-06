@@ -1,6 +1,6 @@
 # displayForge — the list
 
-**1.0.0 released 2026-10-06** (D-4). Next: 1.0.x tests. A Forge Suite app (terminal, forgekit) for screen settings on Sway: arrange, resolution, refresh rate, scale, rotation, on / off, main screen, brightness. Section of the Forge Suite (D-60). Updated after every step.
+**1.0.0 released 2026-10-06** (D-4); **1.0.1 on main** (Sway only, checked at launch), release pending. Next: 1.0.x tests. A Forge Suite app (terminal, forgekit) for screen settings on Sway: arrange, resolution, refresh rate, scale, rotation, on / off, main screen, brightness. Section of the Forge Suite (D-60). Updated after every step.
 
 ## Phase 0 · Research and design
 - [x] Name: **displayForge** (Javier, 2026-10-05)
@@ -20,7 +20,8 @@
 - [x] **1.0.0 released** (2026-10-06): README with pictures (`scripts/make-screenshots.py`), CHANGELOG, ROADMAP, D-3 + D-4, testing/ matrix + results, tag `displayforge-v1.0.0`, GitHub Release, issues for F-1..F-3. **50 tests, 0 warnings**
 
 ## 1.0.x · the tests not run yet
-- [ ] **After forgekit's shared start-up check (https://github.com/jetomev/forge-suite/issues/33) — Sway only, said and checked** (Javier, 2026-10-06; https://github.com/jetomev/forge-suite/issues/32): a check at launch (Sway running and answering?) → if not, one plain screen: works only on Sway, what was found, why, what to use instead, **Close**; nothing touched. Say "works on Sway only" everywhere (README, manual, About, Release notes, launcher entry, suite README, kognogos.org, KognogOS README). Tests: no SWAYSOCK, Sway not answering, Hyprland / KDE / GNOME
+- [x] **Sway only, said and checked — built 2026-10-06** (Javier; https://github.com/jetomev/forge-suite/issues/32) on forgekit 0.7.0's start-up check (#33): `needs()` = a Sway session (required) + ddcutil (optional: Brightness and Identify); `main()` shows the shared screen and returns 2 when it can't start. Said everywhere: README, manual page 1, About, launcher entry, suite README, KognogOS README; kognogos.org at the release. **54 tests (was 50), 0 warnings.** Version 1.0.1 on main
+- [ ] **Release 1.0.1 — after Javier's run on KDE (expect the screen) and on Sway (expect the app), and forgekit 0.7.0 on the AUR**: tag `displayforge-v1.0.1`, GitHub Release, suite README row, KognogOS README version, kognogos.org
 - [ ] Javier: the rest of Arrange on the real screens; Identify again (F-2 re-run)
 - [ ] One and two screens (test VM)
 - [ ] Sizes 80 / 90 % on real apps (X11 apps blur at non-whole sizes)

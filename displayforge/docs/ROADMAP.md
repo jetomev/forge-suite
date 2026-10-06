@@ -8,5 +8,6 @@
 - **Later** — Night light (warmer colours in the evening); big numbers on each screen during Identify (D-3).
 
 ## Done
+- **1.0.1 — on `main` 2026-10-06, release pending** — Sway only, said everywhere and checked at launch (forgekit 0.7.0).
 - **1.0.0 — 2026-10-06** — Screens, Settings, Arrange, Brightness, Identify, names, try with countdown, save with backup, the manual.
 - **Design — 2026-10-05** — Research; seven screens drawn and approved by Javier (D-2).

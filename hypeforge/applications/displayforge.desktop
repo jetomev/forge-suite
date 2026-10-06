@@ -1,13 +1,14 @@
 [Desktop Entry]
 # hypeForge's entry for displayForge (Forge Suite, screen settings) while it is not packaged yet:
 # run from the Forge Suite folder in its own Alacritty window ("displayforge"), with the
-# forgekit installed on this computer. Replaced by the package's own entry at release.
+# forgekit from the same folder (1.0.1 needs forgekit 0.7.0, not on the AUR yet; drop the PYTHONPATH
+# once python-forgekit 0.7.0 is installed). Replaced by the package's own entry at release.
 Type=Application
 Name=displayForge
 GenericName=Screen settings
-Comment=Arrange your screens, resolution, refresh rate, size, rotation, brightness
+Comment=Arrange your screens, resolution, refresh rate, size, rotation, brightness (Sway only)
 TryExec=alacritty
-Exec=alacritty --class displayforge -o window.dimensions.columns=110 -o window.dimensions.lines=34 -e python3 /home/jetomev/Programs/forge-suite/displayforge/main.py
+Exec=alacritty --class displayforge -o window.dimensions.columns=110 -o window.dimensions.lines=34 -e env PYTHONPATH=/home/jetomev/Programs/forge-suite/forgekit python3 /home/jetomev/Programs/forge-suite/displayforge/main.py
 Icon=preferences-desktop-display
 Terminal=false
 StartupWMClass=displayforge
