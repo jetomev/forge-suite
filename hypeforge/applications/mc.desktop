@@ -7,7 +7,7 @@ Name=Midnight Commander
 GenericName=File Manager
 Comment=Midnight Commander, the terminal file manager
 TryExec=mc
-Exec=alacritty --class mc -e mc
+Exec=alacritty --class mc -e env EDITOR=fresh mc
 Icon=system-file-manager
 Terminal=false
 StartupWMClass=mc
