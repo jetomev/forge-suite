@@ -136,6 +136,21 @@ class App(unittest.TestCase):
         # each control went dark, then back to what it was (75)
         self.assertEqual(self.lines("ddc.log"), [f"--bus {b} setvcp 10 {v}" for b in (3, 4, 5) for v in (0, 75)])
 
+    def test_no_answer_buttons_while_a_screen_is_dark(self):
+        # F-2: the old buttons stayed up during the next dim; a click there skipped the restore
+        async def steps(app, pilot):
+            await pilot.press("5")
+            await pilot.pause(0.3)
+            await pilot.click("#id-start")
+            await pilot.pause(3.7)
+            await pilot.click("#id-is-DP-2")
+            await pilot.pause(1.0)                           # the second screen is dark now
+            self.assertEqual(len(app.query("#df-id-answers Button")), 0)
+            await pilot.pause(3.0)
+            self.assertGreater(len(app.query("#df-id-answers Button")), 0)
+        self.run_app(steps)
+        self.assertEqual(self.lines("ddc.log")[-1], "--bus 4 setvcp 10 75")
+
     def test_typing_a_screen_name(self):
         # 2026-10-06: the first letter typed closed the app (a helper named `_name` hid Textual's own)
         async def steps(app, pilot):

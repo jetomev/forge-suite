@@ -15,6 +15,8 @@
 - [x] **tests/test_app.py**: the app driven in memory (fake swaymsg + ddcutil, throwaway folders; each test checks the real files are untouched) — **41 tests, 0 warnings**
 - [ ] Hook `include ~/.config/sway/outputs` into hypeForge's sway/config (after the fixed lines; check Sway with a missing file)
 - [x] **F-1 (Javier's first real run, 2026-10-06):** everything worked until he typed a screen name — the first letter closed the app. A helper named `_name` hid Textual's own `_name` on every widget. Renamed; a typing test and a permanent name-clash check (that would have caught it) added. 43 tests
+- [x] **F-2 (Javier's run):** after Identify the screens stayed dark. Cause: during each 3-second dim the previous round's answer buttons were still up, and clicking one cancelled the running step before its restore. Fix: no answer buttons while a screen is dark; each dim + restore runs in its own process (`brightness.dim`), so nothing in the app can skip the restore; the restore is read back and retried. Tests in the failing direction (step cancelled mid-dim, a screen that ignores two restores, one that never comes back). 47 tests
+- [ ] **F-3 (Javier's run): no manual in Help** — write the manual pages (forgekit ManualScreen)
 - [ ] Check the screen drawing in a real terminal (a doubled right edge showed in the rendered picture)
 - [ ] Screens drawing + list; per-screen settings form
 - [ ] Apply live with keep-or-revert countdown; save to `~/.config/sway/outputs` with a backup

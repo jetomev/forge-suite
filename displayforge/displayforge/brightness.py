@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import os
 import re
+import shlex
 import subprocess
 import tomllib
 from pathlib import Path
@@ -38,6 +39,25 @@ def get(bus: int, ddcutil: str = "ddcutil") -> int | None:
 def set_(bus: int, percent: int, ddcutil: str = "ddcutil") -> bool:
     return subprocess.run([ddcutil, "--bus", str(bus), "setvcp", "10", str(int(percent))],
                           capture_output=True).returncode == 0
+
+
+def dim(bus: int, seconds: int = 3, before: int | None = None, ddcutil: str = "ddcutil",
+        tries: int = 6) -> subprocess.Popen:
+    """Darken one screen for `seconds`, then put its brightness back — done by an independent
+    process (F-2: a click during the dim cancelled the app's own step and the screen stayed
+    dark). The restore is read back and retried until the screen reports it. Returns the process;
+    wait() on it to know it is back."""
+    if before is None:
+        before = get(bus, ddcutil)
+    before = 70 if before is None else int(before)
+    d, b = shlex.quote(ddcutil), int(bus)
+    script = (f"{d} --bus {b} setvcp 10 0 >/dev/null 2>&1; sleep {int(seconds)}; "
+              f"i=0; while [ $i -lt {int(tries)} ]; do "
+              f"{d} --bus {b} setvcp 10 {before} >/dev/null 2>&1; "
+              f"{d} --bus {b} getvcp 10 --brief 2>/dev/null | grep -q \" {before} \" && exit 0; "
+              f"i=$((i+1)); sleep 1; done; exit 1")
+    return subprocess.Popen(["sh", "-c", script], start_new_session=True,
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 # -- what Identify remembers ---------------------------------------------------------------------

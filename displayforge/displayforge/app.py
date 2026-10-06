@@ -520,25 +520,27 @@ class IdentifyView(VerticalScroll):
 
     async def dim_next(self) -> None:
         import asyncio
+        box = self.query_one("#df-id-answers", Horizontal)
+        # No answer buttons while a screen is dark (F-2: a click then cancelled the restore)
+        await box.remove_children()
         if not self.todo:
             self.session.remembered["bus"] = dict(self.answers)
             B.save(self.session.remembered)
             self.query_one("#df-id-step", Static).update("[$forge-ok]✓ Done.[/] Brightness now knows which "
                                                         "screen is which (Brightness, 4).")
-            await self.query_one("#df-id-answers", Horizontal).remove_children()
             return
         bus = self.todo[0]
         done = len(self.answers) + 1
         total = done + len(self.todo) - 1
         step = self.query_one("#df-id-step", Static)
-        step.update(f"[b]{done} of {total}[/] · one screen goes [b]dark for 3 seconds[/] now…")
-        before = await asyncio.to_thread(B.get, bus, self.ddcutil)
-        await asyncio.to_thread(B.set_, bus, 0, self.ddcutil)
-        await asyncio.sleep(3)
-        await asyncio.to_thread(B.set_, bus, before if before is not None else 70, self.ddcutil)
+        step.update(f"[b]{done} of {total}[/] · one screen goes [b]dark for 3 seconds[/] now… watch")
+        # The dim and its restore run in their own process: nothing here can skip the restore
+        proc = B.dim(bus, 3, ddcutil=self.ddcutil)
+        back = await asyncio.to_thread(proc.wait)
+        if back != 0:
+            self.app.notify("A screen did not report its brightness back. Set it in Brightness (4).",
+                            severity="warning", timeout=8)
         step.update(f"[b]{done} of {total}[/] · Which screen went dark?")
-        box = self.query_one("#df-id-answers", Horizontal)
-        await box.remove_children()
         # the screens where they physically are now — that is what the person sees go dark
         buttons = [Button(f"{self.session.place_words(s.name, False).capitalize()} "
                           f"({self.session.label(s.name).split(' · ')[0]})",

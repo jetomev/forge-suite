@@ -181,6 +181,35 @@ class Brightness(unittest.TestCase):
         self.assertTrue(B.set_(4, 70, self.ddc))
         self.assertIn("--bus 4 setvcp 10 70", (self.tmp / "set.log").read_text())
 
+    def test_dim_comes_back_even_if_the_app_step_is_cancelled(self):
+        # F-2: a click during the dim cancelled the app's step and the screen stayed dark.
+        # Now the dim + restore is its own process: we start it and walk away (no wait).
+        log = self.tmp / "set.log"
+        proc = B.dim(4, seconds=1, before=75, ddcutil=self.ddc)
+        time.sleep(0.3)
+        self.assertEqual(log.read_text().splitlines(), ["--bus 4 setvcp 10 0"])      # dark
+        time.sleep(1.6)
+        self.assertEqual(log.read_text().splitlines()[-1], "--bus 4 setvcp 10 75")   # back
+        proc.wait(timeout=5)                         # only now collected: the restore never needed us
+
+    def test_dim_retries_until_the_screen_reports_it(self):
+        # a screen that ignores the first two restore commands
+        flaky = fake_tool(self.tmp, "ddcutil-flaky",
+                          f'echo "$*" >> {self.tmp}/flaky.log\n'
+                          'case "$*" in\n'
+                          f'  *getvcp*) n=$(grep -c "setvcp 10 75" {self.tmp}/flaky.log); '
+                          '[ "$n" -ge 3 ] && echo "VCP 10 C 75 100" || echo "VCP 10 C 0 100";;\n'
+                          'esac\n')
+        p = B.dim(4, seconds=0, before=75, ddcutil=flaky)
+        self.assertEqual(p.wait(timeout=15), 0)
+        sets = [l for l in (self.tmp / "flaky.log").read_text().splitlines() if "setvcp 10 75" in l]
+        self.assertEqual(len(sets), 3)
+
+    def test_dim_reports_failure_when_it_never_comes_back(self):
+        dead = fake_tool(self.tmp, "ddcutil-dead", 'case "$*" in *getvcp*) echo "VCP 10 C 0 100";; esac\n')
+        p = B.dim(4, seconds=0, before=75, ddcutil=dead, tries=2)
+        self.assertEqual(p.wait(timeout=15), 1)
+
     def test_names_and_buses_remembered(self):
         cfg = self.tmp / "screens.toml"
         self.assertEqual(B.load(cfg), {"names": {}, "bus": {}})
