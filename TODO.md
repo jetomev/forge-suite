@@ -15,7 +15,6 @@
 - [ ] **Desktop entries in every Forge app's package** (2026-10-06): none of the four AUR apps ships one — grubforge#37, alacrittyforge#18, bitlaforge#12, nogforge#16; hypeForge carries its own until then
 - [ ] **fileForge** (Javier, 2026-10-06) — our own file manager, **later**: forgekit look, **full mouse support** (what superfile lacks for him), keyboard too. Replaces the mcForge question below.
 - [ ] **mcForge?** (Javier, 2026-10-06) — Midnight Commander is free software (GPLv3, written in C, github.com/MidnightCommander/mc), so a fork is allowed, and GPLv3 matches ours. Honest size: ~300,000 lines of C, 30 years old — a fork means maintaining all of it. Lighter path that fits D-59: an **mcForge settings app** (look, editor, panels, keys) over the stock mc. Decide later.
-- [ ] mc: Left → Tree reported not working (2026-10-06) — not yet reproduced; waiting on what Javier sees
 
 ## Sections
 - **displayForge** — **1.0.0 released 2026-10-06**; next: the 1.0.x tests → [displayforge/TODO.md](displayforge/TODO.md)
