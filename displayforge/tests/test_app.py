@@ -165,6 +165,16 @@ class App(unittest.TestCase):
         self.assertEqual(self.session.remembered["names"], {"DP-3": "Main"})
         self.assertEqual(B.load(self.tmp / "screens.toml")["names"], {"DP-3": "Main"})
 
+    def test_the_manual_opens(self):
+        # F-3: Help had no manual
+        from forgekit import ManualScreen
+
+        async def steps(app, pilot):
+            await pilot.press("m")
+            await pilot.pause(0.4)
+            self.assertIsInstance(app.screen, ManualScreen)
+        self.run_app(steps)
+
 
 class NoNameClashes(unittest.TestCase):
     """No method or value of displayForge's may reuse a name Textual sets on its own objects —

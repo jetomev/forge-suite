@@ -18,12 +18,14 @@ from textual.widgets import Button, OptionList, Select, Static
 from textual.widgets.option_list import Option
 
 from forgekit import (
-    FORGE_CSS, GPL3_NOTICE, ChangeGroup, Choices, ForgeApp, ForgeModal, Notice, NumberPresets,
-    ReviewDialog, SettingRow, Toggle,
+    FORGE_CSS, GPL3_NOTICE, ChangeGroup, Choices, ForgeApp, ForgeModal, ManualScreen, Notice, NumberPresets,
+    ReviewDialog, SettingRow, Toggle, load_pages,
 )
 
 from . import __version__, brightness as B, drawing, saving as V, screens as S, trial as T
 from .session import Session, rotation_words
+
+MANUAL_DIR = os.path.join(os.path.dirname(__file__), "manual")
 
 DF_CSS = FORGE_CSS + """
 #df-drawing { height: auto; border: round $forge-border; border-title-color: $forge-accent;
@@ -583,7 +585,8 @@ class DisplayForgeApp(ForgeApp):
         {"id": "brightness", "title": "Brightness", "kind": "section"},
         {"id": "identify", "title": "Identify", "kind": "section"},
         {"id": "help", "title": "Help", "kind": "menu", "items": [
-            ("Keys", "k", "shortcuts"), ("License", "l", "license"), ("About", "a", "about")]},
+            ("Manual", "m", "manual"), ("Keys", "k", "shortcuts"), ("License", "l", "license"),
+            ("About", "a", "about")]},
         {"id": "quit", "title": "Quit", "kind": "action", "action": "quit"},
     ]
     SHORTCUTS = [
@@ -594,6 +597,7 @@ class DisplayForgeApp(ForgeApp):
         ("F9", "try the changes live, with the countdown"),
         ("F10", "save, with a review first"),
         ("Esc", "close a window · go back now (countdown)"),
+        ("M", "the manual"),
         ("?", "this list"),
         ("Q or Ctrl+Q", "quit (asks first if something isn't saved)"),
     ]
@@ -606,6 +610,7 @@ class DisplayForgeApp(ForgeApp):
         Binding("f9", "try_it", show=False, priority=True),
         Binding("f10", "save", show=False, priority=True),
         Binding("question_mark", "act('shortcuts')", show=False),
+        Binding("m", "act('manual')", show=False),
         Binding("q", "act('quit')", show=False),
     ]
 
@@ -638,6 +643,14 @@ class DisplayForgeApp(ForgeApp):
 
     def action_go(self, section: str) -> None:
         self._switch_section(section)
+
+    def on_action(self, action_id: str) -> None:
+        if action_id == "manual":
+            pages = load_pages(MANUAL_DIR) if os.path.isdir(MANUAL_DIR) else []
+            if not pages:
+                self.notify("The manual isn't installed.", severity="warning")
+                return
+            self.push_screen(ManualScreen("displayForge manual", pages))
 
     def on_section_shown(self, section_id: str) -> None:
         if section_id == "arrange":
