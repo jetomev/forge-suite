@@ -131,6 +131,24 @@ class Saving(unittest.TestCase):
         V.save(self.screens, self.out, self.bk)
         self.assertEqual([p.name for p in self.out.parent.iterdir()], ["outputs"])
 
+    def test_redirected_save_never_touches_the_real_file(self):
+        # 2026-10-06: a default path fixed at import time sent a test's save to the real
+        # ~/.config/sway/outputs. Redirecting the module's paths must be enough.
+        real = Path.home() / ".config/sway/outputs"
+        existed = real.exists()
+        before = real.stat().st_mtime if existed else None
+        old_out, old_bk = V.OUTPUTS, V.BACKUPS
+        V.OUTPUTS, V.BACKUPS = self.out, self.bk
+        try:
+            path, _ = V.save(self.screens)
+        finally:
+            V.OUTPUTS, V.BACKUPS = old_out, old_bk
+        self.assertEqual(path, self.out)
+        self.assertTrue(self.out.exists())
+        self.assertEqual(real.exists(), existed)
+        if existed:
+            self.assertEqual(real.stat().st_mtime, before)
+
     def test_included_finds_the_include_line(self):
         cfg = self.tmp / "config"
         cfg.write_text("output * bg x fill\n")

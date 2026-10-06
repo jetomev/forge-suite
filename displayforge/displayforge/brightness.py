@@ -42,7 +42,8 @@ def set_(bus: int, percent: int, ddcutil: str = "ddcutil") -> bool:
 
 # -- what Identify remembers ---------------------------------------------------------------------
 
-def load(path: Path = CONFIG) -> dict:
+def load(path: Path | None = None) -> dict:
+    path = path or CONFIG
     try:
         with open(path, "rb") as f:
             data = tomllib.load(f)
@@ -51,7 +52,8 @@ def load(path: Path = CONFIG) -> dict:
     return {"names": dict(data.get("names", {})), "bus": {k: int(v) for k, v in data.get("bus", {}).items()}}
 
 
-def save(data: dict, path: Path = CONFIG) -> None:
+def save(data: dict, path: Path | None = None) -> None:
+    path = path or CONFIG
     def q(s: str) -> str:
         return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
     lines = ["# displayForge — what Identify remembers. Edit it in displayForge (Identify).", "",

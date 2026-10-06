@@ -19,10 +19,15 @@ HEADER = """# Written by displayForge — your screens: resolution, refresh rate
 """
 
 
-def save(screens: list[S.Screen], path: Path = OUTPUTS, backups: Path = BACKUPS,
+def save(screens: list[S.Screen], path: Path | None = None, backups: Path | None = None,
          now: float | None = None) -> tuple[Path, Path | None]:
     """Write the file safely: back up the old one, write a temporary file, then swap it in.
-    Returns (the file, the backup or None if there was nothing to back up)."""
+    Returns (the file, the backup or None if there was nothing to back up).
+
+    The paths are looked up when called, not when Python reads this file: a default fixed at
+    import time once sent an in-memory test's save to the real ~/.config/sway/outputs."""
+    path = path or OUTPUTS
+    backups = backups or BACKUPS
     stamp = time.strftime("%Y%m%d-%H%M%S", time.localtime(now))
     backup = None
     if path.exists():
@@ -49,8 +54,9 @@ def prune(backups: Path, keep: int = KEEP) -> None:
         old.unlink()
 
 
-def included(sway_config: Path, outputs: Path = OUTPUTS) -> bool:
+def included(sway_config: Path, outputs: Path | None = None) -> bool:
     """Does Sway's own config read the outputs file?"""
+    outputs = outputs or OUTPUTS
     if not sway_config.exists():
         return False
     targets = {str(outputs), str(outputs).replace(str(HOME), "~"), "~/.config/sway/outputs",
