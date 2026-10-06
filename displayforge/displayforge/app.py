@@ -477,12 +477,13 @@ class IdentifyView(VerticalScroll):
         box.mount(*rows)
 
     def on_input_submitted(self, e) -> None:
-        self._name(e.input)
+        self._set_screen_name(e.input)
 
     def on_input_changed(self, e) -> None:
-        self._name(e.input, save=False)
+        self._set_screen_name(e.input, save=False)
 
-    def _name(self, inp, save: bool = True) -> None:
+    def _set_screen_name(self, inp, save: bool = True) -> None:
+        # (not `_name`: Textual uses that on every widget — it crashed on the first letter typed)
         cid = inp.id or ""
         if not cid.startswith("n-"):
             return

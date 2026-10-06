@@ -136,6 +136,46 @@ class App(unittest.TestCase):
         # each control went dark, then back to what it was (75)
         self.assertEqual(self.lines("ddc.log"), [f"--bus {b} setvcp 10 {v}" for b in (3, 4, 5) for v in (0, 75)])
 
+    def test_typing_a_screen_name(self):
+        # 2026-10-06: the first letter typed closed the app (a helper named `_name` hid Textual's own)
+        async def steps(app, pilot):
+            await pilot.press("5")
+            await pilot.pause(0.3)
+            await pilot.click("#n-DP-3")
+            for ch in "Main":
+                await pilot.press(ch)
+            await pilot.press("enter")
+            await pilot.pause(0.3)
+        self.run_app(steps)
+        self.assertEqual(self.session.remembered["names"], {"DP-3": "Main"})
+        self.assertEqual(B.load(self.tmp / "screens.toml")["names"], {"DP-3": "Main"})
+
+
+class NoNameClashes(unittest.TestCase):
+    """No method or value of displayForge's may reuse a name Textual sets on its own objects —
+    the `_name` crash, caught for good."""
+
+    def test_none(self):
+        import inspect
+        import re
+        from textual.app import App as TApp
+        from textual.containers import Horizontal, Vertical, VerticalScroll
+        from textual.widget import Widget
+        import displayforge.app as A
+        live = set(vars(Widget())) | set(vars(VerticalScroll())) | set(vars(Horizontal())) | set(vars(Vertical()))
+        app_live = set(vars(TApp()))
+        found = []
+        for name, cls in inspect.getmembers(A, inspect.isclass):
+            if cls.__module__ != A.__name__:
+                continue
+            src = inspect.getsource(cls)
+            mine = set(re.findall(r"^    def ([a-zA-Z_][a-zA-Z0-9_]*)\(", src, re.M))
+            for grp in re.findall(r"((?:self\.[a-zA-Z_][a-zA-Z0-9_]*\s*,\s*)*self\.[a-zA-Z_][a-zA-Z0-9_]*)\s*=(?!=)", src):
+                mine |= set(re.findall(r"self\.([a-zA-Z_][a-zA-Z0-9_]*)", grp))
+            found += [f"{name}.{n}" for n in sorted(mine & (app_live if issubclass(cls, TApp) else live))]
+        self.assertEqual(found, [])
+        self.assertIn("_name", live)        # the check really sees the name that bit us
+
 
 if __name__ == "__main__":
     unittest.main()

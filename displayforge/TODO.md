@@ -14,6 +14,7 @@
 - [x] **Arrange, Brightness, Identify** (2026-10-06, night): Arrange — arrows move the picked screen (others make room), Tab picks the next, Put it / Of / Line up; Brightness — one row per screen in tens + All screens (from a real reading), at once via ddcutil; Identify — dims one control at a time (0 → back to what it was), "which went dark?" by where the screens physically sit, remembered; names. **The design's big numbers on each screen were left out of 0.1.0** (needs a window drawn per monitor; the Screens drawing shows which is which) — Javier may push back. Fixed in the walk-through: empty Of choice, run-together words, planned instead of physical places, a made-up starting brightness
 - [x] **tests/test_app.py**: the app driven in memory (fake swaymsg + ddcutil, throwaway folders; each test checks the real files are untouched) — **41 tests, 0 warnings**
 - [ ] Hook `include ~/.config/sway/outputs` into hypeForge's sway/config (after the fixed lines; check Sway with a missing file)
+- [x] **F-1 (Javier's first real run, 2026-10-06):** everything worked until he typed a screen name — the first letter closed the app. A helper named `_name` hid Textual's own `_name` on every widget. Renamed; a typing test and a permanent name-clash check (that would have caught it) added. 43 tests
 - [ ] Check the screen drawing in a real terminal (a doubled right edge showed in the rendered picture)
 - [ ] Screens drawing + list; per-screen settings form
 - [ ] Apply live with keep-or-revert countdown; save to `~/.config/sway/outputs` with a backup
