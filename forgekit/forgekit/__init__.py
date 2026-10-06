@@ -24,6 +24,10 @@ from .dialogs import (
 from .licenses import GPL3_NOTICE
 from .menu import MenuBar, MenuDropdown, accel, underline_label
 from .theme import COLORS, FORGE_CSS, ROLES, css_variables
+from .needs import (
+    Finding, Need, NeedsApp, a_file, check_needs, describe_session, heading_for, lines_for, missing,
+    needs_text, parse_version, program, service, start_check, sway_session,
+)
 
 __version__ = "0.6.0"
 
@@ -37,5 +41,8 @@ __all__ = [
     "FilterPicker", "ReviewDialog", "ChangeGroup", "review_markup", "ProgressDialog",
     "ManualScreen", "load_pages", "session_banner", "closing_notice", "runs_log_row",
     "PasswordBridge", "PasswordDialog", "RunWindow", "TerminalPane", "InAppPolkitAgent",
+    "Need", "Finding", "check_needs", "missing", "start_check", "NeedsApp", "needs_text",
+    "heading_for", "lines_for", "describe_session", "parse_version",
+    "sway_session", "program", "service", "a_file",
     "__version__",
 ]
