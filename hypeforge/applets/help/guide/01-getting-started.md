@@ -10,7 +10,8 @@ It runs on **Sway** and adds small pieces of its own, called **applets**.
 |---|---|
 | **Win + Space** | The launcher: open apps, lock, log out, reboot, shut down (or click the KognogOS emblem) |
 | **Win + 1 … 6** | Switch workspace — every screen together |
-| **Win + Tab** | The list of workspaces (or click the workspace button) |
+| **Win + W** | The list of workspaces (or click **Workspaces** on the bar) |
+| **Win + F** | Your favorite apps (or click **Favorites** on the bar) |
 | **Alt + F4** | Close a window |
 | **Win + Escape** | Lock the screen |
 | **Print Screen** | Screenshot: drag a box |
@@ -40,9 +41,10 @@ place to change them; until then the files can be edited by hand.
 ## The top bar
 
 From the left — on a slightly lighter background — the **KognogOS emblem** (the launcher),
-the **workspace button** and **Favorites ▾**. On the right: the **tray** (apps running in the
+the menus **Workspaces** and **Favorites** (the underlined letter is the key: Win + W, Win + F).
+On the right, on the same shade: the **tray** (apps running in the
 background — Steam, Discord, Dropbox, Insync…: click to open, right click for their menu), the
-**clipboard icon**, the **bell** and the clock.
+**clipboard icon**, the **bell**, a thin line, and the date and time.
 
 ## No title bars
 

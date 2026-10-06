@@ -21,7 +21,14 @@
     "on-click": "~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections"
   },
   "modules-center": [],
-  "modules-right": ["tray", "custom/clipboard", "custom/notifications", "clock"],
+  "modules-right": ["group/indicators"],
+
+  // The right side: background apps, the clipboard, the bell, then a line and the date and
+  // time — one group with its own shade (Javier, 2026-10-05)
+  "group/indicators": {
+    "orientation": "inherit",
+    "modules": ["tray", "custom/clipboard", "custom/notifications", "clock"]
+  },
   // The tray (Javier, 2026-10-05): apps that keep running in the background — Steam, Discord,
   // Dropbox, Insync… Left click opens the app, right click its menu.
   "tray": {

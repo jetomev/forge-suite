@@ -27,7 +27,8 @@ name = "Workspaces"
 keys = [
   { keys = "Win + 1 … 6", does = "Switch every screen to that workspace (the names are on the top bar)", sway = ["$mod+1", "$mod+2", "$mod+3", "$mod+4", "$mod+5", "$mod+6"] },
   { keys = "Win + Shift + 1 … 6", does = "Send the window to that workspace, on the same screen", sway = ["$mod+Shift+1", "$mod+Shift+2", "$mod+Shift+3", "$mod+Shift+4", "$mod+Shift+5", "$mod+Shift+6"] },
-  { keys = "Win + Tab, or click the workspace button", does = "The list of workspaces: pick one to switch every screen (press again or Esc to close)", sway = ["$mod+Tab"] },
+  { keys = "Win + W, or click Workspaces", does = "The list of workspaces (the one on screen marked ●): pick one to switch every screen; press again or Esc to close", sway = ["$mod+w"] },
+  { keys = "Win + F, or click Favorites", does = "Your favorite apps, with their icons: pick one to open it", sway = ["$mod+f"] },
 ]
 
 [[group]]
@@ -41,12 +42,12 @@ keys = [
 [[group]]
 name = "Layout"
 keys = [
-  { keys = "Win + W", does = "Tabs: the windows in this space become tabs", sway = ["$mod+w"] },
+  { keys = "Win + T", does = "Tabs: the windows in this space become tabs", sway = ["$mod+t"] },
   { keys = "Win + S", does = "Stack: the windows in this space are stacked, names on top", sway = ["$mod+s"] },
   { keys = "Win + E", does = "Side by side again (press again: above each other)", sway = ["$mod+e"] },
   { keys = "Win + B", does = "The next window opens beside this one", sway = ["$mod+b"] },
   { keys = "Win + V", does = "The next window opens below this one", sway = ["$mod+v"] },
-  { keys = "Win + F", does = "Full screen on / off", sway = ["$mod+f"] },
+  { keys = "Win + Shift + F", does = "Full screen on / off", sway = ["$mod+Shift+f"] },
   { keys = "Win + R", does = "Resize mode: arrows (or H J K L) change the size, Enter or Esc to finish", sway = ["$mod+r", "resize:Left", "resize:Down", "resize:Up", "resize:Right", "resize:$left", "resize:$down", "resize:$up", "resize:$right", "resize:Return", "resize:Escape"] },
 ]
 

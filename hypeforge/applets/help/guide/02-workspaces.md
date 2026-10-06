@@ -7,8 +7,8 @@ switches every screen together, so each workspace is a whole desk of its own.
 ## How to use it
 
 - **Win + 1 … 6** switches every screen at once.
-- **The workspace button** on the bar (for example **1. Daily ▾**) shows where you are.
-  **Click it, or press Win + Tab**, and the list drops down: pick one and every screen
+- **Workspaces** on the bar (W underlined) — **click it, or press Win + W** — drops down the
+  list, the one on screen marked **●**; hover over it to see its name. Pick one and every screen
   switches. Press again (or **Esc**) to close it.
 - **Win + Shift + 1 … 6**: send the window you are in to another workspace (it stays on the
   same screen).

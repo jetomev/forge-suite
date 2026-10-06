@@ -75,9 +75,20 @@ window#waybar {
   color: @hf_bar;
 }
 
+/* The date and time, after a thin line that separates them from the icons */
 #clock {
   padding: 0 14px;
+  margin-left: 6px;
   color: @hf_text;
+  border-left: 1px solid @hf_inactive;
+}
+
+/* The right side — the tray, the clipboard, the bell, a line, the date and time — wears its
+   own shade, the mirror of the left side (Javier, 2026-10-05). */
+#indicators {
+  background-color: #262637;
+  border-radius: 12px 0 0 12px;
+  padding-left: 6px;
 }
 
 /* The tray: background apps (Steam, Discord, Dropbox…) */
@@ -98,7 +109,7 @@ window#waybar {
 #custom-clipboard {
   padding: 0 5px;
   font-family: "Symbols Nerd Font", sans-serif;
-  font-size: 17px;
+  font-size: 16px;
   color: @hf_subtext;
 }
 
@@ -116,7 +127,7 @@ window#waybar {
 #custom-notifications {
   padding: 0 5px;
   font-family: "Symbols Nerd Font", sans-serif;
-  font-size: 17px;
+  font-size: 16px;
   color: @hf_subtext;
 }
 

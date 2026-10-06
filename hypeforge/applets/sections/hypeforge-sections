@@ -117,7 +117,11 @@ def sort_into_sections(cfg, everything):
 
 # ---- The menus -------------------------------------------------------------------------------
 
-def pick(cfg, lines, prompt, icons=True, lines_shown=None, menu="launcher", extra=()):
+# Where the launcher opens: under the KognogOS emblem, at the bar's left end (Javier, 2026-10-05)
+UNDER_EMBLEM = ("--anchor", "top-left", "--x-margin", "4", "--y-margin", "4")
+
+
+def pick(cfg, lines, prompt, icons=True, lines_shown=None, menu="launcher", extra=UNDER_EMBLEM):
     """Show `lines` [(text, icon)] in fuzzel; the chosen index, or None (Esc)."""
     fuzzel = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", prompt, *extra]
     if lines_shown:
@@ -153,12 +157,12 @@ def write_bar():
     me = shlex.quote(os.path.abspath(sys.argv[0]))
     fragment = {"group/favourites": {"orientation": "inherit", "modules": []}}
     style = ["/* Written by hypeforge-sections bar. Do not edit by hand. */"]
-    # One dropdown button, "Favorites ▾" (Javier, 2026-10-05: like a menu bar, not a row of icons).
+    # One menu title, "Favorites", its key letter underlined (Win + F) — like a menu bar (Javier).
     # The list it opens shows each app with its icon (`favorites`, below).
     shown = [a for a in cfg.get("favourites", []) if a in everything]
     if shown:
         fragment["group/favourites"]["modules"].append("custom/favorites")
-        fragment["custom/favorites"] = {"format": "Favorites  \u25be", "tooltip": False,
+        fragment["custom/favorites"] = {"format": "<u>F</u>avorites", "tooltip": False,
                                         "on-click": f"{me} favorites"}
     text = json.dumps(fragment, indent=2) + "\n"
     css = "\n".join(style) + "\n"
@@ -180,14 +184,7 @@ def favorites_menu():
     shown = [a for a in cfg.get("favourites", []) if a in everything]
     if not shown:
         return
-    # Under the button: the emblem (~44 px) plus the workspace button, whose width follows its name
-    try:
-        current = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "hypeforge-workspaces.current").read_text().strip()
-        names = tomllib.load(open(CONFIG_DIR / "workspaces.toml", "rb"))
-        label = f"{current}. {[w['name'] for w in names.get('workspace', [])][int(current) - 1]}  ▾"
-    except Exception:
-        label = "1. Daily  ▾"
-    x = 44 + 24 + len(label) * 8 + 8
+    x = 44 + 24 + len("Workspaces") * 8 + 8  # under the button: the emblem + the Workspaces menu
     choice = pick(cfg, [(everything[a]["name"], everything[a]["icon"]) for a in shown], "Favorites  ",
                   lines_shown=len(shown), menu="favorites",
                   extra=("--anchor", "top-left", "--x-margin", str(x), "--y-margin", "4", "--width", "30"))

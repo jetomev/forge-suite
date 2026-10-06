@@ -133,7 +133,7 @@ def write_bar(grid):
             "interval": "once",
             "signal": BAR_SIGNAL,
             "on-click": f"{me} menu",
-            "tooltip": False,
+            "tooltip": True,
         },
     }
     text = json.dumps(fragment, indent=2) + "\n"
@@ -143,18 +143,22 @@ def write_bar(grid):
 
 
 def label(grid):
-    """The button's text: the workspace on screen, and the arrow that says 'there is a list'."""
+    """The bar's menu title, "Workspaces" with its key letter underlined (Win + W); the tooltip
+    names the workspace on screen."""
     i = current() if 1 <= current() <= len(grid.names) else 1
-    print(json.dumps({"text": f"{i}. {grid.names[i - 1]}  \u25be", "class": "active"}))
+    # A menu title, like a menu bar (Javier, 2026-10-05); the workspace on screen is in the tooltip
+    print(json.dumps({"text": "<u>W</u>orkspaces", "class": "menu", "tooltip": f"On screen: {i}. {grid.names[i - 1]}"}))
 
 
 def menu(grid):
     """The dropdown: every workspace in order, the one on screen selected. Opens under the button."""
     if hfmenu.close_open("workspaces"):  # a second click (or Win + Tab) closes it
         return
-    names = [f"{i}. {n}" for i, n in enumerate(grid.names, 1)]
+    here = current()
+    # The one on screen is marked (fuzzel cannot colour one line on its own) and selected
+    names = [f"{'●' if i == here else '  '}  {i}. {n}" for i, n in enumerate(grid.names, 1)]
     look = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
-    cmd = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", "Workspace  ",
+    cmd = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", "Workspaces  ",
            "--anchor", "top-left", "--x-margin", "44", "--y-margin", "4",
            "--width", "28", "--lines", str(len(names)), "--select-index", str(current() - 1)]
     if os.path.isfile(look):

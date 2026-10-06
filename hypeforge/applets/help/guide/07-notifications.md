@@ -10,7 +10,7 @@ counts the ones you have not looked at yet.
 - **Click a pop-up** to close it; **right click** closes them all.
 - **Win + N** closes every pop-up on screen; **Win + Shift + N** brings back the last one closed.
 - **The bell:** grey when nothing is new; **yellow with a number** when something is.
-  **Click it** to see your recent notifications (the number goes away); click again to close
+  **Click it** to see your recent notifications, under the bar's right end (the number goes away); click again to close
   the list. **Right click** turns **Do Not Disturb** on or off: the bell turns red, pop-ups
   stay hidden, and they are still kept in the list.
 

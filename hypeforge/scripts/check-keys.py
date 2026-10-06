@@ -53,7 +53,27 @@ def chart_keys():
     return {k for g in chart.get("group", []) for e in g.get("keys", []) for k in e.get("sway", [])}
 
 
+def empty_bindings():
+    """Key lines that do nothing: no command after the key, or only a comment (2026-10-05: an
+    edit spliced a comment into `bindsym $mod+Tab …`, and the chart check still passed)."""
+    bad = []
+    for n, line in enumerate(CONFIG.read_text().splitlines(), 1):
+        words = line.split()
+        if not words or words[0] != "bindsym":
+            continue
+        rest = [w for w in words[1:] if not w.startswith("--")]
+        if len(rest) < 2 or rest[1].startswith("#"):
+            bad.append(f"line {n}: {line.strip()[:90]}")
+    return bad
+
+
 def main():
+    broken = empty_bindings()
+    if broken:
+        print("check-keys: key lines in sway/config that do nothing:")
+        for b in broken:
+            print(f"  {b}")
+        return 1
     real = sway_keys() - applet_unbinds()
     chart = chart_keys()
     missing = sorted(real - chart)   # in Sway, not explained in the chart
