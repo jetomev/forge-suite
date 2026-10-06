@@ -12,4 +12,5 @@
 - [ ] Release rules (`~/.claude/rules/release.md`) adapted for per-app tags in one repository
 
 ## Sections
+- **displayForge** — next: the screen designs, approved before code → [displayforge/TODO.md](displayforge/TODO.md)
 - **hypeForge** — next: bar piece 3 (favourites as icons) → [hypeforge/TODO.md](hypeforge/TODO.md)

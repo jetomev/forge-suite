@@ -21,6 +21,7 @@
 | Section | What it is | Status |
 |---|---|---|
 | **[hypeForge](hypeforge/)** | The KognogOS desktop: a slim, quick tiling desktop on Sway, built from small applets | 🔄 being built, lived in daily |
+| **[displayForge](displayforge/)** | Screen settings in the terminal: arrange, resolution, refresh rate, scale, rotation, brightness — with a keep-or-revert safety countdown | 📐 designing |
 
 **Moving in, one at a time** (each keeps its own version and AUR package; its old repository is archived with a pointer):
 [forgekit](https://github.com/jetomev/forgekit) (the shared foundation) · [alacrittyForge](https://github.com/jetomev/alacrittyforge) · [bitlaForge](https://github.com/jetomev/bitlaforge) · [nogForge](https://github.com/jetomev/nogforge) · [grubForge](https://github.com/jetomev/grubforge) (last: it has the most users).
