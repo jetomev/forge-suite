@@ -9,7 +9,7 @@
 
 ## Phase 1 · Build (after the design is approved)
 - [x] **Engine step 1 — `displayforge/screens.py`** (2026-10-05): read screens from Sway; only real sizes / rates; exact `output …` commands for a change (HDR / adaptive sync only where supported); the saved-file lines; place left / right / above / below with edges snapped and **the others make room**; overlaps found. **20 tests** (`tests/test_screens.py`: Javier's real three Sceptres, serial blanked; 1, 4, 6 screens; a fourth under screen 1; rotated; 80 %)
-- [ ] Engine step 2 — trial (apply live, undo by itself), saving (outputs file + backup), brightness (ddcutil in tens) + names / which-screen-is-which
+- [x] **Engine step 2** (2026-10-05): `trial.py` — try a change live, undone by itself unless kept, through an **independent safety timer** (a separate process: the undo happens even if displayForge freezes or dies); `saving.py` — `~/.config/sway/outputs`, backup first (20 kept), written all-or-nothing, `included()` checks Sway reads it; `brightness.py` — ddcutil, steps of ten, Identify's names and which control is which screen. **35 tests, 0 warnings** (the safety timer tested in the failing direction, including displayForge dying mid-countdown)
 - [ ] forgekit app skeleton
 - [ ] Screens drawing + list; per-screen settings form
 - [ ] Apply live with keep-or-revert countdown; save to `~/.config/sway/outputs` with a backup
