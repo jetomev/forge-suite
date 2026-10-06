@@ -87,6 +87,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
   - **Any number of screens** (Javier, 10-05): "not everyone has 3 screens… 1, and others 6" — a flexible matrix of monitors × workspaces × window placement, designed when the Monitors / Workspaces / Placement apps are built (today's settings assume this desktop's three)
 - [ ] **hypeForge Settings = the control centre** (D-59): list on the left, the chosen Forge app running in a terminal pane on the right
 
+- [ ] **Remove KDE — the very last step** (Javier, 10-05: "leave removing KDE to the very end"): Plasma, its apps, network-manager-applet / nm-connection-editor, breeze… only once everything else is done and proven
+
 ## Phase 12 · Our own look
 - [ ] **Applet 3 · Folder tabs** (D-47): small left-aligned tabs like folders in a holder, rounded tops, our colours; replaces Sway's even tab row
 - [ ] **Our own bar** (Javier, 10-04): Waybar for now; once the setup is done, our own bar as a hypeForge applet — a Waybar fork or a small one of our own, decided then
