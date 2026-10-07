@@ -47,6 +47,7 @@ A full desktop like KDE Plasma does everything for you, and it carries a lot of 
 | **Window placement** | Every new window goes to the next spot of a fixed order across your screens, then becomes a tab. |
 | **Launcher** (Win + Space, or the emblem) | Apps only: your favourites first, then the workspaces as sections; an app picked from "Work" opens in Work. Press again to close. |
 | **Favorites** (Win + F) | Your favourite apps with their icons, one click away. |
+| **Passwords** — [sudoForge](../sudoforge/README.md) | One box for every admin request: an app asking for admin rights or a `sudo -A` command. It floats up on the screen you are using and says who is asking and what for. Starts at login. |
 | **Screens** — [displayForge](../displayforge/README.md) | Arrange your screens, resolution, refresh rate, size, rotation, brightness, with a countdown that undoes a bad change by itself. The first Forge app built for hypeForge. |
 | **Sound, network, Bluetooth** | Click the bar: **wiremix** (volume per app and device), a network list (with **nmtui** for the details), **bluetui**. Each opens floating, in the KognogOS colours. |
 | **USB drives** | Plugged-in drives mount by themselves (Windows drives read-only, the computer's own disks never); the bar icon lists them, to open in Midnight Commander or eject. |
@@ -88,7 +89,7 @@ The look is **Catppuccin Mocha** with the KognogOS wallpaper: thin borders, no t
 ## How it fits together
 
 1. **The pieces.** Each feature (workspaces, placement, launcher, rules, help, lock…) is its own small piece ([D-47](docs/DECISIONS.md)), with its own settings file in `~/.config/hypeforge/applets/`.
-2. **A Forge app for every setting.** Everything that today can only be set up by editing a file gets its own **Forge Suite app**: our own pieces, and outside programs like the music player, the top bar and the launcher's look ([D-59](docs/DECISIONS.md)). Each is a full app that also runs on its own, built on [forgekit](https://github.com/jetomev/forgekit) so they all look and work the same. The first one, **[displayForge](../displayforge/README.md)** (screens), is done.
+2. **A Forge app for every setting.** Everything that today can only be set up by editing a file gets its own **Forge Suite app**: our own pieces, and outside programs like the music player, the top bar and the launcher's look ([D-59](docs/DECISIONS.md)). Each is a full app that also runs on its own, built on [forgekit](../forgekit/README.md) so they all look and work the same. The first two are done: **[displayForge](../displayforge/README.md)** (screens) and **[sudoForge](../sudoforge/README.md)** (passwords).
 3. **hypeForge Settings, the control centre.** One window, like KDE's System Settings: the list on the left, and the chosen Forge app running on the right. Replace one app and nothing else has to change.
 4. **nog** installs everything and decides when it updates, and system changes are made only through the apps, never by hand.
 
@@ -119,9 +120,9 @@ We don't compare ourselves with anyone. Our picks are simply our picks.
 | Step | What happens | Status |
 |---|---|---|
 | **Choose the base** | Research, then **Sway** chosen ([D-45](docs/DECISIONS.md)); runs on the test desktop | ✅ |
-| **The jobs, one by one** | Workspaces, placement, launcher, rules, help, lock screen, notifications, screenshots, clipboard history, the menu bar, sound, network, Bluetooth, USB drives ✅ · next: the password pop-up, printing, night light | 🔄 in progress |
+| **The jobs, one by one** | Workspaces, placement, launcher, rules, help, lock screen, notifications, screenshots, clipboard history, the menu bar, sound, network, Bluetooth, USB drives, the password pop-up (sudoForge) ✅ · next: printing, night light | 🔄 in progress |
 | **Our own look** | Folder-style tabs, our own top bar, a palette from the KognogOS brand | ⬜ |
-| **The Forge apps** | One Forge Suite app per setting, and **hypeForge Settings** to hold them all. **displayForge 1.0 (screens) ✅** · next: workspaces and window placement, flexible for any number of screens | 🔄 in progress |
+| **The Forge apps** | One Forge Suite app per setting, and **hypeForge Settings** to hold them all. **displayForge 1.0 (screens) ✅** · **sudoForge 1.0 (passwords) ✅** · next: workspaces and window placement, flexible for any number of screens | 🔄 in progress |
 | **The first KognogOS release** | KognogOS ships with hypeForge as its only desktop | ⬜ |
 
 Full detail: [docs/ROADMAP.md](docs/ROADMAP.md) · History: [docs/CHANGELOG.md](docs/CHANGELOG.md)
@@ -159,8 +160,9 @@ hypeForge is a human and AI collaboration. Decisions are written down the day th
 
 - **[KognogOS](https://github.com/jetomev/KognogOS)** — the distribution hypeForge becomes the desktop of
 - **[nog](https://github.com/jetomev/nog)** — tier-aware package manager
+- **[sudoForge](../sudoforge/README.md)** — the password box, in this repository
 - **[displayForge](../displayforge/README.md)** — screen settings, in this repository
-- **[forgekit](https://github.com/jetomev/forgekit)** — the shared foundation for the Forge apps
+- **[forgekit](../forgekit/README.md)** — the shared foundation for the Forge apps
 - **[grubForge](https://github.com/jetomev/grubforge)** — bootloader manager
 - **[alacrittyForge](https://github.com/jetomev/alacrittyforge)** — terminal configurator
 - **[bitlaForge](https://github.com/jetomev/bitlaforge)** — solo Bitcoin mining, honestly framed
