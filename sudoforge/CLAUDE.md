@@ -16,5 +16,5 @@ One floating box for every admin request in a Sway session: polkit's admin pop-u
 
 ## How to run and test
 - Tests: `python -m unittest discover -s tests -v` from this folder (stand-in boxes and sudo prompts; nothing asks the real system unless a test says so).
-- The service by hand: `python main.py service` (Ctrl+C stops it and gives polkit back).
+- The service by hand: `python main.py service` (Ctrl+C stops it and gives polkit back). Its record: `~/.local/state/sudoforge/service.log`.
 - Decisions in `docs/DECISIONS.md` (D-n); `TODO.md` after every step; plain words. Releases: tag `sudoforge-vX.Y.Z`.

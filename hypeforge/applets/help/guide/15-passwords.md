@@ -19,7 +19,7 @@ everything that has no terminal to ask in.
 
 - Your password goes **only** to the system (polkit) or to sudo, which check it. sudoForge
   never keeps it, never writes it anywhere, and never gets admin rights itself.
-- Its record (`sudoforge/logs/service.log`) says what asked and how it ended, never the password.
+- Its record (`~/.local/state/sudoforge/service.log`) says what asked and how it ended, never the password.
 
 ## Settings
 

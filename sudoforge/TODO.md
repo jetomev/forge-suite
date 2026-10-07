@@ -10,7 +10,8 @@
 - [x] nog / sudo in a terminal keep asking in the terminal (D-4)
 
 ## Phase 1 · Build
-- [ ] The section's kit: `CLAUDE.md` ✅ (2026-10-06), tests folder ✅; `README.md`, `docs/ROADMAP.md`, `docs/CHANGELOG.md` with the release
+- [x] The section's kit (2026-10-06): `CLAUDE.md`, `README.md` (live picture of the box), `docs/ROADMAP.md`, `docs/CHANGELOG.md`, `LICENSE`, tests, `testing/20261006 - Test Matrix for sudoForge v1-0-0.md` (tonight's passes marked)
+- [x] The service's record moved to `~/.local/state/sudoforge/service.log`; hypeForge starts it with `exec sudoforge service` (works from the repo via `~/.local/bin/sudoforge` and after install via `/usr/bin`); `scripts/start-service` removed
 - [x] **forgekit: the centred password field** (D-2) — **forgekit 0.8.0 released 2026-10-06** (#34): `PasswordField` + the layout pieces in `PasswordDialog`, 104 forgekit tests, five apps pass on it; Javier: "perfect! great job!"
 - [x] The background service (`service.py`, `agent.py`, 2026-10-06): polkit agent for the **session** (adapted from forgekit's in-app one — fold back into forgekit later), the sudo door (private 0700 folder, SO_PEERCRED, the asker's parent must be sudo), one box at a time, a cancel closes the box; its record in `logs/service.log` (never the password). `main.py service`; `scripts/start-service`
 - [x] `sudoforge-askpass` (stdlib only): asks the service, the service reads the command from sudo itself, the password printed to sudo only; no service → plain words + exit 1
@@ -21,7 +22,7 @@
 
 ## Phase 2 · Javier's run, then release
 - [ ] Test matrix in `testing/`; Javier's run (USB stick, printer, nog from the launcher, the service starting at login). **Already passed live 2026-10-06:** `sudo -A` right password (21:27, 21:29 with only sudo.conf), polkit via `sudoforge setup` (21:29), **wrong passwords: try 2, try 3, then the right one → exit 0 (21:30)**
-- [ ] GitHub issues: the feature (open + close at release) and F-1 (the box crashed on start: forgekit colours)
+- [x] GitHub issues: the feature **#35** (open; closes at release with #24 and #26) and **F-1 #36** (opened and closed with the fix)
 - [ ] Release 1.0.0: tag `sudoforge-v1.0.0`, GitHub Release, AUR; close #26 and #24
 
 ## Later

@@ -27,6 +27,37 @@ def as_admin(*args: str) -> int:
     return subprocess.call(["pkexec", "/usr/bin/python3", "-I", ROOT_PART, *args])
 
 
+def log_path() -> str:
+    state = os.environ.get("XDG_STATE_HOME") or os.path.expanduser("~/.local/state")
+    return os.path.join(state, "sudoforge", "service.log")
+
+
+def run_logged(run) -> int:
+    """The service's record goes to ~/.local/state/sudoforge/service.log (never a
+    password); started by hand in a terminal, it shows there too."""
+    path = log_path()
+    os.makedirs(os.path.dirname(path), mode=0o700, exist_ok=True)
+    log = open(path, "a", buffering=1)
+    screen = sys.stdout if sys.stdout.isatty() else None
+
+    class Both:
+        def write(self, s):
+            log.write(s)
+            if screen:
+                screen.write(s)
+            return len(s)
+
+        def flush(self):
+            log.flush()
+            if screen:
+                screen.flush()
+    sys.stdout = sys.stderr = Both()
+    try:
+        return run()
+    finally:
+        log.close()
+
+
 def status() -> int:
     from sudoforge.service import runtime_dir
     sock = runtime_dir() / "service.sock"
@@ -45,7 +76,7 @@ def status() -> int:
     except OSError:
         text = ""
     print(f"sudoForge {__version__}")
-    print(f"  service:  {'running in this session' if running else 'not running'}")
+    print(f"  service:  {'running in this session' if running else 'not running'} (record: {log_path()})")
     other = sudoconf.current_askpass(text)
     if sudoconf.applied(text, ASKPASS):
         print("  sudo -A:  asks in sudoForge's box (set in /etc/sudo.conf)")
@@ -60,7 +91,7 @@ def main(argv: list[str]) -> int:
     cmd = argv[1] if len(argv) > 1 else "status"
     if cmd == "service":
         from sudoforge.service import run
-        return run()
+        return run_logged(run)
     if cmd == "setup":
         return as_admin("apply", ASKPASS)
     if cmd == "undo":
