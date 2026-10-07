@@ -1,6 +1,6 @@
 # sudoForge — the list
 
-**Started 2026-10-06.** A Forge Suite app (terminal, forgekit) that answers every password question in a Sway session: the admin pop-up (polkit) and `sudo -A` / nog, in one floating box. Section of the Forge Suite (D-60). Closes hypeForge F-44 (#26) and F-42 (#24). Updated after every step.
+**1.0.0 released 2026-10-06.** A Forge Suite app (terminal, forgekit) that answers every password question in a Sway session: the admin pop-up (polkit) and `sudo -A` / nog, in one floating box. Section of the Forge Suite (D-60). Closes hypeForge F-44 (#26) and F-42 (#24). Updated after every step.
 
 ## Phase 0 · Research and design
 - [x] Name: **sudoForge** (Javier, 2026-10-06; D-1)
@@ -24,7 +24,7 @@
 - [x] **Test matrix complete 2026-10-06 22:05** (`testing/20261006 - Test Matrix for sudoForge v1-0-0.md`): every row passed or dropped with a reason (2.5 nog has no launcher entry; USB mounts need no password on this system). Printer unlock + Esc, undo/setup twice, a full reboot with the service starting by itself, two requests at once. Javier: "tested, rebooted, logged back in, tested. All work perfect!" Earlier: **Already passed live 2026-10-06:** `sudo -A` right password (21:27, 21:29 with only sudo.conf), polkit via `sudoforge setup` (21:29), **wrong passwords: try 2, try 3, then the right one → exit 0 (21:30)**
 - [x] GitHub issues: the feature **#35** (open; closes at release with #24 and #26) and **F-1 #36** (opened and closed with the fix)
 - [x] **AUR recipe prepared** (2026-10-06, `~/Programs/aur-sudoforge/`, not pushed — a new AUR package is created on its first push): `/usr/lib/sudoforge` + `/usr/bin/sudoforge`; depends python-forgekit>=0.8.0, python-gobject, polkit, sudo, alacritty; `sudoforge.install`: how to start + `sudoforge setup` after install, a note on upgrade if sudo.conf names another copy, **pre_remove takes our two lines out of /etc/sudo.conf**. Dress rehearsal from a signed local tarball of HEAD: sha256 + signature pass, 36 tests in `check()`, files where they belong
-- [ ] Release 1.0.0 (after Javier's runs 2.4–2.6, 3.2–3.4, 4.1–4.3): version 1.0.0 in `__init__.py` + README badge/status, Test Results file, tag `sudoforge-v1.0.0`, GitHub Release (`--latest`? decide), AUR first push (sha256 + `.SRCINFO`), Javier installs it and runs `sudoforge setup` again (sudo.conf moves from the repo helper to `/usr/lib/sudoforge/`), remove `~/.local/bin/sudoforge`; close #35, #24, #26
+- [x] **RELEASED 1.0.0 — 2026-10-06 22:10**: tag `sudoforge-v1.0.0`, GitHub Release (Latest) with 4 signed assets, AUR `sudoforge` first push (forgekit 0.8.0 there first), #35 #24 #26 closed. **Left: Javier `nog install sudoforge`, then `sudoforge setup` again, then remove `~/.local/bin/sudoforge`.** Was: Release 1.0.0 (after Javier's runs 2.4–2.6, 3.2–3.4, 4.1–4.3): version 1.0.0 in `__init__.py` + README badge/status, Test Results file, tag `sudoforge-v1.0.0`, GitHub Release (`--latest`? decide), AUR first push (sha256 + `.SRCINFO`), Javier installs it and runs `sudoforge setup` again (sudo.conf moves from the repo helper to `/usr/lib/sudoforge/`), remove `~/.local/bin/sudoforge`; close #35, #24, #26
 
 ## Later
 - [ ] The keyring (saved logins for Claude Desktop, Chrome, Discord) — its own research (hypeForge D-61)
