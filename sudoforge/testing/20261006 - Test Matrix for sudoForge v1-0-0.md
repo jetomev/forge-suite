@@ -27,7 +27,7 @@
 | # | Do | Expected | Done |
 |---|---|---|---|
 | 3.1 | `sudoforge setup` | box: "sudoForge wants to run as admin"; `/etc/sudo.conf` gets the two lines; backup saved | ✅ 21:29 |
-| 3.2 | **Print Settings** → change something small (e.g. the default printer) | box: "Printers wants admin rights", the system's sentence, "Asked by system-config-printer" | |
+| 3.2 | **Print Settings** → change something small (e.g. the default printer) | box: "Printers wants admin rights", the system's sentence, "Asked by system-config-printer" | ✅ 21:46 (Unlock; `cupspkhelper.mechanism.all-edit`; Javier: "password success!!!") |
 | 3.3 | Same, press Esc | the change is not made; Print Settings says so | |
 | 3.4 | `sudoforge undo`, then `sudoforge setup` again | the two lines go, then come back; nothing else in the file changes | |
 
