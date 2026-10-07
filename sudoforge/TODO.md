@@ -28,3 +28,5 @@
 
 ## Later
 - [ ] The keyring (saved logins for Claude Desktop, Chrome, Discord) — its own research (hypeForge D-61)
+- [ ] **A sudoForge pinentry** (Javier, 2026-10-06): GPG asks for the signing key's passphrase through `pinentry-gnome3` on Sway (it looked like our box at a commit); ours would ask in sudoForge's box and drop a GNOME piece (D-56)
+- [ ] Fold the session agent back into forgekit (one polkit agent, two modes)

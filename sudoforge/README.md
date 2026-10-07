@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version 1.0.0 in testing" src="https://img.shields.io/badge/version-1.0.0%20in%20testing-f9e2af?style=flat-square&labelColor=313244">
+  <img alt="Version 1.0.0" src="https://img.shields.io/badge/version-1.0.0-a6e3a1?style=flat-square&labelColor=313244">
   <img alt="Sway" src="https://img.shields.io/badge/for-Sway-89b4fa?style=flat-square&labelColor=313244">
   <img alt="Tests: 36" src="https://img.shields.io/badge/tests-36-94e2d5?style=flat-square&labelColor=313244">
   <img alt="License: GPLv3" src="https://img.shields.io/badge/license-GPLv3-a6e3a1?style=flat-square&labelColor=313244">
@@ -42,7 +42,7 @@ In a terminal, `sudo` and nog keep asking right there in the terminal ([D-4](doc
 
 ## Install and run
 
-sudoForge runs from this repository for now; an AUR package comes with 1.0.0.
+- **Install:** `nog install sudoforge` on KognogOS (or `sudoforge` from the AUR). Then once: `sudoforge setup`.
 
 - **Needs:** Sway, Python 3.11 or newer, [forgekit](../forgekit/) **0.8.0** or newer (`python-forgekit` in the AUR), `python-gobject` and `polkit` (for the admin pop-up), Alacritty (the box's window).
 - **Started at login** by hypeForge's Sway settings (`exec sudoforge service`); its window floats and centres by hypeForge's window rules.
@@ -55,13 +55,18 @@ sudoForge runs from this repository for now; an AUR package comes with 1.0.0.
 | `sudoforge undo` | Takes those two lines back out; everything else in the file stays. |
 | `sudoforge service` | The background part (hypeForge starts it). Its record: `~/.local/state/sudoforge/service.log`, never a password. |
 
+## Coming later
+
+- **The keyring:** saved logins for Claude Desktop, Chrome and Discord on Sway (today they are kept as plain text and lost on restart).
+- **GPG's passphrase in the same box:** signing a commit asks through GPG's own window (pinentry); a sudoForge pinentry would ask in our box and drop a GNOME piece.
+
 ## How it works, briefly
 
 A background service with no window holds two doors: a **polkit agent registered for your login session**, and a **private socket** only your account can reach, which the sudo helper uses (sudoForge checks the caller really is sudo). For each question it opens the box in its own small terminal window, passes it the question over a one-time socket, and hands the answer straight on. polkit's own checker and sudo decide whether the password is right. Details: [the research](docs/research/2026-10-06-sudoforge.md).
 
 ## Status
 
-**1.0.0, in testing (October 2026).** Proven live on the test desktop: `sudo -A` with the right password, wrong passwords (try 2, try 3, then right), the admin pop-up through `sudoforge setup`. Still to run before the release: the printer settings, nog from the launcher, the service starting by itself at login. Roadmap: [docs/ROADMAP.md](docs/ROADMAP.md) · changes: [docs/CHANGELOG.md](docs/CHANGELOG.md) · decisions: [docs/DECISIONS.md](docs/DECISIONS.md).
+**1.0.0, released 6 October 2026.** Proven live on the test desktop before release: `sudo -A` with the right password, wrong passwords (try 2, try 3, then right), Esc, two requests at once; the admin pop-up through Print Settings (unlock and cancel) and `sudoforge setup` / `undo`; the service starting by itself after a reboot. Results: [testing/](testing/). Roadmap: [docs/ROADMAP.md](docs/ROADMAP.md) · changes: [docs/CHANGELOG.md](docs/CHANGELOG.md) · decisions: [docs/DECISIONS.md](docs/DECISIONS.md).
 
 ## License & credits
 

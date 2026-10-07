@@ -201,6 +201,10 @@ class LivePolkit(unittest.TestCase):
             with redirect_stdout(log):
                 svc.prepare()
                 why = svc.start_agent()
+            if why and "already exists" in why:
+                # polkit allows one agent per session: the real sudoForge holds it
+                self.skipTest("sudoForge's own service already answers for this session; "
+                              "stop it (or run on a session without it) for this check")
             self.assertIsNone(why, why)
             loop = GLib.MainLoop()
             result = {}
