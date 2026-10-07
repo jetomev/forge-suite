@@ -19,7 +19,7 @@
 | 2.2 | Same, with only `/etc/sudo.conf` set (no override) | the same box; exit 0 | ✅ 21:29 |
 | 2.3 | Same, two wrong passwords first | yellow "didn't work", "try 2 of 3", "try 3 of 3"; the right one → exit 0 | ✅ 21:30 |
 | 2.4 | Same, press Esc | box closes; sudo: "no password was provided"; nothing runs | ✅ 21:48:36 (an earlier try at 21:47 came back "answered", exit 0 — taken as the password typed; Javier to confirm) |
-| 2.5 | nog **from the launcher** (no terminal), something small to install | box: "nog wants to run as admin" + the pacman command | |
+| 2.5 | ~~nog from the launcher~~ | — | **Dropped (2026-10-06):** nog has no launcher entry (a terminal command; nogForge asks in its own built-in box). nog without a terminal uses `sudo -A`, the path 2.1–2.3 prove; the box's "nog wants to run as admin" wording is covered by `tests/test_words.py` |
 | 2.6 | `sudo true` typed in a terminal (no -A) | asks **in the terminal**, no box (D-4) | |
 
 ## 3 · The admin pop-up (polkit)
