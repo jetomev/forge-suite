@@ -18,7 +18,7 @@
 | 2.1 | `sudo -A -k true`, type the right password | box: "Claude wants to run as admin", `true` in orange; sudo exits 0 | ✅ 2026-10-06 21:27 |
 | 2.2 | Same, with only `/etc/sudo.conf` set (no override) | the same box; exit 0 | ✅ 21:29 |
 | 2.3 | Same, two wrong passwords first | yellow "didn't work", "try 2 of 3", "try 3 of 3"; the right one → exit 0 | ✅ 21:30 |
-| 2.4 | Same, press Esc | box closes; sudo: "no password was provided"; nothing runs | |
+| 2.4 | Same, press Esc | box closes; sudo: "no password was provided"; nothing runs | ✅ 21:48:36 (an earlier try at 21:47 came back "answered", exit 0 — taken as the password typed; Javier to confirm) |
 | 2.5 | nog **from the launcher** (no terminal), something small to install | box: "nog wants to run as admin" + the pacman command | |
 | 2.6 | `sudo true` typed in a terminal (no -A) | asks **in the terminal**, no box (D-4) | |
 
