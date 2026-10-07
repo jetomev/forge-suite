@@ -5,6 +5,16 @@
 
 ---
 
+## 2026-10-06
+
+### D-61 · The password helper is called sudoForge; the keyring comes later, as its own step
+**Decided by Javier**, from the options: the name **sudoForge**, and the keyring (where apps keep saved logins) **"later, separate step"**.
+
+**What it means:**
+- sudoForge is the D-56 app: one helper for the whole Sway session that answers polkit's admin pop-up (F-44, #26) and `sudo -A` / `nog` (F-42, #24) with forgekit's password box in a small floating window. It is born as its own section of the Forge Suite (D-60), with its own version, tags and AUR package.
+- **The keyring is not in version 1.** Found today: Claude Desktop on Sway has no keyring (`safeStorage … basic_text`), so its login is kept as plain text and lost on restart. That gets its own research after sudoForge works. KWallet is a KDE piece, so it is not the answer (D-56).
+- Facts measured on this computer before the design: no polkit agent runs for the Sway session, `SUDO_ASKPASS` is unset, and a new Alacritty window with forgekit loaded is on screen in about 0.35 s, so the box can be opened only when needed.
+
 ## 2026-10-05
 
 ### D-60 · One Forge Suite repository; hypeForge is its first section
