@@ -20,7 +20,7 @@
 | 2.3 | Same, two wrong passwords first | yellow "didn't work", "try 2 of 3", "try 3 of 3"; the right one → exit 0 | ✅ 21:30 |
 | 2.4 | Same, press Esc | box closes; sudo: "no password was provided"; nothing runs | ✅ 21:48:36 (an earlier try at 21:47 came back "answered", exit 0 — taken as the password typed; Javier to confirm) |
 | 2.5 | ~~nog from the launcher~~ | — | **Dropped (2026-10-06):** nog has no launcher entry (a terminal command; nogForge asks in its own built-in box). nog without a terminal uses `sudo -A`, the path 2.1–2.3 prove; the box's "nog wants to run as admin" wording is covered by `tests/test_words.py` |
-| 2.6 | `sudo true` typed in a terminal (no -A) | asks **in the terminal**, no box (D-4) | |
+| 2.6 | `sudo true` typed in a terminal (no -A) | asks **in the terminal**, no box (D-4) | ✅ Javier, 22:0x ("all work perfect"); no record expected — sudoForge is never asked |
 
 ## 3 · The admin pop-up (polkit)
 
@@ -28,13 +28,13 @@
 |---|---|---|---|
 | 3.1 | `sudoforge setup` | box: "sudoForge wants to run as admin"; `/etc/sudo.conf` gets the two lines; backup saved | ✅ 21:29 |
 | 3.2 | **Print Settings** → change something small (e.g. the default printer) | box: "Printers wants admin rights", the system's sentence, "Asked by system-config-printer" | ✅ 21:46 (Unlock; `cupspkhelper.mechanism.all-edit`; Javier: "password success!!!") |
-| 3.3 | Same, press Esc | the change is not made; Print Settings says so | |
-| 3.4 | `sudoforge undo`, then `sudoforge setup` again | the two lines go, then come back; nothing else in the file changes | |
+| 3.3 | Same, press Esc | the change is not made; Print Settings says so | ✅ 21:58:22 ("polkit: cancelled") |
+| 3.4 | `sudoforge undo`, then `sudoforge setup` again | the two lines go, then come back; nothing else in the file changes | ✅ 21:59 and again after the reboot 22:04 (both accepted in the box); `/etc/sudo.conf`: one marked line, one `Path askpass`, the rest byte for byte the backup |
 
 ## 4 · The session
 
 | # | Do | Expected | Done |
 |---|---|---|---|
-| 4.1 | Log out of Sway and back in | `sudoforge status`: "running in this session"; the record shows it started | |
-| 4.2 | The box opens on the screen you are using (try with the mouse on each screen) | centred on that screen, typing goes straight in | |
+| 4.1 | Log out of Sway and back in | `sudoforge status`: "running in this session"; the record shows it started | ✅ full reboot (up 22:01:52) → service started by itself 22:02:31, polkit registered; status "running" |
+| 4.2 | The box opens on the screen you are using (try with the mouse on each screen) | centred on that screen, typing goes straight in | ✅ Javier ("all work perfect"); machine check: centred on DP-2 with focus (21:26) |
 | 4.3 | Two requests at once (Claude starts two `sudo -A` together) | one box, then the next; both work | ✅ 21:49 (both asked 21:49:20, answered :27 and :34, both exit 0; at most 1 box on screen, counted every second) |
