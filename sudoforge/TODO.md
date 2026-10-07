@@ -11,7 +11,7 @@
 
 ## Phase 1 · Build
 - [ ] The section's kit: `CLAUDE.md`, `README.md`, `docs/ROADMAP.md`, `docs/CHANGELOG.md`, tests folder (same shape as displayForge)
-- [ ] **forgekit: the centred password field** (D-2) — our own field, dots centred, the password in memory only; every Forge app's password box uses it (forgekit release first)
+- [ ] **forgekit: the centred password field** (D-2) — **built 2026-10-06** (`ab166cc`: `PasswordField` + the layout pieces in `PasswordDialog`, 104 forgekit tests, five apps pass on it); left: Javier's look, then forgekit 0.8.0 released first
 - [ ] The background service: polkit agent for the session + the private socket; one box at a time
 - [ ] `sudoforge-askpass`: asks the service, shows the command (from sudo's parent process), prints the password to sudo only; no Sway → says so and fails cleanly
 - [ ] The box: forgekit app in `alacritty --class sudoforge`, the approved layout; plain-words names table for request kinds
