@@ -57,6 +57,10 @@ class WhoAsks(unittest.TestCase):
         p = fake_proc({30: (1, ["python3", "/usr/bin/udiskie"])})
         self.assertEqual(asker(p, 30)[0], "udiskie")
 
+    def test_a_forge_app_run_as_main_py_is_named_by_its_folder(self):
+        p = fake_proc({80: (1, ["/usr/bin/python3", "/opt/forge-suite/sudoforge/main.py", "setup"])})
+        self.assertEqual(asker(p, 80)[0], "sudoForge")
+
     def test_nothing_known_is_still_plain(self):
         p = fake_proc({40: (1, ["bash"]), 41: (40, ["sudo", "true"])})
         self.assertEqual(sudo_lines(41, "javier", p).heading, "A command wants to run as admin")

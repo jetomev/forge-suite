@@ -39,6 +39,8 @@ PROGRAM_NAMES = {
     "kitty": "Terminal (kitty)", "nog": "nog", "nogforge": "nogForge", "grubforge": "grubForge",
     "udiskie": "udiskie", "system-config-printer": "system-config-printer", "yay": "yay",
     "paru": "paru", "makepkg": "makepkg", "pacman": "pacman",
+    "sudoforge": "sudoForge", "displayforge": "displayForge", "alacrittyforge": "alacrittyForge",
+    "bitlaforge": "bitlaForge", "hypeforge": "hypeForge",
 }
 
 TERMINALS = {"alacritty", "foot", "kitty", "konsole", "wezterm-gui", "gnome-terminal-", "xterm"}
@@ -85,7 +87,11 @@ class Procs:
         if cmd:
             base = os.path.basename(cmd[0])
             if base in ("python", "python3") and len(cmd) > 1 and not cmd[1].startswith("-"):
-                return os.path.basename(cmd[1]).removesuffix(".py")
+                script = os.path.realpath(cmd[1]) if os.path.isabs(cmd[1]) else cmd[1]
+                name = os.path.basename(script).removesuffix(".py")
+                if name == "main":                       # a Forge app run as `python main.py`
+                    name = os.path.basename(os.path.dirname(script)) or name
+                return name
             return base
         return self.comm(pid)
 
