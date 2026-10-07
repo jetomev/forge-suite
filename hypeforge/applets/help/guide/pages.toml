@@ -20,7 +20,7 @@ files = ["04-launcher.md"]
 
 [[page]]
 tab = "Tools"
-files = ["07-notifications.md", "08-screenshots.md", "09-clipboard.md", "10-lock.md", "11-mc.md", "12-autostart.md", "13-sound-network.md", "14-drives.md", "15-passwords.md"]
+files = ["07-notifications.md", "08-screenshots.md", "09-clipboard.md", "10-lock.md", "11-mc.md", "12-autostart.md", "13-sound-network.md", "14-drives.md", "15-passwords.md", "16-default-apps.md"]
 
 [[page]]
 tab = "About"
