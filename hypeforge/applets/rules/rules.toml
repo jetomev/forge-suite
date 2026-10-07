@@ -76,6 +76,12 @@ name = "Password windows (ksshaskpass, polkit)"
 app_id = '(ksshaskpass|polkit)'
 
 [[float]]
+name = "sudoForge's password box (every admin request: polkit and sudo -A)"
+app_id = '^sudoforge$'
+border = 3
+focus = true
+
+[[float]]
 name = "Video in a small window (Chrome / Brave Picture-in-Picture)"
 title = '^Picture[- ]in[- ][Pp]icture$'
 sticky = true

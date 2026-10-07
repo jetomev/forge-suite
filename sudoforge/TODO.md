@@ -10,14 +10,14 @@
 - [x] nog / sudo in a terminal keep asking in the terminal (D-4)
 
 ## Phase 1 · Build
-- [ ] The section's kit: `CLAUDE.md`, `README.md`, `docs/ROADMAP.md`, `docs/CHANGELOG.md`, tests folder (same shape as displayForge)
+- [ ] The section's kit: `CLAUDE.md` ✅ (2026-10-06), tests folder ✅; `README.md`, `docs/ROADMAP.md`, `docs/CHANGELOG.md` with the release
 - [x] **forgekit: the centred password field** (D-2) — **forgekit 0.8.0 released 2026-10-06** (#34): `PasswordField` + the layout pieces in `PasswordDialog`, 104 forgekit tests, five apps pass on it; Javier: "perfect! great job!"
-- [ ] The background service: polkit agent for the session + the private socket; one box at a time
-- [ ] `sudoforge-askpass`: asks the service, shows the command (from sudo's parent process), prints the password to sudo only; no Sway → says so and fails cleanly
-- [ ] The box: forgekit app in `alacritty --class sudoforge`, the approved layout; plain-words names table for request kinds
-- [ ] Apply / undo for `/etc/sudo.conf` (backup first), through the admin pop-up itself
-- [ ] hypeForge: start at login + a Sway rule (float, centre) + a Help page
-- [ ] Tests, in the failing direction too (wrong password, cancel, two requests at once, no Sway)
+- [x] The background service (`service.py`, `agent.py`, 2026-10-06): polkit agent for the **session** (adapted from forgekit's in-app one — fold back into forgekit later), the sudo door (private 0700 folder, SO_PEERCRED, the asker's parent must be sudo), one box at a time, a cancel closes the box; its record in `logs/service.log` (never the password). `main.py service`; `scripts/start-service`
+- [x] `sudoforge-askpass` (stdlib only): asks the service, the service reads the command from sudo itself, the password printed to sudo only; no service → plain words + exit 1
+- [x] The box (`box.py`): forgekit's `PasswordDialog` in sudoForge's layout, in `alacritty --class sudoforge` (66×24), one-time socket + token in its environment; `words.py` = the plain-words lines (request kinds → names, who asked past shells/sudo, the terminal, polkit's sentence → "To …"). **Not yet seen on screen** — Javier's first live test next
+- [x] Apply / undo for `/etc/sudo.conf` (`sudoconf.py`; backup first, only our two marked lines, refuses if another helper is set, atomic write keeping permissions), run as admin through `pkexec` → asked in sudoForge's own box. `sudoforge setup` / `undo` / `status`. **Not run on the real file yet**
+- [x] hypeForge: start at login (`exec …/sudoforge/scripts/start-service` in `sway/config`), a float rule (`app_id=sudoforge`, border 3, focus) in `rules.toml`, Help page `15-passwords.md` on the Tools tab; live copies updated, `sway -C` valid, rules reloaded; service started by hand 21:22 (registered for session 2). `~/.local/bin/sudoforge` → `main.py`
+- [x] Tests: **30 pass** (+1 live polkit check, `SUDOFORGE_LIVE_POLKIT=1`: a real `pkexec` from another program reached the box, cancelled, exit 126). Stand-in sudo (a process named sudo) + stand-in box: the password reaches sudo and never the log; cancel; only sudo may ask; wrong token gets nothing; one box at a time; no service → plain words; 0700/0600 + cleanup; a cancel closes an open box; sudo.conf on throwaway files
 
 ## Phase 2 · Javier's run, then release
 - [ ] Test matrix in `testing/`; Javier's run (USB stick, printer, `sudo -A`, nog from the launcher, wrong password ×3)

@@ -1,0 +1,6 @@
+#!/bin/sh
+# Starts sudoForge's service for this Sway session (hypeForge's sway config runs it at login).
+# Its record goes to sudoforge/logs/service.log (never a password; see sudoforge/CLAUDE.md).
+here=$(dirname "$(readlink -f "$0")")/..
+mkdir -p "$here/logs"
+exec /usr/bin/python3 "$here/main.py" service >> "$here/logs/service.log" 2>&1

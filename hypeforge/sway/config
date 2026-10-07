@@ -317,6 +317,9 @@ include /etc/sway/config.d/*
 # hypeForge: USB drives and discs mount by themselves (udiskie; internal drives never, NTFS
 # read-only — ~/.config/udiskie/config.yml). The bar's drives icon is applet 11.
 exec udiskie
+# sudoForge: one password box for every admin request (polkit + sudo -A; Forge Suite, D-56/D-61).
+# Its log: ~/Programs/forge-suite/sudoforge/logs/service.log
+exec ~/Programs/forge-suite/sudoforge/scripts/start-service
 # hypeForge: start-at-login apps from ~/.config/autostart (applet 10; Sway does not read that folder)
 exec ~/Programs/forge-suite/hypeforge/applets/autostart/hypeforge-autostart
 # hypeForge: the Favorites menu on the bar (applet 4 writes it)
