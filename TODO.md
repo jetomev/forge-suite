@@ -17,10 +17,11 @@
 - [ ] **mcForge?** (Javier, 2026-10-06) — Midnight Commander is free software (GPLv3, written in C, github.com/MidnightCommander/mc), so a fork is allowed, and GPLv3 matches ours. Honest size: ~300,000 lines of C, 30 years old — a fork means maintaining all of it. Lighter path that fits D-59: an **mcForge settings app** (look, editor, panels, keys) over the stock mc. Decide later.
 
 ## Sections
-- **displayForge** — **1.0.0 released 2026-10-06**; next: the 1.0.x tests → [displayforge/TODO.md](displayforge/TODO.md)
-- **forgekit** — 0.6.0; next: button labels "Words (k)" → [forgekit/TODO.md](forgekit/TODO.md)
-- **hypeForge** — the bar, launcher (with a Forge Suite section), sound / network / Bluetooth / USB done; next: password helper, printing, night light → [hypeforge/TODO.md](hypeforge/TODO.md)
-
+- **sudoForge** — **1.0.0 released 2026-10-06** (GitHub Latest, AUR `sudoforge`, installed on the test desktop through nogForge; closes hypeForge F-42/F-44); next: 1.0.1 for F-2 (#37), later a sudoForge pinentry and the keyring → [sudoforge/TODO.md](sudoforge/TODO.md)
+- **displayForge** — **1.0.1 released 2026-10-06** (Sway only, checked at launch); next: the 1.0.x tests, the KDE-login check → [displayforge/TODO.md](displayforge/TODO.md)
+- **forgekit** — **0.8.0 released 2026-10-06** (the password's dots centred, #34; 0.7.0 the start-up check); next: button labels "Words (k)", fold sudoForge's session agent back in → [forgekit/TODO.md](forgekit/TODO.md)
+- **hypeForge** — the bar, launcher, sound / network / Bluetooth / USB done; the password pop-up done (sudoForge); next: printing, night light → [hypeforge/TODO.md](hypeforge/TODO.md)
+- [x] **Every surface shows live versions** (Javier, 2026-10-06): kognogos.org (rebuilt in the homelab repo — it had been server-only and was wiped by a deploy), and live badges in the KognogOS, suite and hypeForge READMEs; kognogos.org "Honest progress" brought current
 
 ## 2026-10-06 evening — the first releases from the suite
 - [x] **forgekit 0.7.0** (`forgekit-v0.7.0`, GitHub Release with signed assets, AUR `python-forgekit` fetching from this repository) and **displayForge 1.0.1** (`displayforge-v1.0.1`, Latest): the per-app tag release works end to end. Details in each section's TODO
