@@ -2,6 +2,12 @@
 
 *Newest first.*
 
+### 1.0.1 — October 7, 2026 · the first backup is kept ([#37](https://github.com/jetomev/forge-suite/issues/37))
+
+- **F-2:** a second `sudoforge setup` (for example after moving from the source checkout to the installed package) overwrote `/etc/sudo.conf.sudoforge-backup` with a file that already held sudoForge's two lines. Now the backup is taken only when there is none yet, or when the file carries no sudoForge mark — so it is always the file from before sudoForge touched it. Nothing was ever lost: `sudoforge undo` removes only our two lines, and never reads the backup.
+- Two new tests: a second setup with another helper path leaves the backup as the original; a setup after an undo backs up the file as it is then.
+- Tests: 38 (was 36). Warnings: 0.
+
 ### 1.0.0 — October 6, 2026 · one password box for every admin request ([#35](https://github.com/jetomev/forge-suite/issues/35))
 
 - **The service** (`sudoforge service`): a polkit agent for the whole login session plus a private door for `sudo -A`; one box at a time; a cancelled request closes its box; a record in `~/.local/state/sudoforge/service.log` that never holds a password.

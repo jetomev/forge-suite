@@ -3,9 +3,9 @@
 </p>
 
 <p align="center">
-  <img alt="Version 1.0.0" src="https://img.shields.io/badge/version-1.0.0-a6e3a1?style=flat-square&labelColor=313244">
+  <img alt="Version 1.0.1" src="https://img.shields.io/badge/version-1.0.1-a6e3a1?style=flat-square&labelColor=313244">
   <img alt="Sway" src="https://img.shields.io/badge/for-Sway-89b4fa?style=flat-square&labelColor=313244">
-  <img alt="Tests: 36" src="https://img.shields.io/badge/tests-36-94e2d5?style=flat-square&labelColor=313244">
+  <img alt="Tests: 38" src="https://img.shields.io/badge/tests-38-94e2d5?style=flat-square&labelColor=313244">
   <img alt="License: GPLv3" src="https://img.shields.io/badge/license-GPLv3-a6e3a1?style=flat-square&labelColor=313244">
   <img alt="Built by a human and an AI" src="https://img.shields.io/badge/built%20by-human%20%2B%20AI-f9e2af?style=flat-square&labelColor=313244">
 </p>
@@ -65,6 +65,8 @@ In a terminal, `sudo` and nog keep asking right there in the terminal ([D-4](doc
 A background service with no window holds two doors: a **polkit agent registered for your login session**, and a **private socket** only your account can reach, which the sudo helper uses (sudoForge checks the caller really is sudo). For each question it opens the box in its own small terminal window, passes it the question over a one-time socket, and hands the answer straight on. polkit's own checker and sudo decide whether the password is right. Details: [the research](docs/research/2026-10-06-sudoforge.md).
 
 ## Status
+
+**1.0.1, released 7 October 2026.** One fix, F-2 ([#37](https://github.com/jetomev/forge-suite/issues/37)): the backup of `/etc/sudo.conf` is now the file from before sudoForge ever touched it, and a second `sudoforge setup` keeps it. 38 tests.
 
 **1.0.0, released 6 October 2026.** Proven live on the test desktop before release: `sudo -A` with the right password, wrong passwords (try 2, try 3, then right), Esc, two requests at once; the admin pop-up through Print Settings (unlock and cancel) and `sudoforge setup` / `undo`; the service starting by itself after a reboot. Results: [testing/](testing/). Roadmap: [docs/ROADMAP.md](docs/ROADMAP.md) · changes: [docs/CHANGELOG.md](docs/CHANGELOG.md) · decisions: [docs/DECISIONS.md](docs/DECISIONS.md).
 

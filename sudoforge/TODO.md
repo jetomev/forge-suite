@@ -1,6 +1,6 @@
 # sudoForge — the list
 
-**1.0.0 released 2026-10-06.** A Forge Suite app (terminal, forgekit) that answers every password question in a Sway session: the admin pop-up (polkit) and `sudo -A` / nog, in one floating box. Section of the Forge Suite (D-60). Closes hypeForge F-44 (#26) and F-42 (#24). Updated after every step.
+**1.0.1 released 2026-10-07** (F-2, #37), after **1.0.0 on 2026-10-06.** A Forge Suite app (terminal, forgekit) that answers every password question in a Sway session: the admin pop-up (polkit) and `sudo -A` / nog, in one floating box. Section of the Forge Suite (D-60). Closes hypeForge F-44 (#26) and F-42 (#24). Updated after every step.
 
 ## Phase 0 · Research and design
 - [x] Name: **sudoForge** (Javier, 2026-10-06; D-1)
@@ -26,8 +26,13 @@
 - [x] **AUR recipe prepared** (2026-10-06, `~/Programs/aur-sudoforge/`, not pushed — a new AUR package is created on its first push): `/usr/lib/sudoforge` + `/usr/bin/sudoforge`; depends python-forgekit>=0.8.0, python-gobject, polkit, sudo, alacritty; `sudoforge.install`: how to start + `sudoforge setup` after install, a note on upgrade if sudo.conf names another copy, **pre_remove takes our two lines out of /etc/sudo.conf**. Dress rehearsal from a signed local tarball of HEAD: sha256 + signature pass, 36 tests in `check()`, files where they belong
 - [x] **RELEASED 1.0.0 — 2026-10-06 22:10**: tag `sudoforge-v1.0.0`, GitHub Release (Latest) with 4 signed assets, AUR `sudoforge` first push (forgekit 0.8.0 there first), #35 #24 #26 closed. **Installed 22:21 — Javier through nogForge ("mindblowing experience")**; `sudoforge setup` re-run from the package (sudo.conf → `/usr/lib/sudoforge/sudoforge-askpass`), `~/.local/bin/sudoforge` removed, the service restarted from `/usr/lib/sudoforge` (PID by number). **F-2 (#37)** found doing it: a second setup overwrites the original backup (nothing lost: the file minus our lines = sudo's shipped original, checked). Was: Release 1.0.0 (after Javier's runs 2.4–2.6, 3.2–3.4, 4.1–4.3): version 1.0.0 in `__init__.py` + README badge/status, Test Results file, tag `sudoforge-v1.0.0`, GitHub Release (`--latest`? decide), AUR first push (sha256 + `.SRCINFO`), Javier installs it and runs `sudoforge setup` again (sudo.conf moves from the repo helper to `/usr/lib/sudoforge/`), remove `~/.local/bin/sudoforge`; close #35, #24, #26
 
-## Next · 1.0.1
-- [ ] **F-2 (#37)**: keep the first backup of `/etc/sudo.conf` (write it only when none exists or the file has no sudoForge mark), with a test
+## 1.0.1 · F-2 — released 2026-10-07
+- [x] **F-2 (#37)**: the backup of `/etc/sudo.conf` is written only when none exists or the file has no sudoForge mark; two tests (a second setup keeps the original; a setup after an undo backs up the file as it is then); the guard fails with the fix removed. **38 tests, 0 warnings**
+- [x] Version 1.0.1 in `__init__.py`, README (badge, tests, status), `docs/CHANGELOG.md`, `docs/ROADMAP.md`; `testing/20261007 - Test Matrix … v1-0-1.md` + Test Results
+- [ ] Tag `sudoforge-v1.0.1`, GitHub Release (signed assets), AUR `sudoforge` 1.0.1-1, Javier installs; then his live row: `sudoforge undo` + `sudoforge setup` repairs this desktop's backup (it holds the 1.0.0 two lines today) — close #37
+
+## Next
+- [ ] (nothing scheduled — see Later)
 
 ## Later
 - [ ] The keyring (saved logins for Claude Desktop, Chrome, Discord) — its own research (hypeForge D-61)
