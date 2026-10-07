@@ -20,7 +20,8 @@
 - [x] Tests: **30 pass** (+1 live polkit check, `SUDOFORGE_LIVE_POLKIT=1`: a real `pkexec` from another program reached the box, cancelled, exit 126). Stand-in sudo (a process named sudo) + stand-in box: the password reaches sudo and never the log; cancel; only sudo may ask; wrong token gets nothing; one box at a time; no service → plain words; 0700/0600 + cleanup; a cancel closes an open box; sudo.conf on throwaway files
 
 ## Phase 2 · Javier's run, then release
-- [ ] Test matrix in `testing/`; Javier's run (USB stick, printer, `sudo -A`, nog from the launcher, wrong password ×3)
+- [ ] Test matrix in `testing/`; Javier's run (USB stick, printer, nog from the launcher, the service starting at login). **Already passed live 2026-10-06:** `sudo -A` right password (21:27, 21:29 with only sudo.conf), polkit via `sudoforge setup` (21:29), **wrong passwords: try 2, try 3, then the right one → exit 0 (21:30)**
+- [ ] GitHub issues: the feature (open + close at release) and F-1 (the box crashed on start: forgekit colours)
 - [ ] Release 1.0.0: tag `sudoforge-v1.0.0`, GitHub Release, AUR; close #26 and #24
 
 ## Later
