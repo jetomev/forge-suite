@@ -37,4 +37,4 @@
 |---|---|---|---|
 | 4.1 | Log out of Sway and back in | `sudoforge status`: "running in this session"; the record shows it started | |
 | 4.2 | The box opens on the screen you are using (try with the mouse on each screen) | centred on that screen, typing goes straight in | |
-| 4.3 | Two requests at once (Claude starts two `sudo -A` together) | one box, then the next; both work | |
+| 4.3 | Two requests at once (Claude starts two `sudo -A` together) | one box, then the next; both work | ✅ 21:49 (both asked 21:49:20, answered :27 and :34, both exit 0; at most 1 box on screen, counted every second) |
