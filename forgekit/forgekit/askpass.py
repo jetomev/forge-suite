@@ -75,7 +75,7 @@ from typing import Awaitable, Callable  # noqa: E402
 from textual.app import ComposeResult  # noqa: E402
 from textual.binding import Binding  # noqa: E402
 from textual.containers import Horizontal, Vertical  # noqa: E402
-from textual.widgets import Button, Input, Static  # noqa: E402
+from textual.widgets import Button, Static  # noqa: E402
 
 from .dialogs import ForgeModal  # noqa: E402
 
@@ -165,46 +165,74 @@ def prompt_words(prompt: str) -> str:
 
 
 class PasswordDialog(ForgeModal[str | None]):
-    """The password, typed inside the app. Enter confirms, Esc cancels."""
+    """The password, typed inside the app. Enter confirms, Esc cancels.
+
+    v0.8.0: the dots are centred (``PasswordField``). sudoForge's layout (its
+    D-2) is there for any app that wants it: ``heading`` (a bar with who is
+    asking), ``detail`` (the command, in the "changed" colour), ``note`` (a
+    quieter line) and ``label`` (the line over the field, e.g. "Password for
+    javier"). Given a heading, every line is centred and a blank line comes
+    before the label. Without them the box looks as it did, dots centred.
+    """
 
     BINDINGS = [Binding("escape", "cancel", "", show=False)]
 
-    def __init__(self, prompt: str, attempt: int = 1, title: str = "Password", words: str | None = None) -> None:
+    def __init__(self, prompt: str, attempt: int = 1, title: str = "Password", words: str | None = None,
+                 *, heading: str | None = None, detail: str | None = None,
+                 note: str | None = None, label: str | None = None) -> None:
         super().__init__()
         self._prompt, self._attempt, self._title = prompt, attempt, title
         self._words = words
+        self._heading, self._detail, self._note, self._label = heading, detail, note, label
 
     def compose(self) -> ComposeResult:
-        with Vertical(classes="forge-confirm forge-password"):
+        from .console import literal
+        from .password_field import PasswordField
+        laid = " -laid-out" if self._heading else ""
+        with Vertical(classes="forge-confirm forge-password" + laid):
             yield Static(f"[b]{self._title}[/]", classes="forge-panel-title")
             if self._attempt > 1:
                 yield Static("[$forge-warn]That password didn't work. Try again.[/]", id="pw-again")
-            from .console import literal
-            yield Static(literal(self._words or prompt_words(self._prompt)), classes="forge-confirm-msg")
-            yield Input(password=True, id="pw-input", placeholder="password")
+            if self._heading:
+                yield Static(literal(self._heading), id="pw-heading")
+            if self._detail:
+                yield Static(literal(self._detail), id="pw-detail")
+            words = self._words or (None if self._heading else prompt_words(self._prompt))
+            if words:
+                yield Static(literal(words), classes="forge-confirm-msg", id="pw-words")
+            if self._note:
+                yield Static(literal(self._note), id="pw-note")
+            if self._label:
+                yield Static(literal(self._label), id="pw-label")
+            yield PasswordField("password", id="pw-input")
             with Horizontal(classes="forge-buttons"):
                 yield Button("Cancel", id="pw-cancel")
                 yield Button("OK", id="pw-ok", variant="primary")
 
-    def on_mount(self) -> None:
-        self.query_one("#pw-input", Input).focus()
+    def _field(self):
+        from .password_field import PasswordField
+        return self.query_one("#pw-input", PasswordField)
 
-    def on_input_submitted(self, event: Input.Submitted) -> None:
+    def on_mount(self) -> None:
+        from .password_field import PasswordField
+        for field in self.query("#pw-input").results(PasswordField):   # gone if closed while opening
+            field.focus()
+
+    def on_password_field_submitted(self, event) -> None:
         event.stop()
         self._done(event.value)
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         event.stop()
         if event.button.id == "pw-ok":
-            self._done(self.query_one("#pw-input", Input).value)
+            self._done(self._field().value)
         else:
             self.action_cancel()
 
     def _done(self, value: str) -> None:
-        box = self.query_one("#pw-input", Input)
-        box.value = ""
+        self._field().clear()
         self.dismiss(value)
 
     def action_cancel(self) -> None:
-        self.query_one("#pw-input", Input).value = ""
+        self._field().clear()
         self.dismiss(None)

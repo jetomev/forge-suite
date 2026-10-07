@@ -18,7 +18,7 @@ from pathlib import Path
 
 from textual.widgets import Button, Input, Static
 
-from forgekit import ForgeApp, PasswordDialog, RunWindow, TerminalPane
+from forgekit import ForgeApp, PasswordDialog, PasswordField, RunWindow, TerminalPane
 from forgekit.terminal import ForgeScreen, key_bytes
 import pyte
 
@@ -131,7 +131,7 @@ printf %s "$pw" > {out}; echo ok''')
             self.assertTrue(await until(pilot, lambda: isinstance(app.screen, PasswordDialog)))
             text = " ".join(str(s.render()) for s in app.screen.query(Static))
             self.assertIn("Your password (javier)", text)
-            self.assertTrue(app.screen.query_one("#pw-input", Input).password, "typed as dots")
+            self.assertIsInstance(app.screen.query_one("#pw-input"), PasswordField, "typed as dots")
             await pilot.press(*"s3cret!", "enter")
             self.assertTrue(await until(pilot, lambda: win.status is not None))
             self.assertEqual(out.read_text(), "s3cret!")

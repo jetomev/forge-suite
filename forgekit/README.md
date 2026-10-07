@@ -46,6 +46,8 @@ polish improves every app at once.
   when it asks something, Yes/No for its questions. The app never leaves its screen.
 - **The password inside the app** *(0.6.0)*. sudo's and polkit's password questions are
   asked in the app's own box, on a desktop and on a text console alike.
+  *Coming in 0.8.0 (built, not released yet):* the dots are centred as you type, and the
+  box can show who is asking in a heading bar (sudoForge's layout).
 - **A start-up check** *(0.7.0)*. An app says what it needs (a Sway session, a program
   and its version, a running service, a file). When something is missing it shows one
   plain screen — what it needs, what was found instead, why, what to use — and closes.
@@ -188,6 +190,7 @@ For apps that hand work to a real program and must not leave their screen while 
 | `ForgeApp.run_in_app()` / `RunWindow` | Run a program in a window over the app. Steps and a progress bar from a JSON-lines events file; the program's own screen folded until it asks something or fails (F12 anytime); **Yes (y) / No (n)** for yes/no questions; menus (yay's `==>`) are typed in the screen; an editor or pager simply gets the keys. Returns the exit status. |
 | `TerminalPane` | A program in a pseudo-terminal, drawn inside the app (pyte, plus the alternate screen and a capped scrollback). Keys and Ctrl+C go to it. |
 | `PasswordBridge` / `PasswordDialog` | `sudo -A`'s helper asks the running app over a private socket (a folder only you can open, a one-time token); the app shows its password box; "try again" after a wrong one. Nothing is written to disk or put on a command line. |
+| `PasswordField` *(0.8.0, not released yet)* | The password box's field: one dot per character, centred, nothing else ever drawn; Backspace, Ctrl+U to empty it, paste (line breaks dropped). `PasswordDialog` uses it, and takes `heading`, `detail`, `note` and `label` for sudoForge's layout (`examples/password.py`). |
 | `ForgeApp.polkit_agent()` / `InAppPolkitAgent` | The app becomes polkit's password asker **for its own process only**: `pkexec` asks in the app's box, and polkit's own helper checks the password. Three tries; Cancel cancels. |
 
 ### Forms and flows (0.5.0)

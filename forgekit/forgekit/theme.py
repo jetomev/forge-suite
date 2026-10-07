@@ -311,6 +311,18 @@ Toast.-error { border-left: outer $forge-danger; }
 #run-status { height: auto; padding: 1 0 0 0; }
 .forge-password { width: 60; }
 #pw-input { margin: 0 0 1 0; }
+/* v0.8.0: the password field (dots centred) looks like every other field */
+PasswordField { background: $forge-surface; color: $forge-text; border: solid $forge-field-border; }
+PasswordField:focus { border: solid $forge-accent; }
+PasswordField > .password-field--placeholder { color: $forge-muted; }
+/* v0.8.0: sudoForge's layout (heading bar, centred lines, a blank line before the label) */
+#pw-heading { width: 100%; background: $forge-bg; color: $forge-text; text-style: bold;
+              text-align: center; padding: 1 1; margin: 0 0 1 0; }
+#pw-detail { width: 100%; color: $forge-changed; text-align: center; }
+.forge-password.-laid-out #pw-words { width: 100%; text-align: center; padding: 0; }
+#pw-note { width: 100%; color: $forge-muted; text-align: center; }
+#pw-label { width: 100%; color: $forge-muted; text-align: center; margin: 1 0 0 0; }
+.forge-password.-laid-out #pw-again { width: 100%; text-align: center; }
 #pw-again { padding: 0 0 1 0; }
 #progress-log { padding: 1 0 0 0; }
 

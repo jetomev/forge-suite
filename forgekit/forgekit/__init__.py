@@ -9,6 +9,7 @@ from .closing import closing_notice, runs_log_row, session_banner
 from .flows import ChangeGroup, ProgressDialog, ReviewDialog, review_markup
 from .manual import ManualScreen, load_pages
 from .askpass import PasswordBridge, PasswordDialog
+from .password_field import PasswordField
 from .run import RunWindow
 from .polkit_agent import InAppPolkitAgent
 from .terminal import TerminalPane
@@ -40,7 +41,7 @@ __all__ = [
     "Notice", "notice_markup", "HintBar", "hints_markup", "ChangesBar", "SettingRow", "NumberPresets", "Toggle", "Choices", "CheckList",
     "FilterPicker", "ReviewDialog", "ChangeGroup", "review_markup", "ProgressDialog",
     "ManualScreen", "load_pages", "session_banner", "closing_notice", "runs_log_row",
-    "PasswordBridge", "PasswordDialog", "RunWindow", "TerminalPane", "InAppPolkitAgent",
+    "PasswordBridge", "PasswordDialog", "PasswordField", "RunWindow", "TerminalPane", "InAppPolkitAgent",
     "Need", "Finding", "check_needs", "missing", "start_check", "NeedsApp", "needs_text",
     "heading_for", "lines_for", "describe_session", "parse_version",
     "sway_session", "program", "service", "a_file",
