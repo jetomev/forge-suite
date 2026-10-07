@@ -47,8 +47,8 @@ A full desktop like KDE Plasma does everything for you, and it carries a lot of 
 | **Window placement** | Every new window goes to the next spot of a fixed order across your screens, then becomes a tab. |
 | **Launcher** (Win + Space, or the emblem) | Apps only: your favourites first, then the workspaces as sections; an app picked from "Work" opens in Work. Press again to close. |
 | **Favorites** (Win + F) | Your favourite apps with their icons, one click away. |
-| **Passwords** — [sudoForge](../sudoforge/README.md) | One box for every admin request: an app asking for admin rights or a `sudo -A` command. It floats up on the screen you are using and says who is asking and what for. Starts at login. |
-| **Screens** — [displayForge](../displayforge/README.md) | Arrange your screens, resolution, refresh rate, size, rotation, brightness, with a countdown that undoes a bad change by itself. The first Forge app built for hypeForge. |
+| **Passwords** — [sudoForge](../sudoforge/README.md) ![sudoForge on the AUR](https://img.shields.io/aur/version/sudoforge?label=AUR&style=flat-square&labelColor=313244&color=a6e3a1) | One box for every admin request: an app asking for admin rights or a `sudo -A` command. It floats up on the screen you are using and says who is asking and what for. Starts at login. |
+| **Screens** — [displayForge](../displayforge/README.md) ![displayForge release](https://img.shields.io/github/v/release/jetomev/forge-suite?filter=displayforge-*&label=release&style=flat-square&labelColor=313244&color=a6e3a1) | Arrange your screens, resolution, refresh rate, size, rotation, brightness, with a countdown that undoes a bad change by itself. The first Forge app built for hypeForge. |
 | **Sound, network, Bluetooth** | Click the bar: **wiremix** (volume per app and device), a network list (with **nmtui** for the details), **bluetui**. Each opens floating, in the KognogOS colours. |
 | **USB drives** | Plugged-in drives mount by themselves (Windows drives read-only, the computer's own disks never); the bar icon lists them, to open in Midnight Commander or eject. |
 | **Window rules** | Small tools (the calculator, settings windows, picture-in-picture video, password boxes) float above the tiled windows. |
@@ -159,13 +159,14 @@ hypeForge is a human and AI collaboration. Decisions are written down the day th
 ## Related Projects
 
 - **[KognogOS](https://github.com/jetomev/KognogOS)** — the distribution hypeForge becomes the desktop of
-- **[nog](https://github.com/jetomev/nog)** — tier-aware package manager
-- **[sudoForge](../sudoforge/README.md)** — the password box, in this repository
-- **[displayForge](../displayforge/README.md)** — screen settings, in this repository
-- **[forgekit](../forgekit/README.md)** — the shared foundation for the Forge apps
-- **[grubForge](https://github.com/jetomev/grubforge)** — bootloader manager
-- **[alacrittyForge](https://github.com/jetomev/alacrittyforge)** — terminal configurator
-- **[bitlaForge](https://github.com/jetomev/bitlaforge)** — solo Bitcoin mining, honestly framed
+- **[nog](https://github.com/jetomev/nog)** ![nog on the AUR](https://img.shields.io/aur/version/nog?label=AUR&style=flat-square&labelColor=313244&color=a6e3a1) — tier-aware package manager
+- **[sudoForge](../sudoforge/README.md)** ![sudoForge on the AUR](https://img.shields.io/aur/version/sudoforge?label=AUR&style=flat-square&labelColor=313244&color=a6e3a1) — the password box, in this repository
+- **[displayForge](../displayforge/README.md)** ![displayForge release](https://img.shields.io/github/v/release/jetomev/forge-suite?filter=displayforge-*&label=release&style=flat-square&labelColor=313244&color=a6e3a1) — screen settings, in this repository
+- **[forgekit](../forgekit/README.md)** ![forgekit on the AUR](https://img.shields.io/aur/version/python-forgekit?label=AUR&style=flat-square&labelColor=313244&color=a6e3a1) — the shared foundation for the Forge apps
+- **[grubForge](https://github.com/jetomev/grubforge)** ![grubForge on the AUR](https://img.shields.io/aur/version/grubforge?label=AUR&style=flat-square&labelColor=313244&color=a6e3a1) — bootloader manager
+- **[alacrittyForge](https://github.com/jetomev/alacrittyforge)** ![alacrittyForge on the AUR](https://img.shields.io/aur/version/alacrittyforge?label=AUR&style=flat-square&labelColor=313244&color=a6e3a1) — terminal configurator
+- **[bitlaForge](https://github.com/jetomev/bitlaforge)** ![bitlaForge on the AUR](https://img.shields.io/aur/version/bitlaforge?label=AUR&style=flat-square&labelColor=313244&color=a6e3a1) — solo Bitcoin mining, honestly framed
+- **[nogForge](https://github.com/jetomev/nogforge)** ![nogForge on the AUR](https://img.shields.io/aur/version/nogforge?label=AUR&style=flat-square&labelColor=313244&color=a6e3a1) — apps through nog, in a window
 - **[mindForge](https://github.com/jetomev/mindforge)** — a working agreement with an AI assistant that doesn't decay
 
 ---
