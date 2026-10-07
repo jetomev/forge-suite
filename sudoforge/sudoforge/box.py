@@ -17,7 +17,8 @@ import threading
 from textual.app import App, ComposeResult
 from textual.widgets import Static
 
-from forgekit import FORGE_CSS, PasswordDialog
+from forgekit import FORGE_CSS, PasswordDialog, console_mode
+from forgekit.theme import css_variables
 
 
 class BoxApp(App):
@@ -31,6 +32,10 @@ class BoxApp(App):
         super().__init__()
         self.question, self.conn = question, conn
         self._answered = False
+
+    def get_css_variables(self) -> dict[str, str]:
+        # forgekit's colours ($forge-*) — ForgeApp adds them; this small app must too
+        return {**super().get_css_variables(), **css_variables(console_mode())}
 
     def compose(self) -> ComposeResult:
         yield Static("")
