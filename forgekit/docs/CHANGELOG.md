@@ -2,6 +2,24 @@
 
 *Newest first. The README's status box carries the two most recent versions; everything else is here.*
 
+### 0.8.0 — October 6, 2026 · the password's dots centred ([#34](https://github.com/jetomev/forge-suite/issues/34))
+
+Built for sudoForge, the password helper for the Sway desktop (its D-2): Javier wanted the typed
+dots centred in the field, and Textual's `Input` cannot centre its text. *"Build it into forgekit"*,
+so every Forge app's password box gets it.
+
+- **`PasswordField`**: one dot per character, centred; nothing else is ever drawn. Backspace,
+  Ctrl+U empties it, paste works (line breaks dropped, never sent). The password stays in memory
+  only; `repr()` shows only its length. The dot comes from the glyph table, so a text console
+  draws it too.
+- **`PasswordDialog`** uses it, and takes `heading` (a bar saying who is asking), `detail` (the
+  command, in the "changed" colour), `note` (a quieter line) and `label` ("Password for …"),
+  all centred, with a blank line before the label. Without them the box reads as before.
+- `examples/password.py` opens the box in sudoForge's layout (`plain` for the old one).
+- Tests 93 → 104, warnings 0 → 0. Found by the tests before anyone saw it: the dots were drawn at
+  the left (Textual does not apply a text's own centring there); now centred by hand.
+- nogForge 37, grubForge 53, alacrittyForge 80, bitlaForge 64, displayForge 54 pass on it.
+
 ### 0.7.0 — October 6, 2026 · the shared start-up check ([#33](https://github.com/jetomev/forge-suite/issues/33))
 
 Javier, the night displayForge 1.0.0 shipped: it must say clearly it works on Sway only, and check

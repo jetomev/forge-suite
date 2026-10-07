@@ -22,13 +22,14 @@
 |---|---|---|
 | **[hypeForge](hypeforge/)** | The KognogOS desktop: a slim, quick tiling desktop on Sway, built from small applets | 🔄 being built, lived in daily |
 | **[displayForge](displayforge/)** | Screen settings in the terminal: arrange, resolution, refresh rate, size, rotation, brightness — with a countdown that undoes a change by itself. **Sway only**, and it says so at launch anywhere else | ✅ **1.0.1** (2026-10-06) |
-| **[forgekit](forgekit/)** | The shared foundation every Forge app is built on: title bar, menu bar, dialogs, one look — and, from 0.7.0, the start-up check that explains when an app can't run here | ✅ **0.7.0** (2026-10-06) · `python-forgekit` on the AUR |
+| **[sudoForge](sudoforge/)** | The password helper for the Sway desktop: one floating box for every admin request (the system's pop-up, and `sudo -A`) | 🔄 design approved, research done, being built |
+| **[forgekit](forgekit/)** | The shared foundation every Forge app is built on: title bar, menu bar, dialogs, one look — the start-up check that explains when an app can't run here (0.7.0), the password's dots centred (0.8.0) | ✅ **0.8.0** (2026-10-06) · `python-forgekit` on the AUR |
 
 **Moving in, one at a time** (each keeps its own version, tags `<app>-vX.Y.Z` and AUR package; its old repository is archived with a pointer). **Moved in:** forgekit (2026-10-06, with its full history). **Next:** [alacrittyForge](https://github.com/jetomev/alacrittyforge) · [bitlaForge](https://github.com/jetomev/bitlaforge) · [nogForge](https://github.com/jetomev/nogforge) · [grubForge](https://github.com/jetomev/grubforge) (last: it has the most users).
 
 **Staying outside, on purpose:** [nog](https://github.com/jetomev/nog) (the heart of KognogOS) and [mindForge](https://github.com/jetomev/mindforge) (the working agreement between the human and the AI, kept on its own for now).
 
-**Coming, born here:** one Forge app for every setting of the desktop — a password helper, sound, network, Bluetooth, a theme manager, notifications, workspaces and windows, lock and idle, default and startup apps, USB drives, a calculator — all held by **hypeForge Settings**, the control centre ([D-59](hypeforge/docs/DECISIONS.md)); for installing, **installForge** and **welcomeForge**; later, **fileForge**, **cloneForge**, **greetForge** and **promptForge**. Most names are still to come. The same list is on [kognogos.org](https://kognogos.org/#forge); the detail is in [hypeForge's TODO](hypeforge/TODO.md).
+**Coming, born here:** one Forge app for every setting of the desktop — sound, network, Bluetooth, a theme manager, notifications, workspaces and windows, lock and idle, default and startup apps, USB drives, a calculator — all held by **hypeForge Settings**, the control centre ([D-59](hypeforge/docs/DECISIONS.md)); for installing, **installForge** and **welcomeForge**; later, **fileForge**, **cloneForge**, **greetForge** and **promptForge**. Most names are still to come. The same list is on [kognogos.org](https://kognogos.org/#forge); the detail is in [hypeForge's TODO](hypeforge/TODO.md).
 
 ---
 

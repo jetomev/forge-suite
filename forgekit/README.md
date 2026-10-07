@@ -1,6 +1,6 @@
 # 🔨 forgekit
 
-![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-purple.svg)
+![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-purple.svg)
 ![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
 ![Built with Textual](https://img.shields.io/badge/Built%20with-Textual-5a3fd6.svg)
 ![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)
@@ -46,8 +46,8 @@ polish improves every app at once.
   when it asks something, Yes/No for its questions. The app never leaves its screen.
 - **The password inside the app** *(0.6.0)*. sudo's and polkit's password questions are
   asked in the app's own box, on a desktop and on a text console alike.
-  *Coming in 0.8.0 (built, not released yet):* the dots are centred as you type, and the
-  box can show who is asking in a heading bar (sudoForge's layout).
+  *From 0.8.0* the dots are centred as you type, and the box can show who is asking in a
+  heading bar (sudoForge's layout).
 - **A start-up check** *(0.7.0)*. An app says what it needs (a Sway session, a program
   and its version, a running service, a file). When something is missing it shows one
   plain screen — what it needs, what was found instead, why, what to use — and closes.
@@ -56,15 +56,15 @@ polish improves every app at once.
   switches to colours and characters that screen can actually show, by itself.
   [More below](#on-a-plain-text-console).
 
-> **Status: 0.7.0 (alpha), released 6 October 2026** — the first release from the Forge Suite repository. The API may still
+> **Status: 0.8.0 (alpha), released 6 October 2026.** The API may still
 > shift while the Forge apps migrate onto it. Pin a version if you depend on it.
+> 0.8.0: the password's dots centred — `PasswordField`, and `PasswordDialog`'s
+> `heading` / `detail` / `note` / `label` ([#34](https://github.com/jetomev/forge-suite/issues/34)).
+> Built for sudoForge's approved design; every Forge app's password box gets it.
 > 0.7.0: the shared start-up check — `start_check`, `Need`, `NeedsApp`
 > ([#33](https://github.com/jetomev/forge-suite/issues/33)). Javier, from displayForge:
 > an app that can't do its job here must say so in plain words and close, not crash.
-> displayForge 1.0.1 is its first user.
-> 0.6.0: a tool's run and its password inside the app: `RunWindow`, `TerminalPane`,
-> `PasswordBridge`, `InAppPolkitAgent` ([#6](https://github.com/jetomev/forgekit/issues/6)).
-> nogForge 1.1 and grubForge 2.1 are built on it. Earlier versions: [docs/CHANGELOG.md](docs/CHANGELOG.md).
+> displayForge 1.0.1 is its first user. Earlier versions: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 ## Screenshots
 
@@ -190,7 +190,7 @@ For apps that hand work to a real program and must not leave their screen while 
 | `ForgeApp.run_in_app()` / `RunWindow` | Run a program in a window over the app. Steps and a progress bar from a JSON-lines events file; the program's own screen folded until it asks something or fails (F12 anytime); **Yes (y) / No (n)** for yes/no questions; menus (yay's `==>`) are typed in the screen; an editor or pager simply gets the keys. Returns the exit status. |
 | `TerminalPane` | A program in a pseudo-terminal, drawn inside the app (pyte, plus the alternate screen and a capped scrollback). Keys and Ctrl+C go to it. |
 | `PasswordBridge` / `PasswordDialog` | `sudo -A`'s helper asks the running app over a private socket (a folder only you can open, a one-time token); the app shows its password box; "try again" after a wrong one. Nothing is written to disk or put on a command line. |
-| `PasswordField` *(0.8.0, not released yet)* | The password box's field: one dot per character, centred, nothing else ever drawn; Backspace, Ctrl+U to empty it, paste (line breaks dropped). `PasswordDialog` uses it, and takes `heading`, `detail`, `note` and `label` for sudoForge's layout (`examples/password.py`). |
+| `PasswordField` *(0.8.0)* | The password box's field: one dot per character, centred, nothing else ever drawn; Backspace, Ctrl+U to empty it, paste (line breaks dropped). `PasswordDialog` uses it, and takes `heading`, `detail`, `note` and `label` for sudoForge's layout (`examples/password.py`). |
 | `ForgeApp.polkit_agent()` / `InAppPolkitAgent` | The app becomes polkit's password asker **for its own process only**: `pkexec` asks in the app's box, and polkit's own helper checks the password. Three tries; Cancel cancels. |
 
 ### Forms and flows (0.5.0)
