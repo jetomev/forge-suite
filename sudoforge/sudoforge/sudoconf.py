@@ -97,9 +97,15 @@ def root_main(argv: list[str], conf: str = CONF, backup: str = BACKUP) -> int:
             if new == text:
                 print("Already set up; nothing changed.")
                 return 0
-            shutil.copy2(conf, backup)
+            # The backup is the file from before sudoForge ever touched it (F-2,
+            # #37): take it only when there is none yet, or when the file carries
+            # no sudoForge mark. A second setup never overwrites the original.
+            if not os.path.exists(backup) or MARK not in text:
+                shutil.copy2(conf, backup)
+                print(f"Done: sudo -A now asks in sudoForge's box. Backup: {backup}")
+            else:
+                print(f"Done: sudo -A now asks in sudoForge's box. The original backup is kept: {backup}")
             _write_atomic(conf, new)
-            print(f"Done: sudo -A now asks in sudoForge's box. Backup: {backup}")
             return 0
         if argv[:1] == ["undo"] and len(argv) == 1:
             new = undo_text(text)

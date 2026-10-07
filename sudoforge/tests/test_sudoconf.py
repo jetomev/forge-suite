@@ -69,6 +69,21 @@ class AsAdmin(unittest.TestCase):
         self.assertEqual(self.run_root("undo"), 0)
         self.assertEqual(self.conf.read_text(), STOCK)
 
+    def test_a_second_setup_keeps_the_original_backup(self):
+        """F-2 (#37): setup from the repo, then again from the package — the backup stays the original."""
+        self.assertEqual(self.run_root("apply", "/home/someone/forge-suite/sudoforge/sudoforge-askpass"), 0)
+        self.assertEqual(self.run_root("apply", HELPER), 0)
+        self.assertTrue(applied(self.conf.read_text(), HELPER), "the new helper is in place")
+        self.assertEqual(self.backup.read_text(), STOCK, "the backup is still the file from before sudoForge")
+
+    def test_setup_after_undo_backs_up_the_file_as_it_is_then(self):
+        """After an undo the file has no sudoForge mark, so the next setup may back it up afresh."""
+        self.run_root("apply", HELPER)
+        self.run_root("undo")
+        self.conf.write_text(STOCK + "Set disable_coredump false\n")
+        self.assertEqual(self.run_root("apply", HELPER), 0)
+        self.assertEqual(self.backup.read_text(), STOCK + "Set disable_coredump false\n")
+
     def test_refused_changes_nothing(self):
         self.conf.write_text(STOCK + "Path askpass /usr/bin/other\n")
         self.assertEqual(self.run_root("apply", HELPER), 3)
