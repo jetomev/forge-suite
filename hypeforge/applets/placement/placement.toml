@@ -3,6 +3,8 @@
 # Every new window goes to the next free spot, in this order, in whatever workspace is on
 # screen (counting everything visible on every screen, a shared screen included). Once every
 # spot is taken, the next windows go round the same order again as TABS on those spots.
+# Javier's order (2026-10-07, replaces D-50's): the three screens first, then the right halves
+# of 2 and 3, then their bottoms, and the main screen is split last (windows 8 and 9).
 # Dialogs and floating windows are left alone.
 #
 # The hypeForge Settings will edit this file; until then, edit it by hand and run
@@ -20,12 +22,13 @@ screens = ["DP-3", "DP-2", "DP-1"]
 # beside the first window), "under-right" (the bottom of the right half). On each screen the
 # spots come in that order.
 order = [
-  { screen = 1, spot = "fill" },          # window 1
-  { screen = 1, spot = "right" },         # window 2
-  { screen = 2, spot = "fill" },          # window 3
-  { screen = 2, spot = "right" },         # window 4
-  { screen = 3, spot = "fill" },          # window 5
-  { screen = 3, spot = "right" },         # window 6
-  { screen = 2, spot = "under-right" },   # window 7
-  { screen = 3, spot = "under-right" },   # window 8
+  { screen = 1, spot = "fill" },          # window 1 · screen 1 (middle)
+  { screen = 2, spot = "fill" },          # window 2 · screen 2 (left)
+  { screen = 3, spot = "fill" },          # window 3 · screen 3 (right)
+  { screen = 2, spot = "right" },         # window 4 · screen 2, right half
+  { screen = 3, spot = "right" },         # window 5 · screen 3, right half
+  { screen = 2, spot = "under-right" },   # window 6 · screen 2, bottom of the right half
+  { screen = 3, spot = "under-right" },   # window 7 · screen 3, bottom of the right half
+  { screen = 1, spot = "right" },         # window 8 · screen 1, right half
+  { screen = 1, spot = "under-right" },   # window 9 · screen 1, bottom of the right half
 ]
