@@ -16,7 +16,7 @@
 
 | # | Do | Expected | Done |
 |---|---|---|---|
-| 2.1 | Install 1.0.1 (nogForge or `nog install sudoforge`), `sudoforge status` | "asks in sudoForge's box", version 1.0.1 | |
-| 2.2 | `sudoforge undo`, then `sudoforge setup` (two boxes) | after undo the file has no sudoForge mark, so setup takes a fresh backup: `/etc/sudo.conf.sudoforge-backup` is now byte for byte sudo's shipped file (4,344 bytes) — this repairs the backup 1.0.0 overwrote on this desktop | |
-| 2.3 | `sudoforge setup` once more | "Already set up; nothing changed." — the backup untouched | |
-| 2.4 | `sudo -A -k true` | the box as before; exit 0 (nothing else changed) | |
+| 2.1 | Install 1.0.1 (nogForge or `nog install sudoforge`), `sudoforge status` | "asks in sudoForge's box", version 1.0.1 | ✅ 19:01 |
+| 2.2 | `sudoforge undo`, then `sudoforge setup` (two boxes) | after undo the file has no sudoForge mark, so setup takes a fresh backup: `/etc/sudo.conf.sudoforge-backup` is now byte for byte sudo's shipped file (4,344 bytes) — this repairs the backup 1.0.0 overwrote on this desktop | ✅ 19:03 |
+| 2.3 | `sudoforge setup` once more | "Already set up; nothing changed." — the backup untouched | ✅ 19:03 |
+| 2.4 | `sudo -A -k true` | the box as before; exit 0 (nothing else changed) | ✅ 19:04 |

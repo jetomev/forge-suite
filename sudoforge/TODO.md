@@ -29,7 +29,7 @@
 ## 1.0.1 · F-2 — released 2026-10-07
 - [x] **F-2 (#37)**: the backup of `/etc/sudo.conf` is written only when none exists or the file has no sudoForge mark; two tests (a second setup keeps the original; a setup after an undo backs up the file as it is then); the guard fails with the fix removed. **38 tests, 0 warnings**
 - [x] Version 1.0.1 in `__init__.py`, README (badge, tests, status), `docs/CHANGELOG.md`, `docs/ROADMAP.md`; `testing/20261007 - Test Matrix … v1-0-1.md` + Test Results
-- [ ] Tag `sudoforge-v1.0.1`, GitHub Release (signed assets), AUR `sudoforge` 1.0.1-1, Javier installs; then his live row: `sudoforge undo` + `sudoforge setup` repairs this desktop's backup (it holds the 1.0.0 two lines today) — close #37
+- [x] **Released 2026-10-07 18:46**: tag `sudoforge-v1.0.1`, GitHub Release (Latest, 4 signed assets, download matches), AUR `sudoforge` 1.0.1-1 (makepkg: checksum + signature pass, 38 tests). **Installed 19:01 through nogForge**; live rows 2.1–2.4 all ✅ (19:01–19:04): `undo` + `setup` repaired this desktop's backup (4,344 bytes, the original); #37 closed
 
 ## Next
 - [ ] (nothing scheduled — see Later)
