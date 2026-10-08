@@ -33,5 +33,5 @@ A small Python library on top of [Textual](https://textual.textualize.io): the s
 - Version in **every** surface at once: `pyproject.toml`, `forgekit/__init__.py`, README, the AUR `python-forgekit` PKGBUILD (in lockstep on content, not only `pkgver`).
 - Commits: `<scope>: …` for work, `release: vX.Y.Z — <tagline>` for the release commit; every commit GPG-signed and carrying the co-author trailer.
 - Tags are annotated and signed: `git tag -s vX.Y.Z -m "…"` (a bare `git tag` fails here because tag signing is on).
-- Order: push `main` + tag → GitHub Release with notes and signed artifacts → AUR → check with a fresh install. Then the adopting apps move to the new version, one at a time.
+- Order: push `main` + tag → GitHub Release with notes and signed artifacts → `makepkg` locally → **Javier installs the built package and tests; only on his pass, the AUR push** (one push per proven version — Javier, 2026-10-07) → check with a fresh install. Then the adopting apps move to the new version, one at a time.
 - Test matrices go in `testing/`, named `YYYYMMDD - Test Matrix for forgekit vX-Y-Z.md` (hyphens in the version).
