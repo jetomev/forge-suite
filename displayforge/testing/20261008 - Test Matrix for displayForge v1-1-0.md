@@ -18,7 +18,7 @@
 | 12 | Inside hypeForge Settings: no Quit | Settings → Screens: no Quit in the bar; Q and Ctrl+Q do nothing | Javier | |
 | 13 | Inside Settings: quitting Settings asks | change a setting in Screens → Settings' Quit: Settings shows the Screens page and displayForge asks its question | Javier | |
 | 14 | Tab and Enter still work | Settings page: Tab moves between fields, Enter chooses (Ctrl+I is not Tab) | Javier | |
-| 16 | Help by number, twice | 6 opens Help, 6 again closes it | Javier | |
-| 17 | The open menu is lit | while Help's menu is open, its title has the highlight | Javier | |
-| 18 | About and License as pages | Help → About, Help → License: they show in the work area (no window), Help lit; Esc goes back to the page you were on | Javier | |
-| 15 | Automatic tests | `PYTHONPATH=../forgekit python -W always -m unittest discover -s tests`: 63 pass, 0 warnings | Claude | ✅ 2026-10-08 |
+| 15 | Help by number, twice | 6 opens Help, 6 again closes it | Javier | |
+| 16 | The open menu is lit | while Help's menu is open, its title has the highlight | Javier | |
+| 17 | About and License as pages | Help → About, Help → License: they show in the work area (no window), Help lit; Esc goes back to the page you were on | Javier | |
+| 18 | Automatic tests | `PYTHONPATH=../forgekit python -W always -m unittest discover -s tests`: 63 pass, 0 warnings | Claude | ✅ 2026-10-08 |
