@@ -105,8 +105,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] Each visual step designed and approved before it is built (bar, borders, launcher, notifications, lock screen, terminal, wallpaper…)
 
 ## Track · The order from here
-*Ranked 2026-10-07 — Javier agreed the v1.0 cut; walletForge pulled to the front by Javier the same night. Workflow first, then usability, then coolness. One line per step; the step in progress carries its issue.*
-- [ ] 0. **walletForge** — our own secret store (Javier: "critical functionality"); the no-window part is already true since 10-07 through PAM + KDE's store (#41 closed); walletForge replaces KDE's store → its own section `walletforge/`
+*Ranked 2026-10-07 — Javier agreed the v1.0 cut; walletForge was pulled to the front, then set back to its place by Javier the same night once #41 removed the pain (D-2). Workflow first, then usability, then coolness. One line per step; the step in progress carries its issue.*
 - [x] 1. Claude Desktop keeps its login (#39) — proven after a reboot 10-07
 - [ ] 2. forgekit menu bar on narrow windows (#40, a forgekit release)
 - [ ] 3. Window placement nine-spot order — Javier's test (#38)
@@ -129,7 +128,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] 20. USB drives & disks
 - [ ] 21. Users
 - [ ] 22. About this computer
-- [ ] 23. sudoForge pinentry
+- [ ] 23. **walletForge** (its own section `walletforge/`, D-2): our own secret store replacing KDE's, copying its entries; SSH keys + GPG after; must land **before KDE leaves**. The no-window part is already true since 10-07 (#41)
+- [ ] 23b. sudoForge pinentry (goes with walletForge)
 - [ ] 24. displayForge 1.0.x tests
 - [ ] 25. Look & polish: Chrome and friends' own title bars off · pop-up list positions · SwayFX trial · folder tabs · our own bar · Alt+Tab with previews · drag and drop
 - [ ] 26. After 1.0: game controllers + the G13 app · accessibility · online accounts · remote desktop · touchscreen · permissions · spell check · animations
