@@ -314,6 +314,16 @@ class MenuKeysForEveryEntry(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(field.value, "hello3", "the field got Ctrl+E and the digit")
             self.assertIsInstance(app.screen, Box)
 
+    def test_making_apps_never_grows_the_class_key_table(self):
+        class OwnKeys(self.Three):
+            BINDINGS = [Binding("ctrl+w", "activate('two')", show=False), Binding("2", "activate('two')", show=False)]
+
+        before = {k: len(v) for k, v in OwnKeys._merged_bindings.key_to_bindings.items()}
+        for _ in range(5):
+            OwnKeys()
+        after = {k: len(v) for k, v in OwnKeys._merged_bindings.key_to_bindings.items()}
+        self.assertEqual(after, before)
+
     async def test_hypeforge_count_is_the_same(self):
         app = self.Three(hypeforge=True)
         async with app.run_test(size=(80, 20)) as pilot:

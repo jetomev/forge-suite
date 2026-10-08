@@ -179,6 +179,10 @@ class ForgeApp(App[None]):
     def _bind_menu_keys(self) -> None:
         """Ctrl+<underlined letter> (priority: it works from any field, like Ctrl+H always
         did) and 1-9 (not priority: a field that takes digits keeps them) for each entry."""
+        # Textual's copy of the class's key table shares each key's list: adding to a key the
+        # class already binds would grow the CLASS's list, once per app made (found by the
+        # alacrittyForge 1.1.0 build: 12 copies after one test run). Own lists first.
+        self._bindings.key_to_bindings = {k: list(v) for k, v in self._bindings.key_to_bindings.items()}
         taken: set[str] = {"h", "q"}            # the class bindings: Help and Quit
         n = 0
         for m in self.MENU:
