@@ -60,7 +60,7 @@ polish improves every app at once.
 > shift while the Forge apps migrate onto it. Pin a version if you depend on it.
 > 0.10.0: **every menu entry gets Ctrl + its underlined letter and a number** (Help included),
 > made from the menu, the letter by Javier's rule (first letter, else the next free one);
-> About and License as pages; "1-N menu" in the bottom bar; one dropdown at a time; a dialog keeps its
+> About, License, Keys and the manual as pages; "1-N menu" in the bottom bar; one dropdown at a time; a dialog keeps its
 > own keys; **`--hypeforge`** for apps inside hypeForge Settings (no Quit; Settings asks the app
 > to close); the terminal pane passes the mouse and modern keys; labels like "Cancel (Esc)"
 > ([#49](https://github.com/jetomev/forge-suite/issues/49)).
@@ -237,8 +237,9 @@ taken) and **a number, 1 to N in bar order, Help included**
 (Quit has none). A menu's key opens its dropdown; pressed again, it closes it. The Ctrl keys work
 from anywhere on the app's own screen, a text field included; inside a dialog the dialog keeps
 its keys. A menu's key or number pressed again closes it, and its title is lit while it's open.
-Test that no entry is left without a letter: `menu_key_clashes(MENU) == []`. **About and
-License** open as pages in the work area (Help lit, Esc goes back). Put `MENU_HINT` in `HINTS` and the bottom bar reads "1-N menu".
+Test that no entry is left without a letter: `menu_key_clashes(MENU) == []`. **About,
+License, Keys and the manual** open as pages in the work area (Help lit, Esc goes back); an app
+opens its manual with `show_manual(title, pages, start)`. Put `MENU_HINT` in `HINTS` and the bottom bar reads "1-N menu".
 Set `MENU_KEYS = False` for an app that must have no keys of its own (hypeForge Settings).
 
 **`--hypeforge`** (0.10.0): hypeForge Settings starts every Forge app with it. Add it to your
