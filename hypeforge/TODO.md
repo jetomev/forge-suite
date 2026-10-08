@@ -110,7 +110,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] 1. Claude Desktop keeps its login (#39) — proven after a reboot 10-07
 - [x] 2. forgekit menu bar on narrow windows (#40) — **forgekit 0.9.0 released + installed + proven 10-07 21:50** (Javier: "menu options wrapped perfectly")
 - [ ] 2b. **F-47 (#43): the Workspaces applet crashed at start (missing `import re`, since 10-04)** → Win + 1 showed empty screens (Sway's stock key moved one screen to a bare workspace). Fixed 10-07 22:00 + `scripts/check-names.py` in the commit hook (catches the class). **Reboot proof pending:** applet alive, Win + 1…6 move all three screens, the Steam round trip
-- [ ] 2c. **nogForge first (Javier, 10-07: "too hard to get one package updated by itself")**: #17 scroll jump · #18 tick all / untick all · #19 In-System row buttons · #20 filter box + per-row Update — one nogForge release
+- [ ] 2c. **nogForge first (Javier, 10-07)**: #17 #18 #19 #20 → **nogForge 1.2.0 released 10-07 ~22:40** (GitHub Latest, AUR 1.2.0-1); Javier's run pending (update one package by itself)
 - [ ] 2d. **Bar: the active workspace number in a square next to the emblem (#42, Javier)** — redrawn by the Workspaces applet's bar signal
 - [ ] 3. Window placement nine-spot order — Javier's test (#38)
 - [ ] 4. Night light
