@@ -69,7 +69,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] F-44 (#26) — **fixed by sudoForge 1.0.0 (2026-10-06, #26 closed)**: no admin-password helper (polkit agent) runs in the Sway session — apps that ask for admin rights through a pop-up cannot 
 - [x] **Applet 6 · Help** (D-54): Win + F1 + Help & Keys in the launcher → key chart + guide pages in one floating viewer (border, "q to close" line); one source (`applets/help/`) for Win + F1 and hypeForge Settings; the chart checked against Sway's keys before every commit
 - [x] **Help & Keys as a forgekit app** (D-55): tabs Keys · Start · Workspaces · Windows · Apps · About · Quit, the same look on every page, wrapping tables with alternating rows — Javier: "Everything works! Great job."
-- [ ] forgekit (now `forgekit/` in this repository): the menu bar does not wrap and is cut off on a narrow window — affects every Forge app (found 10-05)
+- [x] forgekit: the menu bar does not wrap and is cut off on a narrow window — affects every Forge app (found 10-05) → **forgekit 0.9.0 (10-07, #40)**: it wraps; Javier's test on Help & Keys pending
 - [x] Wallpaper : the KognogOS Semi Mocha wallpaper on all three screens, via swaybg (D-54)
 - [x] **KognogOS Mocha skin for Midnight Commander** (Javier, 10-05): `themes/mc/kognogos-mocha.ini` — full colour (Catppuccin Mocha + the emblem's blue/peach, mauve accents, rounded corners), tested in a hidden terminal and a real Alacritty window (`themes/mc/preview.png`). **The default now** (`skin=kognogos-mocha` in `~/.config/mc/ini`); Help: a Midnight Commander page on the Tools tab. Later: the Theme manager switches it
 - [ ] Apps that draw their own minimise/maximise/close bar (Chrome…): switch it off where the app allows
@@ -107,7 +107,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 ## Track · The order from here
 *Ranked 2026-10-07 — Javier agreed the v1.0 cut; walletForge was pulled to the front, then set back to its place by Javier the same night once #41 removed the pain (D-2). Workflow first, then usability, then coolness. One line per step; the step in progress carries its issue.*
 - [x] 1. Claude Desktop keeps its login (#39) — proven after a reboot 10-07
-- [ ] 2. forgekit menu bar on narrow windows (#40, a forgekit release)
+- [ ] 2. forgekit menu bar on narrow windows (#40) — **forgekit 0.9.0 released 10-07 21:40** (tag, GitHub Release, AUR recipe built; AUR push after Javier's ssh-agent line); Javier's rows pending: Help & Keys narrow → two rows
 - [ ] 3. Window placement nine-spot order — Javier's test (#38)
 - [ ] 4. Night light
 - [ ] 5. Printing (a front end for CUPS)

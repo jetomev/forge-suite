@@ -17,9 +17,10 @@
 - [ ] **mcForge?** (Javier, 2026-10-06) — Midnight Commander is free software (GPLv3, written in C, github.com/MidnightCommander/mc), so a fork is allowed, and GPLv3 matches ours. Honest size: ~300,000 lines of C, 30 years old — a fork means maintaining all of it. Lighter path that fits D-59: an **mcForge settings app** (look, editor, panels, keys) over the stock mc. Decide later.
 
 ## Sections
+- **walletForge** — **born 2026-10-07** (D-1, D-2): our own secret store, replacing KDE's before KDE leaves; copies its entries; SSH keys + GPG in scope; not urgent — the login password already opens KDE's store through hypeForge's PAM handshake (#41) → [walletforge/TODO.md](walletforge/TODO.md)
 - **sudoForge** — **1.0.1 released and installed 2026-10-07** (F-2 #37 closed: the first backup of `/etc/sudo.conf` is kept, this desktop's backup repaired; 38 tests), after 1.0.0 on 2026-10-06 (AUR `sudoforge`; closes hypeForge F-42/F-44); next: a sudoForge pinentry and the keyring → [sudoforge/TODO.md](sudoforge/TODO.md)
 - **displayForge** — **1.0.1 released 2026-10-06** (Sway only, checked at launch); next: the 1.0.x tests, the KDE-login check → [displayforge/TODO.md](displayforge/TODO.md)
-- **forgekit** — **0.8.0 released 2026-10-06** (the password's dots centred, #34; 0.7.0 the start-up check); next: button labels "Words (k)", fold sudoForge's session agent back in → [forgekit/TODO.md](forgekit/TODO.md)
+- **forgekit** — **0.9.0 released 2026-10-07** (the menu bar wraps on a narrow window, #40, Javier: URGENT; 110 tests), after 0.8.0 on 10-06 (the password's dots centred, #34); next: button labels "Words (k)", fold sudoForge's session agent back in → [forgekit/TODO.md](forgekit/TODO.md)
 - **hypeForge** — the bar, launcher, sound / network / Bluetooth / USB done; the password pop-up done (sudoForge); next: printing, night light → [hypeforge/TODO.md](hypeforge/TODO.md)
 - [x] **Every surface shows live versions** (Javier, 2026-10-06): kognogos.org (rebuilt in the homelab repo — it had been server-only and was wiped by a deploy), and live badges in the KognogOS, suite and hypeForge READMEs; kognogos.org "Honest progress" brought current
 
