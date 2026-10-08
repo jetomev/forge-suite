@@ -2,6 +2,12 @@
 
 *The live work list and the handoff between sessions. Newest work first. Updated after every step.*
 
+- [ ] **0.10.0 — the pane for hypeForge Settings (UNRELEASED, in the repo):**
+  - [x] #45 (10-07): `TerminalPane` passes the mouse to a program that asks for it (SGR 1006); Quit hidden under `HYPEFORGE_SETTINGS` (Ctrl+Q still closes); Ctrl+letter sent the modern way when the program asks (Ctrl+H was Backspace inside Settings, `787623d`). 116 tests
+  - [x] **#47 (10-08, `dcfe8e9`): one dropdown at a time** — an accelerator pressed again closes its dropdown, another menu's key or title switches to that one, a section key closes it and switches the page. 5 tests, proven both ways (the fix taken out → they fail). **121 tests, 0 warnings.** Javier's live look in Settings: pending
+  - [ ] #48: keys that do not reach the app inside the pane — the list comes from Javier
+  - [ ] Release the new way: GitHub (tag + signed assets) → Javier installs the local build → only on his pass, the AUR
+
 - [x] **0.9.0 — the menu bar wraps (2026-10-07, forge-suite #40, Javier: URGENT):** `MenuBar` is a column of rows, re-flowed on resize; `#forge-header` is `height: auto`. 6 new tests (seven tabs at 40 and 100 columns, a second-row click, the active mark across a resize). **110 tests, 0 warnings.** Release: tag `forgekit-v0.9.0`, signed assets, AUR `python-forgekit` 0.9.0-1 — then every Forge app shows the full bar on a narrow window with no change of its own
 
 - [x] **Moved into the Forge Suite (2026-10-06, D-60)**: full history, tags renamed `forgekit-v0.1.0 … v0.6.0`, pyproject / README / CLAUDE.md point at `jetomev/forge-suite`; old repo archived with a pointer; `~/Programs/forgekit` is now a shortcut to `forge-suite/forgekit`. 67 tests, 0 warnings in the new home
