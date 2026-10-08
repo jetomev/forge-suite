@@ -1,6 +1,6 @@
 # hypeForge — the list
 
-**Target: no date set — started 28 Sep 2026; started again 4 Oct 2026 (D-44).** A Forge Suite app that installs the KognogOS tiling desktop onto any Arch install.
+**Target: the first KognogOS release, v1.0, April 2027 — started 28 Sep 2026; started again 4 Oct 2026 (D-44); the ranked order set 7 Oct 2026.** A Forge Suite app that installs the KognogOS tiling desktop onto any Arch install.
 The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. This file only lists what gets done.
 
 **The order from here (Javier, 2026-10-05):** finish the Sway setup → then every pending Forge Suite app → the first KognogOS release. Every pick follows D-57: terminal first (1), Sway-compatible (2), smallest install (3).
@@ -104,15 +104,38 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] From the KognogOS brand (logo, colours): a palette with contrast between elements on purpose — connected, not fused, not monotone
 - [ ] Each visual step designed and approved before it is built (bar, borders, launcher, notifications, lock screen, terminal, wallpaper…)
 
-## The order from here (Javier agreed the v1.0 cut, 2026-10-07; this ranking by Claude: workflow first, then usability, then coolness)
-1. Claude Desktop login survives restarts (#39, proof pending) · 2. forgekit menu bar on narrow windows (#40, a forgekit release) · 3. Window placement nine-spot order, Javier's test (#38) · 4. Night light · 5. Printing (a front end for CUPS)
-6. **hypeForge Settings spike**: one Forge app running inside the Settings pane — unlocks every app below · 7. Sound · 8. Network & Wi-Fi · 9. Bluetooth · 10. Look (the Theme manager: wallpaper, themes, icons, pointer, fonts) · 11. Default apps (#19) · 12. Workspaces & Windows (placement, rules, tiling/floating; **any number of screens designed here — the ISO gate**) · 13. Power & Lock · 14. Notifications · 15. Startup apps · 16. Keyboard · 17. Mouse & Touchpad · 18. Time & Language · 19. Printers (into Settings) · 20. USB drives & disks · 21. Users · 22. About this computer
-23. **Forge wallet** (D-61; must exist before KDE leaves) · 24. sudoForge pinentry · 25. displayForge 1.0.x tests
-26. Look & polish: Chrome and friends' own title bars off · pop-up list positions · SwayFX trial (one evening) · folder tabs · our own bar · Alt+Tab with previews · drag and drop
-27. After 1.0: game controllers + the G13 app · accessibility · online accounts · remote desktop · touchscreen · permissions · spell check · animations
-28. **Remove KDE — the very last step**
+## Track · The order from here
+*Ranked 2026-10-07 — Javier agreed the v1.0 cut; walletForge pulled to the front by Javier the same night. Workflow first, then usability, then coolness. One line per step; the step in progress carries its issue.*
+- [ ] 0. **walletForge** — our own secret store, so no password window at every login (Javier: "critical functionality"); #41 → its own section `walletforge/`
+- [x] 1. Claude Desktop keeps its login (#39) — proven after a reboot 10-07
+- [ ] 2. forgekit menu bar on narrow windows (#40, a forgekit release)
+- [ ] 3. Window placement nine-spot order — Javier's test (#38)
+- [ ] 4. Night light
+- [ ] 5. Printing (a front end for CUPS)
+- [ ] 6. **hypeForge Settings spike**: one Forge app running inside the Settings pane
+- [ ] 7. Sound
+- [ ] 8. Network & Wi-Fi
+- [ ] 9. Bluetooth
+- [ ] 10. Look (the Theme manager: wallpaper, themes, icons, pointer, fonts)
+- [ ] 11. Default apps (#19)
+- [ ] 12. Workspaces & Windows (placement, rules, tiling/floating; **any number of screens — the ISO gate**)
+- [ ] 13. Power & Lock
+- [ ] 14. Notifications
+- [ ] 15. Startup apps
+- [ ] 16. Keyboard
+- [ ] 17. Mouse & Touchpad
+- [ ] 18. Time & Language
+- [ ] 19. Printers (into Settings)
+- [ ] 20. USB drives & disks
+- [ ] 21. Users
+- [ ] 22. About this computer
+- [ ] 23. sudoForge pinentry
+- [ ] 24. displayForge 1.0.x tests
+- [ ] 25. Look & polish: Chrome and friends' own title bars off · pop-up list positions · SwayFX trial · folder tabs · our own bar · Alt+Tab with previews · drag and drop
+- [ ] 26. After 1.0: game controllers + the G13 app · accessibility · online accounts · remote desktop · touchscreen · permissions · spell check · animations
+- [ ] 27. **Remove KDE — the very last step**
 
-## hypeForge Settings — the catalogue (Javier, 2026-10-07) and the v1.0 cut (agreed by Javier, 2026-10-07)
+## Track · Settings catalogue and the v1.0 cut
 *Javier listed every settings area he can think of (KDE's full set: keyboard, touchscreen, game controllers incl. the Logitech G13, accessibility, Bluetooth, sound, disks and cameras, printers, Wi-Fi and internet, online accounts, wallpaper, themes, text and fonts, animations, default apps, notifications, window management, activities, workspace behaviour, screen locking, app permissions, remote desktop, recent files, user feedback, region and language, spell check, date and time, day-night cycle, about, power, software update, users, autostart, session) and said: not everything — choose wisely, closer to Linux Mint's set, the most used and appreciated, for KognogOS v1.0.0.*
 - [ ] **Proposed v1.0 set (18, Mint-sized):** Screens (displayForge ✅ + night light) · Sound · Network & Wi-Fi · Bluetooth · Printers · Keyboard (layout, repeat, our key chart) · Mouse & Touchpad · Power & Lock (idle, sleep, lock screen) · Notifications · Default apps (#19) · Startup apps · Look (wallpaper, themes, icons, pointer, fonts — the Theme manager) · Time & Language (date, time, region, language) · Users · Software updates (nogForge ✅) · Workspaces & Windows (ours: placement, rules, tiling/floating) · USB drives & disks · About this computer
 - [ ] **After 1.0:** game controllers (the G13 as its own Forge app, also inside Settings) · accessibility (large text and pointer go in Look for 1.0) · online accounts · remote desktop · touchscreen · app permissions · spell check · animations
