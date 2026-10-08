@@ -119,12 +119,13 @@ Screen { background: $forge-bg; color: $forge-text; }
 }
 
 /* header: title bar (row 0) + menu bar (row 1) */
-#forge-header { dock: top; height: 2; }
+#forge-header { dock: top; height: auto; }
 #forge-title {
     height: 1; background: $forge-title-bg; color: $forge-title;
     text-style: bold; text-align: center; content-align: center middle;
 }
-#forge-menubar { height: 1; background: $forge-menubar-bg; }
+#forge-menubar { height: auto; background: $forge-menubar-bg; }
+.menu-row { height: 1; width: 1fr; }
 .menu-title { width: auto; height: 1; color: $forge-text; }
 .menu-title:hover { background: $forge-hover-bg; color: $forge-hover; }
 .menu-title.active { background: $forge-active-bg; color: $forge-active; text-style: $forge-strong; }

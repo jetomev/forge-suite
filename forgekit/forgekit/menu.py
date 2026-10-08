@@ -11,11 +11,12 @@ items carry a per-item letter that selects them (no Ctrl) while the menu is open
 
 from __future__ import annotations
 
+from rich.cells import cell_len
 from rich.text import Text
 
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.containers import Horizontal
+from textual.containers import Horizontal, Vertical
 from textual.screen import ModalScreen
 from textual.widgets import OptionList, Static
 from textual.widgets.option_list import Option
@@ -41,24 +42,87 @@ def underline_label(label: str, acc_letter: str) -> Text:
     return t
 
 
-class MenuBar(Horizontal):
-    """The top menu bar. Renders one clickable title per entry with its
-    accelerator letter underlined. Titles get id ``menu-<entry id>``."""
+class MenuBar(Vertical):
+    """The top menu bar: one clickable title per entry, its accelerator letter
+    underlined, each title with id ``menu-<entry id>``.
+
+    The titles are laid out in **as many rows as the window needs** (0.9.0,
+    forge-suite #40): on a narrow window the ones that no longer fit move to a
+    second row instead of being cut off, so every section stays reachable by
+    mouse and key. The bar's height follows; the header is ``height: auto``.
+    """
 
     def __init__(self, menu: list[dict], **kwargs) -> None:
         super().__init__(id="forge-menubar", **kwargs)
         self._menu = menu
+        self._rows: list[list[dict]] = []
+
+    # ---- what each title shows -------------------------------------------------------------
+    @staticmethod
+    def _markup(m: dict) -> str:
+        title, a = m["title"], accel(m)
+        i = title.lower().find(a)
+        markup = f"{title[:i]}[u]{title[i]}[/u]{title[i+1:]}" if i >= 0 else title
+        # F-12: a text console sends Ctrl+H as Backspace, so Help is on F1
+        # there, and the bar says so (console mode only)
+        if m["id"] == "help" and is_console():
+            markup += " [$forge-accent]F1[/]"
+        return f" {markup} "
+
+    @staticmethod
+    def _width(m: dict) -> int:
+        """Cells a title takes on screen: a space, the title, a space — and " F1"
+        after Help on a text console (plain arithmetic; the markup carries Textual
+        variables Rich's parser does not know)."""
+        extra = 3 if m["id"] == "help" and is_console() else 0
+        return cell_len(f" {m['title']} ") + extra
+
+    def layout_rows(self, width: int) -> list[list[dict]]:
+        """Split the entries into rows that fit ``width`` cells, in order. A title
+        wider than the whole window gets a row of its own (it is cut, nothing
+        else is)."""
+        rows: list[list[dict]] = [[]]
+        used = 0
+        for m in self._menu:
+            w = self._width(m)
+            if rows[-1] and used + w > width:
+                rows.append([])
+                used = 0
+            rows[-1].append(m)
+            used += w
+        return rows
+
+    # ---- building and rebuilding -------------------------------------------------------------
+    def _row_widgets(self, row: list[dict], active: set[str] = frozenset()) -> Horizontal:
+        """One row of titles; the ones in ``active`` are born marked, so a reflow
+        never loses the mark (mount and remove are not instant)."""
+        return Horizontal(
+            *(Static(self._markup(m), id=f"menu-{m['id']}",
+                     classes="menu-title active" if f"menu-{m['id']}" in active else "menu-title")
+              for m in row),
+            classes="menu-row",
+        )
 
     def compose(self) -> ComposeResult:
-        for m in self._menu:
-            title, a = m["title"], accel(m)
-            i = title.lower().find(a)
-            markup = f"{title[:i]}[u]{title[i]}[/u]{title[i+1:]}" if i >= 0 else title
-            # F-12: a text console sends Ctrl+H as Backspace, so Help is on F1
-            # there, and the bar says so (console mode only)
-            if m["id"] == "help" and is_console():
-                markup += " [$forge-accent]F1[/]"
-            yield Static(f" {markup} ", id=f"menu-{m['id']}", classes="menu-title")
+        self._rows = [list(self._menu)]
+        yield self._row_widgets(self._menu)
+
+    def on_resize(self, event) -> None:
+        self.relayout(event.size.width)
+
+    def relayout(self, width: int) -> None:
+        """Re-flow the titles for ``width``; keeps the active mark. Does nothing
+        when the row split is unchanged, so a same-size redraw costs nothing."""
+        if width <= 0:
+            return
+        rows = self.layout_rows(width)
+        if rows == self._rows:
+            return
+        active = {w.id for w in self.query(".menu-title.active")}
+        self._rows = rows
+        self.remove_children()
+        for row in rows:
+            self.mount(self._row_widgets(row, active))
 
 
 class MenuDropdown(ModalScreen[str | None]):
