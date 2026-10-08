@@ -66,9 +66,12 @@ class Spike(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(pane.display and pane.region.x > lst.region.x + lst.region.width - 1, "the pane sits right of the list")
             self.assertGreater(pane.region.width, 60)
             self.assertIs(app.focused, pane, "the keys go to the running program")
-            await pilot.press("f2")
+            # 0.2 (Javier): Settings has no bar and no keys of its own; a click on the list is the way back
+            self.assertFalse(app.query_one("#forge-menubar").display, "Settings' own menu bar is hidden")
+            self.assertEqual([str(o.prompt) for o in lst._options][-4:], ["Manual", "License", "About", "Quit"])
+            await pilot.click("#hf-pages")
             await pilot.pause()
-            self.assertIs(app.focused, lst, "F2 brings the keys back to the list")
+            self.assertIs(app.focused, lst, "a click on the list brings the keys back")
             self.assertTrue(pane.running, "the program keeps running meanwhile")
             pane.terminate()
 
