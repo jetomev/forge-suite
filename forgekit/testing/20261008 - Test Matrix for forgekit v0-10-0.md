@@ -6,9 +6,9 @@
 
 | # | Check | Expected | Result |
 |---|---|---|---|
-| 1.1 | `python -W always -m unittest discover -s tests` | 133 pass, 0 warnings | ✅ 2026-10-08 |
+| 1.1 | `python -W always -m unittest discover -s tests` | 134 pass, 0 warnings | ✅ 2026-10-08 |
 | 1.2 | Each new piece switched off once (menu keys, the Q / Ctrl+Q guard, the SIGUSR1 listener, the hint count, the dropdown toggle, the click switch, the dialog guard) | its tests fail | ✅ 2026-10-08 |
-| 1.3 | The six apps' suites on this forgekit | all pass | displayForge 63 · nogForge 52 · grubForge 75 · bitlaForge 81 · alacrittyForge (pending) · hypeForge 8 |
+| 1.3 | The six apps' suites on this forgekit | all pass | ✅ displayForge 63 · nogForge 52 · grubForge 75 (+25 script checks; 3 old library notices, unchanged) · bitlaForge 81 · alacrittyForge 103 · hypeForge 8 |
 | 1.4 | `makepkg` from the release tarball | sha256 + signature pass; `check()` runs the tests | at release |
 
 ## 2 · Javier, inside hypeForge Settings and in each app's own window

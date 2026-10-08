@@ -30,7 +30,7 @@ From Javier's run of every Forge app inside hypeForge Settings ([#49](https://gi
 - Checked: Textual lists Ctrl+I as another name for Tab and Ctrl+M for Enter, but a key matches only what
   was really pressed, so a Ctrl+I shortcut never takes Tab (a test keeps it so). On a plain text console
   Ctrl+I *is* Tab, so there the number is the way.
-- Tests: **133** (was 110). Warnings: **0** (was 0). Each new piece was switched off once to watch its
+- Tests: **134** (was 110). Warnings: **0** (was 0). Each new piece was switched off once to watch its
   tests fail. Two tests from the unreleased 0.10.0-dev were replaced; one of them could never fail.
 
 ### 0.9.0 — October 7, 2026 · the menu bar wraps ([#40](https://github.com/jetomev/forge-suite/issues/40))
