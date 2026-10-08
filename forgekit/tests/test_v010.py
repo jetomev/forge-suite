@@ -324,6 +324,34 @@ class MenuKeysForEveryEntry(unittest.IsolatedAsyncioTestCase):
         after = {k: len(v) for k, v in OwnKeys._merged_bindings.key_to_bindings.items()}
         self.assertEqual(after, before)
 
+    async def test_keys_and_manual_are_pages_too(self):
+        # Javier, 2026-10-08: "yes, Keys and Manual as pages too"
+        pages = [("start", "Start", "# Start\n\nhello"), ("more", "More", "# More\n\nsee [Start](#start)")]
+        app = self.Three()
+        async with app.run_test(size=(80, 20)) as pilot:
+            await pilot.press("ctrl+o")
+            await pilot.pause()
+            app.action_act("shortcuts")
+            await pilot.pause()
+            self.assertEqual(len(app.screen_stack), 1, "Keys: no window")
+            self.assertEqual(app.query_one("#forge-work").current, "sec-forge-keys")
+            self.assertEqual(self.active(app), ["menu-help"])
+            await pilot.press("escape")
+            await pilot.pause()
+            self.assertEqual(app.query_one("#forge-work").current, "sec-one")
+            app.show_manual("Three manual", pages, start="more")
+            await pilot.pause(0.3)
+            self.assertEqual(len(app.screen_stack), 1, "Manual: no window")
+            self.assertEqual(app.query_one("#forge-work").current, "sec-forge-manual")
+            self.assertEqual(app.query_one("#sec-forge-manual").current, "more", "opened at the page asked for")
+            self.assertEqual(self.active(app), ["menu-help"])
+            await pilot.press("escape")
+            await pilot.pause()
+            self.assertEqual(app.query_one("#forge-work").current, "sec-one", "Esc goes back")
+            app.show_manual("Three manual", pages, start="start")     # a second time, another page
+            await pilot.pause(0.3)
+            self.assertEqual(app.query_one("#sec-forge-manual").current, "start")
+
     async def test_hypeforge_count_is_the_same(self):
         app = self.Three(hypeforge=True)
         async with app.run_test(size=(80, 20)) as pilot:

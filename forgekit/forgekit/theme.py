@@ -329,7 +329,7 @@ PasswordField > .password-field--placeholder { color: $forge-muted; }
 
 /* the manual */
 ManualScreen { background: $forge-bg; }
-#forge-manual { height: 1fr; }
+#forge-manual, ManualView { height: 1fr; }
 #forge-manual-title { height: 1; background: $forge-title-bg; color: $forge-title; text-style: bold; }
 #forge-manual-body { height: 1fr; }
 #forge-manual-contents { width: 32; height: 1fr; border: none; border-right: solid $forge-border; background: $forge-bg; padding: 1 1 0 1; }

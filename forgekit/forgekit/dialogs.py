@@ -203,3 +203,17 @@ class LicenseView(_PageView):
     def compose(self) -> ComposeResult:
         yield Static(f"License — {self._name}", classes="forge-page-title")
         yield from license_body(self._notice)
+
+
+class ShortcutsView(_PageView):
+    """The Keys list as a page in the work area (0.10.0, Javier 2026-10-08)."""
+
+    def __init__(self, shortcuts: list[tuple[str, str]], **kw) -> None:
+        super().__init__(**kw)
+        self._shortcuts = shortcuts
+
+    def compose(self) -> ComposeResult:
+        yield Static("Keys", classes="forge-page-title")
+        width = max((len(k) for k, _ in self._shortcuts), default=8)
+        for key, desc in self._shortcuts:
+            yield Static(f"[$forge-accent b]{key:<{width}}[/]  {desc}")

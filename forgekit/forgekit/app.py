@@ -44,7 +44,8 @@ from textual.scrollbar import ScrollBar, ScrollBarRender
 from textual.widgets import ContentSwitcher, Static
 
 from .console import ConsoleGlyphFilter, ConsoleScrollBarRender, console_mode, set_console
-from .dialogs import AboutView, LicenseView, ShortcutsDialog
+from .dialogs import AboutView, LicenseView, ShortcutsView
+from .manual import ManualView
 from .menu import MenuBar, MenuDropdown, accel, assign_accels
 from .theme import FORGE_CSS, css_variables
 from .widgets import ChangesBar, HintBar, hints_for
@@ -283,6 +284,7 @@ class ForgeApp(App[None]):
             # 0.10.0 (Javier, 2026-10-08): About and License are pages here, not windows
             yield AboutView(self.ABOUT or {"name": self.APP_NAME, "version": ""}, id="sec-forge-about")
             yield LicenseView(self.LICENSE_NAME, self.LICENSE_NOTICE, id="sec-forge-license")
+            yield ShortcutsView(self.SHORTCUTS, id="sec-forge-keys")
         # after the work area, so Tab reaches the screen's own fields first and
         # the bar's buttons last (it is docked to the bottom either way)
         if self.SHOW_HINT_BAR or self.SHOW_CHANGES_BAR:
@@ -420,8 +422,24 @@ class ForgeApp(App[None]):
         work.current = f"sec-{page}"
         self._mark_active("help")
         view = self.query_one(f"#sec-{page}")
-        self.call_after_refresh(view.focus)
+        if page != "forge-manual":              # the manual puts the keys in its contents list itself
+            self.call_after_refresh(view.focus)
         self.refresh_hints()
+
+    def show_manual(self, title: str, pages, start: str | None = None) -> None:
+        """The app's manual as a page in the work area (0.10.0), at ``start`` if given; Help lit;
+        Esc goes back to the page you came from."""
+        work = self.query_one("#forge-work", ContentSwitcher)
+        try:
+            view = self.query_one("#sec-forge-manual", ManualView)
+        except Exception:
+            view = None
+        if view is None:
+            work.mount(ManualView(title, pages, start, id="sec-forge-manual"))
+            self.call_after_refresh(self.show_page, "forge-manual")
+            return
+        self.show_page("forge-manual")
+        self.call_after_refresh(view.go_to, start)
 
     def action_back_from_page(self) -> None:
         self._switch_section(self._page_from or self._first_section())
@@ -441,7 +459,7 @@ class ForgeApp(App[None]):
             if self.before_quit():
                 self.exit()
         elif action_id == "shortcuts":
-            self.push_screen(ShortcutsDialog(self.SHORTCUTS))
+            self.show_page("forge-keys")
         elif action_id == "license":
             self.show_page("forge-license")
         elif action_id == "about":

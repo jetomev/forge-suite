@@ -9,7 +9,7 @@ from .app import (
 )
 from .closing import closing_notice, runs_log_row, session_banner
 from .flows import ChangeGroup, ProgressDialog, ReviewDialog, review_markup
-from .manual import ManualScreen, load_pages
+from .manual import ManualScreen, ManualView, load_pages
 from .askpass import PasswordBridge, PasswordDialog
 from .password_field import PasswordField
 from .run import RunWindow
@@ -22,7 +22,7 @@ from .widgets import (
 from .console import GLYPHS, console_mode, console_text, glyph
 from .dialogs import (
     AboutDialog, AboutView, ConfirmDialog, ForgeModal, ForgePanelScreen, LicenseDialog,
-    LicenseView, ShortcutsDialog,
+    LicenseView, ShortcutsDialog, ShortcutsView,
 )
 from .licenses import GPL3_NOTICE
 from .menu import MenuBar, MenuDropdown, accel, assign_accels, underline_label
@@ -38,7 +38,7 @@ __all__ = [
     "ForgeApp", "MENU_HINT", "HYPEFORGE_FLAG", "hypeforge_mode", "add_hypeforge_argument",
     "menu_key_clashes",
     "MenuBar", "MenuDropdown", "accel", "assign_accels", "underline_label",
-    "ConfirmDialog", "AboutView", "LicenseView", "ForgeModal", "ForgePanelScreen", "ShortcutsDialog", "LicenseDialog", "AboutDialog",
+    "ConfirmDialog", "AboutView", "LicenseView", "ShortcutsView", "ManualView", "ForgeModal", "ForgePanelScreen", "ShortcutsDialog", "LicenseDialog", "AboutDialog",
     "FORGE_CSS", "COLORS", "ROLES", "css_variables", "GPL3_NOTICE",
     "console_mode", "console_text", "glyph", "GLYPHS",
     "Notice", "notice_markup", "HintBar", "hints_markup", "ChangesBar", "SettingRow", "NumberPresets", "Toggle", "Choices", "CheckList",
