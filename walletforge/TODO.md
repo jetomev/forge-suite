@@ -11,6 +11,8 @@
 - [ ] Research: KDE's wallet file format (`kdewallet.kwl`, encrypted with the same PBKDF2 hash) so the entries can be copied over at the switch
 - [x] The stopgap meanwhile (#41): hypeForge sends the PAM handshake at login (`exec /usr/lib/pam_kwallet_init`) — wallet opened with the login password, no window — **proven after a reboot 21:26 (#41 closed)**
 
+- [ ] **The password manager screen (Javier, 2026-10-07, from the Settings spike: "like the password administrator of Google Chrome")**: walletForge's own page in hypeForge Settings — saved logins by app, view / delete / lock, never showing a secret in plain text unless asked and unlocked. Until then the Settings "Passwords" page shows sudoForge's status
+
 ## Phase 1 · Build
 - [ ] The daemon on the bus, the store on disk, tests through the real interface
 - [ ] Unlock at login through PAM; sudoForge's box as the fallback

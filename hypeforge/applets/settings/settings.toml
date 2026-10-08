@@ -6,7 +6,7 @@
 [[page]]
 name = "Screens"
 summary = "arrange, resolution, refresh rate, brightness"
-command = "displayforge"
+command = "python3 ~/Programs/forge-suite/displayforge/main.py"   # the AUR package is not installed on the test desktop; the repo copy is
 
 [[page]]
 name = "Passwords"

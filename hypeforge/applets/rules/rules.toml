@@ -97,3 +97,10 @@ app_id = '^hypeforge-help$'
 size = "60 ppt 80 ppt"
 border = 3
 focus = true
+
+[[float]]
+name = "hypeForge Settings"          # Javier, 2026-10-07: floating and resizable, most of the screen
+app_id = '^hypeforge-settings$'
+size = "85 ppt 85 ppt"
+border = 3
+focus = true

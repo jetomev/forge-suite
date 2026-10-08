@@ -81,10 +81,8 @@ def main():
 
         @staticmethod
         def _row(p) -> Text:
-            t = Text(p["name"], style="bold")
-            if p.get("summary"):
-                t.append(f"\n{p['summary']}", style="dim")
-            return t
+            # names only (Javier, 2026-10-07: "people will click on them and find out")
+            return Text(p["name"], style="bold")
 
         def on_mount(self) -> None:
             super().on_mount()
@@ -112,7 +110,8 @@ def main():
             pane.display = True
             cmd = ["sh", "-c", f"exec {os.path.expanduser(p['command'])}"] if any(ch in p["command"] for ch in ";|&") \
                 else [os.path.expanduser(w) for w in shlex.split(p["command"])]
-            self.call_after_refresh(pane.start, cmd)
+            env = dict(os.environ, HYPEFORGE_SETTINGS="1")   # the app knows it runs inside Settings (hides Quit, forgekit)
+            self.call_after_refresh(pane.start, cmd, env)
             self.call_after_refresh(pane.focus)
 
         def on_terminal_pane_exited(self, e: TerminalPane.Exited) -> None:
