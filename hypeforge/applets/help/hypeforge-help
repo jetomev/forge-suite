@@ -46,14 +46,6 @@ def pages():
     return out
 
 
-def accels():
-    """{page id: underlined letter} for tabs whose first letter is taken (pages.toml `acc`, 0.2.0):
-    every underlined letter is a Ctrl shortcut, so no two tabs may share one."""
-    with open(GUIDE / "pages.toml", "rb") as f:
-        listed = tomllib.load(f).get("page", [])
-    return {f"page-{p['tab'].lower()}": p["acc"] for p in listed if p.get("acc")}
-
-
 def inline(text):
     """**bold**, *italic*, `code` -> Rich markup (the rest escaped)."""
     import re
@@ -117,7 +109,6 @@ def run_app():
     from rich.markup import escape
 
     PAGES = pages()
-    ACC = accels()
 
     class HelpApp(ForgeApp):
         APP_NAME = f"hypeForge Help & Keys {VERSION}"
@@ -145,9 +136,9 @@ def run_app():
         .hf-odd { background: $forge-bg; }
         """
         # no Help menu inside the help window (Javier, 10-05): the pages, then Quit
-        # 0.2.0 (Javier, 2026-10-08, F-48): forgekit 0.10.0 makes Ctrl + each underlined letter and 1-N
-        MENU = [{"id": pid, "title": title, "kind": "section", **({"acc": ACC[pid]} if pid in ACC else {})}
-                for pid, title, _ in PAGES] + [
+        # 0.2.0 (Javier, 2026-10-08, F-48): forgekit 0.10.0 makes Ctrl + each underlined letter and 1-N;
+        # the letter is the first of the name, or the next free one (Windows: I, About: B)
+        MENU = [{"id": pid, "title": title, "kind": "section"} for pid, title, _ in PAGES] + [
             {"id": "quit", "title": "Quit", "kind": "action", "action": "quit"},
         ]
         SHORTCUTS = [

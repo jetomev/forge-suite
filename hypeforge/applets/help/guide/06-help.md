@@ -13,8 +13,9 @@ applet. The hypeForge Settings will show the same pages.
 ## Moving around
 
 - **← →** the previous / next tab; **1 to 7** go straight to a tab, and so does **Ctrl + the underlined
-  letter** in its name (Ctrl+K Keys, Ctrl+S Start, Ctrl+W Workspaces, Ctrl+N Windows, Ctrl+A Apps,
+  letter** in its name (Ctrl+K Keys, Ctrl+S Start, Ctrl+W Workspaces, Ctrl+I Windows, Ctrl+A Apps,
   Ctrl+T Tools, Ctrl+B About).
+- Help & Keys has no Help menu of its own; **About** is the last tab.
 - **↑ ↓** or **Page Up / Page Down** to read; **q**, **Esc** or **Ctrl+Q** to close.
 
 ## Inside hypeForge Settings

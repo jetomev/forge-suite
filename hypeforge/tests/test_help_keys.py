@@ -38,7 +38,8 @@ class HelpKeys(unittest.IsolatedAsyncioTestCase):
         from forgekit import accel
         HelpApp = load_app_class()
         app = HelpApp()
-        tabs = [m for m in HelpApp.MENU if m["id"] != "quit"]
+        tabs = [m for m in app.MENU if m["id"] != "quit"]          # the app's copy carries the letters
+        self.assertEqual("".join(accel(m) for m in tabs), "kswiatb", "Javier's rule: first letter, else the next free")
         async with app.run_test(size=(120, 36)) as pilot:
             await pilot.pause()
             for m in reversed(tabs):

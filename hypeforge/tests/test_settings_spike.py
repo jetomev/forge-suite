@@ -190,6 +190,27 @@ class QuitAsksEachApp(unittest.IsolatedAsyncioTestCase):
                     break
             self.assertEqual(exits, [1], "Settings closes once the last app has answered")
 
+    async def test_about_and_license_open_on_the_right(self):
+        SettingsApp, m = load_app_class()
+        app = SettingsApp()
+        async with app.run_test(size=(120, 36)) as pilot:
+            await pilot.pause()
+            app.open_page(0)
+            await pilot.pause(0.5)
+            for act, wid in (("about", "#hf-about"), ("license", "#hf-license")):
+                app.extra(act)
+                await pilot.pause()
+                self.assertEqual(len(app.screen_stack), 1, f"{act}: no window")
+                self.assertTrue(app.query_one(wid).display, act)
+                self.assertTrue(app.query_one("#hf-pages").display, "the list stays")
+                self.assertFalse(app.query_one("#hf-pane-0").display)
+                self.assertTrue(app.query_one("#hf-pane-0").running, "the app keeps running")
+            app.open_page(0)
+            await pilot.pause()
+            self.assertFalse(app.query_one("#hf-license").display, "an app's page hides License again")
+            for pane in app.query("TerminalPane"):
+                pane.terminate()
+
     async def test_settings_has_no_menu_keys_of_its_own(self):
         SettingsApp, m = load_app_class()
         app = SettingsApp()

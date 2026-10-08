@@ -44,7 +44,7 @@ def main():
     from textual.widgets.option_list import Option
     from rich.text import Text
 
-    from forgekit import ForgeApp, FORGE_CSS, GPL3_NOTICE
+    from forgekit import AboutView, ForgeApp, FORGE_CSS, GPL3_NOTICE, LicenseView
     from forgekit.terminal import TerminalPane
 
     PAGES = pages()
@@ -94,6 +94,9 @@ def main():
                     # one pane per page (0.3.0, Javier: an app you leave stays open and comes back as it was)
                     for i in range(len(PAGES)):
                         yield TerminalPane(id=f"hf-pane-{i}", classes="hf-pane")
+                    # About and License open on the right, like the apps (Javier, 2026-10-08: not in a window)
+                    yield AboutView(self.ABOUT, id="hf-about", classes="hf-page")
+                    yield LicenseView(self.LICENSE_NAME, self.LICENSE_NOTICE, id="hf-license", classes="hf-page")
                     with Vertical(id="hf-manual"):
                         yield Static("[b]hypeForge Settings[/b] — the control centre of the KognogOS desktop.")
                         yield Static("Every setting is its own Forge app. This window holds them: pick one on the "
@@ -116,6 +119,8 @@ def main():
                 pane.display = False
             self.query_one("#hf-running").display = False
             self.query_one("#hf-manual").display = False
+            for page in self.query(".hf-page"):
+                page.display = False
             self.query_one("#hf-pages", OptionList).focus()
             want = (sys.argv[1] if len(sys.argv) > 1 else "").lower()
             for i, p in enumerate(PAGES):
@@ -135,16 +140,21 @@ def main():
             self._quitting = False                # any choice on the list ends a quit in progress
             if act == "quit":
                 self.quit_all()
-            elif act == "about":
-                self.action_act("about")
-            elif act == "license":
-                self.action_act("license")
-            elif act == "manual":
-                for pane in self.query(".hf-pane"):
-                    pane.display = False
-                self.query_one("#hf-running").display = False
-                self.query_one("#hf-empty").display = False
-                self.query_one("#hf-manual").display = True
+            elif act in ("about", "license", "manual"):
+                self.show_right(f"#hf-{act}")
+
+        def show_right(self, which: str) -> None:
+            """Manual, About or License on the right, where the apps run; the apps keep running."""
+            for w in self.query(".hf-pane, .hf-page"):
+                w.display = False
+            self.query_one("#hf-running").display = False
+            self.query_one("#hf-empty").display = False
+            self.query_one("#hf-manual").display = which == "#hf-manual"
+            if which != "#hf-manual":
+                self.query_one(which).display = True
+
+        def action_back_from_page(self) -> None:      # Esc on About / License: back to the list
+            self.query_one("#hf-pages", OptionList).focus()
 
         # ── Quit (0.4.0, Javier 2026-10-08: "ask each app, its own way") ─────────────────────────
         def _forge_panes(self) -> list[tuple[int, "TerminalPane"]]:
@@ -193,6 +203,8 @@ def main():
             pane = self.query_one(f"#hf-pane-{i}", TerminalPane)
             self.query_one("#hf-empty").display = False
             self.query_one("#hf-manual").display = False
+            for page in self.query(".hf-page"):
+                page.display = False
             self.query_one("#hf-running", Static).update(f"{p['name']}  ·  click the list for another page; this one keeps running")
             self.query_one("#hf-running").display = True
             if not pane.running:
