@@ -15,6 +15,6 @@ displayForge changes how your **screens** are set up: where each one sits, its r
 - **1 – 5** go to the screens: Screens, Settings, Arrange, Brightness, Identify (or the underlined letter).
 - **Tab** goes to the next field or button, **Shift+Tab** back. **Enter** chooses, **Space** flips a switch.
 - **1 to 6** go through the menu in order (6 is Help), and so does **Ctrl + the underlined letter**: Ctrl+S Screens, Ctrl+E Settings, Ctrl+A Arrange, Ctrl+B Brightness, Ctrl+I Identify, Ctrl+H Help.
-- **6** or **Ctrl+H** opens Help; pressed again, it closes. **About** and **License** show here in the work area; **Esc** goes back.
+- **6** or **Ctrl+H** opens Help; pressed again, it closes. **About**, **License**, **Keys** and this manual show here in the work area; **Esc** goes back.
 - **?** lists every key. **M** opens this manual. **Q** quits. If something isn't applied or saved yet, it asks first: **Yes** applies it (try, then save), **No** quits without it, **Esc** stays.
 - **Inside hypeForge Settings** there is no Quit: Settings starts displayForge with `--hypeforge`, and closing Settings asks the same question.

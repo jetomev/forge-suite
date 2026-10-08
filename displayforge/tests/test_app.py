@@ -213,14 +213,20 @@ class App(unittest.TestCase):
         self.assertEqual(B.load(self.tmp / "screens.toml")["names"], {"DP-3": "Main"})
 
     def test_the_manual_opens(self):
-        # F-3: Help had no manual
-        from forgekit import ManualScreen
+        # F-3: Help had no manual. 1.1.0 (Javier): it opens as a page, not a window; Esc goes back
+        seen = []
 
         async def steps(app, pilot):
+            app.action_go("arrange")
+            await pilot.pause(0.2)
             await pilot.press("m")
             await pilot.pause(0.4)
-            self.assertIsInstance(app.screen, ManualScreen)
+            seen.append((len(app.screen_stack), app.query_one("#forge-work").current, self.active(app)))
+            await pilot.press("escape")
+            await pilot.pause(0.3)
+            seen.append(app.query_one("#forge-work").current)
         self.run_app(steps)
+        self.assertEqual(seen, [(1, "sec-forge-manual", ["menu-help"]), "sec-arrange"])
 
 
     # -- 1.1.0 (Javier, 2026-10-08) ------------------------------------------------------------

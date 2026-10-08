@@ -18,7 +18,7 @@ from textual.widgets import Button, OptionList, Select, Static
 from textual.widgets.option_list import Option
 
 from forgekit import (
-    FORGE_CSS, GPL3_NOTICE, MENU_HINT, ChangeGroup, Choices, ForgeApp, ForgeModal, ManualScreen, Notice, NumberPresets,
+    FORGE_CSS, GPL3_NOTICE, MENU_HINT, ChangeGroup, Choices, ForgeApp, ForgeModal, Notice, NumberPresets,
     ReviewDialog, SettingRow, Toggle, load_pages, program, start_check, sway_session,
 )
 
@@ -693,7 +693,7 @@ class DisplayForgeApp(ForgeApp):
             if not pages:
                 self.notify("The manual isn't installed.", severity="warning")
                 return
-            self.push_screen(ManualScreen("displayForge manual", pages))
+            self.show_manual("displayForge manual", pages)          # a page, not a window (1.1.0, Javier)
 
     def on_section_shown(self, section_id: str) -> None:
         self.refresh_bar(section_id)

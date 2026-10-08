@@ -20,5 +20,5 @@
 | 14 | Tab and Enter still work | Settings page: Tab moves between fields, Enter chooses (Ctrl+I is not Tab) | Javier | |
 | 15 | Help by number, twice | 6 opens Help, 6 again closes it | Javier | |
 | 16 | The open menu is lit | while Help's menu is open, its title has the highlight | Javier | |
-| 17 | About and License as pages | Help → About, Help → License: they show in the work area (no window), Help lit; Esc goes back to the page you were on | Javier | |
+| 17 | About, License, Keys and the manual as pages | Help → About, License, Keys, Manual (and M, ?): they show in the work area (no window), Help lit; Esc goes back to the page you were on | Javier | |
 | 18 | Automatic tests | `PYTHONPATH=../forgekit python -W always -m unittest discover -s tests`: 63 pass, 0 warnings | Claude | ✅ 2026-10-08 |
