@@ -1,4 +1,8 @@
 #!/bin/sh
-# Forge Suite · hypeForge: the key chart must match Sway's real keys (D-54). Installed with:
+# Forge Suite · hypeForge commit checks. Installed with:
 #   git config core.hooksPath hypeforge/scripts/hooks
-exec python3 "$(git rev-parse --show-toplevel)/hypeforge/scripts/check-keys.py"
+# 1. the key chart must match Sway's real keys (D-54)
+# 2. no applet uses a name it never defined or imported (F-47, 2026-10-07)
+top="$(git rev-parse --show-toplevel)"
+python3 "$top/hypeforge/scripts/check-keys.py" || exit 1
+python3 "$top/hypeforge/scripts/check-names.py" || exit 1

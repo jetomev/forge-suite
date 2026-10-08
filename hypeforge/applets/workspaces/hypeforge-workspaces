@@ -24,6 +24,7 @@ Only Python's standard library: it talks to Sway over Sway's own socket (the i3 
 
 import json
 import os
+import re
 import shlex
 import signal
 import sys
