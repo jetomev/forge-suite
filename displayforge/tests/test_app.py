@@ -54,8 +54,8 @@ class App(unittest.TestCase):
         p = self.tmp / name
         return p.read_text().splitlines() if p.exists() else []
 
-    def run_app(self, steps):
-        app = DisplayForgeApp(self.session, swaymsg=self.sway, ddcutil=self.ddc)
+    def run_app(self, steps, **kw):
+        app = DisplayForgeApp(self.session, swaymsg=self.sway, ddcutil=self.ddc, **kw)
 
         async def go():
             async with app.run_test(size=(100, 34)) as pilot:
@@ -96,6 +96,8 @@ class App(unittest.TestCase):
         async def steps(app, pilot):
             se = self.session
             se.change("DP-1", scale=0.9)
+            app.action_go("settings")                # 1.1.0: Try works on the pages that change things
+            await pilot.pause(0.2)
             await pilot.press("f9")
             await pilot.pause(0.6)
             await pilot.press("enter")
@@ -113,6 +115,8 @@ class App(unittest.TestCase):
 
         async def steps(app, pilot):
             self.session.change("DP-1", scale=0.9)
+            app.action_go("settings")                # 1.1.0: Try works on the pages that change things
+            await pilot.pause(0.2)
             await pilot.press("f9")
             await pilot.pause(0.6)
             await pilot.press("enter")
@@ -131,6 +135,8 @@ class App(unittest.TestCase):
             se = self.session
             se.change("DP-1", scale=0.9)
             app.refresh_state()
+            app.action_go("settings")                # 1.1.0: Try works on the pages that change things
+            await pilot.pause(0.2)
             await pilot.press("f9")
             await pilot.pause(0.6)
             await pilot.press("escape")                      # Go back now
@@ -144,6 +150,8 @@ class App(unittest.TestCase):
         async def steps(app, pilot):
             se = self.session
             se.change("DP-1", x=0)                           # on top of DP-2
+            app.action_go("settings")                # 1.1.0: Try works on the pages that change things
+            await pilot.pause(0.2)
             await pilot.press("f9")
             await pilot.pause(0.4)
         self.run_app(steps)
@@ -213,6 +221,179 @@ class App(unittest.TestCase):
             await pilot.pause(0.4)
             self.assertIsInstance(app.screen, ManualScreen)
         self.run_app(steps)
+
+
+    # -- 1.1.0 (Javier, 2026-10-08) ------------------------------------------------------------
+    def active(self, app):
+        return [w.id for w in app.query(".menu-title.active")]
+
+    def hints(self, app):
+        from forgekit import HintBar
+        return str(app.query_one(HintBar).render())
+
+    def test_every_underlined_letter_is_a_shortcut(self):
+        from forgekit import menu_key_clashes
+        self.assertEqual(menu_key_clashes(DisplayForgeApp.MENU), [])
+        seen = []
+
+        async def steps(app, pilot):
+            for key, page in (("ctrl+e", "settings"), ("ctrl+a", "arrange"), ("ctrl+b", "brightness"),
+                              ("ctrl+i", "identify"), ("ctrl+s", "screens")):
+                await pilot.press(key)
+                await pilot.pause(0.2)
+                seen.append((key, self.active(app)))
+            await pilot.press("ctrl+h")
+            await pilot.pause(0.2)
+            seen.append(("ctrl+h", getattr(app.screen, "menu_id", None)))
+        self.run_app(steps)
+        self.assertEqual(seen, [("ctrl+e", ["menu-settings"]), ("ctrl+a", ["menu-arrange"]),
+                                ("ctrl+b", ["menu-brightness"]), ("ctrl+i", ["menu-identify"]),
+                                ("ctrl+s", ["menu-screens"]), ("ctrl+h", "help")])
+
+    def test_numbers_one_to_six_help_included(self):
+        seen = []
+
+        async def steps(app, pilot):
+            for n in "12345":
+                app.action_go("screens")
+                app.set_focus(None)
+                await pilot.press(n)
+                await pilot.pause(0.2)
+                seen.append(self.active(app))
+            app.action_go("screens")
+            app.set_focus(None)
+            await pilot.press("6")
+            await pilot.pause(0.2)
+            seen.append(getattr(app.screen, "menu_id", None))
+        self.run_app(steps)
+        self.assertEqual(seen, [["menu-screens"], ["menu-settings"], ["menu-arrange"], ["menu-brightness"],
+                                ["menu-identify"], "help"])
+
+    def test_try_and_save_only_where_things_change(self):
+        seen = {}
+
+        async def steps(app, pilot):
+            for page in ("screens", "settings", "arrange", "brightness", "identify"):
+                app.action_go(page)
+                await pilot.pause(0.2)
+                seen[page] = self.hints(app)
+        self.run_app(steps)
+        for page in ("settings", "arrange"):
+            self.assertIn("F9", seen[page], page)
+            self.assertIn("F10", seen[page], page)
+        for page in ("screens", "brightness", "identify"):
+            self.assertNotIn("F9", seen[page], page)
+            self.assertNotIn("F10", seen[page], page)
+        for text in seen.values():
+            self.assertIn("1-6", text)
+            self.assertIn("menu", text)
+
+    def test_elsewhere_f9_only_reminds_and_the_bar_points_the_way(self):
+        seen = []
+
+        async def steps(app, pilot):
+            self.session.change("DP-1", scale=0.9)
+            app.action_go("brightness")
+            await pilot.pause(0.2)
+            await pilot.press("f9")
+            await pilot.pause(0.4)
+            seen.append(isinstance(app.screen, type(app.screen_stack[0])))      # no countdown window
+            bar = app.changes_bar
+            seen.append(bar.display)
+            seen.append(len(bar.query("Button")))
+            seen.extend(n.message for n in app._notifications)
+        self.run_app(steps)
+        self.assertEqual(self.lines("sway.log"), [], "nothing was tried from Brightness")
+        self.assertEqual(seen[:3], [True, True, 0], "a reminder in the bar, with no buttons")
+        self.assertTrue(any("Settings (2) or Arrange (3)" in m for m in seen[3:]))
+
+    def test_quit_asks_no_quits_without_applying(self):
+        exits = []
+
+        async def steps(app, pilot):
+            app.exit = lambda *a, **k: exits.append(1)
+            self.session.change("DP-1", scale=0.9)
+            await pilot.press("q")
+            await pilot.pause(0.3)
+            self.assertEqual(type(app.screen).__name__, "ApplyDialog")
+            await pilot.press("escape")
+            await pilot.pause(0.2)
+            self.assertEqual(exits, [], "Esc stays")
+            await pilot.press("q")
+            await pilot.pause(0.3)
+            await pilot.press("n")
+            await pilot.pause(0.3)
+        self.run_app(steps)
+        self.assertEqual(exits, [1])
+        self.assertEqual(self.lines("sway.log"), [], "No changed nothing")
+
+    def test_quit_yes_tries_then_saves_then_quits(self):
+        exits = []
+
+        async def steps(app, pilot):
+            app.exit = lambda *a, **k: exits.append(1)
+            self.session.change("DP-1", scale=0.9)
+            await pilot.press("q")
+            await pilot.pause(0.3)
+            await pilot.press("y")
+            await pilot.pause(0.6)
+            self.assertEqual(type(app.screen).__name__, "KeepDialog")
+            await pilot.press("enter")                       # keep it
+            await pilot.pause(0.6)
+            await pilot.click("#save")                       # the save review
+            await pilot.pause(0.6)
+        self.run_app(steps)
+        self.assertEqual(self.lines("sway.log"), ["output DP-1 scale 0.9"])
+        self.assertTrue(V.OUTPUTS.exists(), "saved for the next login")
+        self.assertEqual(exits, [1])
+
+    def test_kept_but_not_saved_is_asked_too(self):
+        exits = []
+
+        async def steps(app, pilot):
+            app.exit = lambda *a, **k: exits.append(1)
+            self.session.change("DP-1", scale=0.9)
+            app.action_go("settings")
+            await pilot.pause(0.2)
+            await pilot.press("f9")
+            await pilot.pause(0.6)
+            await pilot.press("enter")
+            await pilot.pause(0.5)
+            await pilot.press("q")
+            await pilot.pause(0.3)
+            self.assertEqual(type(app.screen).__name__, "ApplyDialog")
+        self.run_app(steps)
+        self.assertEqual(exits, [])
+
+    def test_the_save_button_in_the_bar_works(self):
+        seen = []
+
+        async def steps(app, pilot):
+            self.session.change("DP-1", scale=0.9)
+            app.action_go("settings")
+            await pilot.pause(0.2)
+            await pilot.press("f9")
+            await pilot.pause(0.6)
+            await pilot.press("enter")
+            await pilot.pause(0.5)
+            await pilot.click("#df-save")
+            await pilot.pause(0.5)
+            seen.append(type(app.screen).__name__)
+        self.run_app(steps)
+        self.assertEqual(seen, ["ReviewDialog"])
+
+    def test_inside_hypeforge_settings_no_quit(self):
+        exits = []
+
+        async def steps(app, pilot):
+            app.exit = lambda *a, **k: exits.append(1)
+            self.assertEqual(len(app.query("#menu-quit")), 0)
+            for key in ("q", "ctrl+q"):
+                await pilot.press(key)
+                await pilot.pause(0.2)
+            app.host_quit()                                 # Settings asks: nothing unsaved, so it closes
+        self.run_app(steps, hypeforge=True)
+        self.assertEqual(exits, [1])
 
 
 class NoNameClashes(unittest.TestCase):

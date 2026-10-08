@@ -1,6 +1,6 @@
 # displayForge — the list
 
-**1.0.1 released 2026-10-06** (Sway only, checked at launch; D-5), after 1.0.0 the same morning (D-4). Next: 1.0.x tests. A Forge Suite app (terminal, forgekit) for screen settings on Sway: arrange, resolution, refresh rate, scale, rotation, on / off, main screen, brightness. Section of the Forge Suite (D-60). Updated after every step.
+**1.1.0 built 2026-10-08, waiting for Javier's test** (his run inside hypeForge Settings: keys, Try/Save where they belong, a real question before quitting); **1.0.1 released 2026-10-06** (Sway only, D-5), after 1.0.0 the same morning (D-4). Next: Javier runs the 1.1.0 matrix, then the release; 1.1.x tests. A Forge Suite app (terminal, forgekit) for screen settings on Sway: arrange, resolution, refresh rate, scale, rotation, on / off, main screen, brightness. Section of the Forge Suite (D-60). Updated after every step.
 
 ## Phase 0 · Research and design
 - [x] Name: **displayForge** (Javier, 2026-10-05)
@@ -19,7 +19,13 @@
 - [x] **F-3 (Javier's run): no manual in Help** — 7 pages (start, Screens, Settings, Arrange, Brightness, Identify, where things are kept); Help → Manual and the M key; test that it opens. 48 tests
 - [x] **1.0.0 released** (2026-10-06): README with pictures (`scripts/make-screenshots.py`), CHANGELOG, ROADMAP, D-3 + D-4, testing/ matrix + results, tag `displayforge-v1.0.0`, GitHub Release, issues for F-1..F-3. **50 tests, 0 warnings**
 
-## 1.0.x · the tests not run yet
+## 1.1.0 · Javier's run inside hypeForge Settings (2026-10-08)
+- [x] **F-4 (#50):** the underlined letters were not shortcuts → forgekit 0.10.0 makes Ctrl + each letter and 1-6 (Help included) from the menu; displayForge's own number keys removed; "1-6 menu" in the bar
+- [x] **F-5 (#51):** Try / Save only on Settings and Arrange (per-page bottom row; elsewhere F9 / F10 and the bar only remind); **"Apply your changes before quitting?"** (Yes = try with the countdown, then save; No = quit; Esc = stay), also for kept-but-not-saved; **found on the way: the bar's Save button had no handler since 1.0.0**, fixed
+- [x] `--hypeforge` (forgekit reads it), button labels as "Try It (F9)", version 1.1.0 in README / CHANGELOG / ROADMAP / manual / CLAUDE.md; `testing/20261008 - Test Matrix … v1-1-0.md`. **63 tests (was 54), 0 warnings**; each new test seen failing with its fix taken out
+- [ ] Javier runs the matrix → tag `displayforge-v1.1.0`, GitHub Release; close #50 #51
+
+## 1.1.x · the tests not run yet
 - [x] **Sway only, said and checked — built 2026-10-06** (Javier; https://github.com/jetomev/forge-suite/issues/32) on forgekit 0.7.0's start-up check (#33): `needs()` = a Sway session (required) + ddcutil (optional: Brightness and Identify); `main()` shows the shared screen and returns 2 when it can't start. Said everywhere: README, manual page 1, About, launcher entry, suite README, KognogOS README; kognogos.org at the release. **54 tests (was 50), 0 warnings.** Version 1.0.1 on main
 - [x] **1.0.1 released 2026-10-06 evening**: Javier's run of the check screen (forgekit's example, 17:57) PASS; `python-forgekit` 0.7.0 installed from the AUR (18:37); tag `displayforge-v1.0.1`, GitHub Release, suite README, KognogOS README, kognogos.org; the launcher entry back on the installed forgekit. Still to run by Javier: the launcher from a KDE login (expect the screen) — not tonight, he did not want to close everything
 - [x] **Javier, 2026-10-06 evening, on the real screens:** Arrange "worked as I expected, no issues"; Identify "worked wonders" (the F-2 re-run: the screens come back) — the last piece of his own 1.0 testing

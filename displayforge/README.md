@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version 1.0.1" src="https://img.shields.io/badge/version-1.0.1-a6e3a1?style=flat-square&labelColor=313244">
+  <img alt="Version 1.1.0" src="https://img.shields.io/badge/version-1.1.0-a6e3a1?style=flat-square&labelColor=313244">
   <img alt="Sway" src="https://img.shields.io/badge/for-Sway-89b4fa?style=flat-square&labelColor=313244">
   <img alt="Terminal app" src="https://img.shields.io/badge/app-terminal-b4befe?style=flat-square&labelColor=313244">
   <img alt="Tests: 54" src="https://img.shields.io/badge/tests-54-94e2d5?style=flat-square&labelColor=313244">
@@ -34,8 +34,10 @@
 ## The three steps for a change
 
 1. **Change** something. Nothing happens on your screens yet.
-2. **Try it (F9).** The change appears, and a window asks **"Keep these settings?"** with a 12-second countdown. Do nothing and it **goes back by itself** — and that countdown runs outside displayForge, so it happens even if displayForge closes.
+2. **Try It (F9)**, on Settings or Arrange, the two pages that change something. The change appears, and a window asks **"Keep these settings?"** with a 12-second countdown. Do nothing and it **goes back by itself** — and that countdown runs outside displayForge, so it happens even if displayForge closes.
 3. **Save (F10)** to keep it after your next login. A review of every change first, and a backup of the old file.
+
+On the other pages, the bar at the bottom reminds you that changes are waiting and where to finish them. Quit with anything not finished and displayForge asks **"Apply your changes before quitting?"**: **Yes** tries them (with the countdown) and saves them, **No** quits without them, **Esc** stays. *(1.1.0)*
 
 <p align="center"><img src="docs/images/keep-or-go-back.png" alt="The Keep these settings window, going back in 12 seconds unless kept" width="90%"></p>
 
@@ -53,7 +55,7 @@
 displayForge is not packaged yet; it runs from this repository.
 
 - **Sway only.** displayForge sets up screens by talking to Sway, and only Sway. It checks at launch *(1.0.1)*: on any other desktop (KDE, GNOME, Hyprland…) or on a text console it shows one plain screen — what it needs, what it found instead, why, what to use — and closes. Nothing is touched.
-- **Needs:** Sway, Python 3.11 or newer, [forgekit](../forgekit/) 0.7.0 or newer (`python-forgekit` in the AUR) and `ddcutil` (for brightness; your screens need **DDC/CI** switched on in their own menu). Without `ddcutil` the launch screen says so and lets you continue; Brightness and Identify are the two views that need it.
+- **Needs:** Sway, Python 3.11 or newer, [forgekit](../forgekit/) 0.10.0 or newer (`python-forgekit` in the AUR) and `ddcutil` (for brightness; your screens need **DDC/CI** switched on in their own menu). Without `ddcutil` the launch screen says so and lets you continue; Brightness and Identify are the two views that need it.
 - **Run:** `python3 displayforge/main.py` from the Forge Suite folder. In hypeForge it's in the launcher (Win + Space → "display"), opening in its own floating window.
 - **Sway must read the saved file:** hypeForge's Sway settings include the line `include ~/.config/sway/outputs` after its own screen lines. displayForge warns you if that line is missing.
 
@@ -61,12 +63,17 @@ displayForge is not packaged yet; it runs from this repository.
 
 | Keys | What happens |
 |---|---|
-| **1 – 5** | The views (or the underlined letter in the menu) |
+| **1 – 6** | The menu, in order: 1 Screens … 5 Identify, 6 Help *(1.1.0: Help has a number too)* |
+| **Ctrl + the underlined letter** | The same: **Ctrl+S** Screens, **Ctrl+E** Settings, **Ctrl+A** Arrange, **Ctrl+B** Brightness, **Ctrl+I** Identify, **Ctrl+H** Help *(1.1.0)* |
 | **← →** | Pick a screen (Screens, Settings) |
 | **Tab** + **arrows** | Arrange: pick a screen, then move it |
-| **F9** · **F10** | Try the changes · save them |
+| **F9** · **F10** | Try the changes · save them (on Settings and Arrange) |
 | **M** · **?** | The manual · every key |
-| **Q** | Quit (asks first if something isn't saved) |
+| **Q** | Quit (asks to apply anything not finished) |
+
+**Inside hypeForge Settings** *(1.1.0)*: Settings starts displayForge with `--hypeforge` added to its command (`--hypeForge` works too). That option is for Settings only, not for people. Started that way, displayForge has **no Quit**: Q and Ctrl+Q do nothing, because the Settings window is the one that closes. When you quit Settings, displayForge asks the same "Apply your changes?" question if anything isn't finished.
+
+On a plain text console, **Ctrl+I** arrives as Tab (an old terminal can't tell them apart), so Identify is reached with **5** there.
 
 ## Where things are kept
 
@@ -78,7 +85,7 @@ displayForge is not packaged yet; it runs from this repository.
 
 ---
 
-## Known limits in 1.0.1
+## Known limits in 1.1.0
 
 Said plainly, so nobody finds out the hard way:
 - **Tested on one setup:** three identical 1440p screens on NVIDIA. One- and two-screen setups, the 80 / 90 % sizes on real apps and a plain text console are **not tested yet**; they come next, and anything they find becomes a 1.0.x fix.
@@ -91,10 +98,10 @@ Said plainly, so nobody finds out the hard way:
 
 | Version | What | Status |
 |---|---|---|
-| **1.0.x** | The tests above: 1 and 2 screens, 80 / 90 %, text console; Javier's Arrange run | ⬜ next |
+| **1.1.x** | The tests above: 1 and 2 screens, 80 / 90 %, text console; Javier's Arrange run | ⬜ next |
+| **1.2** | Profiles · an AUR package | ⬜ |
+| **1.1.0** | Javier's run inside hypeForge Settings: Ctrl + every underlined letter, Help numbered, "1-6 menu"; Try and Save only where things change; a real "Apply your changes?" before quitting; the Save button in the bar works; `--hypeforge`; button labels as "Try It (F9)" | 🧪 built, Javier's test next |
 | **1.0.1** | Sway only, said everywhere and checked at launch (on forgekit 0.7.0's start-up check) | ✅ 2026-10-06 |
-| **1.1** | Profiles · a page in hypeForge Settings · an AUR package | ⬜ |
-| **1.0.0** | Screens, Settings, Arrange, Brightness, Identify, names; try with a countdown, save with a backup; the manual | ✅ 2026-10-06 |
 
 Full detail: [docs/ROADMAP.md](docs/ROADMAP.md) · History: [docs/CHANGELOG.md](docs/CHANGELOG.md)
 

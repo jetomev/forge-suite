@@ -2,6 +2,18 @@
 
 *Newest first.*
 
+## 1.1.0 — 2026-10-08 · keys, Try and Save where they belong, and a real question before quitting
+
+From Javier's run of displayForge inside hypeForge Settings ([F-4 #50](https://github.com/jetomev/forge-suite/issues/50), [F-5 #51](https://github.com/jetomev/forge-suite/issues/51)).
+- **Every underlined letter is a shortcut:** Ctrl+S Screens, Ctrl+E Settings, Ctrl+A Arrange, Ctrl+B Brightness, Ctrl+I Identify, Ctrl+H Help. **Help has a number (6)**, and the bottom bar says **"1-6 menu"** instead of "1-5 screens". All of it comes from forgekit 0.10.0, which makes the keys from the menu itself; displayForge's own number keys are gone.
+- **Try (F9) and Save (F10) belong to Settings and Arrange**, the pages that change something. Elsewhere the keys only remind you, and so does the bar at the bottom: "2 changes not tried yet · finish them in Settings (2) or Arrange (3)".
+- **A real question before quitting:** "Apply your changes before quitting?" **Yes** tries them with the countdown, then saves; **No** quits without them; **Esc** stays. It also asks about changes that were kept on screen but **not saved**, which quitting used to lose silently.
+- **The Save button in the bar works.** It never had anything behind it: only F10 saved.
+- **`--hypeforge`** (or `--hypeForge`): how hypeForge Settings starts displayForge. No Quit, and Q and Ctrl+Q do nothing; Settings asks the question above when it closes. Meant for Settings only; written down here, in the README and in the manual.
+- **Button labels as "Words (key)":** Try It (F9), Save (F10), Keep It (Enter), Go Back Now (Esc), None Of Them, Dim It Again.
+- **Needs forgekit 0.10.0.**
+- **Tests: 63 (was 54), warnings: 0 (was 0).** Four older tests now open Settings before trying a change. Each new test was checked by taking its fix out and watching it fail.
+
 ## 1.0.1 — 2026-10-06 · Sway only, said and checked ([forge-suite #32](https://github.com/jetomev/forge-suite/issues/32))
 
 Javier, the night 1.0.0 shipped: displayForge must say clearly it works on Sway only, and check at launch — if not Sway, say why, with only a Close button. Until now it would have crashed on KDE with an error dump.

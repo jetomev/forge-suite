@@ -18,7 +18,7 @@ from textual.widgets import Button, OptionList, Select, Static
 from textual.widgets.option_list import Option
 
 from forgekit import (
-    FORGE_CSS, GPL3_NOTICE, ChangeGroup, Choices, ForgeApp, ForgeModal, ManualScreen, Notice, NumberPresets,
+    FORGE_CSS, GPL3_NOTICE, MENU_HINT, ChangeGroup, Choices, ForgeApp, ForgeModal, ManualScreen, Notice, NumberPresets,
     ReviewDialog, SettingRow, Toggle, load_pages, program, start_check, sway_session,
 )
 
@@ -62,8 +62,8 @@ class KeepDialog(ForgeModal[bool]):
             yield Static("Keep these settings?", classes="forge-panel-title")
             yield Static("", id="df-keep-body")
             with Horizontal(classes="forge-buttons forge-panel-footer"):
-                yield Button("Keep it", id="keep", variant="primary")
-                yield Button("Go back now", id="back")
+                yield Button("Keep It (Enter)", id="keep", variant="primary")
+                yield Button("Go Back Now (Esc)", id="back")
 
     def on_mount(self) -> None:
         self._draw()
@@ -93,8 +93,47 @@ class KeepDialog(ForgeModal[bool]):
         self.dismiss(False)
 
 
+
+class ApplyDialog(ForgeModal[bool | None]):
+    """Before quitting with something not applied (1.1.0, Javier): Yes applies it, No quits
+    without it, Esc stays. True / False / None."""
+
+    BINDINGS = [Binding("escape", "stay", "", show=False), Binding("y", "yes", "", show=False),
+                Binding("n", "no", "", show=False)]
+
+    def __init__(self, heading: str, lines: list[str]) -> None:
+        super().__init__()
+        self._heading, self._lines = heading, lines
+
+    def compose(self) -> ComposeResult:
+        with Vertical(classes="forge-panel"):
+            yield Static("Apply your changes before quitting?", classes="forge-panel-title")
+            yield Notice(self._heading, self._lines, level="warn", id="df-apply-msg")
+            with Horizontal(classes="forge-buttons forge-panel-footer"):
+                yield Button("Yes, Apply (y)", id="apply-yes", variant="primary")
+                yield Button("No, Quit (n)", id="apply-no")
+                yield Button("Stay (Esc)", id="apply-stay")
+
+    def on_mount(self) -> None:
+        self.query_one("#apply-yes", Button).focus()
+
+    def on_button_pressed(self, e: Button.Pressed) -> None:
+        e.stop()
+        self.dismiss({"apply-yes": True, "apply-no": False}.get(e.button.id))
+
+    def action_yes(self) -> None:
+        self.dismiss(True)
+
+    def action_no(self) -> None:
+        self.dismiss(False)
+
+    def action_stay(self) -> None:
+        self.dismiss(None)
+
 class ScreensView(VerticalScroll):
     """1 · Screens: the drawing, the picked screen, and what needs attention."""
+
+    FORGE_HINTS = [("← →", "pick a screen"), MENU_HINT, ("?", "all keys")]
 
     def __init__(self, session: Session, **kw) -> None:
         super().__init__(**kw)
@@ -159,6 +198,9 @@ class ScreensView(VerticalScroll):
 
 class SettingsView(Horizontal):
     """2 · Settings: the screens on the left, the picked one's settings on the right."""
+
+    # 1.1.0 (Javier, 2026-10-08): Try and Save belong to the pages that change something
+    FORGE_HINTS = [("Tab", "next"), ("F9", "try"), ("F10", "save"), MENU_HINT, ("?", "all keys")]
 
     def __init__(self, session: Session, **kw) -> None:
         super().__init__(**kw)
@@ -289,6 +331,9 @@ class SettingsView(Horizontal):
 
 class ArrangeView(VerticalScroll):
     """3 · Arrange: the layout; arrows move the picked screen (the others make room)."""
+
+    FORGE_HINTS = [("← → ↑ ↓", "move"), ("Tab", "next screen"), ("F9", "try"), ("F10", "save"), MENU_HINT,
+                   ("?", "all keys")]
 
     BINDINGS = [Binding("left", "move('left')", show=False), Binding("right", "move('right')", show=False),
                 Binding("up", "move('above')", show=False), Binding("down", "move('below')", show=False),
@@ -548,7 +593,7 @@ class IdentifyView(VerticalScroll):
                           f"({self.session.label(s.name).split(' · ')[0]})",
                           id=f"id-is-{s.name}") for s in sorted(self.session.live, key=lambda s: (s.y, s.x))
                    if s.name not in self.answers]
-        buttons += [Button("None of them", id="id-is-none"), Button("Dim it again", id="id-is-again")]
+        buttons += [Button("None Of Them", id="id-is-none"), Button("Dim It Again", id="id-is-again")]
         await box.mount(*buttons)
 
     @work(exclusive=True, group="df-identify")
@@ -590,22 +635,20 @@ class DisplayForgeApp(ForgeApp):
         {"id": "quit", "title": "Quit", "kind": "action", "action": "quit"},
     ]
     SHORTCUTS = [
-        ("1-5, Ctrl+letter", "go to a screen (the underlined letter)"),
+        ("1-6, Ctrl+letter", "go to a menu entry: 1 Screens … 6 Help, or Ctrl + its underlined letter"),
         ("← →", "pick a screen (Screens)"),
         ("Tab / Shift+Tab", "next / previous field or button"),
         ("Enter / Space", "choose / flip a switch"),
-        ("F9", "try the changes live, with the countdown"),
-        ("F10", "save, with a review first"),
+        ("F9", "try the changes live, with the countdown (Settings, Arrange)"),
+        ("F10", "save, with a review first (Settings, Arrange)"),
         ("Esc", "close a window · go back now (countdown)"),
         ("M", "the manual"),
         ("?", "this list"),
-        ("Q or Ctrl+Q", "quit (asks first if something isn't saved)"),
+        ("Q or Ctrl+Q", "quit; asks to apply anything not saved (not inside hypeForge Settings)"),
     ]
-    HINTS = [("← →", "pick a screen"), ("1-5", "screens"), ("F9", "try"), ("F10", "save"), ("?", "all keys")]
+    HINTS = [MENU_HINT, ("?", "all keys")]
+    CHANGING = ("settings", "arrange")      # the pages where Try and Save apply (1.1.0)
     BINDINGS = [
-        Binding("1", "go('screens')", show=False), Binding("2", "go('settings')", show=False),
-        Binding("3", "go('arrange')", show=False), Binding("4", "go('brightness')", show=False),
-        Binding("5", "go('identify')", show=False),
         Binding("left", "pick(-1)", show=False), Binding("right", "pick(1)", show=False),
         Binding("f9", "try_it", show=False, priority=True),
         Binding("f10", "save", show=False, priority=True),
@@ -653,6 +696,7 @@ class DisplayForgeApp(ForgeApp):
             self.push_screen(ManualScreen("displayForge manual", pages))
 
     def on_section_shown(self, section_id: str) -> None:
+        self.refresh_bar(section_id)
         if section_id == "arrange":
             self.query_one(ArrangeView).refresh_view()
             self.query_one(ArrangeView).focus()
@@ -673,13 +717,33 @@ class DisplayForgeApp(ForgeApp):
                 return sid
         return "screens"
 
-    def refresh_state(self) -> None:
+    @property
+    def kept_not_saved(self) -> bool:
+        """Changes tried and kept on screen, but not saved for the next login."""
+        return bool(self.session.to_save())
+
+    def refresh_bar(self, section: str | None = None) -> None:
+        """The changes bar (1.1.0, Javier): Try and Save on the pages that change something;
+        anywhere else, only a reminder of what is waiting and where."""
+        section = section or self.current_section
         n = self.session.change_count
-        if n:
+        here = section in self.CHANGING
+        if n and here:
             self.changes_bar.show(f"{n} change{'s' if n != 1 else ''} not tried yet", "changed",
-                                  [("Try it…  F9", "df-try", True), ("Discard", "df-discard", False)])
+                                  [("Try It (F9)", "df-try", True), ("Discard", "df-discard", False)])
+        elif n:
+            self.changes_bar.show(f"{n} change{'s' if n != 1 else ''} not tried yet · "
+                                  "finish them in Settings (2) or Arrange (3)", "changed")
+        elif self.kept_not_saved and here:
+            self.changes_bar.show("Kept on screen · not saved yet", "changed", [("Save (F10)", "df-save", True)])
+        elif self.kept_not_saved:
+            self.changes_bar.show("Kept on screen · not saved yet · save it in Settings (2) or Arrange (3)",
+                                  "changed")
         else:
             self.changes_bar.hide()
+
+    def refresh_state(self) -> None:
+        self.refresh_bar()
         self.query_one(ScreensView).refresh_view()
         try:
             self.query_one(ArrangeView).refresh_view()
@@ -689,6 +753,8 @@ class DisplayForgeApp(ForgeApp):
     def on_button_pressed(self, e: Button.Pressed) -> None:
         if e.button.id == "df-try":
             self.action_try_it()
+        elif e.button.id == "df-save":           # the Save button never had a handler before 1.1.0
+            self.action_save()
         elif e.button.id == "df-discard":
             self.session.discard()
             self.query_one(SettingsView).build_form()
@@ -698,43 +764,67 @@ class DisplayForgeApp(ForgeApp):
     # -- try, keep or go back --------------------------------------------------------------------
     @work(exclusive=True, group="df-try")
     async def action_try_it(self) -> None:
+        if self.current_section not in self.CHANGING:
+            self._elsewhere("try")
+            return
+        await self._try()
+
+    def _elsewhere(self, what: str) -> None:
+        """F9 / F10 on a page that changes nothing: a reminder, not an action."""
+        if self.session.change_count or self.kept_not_saved:
+            self.notify(f"Changes are {'waiting' if self.session.change_count else 'kept, not saved'}: "
+                        f"{what} them in Settings (2) or Arrange (3).", timeout=6)
+        else:
+            self.notify("Nothing to " + what + " here: this page changes nothing to save.", timeout=4)
+
+    async def _try(self) -> bool:
+        """The countdown trial; True when the change was kept."""
+        self._tried_ok = False
         se = self.session
         if not se.change_count:
             self.notify("Nothing to try: no changes.")
-            return
+            return False
         problems = se.problems()
         if problems:
             self.notify("\n".join(problems), title="Can't try this", severity="warning", timeout=8)
-            return
+            return False
         what = "; ".join(f"{n}: {new}" for n, _o, new in se.changes())
         trial = T.Trial(se.live, se.pending, swaymsg=self.swaymsg)
         if not trial.start():
             self.notify("Sway did not accept that. Nothing changed.", title="Not tried", severity="error")
-            return
+            return False
         keep = await self.push_screen_wait(KeepDialog(what))
         if keep:
             trial.keep()
             se.tried()
             self.notify("Kept. Press F10 to save it for the next login.", title="Kept", timeout=6)
+            self._tried_ok = True
             self.refresh_state()
-            self.changes_bar.show("Kept on screen · not saved yet", "changed", [("Save…  F10", "df-save", True)])
         else:
             trial.revert_now()
             self.notify("Back to how it was.")
             self.refresh_state()
+        return self._tried_ok
 
     # -- save ------------------------------------------------------------------------------------
     @work(exclusive=True, group="df-save")
     async def action_save(self) -> None:
+        if self.current_section not in self.CHANGING:
+            self._elsewhere("save")
+            return
+        await self._save()
+
+    async def _save(self) -> bool:
+        """The save, with its review first; True when written."""
         se = self.session
         if se.change_count:
             self.notify("Try the changes first (F9): only what you kept on screen is saved.", timeout=6)
-            return
+            return False
         path = str(V.OUTPUTS).replace(os.path.expanduser("~"), "~")
         rows = se.to_save()
         if not rows and V.OUTPUTS.exists() and not se.saved_differs():
             self.notify("Nothing to save: what is on screen is already saved.")
-            return
+            return False
         if not rows:
             rows = [("All screens", "not saved yet", "as they are now")]
         choice = await self.push_screen_wait(ReviewDialog(
@@ -744,12 +834,12 @@ class DisplayForgeApp(ForgeApp):
                    "Brightness is not part of this: the screens keep it themselves"],
             buttons=[("Save", "save", True)]))
         if choice is None:
-            return
+            return False
         try:
             _, backup = V.save(se.live)
         except OSError as e:
             self.notify(f"{e.strerror or e}. Nothing was written.", title="Not saved", severity="error")
-            return
+            return False
         se.saved()
         self.changes_bar.hide()
         self.refresh_state()
@@ -758,16 +848,42 @@ class DisplayForgeApp(ForgeApp):
             self.notify("Sway doesn't read this file yet, so the screens go back at your next login. "
                         f"Add this line to {V.SWAY_CONFIG}:\ninclude ~/.config/sway/outputs",
                         title="One line missing", severity="warning", timeout=20)
+        return True
 
     def before_quit(self) -> bool:
-        if self.session.change_count:
-            self.notify("You have changes not tried yet. Discard them first, or press Q again to quit.",
-                        severity="warning")
-            if getattr(self, "_quit_warned", False):
-                return True
-            self._quit_warned = True
-            return False
-        return True
+        """1.1.0 (Javier, 2026-10-08): anything not finished gets a proper question before quitting:
+        apply it now (try with the countdown, then save) or quit without it. Esc stays."""
+        se = self.session
+        if not (se.change_count or self.kept_not_saved):
+            return True
+        if se.change_count:
+            n = se.change_count
+            heading = f"{n} change{'s are' if n != 1 else ' is'} not applied yet"
+            lines = ["Yes tries them on your screens (with the countdown), then saves them for the next login.",
+                     "No quits, and your screens stay as they are now."]
+        else:
+            heading = "What is on your screens is not saved"
+            lines = ["Yes saves it for the next login.", "No quits; at the next login the screens go back."]
+        self.push_screen(ApplyDialog(heading, lines), self._after_quit_choice)
+        return False
+
+    def _after_quit_choice(self, choice: bool | None) -> None:
+        if choice is None:                       # Esc / Stay
+            return
+        if choice is False:
+            self.exit()
+            return
+        self.apply_then_quit()
+
+    @work(exclusive=True, group="df-quit")
+    async def apply_then_quit(self) -> None:
+        if self.session.change_count and not await self._try():
+            self.notify("Not applied, so displayForge stays open.", timeout=6)
+            return
+        if self.kept_not_saved and not await self._save():
+            self.notify("Not saved, so displayForge stays open.", timeout=6)
+            return
+        self.exit()
 
 
 def needs(*, environ=None, swaymsg: str = "swaymsg", ddcutil: str = "ddcutil") -> list:
