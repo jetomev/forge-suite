@@ -320,6 +320,12 @@ exec udiskie
 # sudoForge: one password box for every admin request (polkit + sudo -A; Forge Suite, D-56/D-61).
 # Its record: ~/.local/state/sudoforge/service.log (never a password).
 exec sudoforge service
+# The secret store (#39, 2026-10-07): Electron apps (Claude Desktop, Chrome) keep their logins
+# through the standard "Secret Service"; KDE's ksecretd answers it but only starts when something
+# knocks, and nothing knocks at login on Sway — so Claude Desktop found no store and lost its
+# login at every restart. Started here, it is there before any app asks. The Forge wallet (D-61)
+# replaces this line one day; the apps will not notice.
+exec ksecretd
 # hypeForge: start-at-login apps from ~/.config/autostart (applet 10; Sway does not read that folder)
 exec ~/Programs/forge-suite/hypeforge/applets/autostart/hypeforge-autostart
 # hypeForge: the Favorites menu on the bar (applet 4 writes it)
