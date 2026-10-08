@@ -30,7 +30,7 @@ from .needs import (
     needs_text, parse_version, program, service, start_check, sway_session,
 )
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 
 __all__ = [
     "ForgeApp",

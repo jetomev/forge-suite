@@ -1,6 +1,6 @@
 # 🔨 forgekit
 
-![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-purple.svg)
+![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-purple.svg)
 ![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
 ![Built with Textual](https://img.shields.io/badge/Built%20with-Textual-5a3fd6.svg)
 ![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)
@@ -31,7 +31,7 @@ polish improves every app at once.
 
 **What you get:**
 
-- **A menu bar** across the top. Each option's first letter is underlined and works
+- **A menu bar** across the top (it wraps onto more rows when the window is narrow, so no section is ever cut off). Each option's first letter is underlined and works
   as `Ctrl+<letter>`. Options always end with `Help` and `Quit`, in that order.
 - **A workspace** showing one full-width section at a time. No permanent sidebar
   eating your screen — you switch sections from the menu.
@@ -56,14 +56,14 @@ polish improves every app at once.
   switches to colours and characters that screen can actually show, by itself.
   [More below](#on-a-plain-text-console).
 
-> **Status: 0.8.0 (alpha), released 6 October 2026.** The API may still
+> **Status: 0.9.0 (alpha), released 7 October 2026.** The API may still
 > shift while the Forge apps migrate onto it. Pin a version if you depend on it.
+> 0.9.0: the menu bar wraps on a narrow window — every section stays on screen
+> and clickable, in as many rows as the window needs
+> ([#40](https://github.com/jetomev/forge-suite/issues/40)). Javier: "hits every Forge app".
 > 0.8.0: the password's dots centred — `PasswordField`, and `PasswordDialog`'s
 > `heading` / `detail` / `note` / `label` ([#34](https://github.com/jetomev/forge-suite/issues/34)).
 > Built for sudoForge's approved design; every Forge app's password box gets it.
-> 0.7.0: the shared start-up check — `start_check`, `Need`, `NeedsApp`
-> ([#33](https://github.com/jetomev/forge-suite/issues/33)). Javier, from displayForge:
-> an app that can't do its job here must say so in plain words and close, not crash.
 > displayForge 1.0.1 is its first user. Earlier versions: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 ## Screenshots

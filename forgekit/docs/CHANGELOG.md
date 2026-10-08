@@ -2,6 +2,21 @@
 
 *Newest first. The README's status box carries the two most recent versions; everything else is here.*
 
+### 0.9.0 — October 7, 2026 · the menu bar wraps ([#40](https://github.com/jetomev/forge-suite/issues/40))
+
+Found in hypeForge's Help & Keys on 2026-10-05, marked URGENT by Javier on 2026-10-07: the bar was
+one line, so on a narrow window the sections at the right were cut off and could not be reached.
+Every Forge app has the bar, so every Forge app had the bug.
+
+- **`MenuBar`** lays its titles out in as many rows as the window needs, in order, and re-flows on
+  every resize; a title wider than the whole window gets a row of its own. The header is
+  `height: auto` so the work area moves down with it. Clicks, accelerator letters, dropdown
+  anchoring and the active mark are unchanged (the mark survives a re-flow).
+- Apps change nothing; they pick it up by depending on `python-forgekit>=0.9.0`.
+- Tests: **110** (was 104): the row arithmetic, a seven-tab app at 40 columns (every title on
+  screen, two rows, header grew), 100 columns (one row, as before), a click on a second-row title,
+  the active mark after growing the window. Warnings: 0.
+
 ### 0.8.0 — October 6, 2026 · the password's dots centred ([#34](https://github.com/jetomev/forge-suite/issues/34))
 
 Built for sudoForge, the password helper for the Sway desktop (its D-2): Javier wanted the typed

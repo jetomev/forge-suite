@@ -2,6 +2,7 @@
 
 *The live work list and the handoff between sessions. Newest work first. Updated after every step.*
 
+- [x] **0.9.0 — the menu bar wraps (2026-10-07, forge-suite #40, Javier: URGENT):** `MenuBar` is a column of rows, re-flowed on resize; `#forge-header` is `height: auto`. 6 new tests (seven tabs at 40 and 100 columns, a second-row click, the active mark across a resize). **110 tests, 0 warnings.** Release: tag `forgekit-v0.9.0`, signed assets, AUR `python-forgekit` 0.9.0-1 — then every Forge app shows the full bar on a narrow window with no change of its own
 
 - [x] **Moved into the Forge Suite (2026-10-06, D-60)**: full history, tags renamed `forgekit-v0.1.0 … v0.6.0`, pyproject / README / CLAUDE.md point at `jetomev/forge-suite`; old repo archived with a pointer; `~/Programs/forgekit` is now a shortcut to `forge-suite/forgekit`. 67 tests, 0 warnings in the new home
 - [x] **Done with 0.7.0 (2026-10-06):** the AUR recipe (`aur-python-forgekit`) fetches the signed asset from `jetomev/forge-suite` releases (tag `forgekit-vX.Y.Z`), not the archived repo. Still to write down: the release rules adapted for per-app tags (CLAUDE.md)
