@@ -44,8 +44,8 @@ from textual.scrollbar import ScrollBar, ScrollBarRender
 from textual.widgets import ContentSwitcher, Static
 
 from .console import ConsoleGlyphFilter, ConsoleScrollBarRender, console_mode, set_console
-from .dialogs import AboutDialog, LicenseDialog, ShortcutsDialog
-from .menu import MenuBar, MenuDropdown, accel
+from .dialogs import AboutView, LicenseView, ShortcutsDialog
+from .menu import MenuBar, MenuDropdown, accel, assign_accels
 from .theme import FORGE_CSS, css_variables
 from .widgets import ChangesBar, HintBar, hints_for
 
@@ -73,19 +73,12 @@ def add_hypeforge_argument(parser) -> None:
                         help=argparse.SUPPRESS)
 
 
-def menu_key_clashes(menu: list[dict]) -> list[tuple[str, str, str]]:
-    """Entries whose underlined letter is already taken by an earlier one:
-    (letter, first entry id, clashing entry id). Each underlined letter is a
-    Ctrl shortcut (0.10.0), so a clash means a dead key; apps test for none."""
-    seen: dict[str, str] = {}
-    out = []
-    for m in menu:
-        a = accel(m)
-        if a in seen:
-            out.append((a, seen[a], m["id"]))
-        else:
-            seen[a] = m["id"]
-    return out
+def menu_key_clashes(menu: list[dict], taken: Sequence[str] = ()) -> list[tuple[str, str, str]]:
+    """Entries left without a Ctrl letter: (first letter, "", entry id). Letters are given by
+    Javier's rule (``assign_accels``: the first letter, else the next free one of the title), so
+    this is empty unless every letter of a title is taken. Apps test that it stays empty."""
+    letters = assign_accels(menu, set(taken))
+    return [(m["title"][:1].lower(), "", m["id"]) for m in menu if not letters[m["id"]]]
 
 
 class TitleText(Static):
@@ -170,9 +163,17 @@ class ForgeApp(App[None]):
         self.hypeforge = hypeforge_mode() if hypeforge is None else hypeforge
         if self.hypeforge:
             self.MENU = [m for m in self.MENU if m.get("id") != "quit"]
+        # each entry's underlined letter by Javier's rule (first letter, else the next free one
+        # of its title); the app's own Ctrl keys count as taken, so nothing is bound twice
+        own = {k.split("+", 1)[1] for k in self._bindings.key_to_bindings
+               if k.startswith("ctrl+") and len(k) == 6 and k[5].isalpha()} - {"h", "q"}
+        letters = assign_accels(self.MENU, own)
+        self.MENU = [dict(m, acc=letters[m["id"]]) for m in self.MENU]
         self._by_id = {m["id"]: m for m in self.MENU}
         self._title_status = ""
         self._menu_count = 0
+        self._menu_numbers: dict[str, str] = {}     # "1" -> entry id (a dropdown asks it too)
+        self._page_from = ""                         # the section an About / License page came from
         if self.MENU_KEYS:
             self._bind_menu_keys()
 
@@ -189,12 +190,13 @@ class ForgeApp(App[None]):
             if m["id"] == "quit":
                 continue
             letter = accel(m)
-            if letter.isalpha() and letter not in taken:
+            if letter and letter.isalpha() and letter not in taken:
                 self._bindings.bind(f"ctrl+{letter}", f"activate('{m['id']}')", show=False, priority=True)
             taken.add(letter)
             n += 1
             if n <= 9:
                 self._bindings.bind(str(n), f"activate('{m['id']}')", show=False)
+                self._menu_numbers[str(n)] = m["id"]
         self._menu_count = min(n, 9)
 
     # ── v0.6.0: a tool's run and its password, inside the app ────────────────
@@ -278,6 +280,9 @@ class ForgeApp(App[None]):
             yield MenuBar(self.MENU)
         with ContentSwitcher(initial=f"sec-{self._first_section()}", id="forge-work"):
             yield from self.compose_sections()
+            # 0.10.0 (Javier, 2026-10-08): About and License are pages here, not windows
+            yield AboutView(self.ABOUT or {"name": self.APP_NAME, "version": ""}, id="sec-forge-about")
+            yield LicenseView(self.LICENSE_NAME, self.LICENSE_NOTICE, id="sec-forge-license")
         # after the work area, so Tab reaches the screen's own fields first and
         # the bar's buttons last (it is docked to the bottom either way)
         if self.SHOW_HINT_BAR or self.SHOW_CHANGES_BAR:
@@ -388,8 +393,12 @@ class ForgeApp(App[None]):
             self.action_act(entry["action"])
         elif kind == "menu":
             w = self.query_one(f"#menu-{entry_id}")
-            self.push_screen(MenuDropdown(entry["items"], w.region.x, w.region.y + 1, entry_id),
-                             self._on_menu_choice)
+            w.add_class("open")                      # lit while its dropdown is open (Javier, 10-08)
+
+            def chosen(result, w=w):
+                w.remove_class("open")
+                self._on_menu_choice(result)
+            self.push_screen(MenuDropdown(entry["items"], w.region.x, w.region.y + 1, entry_id), chosen)
 
     def _switch_section(self, section_id: str) -> None:
         self.query_one("#forge-work", ContentSwitcher).current = f"sec-{section_id}"
@@ -400,6 +409,22 @@ class ForgeApp(App[None]):
 
     def on_section_shown(self, section_id: str) -> None:
         """Hook: called after a section becomes visible."""
+
+    def show_page(self, page: str) -> None:
+        """Show one of forgekit's own pages (About, License) in the content area. Help is lit
+        while it shows, as the page belongs to Help; Esc goes back where you came from."""
+        work = self.query_one("#forge-work", ContentSwitcher)
+        current = (work.current or "").removeprefix("sec-")
+        if not current.startswith("forge-"):
+            self._page_from = current
+        work.current = f"sec-{page}"
+        self._mark_active("help")
+        view = self.query_one(f"#sec-{page}")
+        self.call_after_refresh(view.focus)
+        self.refresh_hints()
+
+    def action_back_from_page(self) -> None:
+        self._switch_section(self._page_from or self._first_section())
 
     def _mark_active(self, section_id: str) -> None:
         for m in self.MENU:
@@ -418,9 +443,9 @@ class ForgeApp(App[None]):
         elif action_id == "shortcuts":
             self.push_screen(ShortcutsDialog(self.SHORTCUTS))
         elif action_id == "license":
-            self.push_screen(LicenseDialog(self.LICENSE_NAME, self.LICENSE_NOTICE))
+            self.show_page("forge-license")
         elif action_id == "about":
-            self.push_screen(AboutDialog(self.ABOUT))
+            self.show_page("forge-about")
         else:
             self.on_action(action_id)
 

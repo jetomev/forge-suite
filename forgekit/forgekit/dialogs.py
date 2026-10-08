@@ -128,6 +128,28 @@ class ShortcutsDialog(ForgePanelScreen):
             yield Static(f"[$forge-accent b]{key:<{width}}[/]  {desc}")
 
 
+def license_body(notice: str) -> ComposeResult:
+    yield Static(notice)
+
+
+def about_body(a: dict) -> ComposeResult:
+    """The About text: name and version, tagline, description, authors, license, links."""
+    yield Static(f"[b $forge-title-accent]{a['name']}[/]   [$forge-muted]v{a['version']}[/]")
+    if a.get("tagline"):
+        # italic reads as green on a text console, so plain there
+        yield Static(f"[{'' if is_console() else 'i '}$forge-muted]{a['tagline']}[/]")
+    if a.get("description"):
+        yield Static(f"\n{a['description']}\n")
+    if a.get("authors"):
+        yield Static(f"[$forge-accent b]Authors[/]   {a['authors']}")
+    if a.get("license"):
+        yield Static(f"[$forge-accent b]License[/]   {a['license']}")
+    if a.get("links"):
+        yield Static("\n[$forge-accent b]Links[/]")
+        for label, url in a["links"]:
+            yield Static(f"  {label}:  [u $forge-accent]{url}[/]")
+
+
 class LicenseDialog(ForgePanelScreen):
     def __init__(self, license_name: str, notice: str) -> None:
         super().__init__()
@@ -135,7 +157,7 @@ class LicenseDialog(ForgePanelScreen):
         self._notice = notice
 
     def compose_body(self) -> ComposeResult:
-        yield Static(self._notice)
+        yield from license_body(self._notice)
 
 
 class AboutDialog(ForgePanelScreen):
@@ -145,18 +167,39 @@ class AboutDialog(ForgePanelScreen):
         self._a = about
 
     def compose_body(self) -> ComposeResult:
-        a = self._a
-        yield Static(f"[b $forge-title-accent]{a['name']}[/]   [$forge-muted]v{a['version']}[/]")
-        if a.get("tagline"):
-            # italic reads as green on a text console, so plain there
-            yield Static(f"[{'' if is_console() else 'i '}$forge-muted]{a['tagline']}[/]")
-        if a.get("description"):
-            yield Static(f"\n{a['description']}\n")
-        if a.get("authors"):
-            yield Static(f"[$forge-accent b]Authors[/]   {a['authors']}")
-        if a.get("license"):
-            yield Static(f"[$forge-accent b]License[/]   {a['license']}")
-        if a.get("links"):
-            yield Static("\n[$forge-accent b]Links[/]")
-            for label, url in a["links"]:
-                yield Static(f"  {label}:  [u $forge-accent]{url}[/]")
+        yield from about_body(self._a)
+
+
+class _PageView(VerticalScroll):
+    """0.10.0 (Javier, 2026-10-08): About and License open in the content area, not in a window.
+    Esc goes back to the page you came from."""
+
+    BINDINGS = [Binding("escape", "back", "", show=False)]
+    FORGE_HINTS = [("Esc", "back")]
+    can_focus = True
+    DEFAULT_CSS = "_PageView { padding: 1 3; } _PageView > .forge-page-title { margin: 0 0 1 0; color: $forge-accent; text-style: bold; }"
+
+    def action_back(self) -> None:
+        back = getattr(self.app, "action_back_from_page", None)
+        if back:
+            back()
+
+
+class AboutView(_PageView):
+    def __init__(self, about: dict, **kw) -> None:
+        super().__init__(**kw)
+        self._a = about
+
+    def compose(self) -> ComposeResult:
+        yield Static(f"About {self._a.get('name', '')}", classes="forge-page-title")
+        yield from about_body(self._a)
+
+
+class LicenseView(_PageView):
+    def __init__(self, license_name: str, notice: str, **kw) -> None:
+        super().__init__(**kw)
+        self._name, self._notice = license_name, notice
+
+    def compose(self) -> ComposeResult:
+        yield Static(f"License — {self._name}", classes="forge-page-title")
+        yield from license_body(self._notice)

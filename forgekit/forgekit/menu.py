@@ -25,8 +25,30 @@ from .console import is_console
 
 
 def accel(entry: dict) -> str:
-    """The main-option accelerator letter (defaults to the title's first)."""
+    """The main-option accelerator letter (defaults to the title's first). ``ForgeApp`` fills
+    ``acc`` for every entry with ``assign_accels``; "" means the entry has none."""
     return entry.get("acc", entry["title"][0]).lower()
+
+
+RESERVED = {"help": "h", "quit": "q"}       # Ctrl+H Help and Ctrl+Q Quit in every Forge app
+
+
+def assign_accels(menu: list[dict], taken: set[str] = frozenset()) -> dict[str, str]:
+    """Javier's rule (2026-10-08): each entry's letter is the first letter of its title, unless
+    that one is already used; then the next letter of the title, in order, and so on. Help is
+    always H and Quit always Q; ``taken`` adds letters the app already uses for its own Ctrl
+    keys. Returns {entry id: letter}, "" for an entry whose every letter is taken."""
+    used = set(taken) | set(RESERVED.values())
+    out: dict[str, str] = {}
+    for m in menu:
+        if m["id"] in RESERVED:
+            out[m["id"]] = RESERVED[m["id"]]
+            continue
+        letter = next((c for c in m["title"].lower() if c.isalpha() and c not in used), "")
+        if letter:
+            used.add(letter)
+        out[m["id"]] = letter
+    return out
 
 
 def underline_label(label: str, acc_letter: str) -> Text:
@@ -61,7 +83,7 @@ class MenuBar(Vertical):
     @staticmethod
     def _markup(m: dict) -> str:
         title, a = m["title"], accel(m)
-        i = title.lower().find(a)
+        i = title.lower().find(a) if a else -1
         markup = f"{title[:i]}[u]{title[i]}[/u]{title[i+1:]}" if i >= 0 else title
         # F-12: a text console sends Ctrl+H as Backspace, so Help is on F1
         # there, and the bar says so (console mode only)
@@ -162,6 +184,13 @@ class MenuDropdown(ModalScreen[str | None]):
         ol.focus()
 
     def on_key(self, event) -> None:
+        # a menu's number pressed again closes it, another number goes there (Javier, 10-08):
+        # the app's number keys do not reach through this window, so it passes them on
+        numbers = getattr(self.app, "_menu_numbers", {})
+        if event.key in numbers and hasattr(self.app, "action_activate"):
+            event.stop()
+            self.app.call_later(self.app.action_activate, numbers[event.key])
+            return
         ch = (event.character or "").lower()
         if ch in self._accels:
             event.stop()

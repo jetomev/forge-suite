@@ -177,8 +177,8 @@ class MenuKeysForEveryEntry(unittest.IsolatedAsyncioTestCase):
     class Three(ForgeApp):
         APP_NAME = "three"
         MENU = [{"id": "one", "title": "One", "kind": "section"},
-                {"id": "two", "title": "Two", "kind": "section", "acc": "w"},
-                {"id": "more", "title": "More", "kind": "menu", "acc": "r", "items": [("Thing", "t", "thing")]},
+                {"id": "two", "title": "Two", "kind": "section", "acc": "w"},   # "acc" is ignored now: T
+                {"id": "more", "title": "More", "kind": "menu", "items": [("Thing", "t", "thing")]},
                 {"id": "help", "title": "Help", "kind": "menu", "items": [("About", "a", "about")]},
                 {"id": "quit", "title": "Quit", "kind": "action", "action": "quit"}]
         SHOW_HINT_BAR = True
@@ -195,13 +195,13 @@ class MenuKeysForEveryEntry(unittest.IsolatedAsyncioTestCase):
     async def test_ctrl_letters(self):
         app = self.Three()
         async with app.run_test(size=(80, 20)) as pilot:
-            await pilot.press("ctrl+w")
+            await pilot.press("ctrl+t")
             await pilot.pause()
             self.assertEqual(self.active(app), ["menu-two"])
             await pilot.press("ctrl+o")
             await pilot.pause()
             self.assertEqual(self.active(app), ["menu-one"])
-            await pilot.press("ctrl+r")
+            await pilot.press("ctrl+m")
             await pilot.pause()
             self.assertIsInstance(app.screen, MenuDropdown)
             self.assertEqual(app.screen.menu_id, "more")
@@ -233,7 +233,7 @@ class MenuKeysForEveryEntry(unittest.IsolatedAsyncioTestCase):
     async def test_a_field_keeps_its_digits_but_ctrl_still_moves(self):
         app = self.Three()
         async with app.run_test(size=(80, 20)) as pilot:
-            await pilot.press("ctrl+w")
+            await pilot.press("ctrl+t")
             await pilot.pause()
             field = app.query_one("#sec-two")
             field.focus()
@@ -306,7 +306,7 @@ class MenuKeysForEveryEntry(unittest.IsolatedAsyncioTestCase):
             field = app.screen.query_one("#box-field")
             field.focus()
             field.cursor_position = 0
-            await pilot.press("ctrl+w")          # Two's key; in a field it deletes the word before
+            await pilot.press("ctrl+t")          # Two's key
             await pilot.press("ctrl+e")          # end of line
             await pilot.press("3")
             await pilot.pause()
@@ -330,10 +330,66 @@ class MenuKeysForEveryEntry(unittest.IsolatedAsyncioTestCase):
             await pilot.pause()
             self.assertEqual(app._menu_count, 4)
 
-    def test_clashes(self):
+    def test_javiers_rule_for_the_letters(self):
+        # the first letter, unless taken; then the next letter of the title, in order (2026-10-08).
+        # Help is always H and Quit always Q.
+        from forgekit import assign_accels
+
+        def menu(*titles):
+            return [{"id": t.lower(), "title": t} for t in titles] + [{"id": "help", "title": "Help"},
+                                                                      {"id": "quit", "title": "Quit"}]
+        cases = {
+            ("Screens", "Settings", "Arrange", "Brightness", "Identify"): "seabi",       # displayForge
+            ("Overview", "Settings", "Themes", "Shortcuts", "Backups"): "ostrb",       # alacrittyForge
+            ("Dashboard", "In-System", "Install", "Update", "History"): "dinus",       # nogForge
+            ("Overview", "Settings", "Boot Menu", "Themes", "Backups"): "osbta",       # grubForge
+            ("Dashboard", "Settings", "Log", "History"): "dsli",                       # bitlaForge
+            ("Keys", "Start", "Workspaces", "Windows", "Apps", "Tools", "About"): "kswiatb",   # Help & Keys
+        }
+        for titles, want in cases.items():
+            got = assign_accels(menu(*titles))
+            self.assertEqual("".join(got[t.lower()] for t in titles), want, titles)
+            self.assertEqual((got["help"], got["quit"]), ("h", "q"))
+        self.assertEqual(assign_accels(menu("Rebuild"), {"r"})["rebuild"], "e", "an app's own Ctrl key is taken")
         self.assertEqual(menu_key_clashes(self.Three.MENU), [])
-        self.assertEqual(menu_key_clashes([{"id": "a", "title": "Sun"}, {"id": "b", "title": "Sea"}]),
-                         [("s", "a", "b")])
+        self.assertEqual(menu_key_clashes([{"id": "a", "title": "Hq"}]), [("h", "", "a")])
+
+    async def test_a_menus_number_again_closes_it_and_its_title_is_lit(self):
+        app = self.Three()
+        async with app.run_test(size=(80, 20)) as pilot:
+            app.set_focus(None)
+            await pilot.press("3")
+            await pilot.pause()
+            self.assertEqual(getattr(app.screen, "menu_id", None), "more")
+            self.assertTrue(app.query_one("#menu-more").has_class("open"), "lit while open")
+            await pilot.press("3")
+            await pilot.pause()
+            self.assertEqual(len(app.screen_stack), 1, "the same number closes it")
+            self.assertFalse(app.query_one("#menu-more").has_class("open"))
+            app.set_focus(None)                  # the test app's only field took the focus back
+            await pilot.press("3")
+            await pilot.pause()
+            await pilot.press("4")
+            await pilot.pause()
+            self.assertEqual(getattr(app.screen, "menu_id", None), "help", "another number switches")
+            self.assertTrue(app.query_one("#menu-help").has_class("open"))
+            self.assertFalse(app.query_one("#menu-more").has_class("open"))
+
+    async def test_about_and_license_are_pages_not_windows(self):
+        app = self.Three()
+        async with app.run_test(size=(80, 20)) as pilot:
+            await pilot.press("ctrl+o")
+            await pilot.pause()
+            for action, page in (("about", "sec-forge-about"), ("license", "sec-forge-license")):
+                app.action_act(action)
+                await pilot.pause()
+                self.assertEqual(len(app.screen_stack), 1, f"{action}: no window")
+                self.assertEqual(app.query_one("#forge-work").current, page)
+                self.assertEqual(self.active(app), ["menu-help"], "Help is lit while its page shows")
+            await pilot.press("escape")
+            await pilot.pause()
+            self.assertEqual(app.query_one("#forge-work").current, "sec-one", "Esc goes back where you were")
+            self.assertEqual(self.active(app), ["menu-one"])
 
 
 class ModernKeysIntoThePane(unittest.IsolatedAsyncioTestCase):

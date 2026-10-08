@@ -128,7 +128,7 @@ Screen { background: $forge-bg; color: $forge-text; }
 .menu-row { height: 1; width: 1fr; }
 .menu-title { width: auto; height: 1; color: $forge-text; }
 .menu-title:hover { background: $forge-hover-bg; color: $forge-hover; }
-.menu-title.active { background: $forge-active-bg; color: $forge-active; text-style: $forge-strong; }
+.menu-title.active, .menu-title.open { background: $forge-active-bg; color: $forge-active; text-style: $forge-strong; }
 
 /* work area — no right padding so section scrollbars hug the screen edge */
 #forge-work { padding: 1 0 1 2; height: 1fr; }

@@ -21,11 +21,11 @@ from .widgets import (
 )
 from .console import GLYPHS, console_mode, console_text, glyph
 from .dialogs import (
-    AboutDialog, ConfirmDialog, ForgeModal, ForgePanelScreen, LicenseDialog,
-    ShortcutsDialog,
+    AboutDialog, AboutView, ConfirmDialog, ForgeModal, ForgePanelScreen, LicenseDialog,
+    LicenseView, ShortcutsDialog,
 )
 from .licenses import GPL3_NOTICE
-from .menu import MenuBar, MenuDropdown, accel, underline_label
+from .menu import MenuBar, MenuDropdown, accel, assign_accels, underline_label
 from .theme import COLORS, FORGE_CSS, ROLES, css_variables
 from .needs import (
     Finding, Need, NeedsApp, a_file, check_needs, describe_session, heading_for, lines_for, missing,
@@ -37,8 +37,8 @@ __version__ = "0.10.0"
 __all__ = [
     "ForgeApp", "MENU_HINT", "HYPEFORGE_FLAG", "hypeforge_mode", "add_hypeforge_argument",
     "menu_key_clashes",
-    "MenuBar", "MenuDropdown", "accel", "underline_label",
-    "ConfirmDialog", "ForgeModal", "ForgePanelScreen", "ShortcutsDialog", "LicenseDialog", "AboutDialog",
+    "MenuBar", "MenuDropdown", "accel", "assign_accels", "underline_label",
+    "ConfirmDialog", "AboutView", "LicenseView", "ForgeModal", "ForgePanelScreen", "ShortcutsDialog", "LicenseDialog", "AboutDialog",
     "FORGE_CSS", "COLORS", "ROLES", "css_variables", "GPL3_NOTICE",
     "console_mode", "console_text", "glyph", "GLYPHS",
     "Notice", "notice_markup", "HintBar", "hints_markup", "ChangesBar", "SettingRow", "NumberPresets", "Toggle", "Choices", "CheckList",
