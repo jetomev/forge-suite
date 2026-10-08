@@ -4,11 +4,11 @@
 
 ## Phase 0 · Research and design
 - [x] Name: **walletForge** (Javier, 2026-10-07; D-1)
-- [ ] Research: how Plasma opens the wallet with the login password (`pam_kwallet5`: hash of the password, a waiting daemon, a handshake) and whether the same PAM module can start **our** daemon → `docs/research/2026-10-07-walletforge.md`
+- [x] Research: how Plasma opens the wallet with the login password — `pam_kwallet5` hashes it, forks the daemon with the hash, leaves a socket; the session sends its environment to wake it; the module's `kwalletd=` option can name **our** daemon → `docs/research/2026-10-07-walletforge.md` (2026-10-07, checked live)
 - [ ] Research: what the standard interface needs from a server (sessions with encryption, collections, items, prompts, aliases; what libsecret and Chromium actually call)
 - [ ] Decide the store format and the encryption (key from the password hash PAM hands over; per-item encryption; the salt file)
 - [ ] Design approved by Javier: what shows on screen (nothing, normally; sudoForge's box when locked; a small `walletforge status`)
-- [ ] The stopgap meanwhile (#41): KDE's own store unlocked by the login password on Sway, if the PAM handshake can be completed from hypeForge
+- [x] The stopgap meanwhile (#41): hypeForge sends the PAM handshake at login (`exec /usr/lib/pam_kwallet_init`) — wallet opened with the login password, no window, proven by hand 21:20; reboot proof pending
 
 ## Phase 1 · Build
 - [ ] The daemon on the bus, the store on disk, tests through the real interface
