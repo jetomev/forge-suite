@@ -25,7 +25,7 @@ HERE = Path(__file__).resolve().parent
 KEYS = HERE / "keys.toml"
 GUIDE = HERE / "guide"
 WINDOW_CLASS = "hypeforge-help"  # Window Rules float it, with a border (rules.toml)
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 
 
 def key_groups():
@@ -44,6 +44,14 @@ def pages():
         text = "\n\n".join((GUIDE / name).read_text() for name in page.get("files", []))
         out.append((f"page-{page['tab'].lower()}", page["tab"], text))
     return out
+
+
+def accels():
+    """{page id: underlined letter} for tabs whose first letter is taken (pages.toml `acc`, 0.2.0):
+    every underlined letter is a Ctrl shortcut, so no two tabs may share one."""
+    with open(GUIDE / "pages.toml", "rb") as f:
+        listed = tomllib.load(f).get("page", [])
+    return {f"page-{p['tab'].lower()}": p["acc"] for p in listed if p.get("acc")}
 
 
 def inline(text):
@@ -99,7 +107,7 @@ def blocks(markdown):
 
 
 def run_app():
-    from forgekit import ForgeApp
+    from forgekit import MENU_HINT, ForgeApp
     from forgekit.app import FORGE_CSS
     from textual.app import ComposeResult
     from textual.binding import Binding
@@ -109,6 +117,7 @@ def run_app():
     from rich.markup import escape
 
     PAGES = pages()
+    ACC = accels()
 
     class HelpApp(ForgeApp):
         APP_NAME = f"hypeForge Help & Keys {VERSION}"
@@ -136,16 +145,19 @@ def run_app():
         .hf-odd { background: $forge-bg; }
         """
         # no Help menu inside the help window (Javier, 10-05): the pages, then Quit
-        MENU = [{"id": pid, "title": title, "kind": "section"} for pid, title, _ in PAGES] + [
+        # 0.2.0 (Javier, 2026-10-08, F-48): forgekit 0.10.0 makes Ctrl + each underlined letter and 1-N
+        MENU = [{"id": pid, "title": title, "kind": "section", **({"acc": ACC[pid]} if pid in ACC else {})}
+                for pid, title, _ in PAGES] + [
             {"id": "quit", "title": "Quit", "kind": "action", "action": "quit"},
         ]
         SHORTCUTS = [
-            ("← → or 1–6", "previous / next page, or straight to a page"),
+            ("← →", "previous / next page"),
+            (f"1–{len(PAGES)}, Ctrl+letter", "straight to a page: its number, or Ctrl + its underlined letter"),
             ("↑ ↓, Page Up / Page Down", "scroll the page"),
             ("A click on the menu bar", "open that page"),
-            ("Q, Esc or Ctrl+Q", "close"),
+            ("Q, Esc or Ctrl+Q", "close (not inside hypeForge Settings: Settings closes it)"),
         ]
-        HINTS = [("← →", "pages"), ("↑ ↓", "scroll"), ("PgUp PgDn", "page"), ("Q", "close")]
+        HINTS = [("← →", "pages"), MENU_HINT, ("↑ ↓", "scroll"), ("PgUp PgDn", "page"), ("Q", "close")]
         BINDINGS = [
             Binding("left", "step(-1)", show=False, priority=True),
             Binding("right", "step(1)", show=False, priority=True),
@@ -156,7 +168,7 @@ def run_app():
             Binding("q,escape", "act('quit')", show=False),
             # forgekit opens its Help menu on F1 / Ctrl+H; this window has none
             Binding("f1,ctrl+h", "nothing", show=False, priority=True),
-        ] + [Binding(str(n), f"go('{pid}')", show=False) for n, (pid, _, _) in enumerate(PAGES, 1) if n < 10]
+        ]   # the numbers bound go(), which this app never had: they did nothing (F-48); forgekit makes them now
 
         @staticmethod
         def table(rows, first_width=None):
@@ -208,7 +220,8 @@ def run_app():
 
         def on_mount(self) -> None:
             super().on_mount()
-            start = sys.argv[1] if len(sys.argv) > 1 else ""
+            words = [a for a in sys.argv[1:] if not a.startswith("-")]     # --hypeforge is not a page
+            start = words[0] if words else ""
             match = [pid for pid, _, _ in PAGES if pid in (start, f"page-{start}")]
             if match:
                 self.call_after_refresh(self._switch_section, match[0])

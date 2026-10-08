@@ -593,7 +593,7 @@ class IdentifyView(VerticalScroll):
                           f"({self.session.label(s.name).split(' · ')[0]})",
                           id=f"id-is-{s.name}") for s in sorted(self.session.live, key=lambda s: (s.y, s.x))
                    if s.name not in self.answers]
-        buttons += [Button("None Of Them", id="id-is-none"), Button("Dim It Again", id="id-is-again")]
+        buttons += [Button("None of Them", id="id-is-none"), Button("Dim It Again", id="id-is-again")]
         await box.mount(*buttons)
 
     @work(exclusive=True, group="df-identify")

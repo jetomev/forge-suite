@@ -52,7 +52,7 @@ A full desktop like KDE Plasma does everything for you, and it carries a lot of 
 | **Sound, network, Bluetooth** | Click the bar: **wiremix** (volume per app and device), a network list (with **nmtui** for the details), **bluetui**. Each opens floating, in the KognogOS colours. |
 | **USB drives** | Plugged-in drives mount by themselves (Windows drives read-only, the computer's own disks never); the bar icon lists them, to open in Midnight Commander or eject. |
 | **Window rules** | Small tools (the calculator, settings windows, picture-in-picture video, password boxes) float above the tiled windows. |
-| **Help & Keys** (Win + F1) | A small Forge app with tabs: the key chart and a plain-words guide to every piece. The chart is checked against Sway's real keys before every change is saved. |
+| **Help & Keys** (Win + F1) | A small Forge app with tabs: the key chart and a plain-words guide to every piece. The chart is checked against Sway's real keys before every change is saved. Each tab has a number and a Ctrl + letter. |
 | **Lock screen** (Win + Escape) | A big clock and a password box over the blurred KognogOS wallpaper. Locks by itself after 30 minutes; the screens turn off after 60. |
 | **Notifications** | Small pop-ups at the top right of the screen you're using; **Win + N** closes them all. |
 | **Clipboard history** (Win + C) | Everything you copy, text and pictures; passwords from password managers are skipped. |
@@ -90,7 +90,7 @@ The look is **Catppuccin Mocha** with the KognogOS wallpaper: thin borders, no t
 
 1. **The pieces.** Each feature (workspaces, placement, launcher, rules, help, lock…) is its own small piece ([D-47](docs/DECISIONS.md)), with its own settings file in `~/.config/hypeforge/applets/`.
 2. **A Forge app for every setting.** Everything that today can only be set up by editing a file gets its own **Forge Suite app**: our own pieces, and outside programs like the music player, the top bar and the launcher's look ([D-59](docs/DECISIONS.md)). Each is a full app that also runs on its own, built on [forgekit](../forgekit/README.md) so they all look and work the same. The first two are done: **[displayForge](../displayforge/README.md)** (screens) and **[sudoForge](../sudoforge/README.md)** (passwords).
-3. **hypeForge Settings, the control centre.** One window, like KDE's System Settings: the list on the left, and the chosen Forge app running on the right. Replace one app and nothing else has to change.
+3. **hypeForge Settings, the control centre.** One window, like KDE's System Settings: the list on the left, and the chosen Forge app running on the right. Replace one app and nothing else has to change. Inside it, every app runs **without a Quit of its own** (Settings starts it with `--hypeforge`): Settings' Quit closes them all, and an app with unsaved work asks you first.
 4. **nog** installs everything and decides when it updates, and system changes are made only through the apps, never by hand.
 
 The Forge apps already shipped, [grubForge](https://github.com/jetomev/grubforge) and [alacrittyForge](https://github.com/jetomev/alacrittyforge), will be opened from hypeForge Settings too. The full list of upcoming apps is in the [to-do list](TODO.md).

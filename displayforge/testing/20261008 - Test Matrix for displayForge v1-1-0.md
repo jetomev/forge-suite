@@ -14,7 +14,7 @@
 | 8 | Quit asks, Yes | same → Yes → the countdown → Keep It → the save review → Save: quits, the change saved | Javier | |
 | 9 | Kept but not saved is asked too | change → F9 → Keep It → Q: the question comes up | Javier | |
 | 10 | The Save button in the bar | change → F9 → Keep It → click Save (F10) in the bar: the review opens | Javier | |
-| 11 | Button labels | Try It (F9), Save (F10), Keep It (Enter), Go Back Now (Esc), None Of Them, Dim It Again | Javier | |
+| 11 | Button labels | Try It (F9), Save (F10), Keep It (Enter), Go Back Now (Esc), None of Them, Dim It Again | Javier | |
 | 12 | Inside hypeForge Settings: no Quit | Settings → Screens: no Quit in the bar; Q and Ctrl+Q do nothing | Javier | |
 | 13 | Inside Settings: quitting Settings asks | change a setting in Screens → Settings' Quit: Settings shows the Screens page and displayForge asks its question | Javier | |
 | 14 | Tab and Enter still work | Settings page: Tab moves between fields, Enter chooses (Ctrl+I is not Tab) | Javier | |

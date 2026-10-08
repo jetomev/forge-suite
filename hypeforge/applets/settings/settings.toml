@@ -2,11 +2,13 @@
 # command) that runs INSIDE the Settings window, in a terminal pane on the right.
 # The spike (2026-10-07, step 6 of the order): prove a full Forge app runs inside the pane with
 # its colours, keys and mouse. Copied to ~/.config/hypeforge/applets/settings.toml, which is read.
+# forge = true: a Forge app, started with --hypeforge (no Quit of its own; Settings closes it, 0.4.0).
 
 [[page]]
 name = "Screens"
 summary = "arrange, resolution, refresh rate, brightness"
 command = "python3 ~/Programs/forge-suite/displayforge/main.py"   # the AUR package is not installed on the test desktop; the repo copy is
+forge = true
 
 [[page]]
 name = "Passwords"
@@ -17,18 +19,22 @@ command = "sudoforge status; echo; echo 'Press Enter to go back'; read _"
 name = "Terminal"
 summary = "Alacritty's look and behaviour"
 command = "alacrittyforge"
+forge = true
 
 [[page]]
 name = "Packages"
 summary = "nogForge: what is installed, updates"
 command = "nogforge"
+forge = true
 
 [[page]]
-name = "Boot menu"
+name = "Boot Menu"
 summary = "grubForge: GRUB's look and entries"
 command = "grubforge"
+forge = true
 
 [[page]]
 name = "Help & Keys"
 summary = "every key of the desktop"
 command = "~/Programs/forge-suite/hypeforge/applets/help/hypeforge-help"
+forge = true

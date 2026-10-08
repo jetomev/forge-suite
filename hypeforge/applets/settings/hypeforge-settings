@@ -8,24 +8,30 @@ the apps; it does not copy them.
     hypeforge-settings            open the control centre
     hypeforge-settings <page>     open it on a page ("screens", "packages"…)
 
-Pages: ~/.config/hypeforge/applets/settings.toml (name, summary, command).
+Pages: ~/.config/hypeforge/applets/settings.toml (name, summary, command, forge), or the file named
+by HYPEFORGE_SETTINGS_PAGES (for trying new app versions before they are installed).
+A page with `forge = true` is a Forge app: it is started with --hypeforge (0.4.0, Javier 2026-10-08),
+so it has no Quit of its own; Settings' Quit asks each one to close, and an app with something
+unsaved asks its own question first.
 Keys: none of its own (Javier, 2026-10-07: every key belongs to the app in the pane; a click on
 the list is the way back). The list ends with Manual · License · About · Quit.
 """
 
 import os
 import shlex
+import signal
 import sys
 import tomllib
 from pathlib import Path
 
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 HERE = Path(__file__).resolve().parent
 CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets/settings.toml"
 
 
 def pages():
-    src = CONFIG if CONFIG.exists() else HERE / "settings.toml"
+    override = os.environ.get("HYPEFORGE_SETTINGS_PAGES")
+    src = Path(override) if override else CONFIG if CONFIG.exists() else HERE / "settings.toml"
     with open(src, "rb") as f:
         return [p for p in tomllib.load(f).get("page", []) if p.get("name") and p.get("command")]
 
@@ -46,6 +52,7 @@ def main():
     class SettingsApp(ForgeApp, inherit_bindings=False):   # no shortcuts of its own: every key belongs to the app in the pane
         APP_NAME = f"hypeForge Settings {VERSION}"
         SHOW_HINT_BAR = False
+        MENU_KEYS = False          # forgekit 0.10.0 would give Settings Ctrl keys and numbers: they belong to the app
         CSS = FORGE_CSS + """
         #forge-menubar { display: none; }  /* the only menu bar on screen is the running app's */
         #sec-settings { height: 1fr; }
@@ -94,8 +101,9 @@ def main():
                                      "as it does in its own window.")
                         yield Static("The list is the only thing that belongs to Settings. Click it to change page: "
                                      "the app you leave keeps running, and comes back exactly as you left it.")
-                        yield Static("Manual, License, About and Quit are the last four entries. Quit closes "
-                                     "Settings and every app running inside it.")
+                        yield Static("Manual, License, About and Quit are the last four entries. The apps "
+                                     "here have no Quit of their own: Quit closes Settings and every app inside "
+                                     "it. An app with something not saved asks you first, on its own page.")
 
         @staticmethod
         def _row(p) -> Text:
@@ -124,11 +132,9 @@ def main():
                 self.open_page(int(oid.removeprefix("page-")))
 
         def extra(self, act: str) -> None:
+            self._quitting = False                # any choice on the list ends a quit in progress
             if act == "quit":
-                for pane in self.query(TerminalPane):
-                    if pane.running:
-                        pane.terminate()          # Quit closes Settings and every app inside it
-                self.exit()
+                self.quit_all()
             elif act == "about":
                 self.action_act("about")
             elif act == "license":
@@ -140,7 +146,45 @@ def main():
                 self.query_one("#hf-empty").display = False
                 self.query_one("#hf-manual").display = True
 
-        def open_page(self, i: int) -> None:
+        # ── Quit (0.4.0, Javier 2026-10-08: "ask each app, its own way") ─────────────────────────
+        def _forge_panes(self) -> list[tuple[int, "TerminalPane"]]:
+            return [(i, self.query_one(f"#hf-pane-{i}", TerminalPane)) for i, p in enumerate(PAGES)
+                    if p.get("forge") and self.query_one(f"#hf-pane-{i}", TerminalPane).running]
+
+        def quit_all(self) -> None:
+            """Every Forge app is asked to close (SIGUSR1: forgekit's host_quit runs the app's own
+            check); anything else is closed. Settings closes when the last app has; an app that
+            asks a question is shown, and Settings waits for the answer."""
+            for i, pane in enumerate(self.query(TerminalPane)):
+                if pane.running and not PAGES[i].get("forge"):
+                    pane.terminate()
+            asked = self._forge_panes()
+            if not asked:
+                self.exit()
+                return
+            self._quitting = True
+            for _i, pane in asked:
+                try:
+                    os.kill(pane.proc.pid, signal.SIGUSR1)     # the app only, never its children
+                except (OSError, AttributeError):
+                    pane.terminate()
+            self.set_timer(0.8, self._quit_next)
+
+        def _quit_next(self) -> None:
+            if not getattr(self, "_quitting", False):
+                return
+            left = self._forge_panes()
+            if not left:
+                self.exit()
+                return
+            i, _pane = left[0]
+            self.open_page(i, keep_quitting=True)
+            self.query_one("#hf-running", Static).update(
+                f"{PAGES[i]['name']} has something not saved: answer it, and Settings closes after")
+
+        def open_page(self, i: int, keep_quitting: bool = False) -> None:
+            if not keep_quitting:
+                self._quitting = False
             """Show page i's pane; start its app the first time (or again after it closed itself).
             The pane we leave stays as it is, its app running (Javier, 2026-10-08)."""
             p = PAGES[i]
@@ -154,11 +198,15 @@ def main():
             if not pane.running:
                 cmd = ["sh", "-c", f"exec {os.path.expanduser(p['command'])}"] if any(ch in p["command"] for ch in ";|&") \
                     else [os.path.expanduser(w) for w in shlex.split(p["command"])]
-                env = dict(os.environ, HYPEFORGE_SETTINGS="1")   # the app knows it runs inside Settings (hides Quit)
-                self.call_after_refresh(pane.start, cmd, env)
+                if p.get("forge") and cmd[:2] != ["sh", "-c"]:
+                    cmd.append("--hypeforge")     # no Quit of its own: Settings closes it (0.4.0)
+                self.call_after_refresh(pane.start, cmd, dict(os.environ))
             self.call_after_refresh(pane.focus)
 
         def on_terminal_pane_exited(self, e: TerminalPane.Exited) -> None:
+            if getattr(self, "_quitting", False):
+                self.call_after_refresh(self._quit_next)
+                return
             if e.pane.display:      # the one on screen closed itself (its Ctrl+Q): say so, keys back to the list
                 self.query_one("#hf-running", Static).update(
                     f"closed  ·  pick a page on the left; picking this one again starts it afresh")

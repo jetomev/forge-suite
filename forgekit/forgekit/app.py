@@ -35,6 +35,7 @@ import sys
 
 from collections.abc import Sequence
 
+from textual.actions import SkipAction
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Vertical
@@ -361,6 +362,12 @@ class ForgeApp(App[None]):
     def action_activate(self, entry_id: str) -> None:
         if entry_id not in self._by_id:              # e.g. Quit under --hypeforge: nothing
             return
+        # 0.10.0: a window open over the app (a dialog, a form) keeps its keys: Ctrl+E / Ctrl+K in
+        # its text field edit the text, a digit is typed, and nothing switches the page behind it.
+        # Only a menu dropdown gives way (below), and Quit still works from anywhere
+        top = self.screen
+        if len(self.screen_stack) > 1 and not isinstance(top, MenuDropdown) and entry_id != "quit":
+            raise SkipAction()
         entry = self._by_id[entry_id]
         kind = entry["kind"]
         # 0.10.0 (#47): one dropdown at a time. The accelerators are priority bindings, so

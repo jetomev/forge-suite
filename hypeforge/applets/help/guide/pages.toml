@@ -1,6 +1,7 @@
 # hypeForge Help & Keys — the pages and their tabs, in order (Javier, 2026-10-05: short tab
 # names, so the menu bar fits a small window). The key chart ("Keys") always comes first;
-# each page shows its guide files one after the other. The hypeForge Settings reads this too.
+# each page shows its guide files one after the other. `acc` = the underlined letter when the
+# first one is taken (every underlined letter is a Ctrl shortcut, 2026-10-08). The hypeForge Settings reads this too.
 
 [[page]]
 tab = "Start"
@@ -12,6 +13,7 @@ files = ["02-workspaces.md"]
 
 [[page]]
 tab = "Windows"
+acc = "n"            # W is Workspaces
 files = ["03-placement.md", "05-window-rules.md"]
 
 [[page]]
@@ -24,4 +26,5 @@ files = ["07-notifications.md", "08-screenshots.md", "09-clipboard.md", "10-lock
 
 [[page]]
 tab = "About"
+acc = "b"            # A is Apps
 files = ["06-help.md"]

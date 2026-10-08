@@ -24,7 +24,8 @@ def load_app_class():
     src = APP.read_text()
     body = src[src.index("    from textual.app import ComposeResult"):src.index("    SettingsApp().run()")]
     import shlex
-    ns = {"os": os, "sys": sys, "shlex": shlex, "pages": m.pages, "VERSION": m.VERSION}
+    import signal
+    ns = {"os": os, "sys": sys, "shlex": shlex, "signal": signal, "pages": m.pages, "VERSION": m.VERSION}
     exec("\n".join(line[4:] if line.startswith("    ") else line for line in body.splitlines()), ns)
     return ns["SettingsApp"], m
 
@@ -94,6 +95,108 @@ class Spike(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(type(app.screen).__name__, "Screen", "no Settings help screen opened on Ctrl+H")
             self.assertFalse(app.query_one("#forge-menubar").display)
             pane.terminate(); second.terminate()
+
+# A stand-in Forge app: writes its arguments down; on SIGUSR1 (Settings' Quit) it closes at once,
+# or, started with "dirty", prints a question and closes only on the answer "n".
+FAKE = r"""
+import os, signal, sys, time, tty
+out = sys.argv[1]
+open(out, "a").write(" ".join(sys.argv[2:]) + "\n")
+dirty = "dirty" in sys.argv
+asked = []
+def ask(*_):
+    if not dirty:
+        sys.exit(0)
+    asked.append(1)
+    print("UNSAVED: quit without saving? n", flush=True)
+signal.signal(signal.SIGUSR1, ask)
+tty.setraw(0)
+while True:
+    try:
+        b = os.read(0, 1)
+    except InterruptedError:
+        continue
+    if asked and b == b"n":
+        sys.exit(0)
+"""
+
+
+class QuitAsksEachApp(unittest.IsolatedAsyncioTestCase):
+    """0.4.0 (Javier, 2026-10-08): Forge apps start with --hypeforge; Settings' Quit asks each one
+    to close; one with something unsaved is shown and asks its own question; Settings closes after."""
+
+    def setUp(self):
+        self.dir = Path(tempfile.mkdtemp())
+        fake = self.dir / "fake.py"
+        fake.write_text(FAKE)
+        self.log = self.dir / "argv.log"
+        py = sys.executable
+        conf = self.dir / "pages.toml"
+        conf.write_text(
+            f'[[page]]\nname = "Clean"\ncommand = "{py} {fake} {self.log} clean"\nforge = true\n'
+            f'[[page]]\nname = "Dirty"\ncommand = "{py} {fake} {self.log} dirty"\nforge = true\n'
+            f'[[page]]\nname = "Plain"\ncommand = "sleep 30"\n')
+        self._old = os.environ.get("HYPEFORGE_SETTINGS_PAGES")
+        os.environ["HYPEFORGE_SETTINGS_PAGES"] = str(conf)
+
+    def tearDown(self):
+        if self._old is None:
+            os.environ.pop("HYPEFORGE_SETTINGS_PAGES", None)
+        else:
+            os.environ["HYPEFORGE_SETTINGS_PAGES"] = self._old
+
+    async def open_all(self, app, pilot):
+        for i in range(3):
+            app.open_page(i)
+            await pilot.pause(0.4)
+        for _ in range(30):
+            await pilot.pause(0.1)
+            if self.log.exists() and len(self.log.read_text().splitlines()) == 2:
+                break
+
+    async def test_forge_apps_get_the_flag_and_others_do_not(self):
+        SettingsApp, m = load_app_class()
+        app = SettingsApp()
+        async with app.run_test(size=(120, 36)) as pilot:
+            await self.open_all(app, pilot)
+            started = self.log.read_text().splitlines()
+            self.assertEqual(sorted(started), ["clean --hypeforge", "dirty --hypeforge"])
+            for pane in app.query("TerminalPane"):
+                pane.terminate()
+
+    async def test_quit_closes_the_clean_ones_and_waits_for_the_answer(self):
+        SettingsApp, m = load_app_class()
+        app = SettingsApp()
+        async with app.run_test(size=(120, 36)) as pilot:
+            exits = []
+            app.exit = lambda *a, **k: exits.append(1)
+            await self.open_all(app, pilot)
+            panes = [app.query_one(f"#hf-pane-{i}") for i in range(3)]
+            app.quit_all()
+            for _ in range(30):
+                await pilot.pause(0.1)
+                if not panes[0].running and not panes[2].running and panes[1].display:
+                    break
+            self.assertFalse(panes[0].running, "the app with nothing unsaved closed at once")
+            self.assertFalse(panes[2].running, "a plain program is simply closed")
+            self.assertTrue(panes[1].running, "the one with something unsaved waits")
+            self.assertTrue(panes[1].display, "and its page is shown")
+            self.assertEqual(exits, [], "Settings waits for the answer")
+            self.assertTrue(any("UNSAVED" in ln for ln in panes[1].lines_plain()))
+            panes[1].write(b"n")
+            for _ in range(30):
+                await pilot.pause(0.1)
+                if exits:
+                    break
+            self.assertEqual(exits, [1], "Settings closes once the last app has answered")
+
+    async def test_settings_has_no_menu_keys_of_its_own(self):
+        SettingsApp, m = load_app_class()
+        app = SettingsApp()
+        async with app.run_test(size=(120, 36)) as pilot:
+            await pilot.pause()
+            keys = set(app._bindings.key_to_bindings)
+            self.assertFalse({"1", "2", "ctrl+s"} & keys, keys)
 
 
 if __name__ == "__main__":

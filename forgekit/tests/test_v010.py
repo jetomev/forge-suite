@@ -289,6 +289,31 @@ class MenuKeysForEveryEntry(unittest.IsolatedAsyncioTestCase):
             await pilot.pause()
             self.assertEqual(self.active(app), ["menu-info"], "the real Ctrl+I still works")
 
+    async def test_a_dialog_keeps_its_keys(self):
+        # found building grubForge 2.2.0: Ctrl+E in a Rename box switched the page behind it
+        from textual.screen import ModalScreen
+        from textual.widgets import Input
+
+        class Box(ModalScreen):
+            def compose(self):
+                yield Input("hello", id="box-field")
+
+        app = self.Three()
+        async with app.run_test(size=(80, 20)) as pilot:
+            await pilot.pause()
+            app.push_screen(Box())
+            await pilot.pause()
+            field = app.screen.query_one("#box-field")
+            field.focus()
+            field.cursor_position = 0
+            await pilot.press("ctrl+w")          # Two's key; in a field it deletes the word before
+            await pilot.press("ctrl+e")          # end of line
+            await pilot.press("3")
+            await pilot.pause()
+            self.assertEqual(self.active(app), ["menu-one"], "nothing switched behind the box")
+            self.assertEqual(field.value, "hello3", "the field got Ctrl+E and the digit")
+            self.assertIsInstance(app.screen, Box)
+
     async def test_hypeforge_count_is_the_same(self):
         app = self.Three(hypeforge=True)
         async with app.run_test(size=(80, 20)) as pilot:

@@ -5,6 +5,17 @@
 
 ---
 
+## 2026-10-08
+
+### D-62 · Inside hypeForge Settings an app has no Quit; Settings closes it, and each app asks its own question
+**Decided by Javier**, after running every app inside Settings: *"q still quit apps. We need to create a command for all apps. When they are open with the command `[app]Forge --hypeForge` … it will not show the Quit option, and disable the quit shortcuts."* Then, from the options, **"ask each app, its own way"**.
+- Every Forge app accepts `--hypeforge` (any capitals). Settings starts the Forge pages with it (`forge = true` in `settings.toml`). Started that way the app has no Quit in its menu bar, and Q, Esc (Help & Keys) and Ctrl+Q do nothing.
+- Settings' Quit asks every app to close (forgekit's `host_quit`, through SIGUSR1). An app with nothing unsaved closes at once; one with unsaved work is shown, and asks its usual "Save first / Quit without saving" (displayForge: "Apply your changes?"). Settings closes after the last one has closed.
+- The option is for Settings only, so it's left out of `--help` and the man pages, but it's written down in every app's README, manual, CLAUDE.md and changelog.
+- **Also from the same run:** every underlined letter in a menu bar is a Ctrl shortcut, every entry has a number (Help included), and the bottom bar says "1-N menu" (forgekit 0.10.0). Button labels read "Words (key)", e.g. "Save Changes (s)" (Javier, 2026-10-03). **Proposed (Claude, to confirm with Javier):** standard title case, so small words such as *the*, *of* and *and* stay lowercase, as in nogForge's already approved "Update the Ticked Ones (u)".
+
+---
+
 ## 2026-10-06
 
 ### D-61 · The password helper is called sudoForge; the keyring comes later, as its own step

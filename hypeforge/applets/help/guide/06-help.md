@@ -10,4 +10,15 @@ applet. The hypeForge Settings will show the same pages.
   Sway's real keys on every save, so it cannot quietly go out of date.
 - The guide: `applets/help/guide/`, one page per applet.
 
-Guide pages open in a small window: **↑ ↓** or **Page Up / Page Down** to read, **q** to close.
+## Moving around
+
+- **← →** the previous / next tab; **1 to 7** go straight to a tab, and so does **Ctrl + the underlined
+  letter** in its name (Ctrl+K Keys, Ctrl+S Start, Ctrl+W Workspaces, Ctrl+N Windows, Ctrl+A Apps,
+  Ctrl+T Tools, Ctrl+B About).
+- **↑ ↓** or **Page Up / Page Down** to read; **q**, **Esc** or **Ctrl+Q** to close.
+
+## Inside hypeForge Settings
+
+Every Forge app in Settings, this help included, runs **without a Quit of its own**: Settings starts
+them with `--hypeforge`, so q, Esc and Ctrl+Q do nothing there. Settings' own **Quit** closes them all,
+and an app with something not saved asks you first, on its own page.
