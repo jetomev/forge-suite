@@ -30,7 +30,8 @@ v0.5.0, all opt-in so existing apps look the same:
 
 from __future__ import annotations
 
-import os
+import signal
+import sys
 
 from collections.abc import Sequence
 
@@ -43,9 +44,47 @@ from textual.widgets import ContentSwitcher, Static
 
 from .console import ConsoleGlyphFilter, ConsoleScrollBarRender, console_mode, set_console
 from .dialogs import AboutDialog, LicenseDialog, ShortcutsDialog
-from .menu import MenuBar, MenuDropdown
+from .menu import MenuBar, MenuDropdown, accel
 from .theme import FORGE_CSS, css_variables
 from .widgets import ChangesBar, HintBar, hints_for
+
+
+# 0.10.0: a hint whose key is MENU_HINT[0] shows as "1-N", N = the numbered menu entries
+MENU_HINT = ("{menu}", "menu")
+
+HYPEFORGE_FLAG = "--hypeforge"
+
+
+def hypeforge_mode(argv: Sequence[str] | None = None) -> bool:
+    """True when the app was started with ``--hypeforge`` (any case: ``--hypeForge`` too).
+
+    hypeForge Settings starts every Forge app this way (0.10.0): the app is one page
+    of a bigger window, so it has no Quit of its own — Settings closes it."""
+    args = sys.argv[1:] if argv is None else argv
+    return any(a.lower() == HYPEFORGE_FLAG for a in args)
+
+
+def add_hypeforge_argument(parser) -> None:
+    """Teach an app's argparse parser ``--hypeforge`` (and ``--hypeForge``), kept out of
+    ``--help``: it is for hypeForge Settings, not for people."""
+    import argparse
+    parser.add_argument("--hypeforge", "--hypeForge", dest="hypeforge", action="store_true",
+                        help=argparse.SUPPRESS)
+
+
+def menu_key_clashes(menu: list[dict]) -> list[tuple[str, str, str]]:
+    """Entries whose underlined letter is already taken by an earlier one:
+    (letter, first entry id, clashing entry id). Each underlined letter is a
+    Ctrl shortcut (0.10.0), so a clash means a dead key; apps test for none."""
+    seen: dict[str, str] = {}
+    out = []
+    for m in menu:
+        a = accel(m)
+        if a in seen:
+            out.append((a, seen[a], m["id"]))
+        else:
+            seen[a] = m["id"]
+    return out
 
 
 class TitleText(Static):
@@ -93,6 +132,9 @@ class ForgeApp(App[None]):
     SHOW_HINT_BAR: bool = False
     SHOW_CHANGES_BAR: bool = False
     HINTS: list[tuple[str, str]] = []
+    # 0.10.0 (Javier, 2026-10-08): every menu entry gets Ctrl+<its underlined letter>
+    # and a number, 1 to N in bar order, Help included, Quit not. False = the app binds its own
+    MENU_KEYS: bool = True
 
     CSS = FORGE_CSS
 
@@ -105,7 +147,8 @@ class ForgeApp(App[None]):
         Binding("ctrl+q", "activate('quit')", show=False, priority=True),
     ]
 
-    def __init__(self, *args, console: bool | None = None, **kwargs) -> None:
+    def __init__(self, *args, console: bool | None = None, hypeforge: bool | None = None,
+                 **kwargs) -> None:
         # console: None = decide from the environment (TERM / FORGE_ASCII)
         # (not "self.console": Textual's App already uses that name for its
         # Rich console, and would overwrite the flag)
@@ -120,12 +163,34 @@ class ForgeApp(App[None]):
             self.theme = "ansi-dark"
         self._glyph_filter = ConsoleGlyphFilter()
         self.title = self.APP_NAME
-        # 0.10.0 (forge-suite #45): inside hypeForge Settings the app is one page of a bigger
-        # window, so its own Quit goes (Ctrl+Q still closes it, which returns Settings to its list)
-        if os.environ.get("HYPEFORGE_SETTINGS"):
+        # 0.10.0 (Javier, 2026-10-08): started with --hypeforge, the app is one page of
+        # hypeForge Settings. No Quit in the bar, and every way to quit (Q, Ctrl+Q, the
+        # Quit entry) does nothing: Settings closes it, asking first through SIGUSR1
+        self.hypeforge = hypeforge_mode() if hypeforge is None else hypeforge
+        if self.hypeforge:
             self.MENU = [m for m in self.MENU if m.get("id") != "quit"]
         self._by_id = {m["id"]: m for m in self.MENU}
         self._title_status = ""
+        self._menu_count = 0
+        if self.MENU_KEYS:
+            self._bind_menu_keys()
+
+    def _bind_menu_keys(self) -> None:
+        """Ctrl+<underlined letter> (priority: it works from any field, like Ctrl+H always
+        did) and 1-9 (not priority: a field that takes digits keeps them) for each entry."""
+        taken: set[str] = {"h", "q"}            # the class bindings: Help and Quit
+        n = 0
+        for m in self.MENU:
+            if m["id"] == "quit":
+                continue
+            letter = accel(m)
+            if letter.isalpha() and letter not in taken:
+                self._bindings.bind(f"ctrl+{letter}", f"activate('{m['id']}')", show=False, priority=True)
+            taken.add(letter)
+            n += 1
+            if n <= 9:
+                self._bindings.bind(str(n), f"activate('{m['id']}')", show=False)
+        self._menu_count = min(n, 9)
 
     # ── v0.6.0: a tool's run and its password, inside the app ────────────────
     PASSWORD_TITLE: str = "Password"
@@ -177,6 +242,12 @@ class ForgeApp(App[None]):
         return self._forge_polkit
 
     async def on_unmount(self) -> None:
+        if self.hypeforge:
+            try:
+                import asyncio
+                asyncio.get_running_loop().remove_signal_handler(signal.SIGUSR1)
+            except (NotImplementedError, RuntimeError, ValueError):
+                pass
         agent = getattr(self, "_forge_polkit", None)
         if agent is not None:
             agent.stop()
@@ -217,6 +288,22 @@ class ForgeApp(App[None]):
     def on_mount(self) -> None:
         self._mark_active(self._first_section())
         self.refresh_hints()
+        if self.hypeforge:
+            try:
+                import asyncio
+                asyncio.get_running_loop().add_signal_handler(signal.SIGUSR1, self.host_quit)
+            except (NotImplementedError, RuntimeError, ValueError):   # not the main thread / no signals
+                pass
+
+    def host_quit(self) -> None:
+        """hypeForge Settings asks the app to close (SIGUSR1 under --hypeforge). The
+        app's own check runs, exactly as its Quit would: nothing unsaved closes at once;
+        otherwise the app asks, and closes on that answer (or stays, and Settings with it)."""
+        top = self.screen
+        if isinstance(top, MenuDropdown):
+            top.dismiss(None)
+        if self.before_quit():
+            self.exit()
 
     # ── v0.5.0: title status, hint bar, changes bar ──────────────────────────
     def set_title_status(self, text: str) -> None:
@@ -248,7 +335,8 @@ class ForgeApp(App[None]):
             shown = None
         if shown is not None and (widget is None or shown not in widget.ancestors_with_self):
             widget = shown
-        bar.set_hints(hints_for(widget, self.HINTS))
+        hints = hints_for(widget, self.HINTS)
+        bar.set_hints([(f"1-{self._menu_count}" if k == MENU_HINT[0] else k, d) for k, d in hints])
 
     def on_descendant_focus(self, event) -> None:
         self.refresh_hints()
@@ -271,9 +359,7 @@ class ForgeApp(App[None]):
             self.action_activate(w.id.removeprefix("menu-"))
 
     def action_activate(self, entry_id: str) -> None:
-        if entry_id not in self._by_id:              # Quit hidden inside Settings: Ctrl+Q still closes
-            if entry_id == "quit":
-                self.exit()
+        if entry_id not in self._by_id:              # e.g. Quit under --hypeforge: nothing
             return
         entry = self._by_id[entry_id]
         kind = entry["kind"]
@@ -314,6 +400,8 @@ class ForgeApp(App[None]):
 
     def action_act(self, action_id: str) -> None:
         if action_id == "quit":
+            if self.hypeforge:                       # Settings closes it (host_quit)
+                return
             if self.before_quit():
                 self.exit()
         elif action_id == "shortcuts":

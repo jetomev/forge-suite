@@ -4,7 +4,9 @@ Top menu bar, full-width workspace, and floating dialogs, Catppuccin-themed.
 Build an app by subclassing ``ForgeApp``; see ``examples/demo.py``.
 """
 
-from .app import ForgeApp
+from .app import (
+    HYPEFORGE_FLAG, MENU_HINT, ForgeApp, add_hypeforge_argument, hypeforge_mode, menu_key_clashes,
+)
 from .closing import closing_notice, runs_log_row, session_banner
 from .flows import ChangeGroup, ProgressDialog, ReviewDialog, review_markup
 from .manual import ManualScreen, load_pages
@@ -30,10 +32,11 @@ from .needs import (
     needs_text, parse_version, program, service, start_check, sway_session,
 )
 
-__version__ = "0.9.0"
+__version__ = "0.10.0"
 
 __all__ = [
-    "ForgeApp",
+    "ForgeApp", "MENU_HINT", "HYPEFORGE_FLAG", "hypeforge_mode", "add_hypeforge_argument",
+    "menu_key_clashes",
     "MenuBar", "MenuDropdown", "accel", "underline_label",
     "ConfirmDialog", "ForgeModal", "ForgePanelScreen", "ShortcutsDialog", "LicenseDialog", "AboutDialog",
     "FORGE_CSS", "COLORS", "ROLES", "css_variables", "GPL3_NOTICE",
