@@ -8,7 +8,7 @@
 - [ ] Research: what the standard interface needs from a server (sessions with encryption, collections, items, prompts, aliases; what libsecret and Chromium actually call)
 - [ ] Decide the store format and the encryption (key from the password hash PAM hands over; per-item encryption; the salt file)
 - [ ] Design approved by Javier: what shows on screen (nothing, normally; sudoForge's box when locked; a small `walletforge status`)
-- [x] The stopgap meanwhile (#41): hypeForge sends the PAM handshake at login (`exec /usr/lib/pam_kwallet_init`) — wallet opened with the login password, no window, proven by hand 21:20; reboot proof pending
+- [x] The stopgap meanwhile (#41): hypeForge sends the PAM handshake at login (`exec /usr/lib/pam_kwallet_init`) — wallet opened with the login password, no window — **proven after a reboot 21:26 (#41 closed)**
 
 ## Phase 1 · Build
 - [ ] The daemon on the bus, the store on disk, tests through the real interface
