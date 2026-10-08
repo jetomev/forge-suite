@@ -25,7 +25,8 @@
 
 ## 2026-10-07 — the issue sweep
 - [x] **17 open issues → 5** (Javier: "close them all tonight"). Closed with a full explanation each: #33 and #32 had shipped (forgekit 0.7.0, displayForge 1.0.1) and were left open by oversight; #17 #16 #15 #9 #13 #5 #7 #4 described the Hyprland days, cleared off this computer on 10-05; #8 holds by construction (every app is on forgekit ≥ 0.4); #22 (D-44) is carried out, Phase 10 complete. Left open: #37 (sudoForge 1.0.1, tonight), #25 (F-43, fix prepared, Javier's test), #19 (default apps, a pick for Javier), #23 (F-41, Javier deferred it 10-04), #10 (the Plasma marker, by rule)
-- [ ] Found on the way: `monique` 0.8.3 (the Hyprland screens app) is still installed and unused — **Javier (10-07): remove it**; nog from Claude's shell could not (no terminal to answer pacman's question → jetomev/nog#48), Javier runs it in a terminal
+- [x] Later the same night: F-43 (#25) and F-41 (#23) proven and closed; **Claude Desktop's login on Sway (#39)**: flags file + `exec ksecretd` at login — after the reboot the store runs from login and the wallet unlocks through KDE's password window once per login (the Forge wallet, D-61, replaces that window); nine-spot window order (#38), forgekit menu bar (#40) filed; Javier's Settings catalogue + the agreed v1.0 cut ranked in hypeForge's TODO
+- [x] Found on the way: `monique` 0.8.3 (the Hyprland screens app) was still installed and unused — removed by Javier 10-07 (nog from Claude's shell could not: no terminal to answer pacman's question → folded into jetomev/nog#32)
 
 ## 2026-10-06 evening — the first releases from the suite
 - [x] **forgekit 0.7.0** (`forgekit-v0.7.0`, GitHub Release with signed assets, AUR `python-forgekit` fetching from this repository) and **displayForge 1.0.1** (`displayforge-v1.0.1`, Latest): the per-app tag release works end to end. Details in each section's TODO
