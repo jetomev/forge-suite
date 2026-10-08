@@ -387,6 +387,59 @@ class TerminalPane(ScrollView, can_focus=True):
         self._follow = True
         self.write(data)
 
+    # ── the mouse (0.10.0, forge-suite #45): passed to the program when it asks for it ────────
+    # The program switches mouse reporting on with ESC [ ? 1000 h (clicks), 1002 (drag), 1003
+    # (every move) and 1006 (the SGR form, which every Textual app uses). pyte keeps private
+    # modes shifted by 5. We send the SGR form only: ESC [ < button ; column ; row M (press,
+    # move, wheel) or m (release), 1-based, relative to the pane's own top-left corner.
+    def _mouse_mode(self) -> int:
+        """0 = off, 1000 = clicks, 1002 = clicks + drag, 1003 = everything."""
+        modes = self.screen_vt.mode
+        for m in (1003, 1002, 1000):
+            if (m << 5) in modes:
+                return m
+        return 0
+
+    def _send_mouse(self, button: int, event, release: bool = False) -> None:
+        if not self.running or (1006 << 5) not in self.screen_vt.mode:
+            return
+        col = max(1, min(int(event.x) + 1, self.screen_vt.columns))
+        row = max(1, min(int(event.y) + 1, self.screen_vt.lines))
+        self.write(f"\x1b[<{button};{col};{row}{'m' if release else 'M'}".encode())
+
+    @staticmethod
+    def _button_code(button: int) -> int:
+        return {1: 0, 2: 1, 3: 2}.get(button, 0)   # Textual: 1 left, 2 middle, 3 right → xterm 0, 1, 2
+
+    def on_mouse_down(self, event: events.MouseDown) -> None:
+        if self._mouse_mode():
+            event.stop()
+            self.focus()
+            self._send_mouse(self._button_code(event.button), event)
+
+    def on_mouse_up(self, event: events.MouseUp) -> None:
+        if self._mouse_mode():
+            event.stop()
+            self._send_mouse(self._button_code(event.button), event, release=True)
+
+    def on_mouse_move(self, event: events.MouseMove) -> None:
+        mode = self._mouse_mode()
+        if mode == 1003 or (mode == 1002 and event.button):
+            event.stop()
+            self._send_mouse(self._button_code(event.button) + 32 if event.button else 35, event)
+
+    def on_mouse_scroll_down(self, event: events.MouseScrollDown) -> None:
+        if self._mouse_mode():
+            event.stop()
+            event.prevent_default()
+            self._send_mouse(65, event)
+
+    def on_mouse_scroll_up(self, event: events.MouseScrollUp) -> None:
+        if self._mouse_mode():
+            event.stop()
+            event.prevent_default()
+            self._send_mouse(64, event)
+
     def on_paste(self, event: events.Paste) -> None:
         if self.running:
             event.stop()

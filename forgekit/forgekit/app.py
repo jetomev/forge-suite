@@ -30,6 +30,8 @@ v0.5.0, all opt-in so existing apps look the same:
 
 from __future__ import annotations
 
+import os
+
 from collections.abc import Sequence
 
 from textual.app import App, ComposeResult
@@ -118,6 +120,10 @@ class ForgeApp(App[None]):
             self.theme = "ansi-dark"
         self._glyph_filter = ConsoleGlyphFilter()
         self.title = self.APP_NAME
+        # 0.10.0 (forge-suite #45): inside hypeForge Settings the app is one page of a bigger
+        # window, so its own Quit goes (Ctrl+Q still closes it, which returns Settings to its list)
+        if os.environ.get("HYPEFORGE_SETTINGS"):
+            self.MENU = [m for m in self.MENU if m.get("id") != "quit"]
         self._by_id = {m["id"]: m for m in self.MENU}
         self._title_status = ""
 
@@ -265,6 +271,10 @@ class ForgeApp(App[None]):
             self.action_activate(w.id.removeprefix("menu-"))
 
     def action_activate(self, entry_id: str) -> None:
+        if entry_id not in self._by_id:              # Quit hidden inside Settings: Ctrl+Q still closes
+            if entry_id == "quit":
+                self.exit()
+            return
         entry = self._by_id[entry_id]
         kind = entry["kind"]
         if kind == "section":
