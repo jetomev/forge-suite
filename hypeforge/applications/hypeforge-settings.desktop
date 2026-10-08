@@ -1,0 +1,12 @@
+[Desktop Entry]
+# hypeForge Settings — the control centre (D-58, D-59). The spike, 2026-10-07.
+Type=Application
+Name=hypeForge Settings
+GenericName=Settings
+Comment=Every setting of the desktop, each a Forge app, running in one window
+TryExec=alacritty
+Exec=alacritty --class hypeforge-settings -o window.dimensions.columns=130 -o window.dimensions.lines=40 -e /home/jetomev/Programs/forge-suite/hypeforge/applets/settings/hypeforge-settings
+Icon=preferences-system
+Terminal=false
+StartupWMClass=hypeforge-settings
+Categories=Settings;

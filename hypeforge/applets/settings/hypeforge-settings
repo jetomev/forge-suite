@@ -1,0 +1,130 @@
+#!/usr/bin/env python3
+"""hypeForge Settings — the control centre (D-58, D-59). THE SPIKE, 2026-10-07.
+
+A list of settings pages on the left; the chosen Forge app runs on the right, inside a terminal
+pane (forgekit's TerminalPane), with its own menu bar, colours, keys and mouse. Settings holds
+the apps; it does not copy them.
+
+    hypeforge-settings            open the control centre
+    hypeforge-settings <page>     open it on a page ("screens", "packages"…)
+
+Pages: ~/.config/hypeforge/applets/settings.toml (name, summary, command).
+Keys: ↑ ↓ pick a page · Enter run it · F2 back to the list from a running app · Ctrl+Q quit.
+"""
+
+import os
+import shlex
+import sys
+import tomllib
+from pathlib import Path
+
+VERSION = "0.1.0"
+HERE = Path(__file__).resolve().parent
+CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets/settings.toml"
+
+
+def pages():
+    src = CONFIG if CONFIG.exists() else HERE / "settings.toml"
+    with open(src, "rb") as f:
+        return [p for p in tomllib.load(f).get("page", []) if p.get("name") and p.get("command")]
+
+
+def main():
+    from textual.app import ComposeResult
+    from textual.binding import Binding
+    from textual.containers import Horizontal, Vertical
+    from textual.widgets import OptionList, Static
+    from textual.widgets.option_list import Option
+    from rich.text import Text
+
+    from forgekit import ForgeApp, FORGE_CSS, GPL3_NOTICE
+    from forgekit.terminal import TerminalPane
+
+    PAGES = pages()
+
+    class SettingsApp(ForgeApp):
+        APP_NAME = f"hypeForge Settings {VERSION}"
+        SHOW_HINT_BAR = True
+        CSS = FORGE_CSS + """
+        #sec-settings { height: 1fr; }
+        #hf-pages { width: 30; height: 1fr; border-right: solid $forge-border; padding: 0 0 0 1; }
+        #hf-pages > .option-list--option-highlighted { background: $forge-selected-bg; color: $forge-selected; }
+        #hf-right { width: 1fr; height: 1fr; }
+        #hf-pane { height: 1fr; }
+        #hf-empty { height: 1fr; padding: 2 3; color: $forge-muted; }
+        #hf-running { height: 1; padding: 0 2; color: $forge-muted; background: $forge-surface; }
+        """
+        MENU = [
+            {"id": "settings", "title": "Settings", "kind": "section"},
+            {"id": "help", "title": "Help", "kind": "menu", "items": [("Shortcuts", "s", "shortcuts"),
+                                                                     ("About", "a", "about")]},
+            {"id": "quit", "title": "Quit", "kind": "action", "action": "quit"},
+        ]
+        SHORTCUTS = [("↑ ↓", "pick a page"), ("Enter", "open the page's app on the right"),
+                     ("F2", "back to the list while an app runs"), ("Ctrl+Q", "quit")]
+        HINTS = [("↑↓", "pick"), ("Enter", "open"), ("F2", "list"), ("Ctrl+Q", "quit")]
+        ABOUT = {"name": "hypeForge Settings", "version": VERSION,
+                 "summary": "The control centre of the KognogOS desktop: every setting is a Forge app, and they run here.",
+                 "authors": ["Javier", "Claude"]}
+        LICENSE_NAME = "GPL-3.0-or-later"
+        LICENSE_NOTICE = GPL3_NOTICE
+        BINDINGS = [Binding("f2", "back_to_list", "", show=False, priority=True)]
+
+        def compose_sections(self) -> ComposeResult:
+            with Horizontal(id="sec-settings"):
+                yield OptionList(*(Option(self._row(p), id=f"page-{i}") for i, p in enumerate(PAGES)), id="hf-pages")
+                with Vertical(id="hf-right"):
+                    yield Static("Pick a page on the left and press Enter: the app opens here, "
+                                 "with its own menu bar. F2 brings you back to the list.", id="hf-empty")
+                    yield Static("", id="hf-running")
+                    yield TerminalPane(id="hf-pane")
+
+        @staticmethod
+        def _row(p) -> Text:
+            t = Text(p["name"], style="bold")
+            if p.get("summary"):
+                t.append(f"\n{p['summary']}", style="dim")
+            return t
+
+        def on_mount(self) -> None:
+            super().on_mount()
+            self.query_one("#hf-pane").display = False
+            self.query_one("#hf-running").display = False
+            self.query_one("#hf-pages", OptionList).focus()
+            want = (sys.argv[1] if len(sys.argv) > 1 else "").lower()
+            for i, p in enumerate(PAGES):
+                if want and p["name"].lower().startswith(want):
+                    self.query_one("#hf-pages", OptionList).highlighted = i
+                    self.call_after_refresh(self.open_page, i)
+
+        def on_option_list_option_selected(self, e: OptionList.OptionSelected) -> None:
+            e.stop()
+            self.open_page(int(e.option.id.removeprefix("page-")))
+
+        def open_page(self, i: int) -> None:
+            p = PAGES[i]
+            pane = self.query_one("#hf-pane", TerminalPane)
+            if pane.running:
+                pane.terminate()
+            self.query_one("#hf-empty").display = False
+            self.query_one("#hf-running", Static).update(f"{p['name']}  ·  {p['command']}  ·  F2: back to the list")
+            self.query_one("#hf-running").display = True
+            pane.display = True
+            cmd = ["sh", "-c", f"exec {os.path.expanduser(p['command'])}"] if any(ch in p["command"] for ch in ";|&") \
+                else [os.path.expanduser(w) for w in shlex.split(p["command"])]
+            self.call_after_refresh(pane.start, cmd)
+            self.call_after_refresh(pane.focus)
+
+        def on_terminal_pane_exited(self, e: TerminalPane.Exited) -> None:
+            self.query_one("#hf-running", Static).update(
+                f"closed (status {e.status})  ·  pick a page and press Enter to open another")
+            self.query_one("#hf-pages", OptionList).focus()
+
+        def action_back_to_list(self) -> None:
+            self.query_one("#hf-pages", OptionList).focus()
+
+    SettingsApp().run()
+
+
+if __name__ == "__main__":
+    main()

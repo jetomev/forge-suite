@@ -1,0 +1,34 @@
+# hypeForge Settings (D-58, D-59) — the control centre's list: each entry is a Forge app (or a
+# command) that runs INSIDE the Settings window, in a terminal pane on the right.
+# The spike (2026-10-07, step 6 of the order): prove a full Forge app runs inside the pane with
+# its colours, keys and mouse. Copied to ~/.config/hypeforge/applets/settings.toml, which is read.
+
+[[page]]
+name = "Screens"
+summary = "arrange, resolution, refresh rate, brightness"
+command = "displayforge"
+
+[[page]]
+name = "Passwords"
+summary = "sudoForge: is the password box set up?"
+command = "sudoforge status; echo; echo 'Press Enter to go back'; read _"
+
+[[page]]
+name = "Terminal"
+summary = "Alacritty's look and behaviour"
+command = "alacrittyforge"
+
+[[page]]
+name = "Packages"
+summary = "nogForge: what is installed, updates"
+command = "nogforge"
+
+[[page]]
+name = "Boot menu"
+summary = "grubForge: GRUB's look and entries"
+command = "grubforge"
+
+[[page]]
+name = "Help & Keys"
+summary = "every key of the desktop"
+command = "~/Programs/forge-suite/hypeforge/applets/help/hypeforge-help"
