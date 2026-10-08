@@ -57,7 +57,8 @@ def check(path: Path) -> list[str]:
     hits = []
     for n in ast.walk(tree):
         if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load) and n.id not in known:
-            hits.append(f"{path.relative_to(ROOT)}:{n.lineno}: '{n.id}' is used but never defined or imported")
+            shown = path.relative_to(ROOT) if path.is_relative_to(ROOT) else path
+            hits.append(f"{shown}:{n.lineno}: '{n.id}' is used but never defined or imported")
     return hits
 
 
