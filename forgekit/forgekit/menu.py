@@ -128,12 +128,19 @@ class MenuBar(Vertical):
 class MenuDropdown(ModalScreen[str | None]):
     """Transient dropdown anchored under a menu title. Returns the chosen
     action id, or None on escape / click-away. ``items`` is a list of
-    (label, accel_letter, action_id)."""
+    (label, accel_letter, action_id); ``menu_id`` names the menu it belongs to,
+    so the app can tell "the same menu again" (close) from "another one" (switch).
+
+    0.10.0 (#47): only one is ever open. The app's accelerators still fire while
+    it is up (they are priority bindings), so ``ForgeApp.action_activate`` closes
+    it first; a click on a menu title behind it does the same."""
 
     BINDINGS = [Binding("escape", "dismiss_none", "", show=False)]
 
-    def __init__(self, items: list[tuple[str, str, str]], x: int, y: int) -> None:
+    def __init__(self, items: list[tuple[str, str, str]], x: int, y: int,
+                 menu_id: str | None = None) -> None:
         super().__init__()
+        self.menu_id = menu_id
         self._items = items
         self._x, self._y = x, y
         self._accels = {a.lower(): act for _l, a, act in items}
@@ -167,5 +174,23 @@ class MenuDropdown(ModalScreen[str | None]):
         self.dismiss(None)
 
     def on_click(self, event) -> None:
-        if self.get_widget_at(event.screen_x, event.screen_y)[0] is self:
-            self.dismiss(None)
+        if self.get_widget_at(event.screen_x, event.screen_y)[0] is not self:
+            return
+        # a click outside the list: close. On another menu title, open that one
+        # (its own title only closes, like the same accelerator pressed twice)
+        title = self._title_below(event.screen_x, event.screen_y)
+        self.dismiss(None)
+        if title and title != self.menu_id and hasattr(self.app, "action_activate"):
+            self.app.call_later(self.app.action_activate, title)
+
+    def _title_below(self, x: int, y: int) -> str | None:
+        """The menu entry id of the title under (x, y) on the screen beneath, if any."""
+        stack = self.app.screen_stack
+        if len(stack) < 2:
+            return None
+        try:
+            w, _ = stack[-2].get_widget_at(x, y)
+        except Exception:                            # outside every widget
+            return None
+        wid = w.id or ""
+        return wid.removeprefix("menu-") if wid.startswith("menu-") and w.has_class("menu-title") else None

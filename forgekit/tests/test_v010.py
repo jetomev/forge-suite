@@ -111,9 +111,6 @@ class QuitHiddenInsideSettings(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(len(app.query("#menu-quit")), 1)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class ModernKeysIntoThePane(unittest.IsolatedAsyncioTestCase):
     """Ctrl+H reaches a program that asked for the modern keyboard protocol as ESC [ 104 ; 5 u,
@@ -156,3 +153,80 @@ while True:
         data = await self.run_prog("plain")
         self.assertIn(b"\x08", data)
         self.assertNotIn(b"[104;5u", data)
+
+
+# ── #47: a menu accelerator pressed while a dropdown is open toggles, never stacks ─────────────────
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "examples"))
+import demo  # noqa: E402
+from forgekit.menu import MenuDropdown  # noqa: E402
+
+
+class OneDropdownAtATime(unittest.IsolatedAsyncioTestCase):
+    """Found by Javier 2026-10-08 00:55: Ctrl+H, Ctrl+H stacked a second Help dropdown on the first
+    (the app behind went darker each time) and Esc had to be pressed once per dropdown."""
+
+    def dropdowns(self, app) -> list:
+        return [s for s in app.screen_stack if isinstance(s, MenuDropdown)]
+
+    async def test_the_same_accelerator_twice_closes_it(self):
+        app = demo.BitlaForgeDemo(console=False)
+        async with app.run_test(size=(100, 30)) as pilot:
+            await pilot.press("ctrl+h")
+            await pilot.pause()
+            self.assertEqual(len(self.dropdowns(app)), 1, "the first press opens Help")
+            await pilot.press("ctrl+h")
+            await pilot.pause()
+            self.assertEqual(self.dropdowns(app), [], "the second press closes it")
+            self.assertEqual(len(app.screen_stack), 1)
+
+    async def test_another_menu_replaces_the_open_one(self):
+        app = demo.BitlaForgeDemo(console=False)
+        async with app.run_test(size=(100, 30)) as pilot:
+            await pilot.press("ctrl+h")
+            await pilot.pause()
+            await pilot.press("ctrl+c")
+            await pilot.pause()
+            open_ = self.dropdowns(app)
+            self.assertEqual(len(open_), 1, "one dropdown, never two")
+            self.assertEqual(open_[0].menu_id, "config")
+
+    async def test_a_section_key_closes_the_dropdown_and_switches(self):
+        app = demo.BitlaForgeDemo(console=False)
+        async with app.run_test(size=(100, 30)) as pilot:
+            await pilot.press("ctrl+h")
+            await pilot.pause()
+            await pilot.press("ctrl+l")
+            await pilot.pause()
+            self.assertEqual(self.dropdowns(app), [], "nothing left floating over the new page")
+            self.assertTrue(app.query_one("#menu-log").has_class("active"))
+
+    async def test_one_escape_is_always_enough(self):
+        app = demo.BitlaForgeDemo(console=False)
+        async with app.run_test(size=(100, 30)) as pilot:
+            for key in ("ctrl+h", "ctrl+h", "ctrl+h", "ctrl+c", "ctrl+h"):
+                await pilot.press(key)
+                await pilot.pause()
+            self.assertLessEqual(len(self.dropdowns(app)), 1)
+            await pilot.press("escape")
+            await pilot.pause()
+            self.assertEqual(len(app.screen_stack), 1)
+
+    async def test_clicking_titles_while_a_dropdown_is_open(self):
+        app = demo.BitlaForgeDemo(console=False)
+        async with app.run_test(size=(100, 30)) as pilot:
+            await pilot.click("#menu-help")
+            await pilot.pause()
+            self.assertEqual(len(self.dropdowns(app)), 1)
+            config_title = app.screen_stack[0].query_one("#menu-config").region
+            await pilot.click(offset=(config_title.x + 1, config_title.y))   # another title: switch
+            await pilot.pause()
+            open_ = self.dropdowns(app)
+            self.assertEqual([d.menu_id for d in open_], ["config"])
+            config_title = app.screen_stack[0].query_one("#menu-config").region
+            await pilot.click(offset=(config_title.x + 1, config_title.y))   # its own title: close
+            await pilot.pause()
+            self.assertEqual(self.dropdowns(app), [])
+
+
+if __name__ == "__main__":
+    unittest.main()

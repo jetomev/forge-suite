@@ -277,13 +277,21 @@ class ForgeApp(App[None]):
             return
         entry = self._by_id[entry_id]
         kind = entry["kind"]
+        # 0.10.0 (#47): one dropdown at a time. The accelerators are priority bindings, so
+        # they reach here while a dropdown is open; it closes first, and the same menu's
+        # key pressed again stops there (a toggle) instead of stacking a second one
+        top = self.screen
+        if isinstance(top, MenuDropdown):
+            top.dismiss(None)
+            if kind == "menu" and top.menu_id == entry_id:
+                return
         if kind == "section":
             self._switch_section(entry_id)
         elif kind == "action":
             self.action_act(entry["action"])
         elif kind == "menu":
             w = self.query_one(f"#menu-{entry_id}")
-            self.push_screen(MenuDropdown(entry["items"], w.region.x, w.region.y + 1),
+            self.push_screen(MenuDropdown(entry["items"], w.region.x, w.region.y + 1, entry_id),
                              self._on_menu_choice)
 
     def _switch_section(self, section_id: str) -> None:
