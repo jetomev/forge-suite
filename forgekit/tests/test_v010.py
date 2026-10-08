@@ -113,3 +113,46 @@ class QuitHiddenInsideSettings(unittest.IsolatedAsyncioTestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ModernKeysIntoThePane(unittest.IsolatedAsyncioTestCase):
+    """Ctrl+H reaches a program that asked for the modern keyboard protocol as ESC [ 104 ; 5 u,
+    and a plain program still gets the old single byte."""
+
+    PROG = r'''
+import os, sys, tty
+tty.setraw(0)
+if sys.argv[2] == "modern": sys.stdout.write("\x1b[>1u"); sys.stdout.flush()
+out = open(sys.argv[1], "ab")
+while True:
+    b = os.read(0, 64)
+    if not b: break
+    out.write(b); out.flush()
+'''
+
+    async def run_prog(self, kind: str) -> bytes:
+        d = Path(tempfile.mkdtemp())
+        prog, got = d / "p.py", d / "got.bin"
+        prog.write_text(self.PROG)
+        app = PaneHost()
+        async with app.run_test(size=(100, 30)) as pilot:
+            pane = app.query_one("#pane", TerminalPane)
+            pane.start([sys.executable, str(prog), str(got), kind])
+            for _ in range(40):
+                await pilot.pause(0.05)
+                if pane.kitty_keys or kind == "plain" and pane.running:
+                    break
+            await pilot.pause(0.2)
+            pane.focus()
+            await pilot.press("ctrl+h")
+            await pilot.pause(0.3)
+            pane.terminate()
+        return got.read_bytes() if got.exists() else b""
+
+    async def test_modern_program_gets_ctrl_h_as_csi_u(self):
+        self.assertIn(b"\x1b[104;5u", await self.run_prog("modern"))
+
+    async def test_plain_program_gets_the_old_byte(self):
+        data = await self.run_prog("plain")
+        self.assertIn(b"\x08", data)
+        self.assertNotIn(b"[104;5u", data)

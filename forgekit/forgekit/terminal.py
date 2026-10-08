@@ -141,14 +141,25 @@ _KEYS = {
 _ARROWS = {"up": "A", "down": "B", "right": "C", "left": "D"}
 
 
-def key_bytes(key: str, character: str | None, app_cursor: bool = False) -> bytes | None:
-    """The bytes for a key press, or None for keys the pane leaves to the app."""
+KITTY_PUSH = re.compile(rb"\x1b\[>\d*u")   # the program asks for the modern keyboard protocol
+KITTY_POP = re.compile(rb"\x1b\[<\d*u")    # ...and gives it back
+
+
+def key_bytes(key: str, character: str | None, app_cursor: bool = False, kitty: bool = False) -> bytes | None:
+    """The bytes for a key press, or None for keys the pane leaves to the app.
+
+    ``kitty``: the program asked for the modern keyboard protocol (every Textual app does), so a
+    Ctrl+letter goes as ``ESC [ code ; 5 u`` — the old single byte would read as something else
+    (Ctrl+H is the Backspace byte, Ctrl+I the Tab byte, Ctrl+M Enter). Found in hypeForge
+    Settings, 2026-10-08: Ctrl+H inside the pane opened nothing (forge-suite #45)."""
     if key in _ARROWS:
         return (b"\x1bO" if app_cursor else b"\x1b[") + _ARROWS[key].encode()
     if key in _KEYS:
         return _KEYS[key]
     m = re.fullmatch(r"ctrl\+([a-z])", key)
     if m:
+        if kitty:
+            return f"\x1b[{ord(m.group(1))};5u".encode()
         return bytes([ord(m.group(1)) - 96])
     if character and character.isprintable():
         return character.encode()
@@ -194,6 +205,7 @@ class TerminalPane(ScrollView, can_focus=True):
         self.proc: subprocess.Popen | None = None
         self.status: int | None = None
         self._follow = True
+        self.kitty_keys = False          # the program asked for the modern keyboard protocol
         self.transcript: deque[str] = deque(maxlen=200)   # the last lines, plain (for reasons and tests)
 
     # ── running ──────────────────────────────────────────────────────────────
@@ -201,6 +213,7 @@ class TerminalPane(ScrollView, can_focus=True):
         """Run ``cmd`` in a new pseudo-terminal the size of the pane (or ``size``,
         columns × lines, when the pane is folded away and has no size yet)."""
         cols, lines = size if size else self._term_size()
+        self.kitty_keys = False
         self.screen_vt.resize(lines, cols)
         master, slave = pty.openpty()
         _set_size(master, lines, cols)
@@ -231,6 +244,10 @@ class TerminalPane(ScrollView, can_focus=True):
         self.feed(data)
 
     def feed(self, data: bytes) -> None:
+        if KITTY_PUSH.search(data):
+            self.kitty_keys = True
+        if KITTY_POP.search(data):
+            self.kitty_keys = False
         self._stream.feed(data)
         self._sync()
         self.post_message(self.Output(self))
@@ -379,7 +396,7 @@ class TerminalPane(ScrollView, can_focus=True):
         if not self.running:
             return
         app_cursor = (1 << 5) in self.screen_vt.mode          # DECCKM (private mode 1): arrows as ESC O x
-        data = key_bytes(event.key, event.character, app_cursor)
+        data = key_bytes(event.key, event.character, app_cursor, self.kitty_keys)
         if data is None:
             return
         event.stop()
