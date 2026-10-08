@@ -104,6 +104,15 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] From the KognogOS brand (logo, colours): a palette with contrast between elements on purpose — connected, not fused, not monotone
 - [ ] Each visual step designed and approved before it is built (bar, borders, launcher, notifications, lock screen, terminal, wallpaper…)
 
+## hypeForge Settings — the catalogue (Javier, 2026-10-07) and the v1.0 cut (proposed, his call)
+*Javier listed every settings area he can think of (KDE's full set: keyboard, touchscreen, game controllers incl. the Logitech G13, accessibility, Bluetooth, sound, disks and cameras, printers, Wi-Fi and internet, online accounts, wallpaper, themes, text and fonts, animations, default apps, notifications, window management, activities, workspace behaviour, screen locking, app permissions, remote desktop, recent files, user feedback, region and language, spell check, date and time, day-night cycle, about, power, software update, users, autostart, session) and said: not everything — choose wisely, closer to Linux Mint's set, the most used and appreciated, for KognogOS v1.0.0.*
+- [ ] **Proposed v1.0 set (18, Mint-sized):** Screens (displayForge ✅ + night light) · Sound · Network & Wi-Fi · Bluetooth · Printers · Keyboard (layout, repeat, our key chart) · Mouse & Touchpad · Power & Lock (idle, sleep, lock screen) · Notifications · Default apps (#19) · Startup apps · Look (wallpaper, themes, icons, pointer, fonts — the Theme manager) · Time & Language (date, time, region, language) · Users · Software updates (nogForge ✅) · Workspaces & Windows (ours: placement, rules, tiling/floating) · USB drives & disks · About this computer
+- [ ] **After 1.0:** game controllers (the G13 as its own Forge app, also inside Settings) · accessibility (large text and pointer go in Look for 1.0) · online accounts · remote desktop · touchscreen · app permissions · spell check · animations
+- [ ] **Not ours / not now:** activities, recent files, user feedback, session (Sway has no such things to set)
+- [ ] **Wallet (Javier, 10-07: "we need a Forge Suite Wallet"):** yes — our own secret store (the standard Secret Service interface, unlocked through sudoForge's box); today KDE's `ksecretd` answers it (Claude Desktop fix #39). Name his call. = the D-61 keyring step
+- [ ] **Pop-up list positions** (= "where the pop-up lists open"): the launcher, the clipboard history and the notification list each open at a fixed spot (under their bar button); a setting to choose the spot (centre, under the button, a corner). Low priority; lands with the Launcher / Notifications apps
+- [ ] Alt+Tab with previews, drag and drop, folder tabs, our own bar = hypeForge pieces (window management, the look), not separate Forge apps
+
 ## Phase 13 · Forge apps for the gaps
 - [ ] New Forge Suite apps for the jobs with no terminal app (one at a time, each its own project)
 
