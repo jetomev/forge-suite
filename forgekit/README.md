@@ -1,6 +1,6 @@
 # 🔨 forgekit
 
-![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-purple.svg)
+![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-purple.svg)
 ![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
 ![Built with Textual](https://img.shields.io/badge/Built%20with-Textual-5a3fd6.svg)
 ![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)
@@ -56,15 +56,16 @@ polish improves every app at once.
   switches to colours and characters that screen can actually show, by itself.
   [More below](#on-a-plain-text-console).
 
-> **Status: 0.9.0 (alpha), released 7 October 2026.** The API may still
+> **Status: 0.10.0 (alpha), built 8 October 2026, waiting for Javier's test.** The API may still
 > shift while the Forge apps migrate onto it. Pin a version if you depend on it.
+> 0.10.0: **every menu entry gets Ctrl + its underlined letter and a number** (Help included),
+> made from the menu; "1-N menu" in the bottom bar; one dropdown at a time; a dialog keeps its
+> own keys; **`--hypeforge`** for apps inside hypeForge Settings (no Quit; Settings asks the app
+> to close); the terminal pane passes the mouse and modern keys; labels like "Cancel (Esc)"
+> ([#49](https://github.com/jetomev/forge-suite/issues/49)).
 > 0.9.0: the menu bar wraps on a narrow window — every section stays on screen
 > and clickable, in as many rows as the window needs
-> ([#40](https://github.com/jetomev/forge-suite/issues/40)). Javier: "hits every Forge app".
-> 0.8.0: the password's dots centred — `PasswordField`, and `PasswordDialog`'s
-> `heading` / `detail` / `note` / `label` ([#34](https://github.com/jetomev/forge-suite/issues/34)).
-> Built for sudoForge's approved design; every Forge app's password box gets it.
-> displayForge 1.0.1 is its first user. Earlier versions: [docs/CHANGELOG.md](docs/CHANGELOG.md).
+> ([#40](https://github.com/jetomev/forge-suite/issues/40)). Earlier versions: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 ## Screenshots
 
@@ -228,8 +229,21 @@ Each entry has a `kind`:
 
 ## Keyboard model
 
-Menu options use their first letter as `Ctrl+<letter>`, and the app's shortcuts
-take priority over the terminal's.
+**forgekit makes the menu's keys itself** (0.10.0): every entry gets **Ctrl + its underlined
+letter** (the first letter, or `"acc"`) and **a number, 1 to N in bar order, Help included**
+(Quit has none). A menu's key opens its dropdown; pressed again, it closes it. The Ctrl keys work
+from anywhere on the app's own screen, a text field included; inside a dialog the dialog keeps
+its keys. No two entries may share an underlined letter: test it with
+`menu_key_clashes(MENU) == []`. Put `MENU_HINT` in `HINTS` and the bottom bar reads "1-N menu".
+Set `MENU_KEYS = False` for an app that must have no keys of its own (hypeForge Settings).
+
+**`--hypeforge`** (0.10.0): hypeForge Settings starts every Forge app with it. Add it to your
+command line with `add_hypeforge_argument(parser)` (it stays out of `--help`) and pass
+`hypeforge=args.hypeforge`, or let `ForgeApp` read it from the command line itself. The app then has
+no Quit, and Q / Ctrl+Q / the Quit action do nothing; Settings closes it through SIGUSR1 →
+`host_quit()`, which runs your `before_quit()` first.
+
+The app's shortcuts take priority over the terminal's.
 
 One sharp edge worth knowing: a few control keys are terminal conventions rather
 than yours. `Ctrl+C` interrupts, `Ctrl+S` and `Ctrl+Q` are flow control, and

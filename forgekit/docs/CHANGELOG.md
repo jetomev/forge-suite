@@ -2,6 +2,37 @@
 
 *Newest first. The README's status box carries the two most recent versions; everything else is here.*
 
+### 0.10.0 — October 8, 2026 · keys for every menu entry, `--hypeforge`, and the pane for hypeForge Settings
+
+From Javier's run of every Forge app inside hypeForge Settings ([#49](https://github.com/jetomev/forge-suite/issues/49), [#45](https://github.com/jetomev/forge-suite/issues/45), [#47](https://github.com/jetomev/forge-suite/issues/47), [#48](https://github.com/jetomev/forge-suite/issues/48)).
+
+- **Every menu entry gets its keys from the menu** (`MENU_KEYS`, on by default): **Ctrl + the underlined
+  letter**, which works from anywhere, a text field included, and **a number, 1 to N in bar order, Help
+  included** (Quit has none). A menu's number or letter opens its dropdown. Each app used to wire these
+  by hand, so some were missing (displayForge had no Ctrl keys at all, nogForge no Ctrl+Y). An app's own
+  number and Ctrl keys for its menu can go.
+- **A window open over the app keeps its keys:** Ctrl+E and Ctrl+K edit the text in a dialog's field,
+  digits are typed into it, and nothing switches the page behind it. Quit still works from anywhere.
+- **`MENU_HINT`** in an app's `HINTS` shows as **"1-N menu"**, with N counted for it.
+- **`menu_key_clashes(MENU)`**: the entries whose underlined letter is already taken, for an app's tests.
+- **`--hypeforge`** (any capitals): `hypeforge_mode()`, `add_hypeforge_argument(parser)` (kept out of
+  `--help`), `ForgeApp(hypeforge=…)`. Started this way the app is a page of hypeForge Settings: **no Quit
+  in the bar, and Q, Ctrl+Q and the Quit action do nothing.** Settings closes the app with SIGUSR1 →
+  `host_quit()`, which runs the app's own `before_quit()`: nothing unsaved closes at once, otherwise the
+  app asks its usual question. Replaces 0.10.0-dev's `HYPEFORGE_SETTINGS` variable.
+- **One dropdown at a time** ([#47](https://github.com/jetomev/forge-suite/issues/47)): a menu key pressed
+  again closes its dropdown instead of stacking another; another menu's key or title switches to it.
+- **The terminal pane** ([#45](https://github.com/jetomev/forge-suite/issues/45)): passes the mouse to a
+  program that asks for it, and sends Ctrl+letter the modern way when the program asks (Ctrl+H used to
+  arrive as Backspace).
+- **Button labels as "Words (key)"** (Javier, 2026-10-03): Cancel (Esc), OK (Enter), Close (Esc),
+  Choose (Enter), Cancel (n) in the confirm box, "<tool>'s Screen (F12)".
+- Checked: Textual lists Ctrl+I as another name for Tab and Ctrl+M for Enter, but a key matches only what
+  was really pressed, so a Ctrl+I shortcut never takes Tab (a test keeps it so). On a plain text console
+  Ctrl+I *is* Tab, so there the number is the way.
+- Tests: **133** (was 110). Warnings: **0** (was 0). Each new piece was switched off once to watch its
+  tests fail. Two tests from the unreleased 0.10.0-dev were replaced; one of them could never fail.
+
 ### 0.9.0 — October 7, 2026 · the menu bar wraps ([#40](https://github.com/jetomev/forge-suite/issues/40))
 
 Found in hypeForge's Help & Keys on 2026-10-05, marked URGENT by Javier on 2026-10-07: the bar was
