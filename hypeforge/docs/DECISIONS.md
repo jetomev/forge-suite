@@ -12,6 +12,7 @@
 - Every Forge app accepts `--hypeforge` (any capitals). Settings starts the Forge pages with it (`forge = true` in `settings.toml`). Started that way the app has no Quit in its menu bar, and Q, Esc (Help & Keys) and Ctrl+Q do nothing.
 - Settings' Quit asks every app to close (forgekit's `host_quit`, through SIGUSR1). An app with nothing unsaved closes at once; one with unsaved work is shown, and asks its usual "Save first / Quit without saving" (displayForge: "Apply your changes?"). Settings closes after the last one has closed.
 - The option is for Settings only, so it's left out of `--help` and the man pages, but it's written down in every app's README, manual, CLAUDE.md and changelog.
+- **Javier's run 2 (evening):** *"Shortcuts always should use the first letter, unless already being used, then we pick in sequence the next."* forgekit picks every underlined letter this way (Help H and Quit Q always; an app's own Ctrl keys count as taken). A menu's number pressed again closes it, the open menu's title is lit, and **About and License open in the content area, not in a window**.
 - **Also from the same run:** every underlined letter in a menu bar is a Ctrl shortcut, every entry has a number (Help included), and the bottom bar says "1-N menu" (forgekit 0.10.0). Button labels read "Words (key)", e.g. "Save Changes (s)" (Javier, 2026-10-03). **Proposed (Claude, to confirm with Javier):** standard title case, so small words such as *the*, *of* and *and* stay lowercase, as in nogForge's already approved "Update the Ticked Ones (u)".
 
 ---
