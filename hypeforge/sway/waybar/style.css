@@ -61,7 +61,7 @@ window#waybar {
    emblem, in the bar's active colour — so a glance tells which workspace this screen shows */
 #custom-wsnum {
   min-width: 16px;
-  margin: 6px 6px 6px 0;
+  margin: 6px 2px 6px 0;      /* Javier, 2026-10-07: the Workspaces title sits right beside it */
   padding: 0 5px;
   background: @hf_active;
   color: @hf_bar;
@@ -72,7 +72,7 @@ window#waybar {
 }
 
 #custom-ws {
-  padding: 0 12px;
+  padding: 0 12px 0 4px;
   color: @hf_subtext;
   background: transparent;
 }
