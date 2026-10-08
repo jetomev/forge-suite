@@ -50,8 +50,8 @@ class FilterPicker(ForgeModal[str | None]):
             yield Static("", id="picker-count")
             yield OptionList(id="picker-list")
             with Horizontal(classes="forge-buttons forge-panel-footer"):
-                yield Button("Choose", id="pick", variant="primary")
-                yield Button("Cancel", id="cancel")
+                yield Button("Choose (Enter)", id="pick", variant="primary")
+                yield Button("Cancel (Esc)", id="cancel")
 
     def on_mount(self) -> None:
         self._refill("")

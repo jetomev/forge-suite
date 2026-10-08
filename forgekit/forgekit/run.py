@@ -77,8 +77,8 @@ class RunWindow(ForgeModal[int]):
             yield TerminalPane(id="run-screen")
             yield Static("", id="run-status")
             with Horizontal(classes="forge-buttons forge-panel-footer"):
-                yield Button(f"{self._tool}'s screen (F12)", id="run-toggle")
-                yield Button("Close", id="run-close", variant="primary", disabled=True)
+                yield Button(f"{self._tool}'s Screen (F12)", id="run-toggle")
+                yield Button("Close (Esc)", id="run-close", variant="primary", disabled=True)
 
     async def on_mount(self) -> None:
         self.query_one("#run-question").display = False

@@ -255,6 +255,40 @@ class MenuKeysForEveryEntry(unittest.IsolatedAsyncioTestCase):
             self.assertIn("menu", text)
             self.assertNotIn("{menu}", text)
 
+    async def test_ctrl_i_and_ctrl_m_never_steal_tab_and_enter(self):
+        # Textual lists Ctrl+I as another name for Tab (and Ctrl+M for Enter), but a binding matches
+        # only the key really pressed — checked 2026-10-08, so Identify can have Ctrl+I. This keeps it so.
+        class Two(ForgeApp):
+            APP_NAME = "two"
+            MENU = [{"id": "info", "title": "Info", "kind": "section"},
+                    {"id": "main", "title": "Main", "kind": "section"}]
+
+            def compose_sections(self):
+                from textual.containers import Vertical
+                from textual.widgets import Button
+                yield Vertical(Button("a", id="a"), Button("b", id="b"), id="sec-info")
+                yield Static("main", id="sec-main")
+
+        app = Two()
+        async with app.run_test(size=(80, 20)) as pilot:
+            app.query_one("#a").focus()
+            await pilot.pause()
+            await pilot.press("tab")
+            await pilot.pause()
+            self.assertEqual(app.focused.id, "b", "Tab still moves to the next button")
+            self.assertEqual(self.active(app), ["menu-info"])
+            pressed = []
+            app.query_one("#b").press = lambda: pressed.append(1)
+            await pilot.press("enter")
+            await pilot.pause()
+            self.assertEqual(self.active(app), ["menu-info"], "Enter did not jump to Main")
+            await pilot.press("ctrl+m")
+            await pilot.pause()
+            self.assertEqual(self.active(app), ["menu-main"], "the real Ctrl+M still works")
+            await pilot.press("ctrl+i")
+            await pilot.pause()
+            self.assertEqual(self.active(app), ["menu-info"], "the real Ctrl+I still works")
+
     async def test_hypeforge_count_is_the_same(self):
         app = self.Three(hypeforge=True)
         async with app.run_test(size=(80, 20)) as pilot:

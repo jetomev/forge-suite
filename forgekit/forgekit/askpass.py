@@ -206,8 +206,8 @@ class PasswordDialog(ForgeModal[str | None]):
                 yield Static(literal(self._label), id="pw-label")
             yield PasswordField("password", id="pw-input")
             with Horizontal(classes="forge-buttons"):
-                yield Button("Cancel", id="pw-cancel")
-                yield Button("OK", id="pw-ok", variant="primary")
+                yield Button("Cancel (Esc)", id="pw-cancel")
+                yield Button("OK (Enter)", id="pw-ok", variant="primary")
 
     def _field(self):
         from .password_field import PasswordField

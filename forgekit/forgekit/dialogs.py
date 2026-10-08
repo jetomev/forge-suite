@@ -60,7 +60,7 @@ class ConfirmDialog(ModalScreen[bool]):
             with Horizontal(classes="forge-buttons"):
                 yield Button(self._confirm_label, id="ok",
                              variant="error" if self._danger else "primary")
-                yield Button("Cancel", id="cancel")
+                yield Button("Cancel (n)", id="cancel")
 
     def on_button_pressed(self, e: Button.Pressed) -> None:
         self.dismiss(e.button.id == "ok")
@@ -104,7 +104,7 @@ class ForgePanelScreen(ModalScreen[None]):
         yield from ()
 
     def compose_footer(self) -> ComposeResult:
-        yield Button("Close", id="forge-close", variant="primary")
+        yield Button("Close (Esc)", id="forge-close", variant="primary")
 
     def on_button_pressed(self, e: Button.Pressed) -> None:
         self.dismiss()

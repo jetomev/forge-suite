@@ -79,7 +79,7 @@ class ReviewDialog(ForgeModal[str | None]):
             with Horizontal(classes="forge-buttons forge-panel-footer"):
                 for label, bid, primary in self._buttons:
                     yield Button(label, id=bid, variant="primary" if primary else "default")
-                yield Button("Cancel", id="cancel")
+                yield Button("Cancel (Esc)", id="cancel")
 
     def on_mount(self) -> None:
         for label, bid, primary in self._buttons:
@@ -135,7 +135,7 @@ class ProgressDialog(ForgeModal[None]):
                 yield Static(self._steps_markup(), id="progress-steps")
                 yield Static("", id="progress-log")
             with Horizontal(classes="forge-buttons forge-panel-footer"):
-                yield Button("Close", id="progress-close", variant="primary", disabled=True)
+                yield Button("Close (Esc)", id="progress-close", variant="primary", disabled=True)
 
     def _steps_markup(self) -> str:
         out = []
