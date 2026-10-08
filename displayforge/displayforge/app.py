@@ -730,12 +730,12 @@ class DisplayForgeApp(ForgeApp):
         here = section in self.CHANGING
         if n and here:
             self.changes_bar.show(f"{n} change{'s' if n != 1 else ''} not tried yet", "changed",
-                                  [("Try It (F9)", "df-try", True), ("Discard", "df-discard", False)])
+                                  [("Try It (F9)", "df-try", True), ("Discard Changes", "df-discard", False)])
         elif n:
             self.changes_bar.show(f"{n} change{'s' if n != 1 else ''} not tried yet · "
                                   "finish them in Settings (2) or Arrange (3)", "changed")
         elif self.kept_not_saved and here:
-            self.changes_bar.show("Kept on screen · not saved yet", "changed", [("Save (F10)", "df-save", True)])
+            self.changes_bar.show("Kept on screen · not saved yet", "changed", [("Save Changes (F10)", "df-save", True)])
         elif self.kept_not_saved:
             self.changes_bar.show("Kept on screen · not saved yet · save it in Settings (2) or Arrange (3)",
                                   "changed")

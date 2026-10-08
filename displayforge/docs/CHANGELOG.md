@@ -10,7 +10,7 @@ From Javier's run of displayForge inside hypeForge Settings ([F-4 #50](https://g
 - **A real question before quitting:** "Apply your changes before quitting?" **Yes** tries them with the countdown, then saves; **No** quits without them; **Esc** stays. It also asks about changes that were kept on screen but **not saved**, which quitting used to lose silently.
 - **The Save button in the bar works.** It never had anything behind it: only F10 saved.
 - **`--hypeforge`** (or `--hypeForge`): how hypeForge Settings starts displayForge. No Quit, and Q and Ctrl+Q do nothing; Settings asks the question above when it closes. Meant for Settings only; written down here, in the README and in the manual.
-- **Button labels as "Words (key)":** Try It (F9), Save (F10), Keep It (Enter), Go Back Now (Esc), None of Them, Dim It Again.
+- **Button labels as "Words (key)":** Try It (F9), Save Changes (F10), Discard Changes, Keep It (Enter), Go Back Now (Esc), None of Them, Dim It Again.
 - **Needs forgekit 0.10.0.**
 - **Tests: 63 (was 54), warnings: 0 (was 0).** Four older tests now open Settings before trying a change. Each new test was checked by taking its fix out and watching it fail.
 
