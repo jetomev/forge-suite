@@ -19,7 +19,7 @@ import sys
 import tomllib
 from pathlib import Path
 
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 HERE = Path(__file__).resolve().parent
 CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets/settings.toml"
 
@@ -43,10 +43,9 @@ def main():
 
     PAGES = pages()
 
-    class SettingsApp(ForgeApp):
+    class SettingsApp(ForgeApp, inherit_bindings=False):   # no shortcuts of its own: every key belongs to the app in the pane
         APP_NAME = f"hypeForge Settings {VERSION}"
         SHOW_HINT_BAR = False
-        inherit_bindings = False          # no shortcuts of its own: they all belong to the app in the pane
         CSS = FORGE_CSS + """
         #forge-menubar { display: none; }  /* the only menu bar on screen is the running app's */
         #sec-settings { height: 1fr; }
@@ -83,18 +82,20 @@ def main():
                                  id="hf-pages")
                 with Vertical(id="hf-right"):
                     yield Static("Pick a page on the left: the app opens here, with its own menu bar, keys and "
-                                 "mouse. Click the list to pick another.", id="hf-empty")
+                                 "mouse. Click the list to pick another — the one you leave keeps running.", id="hf-empty")
                     yield Static("", id="hf-running")
-                    yield TerminalPane(id="hf-pane")
+                    # one pane per page (0.3.0, Javier: an app you leave stays open and comes back as it was)
+                    for i in range(len(PAGES)):
+                        yield TerminalPane(id=f"hf-pane-{i}", classes="hf-pane")
                     with Vertical(id="hf-manual"):
                         yield Static("[b]hypeForge Settings[/b] — the control centre of the KognogOS desktop.")
                         yield Static("Every setting is its own Forge app. This window holds them: pick one on the "
                                      "left and it runs on the right, with its own menu bar, keys and mouse — exactly "
                                      "as it does in its own window.")
-                        yield Static("The list is the only thing that belongs to Settings. Click it to change page; "
-                                     "the app you leave keeps running until you pick another or close it.")
+                        yield Static("The list is the only thing that belongs to Settings. Click it to change page: "
+                                     "the app you leave keeps running, and comes back exactly as you left it.")
                         yield Static("Manual, License, About and Quit are the last four entries. Quit closes "
-                                     "Settings and whatever runs inside it.")
+                                     "Settings and every app running inside it.")
 
         @staticmethod
         def _row(p) -> Text:
@@ -103,7 +104,8 @@ def main():
 
         def on_mount(self) -> None:
             super().on_mount()
-            self.query_one("#hf-pane").display = False
+            for pane in self.query(".hf-pane"):
+                pane.display = False
             self.query_one("#hf-running").display = False
             self.query_one("#hf-manual").display = False
             self.query_one("#hf-pages", OptionList).focus()
@@ -123,40 +125,44 @@ def main():
 
         def extra(self, act: str) -> None:
             if act == "quit":
-                pane = self.query_one("#hf-pane", TerminalPane)
-                if pane.running:
-                    pane.terminate()
+                for pane in self.query(TerminalPane):
+                    if pane.running:
+                        pane.terminate()          # Quit closes Settings and every app inside it
                 self.exit()
             elif act == "about":
                 self.action_act("about")
             elif act == "license":
                 self.action_act("license")
             elif act == "manual":
-                self.query_one("#hf-pane").display = False
+                for pane in self.query(".hf-pane"):
+                    pane.display = False
                 self.query_one("#hf-running").display = False
                 self.query_one("#hf-empty").display = False
                 self.query_one("#hf-manual").display = True
 
         def open_page(self, i: int) -> None:
+            """Show page i's pane; start its app the first time (or again after it closed itself).
+            The pane we leave stays as it is, its app running (Javier, 2026-10-08)."""
             p = PAGES[i]
-            pane = self.query_one("#hf-pane", TerminalPane)
-            if pane.running:
-                pane.terminate()
+            for j, other in enumerate(self.query(".hf-pane")):
+                other.display = (other.id == f"hf-pane-{i}")
+            pane = self.query_one(f"#hf-pane-{i}", TerminalPane)
             self.query_one("#hf-empty").display = False
             self.query_one("#hf-manual").display = False
-            self.query_one("#hf-running", Static).update(f"{p['name']}  ·  click the list for another page")
+            self.query_one("#hf-running", Static).update(f"{p['name']}  ·  click the list for another page; this one keeps running")
             self.query_one("#hf-running").display = True
-            pane.display = True
-            cmd = ["sh", "-c", f"exec {os.path.expanduser(p['command'])}"] if any(ch in p["command"] for ch in ";|&") \
-                else [os.path.expanduser(w) for w in shlex.split(p["command"])]
-            env = dict(os.environ, HYPEFORGE_SETTINGS="1")   # the app knows it runs inside Settings (hides Quit, forgekit)
-            self.call_after_refresh(pane.start, cmd, env)
+            if not pane.running:
+                cmd = ["sh", "-c", f"exec {os.path.expanduser(p['command'])}"] if any(ch in p["command"] for ch in ";|&") \
+                    else [os.path.expanduser(w) for w in shlex.split(p["command"])]
+                env = dict(os.environ, HYPEFORGE_SETTINGS="1")   # the app knows it runs inside Settings (hides Quit)
+                self.call_after_refresh(pane.start, cmd, env)
             self.call_after_refresh(pane.focus)
 
         def on_terminal_pane_exited(self, e: TerminalPane.Exited) -> None:
-            self.query_one("#hf-running", Static).update(
-                f"closed (status {e.status})  ·  pick a page and press Enter to open another")
-            self.query_one("#hf-pages", OptionList).focus()
+            if e.pane.display:      # the one on screen closed itself (its Ctrl+Q): say so, keys back to the list
+                self.query_one("#hf-running", Static).update(
+                    f"closed  ·  pick a page on the left; picking this one again starts it afresh")
+                self.query_one("#hf-pages", OptionList).focus()
 
 
     SettingsApp().run()

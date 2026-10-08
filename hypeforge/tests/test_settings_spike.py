@@ -23,7 +23,8 @@ def load_app_class():
     # main() builds the class and runs it; rebuild the class the same way without .run()
     src = APP.read_text()
     body = src[src.index("    from textual.app import ComposeResult"):src.index("    SettingsApp().run()")]
-    ns = {"os": os, "sys": sys, "pages": m.pages, "VERSION": m.VERSION}
+    import shlex
+    ns = {"os": os, "sys": sys, "shlex": shlex, "pages": m.pages, "VERSION": m.VERSION}
     exec("\n".join(line[4:] if line.startswith("    ") else line for line in body.splitlines()), ns)
     return ns["SettingsApp"], m
 
@@ -56,7 +57,7 @@ class Spike(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(lst.region.width, 30)
             self.assertIs(app.focused, lst, "the list has the keys at start")
             await pilot.press("enter")                       # open the first page
-            pane = app.query_one("#hf-pane")
+            pane = app.query_one("#hf-pane-0")
             end = 0
             for _ in range(40):
                 await pilot.pause(0.1)
@@ -73,7 +74,26 @@ class Spike(unittest.IsolatedAsyncioTestCase):
             await pilot.pause()
             self.assertIs(app.focused, lst, "a click on the list brings the keys back")
             self.assertTrue(pane.running, "the program keeps running meanwhile")
-            pane.terminate()
+            # 0.3: switching pages keeps the app you leave; coming back shows the same pane
+            lst.highlighted = 1
+            await pilot.press("enter")
+            await pilot.pause(0.5)
+            second = app.query_one("#hf-pane-1")
+            self.assertTrue(second.display and not pane.display, "the second page's pane is on screen")
+            self.assertTrue(pane.running, "the first app still runs, hidden")
+            self.assertTrue(second.running)
+            await pilot.click("#hf-pages")
+            lst.highlighted = 0
+            await pilot.press("enter")
+            await pilot.pause(0.3)
+            self.assertTrue(pane.display and not second.display, "back to the first pane")
+            self.assertTrue(any("hello from inside" in ln for ln in pane.lines_plain()), "as we left it")
+            # Settings has no shortcuts of its own: Ctrl+H reaches the pane, not forgekit's Help
+            await pilot.press("ctrl+h")
+            await pilot.pause(0.2)
+            self.assertEqual(type(app.screen).__name__, "Screen", "no Settings help screen opened on Ctrl+H")
+            self.assertFalse(app.query_one("#forge-menubar").display)
+            pane.terminate(); second.terminate()
 
 
 if __name__ == "__main__":
