@@ -6,6 +6,9 @@
 
 From Javier's run of every Forge app inside hypeForge Settings ([#49](https://github.com/jetomev/forge-suite/issues/49), [#45](https://github.com/jetomev/forge-suite/issues/45), [#47](https://github.com/jetomev/forge-suite/issues/47), [#48](https://github.com/jetomev/forge-suite/issues/48)).
 
+- **The underlined letter follows Javier's rule** (`assign_accels`): the first letter of the entry's name,
+  unless it's taken; then the next letter of the name, in order. Help is always H, Quit always Q, and the
+  app's own Ctrl keys count as taken. forgekit picks it; an app's `"acc"` is no longer used.
 - **Every menu entry gets its keys from the menu** (`MENU_KEYS`, on by default): **Ctrl + the underlined
   letter**, which works from anywhere, a text field included, and **a number, 1 to N in bar order, Help
   included** (Quit has none). A menu's number or letter opens its dropdown. Each app used to wire these
@@ -14,12 +17,16 @@ From Javier's run of every Forge app inside hypeForge Settings ([#49](https://gi
 - **A window open over the app keeps its keys:** Ctrl+E and Ctrl+K edit the text in a dialog's field,
   digits are typed into it, and nothing switches the page behind it. Quit still works from anywhere.
 - **`MENU_HINT`** in an app's `HINTS` shows as **"1-N menu"**, with N counted for it.
-- **`menu_key_clashes(MENU)`**: the entries whose underlined letter is already taken, for an app's tests.
+- **`menu_key_clashes(MENU)`**: the entries left without any letter (every letter of the name taken), for
+  an app's tests.
 - **`--hypeforge`** (any capitals): `hypeforge_mode()`, `add_hypeforge_argument(parser)` (kept out of
   `--help`), `ForgeApp(hypeforge=…)`. Started this way the app is a page of hypeForge Settings: **no Quit
   in the bar, and Q, Ctrl+Q and the Quit action do nothing.** Settings closes the app with SIGUSR1 →
   `host_quit()`, which runs the app's own `before_quit()`: nothing unsaved closes at once, otherwise the
   app asks its usual question. Replaces 0.10.0-dev's `HYPEFORGE_SETTINGS` variable.
+- **A menu closes on its own key or number pressed again**, and **its title is lit while it's open**.
+- **About and License are pages in the work area**, not windows (`AboutView`, `LicenseView`,
+  `show_page`); Help is lit while they show, and Esc goes back to the page you came from.
 - **One dropdown at a time** ([#47](https://github.com/jetomev/forge-suite/issues/47)): a menu key pressed
   again closes its dropdown instead of stacking another; another menu's key or title switches to it.
 - **The terminal pane** ([#45](https://github.com/jetomev/forge-suite/issues/45)): passes the mouse to a
@@ -30,7 +37,7 @@ From Javier's run of every Forge app inside hypeForge Settings ([#49](https://gi
 - Checked: Textual lists Ctrl+I as another name for Tab and Ctrl+M for Enter, but a key matches only what
   was really pressed, so a Ctrl+I shortcut never takes Tab (a test keeps it so). On a plain text console
   Ctrl+I *is* Tab, so there the number is the way.
-- Tests: **134** (was 110). Warnings: **0** (was 0). Each new piece was switched off once to watch its
+- Tests: **136** (was 110). Warnings: **0** (was 0). Each new piece was switched off once to watch its
   tests fail. Two tests from the unreleased 0.10.0-dev were replaced; one of them could never fail.
 
 ### 0.9.0 — October 7, 2026 · the menu bar wraps ([#40](https://github.com/jetomev/forge-suite/issues/40))

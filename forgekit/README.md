@@ -59,7 +59,8 @@ polish improves every app at once.
 > **Status: 0.10.0 (alpha), built 8 October 2026, waiting for Javier's test.** The API may still
 > shift while the Forge apps migrate onto it. Pin a version if you depend on it.
 > 0.10.0: **every menu entry gets Ctrl + its underlined letter and a number** (Help included),
-> made from the menu; "1-N menu" in the bottom bar; one dropdown at a time; a dialog keeps its
+> made from the menu, the letter by Javier's rule (first letter, else the next free one);
+> About and License as pages; "1-N menu" in the bottom bar; one dropdown at a time; a dialog keeps its
 > own keys; **`--hypeforge`** for apps inside hypeForge Settings (no Quit; Settings asks the app
 > to close); the terminal pane passes the mouse and modern keys; labels like "Cancel (Esc)"
 > ([#49](https://github.com/jetomev/forge-suite/issues/49)).
@@ -230,11 +231,14 @@ Each entry has a `kind`:
 ## Keyboard model
 
 **forgekit makes the menu's keys itself** (0.10.0): every entry gets **Ctrl + its underlined
-letter** (the first letter, or `"acc"`) and **a number, 1 to N in bar order, Help included**
+letter**, picked by Javier's rule (the first letter of the name, unless it's taken; then the next
+letter of the name, in order; Help is always H, Quit Q, and the app's own Ctrl keys count as
+taken) and **a number, 1 to N in bar order, Help included**
 (Quit has none). A menu's key opens its dropdown; pressed again, it closes it. The Ctrl keys work
 from anywhere on the app's own screen, a text field included; inside a dialog the dialog keeps
-its keys. No two entries may share an underlined letter: test it with
-`menu_key_clashes(MENU) == []`. Put `MENU_HINT` in `HINTS` and the bottom bar reads "1-N menu".
+its keys. A menu's key or number pressed again closes it, and its title is lit while it's open.
+Test that no entry is left without a letter: `menu_key_clashes(MENU) == []`. **About and
+License** open as pages in the work area (Help lit, Esc goes back). Put `MENU_HINT` in `HINTS` and the bottom bar reads "1-N menu".
 Set `MENU_KEYS = False` for an app that must have no keys of its own (hypeForge Settings).
 
 **`--hypeforge`** (0.10.0): hypeForge Settings starts every Forge app with it. Add it to your
