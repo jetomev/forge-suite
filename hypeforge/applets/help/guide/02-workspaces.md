@@ -31,3 +31,7 @@ screens — a window can only be in one place.
 - `[share]` — which workspaces share a space on each screen
 
 After editing by hand: `hypeforge-workspaces reload`.
+
+## Which workspace am I on?
+
+The **square right of the KognogOS emblem** shows the number of the workspace on this screen (1 to 6), in the bar's bright colour; hover it for the name. It changes the moment you switch (Win + 1…6, the Workspaces list, or an app opened from a section). A click opens the Workspaces list, like Win + W.

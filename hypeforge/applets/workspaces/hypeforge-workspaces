@@ -15,6 +15,7 @@ that screen as it is while the others change.
 
     hypeforge-workspaces            run: set up Sway, then keep the screens in step
     hypeforge-workspaces go N       switch every screen to workspace N   (Win + N, a bar click)
+    hypeforge-workspaces number     the bar's square: the number of the workspace on screen (#42)
     hypeforge-workspaces move N     send the focused window to workspace N, same screen
     hypeforge-workspaces reload     re-read the settings file
 
@@ -127,7 +128,17 @@ def write_bar(grid):
     me = shlex.quote(os.path.abspath(sys.argv[0]))
     # A group the bar's own settings place where they want it ("group/workspaces" in modules-left)
     fragment = {
-        "group/workspaces": {"orientation": "inherit", "modules": ["custom/ws"]},
+        # #42 (Javier, 2026-10-07): the number of the workspace on screen, in a square right of
+        # the emblem — "by looking at the top bar, you never know on which one you are"
+        "group/workspaces": {"orientation": "inherit", "modules": ["custom/wsnum", "custom/ws"]},
+        "custom/wsnum": {
+            "exec": f"{me} number",
+            "return-type": "json",
+            "interval": "once",
+            "signal": BAR_SIGNAL,
+            "on-click": f"{me} menu",
+            "tooltip": True,
+        },
         "custom/ws": {
             "exec": f"{me} label",
             "return-type": "json",
@@ -149,6 +160,13 @@ def label(grid):
     i = current() if 1 <= current() <= len(grid.names) else 1
     # A menu title, like a menu bar (Javier, 2026-10-05); the workspace on screen is in the tooltip
     print(json.dumps({"text": "<u>W</u>orkspaces", "class": "menu", "tooltip": f"On screen: {i}. {grid.names[i - 1]}"}))
+
+
+def number(grid):
+    """The square next to the emblem (#42): the number of the workspace on screen; its name in the
+    tooltip. Redrawn with the Workspaces title on every switch (the same bar signal)."""
+    i = current() if 1 <= current() <= len(grid.names) else 1
+    print(json.dumps({"text": str(i), "class": "wsnum", "tooltip": f"{i}. {grid.names[i - 1]}  (Win + W: the list)"}))
 
 
 def menu(grid):
@@ -242,8 +260,8 @@ def already_running():
 def main():
     args = sys.argv[1:]
     grid = Grid()
-    if args in (["label"], ["menu"]):
-        (label if args[0] == "label" else menu)(grid)
+    if args in (["label"], ["menu"], ["number"]):
+        {"label": label, "menu": menu, "number": number}[args[0]](grid)
         return
     if args and args[0] in ("go", "move") and len(args) == 2:
         if grid.usable():

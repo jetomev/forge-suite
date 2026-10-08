@@ -111,9 +111,9 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] 2. forgekit menu bar on narrow windows (#40) — **forgekit 0.9.0 released + installed + proven 10-07 21:50** (Javier: "menu options wrapped perfectly")
 - [ ] 2b. **F-47 (#43): the Workspaces applet crashed at start (missing `import re`, since 10-04)** → Win + 1 showed empty screens (Sway's stock key moved one screen to a bare workspace). Fixed 10-07 22:00 + `scripts/check-names.py` in the commit hook (catches the class). **Reboot proof pending:** applet alive, Win + 1…6 move all three screens, the Steam round trip
 - [x] 2c. **nogForge first (Javier, 10-07)**: #17 #18 #19 #20 → **nogForge 1.2.0 (22:10) + 1.3.0 (22:32) released** (#21 #22 from his first look: live search everywhere, one-row filters); **Javier: "pass" 22:55**; #23 (run window as a progress bar) parked for later
-- [ ] 2d. **Bar: the active workspace number in a square next to the emblem (#42, Javier)** — redrawn by the Workspaces applet's bar signal
+- [ ] 2d. **Bar: the active workspace number in a square next to the emblem (#42)** — **built 10-07 23:05**: `hypeforge-workspaces number` → `custom/wsnum` first in the workspaces group, bright square, name on hover, click = the list; Help 02 updated. Javier's look pending
 - [ ] 3. Window placement nine-spot order — Javier's test (#38)
-- [ ] 4. Night light
+- [ ] 4. Night light — **wired 10-07**: `exec sh -c 'command -v wlsunset && exec wlsunset -l 25.77 -L -80.19'` (Miami; 4000 K night / 6500 K day; only when installed); Help page 17. **Javier: `nog install wlsunset`**, then it starts at the next login (or `wlsunset -l 25.77 -L -80.19 &` now)
 - [ ] 5. Printing (a front end for CUPS)
 - [ ] 6. **hypeForge Settings spike**: one Forge app running inside the Settings pane
 - [ ] 7. Sound

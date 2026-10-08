@@ -57,6 +57,20 @@ window#waybar {
 }
 
 /* The workspace buttons, drawn by applet 1 (one module per workspace: custom/ws#w1 …) */
+/* #42 (Javier, 2026-10-07): a square with the number of the workspace on screen, right of the
+   emblem, in the bar's active colour — so a glance tells which workspace this screen shows */
+#custom-wsnum {
+  min-width: 16px;
+  margin: 6px 6px 6px 0;
+  padding: 0 5px;
+  background: @hf_active;
+  color: @hf_bar;
+  font-weight: bold;
+}
+#custom-wsnum:hover {
+  background: @hf_text;
+}
+
 #custom-ws {
   padding: 0 12px;
   color: @hf_subtext;
