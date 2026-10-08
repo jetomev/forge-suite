@@ -153,20 +153,28 @@ window#waybar {
 }
 
 /* Network, Bluetooth, volume: icons like the clipboard's; the volume shows its number */
-#custom-drives, #network, #bluetooth, #wireplumber {
+#custom-drives, #custom-printers, #network, #bluetooth, #wireplumber {
   padding: 0 5px;
   font-family: "Symbols Nerd Font", sans-serif;
   font-size: 16px;
   color: @hf_subtext;
 }
 
-#custom-drives:hover, #network:hover, #bluetooth:hover, #wireplumber:hover {
+#custom-drives:hover, #custom-printers:hover, #network:hover, #bluetooth:hover, #wireplumber:hover {
   background: @hf_inactive;
   color: @hf_text;
 }
 
 #custom-drives.has {
   color: #89b4fa;
+}
+
+/* The printer (applet 12): lit while printing, red when a printer is stopped */
+#custom-printers.busy {
+  color: #89b4fa;
+}
+#custom-printers.stopped {
+  color: #f38ba8;
 }
 
 #network.disconnected, #bluetooth.off, #bluetooth.disabled, #wireplumber.muted {

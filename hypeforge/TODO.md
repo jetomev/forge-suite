@@ -115,7 +115,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] 3. Window placement nine-spot order — Javier's test (#38): "Perfection!" 23:10
 - [x] 4. Night light — **wired + installed 10-07** (wlsunset running): `exec sh -c 'command -v wlsunset && exec wlsunset -l 25.77 -L -80.19'` (Miami; 4000 K night / 6500 K day; only when installed); Help page 17. **Javier: `nog install wlsunset`**, then it starts at the next login (or `wlsunset -l 25.77 -L -80.19 &` now)
 - [ ] 4b. **nightForge** (Javier, 10-07): the night light's app — on/off, temperatures, place; a Settings page → issue filed
-- [ ] 5. Printing — **found 10-07: already works on Sway**: CUPS active, HP M15w set up (driverless, ipp://192.168.1.202), Print Settings in the launcher's Settings section, its admin pop-up through sudoForge (proven in sudoForge's matrix). Left: a Help page (18) and a test page printed from the Sway session; the Printers Forge app = step 19
+- [ ] 5. Printing — **found 10-07: already works on Sway**: CUPS active, HP M15w set up (driverless, ipp://192.168.1.202), Print Settings in the launcher's Settings section, its admin pop-up through sudoForge (proven in sudoForge's matrix). Help page 18 written. **Applet 12 · the printer on the bar (Javier 10-07: "a printer icon in the tray indicating if it is idle or busy, the list of open jobs, and how to open the printer app")**: `applets/printers/` — grey idle / lit + job count / red stopped (`lpstat`), click = the jobs (cancel one) + Print Settings, right click = Print Settings; 10 s refresh. Left: a test page from Sway; **printerForge** (his name) = step 19
 - [ ] 6. **hypeForge Settings spike**: one Forge app running inside the Settings pane
 - [ ] 7. Sound
 - [ ] 8. Network & Wi-Fi
@@ -129,7 +129,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] 16. Keyboard
 - [ ] 17. Mouse & Touchpad
 - [ ] 18. Time & Language
-- [ ] 19. Printers (into Settings)
+- [ ] 19. printerForge (Javier's name, 10-07): the Printers Forge app, into Settings
 - [ ] 20. USB drives & disks
 - [ ] 21. Users
 - [ ] 22. About this computer
@@ -142,7 +142,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Track · Settings catalogue and the v1.0 cut
 *Javier listed every settings area he can think of (KDE's full set: keyboard, touchscreen, game controllers incl. the Logitech G13, accessibility, Bluetooth, sound, disks and cameras, printers, Wi-Fi and internet, online accounts, wallpaper, themes, text and fonts, animations, default apps, notifications, window management, activities, workspace behaviour, screen locking, app permissions, remote desktop, recent files, user feedback, region and language, spell check, date and time, day-night cycle, about, power, software update, users, autostart, session) and said: not everything — choose wisely, closer to Linux Mint's set, the most used and appreciated, for KognogOS v1.0.0.*
-- [ ] **Proposed v1.0 set (18, Mint-sized):** Screens (displayForge ✅) · Night light (nightForge, Javier 10-07) · Sound · Network & Wi-Fi · Bluetooth · Printers · Keyboard (layout, repeat, our key chart) · Mouse & Touchpad · Power & Lock (idle, sleep, lock screen) · Notifications · Default apps (#19) · Startup apps · Look (wallpaper, themes, icons, pointer, fonts — the Theme manager) · Time & Language (date, time, region, language) · Users · Software updates (nogForge ✅) · Workspaces & Windows (ours: placement, rules, tiling/floating) · USB drives & disks · About this computer
+- [ ] **Proposed v1.0 set (18, Mint-sized):** Screens (displayForge ✅) · Night light (nightForge, Javier 10-07) · Sound · Network & Wi-Fi · Bluetooth · Printers (printerForge) · Keyboard (layout, repeat, our key chart) · Mouse & Touchpad · Power & Lock (idle, sleep, lock screen) · Notifications · Default apps (#19) · Startup apps · Look (wallpaper, themes, icons, pointer, fonts — the Theme manager) · Time & Language (date, time, region, language) · Users · Software updates (nogForge ✅) · Workspaces & Windows (ours: placement, rules, tiling/floating) · USB drives & disks · About this computer
 - [ ] **After 1.0:** game controllers (the G13 as its own Forge app, also inside Settings) · accessibility (large text and pointer go in Look for 1.0) · online accounts · remote desktop · touchscreen · app permissions · spell check · animations
 - [ ] **Not ours / not now:** activities, recent files, user feedback, session (Sway has no such things to set)
 - [ ] **Wallet (Javier, 10-07: "we need a Forge Suite Wallet"):** yes — our own secret store (the standard Secret Service interface, unlocked through sudoForge's box); today KDE's `ksecretd` answers it (Claude Desktop fix #39). Name his call. = the D-61 keyring step

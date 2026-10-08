@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+"""hypeForge applet 12 · the printer on the bar (Javier, 2026-10-07).
+
+    hypeforge-printers bar        the printer icon, as Waybar JSON: grey idle, lit while printing
+                                  (with the count of jobs), red when a printer is stopped
+    hypeforge-printers menu       the list of open jobs (pick one to cancel it), and Print Settings
+    hypeforge-printers settings   open Print Settings (system-config-printer)
+
+Printing itself is CUPS's job; this applet only reads `lpstat` and opens the existing apps.
+printerForge (the Forge app) replaces the Print Settings window one day; the bar piece stays.
+"""
+
+import json
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
+import hfmenu  # noqa: E402
+
+ICON = "\U000f042a"  # 󰐪 printer (Nerd Font)
+FUZZEL = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+SETTINGS_APP = "system-config-printer"
+
+
+def run(*cmd):
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True, timeout=5).stdout
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+
+
+def printers():
+    """[(name, state)] from `lpstat -p`: state is idle / printing / stopped / disabled."""
+    found = []
+    for line in run("lpstat", "-p").splitlines():
+        m = re.match(r"printer (\S+) (?:is|now) (\w+)", line)
+        if m:
+            state = m.group(2)
+            if "disabled" in line:
+                state = "stopped"
+            found.append((m.group(1), state))
+    return found
+
+
+def jobs():
+    """[(id, printer, user, size)] from `lpstat -o`: the jobs still waiting or printing."""
+    out = []
+    for line in run("lpstat", "-o").splitlines():
+        parts = line.split()
+        if len(parts) >= 3 and "-" in parts[0]:
+            printer, _, num = parts[0].rpartition("-")
+            out.append((parts[0], printer, parts[1], parts[2] if len(parts) > 2 else ""))
+    return out
+
+
+def bar():
+    ps, js = printers(), jobs()
+    if not ps:
+        print(json.dumps({"text": ICON, "class": "none", "tooltip": "No printer set up\nRight click: Print Settings"}))
+        return
+    stopped = [n for n, s in ps if s == "stopped"]
+    busy = bool(js) or any(s == "printing" for _, s in ps)
+    cls = "stopped" if stopped else ("busy" if busy else "idle")
+    text = f"{ICON} {len(js)}" if js else ICON
+    tip = "\n".join(f"{n}: {s}" for n, s in ps)
+    tip += f"\n{len(js)} job{'s' if len(js) != 1 else ''} waiting" if js else "\nNothing waiting"
+    tip += "\nClick: the jobs · Right click: Print Settings"
+    print(json.dumps({"text": text, "class": cls, "tooltip": tip}))
+
+
+def settings():
+    subprocess.Popen(["swaymsg", "exec", SETTINGS_APP], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
+def menu():
+    if hfmenu.close_open("printers"):  # a second click closes it
+        return
+    js = jobs()
+    items = [(f"Cancel   {jid}  ({user}, {size} bytes)", "cancel", jid) for jid, _p, user, size in js]
+    if not items:
+        items.append(("Nothing waiting to print", None, None))
+    for name, state in printers():
+        items.append((f"{name} is {state}", None, None))
+    items.append(("Print Settings…", "settings", None))
+    lines = [t for t, _, _ in items]
+    cmd = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", "Printer  ",
+           "--anchor", "top-right", "--x-margin", "4", "--y-margin", "4", "--width", "48",
+           "--font", "Noto Sans:size=10", "--lines", str(max(1, len(lines)))]
+    if os.path.isfile(FUZZEL):
+        cmd[1:1] = ["--config", FUZZEL]
+    picked = hfmenu.run("printers", cmd, "\n".join(lines))
+    if picked is None or not picked.strip().isdigit():
+        return
+    _, action, jid = items[int(picked)]
+    if action == "cancel":
+        subprocess.run(["cancel", jid], capture_output=True)
+        subprocess.run(["notify-send", "-a", "Printer", "-i", "printer", f"Cancelled {jid}"])
+    elif action == "settings":
+        settings()
+
+
+def main():
+    action = sys.argv[1] if len(sys.argv) > 1 else ""
+    {"bar": bar, "menu": menu, "settings": settings}.get(action, lambda: sys.exit(__doc__))()
+
+
+if __name__ == "__main__":
+    main()

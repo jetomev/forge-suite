@@ -39,7 +39,7 @@
   // Bluetooth, network, volume | the date and time | the bell, the power menu — one shade
   "group/indicators": {
     "orientation": "inherit",
-    "modules": ["tray", "custom/clipboard", "custom/drives", "bluetooth", "network", "wireplumber", "clock", "custom/notifications", "custom/power"]
+    "modules": ["tray", "custom/clipboard", "custom/drives", "custom/printers", "bluetooth", "network", "wireplumber", "clock", "custom/notifications", "custom/power"]
   },
   // Network, Bluetooth, volume (Javier, 2026-10-05). Network: click = the network menu
   // (networkmanager_dmenu in fuzzel), right click = nmtui. Bluetooth: click = bluetui, right
@@ -85,6 +85,15 @@
     "interval": 60,
     "signal": 11,
     "on-click": "~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives menu"
+  },
+  // The printer (applet 12, Javier 2026-10-07): grey idle, lit while printing with the job count,
+  // red when stopped. Click = the jobs (cancel one), right click = Print Settings.
+  "custom/printers": {
+    "exec": "~/Programs/forge-suite/hypeforge/applets/printers/hypeforge-printers bar",
+    "return-type": "json",
+    "interval": 10,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/printers/hypeforge-printers menu",
+    "on-click-right": "~/Programs/forge-suite/hypeforge/applets/printers/hypeforge-printers settings"
   },
   // The power menu: Lock · Log Out · Reboot · Shut Down (applet 4, `hypeforge-sections power`)
   "custom/power": {
