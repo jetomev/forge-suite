@@ -4,5 +4,11 @@
 
 ## 2026-10-09
 
+### D-2 · First design review: his thirteen default apps with drop-downs; File Types like workspaceForge's Apps page (Javier)
+1. **Kinds → Default Apps:** Web Browser · Email Client · Calendar · Phone Numbers · Image Viewer · Music Player · Video Player · Text Editor · PDF Viewer · File Manager · Terminal Emulator · Archive Manager · Map. A drop-down next to each with the apps available. *"No need for status, it is kind of overkill."*
+2. **File Types:** *"kind a busy section."* The most common types only, assigned to the default apps (to keep it simple), done like workspaceForge's Apps page: file extensions on the left, the default apps on the right each with its own types, `>>` to assign, `<<` to clear.
+
+Second draft the same hour. New questions from what it needs: Office Suite (documents have no default app in the list), the Terminal Emulator standard (`xdg-terminal-exec`, not installed), Phone Numbers with nothing installed.
+
 ### D-1 · defaultappsForge is next, and its name (Javier)
 Picked after nightForge: *"dappsForge next? (default apps)"*, then *"d-appsForge"*, then *"ah! wait, then defaultappsForge"* — Claude had pointed out that "dApps" is a crypto word, and that Python names can't hold a hyphen. It is the Forge app #19 (F-36, 2026-09-30) has been waiting for; the stopgap `handlr-regex` stays meanwhile. The design first, for his approval.

@@ -36,7 +36,7 @@ def header(active, right="KognogOS · javier · nothing changed yet"):
     left = " {v b:defaultappsForge 0.1.0}{m: · which app opens what}"
     gap = W - len(vis(left)) - len(right) - 1
     top = line(left + " " * gap + "{m:" + right + "} ", "hdr")
-    items = [("Kinds", "K"), ("File Types", "F"), ("Help ▾", "H"), ("Quit", "Q")]
+    items = [("Default Apps", "D"), ("File Types", "F"), ("Help ▾", "H"), ("Quit", "Q")]
     parts = []
     for name, letter in items:
         if name.startswith(active):
@@ -96,108 +96,108 @@ blank = line("")
 
 
 
-# ---- 1 · Kinds ---------------------------------------------------------------------------------------
-# (kind, opens with, status) — today on Javier's desktop (xdg-mime + ~/.config/mimeapps.list, 2026-10-09)
-KINDS = [
-    ("Web browser", "Google Chrome", "mine"),
-    ("Email", "Thunderbird", "guess"),
-    ("Files & folders", "Thunar", "mine"),
-    ("Text & code", "Fresh", "mine"),
-    ("PDF", "Google Chrome", "guess"),
-    ("Pictures", "Pinta · Google Chrome", "mixed"),
-    ("Music", "mpv", "guess"),
-    ("Video", "mpv", "guess"),
-    ("Documents & sheets", "ONLYOFFICE", "guess"),
-    ("Archives", "Ark", "kde"),
+# ---- 1 · Default Apps (Javier's list and layout, first review 2026-10-09) ---------------------------
+# today on Javier's desktop (xdg-mime + ~/.config/mimeapps.list, 2026-10-09)
+DEFAULTS = [
+    ("Web Browser", "Google Chrome"), ("Email Client", "Thunderbird"), ("Calendar", "Thunderbird"),
+    ("Phone Numbers", "— none installed —"), ("Image Viewer", "Pinta"), ("Music Player", "mpv"),
+    ("Video Player", "mpv"), ("Text Editor", "Fresh"), ("PDF Viewer", "Google Chrome"),
+    ("File Manager", "Thunar"), ("Terminal Emulator", "Alacritty"), ("Archive Manager", "Ark"),
+    ("Map", "Google Maps"),
 ]
-STATUS = {"mine": "{ok:✓ your choice}", "guess": "{m:~ the system's guess}", "mixed": "{w:◐ split: 2 apps}",
-          "kde": "{w:⚠ leaves with KDE}", "gone": "{er:⚠ app is gone}"}
 
 
-def table_row(kind, app, status, sel=False, shade=False):
-    txt = f"  {kind:<22}{app:<26}"
-    st = STATUS[status]
-    row = txt + st + " " * (26 - len(vis(st)))
-    if sel:
-        return "{sel:" + txt + "}" + st + "{sel:" + " " * (26 - len(vis(st))) + "}"
-    return "{fld:" + txt + "}" + st + "{fld:" + " " * (26 - len(vis(st))) + "}" if shade else row
+def dropdown(app, focus=False):
+    inner = f" {app:<24}▾ "
+    return ("{foc:" if focus else "{fld:") + inner + "}"
 
 
-def s_kinds():
-    L = header("Kinds")
+def s_defaults():
+    L = header("Default Apps")
     L += [blank]
-    L += [line("  " + r) for r in box("Needs attention", [
-        "{w:⚠} {b:3 old choices point to apps that are gone:} Typora, Nemo, Brave",
-        "{w:⚠} {b:Ark} (archives) and {b:Konsole} (shell scripts) leave with KDE: pick others before it goes",
-        "{d:Saving tidies the old choices away; nothing else changes unless you pick it.}"], 96, "w")]
+    for name, app in DEFAULTS:
+        L.append(line(f"  {name:<22}" + dropdown(app, focus=(name == "PDF Viewer"))))
     L += [blank,
-          line("  {b:Kind ▲                Opens with                Status}" + " " * 22 + "{d:Show}  {fld: All ▾ }"),
-          line("  {d:" + "─" * 94 + "}")]
-    for i, (k, a, s) in enumerate(KINDS):
-        L.append(line(table_row(k, a, s, sel=(k == "PDF"), shade=i % 2 == 1)))
-    L += [blank, line("  {btn: Change… (Enter) }  {d:pick the app for the highlighted kind}")]
-    L += [blank, hint("{a:↑ ↓} {d:pick}  ·  {a:Enter} {d:change}  ·  {a:F10} {d:save}  ·  {a:1-3} {d:menu}  ·  {a:F1} {d:help}")]
+          line("  {d:Each list holds only the apps that can do that job. The next file or link you open uses it.}")]
+    L += [blank, hint("{a:↑ ↓} {d:next}  ·  {a:Enter} {d:open the list}  ·  {a:F10} {d:save}  ·  {a:1-3} {d:menu}  ·  {a:F1} {d:help}")]
     return pad(L)
 
 
-# ---- Change: a pop-up ------------------------------------------------------------------------------
-
-def s_pick():
-    L = header("Kinds")
-    L += [blank] * 3
-    rows = ["",
-            "{b:These can open PDFs:}",
-            "",
-            "{sel:  (•) Master PDF Editor                                        }",
-            "  ( ) Zathura                {d:light, keyboard-driven}",
-            "  ( ) Okular                 {w:leaves with KDE}",
-            "  ( ) ONLYOFFICE",
-            "  ( ) Google Chrome          {d:now, the system's guess}",
-            "  ( ) GIMP",
-            "",
-            "{d:Applies to every PDF. A kind with many file types (Pictures: PNG, JPEG,}",
-            "{d:GIF, WebP, SVG…) sets each one the app can open; the others stay.}",
-            "",
-            "            {pri: Use Master PDF Editor (Enter) }    {btn: Cancel (Esc) }",
-            ""]
-    L += [line("        " + r) for r in box("PDF: open with…", rows, 82)]
-    L += [blank] * 2
-    L += [hint("{a:↑ ↓} {d:pick}  ·  {a:Enter} {d:use it}  ·  {a:Esc} {d:cancel}")]
+def s_dropdown():
+    """The PDF Viewer's list, open."""
+    L = header("Default Apps")
+    L += [blank]
+    for name, app in DEFAULTS[:9]:
+        L.append(line(f"  {name:<22}" + dropdown(app, focus=(name == "PDF Viewer"))))
+    opts = [("Google Chrome", True), ("Master PDF Editor", False), ("Zathura", False), ("Okular", False),
+            ("ONLYOFFICE", False), ("GIMP", False)]
+    for o, cur in opts:
+        mark = "●" if cur else " "
+        txt = f" {mark} {o:<24}"
+        L.append(line(" " * 24 + ("{sel:" + txt + "}" if o == "Master PDF Editor" else "{fld:" + txt + "}")))
+    L += [blank, hint("{a:↑ ↓} {d:pick}  ·  {a:Enter} {d:use it}  ·  {a:Esc} {d:close the list}")]
     return pad(L)
 
 
-# ---- 2 · File Types ---------------------------------------------------------------------------------
+# ---- 2 · File Types: two tables with >> / << (like workspaceForge's Apps page) ---------------------
+
+LW, MW, RW = 40, 10, 48
+
+
+def trow(ticked, ext, what, width, shade, cur=False):
+    txt = f" {'[x]' if ticked else '[ ]'} {ext:<10}{what}"
+    txt = txt + " " * (width - len(txt))
+    return "{sel:" + txt + "}" if cur else ("{fld:" + txt + "}" if shade else txt)
+
 
 def s_types():
     L = header("File Types")
-    L += [blank,
-          line("  {d:Every file type one by one, for the ones a kind doesn't cover.}" + " " * 4 + "{d:Find} {fld: image     }  {fld: All ▾ }"),
-          blank,
-          line("  {b:Type ▲                     Example     Opens with           Status}"),
-          line("  {d:" + "─" * 94 + "}")]
-    rows = [("image/bmp", ".bmp", "Pinta", "mine"), ("image/gif", ".gif", "Google Chrome", "guess"),
-            ("image/jpeg", ".jpg", "Pinta", "mine"), ("image/png", ".png", "Pinta", "mine"),
-            ("image/svg+xml", ".svg", "Pinta", "guess"), ("image/webp", ".webp", "Google Chrome", "guess")]
-    for i, (t_, ex, app, st) in enumerate(rows):
-        txt = f"  {t_:<27}{ex:<12}{app:<21}"
-        s = STATUS[st]
-        L.append(line(("{sel:" + txt + "}" + s) if t_ == "image/gif" else (("{fld:" + txt + "}" + s) if i % 2 else txt + s)))
-    L += [blank, line("  {m:6 of 1,129 types}   {btn: Change… (Enter) }  {btn: Back to the System's Guess (d) }")]
-    L += [blank, hint("{a:↑ ↓} {d:pick}  ·  {a:Enter} {d:change}  ·  {a:d} {d:system's guess}  ·  {a:F10} {d:save}  ·  {a:F1} {d:help}")]
+    L += [blank]
+    left = ["{v b:File types on no default app}", fit(" " * 10 + "{d:Find} {fld:          }", LW),
+            "{btn: Select All (a) } {btn: Deselect All (u) }", "{b:     Type ▲    What}"]
+    pool = [(".csv", "spreadsheet text"), (".docx", "Word document"), (".epub", "e-book"), (".ics", "calendar event"),
+            (".iso", "disc image"), (".odt", "document"), (".rtf", "rich text"), (".srt", "subtitles"),
+            (".torrent", "torrent"), (".ttf", "font"), (".xlsx", "Excel sheet")]
+    for i, (e, w) in enumerate(pool):
+        left.append(trow(e == ".ics", e, w, LW, i % 2 == 1, cur=e == ".ics"))
+    right = ["{v b:Default apps}  {m:open one to see its file types}"]
+    counts = {"Web Browser": 3, "Email Client": 1, "Calendar": 0, "Image Viewer": 7, "Music Player": 6,
+              "Video Player": 6, "Text Editor": 12, "PDF Viewer": 1, "Archive Manager": 6}
+    for name, n in counts.items():
+        if name == "Calendar":
+            right.append("{act: ▾ " + f"{name:<28}" + f"{n} type{'s' if n != 1 else ''}".rjust(RW - 33) + " }")
+            right.append("{btn: Select All (a) } {btn: Deselect All (u) }")
+            right.append("{d:   nothing yet: send .ics here with >>}")
+        else:
+            right.append(f" ▸ {name:<28}" + "{m:" + f"{n} type{'s' if n != 1 else ''}".rjust(RW - 33) + "}")
+    mid = [""] * 7 + ["{pri:   >>   }", "{d:  assign}", "", "{btn:   <<   }", "{d:  clear}"]
+    for i in range(max(len(left), len(right))):
+        a = fit(left[i] if i < len(left) else "", LW)
+        m = fit(" " + (mid[i] if i < len(mid) else ""), MW)
+        b = right[i] if i < len(right) else ""
+        L.append(line(" " + a + m + b))
+    L += [blank, hint("{a:Space} {d:tick}  ·  {a:>} {d:assign to the open one}  ·  {a:<} {d:clear}  ·  {a:Tab} {d:other side}  ·  {a:F10} {d:save}")]
     return pad(L)
+
+
+def fit(s, width):
+    n = len(vis(s))
+    if n > width:
+        sys.exit(f"CELL TOO WIDE ({n} > {width}): {vis(s)!r}")
+    return s + " " * (width - n)
 
 
 # ---- Save: a pop-up ----------------------------------------------------------------------------------
 
 def s_save():
-    L = header("Kinds", right="KognogOS · javier · 3 changes waiting")
+    L = header("Default Apps", right="KognogOS · javier · 3 changes waiting")
     L += [blank] * 3
     L += [line("      " + r) for r in box("Save your default apps?", [
         "",
         "{m:Change                    Before                 Now}",
         "{d:────────────────────────────────────────────────────────────────────────}",
-        "PDF                       Google Chrome (guess)  {ok:Master PDF Editor}",
-        "Pictures (GIF, WebP)      Google Chrome (guess)  {ok:Pinta}",
+        "PDF Viewer                Google Chrome          {ok:Master PDF Editor}",
+        "File type .ics            —                      {ok:Calendar (Thunderbird)}",
         "Old choices tidied        Typora, Nemo, Brave    {ok:removed (apps gone)}",
         "",
         "{m:Written to}    ~/.config/mimeapps.list   {d:every desktop and app reads it}",
@@ -211,7 +211,7 @@ def s_save():
     return pad(L)
 
 
-SCREENS = {"kinds": s_kinds(), "pick": s_pick(), "types": s_types(), "save": s_save()}
+SCREENS = {"defaults": s_defaults(), "dropdown": s_dropdown(), "types": s_types(), "save": s_save()}
 
 if __name__ == "__main__":
     for k, v in SCREENS.items():
