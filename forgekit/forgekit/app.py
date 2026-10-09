@@ -395,11 +395,24 @@ class ForgeApp(App[None]):
             self.action_act(entry["action"])
         elif kind == "menu":
             w = self.query_one(f"#menu-{entry_id}")
-            w.add_class("open")                      # lit while its dropdown is open (Javier, 10-08)
+            # lit while its dropdown is open, and the only one lit (Javier, 10-08): the page's own
+            # mark goes, and comes back if the menu closes without changing the page
+            lit = [t for t in self.query(".menu-title.active")]
+            if lit:                                  # (none when switching from another menu: keep the first)
+                self._lit_before = lit
+            for t in lit:
+                t.remove_class("active")
+            w.add_class("open")
 
             def chosen(result, w=w):
                 w.remove_class("open")
                 self._on_menu_choice(result)
+                if self.query(".menu-title.open"):  # another menu took over: it restores later
+                    return
+                if not self.query(".menu-title.active"):
+                    for t in getattr(self, "_lit_before", []):
+                        t.add_class("active")
+                self._lit_before = []
             self.push_screen(MenuDropdown(entry["items"], w.region.x, w.region.y + 1, entry_id), chosen)
 
     def _switch_section(self, section_id: str) -> None:

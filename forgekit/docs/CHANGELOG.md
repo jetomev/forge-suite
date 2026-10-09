@@ -24,7 +24,7 @@ From Javier's run of every Forge app inside hypeForge Settings ([#49](https://gi
   in the bar, and Q, Ctrl+Q and the Quit action do nothing.** Settings closes the app with SIGUSR1 →
   `host_quit()`, which runs the app's own `before_quit()`: nothing unsaved closes at once, otherwise the
   app asks its usual question. Replaces 0.10.0-dev's `HYPEFORGE_SETTINGS` variable.
-- **A menu closes on its own key or number pressed again**, and **its title is lit while it's open**.
+- **A menu closes on its own key or number pressed again**, and **its title is the only one lit while it's open**: the page's own mark comes back if the menu closes without changing the page.
 - **About, License, Keys and the manual are pages in the work area**, not windows (`AboutView`,
   `LicenseView`, `ShortcutsView`, `ManualView`; `show_page`, `show_manual(title, pages, start)`);
   Help is lit while they show, and Esc goes back to the page you came from. `ManualScreen` stays,
@@ -40,7 +40,7 @@ From Javier's run of every Forge app inside hypeForge Settings ([#49](https://gi
 - Checked: Textual lists Ctrl+I as another name for Tab and Ctrl+M for Enter, but a key matches only what
   was really pressed, so a Ctrl+I shortcut never takes Tab (a test keeps it so). On a plain text console
   Ctrl+I *is* Tab, so there the number is the way.
-- Tests: **138** (was 110). Warnings: **0** (was 0). Each new piece was switched off once to watch its
+- Tests: **139** (was 110). Warnings: **0** (was 0). Each new piece was switched off once to watch its
   tests fail. Two tests from the unreleased 0.10.0-dev were replaced; one of them could never fail.
 
 ### 0.9.0 — October 7, 2026 · the menu bar wraps ([#40](https://github.com/jetomev/forge-suite/issues/40))

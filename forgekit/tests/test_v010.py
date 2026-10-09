@@ -432,6 +432,30 @@ class MenuKeysForEveryEntry(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(app.query_one("#menu-help").has_class("open"))
             self.assertFalse(app.query_one("#menu-more").has_class("open"))
 
+    async def test_an_open_menu_is_the_only_title_lit(self):
+        # Javier, 2026-10-08: "the previous option needs to clear the color, cannot stay painted"
+        app = self.Three()
+        async with app.run_test(size=(80, 20)) as pilot:
+            await pilot.press("ctrl+o")
+            await pilot.pause()
+            self.assertEqual(self.active(app), ["menu-one"])
+            def lit():
+                return sorted(w.id for w in app.query(".menu-title.active, .menu-title.open"))
+            await pilot.press("ctrl+m")
+            await pilot.pause()
+            self.assertEqual(lit(), ["menu-more"], "only the open menu")
+            await pilot.press("ctrl+h")              # switch to Help's menu
+            await pilot.pause()
+            self.assertEqual(lit(), ["menu-help"])
+            await pilot.press("escape")              # closed without a choice: the page is lit again
+            await pilot.pause()
+            self.assertEqual(lit(), ["menu-one"])
+            await pilot.press("ctrl+h")
+            await pilot.pause()
+            await pilot.press("a")                   # About: Help stays lit, One does not come back
+            await pilot.pause()
+            self.assertEqual(lit(), ["menu-help"])
+
     async def test_about_and_license_are_pages_not_windows(self):
         app = self.Three()
         async with app.run_test(size=(80, 20)) as pilot:
