@@ -54,11 +54,17 @@ On the other pages, the bar at the bottom reminds you that changes are waiting a
 
 ## Install and run
 
-displayForge is not packaged yet; it runs from this repository.
+From the AUR (since 2026-10-09):
+
+```
+yay -S displayforge
+```
+
+Then `displayforge`, or the **Screens** page of hypeForge Settings. It also runs straight from this repository.
 
 - **Sway only.** displayForge sets up screens by talking to Sway, and only Sway. It checks at launch *(1.0.1)*: on any other desktop (KDE, GNOME, Hyprland…) or on a text console it shows one plain screen — what it needs, what it found instead, why, what to use — and closes. Nothing is touched.
 - **Needs:** Sway, Python 3.11 or newer, [forgekit](../forgekit/) 0.10.0 or newer (`python-forgekit` in the AUR) and `ddcutil` (for brightness; your screens need **DDC/CI** switched on in their own menu). Without `ddcutil` the launch screen says so and lets you continue; Brightness and Identify are the two views that need it.
-- **Run:** `python3 displayforge/main.py` from the Forge Suite folder. In hypeForge it's in the launcher (Win + Space → "display"), opening in its own floating window.
+- **Run:** `displayforge` once installed, or `python3 displayforge/main.py` from the Forge Suite folder. In hypeForge it's in the launcher (Win + Space → "display"), opening in its own floating window.
 - **Sway must read the saved file:** hypeForge's Sway settings include the line `include ~/.config/sway/outputs` after its own screen lines. displayForge warns you if that line is missing.
 
 ## Keys
@@ -101,7 +107,8 @@ Said plainly, so nobody finds out the hard way:
 | Version | What | Status |
 |---|---|---|
 | **1.1.x** | The tests above: 1 and 2 screens, 80 / 90 %, text console; Javier's Arrange run | ⬜ next |
-| **1.2** | Profiles · an AUR package | ⬜ |
+| **1.2** | Profiles | ⬜ |
+| **AUR** | `yay -S displayforge` — 1.1.0 packaged 2026-10-09 (Javier: all ready apps on the AUR) | ✅ |
 | **1.1.0** | Javier's run inside hypeForge Settings: Ctrl + every underlined letter, Help numbered, "1-6 menu"; Try and Save only where things change; a real "Apply your changes?" before quitting; the Save button in the bar works; `--hypeforge`; button labels as "Try It (F9)" | ✅ 2026-10-08 |
 | **1.0.1** | Sway only, said everywhere and checked at launch (on forgekit 0.7.0's start-up check) | ✅ 2026-10-06 |
 

@@ -2,6 +2,9 @@
 
 **1.1.0 released 2026-10-08** (his runs inside hypeForge Settings: keys, Try/Save where they belong, a real question before quitting, pages for Help); before it **1.0.1 released 2026-10-06** (Sway only, D-5), after 1.0.0 the same morning (D-4). Next: 1.1.x tests (one and two screens, 80 / 90 %, text console). A Forge Suite app (terminal, forgekit) for screen settings on Sway: arrange, resolution, refresh rate, scale, rotation, on / off, main screen, brightness. Section of the Forge Suite (D-60). Updated after every step.
 
+## Done 2026-10-09
+- [x] **On the AUR, 2026-10-09** (Javier: "all ready to use apps on AUR, even if they are private"): signed files added to the 1.1.0 release, `displayforge` 1.1.0-1 built locally (63/63 tests in check()), Javier installed and tested it ("displayForge good"), pushed `27bed27`; its AUR description already carries the "where it runs" words
+
 ## At the next release
 - [ ] **The AUR description, at the next release** (Javier, 2026-10-09): the AUR `pkgdesc` (and `.SRCINFO`) gets the same "where it runs" words as the README, GitHub About and kognogos.org — distribution · desktop · plain text console. Not pushed on its own: AUR pushes stay one per proven version.
 
