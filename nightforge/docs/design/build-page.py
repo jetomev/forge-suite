@@ -12,7 +12,7 @@ body = f'''
 <div class="wrap">
 
 <header class="stack">
-  <div class="eyebrow">nightForge · design proposal · 9 October 2026</div>
+  <div class="eyebrow">nightForge · design proposal · 9 October 2026 · second draft</div>
   <h1>nightForge, screen by screen</h1>
   <p class="lede prose">The night light's own app: on or off, how warm the evening gets, and when. In the terminal, like every Forge app, and a page of hypeForge Settings.</p>
   <p class="prose">Today the night light is <b>wlsunset</b>, started at login with Miami's place, 4000 K at night and 6500 K by day, and nothing to change it with (issue #44). The drawings use those real values, and your real sun today in Miami: down at <b>19:00</b>, up at <b>07:15</b>, worked out on this computer. Every drawing is exactly <b>100 columns</b> wide.</p>
@@ -25,6 +25,10 @@ body = f'''
   <div class="decide">
     <h3>From your issue (#44, 7 October)</h3>
     <p><em>"Night-Light → needs its own app to be able to activate/deactivate, modify its settings, etc. … nightForge… I guess."</em> On / off, the warmth, the place or fixed times, and a sign on the bar while it's on.</p>
+  </div>
+  <div class="decide">
+    <h3>Your first review</h3>
+    <p><b>Preview and Save work the same way: both pop-ups</b> over the page.</p>
   </div>
   <h2>Questions for you</h2>
   <p class="prose">Each with my recommendation in bold. Say "go" and they're all answered that way.</p>
@@ -50,7 +54,7 @@ body = f'''
 
 <section id="preview">
   <h2>Preview</h2>
-  <p class="prose">Like displayForge's countdown: it goes back by itself, so nothing gets stuck.</p>
+  <p class="prose">A pop-up, like Save. Like displayForge's countdown, it goes back by itself, so nothing gets stuck.</p>
   {T("preview")}
 </section>
 
@@ -68,7 +72,7 @@ body = f'''
 
 <section id="save">
   <h2>Saving</h2>
-  <p class="prose">A review first, a backup, then the night light restarts with the new settings at once, and at every login after.</p>
+  <p class="prose">A pop-up, like Preview (your first review: <em>"either both are a popup, or a change on the screen. I would say then popup for both."</em>). A review of every change, a backup, then the night light restarts with the new settings at once, and at every login after.</p>
   {T("save")}
 </section>
 

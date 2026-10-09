@@ -171,25 +171,27 @@ def s_preview():
     return pad(L)
 
 
-# ---- Save -------------------------------------------------------------------------------------------
+# ---- Save: a pop-up, like Preview (Javier's first review, 2026-10-09) ----------------------------------
 
 def s_save():
     L = header("Night Light", right="KognogOS · javier · 2 changes waiting")
-    L += [blank,
-          line("  {v b:Save the night light settings?}"),
-          blank,
-          line("  {m:Change                     Before                    After}"),
-          line("  {d:──────────────────────────────────────────────────────────────────────}"),
-          line("  Evening warmth             4000 K                    {ok:3500 K}"),
-          line("  When                       by the sun, Miami         {ok:fixed: 21:00 → 07:00}"),
-          blank,
-          line("  {m:Written to}   ~/.config/nightforge/settings.toml"),
-          line("  {m:Backup first} ~/.config/nightforge/backups/          {d:the last 20 are kept}"),
-          line("  {m:Then}         the night light restarts with them: {b:at once}, and at every login"),
-          blank,
-          line("                                {pri: Save (Enter) }    {btn: Back (Esc) }"),
-          blank,
-          hint("{a:Enter} {d:save}  ·  {a:Esc} {d:back}")]
+    L += [blank] * 4
+    L += [line("      " + r) for r in box("Save the night light settings?", [
+        "",
+        "{m:Change                 Before                Now}",
+        "{d:────────────────────────────────────────────────────────────────────────}",
+        "Evening warmth         4000 K                {ok:3500 K}",
+        "When                   by the sun            {ok:fixed times, 21:00 → 07:00}",
+        "",
+        "{m:Written to}    ~/.config/nightforge/settings.toml",
+        "{m:Backup first}  ~/.config/nightforge/backups/   {d:the last 20 are kept}",
+        "{m:Then}          the night light restarts with them: at once, and at",
+        "              every login after",
+        "",
+        "                  {pri: Save (Enter) }    {btn: Cancel (Esc) }",
+        ""], 86, "a")]
+    L += [blank] * 5
+    L += [hint("{a:Enter} {d:save}  ·  {a:Esc} {d:cancel: nothing is written}")]
     return pad(L)
 
 

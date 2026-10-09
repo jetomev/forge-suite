@@ -111,7 +111,7 @@ td code { white-space: nowrap; }
 <div class="wrap">
 
 <header class="stack">
-  <div class="eyebrow">nightForge · design proposal · 9 October 2026</div>
+  <div class="eyebrow">nightForge · design proposal · 9 October 2026 · second draft</div>
   <h1>nightForge, screen by screen</h1>
   <p class="lede prose">The night light's own app: on or off, how warm the evening gets, and when. In the terminal, like every Forge app, and a page of hypeForge Settings.</p>
   <p class="prose">Today the night light is <b>wlsunset</b>, started at login with Miami's place, 4000 K at night and 6500 K by day, and nothing to change it with (issue #44). The drawings use those real values, and your real sun today in Miami: down at <b>19:00</b>, up at <b>07:15</b>, worked out on this computer. Every drawing is exactly <b>100 columns</b> wide.</p>
@@ -124,6 +124,10 @@ td code { white-space: nowrap; }
   <div class="decide">
     <h3>From your issue (#44, 7 October)</h3>
     <p><em>"Night-Light → needs its own app to be able to activate/deactivate, modify its settings, etc. … nightForge… I guess."</em> On / off, the warmth, the place or fixed times, and a sign on the bar while it's on.</p>
+  </div>
+  <div class="decide">
+    <h3>Your first review</h3>
+    <p><b>Preview and Save work the same way: both pop-ups</b> over the page.</p>
   </div>
   <h2>Questions for you</h2>
   <p class="prose">Each with my recommendation in bold. Say "go" and they're all answered that way.</p>
@@ -178,7 +182,7 @@ td code { white-space: nowrap; }
 
 <section id="preview">
   <h2>Preview</h2>
-  <p class="prose">Like displayForge's countdown: it goes back by itself, so nothing gets stuck.</p>
+  <p class="prose">A pop-up, like Save. Like displayForge's countdown, it goes back by itself, so nothing gets stuck.</p>
   <div class="term"><pre><span class="hdr"> <span class="v b">nightForge 0.1.0</span><span class="m"> · warmer screens in the evening</span>           <span class="m">KognogOS · javier · nothing changed yet</span> </span>
 <span class="bar"> <span class="act"> Night Light </span>   <span class="u">S</span>chedule   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                           </span>
                                                                                                     
@@ -254,37 +258,37 @@ td code { white-space: nowrap; }
 
 <section id="save">
   <h2>Saving</h2>
-  <p class="prose">A review first, a backup, then the night light restarts with the new settings at once, and at every login after.</p>
+  <p class="prose">A pop-up, like Preview (your first review: <em>"either both are a popup, or a change on the screen. I would say then popup for both."</em>). A review of every change, a backup, then the night light restarts with the new settings at once, and at every login after.</p>
   <div class="term"><pre><span class="hdr"> <span class="v b">nightForge 0.1.0</span><span class="m"> · warmer screens in the evening</span>             <span class="m">KognogOS · javier · 2 changes waiting</span> </span>
 <span class="bar"> <span class="act"> Night Light </span>   <span class="u">S</span>chedule   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                           </span>
                                                                                                     
-  <span class="v b">Save the night light settings?</span>                                                                    
-                                                                                                    
-  <span class="m">Change                     Before                    After</span>                                        
-  <span class="d">──────────────────────────────────────────────────────────────────────</span>                            
-  Evening warmth             4000 K                    <span class="ok">3500 K</span>                                       
-  When                       by the sun, Miami         <span class="ok">fixed: 21:00 → 07:00</span>                         
-                                                                                                    
-  <span class="m">Written to</span>   ~/.config/nightforge/settings.toml                                                   
-  <span class="m">Backup first</span> ~/.config/nightforge/backups/          <span class="d">the last 20 are kept</span>                          
-  <span class="m">Then</span>         the night light restarts with them: <span class="b">at once</span>, and at every login                      
-                                                                                                    
-                                <span class="pri"> Save (Enter) </span>    <span class="btn"> Back (Esc) </span>                                      
                                                                                                     
                                                                                                     
                                                                                                     
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
+      <span class="a">╭─ Save the night light settings? ───────────────────────────────────────────────────╮</span>        
+      <span class="a">│</span>                                                                                    <span class="a">│</span>        
+      <span class="a">│</span> <span class="m">Change                 Before                Now</span>                                   <span class="a">│</span>        
+      <span class="a">│</span> <span class="d">────────────────────────────────────────────────────────────────────────</span>           <span class="a">│</span>        
+      <span class="a">│</span> Evening warmth         4000 K                <span class="ok">3500 K</span>                                <span class="a">│</span>        
+      <span class="a">│</span> When                   by the sun            <span class="ok">fixed times, 21:00 → 07:00</span>            <span class="a">│</span>        
+      <span class="a">│</span>                                                                                    <span class="a">│</span>        
+      <span class="a">│</span> <span class="m">Written to</span>    ~/.config/nightforge/settings.toml                                   <span class="a">│</span>        
+      <span class="a">│</span> <span class="m">Backup first</span>  ~/.config/nightforge/backups/   <span class="d">the last 20 are kept</span>                 <span class="a">│</span>        
+      <span class="a">│</span> <span class="m">Then</span>          the night light restarts with them: at once, and at                  <span class="a">│</span>        
+      <span class="a">│</span>               every login after                                                    <span class="a">│</span>        
+      <span class="a">│</span>                                                                                    <span class="a">│</span>        
+      <span class="a">│</span>                   <span class="pri"> Save (Enter) </span>    <span class="btn"> Cancel (Esc) </span>                                 <span class="a">│</span>        
+      <span class="a">│</span>                                                                                    <span class="a">│</span>        
+      <span class="a">╰────────────────────────────────────────────────────────────────────────────────────╯</span>        
                                                                                                     
                                                                                                     
                                                                                                     
                                                                                                     
                                                                                                     
                                                                                                     
-<span class="hdr"> <span class="a">Enter</span> <span class="d">save</span>  ·  <span class="a">Esc</span> <span class="d">back</span>                                                                            </span></pre></div>
+                                                                                                    
+                                                                                                    
+<span class="hdr"> <span class="a">Enter</span> <span class="d">save</span>  ·  <span class="a">Esc</span> <span class="d">cancel: nothing is written</span>                                                      </span></pre></div>
 </section>
 
 <section id="runs">
