@@ -2,6 +2,15 @@
 
 **Target: the first KognogOS release (v1.0, April 2027).** Each section keeps its own detailed list; this one tracks the suite. Updated after every step.
 
+## 2026-10-09 — three new apps in a day, and every app says where it runs
+- [x] **workspaceForge 1.0.0** (new section): designed, approved, built, released — GitHub Latest, AUR after Javier's local test, kognogos.org card; the F-50 engine in hypeForge's Workspaces applet (F-51 loop found and fixed on the new hidden bench)
+- [x] **Where it runs, everywhere** (Javier's rule): a line on every README + GitHub About + kognogos.org card; AUR descriptions at each app's next release
+- [x] **displayForge 1.1.0 + mindForge 0.1.7 on the AUR** (signed files added to their releases; Javier's local tests) — 10 on the AUR
+- [x] **nightForge** (new section, #44): the night light's app + its own tray icon, live at login; **1.0.0 prepared, the tag waits for Javier's sunset check**
+- [x] **defaultappsForge** (new section, #19): designed ("WOW APP!!!!"), 0.1.0 built and in hypeForge Settings — **waits for Javier's run**
+- [ ] **displayForge 1.1.1** (#58, F-6: one-screen computers crashed at start; fixed `9648068`) — release when the AUR pushes are spaced out
+- [ ] Section rows in the suite README for nightForge and defaultappsForge — at their releases
+
 ## 2026-10-08 — six releases from Javier's runs inside hypeForge Settings
 - [x] **forgekit 0.10.0** (AUR first) + **displayForge 1.1.0**, and outside the suite **alacrittyForge 1.1.0 · nogForge 1.4.0 · grubForge 2.2.0 · bitlaForge 1.1.0** — GitHub → Javier's run on the installed packages ("all perfect!") → AUR. Every app: Ctrl + the underlined letter by Javier's rule, numbers with Help, "1-N menu", About/License/Keys/Manual as pages, `--hypeforge`, labels "Words (key)" (hypeForge D-62); 17 issues closed
 - [x] hypeForge: launcher Forge Suite group → Settings (D-63), then standard groups (D-64); **Settings 0.5.0 Home page** (#46, D-65); kognogos.org updated twice
