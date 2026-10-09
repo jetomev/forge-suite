@@ -11,3 +11,6 @@
 - **Any number of screens** (1 … 6+); never assume three. Nothing closes a window, ever.
 - Packages through nog; decisions in `docs/DECISIONS.md` (D-n); TODO.md after every step; plain words.
 - **Versioning:** own version, tags `workspaceforge-vX.Y.Z`, AUR `workspaceforge` when it ships (after Javier's local test).
+- **Run and test:** `python3 main.py` (from this folder; forgekit from the system). Tests: `python3 -m unittest discover -s tests -t .` (headless, Textual's Pilot; report the count). Pictures: `python3 scripts/make-screenshots.py` (a copy of the real settings, nothing touched).
+- **The hidden bench before going live** (hypeForge F-51 rule): any change to how saving moves windows (`model.window_moves`, `live.py`) passes `python3 scripts/bench-save.py` (a screen-less Sway, the real applet, a rename + swap + delete) before Javier uses it.
+

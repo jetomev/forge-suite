@@ -24,7 +24,7 @@ UNKNOWN = "can't tell right now"
 # (card title, function name, the Settings page it opens — None until that setting has an app)
 CARDS = [
     ("Screens", "screens", "Screens"),
-    ("Workspaces", "workspaces", None),
+    ("Workspaces", "workspaces", "Workspaces"),
     ("Network", "network", None),
     ("Sound", "sound", None),
     ("Printer", "printer", None),

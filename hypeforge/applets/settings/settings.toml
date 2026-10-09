@@ -11,6 +11,12 @@ command = "python3 ~/Programs/forge-suite/displayforge/main.py"   # the AUR pack
 forge = true
 
 [[page]]
+name = "Workspaces"
+summary = "names and order, the apps that open on each, sharing"
+command = "python3 ~/Programs/forge-suite/workspaceforge/main.py"   # workspaceForge 0.1.0, from the repo (not packaged yet)
+forge = true
+
+[[page]]
 name = "Passwords"
 summary = "sudoForge: is the password box set up?"
 command = "sudoforge status; echo; echo 'Press Enter to go back'; read _"

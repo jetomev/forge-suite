@@ -4,6 +4,9 @@
 
 ## 2026-10-09
 
+### D-6 · 0.1.0 stops at nine workspaces (Claude, told to Javier)
+The approved answer 1 (D-5) was *as many as you like; Win + 1 … 9 reach the first nine*. Building it showed the Workspaces applet names each screen's part of a workspace `<n + 10 × screen>:<name>`, which only works up to nine: a tenth would clash with the second screen's first. Changing that naming renames every workspace on the desktop, so it gets its own step with its own bench test. **0.1.0 allows one to nine** and says so on screen ("9 is the most for now"); more than nine is in the TODO.
+
 ### D-5 · The design is approved (Javier)
 *"approved!!!!"* — the third draft (`docs/design/v0.1.0-screens.html`), with the eleven open questions answered by the recommendations, as Claude said they would be unless he changed any:
 1. As many workspaces as you like; Win + 1 … 9 reach the first nine, the rest from the bar's list; at least one always stays.

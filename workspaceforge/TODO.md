@@ -22,12 +22,15 @@
 - [ ] Known gaps: WoW (Wine) calls its window `wow.exe` — not matched until its launcher entry says so (StartupWMClass); more than 9 workspaces needs the cell numbering changed (Grid uses `i + 10 × screen`)
 
 ## Phase 2 · The app
-- [ ] Workspaces page: buttons on top; new and edit in place (⚠ note after a rename); delete pop-up moving windows; reorder; on/off
-- [ ] Apps page: the two tables, ticks, Select All / Deselect All (rows showing), `>>` / `<<`, the open-one-at-a-time workspaces
-- [ ] Sharing page: the grid with an Own / Shared switch per cell, Save at the bottom
-- [ ] Review and save (backup, write, `hypeforge-workspaces reload`)
-- [ ] Help pages, `--hypeforge`, a "Workspaces" page in hypeForge Settings
-- [ ] Tests: 1/2/3 screens, 100 columns, text console, missing or broken file
+- [x] Workspaces page: buttons on top; new and edit in place (⚠ note after a rename); delete pop-up moving windows; reorder; on/off
+- [x] Apps page: the two tables, ticks, Select All / Deselect All (rows showing), `>>` / `<<`, the open-one-at-a-time workspaces; Find + Category filters; headings sort ▲ ▼
+- [x] Sharing page: the grid with an Own / Shared switch per cell, arrows between them, Save / Undo at the bottom
+- [x] Review and save: backup (20 kept), open windows carried to their workspace's new name/place, write (read back), the applet reloaded; quit asks to save
+- [x] Manual (5 pages), `--hypeforge`, the **Workspaces** page in hypeForge Settings (repo + live) and its Home card
+- [x] Tests: 33 (model 18, pages 15), 12 behaviours broken on purpose — 12 caught; 100 × 30 pictures checked by eye (found 3 bugs: a rename counted its apps as changes, sharing planned clashing renames, clipped text — fixed, with tests); text console preview clean; `scripts/bench-save.py` (rename + swap + delete on a hidden Sway) OK twice
+- [ ] **NEXT — Javier's first run** (hypeForge Settings → Workspaces, or `python3 main.py`)
+- [ ] More than nine workspaces (D-6): the applet's cell naming changes first, with a bench test
+- [ ] Not yet tried: one or two screens (a VM), a real tty
 
 ## Phase 3 · Release
 - [ ] Test matrix + Javier's run → 1.0.0, GitHub Release, AUR after his local test
