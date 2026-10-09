@@ -38,5 +38,5 @@
 - [x] 1.0.0 (Javier: "this is workspaceForge v1.0", D-8): version everywhere, changelog, roadmap, matrix + results in `testing/`
 - [x] Tag `workspaceforge-v1.0.0` (signed), GitHub Release (Latest) with 4 signed assets
 - [x] AUR `workspaceforge` 1.0.0-1: built locally (checksum, signature, 33/33 tests in check()), **Javier installed and tested it**, then pushed (`e4f649c`, 2026-10-09)
-- [ ] kognogos.org card (after the AUR push: now)
+- [x] kognogos.org card live (homelab `80c86bb`, server backup first), with every card's "Runs on" line
 - [ ] **Only then, the public documentation** (Javier, 2026-10-09: "Documentation is updated only after the app is approved to publish"): the suite README's row, the kognogos.org card (drafted in homelab `fa3496b`, backed out), hypeForge's README and Help pages
