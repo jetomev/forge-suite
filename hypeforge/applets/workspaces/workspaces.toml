@@ -42,7 +42,6 @@ apps = [
 [[workspace]]
 name = "Work"
 apps = [
-  "Alacritty",
   "com.anthropic.Claude",
   "claude-terminal",
   "cmake-gui",
