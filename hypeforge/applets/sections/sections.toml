@@ -38,7 +38,7 @@ claim_order = ["Settings", "Games", "Multimedia", "Graphics", "Office", "Develop
 name = "Development"
 icon = "applications-development"
 workspace = 2
-apps = ["chrome-mjoklplbddabcmpepnokjaffbmgbkkgg-Default", "chrome-fmpnliohjhemenmnlpbfagaolkdacoja-Default"]   # GitHub, Claude (web apps)
+apps = ["chrome-mjoklplbddabcmpepnokjaffbmgbkkgg-Default"]   # GitHub (web app)
 categories = ["Development"]
 
 [[section]]
