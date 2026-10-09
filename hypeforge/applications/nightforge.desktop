@@ -1,0 +1,14 @@
+[Desktop Entry]
+# hypeForge's entry for nightForge (Forge Suite, the night light) while it is not packaged yet:
+# run from the Forge Suite folder in its own Alacritty window ("nightforge"). Replaced by the
+# package's own entry at release.
+Type=Application
+Name=nightForge
+GenericName=Night light
+Comment=Warmer screens in the evening: on or off, how warm, and when (Sway)
+TryExec=alacritty
+Exec=alacritty --class nightforge -o window.dimensions.columns=100 -o window.dimensions.lines=30 -e python3 /home/jetomev/Programs/forge-suite/nightforge/main.py
+Icon=weather-clear-night
+Terminal=false
+StartupWMClass=nightforge
+Categories=Settings;DesktopSettings;

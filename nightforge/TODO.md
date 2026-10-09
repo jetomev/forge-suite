@@ -10,11 +10,12 @@
 - [x] **Approved** (D-3, "perfect"), with a tray icon (D-4)
 
 ## Phase 1 · Build
-- [ ] Settings + `nightforge start` (login) + restart on save; the preview that goes back by itself
-- [ ] The two pages, review and save, quit asks; `--hypeforge`; the manual
-- [ ] The tray icon (`nightforge tray`, D-4): ☀ / ☾ / ○ and its menu, started with the night light
-- [ ] hypeForge: the login line, the Settings page + Home card, Help page 17
-- [ ] Tests (each seen failing first), pictures, the hidden bench
+- [x] Settings (`settings.py`, backup + read-back) + `nightforge start` (login) + restart on save; the preview that goes back by itself; the night light started detached (posix_spawn), stopped by its saved number or (hypeForge's old line) its exact name
+- [x] The two pages (Night Light, Schedule), Preview and Save both pop-ups (D-2), quit asks; `--hypeforge`; the manual (3 pages); `nightforge status`
+- [x] The tray icon (`nightforge tray`, D-4/D-5): muted ☀ by day, mustard ☾ while warm, dim ○ off; its menu; started by `nightforge start`
+- [x] hypeForge: the login line (`nightforge start`, fallbacks), the Settings page + Home card, a launcher entry + float rule (and workspaceForge's, which were missing), Help page 17 — repo + live, backups
+- [x] Tests: 23 (core 12, tray 4 on a private bus, pages 7); 10 behaviours broken on purpose, 10 caught; pictures checked by eye (lost spaces, a repeated word, narrow time fields — fixed); `scripts/bench-start.py` (real wlsunset on a hidden Sway, private bus): 14/14, the real night light untouched
+- [ ] **NEXT — live:** `nightforge start` on the desktop (takes over today's wlsunset, the tray icon appears) → Javier's run
 
 ## Phase 2 · Release
 - [ ] Javier's run → 1.0.0, GitHub, AUR after his local test; then README row, kognogos.org card, Vault

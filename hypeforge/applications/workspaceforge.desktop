@@ -1,0 +1,13 @@
+[Desktop Entry]
+# hypeForge's entry for workspaceForge (Forge Suite, workspaces): the installed package
+# (AUR `workspaceforge`) in its own Alacritty window ("workspaceforge").
+Type=Application
+Name=workspaceForge
+GenericName=Workspaces
+Comment=Your workspaces: names and order, and which apps open on each one (hypeForge on Sway)
+TryExec=workspaceforge
+Exec=alacritty --class workspaceforge -o window.dimensions.columns=100 -o window.dimensions.lines=30 -e workspaceforge
+Icon=preferences-desktop-virtual
+Terminal=false
+StartupWMClass=workspaceforge
+Categories=Settings;DesktopSettings;

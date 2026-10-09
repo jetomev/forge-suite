@@ -329,10 +329,10 @@ exec sudoforge service
 exec /usr/lib/pam_kwallet_init
 
 # Night light (Javier's order, step 4, 2026-10-07): wlsunset (32 KiB, D-57) warms the screens
-# after sunset and cools them at sunrise, from the sun's times at the given place (Miami).
-# Only when installed (`nog install wlsunset`); the Screens / Power Forge app will hold the
-# place and the colour temperatures later. Default: 4000 K at night, 6500 K by day.
-exec sh -c 'command -v wlsunset >/dev/null && exec wlsunset -l 25.77 -L -80.19'
+# after sunset and cools them at sunrise.
+# nightForge runs the night light now (D-3): its settings (place, warmth, schedule, on/off) and its
+# tray icon (D-4). Installed command first, then the Forge Suite folder; plain wlsunset only if neither.
+exec sh -c 'if command -v nightforge >/dev/null; then exec nightforge start; elif [ -x "$HOME/Programs/forge-suite/nightforge/main.py" ]; then exec "$HOME/Programs/forge-suite/nightforge/main.py" start; elif command -v wlsunset >/dev/null; then exec wlsunset -l 25.77 -L -80.19; fi'
 # hypeForge: start-at-login apps from ~/.config/autostart (applet 10; Sway does not read that folder)
 exec ~/Programs/forge-suite/hypeforge/applets/autostart/hypeforge-autostart
 # hypeForge: the Favorites menu on the bar (applet 4 writes it)

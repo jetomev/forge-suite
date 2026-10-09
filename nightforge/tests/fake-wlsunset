@@ -1,0 +1,9 @@
+#!/bin/bash
+# A stand-in for wlsunset in tests: records how it was started and every nudge (SIGUSR1),
+# and never touches a screen. Its name is not "wlsunset", so a real one is never stopped.
+log="${NIGHTFORGE_FAKE_LOG:?}"
+echo "start $*" >> "$log"
+trap 'echo usr1 >> "$log"' USR1
+trap 'echo stop >> "$log"; exit 0' TERM
+[ -n "${NIGHTFORGE_FAKE_FAIL:-}" ] && { echo "no gamma control here" >&2; exit 1; }
+while true; do sleep 0.05; done

@@ -28,7 +28,7 @@ CARDS = [
     ("Network", "network", None),
     ("Sound", "sound", None),
     ("Printer", "printer", None),
-    ("Night light", "night_light", None),
+    ("Night light", "night_light", "Night light"),
     ("Passwords", "passwords", "Passwords"),
     ("Packages", "packages", "Packages"),
     ("Boot Menu", "boot_menu", "Boot Menu"),

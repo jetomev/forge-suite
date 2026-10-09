@@ -12,3 +12,4 @@
 - **Where it runs, said everywhere** (README, GitHub, kognogos.org, AUR): hypeForge on Sway (wlroots); any terminal, a plain text console too; written for KognogOS.
 - **The hidden bench** (hypeForge F-51 rule) before anything that starts or restarts processes at login goes live.
 - Packages through nog; decisions in `docs/DECISIONS.md`; TODO.md after every step; plain words. Versioning: tags `nightforge-vX.Y.Z`, AUR `nightforge` after Javier's local test.
+- **Run and test:** `python3 main.py` (also `start`, `tray`, `status`). Tests: `python3 -m unittest discover -s tests -t .` (a stand-in night light, `tests/fake-wlsunset`; the tray on a private bus). Pictures: `python3 scripts/make-screenshots.py`. **Bench before live:** `dbus-run-session -- python3 scripts/bench-start.py` (the real wlsunset renamed `wlsunset-bench`, so the desktop's night light is never stopped; its own bus, so the tray stays off the real bar).

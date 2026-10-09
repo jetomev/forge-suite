@@ -4,18 +4,25 @@
 go back to normal. Easier on the eyes in the evening; no effect on screenshots or on what
 you share.
 
+## nightForge
+
+The night light has its own app, **nightForge**: Settings → **Night light**, the launcher
+(Settings → nightForge), or its **tray icon** on the bar.
+
+- **The tray icon:** a muted **☀** by day, a mustard **☾** while the screens are warm, a dim
+  **○** when it's off. Its menu: Automatic · Warm Now · Daylight Now · Turn Off / Turn On ·
+  Open nightForge. A click opens nightForge.
+- **Night Light** page: on or off (at once, and at every login), **Right now** (Automatic, Warm
+  Now, Daylight Now: they hold until you pick Automatic again, or log out), the **evening
+  warmth** (3000 very warm … 5000 just a touch) with a 10-second **Preview**.
+- **Schedule** page: **by the sun at your place** (two numbers, worked out on this computer;
+  nothing is looked up online) or **fixed times** with a fade.
+- **F10** saves, with a review first; the night light restarts with it at once.
+
 ## How it works
 
-hypeForge starts **wlsunset** with your session. It works out sunset and sunrise from a place
-(today: Miami, set in `sway/config`) and shifts the colour slowly over about an hour each way,
-so you never see it jump. Night is 4000 K, day is 6500 K (the usual screen white).
+At login hypeForge runs `nightforge start`: it starts **wlsunset** the way nightForge's
+settings say (`~/.config/nightforge/settings.toml`), and the tray icon. `nightforge status` in a
+terminal says what it is doing now.
 
-- Nothing to press. If the screens look slightly orange in the evening, it is working.
-- To stop it for the rest of the session: `pkill -x wlsunset` in a terminal. It comes back at
-  the next login.
-- Not installed yet? `nog install wlsunset` — hypeForge only starts it when it is there.
-
-## Coming
-
-The place, the two temperatures and an on/off switch move into the **Screens** / **Power & Lock**
-Forge apps (hypeForge Settings).
+- Not installed yet? `nog install wlsunset` (nightForge needs it to warm the screens).

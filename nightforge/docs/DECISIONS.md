@@ -4,6 +4,9 @@
 
 ## 2026-10-09
 
+### D-5 · The tray icon's colours (Javier)
+*"The tray icon.... muted during the day, mustard color when night light activates.... eh! eh! eh!"* By day a muted grey-blue sun (Catppuccin's subtext, 166 173 200); while warm a mustard moon (225 173 1); off a dim ring (108 112 134).
+
 ### D-4 · A tray icon, nightForge's own (Javier)
 Approving the design: *"This app have to come with a tray icon as well, btw."* A real tray icon (StatusNotifierItem) in the bar's tray, next to other apps' icons, owned by nightForge (`nightforge tray`), so it works on any bar with a tray, not just hypeForge's. Always there: ☀ by day, ☾ while warm, ○ when switched off. Its menu: Automatic · Warm Now · Daylight Now · Turn Off / Turn On · Open nightForge. It replaces the first draft's bar button (question 7). Started with the night light at login. Claude's reading of "tray icon", told to Javier with the choice to change it.
 
