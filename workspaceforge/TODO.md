@@ -10,10 +10,12 @@
 - [x] **Approved** (Javier, 2026-10-09: "approved!!!!"; D-5) — the third draft, the 11 questions answered by the recommendations (tracking issue #56)
 
 ## Phase 1 · The engine (hypeForge F-50, #55)
-- [ ] **NEXT** — The Workspaces applet reads per-workspace app lists from `workspaces.toml`, seeded once from the launcher's groups
-- [ ] New windows of a listed app go to its workspace, however started; the screens follow (not in the first ~30 s after login)
-- [ ] The launcher reads the same lists (one source of truth); `sections.toml`'s `[workspaces]` and group `workspace =` retired
-- [ ] Tests, each seen failing first; Javier lives with it, file edited by hand
+- [x] The Workspaces applet reads per-workspace app lists from `workspaces.toml`; the repo's default seeded once from the launcher's groups (`scripts/seed-workspace-apps.py`), 2026-10-09
+- [x] New windows of a listed app go to its workspace, however started; the screens follow (not in the first ~30 s after login); Placement's fill order moved to `common/hfplace.py` and leaves those windows to the Workspaces applet (a hidden mark), which places them itself
+- [x] The launcher reads the same lists (one source of truth): typed, Favorites, All apps or a group, all the same; terminal apps open as `alacritty --class <id>` so btop is told apart from a plain terminal; `sections.toml`'s `[workspaces]` and group `workspace =` retired
+- [x] Tests: 17 new (36 in hypeForge), and 12 pieces of the engine broken on purpose in a copy — each one caught
+- [ ] **NEXT — switch it on live** (Javier's go): seed the live `workspaces.toml`, retire the live launcher keys (backups first), restart the two applets; then Javier lives with it
+- [ ] Known gaps: WoW (Wine) calls its window `wow.exe` — not matched until its launcher entry says so (StartupWMClass); more than 9 workspaces needs the cell numbering changed (Grid uses `i + 10 × screen`)
 
 ## Phase 2 · The app
 - [ ] Workspaces page: buttons on top; new and edit in place (⚠ note after a rename); delete pop-up moving windows; reorder; on/off

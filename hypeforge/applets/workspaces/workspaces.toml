@@ -15,23 +15,101 @@ screens = ["DP-3", "DP-2", "DP-1"]
 
 # One block per workspace, in order: the first is Win + 1, the second Win + 2, and so on
 # (at most 9). Add, rename, reorder or delete blocks freely.
+#
+# apps (F-50, #55): the apps that open on this workspace, however they are started (the
+# launcher, Favorites, a terminal, Steam starting a game). Named like the launcher names them:
+# the desktop-entry file name without ".desktop" (steam, google-chrome, "Sim Companies"…).
+# When one opens somewhere else, it is taken here and every screen comes along; not in the
+# first 30 seconds after login, so apps that start by themselves don't move you. One app, one
+# workspace: if two lists name it, the first wins. An app on no list opens where you are.
+# Started 2026-10-09 from the launcher's groups (scripts/seed-workspace-apps.py, once).
 [[workspace]]
 name = "Daily"
+apps = [
+  "bssh",
+  "bvnc",
+  "discord",
+  "dropbox",
+  "google-chrome",
+  "insync",
+  "teams-for-linux",
+  "piavpn",
+  "sparrow-wallet",
+  "org.mozilla.Thunderbird",
+  "chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Default",
+]
 
 [[workspace]]
 name = "Work"
+apps = [
+  "Alacritty",
+  "com.anthropic.Claude",
+  "claude-terminal",
+  "cmake-gui",
+  "fresh",
+  "chrome-mjoklplbddabcmpepnokjaffbmgbkkgg-Default",
+  "org.kde.kate",
+  "masterpdfeditor4",
+  "obsidian",
+  "onlyoffice-desktopeditors",
+  "assistant",
+  "qdbusviewer",
+  "linguist",
+  "designer",
+  "org.pwmt.zathura",
+]
 
 [[workspace]]
 name = "Entertainment"
+apps = [
+  "cliamp",
+  "mpv",
+  "qv4l2",
+  "qvidcap",
+  "spotify",
+  "vlc",
+]
 
 [[workspace]]
 name = "Gaming"
+apps = [
+  "net.lutris.battlenet-1",
+  "net.lutris.Lutris",
+  "net.davidotek.pupgui2",
+  "Sim Companies",
+  "steam",
+  "supertux2",
+  "World_of_Warcraft_Pi5",
+]
 
 [[workspace]]
 name = "Monitoring"
+apps = [
+  "btop",
+  "lstopo",
+  "htop",
+  "nvtop",
+  "org.kde.plasma-systemmonitor",
+]
 
 [[workspace]]
 name = "Settings"
+apps = [
+  "nm-connection-editor",
+  "alacrittyforge",
+  "displayforge",
+  "grubforge",
+  "hypeforge-settings",
+  "input-remapper-gtk",
+  "kdesystemsettings",
+  "cups",
+  "networkmanager_dmenu",
+  "nogforge",
+  "system-config-printer",
+  "thunar-volman-settings",
+  "thunar-settings",
+  "wiremix",
+]
 
 # Sharing — the matrix (D-49). A screen can share ONE space between several workspaces:
 # switching between them leaves that screen as it is (same apps), while the other screens

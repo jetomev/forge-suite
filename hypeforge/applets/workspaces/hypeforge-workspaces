@@ -13,13 +13,18 @@ A screen can SHARE one space between several workspaces (the matrix, D-49): thos
 point to one Sway workspace on that screen ("101:Shared"), so switching between them leaves
 that screen as it is while the others change.
 
+Each workspace can list its apps (F-50, #55): a new window of a listed app is taken to its
+workspace however the app was started, every screen goes with it, and Window Placement's fill
+order gives it its spot there. In the first seconds after login the window goes quietly and the
+screens stay put, so apps that start by themselves don't move you.
+
     hypeforge-workspaces            run: set up Sway, then keep the screens in step
     hypeforge-workspaces go N       switch every screen to workspace N   (Win + N, a bar click)
     hypeforge-workspaces number     the bar's square: the number of the workspace on screen (#42)
     hypeforge-workspaces move N     send the focused window to workspace N, same screen
     hypeforge-workspaces reload     re-read the settings file
 
-Settings: ~/.config/hypeforge/applets/workspaces.toml (enabled, screens, names, sharing).
+Settings: ~/.config/hypeforge/applets/workspaces.toml (enabled, screens, names, sharing, apps).
 Only Python's standard library: it talks to Sway over Sway's own socket (the i3 IPC protocol).
 """
 
@@ -33,7 +38,9 @@ import tomllib
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
-from hfsway import GET_WORKSPACES, SUBSCRIBE, EVENT_WORKSPACE, Sway, quoted  # noqa: E402
+from hfsway import GET_TREE, GET_WORKSPACES, SUBSCRIBE, EVENT_WINDOW, EVENT_WORKSPACE, Sway, quoted  # noqa: E402
+from hfapps import ARRIVED, CURRENT, AppIndex, just_logged_in  # noqa: E402
+import hfplace  # noqa: E402
 from hfbar import signal_bar  # noqa: E402
 import hfmenu  # noqa: E402
 
@@ -41,7 +48,6 @@ CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hyp
 BAR_FRAGMENT = CONFIG.with_name("workspaces.waybar.json")  # read by the bar (Waybar "include")
 RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
 PIDFILE = RUNTIME / "hypeforge-workspaces.pid"
-CURRENT = RUNTIME / "hypeforge-workspaces.current"  # the workspace on screen now (1, 2, …)
 MOD = "Mod4"        # the Windows key
 BAR_SIGNAL = 8      # Waybar redraws the workspace buttons on SIGRTMIN+8
 
@@ -220,13 +226,65 @@ def setup(sway, grid):
     go(sway, grid, start)
 
 
+# ---- Apps that open on their own workspace (F-50, #55) ----------------------------------------
+
+def find(node, test):
+    if test(node):
+        return node
+    for child in node.get("nodes", []) + node.get("floating_nodes", []):
+        hit = find(child, test)
+        if hit:
+            return hit
+    return None
+
+
+def arrive(sway, grid, index_of_app, container):
+    """A new window opened. If its app is on a workspace's list and that isn't where it opened,
+    take it there: mark it (so Placement leaves it), switch every screen, move it onto the main
+    screen's part of that workspace, and give it its spot in the fill order. Nothing is ever
+    closed; a window of an app on no list is left alone."""
+    index = index_of_app.of_window(container)
+    if not index or index > len(grid.names):
+        return
+    tree = sway.ask(GET_TREE)
+    me = container["id"]
+    home = find(tree, lambda n: n.get("type") == "workspace" and find(n, lambda m: m.get("id") == me))
+    if not home or home["name"] in {grid.cells[index, p] for p in range(len(grid.screens))}:
+        return  # already on its workspace (picked from its group, or opened there): nothing to do
+    target = grid.cells[index, 0]
+    sway.run(f"[con_id={me}] mark --add {ARRIVED}{me}")
+    if just_logged_in():  # started by itself at login: off to its place, the screens stay
+        sway.run(f"[con_id={me}] move container to workspace {quoted(target)}")
+        return
+    go(sway, grid, index)
+    sway.run(f"[con_id={me}] move container to workspace {quoted(target)}")
+    enabled, screens, order = placement()
+    if enabled and screens and order:
+        hfplace.place(sway, screens, order, me, handed_over=True)
+    else:
+        sway.run(f"[con_id={me}] focus")
+
+
+def placement():
+    try:
+        return hfplace.load()
+    except (OSError, ValueError):
+        return False, [], []
+
+
 def keep_in_step(grid):
-    """A screen switched some other way (a command, an old binding): pull the others along."""
+    """A screen switched some other way (a command, an old binding): pull the others along.
+    And every new window: is it an app that belongs on another workspace? (`arrive`)"""
     events = Sway()
-    events.ask(SUBSCRIBE, json.dumps(["workspace"]))
+    events.ask(SUBSCRIBE, json.dumps(["workspace", "window"]))
     control = Sway()
+    index_of_app = AppIndex()
     while True:
         kind, event = events.receive()
+        if kind == EVENT_WINDOW:
+            if event.get("change") == "new":
+                arrive(control, grid, index_of_app, event["container"])
+            continue
         if kind != EVENT_WORKSPACE:
             continue
         if event.get("change") == "reload":  # `swaymsg reload` drops our keys: set them again

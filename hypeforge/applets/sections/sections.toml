@@ -1,9 +1,10 @@
 # hypeForge applet 4 · App Sections (D-47, D-52)
 #
-# The launcher (Win + Space) opens on a first screen: Favourites, one section per workspace,
-# All apps, Help & Keys, then Lock Screen · Log Out · Reboot · Shutdown. Picking an app from a section opens
-# it IN THAT SECTION'S WORKSPACE. The hypeForge Settings will edit this file; until then,
-# edit it by hand (it is read every time the launcher opens).
+# The launcher (Win + Space) opens on a first screen: Favourites, the groups (kinds of app),
+# All apps, Help & Keys. Where an app opens is NOT set here: each workspace lists its apps in
+# workspaces.toml (F-50, #55; workspaceForge edits them), and the app opens there however it is
+# picked. The hypeForge Settings will edit this file; until then, edit it by hand (it is read
+# every time the launcher opens).
 #
 # Copied to ~/.config/hypeforge/applets/sections.toml, which is the one that is read.
 # Apps are named by their desktop-entry name: the file name in /usr/share/applications or
@@ -31,101 +32,68 @@ claim_order = ["Settings", "Games", "Multimedia", "Graphics", "Office", "Develop
 #   name / icon   what the launcher shows
 #   categories    the freedesktop.org main categories this group holds
 #   apps          only for apps that declare no category (web apps, games installed by hand…)
-#   workspace     where an app picked from this group opens (Win + that number); "" = the screen
-#                 you are on. Groups are kinds of app, workspaces are places: the two are separate.
 #   other = true  the group for anything no other group claims
 [[section]]
 name = "Development"
 icon = "applications-development"
-workspace = 2
 apps = ["chrome-mjoklplbddabcmpepnokjaffbmgbkkgg-Default"]   # GitHub (web app)
 categories = ["Development"]
 
 [[section]]
 name = "Education"
 icon = "applications-education"
-workspace = ""
 categories = ["Education"]
 
 [[section]]
 name = "Games"
 icon = "applications-games"
-workspace = 4
 apps = ["World_of_Warcraft_Pi5"]   # WoW (our realm): it declares no category
 categories = ["Game"]
 
 [[section]]
 name = "Graphics"
 icon = "applications-graphics"
-workspace = ""
 categories = ["Graphics"]
 
 [[section]]
 name = "Internet"
 icon = "applications-internet"
-workspace = 1
 apps = ["chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Default"]   # WhatsApp Web (web app)
 categories = ["Network"]
 
 [[section]]
 name = "Multimedia"
 icon = "applications-multimedia"
-workspace = 3
 categories = ["AudioVideo", "Audio", "Video"]
 
 [[section]]
 name = "Office"
 icon = "applications-office"
-workspace = 2
 categories = ["Office"]
 
 [[section]]
 name = "Science"
 icon = "applications-science"
-workspace = ""
 categories = ["Science"]
 
 [[section]]
 name = "Settings"
 icon = "preferences-system"
-workspace = 6
 apps = ["hypeforge-settings"]   # the control centre first (D-63)
 categories = ["Settings"]
 
 [[section]]
 name = "System"
 icon = "applications-system"
-workspace = ""
 categories = ["System"]
 
 [[section]]
 name = "Utilities"
 icon = "applications-utilities"
-workspace = ""
 categories = ["Utility"]
 
 [[section]]
 name = "Other"
 icon = "applications-other"
-workspace = ""
 other = true
 categories = []
-
-# An app's own workspace, over its group's (picked from its group). These keep the places
-# Javier set before the groups changed: the monitors on Monitoring, Alacritty on Work.
-[workspaces]
-"btop" = 5
-"htop" = 5
-"nvtop" = 5
-"lstopo" = 5
-"org.kde.plasma-systemmonitor" = 5
-"Alacritty" = 2
-
-# The bottom of the first screen, top to bottom. Log Out, Reboot and Shutdown ask first
-# ("No" is selected, so a stray Enter does nothing). Lock: gtklock (its look:
-# ~/.config/gtklock/style.css).
-[power]
-lock = "gtklock -d"
-logout = "swaymsg exit"
-reboot = "systemctl reboot"
-shutdown = "systemctl poweroff"

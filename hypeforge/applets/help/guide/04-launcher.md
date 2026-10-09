@@ -12,10 +12,11 @@ reboot and shut down are on the bar's **⏻** button.
 - **Type** to search every app straight away, then **Enter**.
 - **Pick a group** to see its apps. Every app is in the group it says it belongs to (its own
   launcher entry carries that), so a new app you install shows up where you'd look for it.
-- **Where it opens:** picked from its group, an app opens on its workspace — Internet on 1 (Daily),
-  Office and Development on 2 (Work), Multimedia on 3 (Entertainment), Games on 4 (Gaming),
-  Settings on 6 — and the system monitors on 5 (Monitoring), Alacritty on 2. Graphics, System and
-  Utilities open on the screen you are on. Window placement then puts it in its spot.
+- **Where it opens:** on its own workspace, **however you pick it** — from its group, by typing its
+  name, from Favorites or All apps. Each workspace lists its apps (see Workspaces, page 2): Steam
+  and the games on Gaming, Chrome on Daily, the system monitors on Monitoring… The screens switch
+  there first, then the app opens. An app on no list opens on the screen you are on. Window
+  placement then puts it in its spot.
 - **Settings** starts with **hypeForge Settings**, the control centre, then every setting:
   displayForge, nogForge, grubForge, alacrittyForge, printers, network, and the rest.
 - **All apps** lists everything. **Back** returns to the first screen; **Esc** closes.

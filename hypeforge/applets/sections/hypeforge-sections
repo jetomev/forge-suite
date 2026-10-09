@@ -7,9 +7,10 @@ The launcher with sections. Win + Space opens a first screen:
 
 and typing there searches every app (they sit below the fold, out of sight until you type).
 
-Picking a section shows its apps; picking one of those switches to the section's workspace
-(through applet 1 when it is on) and opens the app there, where applet 2 places it. An app
-picked from the first screen or All apps opens in the workspace on screen.
+Picking a section shows its apps. However an app is picked (a section, the first screen, All
+apps, Favorites), it opens on its own workspace when one lists it (workspaces.toml, F-50): the
+screens switch there first (applet 1), then the app opens, where applet 2 places it. An app on
+no workspace's list opens on the workspace on screen.
 
     hypeforge-sections            open the launcher
 
@@ -19,13 +20,11 @@ fuzzel draws the menus (its --dmenu mode); this file only decides what is in the
 
 import os
 import json
-import re
 import shlex
 import signal
 import subprocess
 import sys
 import tomllib
-from configparser import ConfigParser
 from pathlib import Path
 
 HOME = Path.home()
@@ -37,56 +36,9 @@ from hfbar import signal_bar  # noqa: E402
 
 WORKSPACES = Path(__file__).resolve().parent.parent / "workspaces/hypeforge-workspaces"
 HELP = Path(__file__).resolve().parent.parent / "help/hypeforge-help"
-TERMINAL = "alacritty -e"  # for apps that run in a terminal (btop…); the session has no $TERMINAL
-DESKTOP_NAMES = {"sway", "wlroots"}
-
-
-# ---- The apps on this computer ---------------------------------------------------------------
-
-def application_dirs():
-    data_home = Path(os.environ.get("XDG_DATA_HOME", HOME / ".local/share"))
-    data_dirs = os.environ.get("XDG_DATA_DIRS", "/usr/local/share:/usr/share").split(":")
-    return [data_home / "applications"] + [Path(d) / "applications" for d in data_dirs if d]
-
-
-def apps():
-    """{desktop id: {name, icon, exec, terminal, categories}} — what a start menu would show."""
-    found = {}
-    for folder in application_dirs():  # the first folder wins (your own entries over the system's)
-        if not folder.is_dir():
-            continue
-        for path in sorted(folder.rglob("*.desktop")):
-            app_id = str(path.relative_to(folder))[:-len(".desktop")].replace("/", "-")
-            if app_id in found:
-                continue
-            parser = ConfigParser(interpolation=None, strict=False)
-            parser.optionxform = str
-            try:
-                parser.read(path, encoding="utf-8")
-                entry = parser["Desktop Entry"]
-            except Exception:
-                continue
-            found[app_id] = None  # seen: a hidden copy still hides the system one
-            only = set(entry.get("OnlyShowIn", "").lower().split(";")) - {""}
-            never = set(entry.get("NotShowIn", "").lower().split(";")) - {""}
-            if (entry.get("Type") != "Application" or entry.get("NoDisplay") == "true"
-                    or entry.get("Hidden") == "true" or not entry.get("Exec")
-                    or (only and not only & DESKTOP_NAMES) or never & DESKTOP_NAMES):
-                continue
-            found[app_id] = {
-                "name": entry.get("Name", app_id),
-                "icon": entry.get("Icon", "application-x-executable"),
-                "exec": entry.get("Exec"),
-                "terminal": entry.get("Terminal") == "true",
-                "categories": set(entry.get("Categories", "").split(";")) - {""},
-            }
-    return {k: v for k, v in found.items() if v}
-
-
-def command_for(app):
-    """The app's Exec line without the %f/%u… placeholders, in a terminal if it needs one."""
-    cmd = re.sub(r"\s*%[fFuUdDnNickvm]", "", app["exec"]).replace("%%", "%").strip()
-    return f"{TERMINAL} {cmd}" if app["terminal"] else cmd
+# The apps on this computer, how each is started, and which workspace lists it: common/hfapps.py,
+# shared with the Workspaces applet and Window Placement (F-50, #55).
+from hfapps import AppIndex, apps, command_for  # noqa: E402,F401  (apps: also used by tests)
 
 
 # ---- Settings --------------------------------------------------------------------------------
@@ -120,13 +72,6 @@ def sort_into_sections(cfg, everything):
     return [(s, members[s["name"]]) for s in sections if members[s["name"]]]
 
 
-def workspace_for(cfg, app_id, section_workspace):
-    """Where an app picked from its group opens: its own line in [workspaces] if it has one,
-    else its group's workspace, else ("") the screen you are on."""
-    own = cfg.get("workspaces", {})
-    return own[app_id] if app_id in own else section_workspace
-
-
 # ---- The menus -------------------------------------------------------------------------------
 
 # Where the launcher opens: under the KognogOS emblem, at the bar's left end (Javier, 2026-10-05)
@@ -146,10 +91,13 @@ def pick(cfg, lines, prompt, icons=True, lines_shown=None, menu="launcher", extr
     return None if out is None else int(out.strip())
 
 
-def launch(app, workspace=None):
+def launch(app_id, app):
+    """Open the app on its own workspace if one lists it (the screens switch first, so it opens
+    right there), otherwise on the workspace on screen."""
+    workspace = AppIndex().of_app(app_id)
     if workspace and WORKSPACES.is_file():
         subprocess.run([str(WORKSPACES), "go", str(workspace)])
-    subprocess.run(["swaymsg", "exec", command_for(app)], capture_output=True)
+    subprocess.run(["swaymsg", "exec", command_for(app_id, app)], capture_output=True)
 
 
 # ---- Favorites on the bar (Javier, 2026-10-05) ---------------------------------------------
@@ -201,7 +149,7 @@ def favorites_menu():
                   lines_shown=len(shown), menu="favorites",
                   extra=("--anchor", "top-left", "--x-margin", str(x), "--y-margin", "4", "--width", "30"))
     if choice is not None:
-        launch(everything[shown[choice]])
+        launch(shown[choice], everything[shown[choice]])
 
 
 # ---- The power menu on the bar (Javier, 2026-10-05) -----------------------------------------
@@ -245,7 +193,7 @@ def main():
     if len(sys.argv) == 3 and sys.argv[1] == "launch":
         app = apps().get(sys.argv[2])
         if app:
-            launch(app)
+            launch(sys.argv[2], app)
         return
     if hfmenu.close_open("launcher"):
         return
@@ -262,12 +210,12 @@ def main():
     # First screen: the menus. Every line has an icon, so all line up.
     first = []  # (text, icon, action)
     if favourites:
-        first.append(("Favorites", "favorites", ("menu", "Favorites", favourites, None)))
+        first.append(("Favorites", "favorites", ("menu", "Favorites", favourites)))
     for s, members in sections:
-        n = s.get("workspace")
-        # the group's name only: groups are kinds of app now, not workspaces (Javier, 10-08)
-        first.append((s["name"], s.get("icon", "applications-other"), ("menu", s["name"], members, n)))
-    first.append(("All apps", "applications-all", ("menu", "All apps", by_name, None)))
+        # the group's name only: groups are kinds of app, not workspaces (Javier, 10-08); where an
+        # app opens is its workspace's list (F-50)
+        first.append((s["name"], s.get("icon", "applications-other"), ("menu", s["name"], members)))
+    first.append(("All apps", "applications-all", ("menu", "All apps", by_name)))
     first.append(("Help & Keys", "help-browser", ("help",)))
     # Power lives on the bar's ⏻ button now; the launcher is for apps only (Javier, 2026-10-05)
 
@@ -281,17 +229,17 @@ def main():
     while choice is not None:
         action = first[choice][2]
         if action[0] == "app":
-            return launch(everything[action[1]])
+            return launch(action[1], everything[action[1]])
         if action[0] == "help":
             subprocess.run(["swaymsg", "exec", str(HELP)], capture_output=True)
             return
-        _, title, members, workspace = action
+        _, title, members = action
         lines = [("Back", "go-home")] + [(everything[a]["name"], everything[a]["icon"]) for a in members]
         sub = pick(cfg, lines, f"{title}  ❯  ")
         if sub is None:
             return
         if sub > 0:
-            return launch(everything[members[sub - 1]], workspace_for(cfg, members[sub - 1], workspace))
+            return launch(members[sub - 1], everything[members[sub - 1]])
         choice = pick(cfg, [(t, i) for t, i, _ in first], "❯  ", lines_shown=shown)  # Back
 
 

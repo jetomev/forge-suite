@@ -71,13 +71,12 @@ class Groups(unittest.TestCase):
     def test_hypeforge_settings_comes_first_in_settings(self):
         self.assertEqual(self.groups["Settings"][0], "hypeforge-settings")
 
-    def test_where_an_app_opens_is_its_own_choice_or_its_groups(self):
-        ws = {s["name"]: s.get("workspace") for s in self.cfg["section"]}
-        self.assertEqual(self.m.workspace_for(self.cfg, "btop", ws["System"]), 5, "the monitors keep Monitoring")
-        self.assertEqual(self.m.workspace_for(self.cfg, "Alacritty", ws["System"]), 2)
-        self.assertEqual(self.m.workspace_for(self.cfg, "chrome", ws["Internet"]), 1)
-        self.assertEqual(self.m.workspace_for(self.cfg, "calc", ws["Utilities"]), "", "Utilities open where you are")
-
+    def test_groups_no_longer_say_where_an_app_opens(self):
+        """F-50 (#55): where an app opens is its workspace's list in workspaces.toml, the one place
+        it is set (workspaceForge D-5). The launcher's file must not keep a second answer."""
+        self.assertFalse(any("workspace" in s for s in self.cfg["section"]))
+        self.assertNotIn("workspaces", self.cfg)
+        self.assertFalse(hasattr(self.m, "workspace_for"))
 
 if __name__ == "__main__":
     unittest.main()
