@@ -20,7 +20,7 @@ CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hyp
 BACKUPS = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "workspaceforge/backups"
 KEEP_BACKUPS = 20
 # Win + 1 … 9 reach nine; the applet's way of naming each screen's part of a workspace
-# ("<n + 10 × screen>:<name>") also stops at nine, so 0.1.0 does too (workspaceForge TODO).
+# ("<n + 10 × screen>:<name>") also stops at nine, so 1.0 does too (D-6; workspaceForge TODO).
 MOST = 9
 
 

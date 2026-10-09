@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img alt="Status: being built" src="https://img.shields.io/badge/status-being%20built%20·%200.1.0-f9e2af?style=flat-square&labelColor=313244">
+  <img alt="workspaceForge release" src="https://img.shields.io/github/v/release/jetomev/forge-suite?filter=workspaceforge-*&label=release&style=flat-square&labelColor=313244&color=a6e3a1">
   <img alt="Sway" src="https://img.shields.io/badge/for-Sway-89b4fa?style=flat-square&labelColor=313244">
   <img alt="License: GPLv3" src="https://img.shields.io/badge/license-GPLv3-a6e3a1?style=flat-square&labelColor=313244">
   <img alt="Built by a human and an AI" src="https://img.shields.io/badge/built%20by-human%20%2B%20AI-f9e2af?style=flat-square&labelColor=313244">
@@ -11,7 +11,9 @@
 
 # workspaceForge
 
-**Your workspaces, in the terminal.** On the KognogOS desktop a workspace covers all your screens at once: Win + 4 takes every screen to Gaming. workspaceForge is where you set them up: their names and order, **which apps open on each one** (however you start them). Today all of that lives in a settings file edited by hand; workspaceForge is the friendly way in.
+**Your workspaces, in the terminal.** On the KognogOS desktop a workspace covers all your screens at once: Win + 4 takes every screen to Gaming. workspaceForge is where you set them up: their names and order, **which apps open on each one** (however you start them). Without it, all of that lives in a settings file edited by hand; workspaceForge is the friendly way in.
+
+**Made for KognogOS's hypeForge desktop on Sway. A terminal app: any terminal, even a plain text console with no graphical session.** Details in [Where it runs](#where-it-runs).
 
 ## What it does
 
@@ -28,9 +30,23 @@ It does **one** job on purpose: where windows sit on a screen and which ones flo
 |---|---|
 | ![Workspaces](docs/images/workspaces.png) | ![Apps](docs/images/apps.png) |
 
+## Where it runs
+
+- **Desktop:** made for **KognogOS's hypeForge desktop on Sway**. It edits the settings of hypeForge's Workspaces helper, which does the switching; without hypeForge there is nothing for it to set up.
+- **Terminal:** it is a terminal app. It runs in any terminal window, and also on a **plain text console (a tty) with no graphical session**: there it edits the settings for your next login, but it can't move open windows.
+- **Distribution:** written for **KognogOS** (Arch-based) and installed from the AUR (`workspaceforge`). It needs only Python, Textual and forgekit, so it runs on any Linux distribution, but hypeForge itself is only on KognogOS today.
+
+## Install and run
+
+```
+yay -S workspaceforge
+```
+
+Then `workspaceforge`, or the **Workspaces** page of hypeForge Settings.
+
 ## Status
 
-**Being built, 0.1.0 (2026-10-09).** Design approved the same morning (D-5); the engine (apps open on their own workspace) is live in hypeForge; the app runs from the repository (`python3 main.py`) and as the **Workspaces** page of hypeForge Settings. Not packaged yet. Javier: *"Why don't we work on workspaceForge already. It is HOT topic xD"*. The design, screen by screen: [docs/design/](docs/design/) · decisions: [docs/DECISIONS.md](docs/DECISIONS.md) · the list: [TODO.md](TODO.md).
+**1.0.0, October 9, 2026.** Workspaces and Apps. **Sharing** is off the menu while Javier rethinks it (D-7), and **nine workspaces** is the most for now (D-6). What changed: [docs/CHANGELOG.md](docs/CHANGELOG.md) · what's next: [docs/ROADMAP.md](docs/ROADMAP.md) · decisions: [docs/DECISIONS.md](docs/DECISIONS.md) · the design: [docs/design/](docs/design/) · tests: [testing/](testing/) · the list: [TODO.md](TODO.md).
 
 ## License & credits
 

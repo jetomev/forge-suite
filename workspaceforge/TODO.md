@@ -35,5 +35,7 @@
 - [ ] Not yet tried: one or two screens (a VM), a real tty
 
 ## Phase 3 · Release
-- [ ] Test matrix + Javier's run → 1.0.0, GitHub Release, AUR after his local test
+- [x] 1.0.0 (Javier: "this is workspaceForge v1.0", D-8): version everywhere, changelog, roadmap, matrix + results in `testing/`
+- [ ] Tag `workspaceforge-v1.0.0` (signed), GitHub Release with signed assets
+- [ ] AUR `workspaceforge`: PKGBUILD in `~/Programs/aur-workspaceforge`, makepkg → **Javier installs the local package and tests (matrix row 12)** → only then the AUR push
 - [ ] **Only then, the public documentation** (Javier, 2026-10-09: "Documentation is updated only after the app is approved to publish"): the suite README's row, the kognogos.org card (drafted in homelab `fa3496b`, backed out), hypeForge's README and Help pages

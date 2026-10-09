@@ -4,6 +4,9 @@
 
 ## 2026-10-09
 
+### D-8 · This is 1.0 (Javier)
+*"update kognogos.org and aur already. this is workspaceForge v1.0."* Released as **1.0.0** with Workspaces and Apps; Sharing off the menu (D-7) and nine workspaces at most (D-6), both said plainly in the release notes, the README and the AUR description. The AUR push still waits for Javier's install of the locally built package (his rule, 2026-10-07).
+
 ### D-7 · Sharing is off the menu for now (Javier)
 After his first run: *"Sharing. Not working for me, have to think better about this section."* and then *"take sharing off for now."* The page is gone from the menu and the manual; its code stays in `app.py` (SharingView), dormant. Saving keeps whatever the settings file says about sharing (nothing is shared on the desktop today). It comes back when Javier has rethought it.
 
