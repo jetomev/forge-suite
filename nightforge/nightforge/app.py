@@ -40,7 +40,6 @@ NF_CSS = FORGE_CSS + """
 .nf-buttons { height: auto; padding: 0 0 1 20; }
 .nf-buttons Button { margin: 0 1 0 0; }
 #nf-preview-body { height: auto; padding: 1 2; }
-.nf-place Input { width: 14; }
 Input.nf-time { width: 14; }
 """
 
@@ -238,11 +237,11 @@ class ScheduleView(VerticalScroll):
         p = self.session.pending
         yield SettingRow("When", Choices([("sun", "By the Sun at Your Place"), ("fixed", "Fixed Times")], p.schedule,
                                          id="nf-schedule"), setting="schedule")
-        with Horizontal(classes="nf-place"):
-            yield SettingRow("Latitude", Input(f"{p.latitude:.2f}", id="nf-lat"), setting="lat")
-            yield SettingRow("Longitude", Input(f"{p.longitude:.2f}", id="nf-lon"), setting="lon")
-        yield Static("[$forge-muted]Your place, as two numbers: one decimal is plenty (about 10 km). "
-                     "Nothing is looked up online.[/]", classes="nf-note")
+        # stacked, like the fixed times: side by side, their boxes' bottom edges spilled onto the note
+        # below (Javier's first run, 2026-10-09)
+        yield SettingRow("Latitude", Input(f"{p.latitude:.2f}", id="nf-lat", classes="nf-time"), setting="lat")
+        yield SettingRow("Longitude", Input(f"{p.longitude:.2f}", id="nf-lon", classes="nf-time"), setting="lon",
+                         note="your place, as two numbers: one decimal is plenty (about 10 km); nothing is looked up online")
         sun = Static("", id="nf-sun")
         sun.border_title = "Your sun, worked out on this computer"
         yield sun

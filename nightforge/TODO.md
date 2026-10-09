@@ -15,7 +15,9 @@
 - [x] The tray icon (`nightforge tray`, D-4/D-5): muted ☀ by day, mustard ☾ while warm, dim ○ off; its menu; started by `nightforge start`
 - [x] hypeForge: the login line (`nightforge start`, fallbacks), the Settings page + Home card, a launcher entry + float rule (and workspaceForge's, which were missing), Help page 17 — repo + live, backups
 - [x] Tests: 23 (core 12, tray 4 on a private bus, pages 7); 10 behaviours broken on purpose, 10 caught; pictures checked by eye (lost spaces, a repeated word, narrow time fields — fixed); `scripts/bench-start.py` (real wlsunset on a hidden Sway, private bus): 14/14, the real night light untouched
-- [ ] **NEXT — live:** `nightforge start` on the desktop (takes over today's wlsunset, the tray icon appears) → Javier's run
+- [x] Live 2026-10-09 ~17:40: `nightforge start` on the desktop took over the night light (one wlsunset, the old one stopped) and the tray icon registered
+- [x] **Javier's first run:** "the app runs well"; Schedule had stray lines over the place note (the latitude/longitude boxes' bottom edges, cut in a too-short row) → stacked like the fixed times, fixed
+- [ ] Tonight ~19:00: it warms by itself and the icon turns mustard
 
 ## Phase 2 · Release
 - [ ] Javier's run → 1.0.0, GitHub, AUR after his local test; then README row, kognogos.org card, Vault
