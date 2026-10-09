@@ -119,20 +119,20 @@ def item(name, app, focus=False):
 
 def s_defaults():
     L = header("Default Apps")
-    L += [blank, line("     {u b:Defaults}" + " " * 12 + "{u b:Selection}")]
+    L += [blank, line("     {u b:Defaults}" + " " * 12 + "{u b:Selection}"), blank]   # a little space under the titles
     for i, (name, app) in enumerate(DEFAULTS):
         if i:
             L.append(blank)                       # a small gap between rows
         L.append(line(item(name, app, focus=(name == "PDF Viewer"))))
     L += [hint("{a:↑ ↓} {d:next}  ·  {a:Enter} {d:open the list}  ·  {a:F10} {d:save}  ·  {a:1-3} {d:menu}  ·  {a:F1} {d:help}")]
-    return pad(L)
+    return pad(L, total=31)   # one line more than the window: the list scrolls by a line at 100 × 30
 
 
 def s_dropdown():
     """The PDF Viewer's list, open."""
     L = header("Default Apps")
-    L += [blank, line("     {u b:Defaults}" + " " * 12 + "{u b:Selection}")]
-    rows = DEFAULTS[:9]
+    L += [blank, line("     {u b:Defaults}" + " " * 12 + "{u b:Selection}"), blank]
+    rows = DEFAULTS[:8]
     for i, (name, app) in enumerate(rows):
         if i:
             L.append(blank)

@@ -11,7 +11,7 @@ body = f'''
 <div class="wrap">
 
 <header class="stack">
-  <div class="eyebrow">defaultappsForge · design proposal · 9 October 2026 · third draft</div>
+  <div class="eyebrow">defaultappsForge · design · approved 9 October 2026</div>
   <h1>defaultappsForge, screen by screen</h1>
   <p class="lede prose">Which app opens what: links, folders, text, PDFs, pictures, music, video, documents, archives. In the terminal, like every Forge app, and a page of hypeForge Settings.</p>
   <p class="prose">Today the only way to choose on the Sway desktop is KDE's page (it leaves with KDE) or a terminal command (issue #19). The drawings show <b>your</b> desktop as it really is right now, read from <code>~/.config/mimeapps.list</code> and from what the system answers for each kind of file. Every drawing is exactly <b>100 columns</b> wide.</p>
@@ -21,6 +21,10 @@ body = f'''
 </header>
 
 <section id="questions" class="stack">
+  <div class="decide">
+    <h3>Approved · Javier, 9 October</h3>
+    <p><em>"WOW APP!!!!"</em> — with a little space under the titles (third review). The questions go with the recommendations: an <b>Office Suite</b> default app (fourteen in all); <b>Terminal Emulator</b> through <code>xdg-terminal-exec</code>, installed with nog when you choose, and Win + Enter following it; <b>Phone Numbers</b> stays, saying "none installed"; old choices tidied on save; each default app starts with its usual file types; Save a pop-up review; the standard file with a backup; a Default apps page and Home card in hypeForge Settings; 0.1.0 → 1.0.0 after your run.</p>
+  </div>
   <div class="decide">
     <h3>Your first review · Javier, 9 October</h3>
     <ol>
@@ -62,7 +66,7 @@ body = f'''
 
 <section id="defaults">
   <h2>1 · Default Apps</h2>
-  <p class="prose">Your thirteen, each with its drop-down, under <b>Defaults</b> and <b>Selection</b>. The values are what your desktop uses today. (At 100 × 30 the list fills the window; on a bigger one there's room to spare.)</p>
+  <p class="prose">Your thirteen, each with its drop-down, under <b>Defaults</b> and <b>Selection</b>. The values are what your desktop uses today. A little space under the titles (your third review). At 100 × 30 the list is one line taller than the window and scrolls by a line; on a bigger window it all fits.</p>
   {T("defaults")}
 </section>
 

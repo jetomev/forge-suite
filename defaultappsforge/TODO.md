@@ -7,7 +7,7 @@
 - [x] Design page: Kinds, Change (pop-up), File Types, Save (pop-up); 9 questions — `docs/design/v0.1.0-screens.html`, published https://claude.ai/artifact/TQfbogzb7BwSq1T4PqVK2A
 - [x] First review (D-2): his 13 default apps with drop-downs, no status; File Types = two tables with >> / <<; second draft published
 - [x] Second review (D-3): Defaults / Selection titles, bullets, drop-downs closer, a gap between rows; File Types' tables aligned from the top; third draft published
-- [ ] **Javier's approval**
+- [x] **Approved** (D-4, "WOW APP!!!!"): space under the titles; Office Suite added (14), xdg-terminal-exec for the terminal, Phone Numbers kept
 
 ## Phase 1 · Build
 - [ ] Reading the apps and what each opens; the system's guess; mimeapps.list read and written keeping what we don't touch
