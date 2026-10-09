@@ -154,6 +154,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Phase 13 · Forge apps for the gaps
 - [ ] New Forge Suite apps for the jobs with no terminal app (one at a time, each its own project)
+- [ ] **fileForge — our own file manager** (planned). **Until then (Javier, 2026-10-08): Thunar in Favorites, mc out** — done in the live `~/.config/hypeforge/applets/sections.toml` (backup next to it); Thunar 4.20.10 was already installed; the Favorites code shows all 18. When fileForge ships, it takes Thunar's place
 
 ## Phase 14 · Our own terminal apps for the rest
 - [ ] Once everything is set up: our own TUI versions of the apps we use that are not Forge Suite (fork the one we use, or write one from zero)
