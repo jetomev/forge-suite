@@ -2,6 +2,11 @@
 
 **Target: the first KognogOS release (v1.0, April 2027).** Each section keeps its own detailed list; this one tracks the suite. Updated after every step.
 
+## 2026-10-08 — six releases from Javier's runs inside hypeForge Settings
+- [x] **forgekit 0.10.0** (AUR first) + **displayForge 1.1.0**, and outside the suite **alacrittyForge 1.1.0 · nogForge 1.4.0 · grubForge 2.2.0 · bitlaForge 1.1.0** — GitHub → Javier's run on the installed packages ("all perfect!") → AUR. Every app: Ctrl + the underlined letter by Javier's rule, numbers with Help, "1-N menu", About/License/Keys/Manual as pages, `--hypeforge`, labels "Words (key)" (hypeForge D-62); 17 issues closed
+- [x] hypeForge: launcher Forge Suite group → Settings (D-63), then standard groups (D-64); **Settings 0.5.0 Home page** (#46, D-65); kognogos.org updated twice
+- [ ] Desktop entries in each AUR package (Ideas below) — still open; the four 10-08 releases did not add them
+
 ## The move-in (D-60, phased)
 - [x] `jetomev/hypeforge` renamed `jetomev/forge-suite` (old links redirect); hypeForge moved into `hypeforge/` (2026-10-05)
 - [x] GitHub About + topics for the suite (2026-10-06)
