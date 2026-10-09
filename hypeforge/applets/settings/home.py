@@ -29,6 +29,7 @@ CARDS = [
     ("Sound", "sound", None),
     ("Printer", "printer", None),
     ("Night light", "night_light", "Night light"),
+    ("Default apps", "default_apps", "Default apps"),
     ("Passwords", "passwords", "Passwords"),
     ("Packages", "packages", "Packages"),
     ("Boot Menu", "boot_menu", "Boot Menu"),
@@ -40,7 +41,7 @@ CARDS = [
 # console can't draw them, so Settings leaves them out there (forgekit's console mode).
 ICONS = {
     "Home": "\U000F02DC", "Screens": "\U000F0379", "Workspaces": "\U000F0570", "Network": "\U000F0318",
-    "Sound": "\U000F057E", "Printer": "\U000F042A", "Night light": "\U000F0594", "Passwords": "\U000F0306",
+    "Sound": "\U000F057E", "Printer": "\U000F042A", "Night light": "\U000F0594", "Default apps": "\U000F003B", "Passwords": "\U000F0306",
     "Packages": "\U000F03D7", "Boot Menu": "\U000F0425", "Terminal": "\U000F018D", "Help & Keys": "\U000F030C",
     "Manual": "\U000F05DA", "License": "\U000F05D1", "About": "\U000F02FC", "Quit": "\U000F0206",
 }
@@ -175,6 +176,23 @@ def night_light() -> list[str]:
     place = (f"sun times for {abs(float(lat.group(1))):.1f}° {'N' if float(lat.group(1)) >= 0 else 'S'}, "
              f"{abs(float(lon.group(1))):.1f}° {'E' if float(lon.group(1)) >= 0 else 'W'}") if lat and lon else "place not set"
     return ["on now" if args else "off", f"{cold.group(1) if cold else 4000} K after sunset, back by sunrise", place]
+
+
+def default_apps() -> list[str]:
+    """Three of the fourteen: what opens links, folders and text now (the standard lookup)."""
+    def name(mime: str) -> str:
+        did = run("xdg-mime", "query", "default", mime).strip()
+        if not did:
+            return "not set"
+        for d in (HOME / ".local/share/applications", Path("/usr/share/applications")):
+            f = d / did
+            if f.is_file():
+                m = re.search(r"^Name=(.+)$", f.read_text(errors="replace"), re.M)
+                if m:
+                    return m.group(1).strip()
+        return did.removesuffix(".desktop")
+    return [f"links: {name('x-scheme-handler/https')}", f"folders: {name('inode/directory')}",
+            f"text: {name('text/plain')}"]
 
 
 def passwords() -> list[str]:

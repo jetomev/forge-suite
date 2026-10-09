@@ -18,7 +18,8 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term alacritty    # hypeForge: Alacritty (foot is not installed)
+# hypeForge: the terminal you chose in defaultappsForge (xdg-terminal-exec and its list), else Alacritty
+set $term sh -c 'if command -v xdg-terminal-exec >/dev/null && [ -s "$HOME/.config/xdg-terminals.list" ]; then exec xdg-terminal-exec; else exec alacritty; fi'
 # Your preferred application launcher
 # hypeForge: fuzzel (Javier 2026-10-04), a small graphical search box of apps.
 # Win + Space, and Win + D as before. (The first try, sway-launcher-desktop, was a list inside a

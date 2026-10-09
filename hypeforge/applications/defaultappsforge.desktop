@@ -1,0 +1,14 @@
+[Desktop Entry]
+# hypeForge's entry for defaultappsForge (Forge Suite, default apps) while it is not packaged yet:
+# run from the Forge Suite folder in its own Alacritty window ("defaultappsforge"). Replaced by
+# the package's own entry at release.
+Type=Application
+Name=defaultappsForge
+GenericName=Default apps
+Comment=Which app opens what: links, folders, text, PDFs, pictures, music, video and more
+TryExec=alacritty
+Exec=alacritty --class defaultappsforge -o window.dimensions.columns=100 -o window.dimensions.lines=32 -e python3 /home/jetomev/Programs/forge-suite/defaultappsforge/main.py
+Icon=preferences-desktop-default-applications
+Terminal=false
+StartupWMClass=defaultappsforge
+Categories=Settings;DesktopSettings;

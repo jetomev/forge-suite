@@ -23,6 +23,12 @@ command = "python3 ~/Programs/forge-suite/nightforge/main.py"   # nightForge 0.1
 forge = true
 
 [[page]]
+name = "Default apps"
+summary = "which app opens what"
+command = "python3 ~/Programs/forge-suite/defaultappsforge/main.py"   # defaultappsForge 0.1.0, from the repo (not packaged yet)
+forge = true
+
+[[page]]
 name = "Passwords"
 summary = "sudoForge: is the password box set up?"
 command = "sudoforge status; echo; echo 'Press Enter to go back'; read _"

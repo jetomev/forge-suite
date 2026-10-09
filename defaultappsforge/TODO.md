@@ -10,10 +10,12 @@
 - [x] **Approved** (D-4, "WOW APP!!!!"): space under the titles; Office Suite added (14), xdg-terminal-exec for the terminal, Phone Numbers kept
 
 ## Phase 1 · Build
-- [ ] Reading the apps and what each opens; the system's guess; mimeapps.list read and written keeping what we don't touch
-- [ ] Kinds and File Types pages, Change and Save pop-ups, quit asks, `--hypeforge`, the manual
-- [ ] hypeForge: the Default apps page + Home card, a launcher entry + float rule, Help
-- [ ] Tests (each seen failing first), pictures
+- [x] Reading the apps and what each opens (the current app always offered; same-named apps told apart); the system's guess (xdg-mime); mimeapps.list read and written line by line, keeping everything we don't touch; old choices for gone apps tidied; only what changed is written
+- [x] Default Apps (14 one-line drop-downs under Defaults / Selection) and File Types (two tables, >> / <<, aligned), Save a pop-up review, quit asks, `--hypeforge`, the manual (3 pages); the terminal through xdg-terminal-exec (installed with nog on save when needed)
+- [x] hypeForge: the Default apps page + Home card (links · folders · text), a launcher entry + float rule, Help page 16 rewritten, Win + Enter follows the chosen terminal — repo + live, backups; hypeForge's card tests now find cards by name
+- [x] Tests: 19 (model 13, pages 6); 7 deliberate breaks caught (one mutation first hit an unreached branch → re-done, plus a new-user test); pictures checked (glued titles, 3-line drop-downs, cut titles — fixed)
+- [x] Found on the way: **displayForge F-6 (#58)** — one-screen computers crash at start (Select.BLANK is False in Textual 8): fixed + test, release 1.1.1 waits on Javier
+- [ ] **NEXT — Javier's run**
 
 ## Phase 2 · Release
 - [ ] Javier's run → 1.0.0, GitHub, AUR after his local test; README row, kognogos.org, Vault

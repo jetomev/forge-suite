@@ -256,7 +256,7 @@ class HomePage(unittest.IsolatedAsyncioTestCase):
             plain = lambda t: t[2:] if t and ord(t[0]) >= 0xE000 else t     # the name, after its icon
             self.assertEqual([plain(c.border_title) for c in cards],
                              ["Screens", "Workspaces", "Network", "Sound", "Printer", "Night light",
-                              "Passwords", "Packages", "Boot Menu", "Terminal"])
+                              "Default apps", "Passwords", "Packages", "Boot Menu", "Terminal"])
             self.assertTrue(all(str(c.render()) not in ("", "…") for c in cards), "every card has its summary")
             xs = {c.region.x for c in cards}
             self.assertEqual(len(xs), 2, "two columns")
@@ -282,14 +282,17 @@ class HomePage(unittest.IsolatedAsyncioTestCase):
         app = SettingsApp()
         async with app.run_test(size=(130, 40)) as pilot:
             await pilot.pause(0.3)
-            app.query_one("#hf-card-7").on_click()           # Packages
+            sys.path.insert(0, str(HERE / "applets/settings"))
+            titles = [c[0] for c in importlib.import_module("home").CARDS]
+            card = lambda name: app.query_one(f"#hf-card-{titles.index(name)}")
+            card("Packages").on_click()                      # a card with a page opens it
             await pilot.pause(0.5)
             self.assertFalse(app.query_one("#hf-home").display)
-            self.assertTrue(app.query_one("#hf-pane-1").display, "the Packages page is shown")
-            self.assertEqual(app.query_one("#hf-pages").highlighted, 2)
-            app.query_one("#hf-card-1").on_click()           # Workspaces: no page yet, nothing breaks
+            ol = app.query_one("#hf-pages")
+            self.assertIn("Packages", str(ol.get_option_at_index(ol.highlighted).prompt), "the Packages page is shown")
+            card("Network").on_click()                       # Network: no page yet, nothing breaks
             await pilot.pause(0.2)
-            self.assertTrue(app.query_one("#hf-pane-1").display)
+            self.assertFalse(app.query_one("#hf-home").display)
             app.extra("home")                                # back to Home from the list
             await pilot.pause(0.3)
             self.assertTrue(app.query_one("#hf-home").display)
@@ -312,7 +315,7 @@ class HomeSummaries(unittest.TestCase):
             rows = home.summaries()
         finally:
             home.shutil.which, home.CONFIG, home.HOME = old_which, old_config, old_home
-        self.assertEqual(len(rows), 10)
+        self.assertEqual(len(rows), len(home.CARDS))
         for title, lines, _page in rows:
             self.assertTrue(lines and all(isinstance(x, str) and x for x in lines), title)
             self.assertLessEqual(len(lines), 3, title)
@@ -331,7 +334,7 @@ class HomeSummaries(unittest.TestCase):
         finally:
             home.screens = old
         self.assertEqual(rows[0][:2], ("Screens", [home.UNKNOWN]))
-        self.assertEqual(len(rows), 10)
+        self.assertEqual(len(rows), len(home.CARDS))
 
 
 if __name__ == "__main__":

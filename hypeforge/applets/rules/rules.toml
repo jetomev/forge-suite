@@ -42,8 +42,8 @@ border = 3
 focus = true
 
 [[float]]
-name = "Forge Suite apps (displayForge, nogForge, grubForge, alacrittyForge, bitlaForge, workspaceForge, nightForge — from the launcher)"
-app_id = '^(display|nog|grub|alacritty|bitla|workspace|night)forge$'
+name = "Forge Suite apps (displayForge, nogForge, grubForge, alacrittyForge, bitlaForge, workspaceForge, nightForge, defaultappsForge — from the launcher)"
+app_id = '^(display|nog|grub|alacritty|bitla|workspace|night|defaultapps)forge$'
 border = 3
 focus = true
 
