@@ -56,7 +56,7 @@ polish improves every app at once.
   switches to colours and characters that screen can actually show, by itself.
   [More below](#on-a-plain-text-console).
 
-> **Status: 0.10.0 (alpha), built 8 October 2026, waiting for Javier's test.** The API may still
+> **Status: 0.10.0 (alpha), released 8 October 2026.** The API may still
 > shift while the Forge apps migrate onto it. Pin a version if you depend on it.
 > 0.10.0: **every menu entry gets Ctrl + its underlined letter and a number** (Help included),
 > made from the menu, the letter by Javier's rule (first letter, else the next free one);
