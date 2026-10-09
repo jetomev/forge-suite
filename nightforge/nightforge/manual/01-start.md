@@ -4,7 +4,7 @@ nightForge looks after the **night light**: after sunset your screens turn a lit
 
 ## Three ways in
 
-- **The tray icon** on the bar: a muted ☀ by day, a mustard ☾ while warm, a dim ○ when off. Its menu: Automatic · Warm Now · Daylight Now · Turn Off / Turn On · Open nightForge.
+- **The tray icon** on the bar: a muted ☀ by day, a mustard ☾ while warm, a dim ○ when off. A click shows its menu: Automatic · Warm Now · Daylight Now · Turn Off / Turn On · Open nightForge.
 - **This app**: hypeForge Settings → Night light, or the launcher.
 - **A terminal**: `nightforge status` says what it is doing now.
 

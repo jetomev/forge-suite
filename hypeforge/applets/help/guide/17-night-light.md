@@ -10,8 +10,8 @@ The night light has its own app, **nightForge**: Settings → **Night light**, t
 (Settings → nightForge), or its **tray icon** on the bar.
 
 - **The tray icon:** a muted **☀** by day, a mustard **☾** while the screens are warm, a dim
-  **○** when it's off. Its menu: Automatic · Warm Now · Daylight Now · Turn Off / Turn On ·
-  Open nightForge. A click opens nightForge.
+  **○** when it's off. A click shows its menu: Automatic · Warm Now · Daylight Now ·
+  Turn Off / Turn On · Open nightForge.
 - **Night Light** page: on or off (at once, and at every login), **Right now** (Automatic, Warm
   Now, Daylight Now: they hold until you pick Automatic again, or log out), the **evening
   warmth** (3000 very warm … 5000 just a touch) with a 10-second **Preview**.

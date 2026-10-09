@@ -69,6 +69,7 @@ if items:
     pix = prop("/StatusNotifierItem", "org.kde.StatusNotifierItem", "IconPixmap")
     out["pixmaps"] = [(w, h, len(b)) for w, h, b in pix]
     out["menu"] = prop("/StatusNotifierItem", "org.kde.StatusNotifierItem", "Menu")
+    out["item_is_menu"] = prop("/StatusNotifierItem", "org.kde.StatusNotifierItem", "ItemIsMenu")
     layout = bus.call_sync(owner, "/MenuBar", "com.canonical.dbusmenu", "GetLayout",
                            GLib.Variant("(iias)", (0, -1, [])), None, Gio.DBusCallFlags.NONE, 3000, None).unpack()
     out["labels"] = [k[1].get("label", "—") for k in layout[1][2]]

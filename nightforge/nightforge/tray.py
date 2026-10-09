@@ -152,12 +152,12 @@ class Tray:
             "Status": V("s", "Active"), "WindowId": V("i", 0), "IconName": V("s", ""),
             "IconPixmap": V("a(iiay)", icons), "OverlayIconName": V("s", ""), "AttentionIconName": V("s", ""),
             "ToolTip": V("(sa(iiay)ss)", ("", [], words, self.state["why"] if self.state else "")),
-            "ItemIsMenu": V("b", False), "Menu": V("o", MENU_PATH),
+            "ItemIsMenu": V("b", True), "Menu": V("o", MENU_PATH),   # a click shows the menu (Javier, D-6)
         }.get(prop)
 
     def _item_call(self, conn, sender, path, iface, method, params, invocation):
-        if method == "Activate":
-            self.open_app()
+        # No click opens the app (Javier, 2026-10-09: "just left click and menu"): the bar shows the
+        # menu, which has "Open nightForge…". A bar that still sends Activate gets nothing.
         invocation.return_value(None)
 
     # -- the menu ---------------------------------------------------------------------------------------

@@ -30,6 +30,7 @@ class Tray(unittest.TestCase):
         self.assertEqual([p[:2] for p in self.out["pixmaps"]], [[22, 22], [32, 32], [44, 44]])
         self.assertEqual([p[2] for p in self.out["pixmaps"]], [22 * 22 * 4, 32 * 32 * 4, 44 * 44 * 4])
         self.assertEqual(self.out["menu"], "/MenuBar")
+        self.assertTrue(self.out["item_is_menu"], "a click shows the menu, it doesn't open the app (D-6)")
         for label in ("Automatic", "Warm Now", "Daylight Now", "Turn Off", "Open nightForge…"):
             self.assertIn(label, self.out["labels"])
 

@@ -4,6 +4,9 @@
 
 ## 2026-10-09
 
+### D-6 · A click on the tray icon shows the menu; nothing opens the app by itself (Javier)
+His run: *"the tray icon works. right click opens the app. I wouldn't. just left click and menu."* The icon says it is a menu (`ItemIsMenu`), so the bar opens the menu on a click; Activate does nothing. "Open nightForge…" stays in the menu.
+
 ### D-5 · The tray icon's colours (Javier)
 *"The tray icon.... muted during the day, mustard color when night light activates.... eh! eh! eh!"* By day a muted grey-blue sun (Catppuccin's subtext, 166 173 200); while warm a mustard moon (225 173 1); off a dim ring (108 112 134).
 
