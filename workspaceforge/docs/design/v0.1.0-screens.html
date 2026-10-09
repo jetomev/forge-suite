@@ -1,0 +1,385 @@
+<title>workspaceForge Designs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+/* Layout: one reading column; each screen = a short brief, a 100-column terminal drawing, then what it decides. Same family as the grubForge 2.0 design page. */
+:root {
+  --bg: #f6f5fa;
+  --fg: #23212e;
+  --muted: #5d5a70;
+  --rule: #dcd9e8;
+  --panel: #ffffff;
+  --accent: #6c4fc7;
+  --accent-soft: #ece6fb;
+  --warn-soft: #fbf1d9;
+  --warn-ink: #7a5300;
+  --bad-soft: #fbe3e6;
+  --bad-ink: #8a1d33;
+  --ok-ink: #1f6b3a;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "DejaVu Sans Mono", ui-monospace, monospace;
+  /* Terminal drawings use the app's own palette (Catppuccin Mocha) in both page themes. */
+  --t-base: #1e1e2e; --t-mantle: #181825; --t-crust: #11111b;
+  --t-s0: #313244; --t-s1: #45475a; --t-s2: #585b70; --t-ov: #7f849c;
+  --t-sub: #a6adc8; --t-text: #cdd6f4; --t-blue: #89b4fa; --t-mauve: #cba6f7;
+  --t-green: #a6e3a1; --t-yellow: #f9e2af; --t-red: #f38ba8; --t-peach: #fab387; --t-box: #2b4a7a;
+  /* Javier's KognogOS-theme, for the theme preview */
+  --k-bg: #1a1a1a; --k-fg: #cdd6f4; --k-cur: #f5e0dc; --k-pink: #f5c2e7; --k-teal: #94e2d5;
+  --k-white: #bac2de; --k-bblack: #585b70; --k-bwhite: #a6adc8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15141c; --fg: #e6e3f2; --muted: #a29fb8; --rule: #2e2c3d; --panel: #1d1b27;
+    --accent: #b9a3ff; --accent-soft: #2a2442; --warn-soft: #3a3020; --warn-ink: #f3d49a;
+    --bad-soft: #3a1e26; --bad-ink: #f6b3c2; --ok-ink: #9fe0b2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15141c; --fg: #e6e3f2; --muted: #a29fb8; --rule: #2e2c3d; --panel: #1d1b27;
+  --accent: #b9a3ff; --accent-soft: #2a2442; --warn-soft: #3a3020; --warn-ink: #f3d49a;
+  --bad-soft: #3a1e26; --bad-ink: #f6b3c2; --ok-ink: #9fe0b2;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 17px; line-height: 1.55; padding: 0 16px; }
+.wrap { max-width: 1060px; margin: 0 auto; padding-block: 40px 80px; display: grid; gap: 56px; }
+.wrap > * { min-width: 0; }
+.prose { max-width: 68ch; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -0.01em; }
+h2 { font-size: 27px; }
+h3 { font-size: 19px; }
+p { margin: 0; }
+.stack { display: grid; gap: 14px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.lede { font-size: 19px; color: var(--muted); }
+code, kbd { font-family: var(--font-mono); font-size: 0.86em; }
+kbd { border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--panel); white-space: nowrap; }
+a { color: var(--accent); }
+ul, ol { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; }
+section { display: grid; gap: 20px; min-width: 0; }
+.toc { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 15px; }
+.toc a { text-decoration: none; border-bottom: 1px solid var(--rule); }
+/* Terminal drawing */
+.term { background: var(--t-base); color: var(--t-text); border-radius: 8px; overflow-x: auto; border: 1px solid #2c2c3e; }
+.term pre { margin: 0; padding: 14px 16px; font-family: var(--font-mono); font-size: 12.6px; line-height: 1.42; white-space: pre; }
+.cap { font-size: 14.5px; color: var(--muted); }
+.m { color: var(--t-sub); } .d { color: var(--t-ov); } .a { color: var(--t-blue); } .v { color: var(--t-mauve); }
+.ok { color: var(--t-green); } .w { color: var(--t-yellow); } .er { color: var(--t-red); } .pc { color: var(--t-peach); }
+.b { font-weight: 700; } .u { text-decoration: underline; }
+.hdr { background: var(--t-crust); } .bar { background: var(--t-mantle); }
+.sel { background: var(--t-box); color: var(--t-text); } .fld { background: var(--t-s0); } .btn { background: var(--t-s1); color: var(--t-text); }
+.pri { background: var(--t-box); color: var(--t-text); font-weight: 700; } .act { background: var(--t-box); font-weight: 700; }
+.foc { background: var(--t-s0); outline: 1px solid var(--t-blue); }
+/* the theme preview, drawn in Javier's KognogOS-theme */
+.kt, .kg, .kbl, .kr, .ky, .kcur { background: var(--k-bg); }
+.kt { color: var(--k-fg); } .kg { color: var(--t-green); } .kbl { color: var(--t-blue); font-weight: 700; }
+.kr { color: var(--t-red); } .ky { color: var(--t-yellow); } .kcur { background: var(--k-cur); }
+.c0 { color: var(--k-bg); } .c1 { color: var(--t-red); } .c2 { color: var(--t-green); } .c3 { color: var(--t-yellow); }
+.c4 { color: var(--t-blue); } .c5 { color: var(--k-pink); } .c6 { color: var(--k-teal); } .c7 { color: var(--k-white); }
+.c8 { color: var(--k-bblack); } .c15 { color: var(--k-bwhite); }
+.k1a { color: var(--k-bg); text-shadow: 0 0 1px #777; } .kcd { color: var(--k-fg); } .kcu { color: var(--k-cur); }
+/* Console drawing: the 8-colour Linux console */
+.con { background: #000; border-color: #333; }
+.con pre { color: #c0c0c0; }
+.c-bl { background: #0000aa; color: #fff; } .c-cy { color: #55ffff; } .c-y { color: #ffff55; } .c-g { color: #55ff55; } .c-pri { background: #00aaaa; color: #000; }
+/* Tables */
+.tw { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 15.5px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+tr.grp th { color: var(--accent); padding-top: 18px; }
+td code { white-space: nowrap; }
+/* Decisions and notes */
+.decide { background: var(--accent-soft); border-radius: 10px; padding: 18px 20px; display: grid; gap: 10px; }
+.decide h3 { color: var(--accent); }
+.decide ol { gap: 12px; }
+.rec { font-weight: 700; }
+.note { background: var(--warn-soft); color: var(--warn-ink); border-radius: 8px; padding: 12px 16px; font-size: 15.5px; }
+.bad { background: var(--bad-soft); color: var(--bad-ink); border-radius: 10px; padding: 16px 20px; display: grid; gap: 10px; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+.two > * { min-width: 0; }
+.shot { margin: 0; display: grid; gap: 6px; }
+.shot img { width: 100%; border-radius: 8px; border: 1px solid var(--rule); display: block; }
+.shot figcaption { font-size: 14px; color: var(--muted); }
+.card { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 18px; display: grid; gap: 8px; align-content: start; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+
+<header class="stack">
+  <div class="eyebrow">workspaceForge · design proposal · 9 October 2026</div>
+  <h1>workspaceForge, screen by screen</h1>
+  <p class="lede prose">Your workspaces, in the terminal: their names and order, which apps open on each one, and which screens keep the same apps across workspaces. Every screen is drawn here before any code is written.</p>
+  <p class="prose">Today all of this lives in a settings file you'd have to edit by hand. workspaceForge is the friendly way in. It follows displayForge on purpose: the same frame, the same menu bar with underlined letters, a list on the left, the picked thing on the right, and a review before every save. Every drawing is exactly <b>100 columns</b> wide. The drawings show <b>your</b> six workspaces, your three screens and the apps on this desktop today.</p>
+  <nav class="toc" aria-label="Contents">
+    <a href="#questions">Questions</a><a href="#workspaces">Workspaces</a><a href="#delete">Delete</a><a href="#apps">Apps</a><a href="#add">Add an app</a><a href="#sharing">Sharing</a><a href="#save">Save</a><a href="#keys">Keys</a><a href="#plan">How it gets built</a>
+  </nav>
+</header>
+
+<section id="questions" class="stack">
+  <div class="decide">
+    <h3>Already decided · Javier, 9 October</h3>
+    <ol>
+      <li><b>Workspaces only.</b> <em>"Notice I said only workspaces, windows is another Forge app. I like atomized solutions."</em> Where windows go on a screen (the fill order) and which windows float become their own Forge app later.</li>
+      <li><b>Apps open on their workspace however you start them</b> (F-50, #55): typed in the launcher, Favorites, the bar, a terminal, or Steam starting a game.</li>
+      <li><b>The screens go with the app</b> when it opens on another workspace.</li>
+      <li><b>Shared screens need no special rule:</b> their windows already belong to every workspace in the group, and the fill order counts them.</li>
+    </ol>
+  </div>
+  <h2>Questions for you</h2>
+  <p class="prose">Each one has my recommendation in bold. Say "go" and they're all answered that way; change any you like.</p>
+  <ol class="prose">
+    <li><b>Up to nine workspaces</b> (Win + 1 … 9), any names, any order. <span class="rec">Recommended: yes.</span></li>
+    <li><b>One app, one workspace.</b> Adding Discord to Gaming takes it off Daily. <span class="rec">Recommended: yes.</span> Two workspaces for one app would need a rule for which one wins.</li>
+    <li><b>Deleting a workspace that has windows open:</b> it asks where they go (Daily picked for you). Nothing is ever closed. <span class="rec">Recommended: yes.</span></li>
+    <li><b>The lists start from the launcher's groups</b>, once: Internet on Daily (11 apps), Office and Development on Work (15), Multimedia on Entertainment (6), Games on Gaming (7), the monitors on Monitoring (5), Settings on Settings (14); the other 26 open where you are. After that the lists are the only place this is set, and the launcher follows them too. <span class="rec">Recommended: yes.</span> Heads-up: Discord, Dropbox, Insync and the VPN start by themselves at login. They'll go to Daily quietly, without moving your screens.</li>
+    <li><b>Saving:</b> <kbd>F10</kbd> shows a review, then it applies <b>at once</b>, no logout. No countdown like displayForge's: nothing here can black out a screen. <span class="rec">Recommended: yes.</span></li>
+    <li><b>Who does the work:</b> hypeForge's Workspaces applet, which already runs all the time, moves the windows. workspaceForge only edits its settings file and tells it to re-read. Your workspaces keep working with workspaceForge closed, or even uninstalled. <span class="rec">Recommended: yes.</span></li>
+    <li><b>Inside hypeForge Settings:</b> a "Workspaces" page that opens workspaceForge, like Screens opens displayForge. <span class="rec">Recommended: yes.</span></li>
+    <li><b>Version:</b> 0.1.0 while it's built; 1.0.0 when this whole design works and you've run it, like displayForge. <span class="rec">Recommended: yes.</span></li>
+  </ol>
+</section>
+
+<section id="workspaces">
+  <h2>1 · Workspaces</h2>
+  <p class="prose">Your workspaces down the left, with the Win key that reaches each one; ● marks the one on screen now. On the right, the picked one: its name, how many apps open there, whether it shares a screen, and what's open on it right now. Rename, add, delete and reorder from here. Moving a workspace up or down changes its Win number. At the bottom, the main switch: workspaces that span every screen, or Sway's own way, where each screen switches by itself.</p>
+  <div class="term"><pre><span class="hdr"> <span class="v b">workspaceForge 0.1.0</span><span class="m"> · workspaces across your screens</span>      <span class="m">KognogOS · javier · nothing changed yet</span> </span>
+<span class="bar"> <span class="act"> Workspaces </span>   <span class="u">A</span>pps   <span class="u">S</span>haring   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                      </span>
+                                                                                                    
+ <span class="m"> Win   Workspace     on now </span><span class="d">│</span> <span class="v b">4 · Gaming</span>   <span class="m">Win + 4 switches all three screens here</span>                 
+  1  Daily              ●    <span class="d">│</span>                                                                      
+  2  Work                    <span class="d">│</span> <span class="b">Name</span>            <span class="foc"> Gaming                    </span>                          
+  3  Entertainment           <span class="d">│</span>                                                                      
+ <span class="sel"> 4  Gaming                </span>  <span class="d">│</span> <span class="b">Apps that open</span>  <span class="b">7</span> <span class="m">Steam, Sim Companies, SuperTux 2, Lutris, …</span>        
+  5  Monitoring              <span class="d">│</span>                 <span class="d">change them on the Apps page (Ctrl + A)</span>              
+  6  Settings                <span class="d">│</span>                                                                      
+                             <span class="d">│</span> <span class="b">Sharing</span>         <span class="m">none: every screen has its own space here</span>            
+                             <span class="d">│</span>                 <span class="d">the Sharing page (Ctrl + S)</span>                          
+ <span class="d"> up to 9  (Win + 1 … 9)</span>     <span class="d">│</span>                                                                      
+                             <span class="d">│</span> <span class="b">Open now</span>        <span class="m">nothing</span>                                              
+                             <span class="d">│</span>                                                                      
+                             <span class="d">│</span> <span class="btn"> Rename (r) </span>  <span class="btn"> New Workspace (n) </span>  <span class="btn"> Delete (d) </span>                      
+                             <span class="d">│</span> <span class="btn"> Move Up (+) </span>  <span class="btn"> Move Down (-) </span>                                       
+                                                                                                    
+  <span class="a">╭─ Workspaces across all screens ──────────────────────────────────────────────────────────────╮</span>  
+  <span class="a">│</span> <span class="ok b">● On</span>   <span class="m">switching a workspace switches every screen together (3 screens: Main, Left, Right)</span>   <span class="a">│</span>  
+  <span class="a">│</span> <span class="d">Off = Sway&#x27;s own: each screen switches by itself.</span>            <span class="btn"> Turn Off (o) </span>                  <span class="a">│</span>  
+  <span class="a">╰──────────────────────────────────────────────────────────────────────────────────────────────╯</span>  
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+<span class="hdr"> <span class="a">↑ ↓</span> <span class="d">pick</span>  ·  <span class="a">Tab</span> <span class="d">into the form</span>  ·  <span class="a">F10</span> <span class="d">save</span>  ·  <span class="a">1-4</span> <span class="d">menu</span>  ·  <span class="a">F1</span> <span class="d">help</span>                               </span></pre></div>
+</section>
+
+<section id="delete">
+  <h2>Deleting a workspace</h2>
+  <p class="prose">If windows are open on it, they're moved, never closed. The ones after it move up a number. Its apps go back to "opens where you are" until you place them.</p>
+  <div class="term"><pre><span class="hdr"> <span class="v b">workspaceForge 0.1.0</span><span class="m"> · workspaces across your screens</span>      <span class="m">KognogOS · javier · nothing changed yet</span> </span>
+<span class="bar"> <span class="act"> Workspaces </span>   <span class="u">A</span>pps   <span class="u">S</span>haring   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                      </span>
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                 <span class="w">╭─ Delete “Work”? ───────────────────────────────────────────────╮</span>                 
+                 <span class="w">│</span>                                                                <span class="w">│</span>                 
+                 <span class="w">│</span> <span class="b">3 windows are open on Work:</span>                                    <span class="w">│</span>                 
+                 <span class="w">│</span>   <span class="m">Alacritty · Obsidian · ONLYOFFICE</span>                            <span class="w">│</span>                 
+                 <span class="w">│</span>                                                                <span class="w">│</span>                 
+                 <span class="w">│</span> They move to   <span class="foc"> 1 · Daily        ▾ </span>                            <span class="w">│</span>                 
+                 <span class="w">│</span>                                                                <span class="w">│</span>                 
+                 <span class="w">│</span> <span class="d">Win + 3 … 6 become Win + 2 … 5 (the ones after it move up).</span>    <span class="w">│</span>                 
+                 <span class="w">│</span> <span class="d">Its 15 apps go to “opens where you are” until you place them.</span>  <span class="w">│</span>                 
+                 <span class="w">│</span>                                                                <span class="w">│</span>                 
+                 <span class="w">│</span>         <span class="pri"> Delete and Move Them (d) </span>   <span class="btn"> Stay (Esc) </span>              <span class="w">│</span>                 
+                 <span class="w">│</span>                                                                <span class="w">│</span>                 
+                 <span class="w">╰────────────────────────────────────────────────────────────────╯</span>                 
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+<span class="hdr"> <span class="a">d</span> <span class="d">delete</span>  ·  <span class="a">Esc</span> <span class="d">stay</span>  ·  <span class="d">nothing is closed: windows only move</span>                                     </span></pre></div>
+</section>
+
+<section id="apps">
+  <h2>2 · Apps</h2>
+  <p class="prose">This is F-50. Pick a workspace and see the apps that open on it, however you start them. The numbers on the left are real: what this desktop's launcher would put on each workspace today. "Where you are" holds the apps with no workspace (GIMP, the calculator, KeePassXC…), which open on whatever is on screen. The switch at the bottom is your answer from this morning: the screens go with the app.</p>
+  <div class="term"><pre><span class="hdr"> <span class="v b">workspaceForge 0.1.0</span><span class="m"> · workspaces across your screens</span>      <span class="m">KognogOS · javier · nothing changed yet</span> </span>
+<span class="bar"> <span class="u">W</span>orkspaces   <span class="act"> Apps </span>   <span class="u">S</span>haring   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                      </span>
+                                                                                                    
+ <span class="m"> Win   Workspace      apps </span> <span class="d">│</span> <span class="v b">Apps that open on Gaming</span>   <span class="m">however you start them</span>                    
+  1  Daily              11   <span class="d">│</span>                                                                      
+  2  Work               15   <span class="d">│</span>   Steam                             <span class="d">Games</span>                            
+  3  Entertainment       6   <span class="d">│</span> <span class="sel">  Sim Companies                     </span><span class="d">Games</span>                            
+ <span class="sel"> 4  Gaming              7 </span>  <span class="d">│</span>   SuperTux 2                        <span class="d">Games</span>                            
+  5  Monitoring          5   <span class="d">│</span>   World of Warcraft Pi5             <span class="d">Games</span>                            
+  6  Settings           14   <span class="d">│</span>   Battle.net                        <span class="d">Games</span>                            
+                             <span class="d">│</span>   Lutris                            <span class="d">Games</span>                            
+  –  Where you are     26    <span class="d">│</span>   ProtonUp-Qt                       <span class="d">Games</span>                            
+                             <span class="d">│</span>                                                                      
+ <span class="d"> each app opens on ONE</span>      <span class="d">│</span> <span class="btn"> Add an App (a) </span>  <span class="btn"> Move To… (m) </span>  <span class="btn"> Remove (d) </span>                       
+ <span class="d"> workspace, or where</span>        <span class="d">│</span>                                                                      
+ <span class="d"> you are</span>                    <span class="d">│</span> <span class="b">When one opens</span>  <span class="ok">● the screens go with it</span>                             
+                             <span class="d">│</span>                 <span class="d">not in the first 30 s after login, so apps</span>           
+                             <span class="d">│</span>                 <span class="d">that start by themselves don&#x27;t move you</span>              
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+<span class="hdr"> <span class="a">↑ ↓</span> <span class="d">pick</span>  ·  <span class="a">Tab</span> <span class="d">the apps</span>  ·  <span class="a">a</span> <span class="d">add</span>  ·  <span class="a">m</span> <span class="d">move</span>  ·  <span class="a">d</span> <span class="d">remove</span>  ·  <span class="a">F10</span> <span class="d">save</span>  ·  <span class="a">F1</span> <span class="d">help</span>               </span></pre></div>
+</section>
+
+<section id="add">
+  <h2>Adding an app</h2>
+  <p class="prose">Type to search every installed app. Each one shows where it opens now, so you can see that adding Discord to Gaming takes it off Daily.</p>
+  <div class="term"><pre><span class="hdr"> <span class="v b">workspaceForge 0.1.0</span><span class="m"> · workspaces across your screens</span>      <span class="m">KognogOS · javier · nothing changed yet</span> </span>
+<span class="bar"> <span class="u">W</span>orkspaces   <span class="act"> Apps </span>   <span class="u">S</span>haring   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                      </span>
+                                                                                                    
+                                                                                                    
+              <span class="a">╭─ Add an app to Gaming ───────────────────────────────────────────────╮</span>              
+              <span class="a">│</span> <span class="b">Search</span>  <span class="foc"> disc▏                                      </span>                 <span class="a">│</span>              
+              <span class="a">│</span>                                                                      <span class="a">│</span>              
+              <span class="a">│</span> <span class="m">App                         now opens on</span>                             <span class="a">│</span>              
+              <span class="a">│</span> <span class="sel"> Discord                     Daily: moves to Gaming     </span>             <span class="a">│</span>              
+              <span class="a">│</span>  Discover                    <span class="d">where you are</span>                           <span class="a">│</span>              
+              <span class="a">│</span>                                                                      <span class="a">│</span>              
+              <span class="a">│</span> <span class="d">Every installed app, as the launcher lists them (95). One already</span>    <span class="a">│</span>              
+              <span class="a">│</span> <span class="d">on another workspace moves here: an app opens on ONE workspace.</span>      <span class="a">│</span>              
+              <span class="a">│</span>                                                                      <span class="a">│</span>              
+              <span class="a">│</span>         <span class="pri"> Add to Gaming (Enter) </span>   <span class="btn"> Back (Esc) </span>                       <span class="a">│</span>              
+              <span class="a">╰──────────────────────────────────────────────────────────────────────╯</span>              
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+<span class="hdr"> <span class="d">type to search</span>  ·  <span class="a">↑ ↓</span> <span class="d">pick</span>  ·  <span class="a">Enter</span> <span class="d">add</span>  ·  <span class="a">Esc</span> <span class="d">back</span>                                             </span></pre></div>
+</section>
+
+<section id="sharing">
+  <h2>3 · Sharing</h2>
+  <p class="prose">The grid you set by hand today in <code>[share]</code>: workspaces down, screens across. Linking a cell with the one above makes that screen keep the same apps in both workspaces. The drawing shows an <b>example</b>: the left screen shared by Daily, Work and Entertainment, so your chat or music could sit there while the other two screens change. Today nothing is shared. Screens are named the way displayForge names them (Main, Left, Right).</p>
+  <div class="term"><pre><span class="hdr"> <span class="v b">workspaceForge 0.1.0</span><span class="m"> · workspaces across your screens</span>      <span class="m">KognogOS · javier · nothing changed yet</span> </span>
+<span class="bar"> <span class="u">W</span>orkspaces   <span class="u">A</span>pps   <span class="act"> Sharing </span>   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                      </span>
+                                                                                                    
+  <span class="v b">Which screens keep the same apps across workspaces</span>                                                
+  <span class="m">A shared screen shows the same windows in every workspace of its group; the others change.</span>        
+                                                                                                    
+                       <span class="b">Main · DP-3</span>           <span class="b">Left · DP-2</span>           <span class="b">Right · DP-1</span>                     
+  <span class="d">─────────────────────────────────────────────────────────────────────────────────</span>                 
+  1  Daily             own                   <span class="ok">┐ shared  A</span>           own                              
+  2  Work              own                   <span class="ok">┤ shared  A</span>           own                              
+  3  Entertainment     own                   <span class="ok">┘ shared  A</span>           <span class="sel">own</span>                              
+  4  Gaming            own                   own                   own                              
+  5  Monitoring        own                   own                   own                              
+  6  Settings          own                   own                   own                              
+                                                                                                    
+  <span class="d">The drawing shows an EXAMPLE: Left shared by Daily, Work and Entertainment (group A).</span>             
+  <span class="d">Today nothing is shared: every cell is “own”.</span>                                                     
+                                                                                                    
+  <span class="btn"> Share With the One Above (space) </span>  <span class="btn"> Stop Sharing (d) </span>                                            
+                                                                                                    
+  <span class="m">A new window can still land on a shared screen (the fill order decides);</span>                          
+  <span class="m">it then shows in every workspace of that group, as sharing means.</span>                                 
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+<span class="hdr"> <span class="a">← → ↑ ↓</span> <span class="d">pick a cell</span>  ·  <span class="a">space</span> <span class="d">share with the one above</span>  ·  <span class="a">d</span> <span class="d">stop</span>  ·  <span class="a">F10</span> <span class="d">save</span>  ·  <span class="a">F1</span> <span class="d">help</span>         </span></pre></div>
+</section>
+
+<section id="save">
+  <h2>Saving</h2>
+  <p class="prose">A review first: every change, before and after. A backup of the file is made, then it's written, and the Workspaces applet re-reads it right away. Open windows don't move; a renamed workspace keeps its windows.</p>
+  <div class="term"><pre><span class="hdr"> <span class="v b">workspaceForge 0.1.0</span><span class="m"> · workspaces across your screens</span>        <span class="m">KognogOS · javier · 2 changes waiting</span> </span>
+<span class="bar"> <span class="u">W</span>orkspaces   <span class="act"> Apps </span>   <span class="u">S</span>haring   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                      </span>
+                                                                                                    
+  <span class="v b">Save these workspace settings?</span>                                                                    
+                                                                                                    
+  <span class="m">Change                          Before                    After</span>                                   
+  <span class="d">──────────────────────────────────────────────────────────────────────────</span>                        
+  Workspace 3 · name              Entertainment             <span class="ok">Media</span>                                   
+  Apps · Discord                  Daily                     <span class="ok">Entertainment</span>                           
+                                                                                                    
+  <span class="m">Written to</span>   ~/.config/hypeforge/applets/workspaces.toml                                          
+  <span class="m">Backup first</span> ~/.config/workspaceforge/backups/         <span class="d">the last 20 are kept</span>                       
+  <span class="m">Then</span>         the Workspaces applet re-reads it: <span class="b">at once</span>, no logout                                
+                                                                                                    
+  <span class="d">Open windows stay where they are; the renamed workspace keeps its windows.</span>                        
+                                                                                                    
+                                <span class="pri"> Save (Enter) </span>    <span class="btn"> Back (Esc) </span>                                      
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+<span class="hdr"> <span class="a">Enter</span> <span class="d">save</span>  ·  <span class="a">Esc</span> <span class="d">back</span>  ·  <span class="d">after saving: a note with what was written</span>                             </span></pre></div>
+</section>
+
+<section id="keys">
+  <h2>Keys</h2>
+  <p class="prose">The same rules as every Forge app: Ctrl + the underlined letter, or the number in menu order, Help included.</p>
+  <div class="tw"><table>
+    <tr><th>Keys</th><th>What happens</th></tr>
+    <tr><td><kbd>Ctrl+W</kbd> <kbd>Ctrl+A</kbd> <kbd>Ctrl+S</kbd> <kbd>Ctrl+H</kbd> · <kbd>1</kbd>–<kbd>4</kbd></td><td>Workspaces, Apps, Sharing, Help</td></tr>
+    <tr><td><kbd>↑</kbd> <kbd>↓</kbd> · <kbd>Tab</kbd></td><td>Pick in the list · move into the page</td></tr>
+    <tr><td><kbd>r</kbd> <kbd>n</kbd> <kbd>d</kbd> <kbd>+</kbd> <kbd>-</kbd> (Workspaces)</td><td>Rename, new, delete, move up, move down</td></tr>
+    <tr><td><kbd>a</kbd> <kbd>m</kbd> <kbd>d</kbd> (Apps)</td><td>Add an app, move it to another workspace, remove it</td></tr>
+    <tr><td><kbd>Space</kbd> <kbd>d</kbd> (Sharing)</td><td>Share with the one above · stop sharing</td></tr>
+    <tr><td><kbd>F10</kbd></td><td>Save, with the review first</td></tr>
+    <tr><td><kbd>Esc</kbd></td><td>Back · close a question</td></tr>
+    <tr><td><kbd>F1</kbd> · <kbd>Q</kbd></td><td>Help · Quit (it asks first if something isn't saved)</td></tr>
+  </table></div>
+</section>
+
+<section id="plan">
+  <h2>How it gets built</h2>
+  <ol class="prose">
+    <li><b>Your answers</b> to the questions above, and any change to the drawings.</li>
+    <li><b>The engine first (F-50):</b> the Workspaces applet learns the app lists and moves new windows to their workspace, screens following. It works with the settings file edited by hand, so you can live with it before the app exists.</li>
+    <li><b>workspaceForge on forgekit</b>, as a new section of the Forge Suite (<code>workspaceforge/</code>): Workspaces, Apps, Sharing, the review and save, then its page inside hypeForge Settings.</li>
+    <li><b>Tests</b>: one, two and three screens; 100 columns; a plain text console; a broken or missing settings file; each check proven failing first.</li>
+    <li><b>Your run</b> with a written test list, then a release on GitHub, and the AUR after your local test.</li>
+  </ol>
+  <p class="prose">Until then your workspaces keep working exactly as they do now.</p>
+</section>
+
+</div>

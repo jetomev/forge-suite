@@ -5,6 +5,16 @@
 
 ---
 
+## 2026-10-09
+
+### D-66 · "Workspaces & Windows" is two Forge apps: workspaceForge now, windows later
+**Decided by Javier:** *"Why don't we work on workspaceForge already. It is HOT topic xD"* and *"Notice I said only workspaces, windows is another Forge app. I like atomized solutions."*
+- **workspaceForge** (Forge Suite section `workspaceforge/`, born 2026-10-09): workspace names and order, the apps that open on each one (F-50, #55), sharing. It edits the Workspaces applet's settings; the applet keeps doing the work.
+- **Windows** (where a window sits on a screen, which ones float: today's Window Placement and Window Rules applets) becomes its own Forge app later.
+- The Settings catalogue's "Workspaces & Windows" line is split accordingly. Also decided the same morning, for F-50: the screens follow an app to its workspace (not in the first ~30 s after login), and shared screens get no special rule.
+
+---
+
 ## 2026-10-08 (late)
 
 ### D-65 · hypeForge Settings opens on a Home page of cards, each with an icon and three lines
