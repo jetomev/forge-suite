@@ -15,6 +15,8 @@
 
 > **Screen settings for the KognogOS desktop, in the terminal.** Arrange your screens, pick the resolution and refresh rate, make things bigger or smaller, rotate a screen, switch one off, set the brightness, and give your screens names. Every change comes with a **safety countdown**: if a change leaves you staring at a black screen, it goes back by itself. Part of the **[Forge Suite](../README.md)**, made for **[hypeForge](../hypeforge/README.md)**. **Works on Sway only**, and says so at launch anywhere else.
 
+> 🖥 **Where it runs:** **the Sway desktop only** (it sets up your screens through Sway), in a terminal window there · written for **KognogOS** (Arch-based); other distributions with Sway not tried · on a plain text console it explains why and closes.
+
 > 🛡 **Security.** Every commit is GPG-signed and GitHub-Verified. displayForge needs no password: it only writes your own files, with a backup first.
 
 <p align="center"><img src="docs/images/screens.png" alt="displayForge's Screens view: three screens drawn side by side, the middle one marked as the main screen" width="90%"></p>

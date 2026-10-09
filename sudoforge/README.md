@@ -14,6 +14,8 @@
 
 > **One password box for every admin request on the KognogOS desktop.** When something needs admin rights (an app changing the printer settings, a `sudo -A` command, nog started from the launcher), a small box floats up in the middle of the screen you are using. It says **who is asking and what for**, in plain words, and asks for your password. Part of the **[Forge Suite](../README.md)**, made for **[hypeForge](../hypeforge/README.md)** on **Sway**.
 
+> 🖥 **Where it runs:** **the Sway desktop only** (KognogOS's desktop; its box opens in an Alacritty window) · written for **KognogOS** (Arch-based); other distributions with Sway not tried · **not for a plain text console**.
+
 > 🛡 **Security.** Every commit is GPG-signed and GitHub-Verified. Your password goes only to the part of the system that checks it (polkit or sudo). sudoForge never keeps it, never writes it anywhere and never gets admin rights itself.
 
 <p align="center"><img src="docs/images/box.png" alt="sudoForge's box on the desktop: 'Claude wants to run as admin', the command 'true' in orange, 'Started from Terminal (Alacritty) · checked by sudo', then 'Password for jetomev' over a centred password field, Cancel and OK" width="70%"></p>

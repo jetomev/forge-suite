@@ -4,6 +4,7 @@
 
 <p align="center">
   <img alt="workspaceForge release" src="https://img.shields.io/github/v/release/jetomev/forge-suite?filter=workspaceforge-*&label=release&style=flat-square&labelColor=313244&color=a6e3a1">
+  <a href="https://aur.archlinux.org/packages/workspaceforge"><img alt="workspaceForge on the AUR" src="https://img.shields.io/aur/version/workspaceforge?label=AUR&style=flat-square&labelColor=313244&color=a6e3a1"></a>
   <img alt="Sway" src="https://img.shields.io/badge/for-Sway-89b4fa?style=flat-square&labelColor=313244">
   <img alt="License: GPLv3" src="https://img.shields.io/badge/license-GPLv3-a6e3a1?style=flat-square&labelColor=313244">
   <img alt="Built by a human and an AI" src="https://img.shields.io/badge/built%20by-human%20%2B%20AI-f9e2af?style=flat-square&labelColor=313244">

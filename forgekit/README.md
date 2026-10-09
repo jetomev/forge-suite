@@ -8,6 +8,8 @@
 
 > 🛡 **Security** — every release is GPG-signed and every commit is GitHub-Verified. **[Where We Stand](https://github.com/jetomev/KognogOS/blob/main/docs/where-we-stand.md)** covers our response to the 2026 AUR supply-chain attacks and how to check us yourself.
 
+> 🖥 **Where it runs:** **any Linux distribution** (a Python library) · apps built on it run in **any terminal, with or without a desktop** · **readable and usable on a plain text console** (a tty).
+
 > 🧰 **Part of the [Forge Suite](../README.md)** since 6 October 2026: forgekit moved into the suite's repository with its full history ([D-60](../hypeforge/docs/DECISIONS.md)). Its releases are tagged `forgekit-vX.Y.Z`; the [old repository](https://github.com/jetomev/forgekit) is archived and keeps its releases and issues.
 
 **A shared foundation for building terminal apps that look and behave the same.**
