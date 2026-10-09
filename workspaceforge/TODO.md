@@ -14,7 +14,9 @@
 - [x] New windows of a listed app go to its workspace, however started; the screens follow (not in the first ~30 s after login); Placement's fill order moved to `common/hfplace.py` and leaves those windows to the Workspaces applet (a hidden mark), which places them itself
 - [x] The launcher reads the same lists (one source of truth): typed, Favorites, All apps or a group, all the same; terminal apps open as `alacritty --class <id>` so btop is told apart from a plain terminal; `sections.toml`'s `[workspaces]` and group `workspace =` retired
 - [x] Tests: 17 new (36 in hypeForge), and 12 pieces of the engine broken on purpose in a copy — each one caught
-- [ ] **NEXT — switch it on live** (Javier's go): seed the live `workspaces.toml`, retire the live launcher keys (backups first), restart the two applets; then Javier lives with it
+- [x] Switched on live 11:57 (lists seeded, Alacritty off every list — Javier; launcher keys retired; backups kept); Javier's launcher tests 1–4 passed, and Sim Companies from cold (Steam closed) opened Steam + the game on Gaming
+- [x] **F-51 (#57), 12:05:** `supertux2 &` from a terminal set the workspaces switching non-stop; desktop locked, reboot from tty3. Lists taken off live (backup); reproduced on the new hidden bench (`hypeforge/scripts/headless-check.py`: 301 switches in 10 s) → fixed (act on the focused workspace now, never a stale event; safety valve 12 switches / 3 s) → 4 switches, 4 runs of 4 (`d48ce5e`); fixed applets live, lists still off
+- [ ] **NEXT — lists back on + Javier's retest:** `supertux2 &` from a terminal → Gaming once, no switching after; then close #57 and #55
 - [ ] Known gaps: WoW (Wine) calls its window `wow.exe` — not matched until its launcher entry says so (StartupWMClass); more than 9 workspaces needs the cell numbering changed (Grid uses `i + 10 × screen`)
 
 ## Phase 2 · The app
