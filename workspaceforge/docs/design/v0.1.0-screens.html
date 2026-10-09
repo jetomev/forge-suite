@@ -111,12 +111,12 @@ td code { white-space: nowrap; }
 <div class="wrap">
 
 <header class="stack">
-  <div class="eyebrow">workspaceForge · design proposal · 9 October 2026</div>
+  <div class="eyebrow">workspaceForge · design proposal · 9 October 2026 · second draft, with Javier's changes</div>
   <h1>workspaceForge, screen by screen</h1>
   <p class="lede prose">Your workspaces, in the terminal: their names and order, which apps open on each one, and which screens keep the same apps across workspaces. Every screen is drawn here before any code is written.</p>
   <p class="prose">Today all of this lives in a settings file you'd have to edit by hand. workspaceForge is the friendly way in. It follows displayForge on purpose: the same frame, the same menu bar with underlined letters, a list on the left, the picked thing on the right, and a review before every save. Every drawing is exactly <b>100 columns</b> wide. The drawings show <b>your</b> six workspaces, your three screens and the apps on this desktop today.</p>
   <nav class="toc" aria-label="Contents">
-    <a href="#questions">Questions</a><a href="#workspaces">Workspaces</a><a href="#delete">Delete</a><a href="#apps">Apps</a><a href="#add">Add an app</a><a href="#sharing">Sharing</a><a href="#save">Save</a><a href="#keys">Keys</a><a href="#plan">How it gets built</a>
+    <a href="#questions">Questions</a><a href="#workspaces">Workspaces</a><a href="#new">New</a><a href="#delete">Delete</a><a href="#apps">Apps</a><a href="#sharing">Sharing</a><a href="#save">Save</a><a href="#keys">Keys</a><a href="#plan">How it gets built</a>
   </nav>
 </header>
 
@@ -128,13 +128,17 @@ td code { white-space: nowrap; }
       <li><b>Apps open on their workspace however you start them</b> (F-50, #55): typed in the launcher, Favorites, the bar, a terminal, or Steam starting a game.</li>
       <li><b>The screens go with the app</b> when it opens on another workspace.</li>
       <li><b>Shared screens need no special rule:</b> their windows already belong to every workspace in the group, and the fill order counts them.</li>
+      <li><b>Workspaces are yours to shape</b> (first draft review): <em>"If the user just want to have one, they only have one."</em> Create, name, edit and remove them as you please, from one up.</li>
+      <li><b>Apps is two tables with arrows between them</b> (first draft review): apps on no workspace on the left with <kbd>[x]</kbd> ticks; your workspaces on the right, one open at a time showing its apps; <kbd>&gt;&gt;</kbd> sends the ticked ones to the open workspace, <kbd>&lt;&lt;</kbd> sends them back. Select All and Deselect All on top of each table, acting only on the rows showing.</li>
     </ol>
   </div>
   <h2>Questions for you</h2>
-  <p class="prose">Each one has my recommendation in bold. Say "go" and they're all answered that way; change any you like.</p>
+  <p class="prose">Each one has my recommendation in bold. Say "go" and they're all answered that way; change any you like. The first draft's "up to nine" question is replaced by #1.</p>
   <ol class="prose">
-    <li><b>Up to nine workspaces</b> (Win + 1 … 9), any names, any order. <span class="rec">Recommended: yes.</span></li>
-    <li><b>One app, one workspace.</b> Adding Discord to Gaming takes it off Daily. <span class="rec">Recommended: yes.</span> Two workspaces for one app would need a rule for which one wins.</li>
+    <li><b>More than nine?</b> You can have as many as you like, but Win + 1 … 9 only reach the first nine; the rest are one click away in the bar's Workspaces list. And at least one always stays (the last one can be renamed, not deleted). <span class="rec">Recommended: yes.</span></li>
+    <li><b>One app, one workspace.</b> Your two tables already work that way: an app sits either on the left (no workspace) or in one workspace. To move Discord from Daily to Gaming: open Daily, send it back with <kbd>&lt;&lt;</kbd>, open Gaming, send it with <kbd>&gt;&gt;</kbd>. <span class="rec">Recommended: yes.</span></li>
+    <li><b>Filters on the apps table</b> (top right, as for every table): a <b>Find</b> box and a <b>Category</b> list (All, Games, Utilities…). Headings sort with a click, ▲ ▼ showing which way. <span class="rec">Recommended: these two.</span> Any other filter you'd want?</li>
+    <li><b>The words:</b> "Select All" and "Deselect All" are yours. nogForge says "Tick All" and "Untick All" for the same thing. <span class="rec">Recommended: yours everywhere; nogForge follows in its next release.</span></li>
     <li><b>Deleting a workspace that has windows open:</b> it asks where they go (Daily picked for you). Nothing is ever closed. <span class="rec">Recommended: yes.</span></li>
     <li><b>The lists start from the launcher's groups</b>, once: Internet on Daily (11 apps), Office and Development on Work (15), Multimedia on Entertainment (6), Games on Gaming (7), the monitors on Monitoring (5), Settings on Settings (14); the other 26 open where you are. After that the lists are the only place this is set, and the launcher follows them too. <span class="rec">Recommended: yes.</span> Heads-up: Discord, Dropbox, Insync and the VPN start by themselves at login. They'll go to Daily quietly, without moving your screens.</li>
     <li><b>Saving:</b> <kbd>F10</kbd> shows a review, then it applies <b>at once</b>, no logout. No countdown like displayForge's: nothing here can black out a screen. <span class="rec">Recommended: yes.</span></li>
@@ -146,7 +150,7 @@ td code { white-space: nowrap; }
 
 <section id="workspaces">
   <h2>1 · Workspaces</h2>
-  <p class="prose">Your workspaces down the left, with the Win key that reaches each one; ● marks the one on screen now. On the right, the picked one: its name, how many apps open there, whether it shares a screen, and what's open on it right now. Rename, add, delete and reorder from here. Moving a workspace up or down changes its Win number. At the bottom, the main switch: workspaces that span every screen, or Sway's own way, where each screen switches by itself.</p>
+  <p class="prose">Yours to shape: one workspace or a dozen, any names, any order. Your workspaces down the left, with the Win key that reaches each one; ● marks the one on screen now. On the right, the picked one: its name, how many apps open there, whether it shares a screen, and what's open on it right now. Rename, create, delete and reorder from here. Moving a workspace up or down changes its Win number. At the bottom, the main switch: workspaces that span every screen, or Sway's own way, where each screen switches by itself.</p>
   <div class="term"><pre><span class="hdr"> <span class="v b">workspaceForge 0.1.0</span><span class="m"> · workspaces across your screens</span>      <span class="m">KognogOS · javier · nothing changed yet</span> </span>
 <span class="bar"> <span class="act"> Workspaces </span>   <span class="u">A</span>pps   <span class="u">S</span>haring   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                      </span>
                                                                                                     
@@ -159,9 +163,9 @@ td code { white-space: nowrap; }
   6  Settings                <span class="d">│</span>                                                                      
                              <span class="d">│</span> <span class="b">Sharing</span>         <span class="m">none: every screen has its own space here</span>            
                              <span class="d">│</span>                 <span class="d">the Sharing page (Ctrl + S)</span>                          
- <span class="d"> up to 9  (Win + 1 … 9)</span>     <span class="d">│</span>                                                                      
-                             <span class="d">│</span> <span class="b">Open now</span>        <span class="m">nothing</span>                                              
-                             <span class="d">│</span>                                                                      
+ <span class="d"> as many as you like;</span>       <span class="d">│</span>                                                                      
+ <span class="d"> Win + 1 … 9 reach the</span>      <span class="d">│</span> <span class="b">Open now</span>        <span class="m">nothing</span>                                              
+ <span class="d"> first nine</span>                 <span class="d">│</span>                                                                      
                              <span class="d">│</span> <span class="btn"> Rename (r) </span>  <span class="btn"> New Workspace (n) </span>  <span class="btn"> Delete (d) </span>                      
                              <span class="d">│</span> <span class="btn"> Move Up (+) </span>  <span class="btn"> Move Down (-) </span>                                       
                                                                                                     
@@ -177,6 +181,41 @@ td code { white-space: nowrap; }
                                                                                                     
                                                                                                     
 <span class="hdr"> <span class="a">↑ ↓</span> <span class="d">pick</span>  ·  <span class="a">Tab</span> <span class="d">into the form</span>  ·  <span class="a">F10</span> <span class="d">save</span>  ·  <span class="a">1-4</span> <span class="d">menu</span>  ·  <span class="a">F1</span> <span class="d">help</span>                               </span></pre></div>
+</section>
+
+<section id="new">
+  <h2>A new workspace</h2>
+  <p class="prose">A name and where it goes in the order. It starts empty; give it apps on the Apps page.</p>
+  <div class="term"><pre><span class="hdr"> <span class="v b">workspaceForge 0.1.0</span><span class="m"> · workspaces across your screens</span>      <span class="m">KognogOS · javier · nothing changed yet</span> </span>
+<span class="bar"> <span class="act"> Workspaces </span>   <span class="u">A</span>pps   <span class="u">S</span>haring   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                      </span>
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                 <span class="a">╭─ New workspace ────────────────────────────────────────────────╮</span>                 
+                 <span class="a">│</span>                                                                <span class="a">│</span>                 
+                 <span class="a">│</span> <span class="b">Name</span>         <span class="foc"> Studio▏                         </span>                 <span class="a">│</span>                 
+                 <span class="a">│</span>                                                                <span class="a">│</span>                 
+                 <span class="a">│</span> <span class="b">Goes after</span>   <span class="fld"> 6 · Settings          ▾ </span>                         <span class="a">│</span>                 
+                 <span class="a">│</span>                                                                <span class="a">│</span>                 
+                 <span class="a">│</span> <span class="d">It becomes 7 · Studio: Win + 7 takes every screen there.</span>       <span class="a">│</span>                 
+                 <span class="a">│</span> <span class="d">It starts with no apps; give it some on the Apps page.</span>         <span class="a">│</span>                 
+                 <span class="a">│</span>                                                                <span class="a">│</span>                 
+                 <span class="a">│</span>           <span class="pri"> Create (Enter) </span>     <span class="btn"> Back (Esc) </span>                    <span class="a">│</span>                 
+                 <span class="a">│</span>                                                                <span class="a">│</span>                 
+                 <span class="a">╰────────────────────────────────────────────────────────────────╯</span>                 
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+<span class="hdr"> <span class="d">type a name</span>  ·  <span class="a">Tab</span> <span class="d">where it goes</span>  ·  <span class="a">Enter</span> <span class="d">create</span>  ·  <span class="a">Esc</span> <span class="d">back</span>                                    </span></pre></div>
 </section>
 
 <section id="delete">
@@ -216,72 +255,39 @@ td code { white-space: nowrap; }
 
 <section id="apps">
   <h2>2 · Apps</h2>
-  <p class="prose">This is F-50. Pick a workspace and see the apps that open on it, however you start them. The numbers on the left are real: what this desktop's launcher would put on each workspace today. "Where you are" holds the apps with no workspace (GIMP, the calculator, KeePassXC…), which open on whatever is on screen. The switch at the bottom is your answer from this morning: the screens go with the app.</p>
+  <p class="prose">Your layout. <b>On the left</b>, every app that's on no workspace yet (it opens wherever you are), in our table style: ticks, its category, every other row shaded, headings that sort, and the filters top right. <b>On the right</b>, your workspaces. Click one and it opens downward to show its apps; click another and the first one closes. <b>Between them</b>, <kbd>&gt;&gt;</kbd> sends the ticked apps from the left into the open workspace, and <kbd>&lt;&lt;</kbd> sends the ticked ones from the open workspace back to the left. Select All and Deselect All tick only the rows you can see: the filtered list on the left, the open workspace on the right.</p>
+  <p class="prose">In the drawing, the left list is filtered to Utilities (16 of the 26 apps on no workspace), Winetricks is ticked, and Gaming is open. One press of <kbd>&gt;&gt;</kbd> and Winetricks opens on Gaming from then on. The counts are real: what this desktop's launcher would put on each workspace today.</p>
   <div class="term"><pre><span class="hdr"> <span class="v b">workspaceForge 0.1.0</span><span class="m"> · workspaces across your screens</span>      <span class="m">KognogOS · javier · nothing changed yet</span> </span>
 <span class="bar"> <span class="u">W</span>orkspaces   <span class="act"> Apps </span>   <span class="u">S</span>haring   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                      </span>
                                                                                                     
- <span class="m"> Win   Workspace      apps </span> <span class="d">│</span> <span class="v b">Apps that open on Gaming</span>   <span class="m">however you start them</span>                    
-  1  Daily              11   <span class="d">│</span>                                                                      
-  2  Work               15   <span class="d">│</span>   Steam                             <span class="d">Games</span>                            
-  3  Entertainment       6   <span class="d">│</span> <span class="sel">  Sim Companies                     </span><span class="d">Games</span>                            
- <span class="sel"> 4  Gaming              7 </span>  <span class="d">│</span>   SuperTux 2                        <span class="d">Games</span>                            
-  5  Monitoring          5   <span class="d">│</span>   World of Warcraft Pi5             <span class="d">Games</span>                            
-  6  Settings           14   <span class="d">│</span>   Battle.net                        <span class="d">Games</span>                            
-                             <span class="d">│</span>   Lutris                            <span class="d">Games</span>                            
-  –  Where you are     26    <span class="d">│</span>   ProtonUp-Qt                       <span class="d">Games</span>                            
-                             <span class="d">│</span>                                                                      
- <span class="d"> each app opens on ONE</span>      <span class="d">│</span> <span class="btn"> Add an App (a) </span>  <span class="btn"> Move To… (m) </span>  <span class="btn"> Remove (d) </span>                       
- <span class="d"> workspace, or where</span>        <span class="d">│</span>                                                                      
- <span class="d"> you are</span>                    <span class="d">│</span> <span class="b">When one opens</span>  <span class="ok">● the screens go with it</span>                             
-                             <span class="d">│</span>                 <span class="d">not in the first 30 s after login, so apps</span>           
-                             <span class="d">│</span>                 <span class="d">that start by themselves don&#x27;t move you</span>              
+ <span class="v b">Apps on no workspace</span>             <span class="m">16 of 26</span>            <span class="v b">Workspaces</span>                             <span class="m">6</span>      
+          <span class="d">Find</span> <span class="fld">          </span>  <span class="foc"> Utilities ▾ </span>               ▸ 1  Daily                          <span class="m">11 apps</span>  
+ <span class="btn"> Select All (a) </span>  <span class="btn"> Deselect All (u) </span>                  ▸ 2  Work                           <span class="m">15 apps</span>  
+ <span class="b">     App ▲                          Category </span>         ▸ 3  Entertainment                   <span class="m">6 apps</span>  
+  [ ] Ark                           Utilities         <span class="act"> ▾ 4  Gaming                          7 apps </span> 
+ <span class="fld"> [ ] bitlaForge                    Utilities </span>        <span class="btn"> Select All (a) </span>  <span class="btn"> Deselect All (u) </span>          
+  [ ] Bulk Rename                   Utilities         <span class="b">     App ▲                          Category </span> 
+ <span class="fld"> [ ] Flatseal                      Utilities </span>         [ ] Steam                             Games  
+  [ ] Galculator                    Utilities         <span class="fld"> [ ] Sim Companies                     Games </span> 
+ <span class="fld"> [ ] hypeForge Help &amp; Keys         Utilities </span> <span class="pri">  &gt;&gt;  </span>  [ ] SuperTux 2                        Games  
+  [ ] KeePassXC                     Utilities  <span class="d"> send</span>  <span class="fld"> [ ] World of Warcraft Pi5             Games </span> 
+ <span class="fld"> [ ] KWrite                        Utilities </span>         [ ] Battle.net                        Games  
+  [ ] Midnight Commander            Utilities         <span class="fld"> [ ] Lutris                            Games </span> 
+ <span class="fld"> [ ] Raspberry Pi Imager           Utilities </span> <span class="btn">  &lt;&lt;  </span>  [ ] ProtonUp-Qt                       Games  
+  [ ] Spectacle                     Utilities  <span class="d"> back</span>   ▸ 5  Monitoring                      <span class="m">5 apps</span>  
+ <span class="fld"> [ ] Termius                       Utilities </span>         ▸ 6  Settings                       <span class="m">14 apps</span>  
+  [ ] Vim                           Utilities                                                       
+ <span class="sel"> [x] Winetricks                    Utilities </span>                                                      
+  [ ] xgps                          Utilities                                                       
+ <span class="fld"> [ ] xgpsspeed                     Utilities </span>                                                      
                                                                                                     
                                                                                                     
                                                                                                     
                                                                                                     
                                                                                                     
                                                                                                     
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-<span class="hdr"> <span class="a">↑ ↓</span> <span class="d">pick</span>  ·  <span class="a">Tab</span> <span class="d">the apps</span>  ·  <span class="a">a</span> <span class="d">add</span>  ·  <span class="a">m</span> <span class="d">move</span>  ·  <span class="a">d</span> <span class="d">remove</span>  ·  <span class="a">F10</span> <span class="d">save</span>  ·  <span class="a">F1</span> <span class="d">help</span>               </span></pre></div>
-</section>
-
-<section id="add">
-  <h2>Adding an app</h2>
-  <p class="prose">Type to search every installed app. Each one shows where it opens now, so you can see that adding Discord to Gaming takes it off Daily.</p>
-  <div class="term"><pre><span class="hdr"> <span class="v b">workspaceForge 0.1.0</span><span class="m"> · workspaces across your screens</span>      <span class="m">KognogOS · javier · nothing changed yet</span> </span>
-<span class="bar"> <span class="u">W</span>orkspaces   <span class="act"> Apps </span>   <span class="u">S</span>haring   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                      </span>
-                                                                                                    
-                                                                                                    
-              <span class="a">╭─ Add an app to Gaming ───────────────────────────────────────────────╮</span>              
-              <span class="a">│</span> <span class="b">Search</span>  <span class="foc"> disc▏                                      </span>                 <span class="a">│</span>              
-              <span class="a">│</span>                                                                      <span class="a">│</span>              
-              <span class="a">│</span> <span class="m">App                         now opens on</span>                             <span class="a">│</span>              
-              <span class="a">│</span> <span class="sel"> Discord                     Daily: moves to Gaming     </span>             <span class="a">│</span>              
-              <span class="a">│</span>  Discover                    <span class="d">where you are</span>                           <span class="a">│</span>              
-              <span class="a">│</span>                                                                      <span class="a">│</span>              
-              <span class="a">│</span> <span class="d">Every installed app, as the launcher lists them (95). One already</span>    <span class="a">│</span>              
-              <span class="a">│</span> <span class="d">on another workspace moves here: an app opens on ONE workspace.</span>      <span class="a">│</span>              
-              <span class="a">│</span>                                                                      <span class="a">│</span>              
-              <span class="a">│</span>         <span class="pri"> Add to Gaming (Enter) </span>   <span class="btn"> Back (Esc) </span>                       <span class="a">│</span>              
-              <span class="a">╰──────────────────────────────────────────────────────────────────────╯</span>              
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-<span class="hdr"> <span class="d">type to search</span>  ·  <span class="a">↑ ↓</span> <span class="d">pick</span>  ·  <span class="a">Enter</span> <span class="d">add</span>  ·  <span class="a">Esc</span> <span class="d">back</span>                                             </span></pre></div>
+<span class="hdr"> <span class="a">Space</span> <span class="d">tick</span>  ·  <span class="a">&gt;</span> <span class="d">send to the open workspace</span>  ·  <span class="a">&lt;</span> <span class="d">send back</span>  ·  <span class="a">Tab</span> <span class="d">other side</span>  ·  <span class="a">F10</span> <span class="d">save</span>        </span></pre></div>
+  <p class="cap">When an app on a list opens, your screens go with it to its workspace (decided this morning), except in the first half-minute after login.</p>
 </section>
 
 <section id="sharing">
@@ -362,7 +368,8 @@ td code { white-space: nowrap; }
     <tr><td><kbd>Ctrl+W</kbd> <kbd>Ctrl+A</kbd> <kbd>Ctrl+S</kbd> <kbd>Ctrl+H</kbd> · <kbd>1</kbd>–<kbd>4</kbd></td><td>Workspaces, Apps, Sharing, Help</td></tr>
     <tr><td><kbd>↑</kbd> <kbd>↓</kbd> · <kbd>Tab</kbd></td><td>Pick in the list · move into the page</td></tr>
     <tr><td><kbd>r</kbd> <kbd>n</kbd> <kbd>d</kbd> <kbd>+</kbd> <kbd>-</kbd> (Workspaces)</td><td>Rename, new, delete, move up, move down</td></tr>
-    <tr><td><kbd>a</kbd> <kbd>m</kbd> <kbd>d</kbd> (Apps)</td><td>Add an app, move it to another workspace, remove it</td></tr>
+    <tr><td><kbd>Space</kbd> <kbd>&gt;</kbd> <kbd>&lt;</kbd> <kbd>a</kbd> <kbd>u</kbd> <kbd>Tab</kbd> (Apps)</td><td>Tick an app · send the ticked ones to the open workspace · send them back · Select All · Deselect All (rows showing only) · switch side</td></tr>
+    <tr><td><kbd>Enter</kbd> on a workspace (Apps)</td><td>Open it (the open one closes)</td></tr>
     <tr><td><kbd>Space</kbd> <kbd>d</kbd> (Sharing)</td><td>Share with the one above · stop sharing</td></tr>
     <tr><td><kbd>F10</kbd></td><td>Save, with the review first</td></tr>
     <tr><td><kbd>Esc</kbd></td><td>Back · close a question</td></tr>

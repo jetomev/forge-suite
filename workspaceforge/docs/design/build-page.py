@@ -11,12 +11,12 @@ body = f'''
 <div class="wrap">
 
 <header class="stack">
-  <div class="eyebrow">workspaceForge · design proposal · 9 October 2026</div>
+  <div class="eyebrow">workspaceForge · design proposal · 9 October 2026 · second draft, with Javier's changes</div>
   <h1>workspaceForge, screen by screen</h1>
   <p class="lede prose">Your workspaces, in the terminal: their names and order, which apps open on each one, and which screens keep the same apps across workspaces. Every screen is drawn here before any code is written.</p>
   <p class="prose">Today all of this lives in a settings file you'd have to edit by hand. workspaceForge is the friendly way in. It follows displayForge on purpose: the same frame, the same menu bar with underlined letters, a list on the left, the picked thing on the right, and a review before every save. Every drawing is exactly <b>100 columns</b> wide. The drawings show <b>your</b> six workspaces, your three screens and the apps on this desktop today.</p>
   <nav class="toc" aria-label="Contents">
-    <a href="#questions">Questions</a><a href="#workspaces">Workspaces</a><a href="#delete">Delete</a><a href="#apps">Apps</a><a href="#add">Add an app</a><a href="#sharing">Sharing</a><a href="#save">Save</a><a href="#keys">Keys</a><a href="#plan">How it gets built</a>
+    <a href="#questions">Questions</a><a href="#workspaces">Workspaces</a><a href="#new">New</a><a href="#delete">Delete</a><a href="#apps">Apps</a><a href="#sharing">Sharing</a><a href="#save">Save</a><a href="#keys">Keys</a><a href="#plan">How it gets built</a>
   </nav>
 </header>
 
@@ -28,13 +28,17 @@ body = f'''
       <li><b>Apps open on their workspace however you start them</b> (F-50, #55): typed in the launcher, Favorites, the bar, a terminal, or Steam starting a game.</li>
       <li><b>The screens go with the app</b> when it opens on another workspace.</li>
       <li><b>Shared screens need no special rule:</b> their windows already belong to every workspace in the group, and the fill order counts them.</li>
+      <li><b>Workspaces are yours to shape</b> (first draft review): <em>"If the user just want to have one, they only have one."</em> Create, name, edit and remove them as you please, from one up.</li>
+      <li><b>Apps is two tables with arrows between them</b> (first draft review): apps on no workspace on the left with <kbd>[x]</kbd> ticks; your workspaces on the right, one open at a time showing its apps; <kbd>&gt;&gt;</kbd> sends the ticked ones to the open workspace, <kbd>&lt;&lt;</kbd> sends them back. Select All and Deselect All on top of each table, acting only on the rows showing.</li>
     </ol>
   </div>
   <h2>Questions for you</h2>
-  <p class="prose">Each one has my recommendation in bold. Say "go" and they're all answered that way; change any you like.</p>
+  <p class="prose">Each one has my recommendation in bold. Say "go" and they're all answered that way; change any you like. The first draft's "up to nine" question is replaced by #1.</p>
   <ol class="prose">
-    <li><b>Up to nine workspaces</b> (Win + 1 … 9), any names, any order. <span class="rec">Recommended: yes.</span></li>
-    <li><b>One app, one workspace.</b> Adding Discord to Gaming takes it off Daily. <span class="rec">Recommended: yes.</span> Two workspaces for one app would need a rule for which one wins.</li>
+    <li><b>More than nine?</b> You can have as many as you like, but Win + 1 … 9 only reach the first nine; the rest are one click away in the bar's Workspaces list. And at least one always stays (the last one can be renamed, not deleted). <span class="rec">Recommended: yes.</span></li>
+    <li><b>One app, one workspace.</b> Your two tables already work that way: an app sits either on the left (no workspace) or in one workspace. To move Discord from Daily to Gaming: open Daily, send it back with <kbd>&lt;&lt;</kbd>, open Gaming, send it with <kbd>&gt;&gt;</kbd>. <span class="rec">Recommended: yes.</span></li>
+    <li><b>Filters on the apps table</b> (top right, as for every table): a <b>Find</b> box and a <b>Category</b> list (All, Games, Utilities…). Headings sort with a click, ▲ ▼ showing which way. <span class="rec">Recommended: these two.</span> Any other filter you'd want?</li>
+    <li><b>The words:</b> "Select All" and "Deselect All" are yours. nogForge says "Tick All" and "Untick All" for the same thing. <span class="rec">Recommended: yours everywhere; nogForge follows in its next release.</span></li>
     <li><b>Deleting a workspace that has windows open:</b> it asks where they go (Daily picked for you). Nothing is ever closed. <span class="rec">Recommended: yes.</span></li>
     <li><b>The lists start from the launcher's groups</b>, once: Internet on Daily (11 apps), Office and Development on Work (15), Multimedia on Entertainment (6), Games on Gaming (7), the monitors on Monitoring (5), Settings on Settings (14); the other 26 open where you are. After that the lists are the only place this is set, and the launcher follows them too. <span class="rec">Recommended: yes.</span> Heads-up: Discord, Dropbox, Insync and the VPN start by themselves at login. They'll go to Daily quietly, without moving your screens.</li>
     <li><b>Saving:</b> <kbd>F10</kbd> shows a review, then it applies <b>at once</b>, no logout. No countdown like displayForge's: nothing here can black out a screen. <span class="rec">Recommended: yes.</span></li>
@@ -46,8 +50,14 @@ body = f'''
 
 <section id="workspaces">
   <h2>1 · Workspaces</h2>
-  <p class="prose">Your workspaces down the left, with the Win key that reaches each one; ● marks the one on screen now. On the right, the picked one: its name, how many apps open there, whether it shares a screen, and what's open on it right now. Rename, add, delete and reorder from here. Moving a workspace up or down changes its Win number. At the bottom, the main switch: workspaces that span every screen, or Sway's own way, where each screen switches by itself.</p>
+  <p class="prose">Yours to shape: one workspace or a dozen, any names, any order. Your workspaces down the left, with the Win key that reaches each one; ● marks the one on screen now. On the right, the picked one: its name, how many apps open there, whether it shares a screen, and what's open on it right now. Rename, create, delete and reorder from here. Moving a workspace up or down changes its Win number. At the bottom, the main switch: workspaces that span every screen, or Sway's own way, where each screen switches by itself.</p>
   {T("workspaces")}
+</section>
+
+<section id="new">
+  <h2>A new workspace</h2>
+  <p class="prose">A name and where it goes in the order. It starts empty; give it apps on the Apps page.</p>
+  {T("new")}
 </section>
 
 <section id="delete">
@@ -58,14 +68,10 @@ body = f'''
 
 <section id="apps">
   <h2>2 · Apps</h2>
-  <p class="prose">This is F-50. Pick a workspace and see the apps that open on it, however you start them. The numbers on the left are real: what this desktop's launcher would put on each workspace today. "Where you are" holds the apps with no workspace (GIMP, the calculator, KeePassXC…), which open on whatever is on screen. The switch at the bottom is your answer from this morning: the screens go with the app.</p>
+  <p class="prose">Your layout. <b>On the left</b>, every app that's on no workspace yet (it opens wherever you are), in our table style: ticks, its category, every other row shaded, headings that sort, and the filters top right. <b>On the right</b>, your workspaces. Click one and it opens downward to show its apps; click another and the first one closes. <b>Between them</b>, <kbd>&gt;&gt;</kbd> sends the ticked apps from the left into the open workspace, and <kbd>&lt;&lt;</kbd> sends the ticked ones from the open workspace back to the left. Select All and Deselect All tick only the rows you can see: the filtered list on the left, the open workspace on the right.</p>
+  <p class="prose">In the drawing, the left list is filtered to Utilities (16 of the 26 apps on no workspace), Winetricks is ticked, and Gaming is open. One press of <kbd>&gt;&gt;</kbd> and Winetricks opens on Gaming from then on. The counts are real: what this desktop's launcher would put on each workspace today.</p>
   {T("apps")}
-</section>
-
-<section id="add">
-  <h2>Adding an app</h2>
-  <p class="prose">Type to search every installed app. Each one shows where it opens now, so you can see that adding Discord to Gaming takes it off Daily.</p>
-  {T("add")}
+  <p class="cap">When an app on a list opens, your screens go with it to its workspace (decided this morning), except in the first half-minute after login.</p>
 </section>
 
 <section id="sharing">
@@ -88,7 +94,8 @@ body = f'''
     <tr><td><kbd>Ctrl+W</kbd> <kbd>Ctrl+A</kbd> <kbd>Ctrl+S</kbd> <kbd>Ctrl+H</kbd> · <kbd>1</kbd>–<kbd>4</kbd></td><td>Workspaces, Apps, Sharing, Help</td></tr>
     <tr><td><kbd>↑</kbd> <kbd>↓</kbd> · <kbd>Tab</kbd></td><td>Pick in the list · move into the page</td></tr>
     <tr><td><kbd>r</kbd> <kbd>n</kbd> <kbd>d</kbd> <kbd>+</kbd> <kbd>-</kbd> (Workspaces)</td><td>Rename, new, delete, move up, move down</td></tr>
-    <tr><td><kbd>a</kbd> <kbd>m</kbd> <kbd>d</kbd> (Apps)</td><td>Add an app, move it to another workspace, remove it</td></tr>
+    <tr><td><kbd>Space</kbd> <kbd>&gt;</kbd> <kbd>&lt;</kbd> <kbd>a</kbd> <kbd>u</kbd> <kbd>Tab</kbd> (Apps)</td><td>Tick an app · send the ticked ones to the open workspace · send them back · Select All · Deselect All (rows showing only) · switch side</td></tr>
+    <tr><td><kbd>Enter</kbd> on a workspace (Apps)</td><td>Open it (the open one closes)</td></tr>
     <tr><td><kbd>Space</kbd> <kbd>d</kbd> (Sharing)</td><td>Share with the one above · stop sharing</td></tr>
     <tr><td><kbd>F10</kbd></td><td>Save, with the review first</td></tr>
     <tr><td><kbd>Esc</kbd></td><td>Back · close a question</td></tr>

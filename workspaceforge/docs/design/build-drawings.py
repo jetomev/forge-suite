@@ -131,7 +131,7 @@ def ws_list(sel, counts=False, width=26):
 def s_workspaces():
     L = header("Workspaces")
     L += [blank]
-    left = ["{m: Win   Workspace     on now }"] + ws_list("Gaming") + ["", "", "{d: up to 9  (Win + 1 … 9)}"]
+    left = ["{m: Win   Workspace     on now }"] + ws_list("Gaming") + ["", "", "{d: as many as you like;}", "{d: Win + 1 … 9 reach the}", "{d: first nine}"]
     right = [
         "{v b:4 · Gaming}   {m:Win + 4 switches all three screens here}",
         "",
@@ -182,51 +182,87 @@ def s_delete():
     return pad(L)
 
 
-# ---- 2 · Apps -----------------------------------------------------------------------------------
+# ---- 2 · Apps: two tables and the arrows between them (Javier's layout, 2026-10-09) ---------
+
+UTILITIES = ["Ark", "bitlaForge", "Bulk Rename", "Flatseal", "Galculator", "hypeForge Help & Keys",
+             "KeePassXC", "KWrite", "Midnight Commander", "Raspberry Pi Imager", "Spectacle", "Termius",
+             "Vim", "Winetricks", "xgps", "xgpsspeed"]
+LW, MW, RW = 45, 8, 45   # left table, the arrows, right table: 45 + 8 + 45 + 2 margins = 100
+
+
+def trow(ticked, name, cat, width, shade, cur=False):
+    """One table row: [x] the app, its category; every other row shaded (our table formatting)."""
+    box_ = "[x]" if ticked else "[ ]"
+    txt = f" {box_} {name}"
+    txt = txt + " " * (width - len(txt) - len(cat) - 1) + cat + " "
+    if cur:
+        return "{sel:" + txt + "}"
+    return "{fld:" + txt + "}" if shade else txt
+
+
+def theading(width):
+    h = "     App ▲"
+    return "{b:" + h + " " * (width - len(h) - len("Category ") ) + "Category }"
+
+
+def fit(s, width):
+    n = len(vis(s))
+    if n > width:
+        sys.exit(f"CELL TOO WIDE ({n} > {width}): {vis(s)!r}")
+    return s + " " * (width - n)
+
 
 def s_apps():
     L = header("Apps")
     L += [blank]
-    left = ["{m: Win   Workspace      apps }"] + ws_list("Gaming", counts=True) + [
-        "", " –  Where you are     26 ", "", "{d: each app opens on ONE}", "{d: workspace, or where}", "{d: you are}"]
-    right = ["{v b:Apps that open on Gaming}   {m:however you start them}", ""]
-    for i, a in enumerate(APPS["Gaming"]):
-        txt = f"  {a}"
-        g = "{d:" + GROUP[a] + "}"
-        row = txt + " " * (36 - len(txt)) + g
-        right.append("{sel:" + txt + " " * (36 - len(txt)) + "}" + g if i == 1 else row)
-    right += ["",
-              "{btn: Add an App (a) }  {btn: Move To… (m) }  {btn: Remove (d) }",
-              "",
-              "{b:When one opens}  {ok:● the screens go with it}",
-              "                {d:not in the first 30 s after login, so apps}",
-              "                {d:that start by themselves don't move you}"]
-    for i in range(max(len(left), len(right))):
-        a = left[i] if i < len(left) else ""
+    left = ["{v b:Apps on no workspace}" + " " * 13 + "{m:16 of 26}",
+            fit(" " * 9 + "{d:Find} {fld:          }  {foc: Utilities ▾ }", LW),
+            "{btn: Select All (a) }  {btn: Deselect All (u) }",
+            theading(LW)]
+    for i, n in enumerate(UTILITIES):
+        left.append(trow(n == "Winetricks", n, "Utilities", LW, i % 2 == 1, cur=n == "Winetricks"))
+    right = ["{v b:Workspaces}" + " " * 29 + "{m:6}"]
+    for i, n in enumerate(WS, 1):
+        k = f"{len(APPS[n])} apps"
+        if n == "Gaming":
+            head = f" ▾ {i}  {n}"
+            right.append("{act:" + head + " " * (RW - len(head) - len(k) - 1) + k + " }")
+            right.append("{btn: Select All (a) }  {btn: Deselect All (u) }")
+            right.append(theading(RW))
+            for j, a in enumerate(APPS["Gaming"]):
+                right.append(trow(False, a, "Games", RW, j % 2 == 1))
+        else:
+            head = f" ▸ {i}  {n}"
+            right.append(head + " " * (RW - len(head) - len(k) - 1) + "{m:" + k + "} ")
+    mid = [""] * 9 + ["{pri:  >>  }", "{d: send}", "", "", "{btn:  <<  }", "{d: back}"]
+    h = max(len(left), len(right))
+    for i in range(h):
+        a = fit(left[i] if i < len(left) else "", LW)
+        m = fit(" " + (mid[i] if i < len(mid) else ""), MW)
         b = right[i] if i < len(right) else ""
-        L.append(col(a, b))
-    L += [blank, hint("{a:↑ ↓} {d:pick}  ·  {a:Tab} {d:the apps}  ·  {a:a} {d:add}  ·  {a:m} {d:move}  ·  {a:d} {d:remove}  ·  {a:F10} {d:save}  ·  {a:F1} {d:help}")]
+        L.append(line(" " + a + m + b))
+    L += [blank, hint("{a:Space} {d:tick}  ·  {a:>} {d:send to the open workspace}  ·  {a:<} {d:send back}  ·  {a:Tab} {d:other side}  ·  {a:F10} {d:save}")]
     return pad(L)
 
 
-# ---- 2b · Add an app ----------------------------------------------------------------------------
+# ---- 1c · A new workspace -----------------------------------------------------------------------
 
-def s_add():
-    L = header("Apps")
-    L += [blank] * 2
-    rows = ["{b:Search}  {foc: disc▏                                      }",
-            "",
-            "{m:App                         now opens on}",
-            "{sel: Discord                     Daily: moves to Gaming     }",
-            " Discover                    {d:where you are}",
-            "",
-            "{d:Every installed app, as the launcher lists them (95). One already}",
-            "{d:on another workspace moves here: an app opens on ONE workspace.}",
-            "",
-            "        {pri: Add to Gaming (Enter) }   {btn: Back (Esc) }"]
-    L += [line(" " * 14 + r) for r in box("Add an app to Gaming", rows, 72)]
-    L += [blank] * 6
-    L += [hint("{d:type to search}  ·  {a:↑ ↓} {d:pick}  ·  {a:Enter} {d:add}  ·  {a:Esc} {d:back}")]
+def s_new():
+    L = header("Workspaces")
+    L += [blank] * 5
+    L += [line(" " * 17 + r) for r in box("New workspace", [
+        "",
+        "{b:Name}         {foc: Studio▏                         }",
+        "",
+        "{b:Goes after}   {fld: 6 · Settings          ▾ }",
+        "",
+        "{d:It becomes 7 · Studio: Win + 7 takes every screen there.}",
+        "{d:It starts with no apps; give it some on the Apps page.}",
+        "",
+        "          {pri: Create (Enter) }     {btn: Back (Esc) }",
+        ""], 66)]
+    L += [blank] * 7
+    L += [hint("{d:type a name}  ·  {a:Tab} {d:where it goes}  ·  {a:Enter} {d:create}  ·  {a:Esc} {d:back}")]
     return pad(L)
 
 
@@ -287,7 +323,7 @@ def s_save():
     return pad(L)
 
 
-SCREENS = {"workspaces": s_workspaces(), "delete": s_delete(), "apps": s_apps(), "add": s_add(),
+SCREENS = {"workspaces": s_workspaces(), "delete": s_delete(), "new": s_new(), "apps": s_apps(),
            "sharing": s_sharing(), "save": s_save()}
 
 if __name__ == "__main__":
