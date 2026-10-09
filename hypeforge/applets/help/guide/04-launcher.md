@@ -2,18 +2,22 @@
 
 **What it does:** **Win + Space**, or a click on the **KognogOS emblem** at the left of the bar,
 opens the launcher, right under the emblem; press again to close it. Its first screen lists **Favorites**,
-your workspaces as **sections**, then **All apps** and **Help & Keys** — apps only. Lock, log out,
+the **groups** every desktop uses — Development, Games, Graphics, Internet, Multimedia, Office, Settings,
+System, Utilities (and Education, Science or Other once something belongs there) — then **All apps**
+and **Help & Keys** — apps only. Lock, log out,
 reboot and shut down are on the bar's **⏻** button.
 
 ## How to use it
 
 - **Type** to search every app straight away, then **Enter**.
-- **Pick a section** (for example *2. Work*) to see its apps. An app picked there opens **in
-  that workspace**, and window placement puts it in its spot.
-- **Settings** (*6. Settings*) starts with **hypeForge Settings**, the control centre, then our own
-  apps: displayForge, nogForge, grubForge, alacrittyForge, bitlaForge and Help & Keys, then the
-  other settings programs. Picked here, they open on the Settings workspace, floating, with a light
-  border.
+- **Pick a group** to see its apps. Every app is in the group it says it belongs to (its own
+  launcher entry carries that), so a new app you install shows up where you'd look for it.
+- **Where it opens:** picked from its group, an app opens on its workspace — Internet on 1 (Daily),
+  Office and Development on 2 (Work), Multimedia on 3 (Entertainment), Games on 4 (Gaming),
+  Settings on 6 — and the system monitors on 5 (Monitoring), Alacritty on 2. Graphics, System and
+  Utilities open on the screen you are on. Window placement then puts it in its spot.
+- **Settings** starts with **hypeForge Settings**, the control centre, then every setting:
+  displayForge, nogForge, grubForge, alacrittyForge, printers, network, and the rest.
 - **All apps** lists everything. **Back** returns to the first screen; **Esc** closes.
 - **Win + D** is the plain search, without sections.
 
@@ -32,7 +36,11 @@ The list follows the `favourites` setting below — after changing it by hand, r
 - `favourites` — your apps at the top, in your order
 
 The emblem's picture: `~/.config/hypeforge/bar/launcher.png` — put any picture there to change it.
-- one `[[section]]` per section: `name`, `icon`, `workspace`, `apps`, `categories`
+- one `[[section]]` per group: `name`, `icon`, `workspace`, `categories` (the standard kinds it
+  holds), `apps` (only for apps that declare no kind); `other = true` marks the catch-all
+- `claim_order` — when an app says several kinds, the first group here wins (Settings over System,
+  Games over Internet)
+- `[workspaces]` — an app's own workspace, over its group's
 - `[power]` — what the bar's ⏻ menu runs for Lock, Log Out, Reboot and Shut Down
 
 The launcher's look (colours, size, corners): `~/.config/sway/fuzzel/fuzzel.ini`.

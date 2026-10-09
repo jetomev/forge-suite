@@ -97,22 +97,34 @@ def load():
 
 
 def sort_into_sections(cfg, everything):
-    """[(section, [app ids])] — explicit apps first, then the rest by their categories."""
+    """[(section, [app ids])] in the order shown, empty ones left out (Javier, 2026-10-08: the
+    standard groups every desktop uses, so people know where an app is or belongs).
+
+    An app goes to the section that lists it in `apps` (for apps that declare no category);
+    otherwise to the first section in `claim_order` whose categories it declares (an app with
+    Settings and System is a setting; one with Game and Network is a game); otherwise to the
+    section marked `other = true`."""
     sections = cfg.get("section", [])
-    claimed, out = set(), []
-    for s in sections:
-        chosen = [a for a in s.get("apps", []) if a in everything]
-        claimed.update(chosen)
-        out.append([s, chosen])
+    by_name = {s["name"]: s for s in sections}
+    order = [by_name[n] for n in cfg.get("claim_order", []) if n in by_name] or sections
+    other = next((s for s in sections if s.get("other")), None)
+    members = {s["name"]: [a for a in s.get("apps", []) if a in everything] for s in sections}
+    claimed = {a for m in members.values() for a in m}
     for app_id in sorted(everything, key=lambda a: everything[a]["name"].lower()):
         if app_id in claimed:
             continue
-        for pair in out:
-            if everything[app_id]["categories"] & set(pair[0].get("categories", [])):
-                pair[1].append(app_id)
-                claimed.add(app_id)
-                break
-    return out
+        cats = everything[app_id]["categories"]
+        home = next((s for s in order if cats & set(s.get("categories", []))), other)
+        if home is not None:
+            members[home["name"]].append(app_id)
+    return [(s, members[s["name"]]) for s in sections if members[s["name"]]]
+
+
+def workspace_for(cfg, app_id, section_workspace):
+    """Where an app picked from its group opens: its own line in [workspaces] if it has one,
+    else its group's workspace, else ("") the screen you are on."""
+    own = cfg.get("workspaces", {})
+    return own[app_id] if app_id in own else section_workspace
 
 
 # ---- The menus -------------------------------------------------------------------------------
@@ -253,8 +265,8 @@ def main():
         first.append(("Favorites", "favorites", ("menu", "Favorites", favourites, None)))
     for s, members in sections:
         n = s.get("workspace")
-        first.append((f"{f'{n}. ' if n else ''}{s['name']}", s.get("icon", "applications-other"),
-                      ("menu", s["name"], members, n)))
+        # the group's name only: groups are kinds of app now, not workspaces (Javier, 10-08)
+        first.append((s["name"], s.get("icon", "applications-other"), ("menu", s["name"], members, n)))
     first.append(("All apps", "applications-all", ("menu", "All apps", by_name, None)))
     first.append(("Help & Keys", "help-browser", ("help",)))
     # Power lives on the bar's ⏻ button now; the launcher is for apps only (Javier, 2026-10-05)
@@ -279,7 +291,7 @@ def main():
         if sub is None:
             return
         if sub > 0:
-            return launch(everything[members[sub - 1]], workspace)
+            return launch(everything[members[sub - 1]], workspace_for(cfg, members[sub - 1], workspace))
         choice = pick(cfg, [(t, i) for t, i, _ in first], "❯  ", lines_shown=shown)  # Back
 
 

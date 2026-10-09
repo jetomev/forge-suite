@@ -7,6 +7,12 @@
 
 ## 2026-10-08 (late)
 
+### D-64 · The launcher's groups are the standard kinds of app; where an app opens is a separate choice
+**Decided by Javier:** *"I know we named them like the Workspaces, but in reality what should apply is the standard names all OS uses to classify the applications… so when people install something, or want to use something, they know where they are or should be."* On where they open: *"I will leave that to you."*
+- **Groups:** Development, Education, Games, Graphics, Internet, Multimedia, Office, Science, Settings, System, Utilities, Other — the freedesktop.org main categories, under the names GNOME, KDE and XFCE show. An app goes where its own desktop entry's Categories put it; when it names several, `claim_order` decides (Settings > Games > Multimedia > Graphics > Office > Development > Education > Science > Internet > System > Utilities). Apps that declare nothing (WoW, Chrome web apps, Rofi) are placed by hand. Empty groups are hidden; nothing is left only in "All apps" (95 of 95 placed).
+- **Where they open (Claude's choice, keeping the old places):** picked from its group, an app opens on the group's workspace — Internet 1, Office and Development 2, Multimedia 3, Games 4, Settings 6 — or on its own line in `[workspaces]` (the monitors on 5, Alacritty on 2); Graphics, System and Utilities open where you are. Search and Favorites still open where you are.
+- Replaces D-52's "the first screen is the workspaces". Under the standard, **bitlaForge and Help & Keys move from Settings (D-63) to Utilities** (what their own entries say); hypeForge Settings stays first in Settings.
+
 ### D-63 · The launcher's Forge Suite group is gone: its apps live in Settings, with hypeForge Settings first
 **Decided by Javier:** *"Everything inside the Forge Suite app launcher group, move it to Settings, and delete the Forge Suite group/folder. Then add the hypeForge Settings app to Settings too."*
 - The **Settings** section lists hypeForge Settings, then displayForge, nogForge, grubForge, alacrittyForge, bitlaForge and Help & Keys, then the printer settings and the other settings programs.

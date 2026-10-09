@@ -18,55 +18,109 @@ fuzzel_config = "~/.config/sway/fuzzel/fuzzel.ini"
 # Always at the top of Favourites, in this order. Empty = the Favourites line is hidden.
 favourites = []
 
-# One block per section, in the order shown. `icon` is an icon name from the icon theme.
-# `workspace` is the workspace number it opens apps
-# in (Win + that number; empty = the workspace on screen). `apps` are placed here on purpose;
-# `categories` catch every other app of that kind (from the app's own desktop entry), so the
-# menu is useful before anything is sorted. An app shows in the first section that claims it.
-[[section]]
-name = "Daily"
-icon = "internet-web-browser"
-workspace = 1
-apps = ["google-chrome", "brave-browser"]
-categories = ["WebBrowser", "Email", "Network", "Chat", "InstantMessaging"]
+# (Above the groups on purpose: written after them, the file would make it part of the last
+# group.) When an app declares several kinds, the first group here that matches wins: a settings app
+# that is also a "System" app is a setting; a game that also says "Network" is a game.
+claim_order = ["Settings", "Games", "Multimedia", "Graphics", "Office", "Development", "Education",
+               "Science", "Internet", "System", "Utilities"]
 
+# The groups (Javier, 2026-10-08, D-64): the standard kinds of app every desktop uses — GNOME, KDE,
+# XFCE, Windows' and macOS' own folders follow the same idea — so anyone who installs something
+# knows where it is. An app lands where its own desktop entry says it belongs (its Categories,
+# the freedesktop.org list every app ships with); a group with nothing in it is not shown.
+#   name / icon   what the launcher shows
+#   categories    the freedesktop.org main categories this group holds
+#   apps          only for apps that declare no category (web apps, games installed by hand…)
+#   workspace     where an app picked from this group opens (Win + that number); "" = the screen
+#                 you are on. Groups are kinds of app, workspaces are places: the two are separate.
+#   other = true  the group for anything no other group claims
 [[section]]
-name = "Work"
+name = "Development"
 icon = "applications-development"
 workspace = 2
-apps = ["Alacritty", "com.anthropic.Claude", "fresh", "onlyoffice-desktopeditors", "obsidian"]
-categories = ["Development", "Office", "TextEditor", "TerminalEmulator"]
+apps = ["chrome-mjoklplbddabcmpepnokjaffbmgbkkgg-Default", "chrome-fmpnliohjhemenmnlpbfagaolkdacoja-Default"]   # GitHub, Claude (web apps)
+categories = ["Development"]
 
 [[section]]
-name = "Entertainment"
-icon = "applications-multimedia"
-workspace = 3
-apps = ["spotify", "mpv"]
-categories = ["AudioVideo", "Audio", "Video", "Player"]
+name = "Education"
+icon = "applications-education"
+workspace = ""
+categories = ["Education"]
 
 [[section]]
-name = "Gaming"
+name = "Games"
 icon = "applications-games"
 workspace = 4
-apps = ["steam", "net.lutris.battlenet-1", "World_of_Warcraft_Pi5", "net.lutris.Lutris"]
+apps = ["World_of_Warcraft_Pi5", "chrome-lmfjplffabieabgoopgbifbdkmaniojo-Default"]   # WoW (our realm), EVEFORGE (web app)
 categories = ["Game"]
 
 [[section]]
-name = "Monitoring"
-icon = "utilities-system-monitor"
-workspace = 5
-apps = ["btop", "nvtop"]
-categories = ["Monitor"]
+name = "Graphics"
+icon = "applications-graphics"
+workspace = ""
+categories = ["Graphics"]
+
+[[section]]
+name = "Internet"
+icon = "applications-internet"
+workspace = 1
+apps = ["chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Default"]   # WhatsApp Web (web app)
+categories = ["Network"]
+
+[[section]]
+name = "Multimedia"
+icon = "applications-multimedia"
+workspace = 3
+categories = ["AudioVideo", "Audio", "Video"]
+
+[[section]]
+name = "Office"
+icon = "applications-office"
+workspace = 2
+categories = ["Office"]
+
+[[section]]
+name = "Science"
+icon = "applications-science"
+workspace = ""
+categories = ["Science"]
 
 [[section]]
 name = "Settings"
 icon = "preferences-system"
 workspace = 6
-# hypeForge Settings first, then the Forge apps (the Forge Suite group moved here and was removed,
-# Javier 2026-10-08; D-63), then the rest
-apps = ["hypeforge-settings", "displayforge", "nogforge", "grubforge", "alacrittyforge", "bitlaforge",
-        "hypeforge-help", "system-config-printer"]
-categories = ["Settings", "System", "HardwareSettings", "Printing"]
+apps = ["hypeforge-settings", "rofi-theme-selector"]   # the control centre first (D-63); Rofi's theme picker declares no category
+categories = ["Settings"]
+
+[[section]]
+name = "System"
+icon = "applications-system"
+workspace = ""
+categories = ["System"]
+
+[[section]]
+name = "Utilities"
+icon = "applications-utilities"
+workspace = ""
+apps = ["rofi"]
+categories = ["Utility"]
+
+[[section]]
+name = "Other"
+icon = "applications-other"
+workspace = ""
+other = true
+categories = []
+
+# An app's own workspace, over its group's (picked from its group). These keep the places
+# Javier set before the groups changed: the monitors on Monitoring, Alacritty on Work.
+[workspaces]
+"btop" = 5
+"htop" = 5
+"nvtop" = 5
+"lstopo" = 5
+"org.kde.plasma-systemmonitor" = 5
+"Alacritty" = 2
 
 # The bottom of the first screen, top to bottom. Log Out, Reboot and Shutdown ask first
 # ("No" is selected, so a stray Enter does nothing). Lock: gtklock (its look:
