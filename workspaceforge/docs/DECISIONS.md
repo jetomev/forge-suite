@@ -4,6 +4,9 @@
 
 ## 2026-10-09
 
+### D-7 · Sharing is off the menu for now (Javier)
+After his first run: *"Sharing. Not working for me, have to think better about this section."* and then *"take sharing off for now."* The page is gone from the menu and the manual; its code stays in `app.py` (SharingView), dormant. Saving keeps whatever the settings file says about sharing (nothing is shared on the desktop today). It comes back when Javier has rethought it.
+
 ### D-6 · 0.1.0 stops at nine workspaces (Claude, told to Javier)
 The approved answer 1 (D-5) was *as many as you like; Win + 1 … 9 reach the first nine*. Building it showed the Workspaces applet names each screen's part of a workspace `<n + 10 × screen>:<name>`, which only works up to nine: a tenth would clash with the second screen's first. Changing that naming renames every workspace on the desktop, so it gets its own step with its own bench test. **0.1.0 allows one to nine** and says so on screen ("9 is the most for now"); more than nine is in the TODO.
 

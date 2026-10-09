@@ -11,22 +11,22 @@
 
 # workspaceForge
 
-**Your workspaces, in the terminal.** On the KognogOS desktop a workspace covers all your screens at once: Win + 4 takes every screen to Gaming. workspaceForge is where you set them up: their names and order, **which apps open on each one** (however you start them), and which screens keep the same apps across workspaces. Today all of that lives in a settings file edited by hand; workspaceForge is the friendly way in.
+**Your workspaces, in the terminal.** On the KognogOS desktop a workspace covers all your screens at once: Win + 4 takes every screen to Gaming. workspaceForge is where you set them up: their names and order, **which apps open on each one** (however you start them). Today all of that lives in a settings file edited by hand; workspaceForge is the friendly way in.
 
 ## What it does
 
 - **Workspaces:** name them, add up to nine for now (Win + 1 … 9), reorder, delete. Deleting one never closes a window; its windows move to a workspace you pick.
 - **Apps:** each workspace has a list of the apps that open on it. Steam on Gaming, Spotify on Entertainment. Start an app from the launcher, a terminal or Steam itself, and it opens on its workspace, with your screens following it. Apps on no list open where you are.
-- **Sharing:** a screen can keep the same apps across several workspaces (say, your chat on the left screen in Daily, Work and Entertainment) while the other screens change.
+- **Sharing** (a screen keeping the same apps across workspaces) is being rethought by Javier and comes back later; the file's sharing is kept as it is.
 - **Saves with a review**, a backup first, and applies at once. No logout.
 
 It does **one** job on purpose: where windows sit on a screen and which ones float is a separate Forge app.
 
 ## How it looks
 
-| Workspaces | Apps | Sharing |
-|---|---|---|
-| ![Workspaces](docs/images/workspaces.png) | ![Apps](docs/images/apps.png) | ![Sharing](docs/images/sharing.png) |
+| Workspaces | Apps |
+|---|---|
+| ![Workspaces](docs/images/workspaces.png) | ![Apps](docs/images/apps.png) |
 
 ## Status
 

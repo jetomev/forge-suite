@@ -12,7 +12,7 @@ from pathlib import Path
 from textual.widgets import Collapsible, Input, OptionList
 
 from workspaceforge import model as M
-from workspaceforge.app import AppsView, ShareCell, SharingView, TickTable, WorkspaceForgeApp, WorkspacesView
+from workspaceforge.app import AppsView, TickTable, WorkspaceForgeApp, WorkspacesView
 from workspaceforge.live import NoDesktop
 
 FILE = '''
@@ -77,16 +77,14 @@ class Pages(unittest.TestCase):
     # -- the frame -------------------------------------------------------------------------------------
     def test_the_menu_and_its_keys(self):
         app = self.make()
-        self.assertEqual([m["title"] for m in app.MENU], ["Workspaces", "Apps", "Sharing", "Help", "Quit"])
-        self.assertEqual([m.get("acc") for m in app.MENU[:4]], ["w", "a", "s", "h"])
+        self.assertEqual([m["title"] for m in app.MENU], ["Workspaces", "Apps", "Help", "Quit"],
+                         "Sharing is off the menu for now (D-7)")
+        self.assertEqual([m.get("acc") for m in app.MENU[:3]], ["w", "a", "h"])
 
         async def go():
             async with app.run_test(size=(100, 30)) as pilot:
                 await pilot.press("2")
                 self.assertTrue(app.query_one("#sec-apps").display)
-                await pilot.press("ctrl+s")
-                await pilot.pause()
-                self.assertTrue(app.query_one("#sec-sharing").display)
                 await pilot.press("ctrl+w")
                 await pilot.pause()
                 self.assertTrue(app.query_one("#sec-workspaces").display)
@@ -269,30 +267,22 @@ class Pages(unittest.TestCase):
                 self.assertEqual(pool.shown_ids(), ["winetricks", "gimp", "galculator"])
         run(go())
 
-    # -- 3 · Sharing ---------------------------------------------------------------------------------------
-    def test_a_switch_per_cell(self):
+    # -- sharing, off the menu for now (D-7) -------------------------------------------------------------
+    def test_saving_keeps_the_files_sharing(self):
+        self.path.write_text(FILE.replace('"DP-2" = []', '"DP-2" = [["Daily", "Work"]]'))
         app = self.make()
 
         async def go():
             async with app.run_test(size=(100, 30)) as pilot:
-                await pilot.press("3")
+                await pilot.pause()
+                app.session.rename(self.uid(app, "Gaming"), "Games")
+                await pilot.press("f10")
+                await pilot.pause()
+                await pilot.press("enter")
                 await pilot.pause()
                 await pilot.pause()
-                cells = list(app.query(ShareCell))
-                self.assertEqual(len(cells), 4 * 3)
-                left_daily = app.query_one(f"#sc-{self.uid(app, 'Daily')}-1", ShareCell)
-                left_work = app.query_one(f"#sc-{self.uid(app, 'Work')}-1", ShareCell)
-                left_daily.focus()
-                await pilot.press("space")
-                self.assertEqual(app.session.change_count, 0, "one cell alone shares nothing")
-                await pilot.press("down", "space")
-                await pilot.pause()
-                self.assertIs(app.focused, left_work, "arrows move between the switches")
-                self.assertIn(("Sharing · DP-2", "not shared", "Daily, Work"), app.session.changes())
-                await pilot.press("escape")
-                await pilot.pause()
-                self.assertEqual(app.session.change_count, 0, "Esc undoes the sharing changes")
         run(go())
+        self.assertEqual(tomllib.loads(self.path.read_text())["share"]["DP-2"], [["Daily", "Work"]])
 
     # -- saving and quitting -------------------------------------------------------------------------------
     def test_save_reviews_backs_up_moves_windows_and_reloads(self):
@@ -356,7 +346,7 @@ class Drawing(unittest.TestCase):
 
             async def go():
                 async with app.run_test(size=(100, 30)) as pilot:
-                    for key in ("1", "2", "3"):
+                    for key in ("1", "2"):
                         await pilot.press(key)
                         await pilot.pause()
                         for w in app.screen.query("Button"):

@@ -76,13 +76,8 @@ async def shots():
         pool = app.query_one("#wf-pool")
         pool.set_tick("winetricks", True)
         await shot("apps")
-        await pilot.press("3")
-        for name in ("Daily", "Work", "Entertainment"):
-            se.set_shared("DP-2", uid(name), True)
-        app.query_one("#sec-sharing").shown = ()
-        app.query_one("#sec-sharing").refresh_view()
+        app.session.assign(["winetricks"], uid("Gaming"))
         app.refresh_state()
-        await shot("sharing")
         await pilot.press("f10")
         await shot("save")
 

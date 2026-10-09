@@ -881,23 +881,22 @@ class WorkspaceForgeApp(ForgeApp):
     MENU = [
         {"id": "workspaces", "title": "Workspaces", "kind": "section"},
         {"id": "apps", "title": "Apps", "kind": "section"},
-        {"id": "sharing", "title": "Sharing", "kind": "section"},
         {"id": "help", "title": "Help", "kind": "menu", "items": [
             ("Manual", "m", "manual"), ("Keys", "k", "shortcuts"), ("License", "l", "license"),
             ("About", "a", "about")]},
         {"id": "quit", "title": "Quit", "kind": "action", "action": "quit"},
     ]
     SHORTCUTS = [
-        ("1-4, Ctrl+letter", "go to a menu entry: 1 Workspaces · 2 Apps · 3 Sharing · 4 Help"),
+        ("1-3, Ctrl+letter", "go to a menu entry: 1 Workspaces · 2 Apps · 3 Help"),
         ("↑ ↓", "pick a workspace (Workspaces) · move in a table (Apps)"),
         ("n · e · d", "new · edit · delete a workspace (Workspaces)"),
         ("+ · -", "move the picked workspace up · down: its Win number changes"),
-        ("Space", "tick an app (Apps) · switch a cell between Own and Shared (Sharing)"),
+        ("Space", "tick an app (Apps)"),
         ("> · <", "send the ticked apps to the open workspace · back to the list (Apps)"),
         ("a · u", "select all · deselect all, only the rows showing (Apps)"),
         ("Tab / Shift+Tab", "next / previous field, table or button"),
         ("F10", "save, with a review first"),
-        ("Esc", "cancel a new name or an edit · undo the sharing changes · close a window"),
+        ("Esc", "cancel a new name or an edit · close a window"),
         ("M", "the manual"),
         ("?", "this list"),
         ("Q or Ctrl+Q", "quit; asks to save anything not saved (not inside hypeForge Settings)"),
@@ -935,7 +934,8 @@ class WorkspaceForgeApp(ForgeApp):
     def compose_sections(self) -> ComposeResult:
         yield WorkspacesView(self.session, self.live, id="sec-workspaces")
         yield AppsView(self.session, self.installed, id="sec-apps")
-        yield SharingView(self.session, id="sec-sharing")
+        # Sharing is off the menu for now (Javier, 2026-10-09, D-7: "have to think better about this
+        # section"); SharingView stays below for when it comes back. Saving keeps the file's sharing.
 
     def on_mount(self) -> None:
         super().on_mount()
@@ -959,8 +959,6 @@ class WorkspaceForgeApp(ForgeApp):
         elif section_id == "apps":
             self.query_one(AppsView).refresh_view()
             self.call_after_refresh(self.query_one("#wf-pool").focus)
-        elif section_id == "sharing":
-            self.query_one(SharingView).refresh_view()
 
     def refresh_state(self) -> None:
         n = self.session.change_count
@@ -981,7 +979,6 @@ class WorkspaceForgeApp(ForgeApp):
             self.query_one(WorkspacesView).renamed = None
             self.query_one(WorkspacesView).refresh_view()
             self.query_one(AppsView).refresh_view()
-            self.query_one(SharingView).refresh_view()
             self.refresh_state()
             self.notify("Changes discarded. Nothing was changed.")
 
@@ -1022,7 +1019,6 @@ class WorkspaceForgeApp(ForgeApp):
             ws.picked is None or not se.pending.has(ws.picked)) else ws.picked
         ws.refresh_view()
         self.query_one(AppsView).refresh_view()
-        self.query_one(SharingView).refresh_view()
         self.refresh_state()
         self.notify(f"Saved to {path}" + (" (old one backed up)" if backup else "") +
                     (". Your workspaces changed at once." if reloaded else
