@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img alt="Status: being built" src="https://img.shields.io/badge/status-being%20built%20·%200.1.0-f9e2af?style=flat-square&labelColor=313244">
+  <img alt="nightForge release" src="https://img.shields.io/github/v/release/jetomev/forge-suite?filter=nightforge-*&label=release&style=flat-square&labelColor=313244&color=a6e3a1">
   <img alt="License: GPLv3" src="https://img.shields.io/badge/license-GPLv3-a6e3a1?style=flat-square&labelColor=313244">
   <img alt="Built by a human and an AI" src="https://img.shields.io/badge/built%20by-human%20%2B%20AI-f9e2af?style=flat-square&labelColor=313244">
 </p>
@@ -20,9 +20,17 @@
 |---|---|
 | ![Night Light](docs/images/night-light.png) | ![Schedule](docs/images/schedule.png) |
 
+## Install and run
+
+```
+yay -S nightforge
+```
+
+Then `nightforge`, the **Night light** page of hypeForge Settings, or the tray icon. At login hypeForge runs `nightforge start`.
+
 ## Status
 
-**Being built, 0.1.0 (2026-10-09).** Design approved (D-3) with a tray icon (D-4). Runs from the repository (`python3 main.py`), as the Night light page of hypeForge Settings, and at login (`nightforge start`). Not packaged yet. Javier's issue: [#44](https://github.com/jetomev/forge-suite/issues/44). The design: [docs/design/](docs/design/) · decisions: [docs/DECISIONS.md](docs/DECISIONS.md) · the list: [TODO.md](TODO.md).
+**1.0.0, October 9, 2026.** What changed: [docs/CHANGELOG.md](docs/CHANGELOG.md) · next: [docs/ROADMAP.md](docs/ROADMAP.md) · decisions: [docs/DECISIONS.md](docs/DECISIONS.md) · the design: [docs/design/](docs/design/) · tests: [testing/](testing/) · the list: [TODO.md](TODO.md).
 
 ## License & credits
 
