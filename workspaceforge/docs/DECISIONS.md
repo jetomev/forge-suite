@@ -4,6 +4,22 @@
 
 ## 2026-10-09
 
+### D-5 · The design is approved (Javier)
+*"approved!!!!"* — the third draft (`docs/design/v0.1.0-screens.html`), with the eleven open questions answered by the recommendations, as Claude said they would be unless he changed any:
+1. As many workspaces as you like; Win + 1 … 9 reach the first nine, the rest from the bar's list; at least one always stays.
+2. One app, one workspace (the two tables already work that way).
+3. The apps table's filters: Find and Category; headings sort (▲ ▼).
+4. Sharing: one shared group per screen (every cell switched to Shared in a column).
+5. "Select All / Deselect All" everywhere; nogForge's "Tick All / Untick All" follows in its next release.
+6. Deleting a workspace asks where its windows go (Daily preselected); nothing is ever closed.
+7. The app lists start from the launcher's groups, once; after that the lists are the one place this is set, and the launcher follows them.
+8. F10 shows a review, then applies at once; no countdown (nothing here can black out a screen).
+9. hypeForge's Workspaces applet does the work; workspaceForge only edits its settings and asks it to re-read.
+10. A "Workspaces" page in hypeForge Settings opens workspaceForge (`--hypeforge`).
+11. 0.1.0 while it is built; 1.0.0 when the whole design works and Javier has run it.
+
+**Next:** the engine (F-50, #55) in the Workspaces applet, then the app.
+
 ### D-4 · Second design review: buttons on top, new and edit in place, sharing as switches (Javier)
 1. **Workspaces:** the New / Edit / Delete buttons go **on top**, not below; Move Up / Move Down on top of the list. **New** needs no pop-up: the same page, a blank form. **Edit** happens on the same page, no pop-up; after a rename, the apps line turns yellow with a small ⚠, asking to review the apps assigned on the Apps page; **not persistent**, just a message after the rename. **Delete** keeps its warning pop-up.
 2. **Apps:** *"perfect."*
