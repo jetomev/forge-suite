@@ -7,12 +7,13 @@
 - [x] The sun worked out on the computer (`nightforge/sun.py`, NOAA formulas): Miami today 07:15 / 19:00, checked against June, London, Svalbard
 - [x] Design page: Night Light, Preview, Schedule, the bar's moon, Save; 10 questions — `docs/design/v0.1.0-screens.html`, published https://claude.ai/artifact/XuQYKnzCpXp7KPMCiAoa3G
 - [x] First review (D-2): Preview and Save both pop-ups; second draft published
-- [ ] **Javier's approval**
+- [x] **Approved** (D-3, "perfect"), with a tray icon (D-4)
 
 ## Phase 1 · Build
 - [ ] Settings + `nightforge start` (login) + restart on save; the preview that goes back by itself
 - [ ] The two pages, review and save, quit asks; `--hypeforge`; the manual
-- [ ] hypeForge: the login line, the moon on the bar, the Settings page + Home card, Help page 17
+- [ ] The tray icon (`nightforge tray`, D-4): ☀ / ☾ / ○ and its menu, started with the night light
+- [ ] hypeForge: the login line, the Settings page + Home card, Help page 17
 - [ ] Tests (each seen failing first), pictures, the hidden bench
 
 ## Phase 2 · Release

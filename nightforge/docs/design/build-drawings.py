@@ -195,12 +195,23 @@ def s_save():
     return pad(L)
 
 
-# ---- The bar ----------------------------------------------------------------------------------------
+# ---- The tray icon (Javier, approving the design: "This app have to come with a tray icon as well") ------
 
 def s_bar():
-    """The top bar's right side, with the moon while the screens are warm."""
-    L = [line(" {v b:◆} {m:1}  Workspaces  Favorites            " + " " * 18 +
-              "{w:☾}  {m:🔊 40%}  {m:⇅ wired}  {m:ᛒ}  {m:⏏}  {m:Fri 19:42}  {m:⏻}", "hdr")]
+    """The top bar's right side: nightForge's own icon in the tray, with its menu open."""
+    L = [line(" {v b:◆} {m:1}  Workspaces  Favorites                 " +
+              "{w b:☾} {m:⟳}  {m:⎘}  {m:⏏}  {m:⎙}  {m:ᛒ}  {m:⇅}  {m:🔊}  {m:Fri 19:42}  {m:🔔}  {m:⏻}", "hdr")]
+    menu = [" {b:Night light · warm, 4000 K}",
+            " {d:automatic: daylight at 07:15}",
+            " {d:──────────────────────────}",
+            " {act:(•) Automatic          }",
+            " ( ) Warm Now",
+            " ( ) Daylight Now",
+            " {d:──────────────────────────}",
+            " Turn Off",
+            " Open nightForge…"]
+    L += [line(" " * 50 + r) for r in box("", menu, 36, "a")]
+    L += [line(" " * 50 + "{d:☀ by day · ☾ while warm · ○ switched off}")]
     return L
 
 

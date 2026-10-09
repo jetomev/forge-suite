@@ -12,12 +12,12 @@ body = f'''
 <div class="wrap">
 
 <header class="stack">
-  <div class="eyebrow">nightForge · design proposal · 9 October 2026 · second draft</div>
+  <div class="eyebrow">nightForge · design · approved 9 October 2026, with a tray icon</div>
   <h1>nightForge, screen by screen</h1>
   <p class="lede prose">The night light's own app: on or off, how warm the evening gets, and when. In the terminal, like every Forge app, and a page of hypeForge Settings.</p>
   <p class="prose">Today the night light is <b>wlsunset</b>, started at login with Miami's place, 4000 K at night and 6500 K by day, and nothing to change it with (issue #44). The drawings use those real values, and your real sun today in Miami: down at <b>19:00</b>, up at <b>07:15</b>, worked out on this computer. Every drawing is exactly <b>100 columns</b> wide.</p>
   <nav class="toc" aria-label="Contents">
-    <a href="#questions">Questions</a><a href="#night">Night Light</a><a href="#preview">Preview</a><a href="#schedule">Schedule</a><a href="#bar">The bar</a><a href="#save">Save</a><a href="#runs">Where it runs</a><a href="#plan">How it gets built</a>
+    <a href="#questions">Questions</a><a href="#night">Night Light</a><a href="#preview">Preview</a><a href="#schedule">Schedule</a><a href="#bar">The tray icon</a><a href="#save">Save</a><a href="#runs">Where it runs</a><a href="#plan">How it gets built</a>
   </nav>
 </header>
 
@@ -25,6 +25,10 @@ body = f'''
   <div class="decide">
     <h3>From your issue (#44, 7 October)</h3>
     <p><em>"Night-Light → needs its own app to be able to activate/deactivate, modify its settings, etc. … nightForge… I guess."</em> On / off, the warmth, the place or fixed times, and a sign on the bar while it's on.</p>
+  </div>
+  <div class="decide">
+    <h3>Approved · Javier, 9 October</h3>
+    <p><em>"perfect. This app have to come with a tray icon as well."</em> The ten questions go with the recommendations; the bar button becomes a real tray icon (below).</p>
   </div>
   <div class="decide">
     <h3>Your first review</h3>
@@ -39,7 +43,7 @@ body = f'''
     <li><b>Evening warmth:</b> five steps, 3000 to 5000 K, with words for each, plus any number you type (1000–6500). <span class="rec">Recommended: yes.</span></li>
     <li><b>Daytime</b> stays the screens' own white (6500 K), with no setting for it. One less thing to get wrong. <span class="rec">Recommended: yes.</span></li>
     <li><b>Your place</b> is two numbers (latitude, longitude), shown in plain words. Nothing is looked up online, so no city names. <span class="rec">Recommended: yes.</span> Or <b>Fixed Times</b>: warm from, daylight from, and a fade.</li>
-    <li><b>A moon on the bar</b> (☾) while the screens are warm; a click opens nightForge. <span class="rec">Recommended: yes.</span></li>
+    <li><b>A tray icon</b> (your ask when approving): always there, ☀ / ☾ / ○, with its menu. <span class="rec">Replaces the first draft's bar button.</span></li>
     <li><b>Who runs the night light:</b> nightForge does. At login hypeForge runs <code>nightforge start</code>, which reads nightForge's settings and starts wlsunset; saving restarts it at once. The line in hypeForge's Sway settings changes to that. <span class="rec">Recommended: yes.</span></li>
     <li><b>Inside hypeForge Settings</b> as the <b>Night light</b> page; the Home page's Night light card opens it. <span class="rec">Recommended: yes.</span></li>
     <li><b>Version:</b> 0.1.0 while it's built, 1.0.0 after your run, then the AUR after your install test. <span class="rec">Recommended: yes.</span></li>
@@ -65,8 +69,8 @@ body = f'''
 </section>
 
 <section id="bar">
-  <h2>The bar</h2>
-  <p class="prose">A small moon on the right side of the bar while the screens are warm; gone by day. A click opens nightForge.</p>
+  <h2>The tray icon</h2>
+  <p class="prose">Asked for when you approved the design: <em>"This app have to come with a tray icon as well."</em> nightForge's own icon in the bar's tray, next to other apps' icons (Insync, Steam…), always there: <b>☀</b> by day, <b>☾</b> while the screens are warm, <b>○</b> when switched off. Its menu: Automatic, Warm Now, Daylight Now, Turn Off / Turn On, and Open nightForge. It's nightForge's, not hypeForge's, so it works on any bar with a tray. It replaces the bar button of the first draft.</p>
   {BAR}
 </section>
 
@@ -90,7 +94,8 @@ body = f'''
   <ol class="prose">
     <li><b>Your answers</b>, and any change to the drawings.</li>
     <li><b>nightForge on forgekit</b>, in <code>nightforge/</code>: the settings, <code>nightforge start</code>, the two pages, preview and save.</li>
-    <li><b>hypeForge:</b> the login line, the moon on the bar, the Settings page and its Home card, Help page 17.</li>
+    <li><b>The tray icon</b> (<code>nightforge tray</code>), started with the night light at login.</li>
+    <li><b>hypeForge:</b> the login line, the Settings page and its Home card, Help page 17.</li>
     <li><b>Tests</b>, each seen failing first; pictures of every page; the start-and-restart tried on the hidden bench before your desktop.</li>
     <li><b>Your run</b>, a release, and the AUR after your install test.</li>
   </ol>
