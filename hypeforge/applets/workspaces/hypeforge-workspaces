@@ -272,6 +272,30 @@ def placement():
         return False, [], []
 
 
+class Breaker:
+    """A safety valve: if this applet switches the screens more than LIMIT times in WINDOW
+    seconds, something is fighting it; it stops answering for PAUSE seconds and says so, rather
+    than ever locking the desktop again (2026-10-09)."""
+    LIMIT, WINDOW, PAUSE = 12, 3.0, 5.0
+
+    def __init__(self, clock=None):
+        import time
+        self.clock = clock or time.monotonic
+        self.recent, self.until = [], 0.0
+
+    def tripped(self):
+        now = self.clock()
+        if now < self.until:
+            return True
+        self.recent = [t for t in self.recent if now - t < self.WINDOW] + [now]
+        if len(self.recent) > self.LIMIT:
+            self.until, self.recent = now + self.PAUSE, []
+            print(f"hypeforge-workspaces: {self.LIMIT} switches in {self.WINDOW:.0f} s — something is "
+                  f"fighting the workspaces; standing still for {self.PAUSE:.0f} s", file=sys.stderr, flush=True)
+            return True
+        return False
+
+
 def keep_in_step(grid):
     """A screen switched some other way (a command, an old binding): pull the others along.
     And every new window: is it an app that belongs on another workspace? (`arrive`)"""
@@ -279,6 +303,7 @@ def keep_in_step(grid):
     events.ask(SUBSCRIBE, json.dumps(["workspace", "window"]))
     control = Sway()
     index_of_app = AppIndex()
+    breaker = Breaker()
     while True:
         kind, event = events.receive()
         if kind == EVENT_WINDOW:
@@ -295,12 +320,20 @@ def keep_in_step(grid):
             continue
         if event.get("change") != "focus":
             continue
-        index = grid.index_of.get(event["current"]["name"])
+        # Act on how things are NOW, never on the event's workspace: by the time an event is read
+        # it may be stale, and our own `go` makes focus events too. Answering old ones made two
+        # switches echo each other for ever (2026-10-09: `supertux2 &` from a terminal, 300
+        # switches in 10 s, the desktop unusable; scripts/headless-check.py reproduces it).
+        workspaces = control.ask(GET_WORKSPACES)
+        focused = next((ws["name"] for ws in workspaces if ws["focused"]), None)
+        index = grid.index_of.get(focused)
         if index is None:  # a shared space, or not ours: it belongs to no single workspace
             continue
-        shown = {ws["output"]: ws["name"] for ws in control.ask(GET_WORKSPACES) if ws["visible"]}
+        shown = {ws["output"]: ws["name"] for ws in workspaces if ws["visible"]}
         if index != current() or any(shown.get(s) != grid.cells[index, p]
                                      for p, s in enumerate(grid.screens) if s in shown):
+            if breaker.tripped():
+                continue
             go(control, grid, index)
 
 

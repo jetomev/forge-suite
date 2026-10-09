@@ -255,5 +255,35 @@ class Seeding(unittest.TestCase):
             self.assertEqual(ws.read_text(), LISTS, "nothing changed")
 
 
+class Breaker(unittest.TestCase):
+    """The safety valve (2026-10-09): never again a desktop locked by switching."""
+
+    def setUp(self):
+        self.ws = load(HERE / "applets/workspaces/hypeforge-workspaces", "hfworkspaces_b")
+        self.now = [100.0]
+        self.b = self.ws.Breaker(clock=lambda: self.now[0])
+
+    def test_it_trips_after_too_many_switches_and_stands_still(self):
+        results = []
+        for _ in range(self.b.LIMIT + 1):
+            results.append(self.b.tripped())
+            self.now[0] += 0.05
+        self.assertEqual(results[:self.b.LIMIT], [False] * self.b.LIMIT, "normal switching is never stopped")
+        self.assertTrue(results[-1], "one more within the window trips it")
+        self.now[0] += 1
+        self.assertTrue(self.b.tripped(), "it stands still during the pause")
+
+    def test_it_comes_back_after_the_pause(self):
+        for _ in range(self.b.LIMIT + 1):
+            self.b.tripped()
+        self.now[0] += self.b.PAUSE + 0.1
+        self.assertFalse(self.b.tripped())
+
+    def test_slow_switching_never_trips_it(self):
+        for _ in range(100):
+            self.assertFalse(self.b.tripped())
+            self.now[0] += self.b.WINDOW / self.b.LIMIT + 0.01
+
+
 if __name__ == "__main__":
     unittest.main()
