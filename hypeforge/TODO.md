@@ -128,7 +128,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] 9. Bluetooth
 - [ ] 10. Look (the Theme manager: wallpaper, themes, icons, pointer, fonts)
 - [ ] 11. Default apps (#19)
-- [ ] 12. Workspaces & Windows (placement, rules, tiling/floating; **any number of screens — the ISO gate**)
+- [x] 12a. **Workspaces → workspaceForge 1.0.0** (D-66, released 10-09, AUR; Sharing off until Javier rethinks it)
+- [ ] 12b. **Windows** — its own Forge app (D-66): placement, float rules, tiling/floating; **any number of screens — the ISO gate**
 - [ ] 13. Power & Lock
 - [ ] 14. Notifications
 - [ ] 15. Startup apps
