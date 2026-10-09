@@ -89,7 +89,7 @@ categories = ["Science"]
 name = "Settings"
 icon = "preferences-system"
 workspace = 6
-apps = ["hypeforge-settings", "rofi-theme-selector"]   # the control centre first (D-63); Rofi's theme picker declares no category
+apps = ["hypeforge-settings"]   # the control centre first (D-63)
 categories = ["Settings"]
 
 [[section]]
@@ -102,7 +102,6 @@ categories = ["System"]
 name = "Utilities"
 icon = "applications-utilities"
 workspace = ""
-apps = ["rofi"]
 categories = ["Utility"]
 
 [[section]]
