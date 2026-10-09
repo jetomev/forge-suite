@@ -111,7 +111,7 @@ td code { white-space: nowrap; }
 <div class="wrap">
 
 <header class="stack">
-  <div class="eyebrow">defaultappsForge · design proposal · 9 October 2026 · second draft</div>
+  <div class="eyebrow">defaultappsForge · design proposal · 9 October 2026 · third draft</div>
   <h1>defaultappsForge, screen by screen</h1>
   <p class="lede prose">Which app opens what: links, folders, text, PDFs, pictures, music, video, documents, archives. In the terminal, like every Forge app, and a page of hypeForge Settings.</p>
   <p class="prose">Today the only way to choose on the Sway desktop is KDE's page (it leaves with KDE) or a terminal command (issue #19). The drawings show <b>your</b> desktop as it really is right now, read from <code>~/.config/mimeapps.list</code> and from what the system answers for each kind of file. Every drawing is exactly <b>100 columns</b> wide.</p>
@@ -126,6 +126,13 @@ td code { white-space: nowrap; }
     <ol>
       <li><b>Kinds → Default Apps</b>, your thirteen: Web Browser · Email Client · Calendar · Phone Numbers · Image Viewer · Music Player · Video Player · Text Editor · PDF Viewer · File Manager · Terminal Emulator · Archive Manager · Map. <b>A drop-down next to each</b> with the apps that can do it. <em>"No need for status, it is kind of overkill."</em></li>
       <li><b>File Types, simpler:</b> the most common types only, assigned to <b>your default apps</b> (not to single apps), <b>like workspaceForge's Apps page</b>: file types on the left, the default apps on the right each with its own types, <b>&gt;&gt;</b> to assign, <b>&lt;&lt;</b> to clear.</li>
+    </ol>
+  </div>
+  <div class="decide">
+    <h3>Your second review</h3>
+    <ol>
+      <li><b>Default Apps:</b> underlined titles, <b>Defaults</b> over the names and <b>Selection</b> over the drop-downs; a bullet before each name; the drop-downs close to their names; a small gap between rows.</li>
+      <li><b>File Types:</b> "good"; both tables start on the same line (one header band across both sides).</li>
     </ol>
   </div>
   <h2>Questions for you</h2>
@@ -155,36 +162,36 @@ td code { white-space: nowrap; }
 
 <section id="defaults">
   <h2>1 · Default Apps</h2>
-  <p class="prose">Your thirteen, each with its drop-down. The values are what your desktop uses today.</p>
+  <p class="prose">Your thirteen, each with its drop-down, under <b>Defaults</b> and <b>Selection</b>. The values are what your desktop uses today. (At 100 × 30 the list fills the window; on a bigger one there's room to spare.)</p>
   <div class="term"><pre><span class="hdr"> <span class="v b">defaultappsForge 0.1.0</span><span class="m"> · which app opens what</span>              <span class="m">KognogOS · javier · nothing changed yet</span> </span>
 <span class="bar"> <span class="act"> Default Apps </span>   <span class="u">F</span>ile Types   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                        </span>
                                                                                                     
-  Web Browser           <span class="fld"> Google Chrome           ▾ </span>                                                 
-  Email Client          <span class="fld"> Thunderbird             ▾ </span>                                                 
-  Calendar              <span class="fld"> Thunderbird             ▾ </span>                                                 
-  Phone Numbers         <span class="fld"> — none installed —      ▾ </span>                                                 
-  Image Viewer          <span class="fld"> Pinta                   ▾ </span>                                                 
-  Music Player          <span class="fld"> mpv                     ▾ </span>                                                 
-  Video Player          <span class="fld"> mpv                     ▾ </span>                                                 
-  Text Editor           <span class="fld"> Fresh                   ▾ </span>                                                 
-  PDF Viewer            <span class="foc"> Google Chrome           ▾ </span>                                                 
-  File Manager          <span class="fld"> Thunar                  ▾ </span>                                                 
-  Terminal Emulator     <span class="fld"> Alacritty               ▾ </span>                                                 
-  Archive Manager       <span class="fld"> Ark                     ▾ </span>                                                 
-  Map                   <span class="fld"> Google Maps             ▾ </span>                                                 
+     <span class="u b">Defaults</span>            <span class="u b">Selection</span>                                                                  
+   • Web Browser         <span class="fld"> Google Chrome           ▾ </span>                                                
                                                                                                     
-  <span class="d">Each list holds only the apps that can do that job. The next file or link you open uses it.</span>       
+   • Email Client        <span class="fld"> Thunderbird             ▾ </span>                                                
                                                                                                     
+   • Calendar            <span class="fld"> Thunderbird             ▾ </span>                                                
                                                                                                     
+   • Phone Numbers       <span class="fld"> — none installed —      ▾ </span>                                                
                                                                                                     
+   • Image Viewer        <span class="fld"> Pinta                   ▾ </span>                                                
                                                                                                     
+   • Music Player        <span class="fld"> mpv                     ▾ </span>                                                
                                                                                                     
+   • Video Player        <span class="fld"> mpv                     ▾ </span>                                                
                                                                                                     
+   • Text Editor         <span class="fld"> Fresh                   ▾ </span>                                                
                                                                                                     
+   • PDF Viewer          <span class="foc"> Google Chrome           ▾ </span>                                                
                                                                                                     
+   • File Manager        <span class="fld"> Thunar                  ▾ </span>                                                
                                                                                                     
+   • Terminal Emulator   <span class="fld"> Alacritty               ▾ </span>                                                
                                                                                                     
+   • Archive Manager     <span class="fld"> Ark                     ▾ </span>                                                
                                                                                                     
+   • Map                 <span class="fld"> Google Maps             ▾ </span>                                                
 <span class="hdr"> <span class="a">↑ ↓</span> <span class="d">next</span>  ·  <span class="a">Enter</span> <span class="d">open the list</span>  ·  <span class="a">F10</span> <span class="d">save</span>  ·  <span class="a">1-3</span> <span class="d">menu</span>  ·  <span class="a">F1</span> <span class="d">help</span>                             </span></pre></div>
 </section>
 
@@ -194,30 +201,30 @@ td code { white-space: nowrap; }
   <div class="term"><pre><span class="hdr"> <span class="v b">defaultappsForge 0.1.0</span><span class="m"> · which app opens what</span>              <span class="m">KognogOS · javier · nothing changed yet</span> </span>
 <span class="bar"> <span class="act"> Default Apps </span>   <span class="u">F</span>ile Types   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                        </span>
                                                                                                     
-  Web Browser           <span class="fld"> Google Chrome           ▾ </span>                                                 
-  Email Client          <span class="fld"> Thunderbird             ▾ </span>                                                 
-  Calendar              <span class="fld"> Thunderbird             ▾ </span>                                                 
-  Phone Numbers         <span class="fld"> — none installed —      ▾ </span>                                                 
-  Image Viewer          <span class="fld"> Pinta                   ▾ </span>                                                 
-  Music Player          <span class="fld"> mpv                     ▾ </span>                                                 
-  Video Player          <span class="fld"> mpv                     ▾ </span>                                                 
-  Text Editor           <span class="fld"> Fresh                   ▾ </span>                                                 
-  PDF Viewer            <span class="foc"> Google Chrome           ▾ </span>                                                 
-                        <span class="fld"> ● Google Chrome           </span>                                                 
-                        <span class="sel">   Master PDF Editor       </span>                                                 
-                        <span class="fld">   Zathura                 </span>                                                 
-                        <span class="fld">   Okular                  </span>                                                 
-                        <span class="fld">   ONLYOFFICE              </span>                                                 
-                        <span class="fld">   GIMP                    </span>                                                 
+     <span class="u b">Defaults</span>            <span class="u b">Selection</span>                                                                  
+   • Web Browser         <span class="fld"> Google Chrome           ▾ </span>                                                
                                                                                                     
+   • Email Client        <span class="fld"> Thunderbird             ▾ </span>                                                
                                                                                                     
+   • Calendar            <span class="fld"> Thunderbird             ▾ </span>                                                
                                                                                                     
+   • Phone Numbers       <span class="fld"> — none installed —      ▾ </span>                                                
                                                                                                     
+   • Image Viewer        <span class="fld"> Pinta                   ▾ </span>                                                
                                                                                                     
+   • Music Player        <span class="fld"> mpv                     ▾ </span>                                                
                                                                                                     
+   • Video Player        <span class="fld"> mpv                     ▾ </span>                                                
                                                                                                     
+   • Text Editor         <span class="fld"> Fresh                   ▾ </span>                                                
                                                                                                     
-                                                                                                    
+   • PDF Viewer          <span class="foc"> Google Chrome           ▾ </span>                                                
+                         <span class="fld"> ● Google Chrome           </span>                                                
+                         <span class="sel">   Master PDF Editor       </span>                                                
+                         <span class="fld">   Zathura                 </span>                                                
+                         <span class="fld">   Okular                  </span>                                                
+                         <span class="fld">   ONLYOFFICE              </span>                                                
+                         <span class="fld">   GIMP                    </span>                                                
                                                                                                     
                                                                                                     
 <span class="hdr"> <span class="a">↑ ↓</span> <span class="d">pick</span>  ·  <span class="a">Enter</span> <span class="d">use it</span>  ·  <span class="a">Esc</span> <span class="d">close the list</span>                                                   </span></pre></div>
@@ -230,20 +237,20 @@ td code { white-space: nowrap; }
 <span class="bar"> <span class="u">D</span>efault Apps   <span class="act"> File Types </span>   <span class="u">H</span>elp ▾   <span class="u">Q</span>uit                                                        </span>
                                                                                                     
  <span class="v b">File types on no default app</span>                      <span class="v b">Default apps</span>  <span class="m">open one to see its file types</span>     
-           <span class="d">Find</span> <span class="fld">          </span>                          ▸ Web Browser                 <span class="m">        3 types</span>   
- <span class="btn"> Select All (a) </span> <span class="btn"> Deselect All (u) </span>                ▸ Email Client                <span class="m">         1 type</span>   
- <span class="b">     Type ▲    What</span>                               <span class="act"> ▾ Calendar                            0 types </span>  
-  [ ] .csv      spreadsheet text                   <span class="btn"> Select All (a) </span> <span class="btn"> Deselect All (u) </span>              
- <span class="fld"> [ ] .docx     Word document            </span>          <span class="d">   nothing yet: send .ics here with &gt;&gt;</span>           
-  [ ] .epub     e-book                              ▸ Image Viewer                <span class="m">        7 types</span>   
- <span class="sel"> [x] .ics      calendar event           </span> <span class="pri">   &gt;&gt;   </span>  ▸ Music Player                <span class="m">        6 types</span>   
-  [ ] .iso      disc image                <span class="d">  assign</span>  ▸ Video Player                <span class="m">        6 types</span>   
- <span class="fld"> [ ] .odt      document                 </span>           ▸ Text Editor                 <span class="m">       12 types</span>   
-  [ ] .rtf      rich text                 <span class="btn">   &lt;&lt;   </span>  ▸ PDF Viewer                  <span class="m">         1 type</span>   
- <span class="fld"> [ ] .srt      subtitles                </span> <span class="d">  clear</span>   ▸ Archive Manager             <span class="m">        6 types</span>   
-  [ ] .torrent  torrent                                                                             
- <span class="fld"> [ ] .ttf      font                     </span>                                                           
-  [ ] .xlsx     Excel sheet                                                                         
+           <span class="d">Find</span> <span class="fld">          </span>                                                                          
+ <span class="btn"> Select All (a) </span> <span class="btn"> Deselect All (u) </span>                                                                
+ <span class="b">     Type ▲      What</span>                              ▸ Web Browser                 <span class="m">        3 types</span>   
+  [ ] .csv        spreadsheet text                  ▸ Email Client                <span class="m">         1 type</span>   
+ <span class="fld"> [ ] .docx       Word document          </span>          <span class="act"> ▾ Calendar                            0 types </span>  
+  [ ] .epub       e-book                           <span class="btn"> Select All (a) </span> <span class="btn"> Deselect All (u) </span>              
+ <span class="sel"> [x] .ics        calendar event         </span> <span class="pri">   &gt;&gt;   </span> <span class="d">   nothing yet: send .ics here with &gt;&gt;</span>           
+  [ ] .iso        disc image              <span class="d">  assign</span>  ▸ Image Viewer                <span class="m">        7 types</span>   
+ <span class="fld"> [ ] .odt        document               </span>           ▸ Music Player                <span class="m">        6 types</span>   
+  [ ] .rtf        rich text               <span class="btn">   &lt;&lt;   </span>  ▸ Video Player                <span class="m">        6 types</span>   
+ <span class="fld"> [ ] .srt        subtitles              </span> <span class="d">  clear</span>   ▸ Text Editor                 <span class="m">       12 types</span>   
+  [ ] .torrent    torrent                           ▸ PDF Viewer                  <span class="m">         1 type</span>   
+ <span class="fld"> [ ] .ttf        font                   </span>           ▸ Archive Manager             <span class="m">        6 types</span>   
+  [ ] .xlsx       Excel sheet                                                                       
                                                                                                     
                                                                                                     
                                                                                                     

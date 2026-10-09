@@ -11,7 +11,7 @@ body = f'''
 <div class="wrap">
 
 <header class="stack">
-  <div class="eyebrow">defaultappsForge · design proposal · 9 October 2026 · second draft</div>
+  <div class="eyebrow">defaultappsForge · design proposal · 9 October 2026 · third draft</div>
   <h1>defaultappsForge, screen by screen</h1>
   <p class="lede prose">Which app opens what: links, folders, text, PDFs, pictures, music, video, documents, archives. In the terminal, like every Forge app, and a page of hypeForge Settings.</p>
   <p class="prose">Today the only way to choose on the Sway desktop is KDE's page (it leaves with KDE) or a terminal command (issue #19). The drawings show <b>your</b> desktop as it really is right now, read from <code>~/.config/mimeapps.list</code> and from what the system answers for each kind of file. Every drawing is exactly <b>100 columns</b> wide.</p>
@@ -26,6 +26,13 @@ body = f'''
     <ol>
       <li><b>Kinds → Default Apps</b>, your thirteen: Web Browser · Email Client · Calendar · Phone Numbers · Image Viewer · Music Player · Video Player · Text Editor · PDF Viewer · File Manager · Terminal Emulator · Archive Manager · Map. <b>A drop-down next to each</b> with the apps that can do it. <em>"No need for status, it is kind of overkill."</em></li>
       <li><b>File Types, simpler:</b> the most common types only, assigned to <b>your default apps</b> (not to single apps), <b>like workspaceForge's Apps page</b>: file types on the left, the default apps on the right each with its own types, <b>&gt;&gt;</b> to assign, <b>&lt;&lt;</b> to clear.</li>
+    </ol>
+  </div>
+  <div class="decide">
+    <h3>Your second review</h3>
+    <ol>
+      <li><b>Default Apps:</b> underlined titles, <b>Defaults</b> over the names and <b>Selection</b> over the drop-downs; a bullet before each name; the drop-downs close to their names; a small gap between rows.</li>
+      <li><b>File Types:</b> "good"; both tables start on the same line (one header band across both sides).</li>
     </ol>
   </div>
   <h2>Questions for you</h2>
@@ -55,7 +62,7 @@ body = f'''
 
 <section id="defaults">
   <h2>1 · Default Apps</h2>
-  <p class="prose">Your thirteen, each with its drop-down. The values are what your desktop uses today.</p>
+  <p class="prose">Your thirteen, each with its drop-down, under <b>Defaults</b> and <b>Selection</b>. The values are what your desktop uses today. (At 100 × 30 the list fills the window; on a bigger one there's room to spare.)</p>
   {T("defaults")}
 </section>
 

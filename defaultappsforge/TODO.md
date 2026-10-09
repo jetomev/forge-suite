@@ -6,6 +6,7 @@
 - [x] Research: `~/.config/mimeapps.list` + `xdg-mime` on the desktop — PDFs in Chrome (a guess), pictures split Pinta/Chrome, 3 old choices for apps that are gone (Typora, Nemo, Brave), Ark and Konsole leave with KDE; 1,129 file types known
 - [x] Design page: Kinds, Change (pop-up), File Types, Save (pop-up); 9 questions — `docs/design/v0.1.0-screens.html`, published https://claude.ai/artifact/TQfbogzb7BwSq1T4PqVK2A
 - [x] First review (D-2): his 13 default apps with drop-downs, no status; File Types = two tables with >> / <<; second draft published
+- [x] Second review (D-3): Defaults / Selection titles, bullets, drop-downs closer, a gap between rows; File Types' tables aligned from the top; third draft published
 - [ ] **Javier's approval**
 
 ## Phase 1 · Build

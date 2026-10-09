@@ -112,30 +112,38 @@ def dropdown(app, focus=False):
     return ("{foc:" if focus else "{fld:") + inner + "}"
 
 
+def item(name, app, focus=False):
+    """• Name, the drop-down close by (Javier, second review: bullets, closer, a gap between rows)."""
+    return f"   • {name:<20}" + dropdown(app, focus)
+
+
 def s_defaults():
     L = header("Default Apps")
-    L += [blank]
-    for name, app in DEFAULTS:
-        L.append(line(f"  {name:<22}" + dropdown(app, focus=(name == "PDF Viewer"))))
-    L += [blank,
-          line("  {d:Each list holds only the apps that can do that job. The next file or link you open uses it.}")]
-    L += [blank, hint("{a:↑ ↓} {d:next}  ·  {a:Enter} {d:open the list}  ·  {a:F10} {d:save}  ·  {a:1-3} {d:menu}  ·  {a:F1} {d:help}")]
+    L += [blank, line("     {u b:Defaults}" + " " * 12 + "{u b:Selection}")]
+    for i, (name, app) in enumerate(DEFAULTS):
+        if i:
+            L.append(blank)                       # a small gap between rows
+        L.append(line(item(name, app, focus=(name == "PDF Viewer"))))
+    L += [hint("{a:↑ ↓} {d:next}  ·  {a:Enter} {d:open the list}  ·  {a:F10} {d:save}  ·  {a:1-3} {d:menu}  ·  {a:F1} {d:help}")]
     return pad(L)
 
 
 def s_dropdown():
     """The PDF Viewer's list, open."""
     L = header("Default Apps")
-    L += [blank]
-    for name, app in DEFAULTS[:9]:
-        L.append(line(f"  {name:<22}" + dropdown(app, focus=(name == "PDF Viewer"))))
+    L += [blank, line("     {u b:Defaults}" + " " * 12 + "{u b:Selection}")]
+    rows = DEFAULTS[:9]
+    for i, (name, app) in enumerate(rows):
+        if i:
+            L.append(blank)
+        L.append(line(item(name, app, focus=(name == "PDF Viewer"))))
     opts = [("Google Chrome", True), ("Master PDF Editor", False), ("Zathura", False), ("Okular", False),
             ("ONLYOFFICE", False), ("GIMP", False)]
     for o, cur in opts:
         mark = "●" if cur else " "
         txt = f" {mark} {o:<24}"
-        L.append(line(" " * 24 + ("{sel:" + txt + "}" if o == "Master PDF Editor" else "{fld:" + txt + "}")))
-    L += [blank, hint("{a:↑ ↓} {d:pick}  ·  {a:Enter} {d:use it}  ·  {a:Esc} {d:close the list}")]
+        L.append(line(" " * 25 + ("{sel:" + txt + "}" if o == "Master PDF Editor" else "{fld:" + txt + "}")))
+    L += [hint("{a:↑ ↓} {d:pick}  ·  {a:Enter} {d:use it}  ·  {a:Esc} {d:close the list}")]
     return pad(L)
 
 
@@ -145,7 +153,7 @@ LW, MW, RW = 40, 10, 48
 
 
 def trow(ticked, ext, what, width, shade, cur=False):
-    txt = f" {'[x]' if ticked else '[ ]'} {ext:<10}{what}"
+    txt = f" {'[x]' if ticked else '[ ]'} {ext:<12}{what}"
     txt = txt + " " * (width - len(txt))
     return "{sel:" + txt + "}" if cur else ("{fld:" + txt + "}" if shade else txt)
 
@@ -153,29 +161,35 @@ def trow(ticked, ext, what, width, shade, cur=False):
 def s_types():
     L = header("File Types")
     L += [blank]
-    left = ["{v b:File types on no default app}", fit(" " * 10 + "{d:Find} {fld:          }", LW),
-            "{btn: Select All (a) } {btn: Deselect All (u) }", "{b:     Type ▲    What}"]
+    # the header band: the same height on both sides (Javier: "both tables aligned from the top")
+    lhead = ["{v b:File types on no default app}", fit(" " * 10 + "{d:Find} {fld:          }", LW),
+             "{btn: Select All (a) } {btn: Deselect All (u) }"]
+    rhead = ["{v b:Default apps}  {m:open one to see its file types}", "", ""]
+    for a_, b_ in zip(lhead, rhead):
+        L.append(line(" " + fit(a_, LW) + " " * MW + b_))
+    left = ["{b:     Type ▲      What}"]
     pool = [(".csv", "spreadsheet text"), (".docx", "Word document"), (".epub", "e-book"), (".ics", "calendar event"),
             (".iso", "disc image"), (".odt", "document"), (".rtf", "rich text"), (".srt", "subtitles"),
             (".torrent", "torrent"), (".ttf", "font"), (".xlsx", "Excel sheet")]
     for i, (e, w) in enumerate(pool):
         left.append(trow(e == ".ics", e, w, LW, i % 2 == 1, cur=e == ".ics"))
-    right = ["{v b:Default apps}  {m:open one to see its file types}"]
+    right = []
     counts = {"Web Browser": 3, "Email Client": 1, "Calendar": 0, "Image Viewer": 7, "Music Player": 6,
               "Video Player": 6, "Text Editor": 12, "PDF Viewer": 1, "Archive Manager": 6}
     for name, n in counts.items():
+        words = f"{n} type{'s' if n != 1 else ''}".rjust(RW - 33)
         if name == "Calendar":
-            right.append("{act: ▾ " + f"{name:<28}" + f"{n} type{'s' if n != 1 else ''}".rjust(RW - 33) + " }")
+            right.append("{act: ▾ " + f"{name:<28}" + words + " }")
             right.append("{btn: Select All (a) } {btn: Deselect All (u) }")
             right.append("{d:   nothing yet: send .ics here with >>}")
         else:
-            right.append(f" ▸ {name:<28}" + "{m:" + f"{n} type{'s' if n != 1 else ''}".rjust(RW - 33) + "}")
-    mid = [""] * 7 + ["{pri:   >>   }", "{d:  assign}", "", "{btn:   <<   }", "{d:  clear}"]
+            right.append(f" ▸ {name:<28}" + "{m:" + words + "}")
+    mid = [""] * 4 + ["{pri:   >>   }", "{d:  assign}", "", "{btn:   <<   }", "{d:  clear}"]
     for i in range(max(len(left), len(right))):
-        a = fit(left[i] if i < len(left) else "", LW)
+        a_ = fit(left[i] if i < len(left) else "", LW)
         m = fit(" " + (mid[i] if i < len(mid) else ""), MW)
-        b = right[i] if i < len(right) else ""
-        L.append(line(" " + a + m + b))
+        b_ = right[i] if i < len(right) else ""
+        L.append(line(" " + a_ + m + b_))
     L += [blank, hint("{a:Space} {d:tick}  ·  {a:>} {d:assign to the open one}  ·  {a:<} {d:clear}  ·  {a:Tab} {d:other side}  ·  {a:F10} {d:save}")]
     return pad(L)
 

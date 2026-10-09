@@ -4,6 +4,9 @@
 
 ## 2026-10-09
 
+### D-3 · Second design review: structure for Default Apps; File Types' tables aligned (Javier)
+*"Default Apps looks disjointed. I think between lines there could be a little gap. Also, the dropdowns shouldn't be so far from the title. Maybe the title with a bullet point also will help give structure. On top of the list of default title, we are missing an underlined title: Defaults. On top of the options drop downs, an underlined title: Selection."* File Types: *"good. Remember both tables to be aligned from the top."* Third draft the same hour.
+
 ### D-2 · First design review: his thirteen default apps with drop-downs; File Types like workspaceForge's Apps page (Javier)
 1. **Kinds → Default Apps:** Web Browser · Email Client · Calendar · Phone Numbers · Image Viewer · Music Player · Video Player · Text Editor · PDF Viewer · File Manager · Terminal Emulator · Archive Manager · Map. A drop-down next to each with the apps available. *"No need for status, it is kind of overkill."*
 2. **File Types:** *"kind a busy section."* The most common types only, assigned to the default apps (to keep it simple), done like workspaceForge's Apps page: file extensions on the left, the default apps on the right each with its own types, `>>` to assign, `<<` to clear.
