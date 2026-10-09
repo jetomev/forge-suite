@@ -4,6 +4,13 @@
 
 ## 2026-10-09
 
+### D-4 · Second design review: buttons on top, new and edit in place, sharing as switches (Javier)
+1. **Workspaces:** the New / Edit / Delete buttons go **on top**, not below; Move Up / Move Down on top of the list. **New** needs no pop-up: the same page, a blank form. **Edit** happens on the same page, no pop-up; after a rename, the apps line turns yellow with a small ⚠, asking to review the apps assigned on the Apps page; **not persistent**, just a message after the rename. **Delete** keeps its warning pop-up.
+2. **Apps:** *"perfect."*
+3. **Sharing:** *"Don't understand how the sharing works. How do you select a screen and tell it where it is shared."* → the same table, but an input in every cell to switch between Shared and not, and a Save button at the bottom.
+
+Third draft drawn the same morning. Claude's reading, put to Javier as a question: every cell switched to Shared in one column shares that screen together, so each screen has at most one shared group.
+
 ### D-3 · First design review: workspaces are dynamic; Apps is two tables with arrows (Javier)
 1. **Workspaces are dynamic:** *"If the user just want to have one, they only have one."* Create, name, edit and remove them as you please; no fixed set.
 2. **Apps, simpler:** on the left, the apps and their category in a vertical table, our table formatting, a `[x]` next to each name, Select All / Deselect All on top. On the right, the workspaces; clicking one expands it downward to show its apps (the previously open one retracts); its apps have `[x]` too, with Select All / Deselect All on top. **Both act only on the rows showing**, never on every workspace.

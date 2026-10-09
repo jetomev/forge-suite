@@ -126,38 +126,89 @@ def ws_list(sel, counts=False, width=26):
     return rows
 
 
-# ---- 1 · Workspaces -----------------------------------------------------------------------------
+# ---- 1 · Workspaces: buttons on top, new and edit on the same page (Javier, D-4) -------------------
 
-def s_workspaces():
-    L = header("Workspaces")
+LC = 31   # the list column on the Workspaces page
+
+
+def ws_rows(names, sel, new_row=False):
+    rows = []
+    for i, n in enumerate(names, 1):
+        mark = "●" if n == "Daily" else " "
+        txt = f" {i}  {n}"
+        txt = txt + " " * (27 - len(txt) - 2) + mark + "  "
+        rows.append("{sel:" + txt + "}" if n == sel else txt)
+    if new_row:
+        txt = f" {len(names) + 1}  (new)"
+        rows.append("{sel:" + txt + " " * (27 - len(txt)) + "}")
+    return rows
+
+
+def ws_page(names, sel, right, new_row=False, status="KognogOS · javier · nothing changed yet",
+            hint_text=None):
+    L = header("Workspaces", right=status)
     L += [blank]
-    left = ["{m: Win   Workspace     on now }"] + ws_list("Gaming") + ["", "", "{d: as many as you like;}", "{d: Win + 1 … 9 reach the}", "{d: first nine}"]
-    right = [
-        "{v b:4 · Gaming}   {m:Win + 4 switches all three screens here}",
-        "",
-        "{b:Name}            {foc: Gaming                    }",
-        "",
-        "{b:Apps that open}  {b:7} {m:Steam, Sim Companies, SuperTux 2, Lutris, …}",
-        "                {d:change them on the Apps page (Ctrl + A)}",
-        "",
-        "{b:Sharing}         {m:none: every screen has its own space here}",
-        "                {d:the Sharing page (Ctrl + S)}",
-        "",
-        "{b:Open now}        {m:nothing}",
-        "",
-        "{btn: Rename (r) }  {btn: New Workspace (n) }  {btn: Delete (d) }",
-        "{btn: Move Up (+) }  {btn: Move Down (-) }",
-    ]
+    left = ["{btn: Move Up (+) } {btn: Move Down (-) }", "",
+            "{m: Win  Workspace       on now}"] + ws_rows(names, sel, new_row)
     for i in range(max(len(left), len(right))):
-        a = left[i] if i < len(left) else ""
-        b = right[i] if i < len(right) else ""
-        L.append(col(a, b))
+        L.append(col(left[i] if i < len(left) else "", right[i] if i < len(right) else "", LC))
     L += [blank]
     L += [line("  " + r) for r in box("Workspaces across all screens", [
         "{ok b:● On}   {m:switching a workspace switches every screen together (3 screens: Main, Left, Right)}",
         "{d:Off = Sway's own: each screen switches by itself.}            {btn: Turn Off (o) }"], 96)]
-    L += [blank, hint("{a:↑ ↓} {d:pick}  ·  {a:Tab} {d:into the form}  ·  {a:F10} {d:save}  ·  {a:1-4} {d:menu}  ·  {a:F1} {d:help}")]
+    L += [blank, hint(hint_text or "{a:↑ ↓} {d:pick}  ·  {a:n} {d:new}  ·  {a:e} {d:edit}  ·  {a:d} {d:delete}  ·  {a:+ -} {d:move}  ·  {a:F10} {d:save}  ·  {a:F1} {d:help}")]
     return pad(L)
+
+
+TOP_BUTTONS = "{btn: New (n) }  {btn: Edit (e) }  {btn: Delete (d) }"
+
+
+def s_workspaces():
+    right = [TOP_BUTTONS, "",
+             "{v b:4 · Gaming}   {m:Win + 4 switches all three screens here}",
+             "",
+             "{b:Name}            Gaming",
+             "",
+             "{b:Apps that open}  {b:7} {m:Steam, Sim Companies, SuperTux 2, …}",
+             "                {d:change them on the Apps page (Ctrl + A)}",
+             "",
+             "{b:Sharing}         {m:none: every screen has its own space}",
+             "",
+             "{b:Open now}        {m:nothing}"]
+    return ws_page(WS, "Gaming", right)
+
+
+def s_new():
+    right = ["{d: New (n) }  {d: Edit (e) }  {d: Delete (d) }", "",
+             "{v b:New workspace}   {m:fill it in right here}",
+             "",
+             "{b:Name}            {foc: ▏                         }",
+             "",
+             "{b:Goes after}      {fld: 6 · Settings          ▾ }",
+             "",
+             "{d:It becomes 7: Win + 7 takes every screen there.}",
+             "{d:It starts with no apps; give it some on the Apps page.}",
+             "",
+             "{pri: Create (Enter) }  {btn: Cancel (Esc) }"]
+    return ws_page(WS, None, right, new_row=True,
+                   hint_text="{d:type a name}  ·  {a:Tab} {d:where it goes}  ·  {a:Enter} {d:create}  ·  {a:Esc} {d:cancel}")
+
+
+def s_edit():
+    names = ["Daily", "Work", "Media", "Gaming", "Monitoring", "Settings"]
+    right = [TOP_BUTTONS, "",
+             "{v b:3 · Media}   {m:Win + 3 switches all three screens here}",
+             "",
+             "{b:Name}            Media  {ok:✓ renamed from Entertainment}",
+             "",
+             "{b:Apps that open}  {b:6} {m:Spotify, cliamp, VLC media player, …}",
+             "                {w:⚠ renamed: check these apps still belong}",
+             "                {w:  here, on the Apps page (Ctrl + A)}",
+             "",
+             "{b:Sharing}         {m:none: every screen has its own space}",
+             "",
+             "{b:Open now}        {m:nothing}"]
+    return ws_page(names, "Media", right, status="KognogOS · javier · 1 change waiting")
 
 
 # ---- 1b · Delete a workspace that has windows ---------------------------------------------------
@@ -245,57 +296,34 @@ def s_apps():
     return pad(L)
 
 
-# ---- 1c · A new workspace -----------------------------------------------------------------------
-
-def s_new():
-    L = header("Workspaces")
-    L += [blank] * 5
-    L += [line(" " * 17 + r) for r in box("New workspace", [
-        "",
-        "{b:Name}         {foc: Studio▏                         }",
-        "",
-        "{b:Goes after}   {fld: 6 · Settings          ▾ }",
-        "",
-        "{d:It becomes 7 · Studio: Win + 7 takes every screen there.}",
-        "{d:It starts with no apps; give it some on the Apps page.}",
-        "",
-        "          {pri: Create (Enter) }     {btn: Back (Esc) }",
-        ""], 66)]
-    L += [blank] * 7
-    L += [hint("{d:type a name}  ·  {a:Tab} {d:where it goes}  ·  {a:Enter} {d:create}  ·  {a:Esc} {d:back}")]
-    return pad(L)
-
-
-# ---- 3 · Sharing --------------------------------------------------------------------------------
+# ---- 3 · Sharing: a switch in every cell, Save at the bottom (Javier, D-4) ------------------------
 
 def s_sharing():
-    L = header("Sharing")
+    L = header("Sharing", right="KognogOS · javier · 3 changes waiting")
     L += [blank,
           line("  {v b:Which screens keep the same apps across workspaces}"),
-          line("  {m:A shared screen shows the same windows in every workspace of its group; the others change.}"),
+          line("  {m:Switch a cell to Shared: that screen keeps the same apps in every workspace switched to}"),
+          line("  {m:Shared in its column. The other screens change as usual.}"),
           blank,
           line("                       {b:Main · DP-3}           {b:Left · DP-2}           {b:Right · DP-1}"),
           line("  {d:─────────────────────────────────────────────────────────────────────────────────}")]
-    grid = [("1  Daily", "own", "{ok:┐ shared  A}", "own"),
-            ("2  Work", "own", "{ok:┤ shared  A}", "own"),
-            ("3  Entertainment", "own", "{ok:┘ shared  A}", "{sel:own}"),
-            ("4  Gaming", "own", "own", "own"),
-            ("5  Monitoring", "own", "own", "own"),
-            ("6  Settings", "own", "own", "own")]
-    for n, a, b, c in grid:
+    own, shared = "{fld: ○ Own      }", "{ok b: ● Shared   }"
+    grid = [("1  Daily", own, shared, own), ("2  Work", own, shared, own),
+            ("3  Entertainment", own, "{foc: ● Shared   }", own), ("4  Gaming", own, own, own),
+            ("5  Monitoring", own, own, own), ("6  Settings", own, own, own)]
+    for n, a_, b_, c_ in grid:
         def cell(x):
             return x + " " * (22 - len(vis(x)))
-        L.append(line("  " + n.ljust(21) + cell(a) + cell(b) + c))
+        L.append(line("  " + n.ljust(21) + cell(a_) + cell(b_) + c_))
     L += [blank,
-          line("  {d:The drawing shows an EXAMPLE: Left shared by Daily, Work and Entertainment (group A).}"),
-          line("  {d:Today nothing is shared: every cell is “own”.}"),
+          line("  {d:EXAMPLE: the left screen shared by Daily, Work and Entertainment: your chat there stays put}"),
+          line("  {d:while the main and right screens change. Today nothing is shared.}"),
           blank,
-          line("  {btn: Share With the One Above (space) }  {btn: Stop Sharing (d) }"),
+          line("  {m:One cell alone shares nothing: it takes two or more in a column.}"),
           blank,
-          line("  {m:A new window can still land on a shared screen (the fill order decides);}"),
-          line("  {m:it then shows in every workspace of that group, as sharing means.}"),
+          line("                                {pri: Save (F10) }    {btn: Undo Changes (Esc) }"),
           blank,
-          hint("{a:← → ↑ ↓} {d:pick a cell}  ·  {a:space} {d:share with the one above}  ·  {a:d} {d:stop}  ·  {a:F10} {d:save}  ·  {a:F1} {d:help}")]
+          hint("{a:← → ↑ ↓} {d:pick a cell}  ·  {a:Space} {d:Own / Shared}  ·  {a:F10} {d:save}  ·  {a:Esc} {d:undo}  ·  {a:F1} {d:help}")]
     return pad(L)
 
 
@@ -323,7 +351,7 @@ def s_save():
     return pad(L)
 
 
-SCREENS = {"workspaces": s_workspaces(), "delete": s_delete(), "new": s_new(), "apps": s_apps(),
+SCREENS = {"workspaces": s_workspaces(), "new": s_new(), "edit": s_edit(), "delete": s_delete(), "apps": s_apps(),
            "sharing": s_sharing(), "save": s_save()}
 
 if __name__ == "__main__":

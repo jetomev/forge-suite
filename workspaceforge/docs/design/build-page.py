@@ -11,12 +11,12 @@ body = f'''
 <div class="wrap">
 
 <header class="stack">
-  <div class="eyebrow">workspaceForge · design proposal · 9 October 2026 · second draft, with Javier's changes</div>
+  <div class="eyebrow">workspaceForge · design proposal · 9 October 2026 · third draft, with Javier's changes</div>
   <h1>workspaceForge, screen by screen</h1>
   <p class="lede prose">Your workspaces, in the terminal: their names and order, which apps open on each one, and which screens keep the same apps across workspaces. Every screen is drawn here before any code is written.</p>
   <p class="prose">Today all of this lives in a settings file you'd have to edit by hand. workspaceForge is the friendly way in. It follows displayForge on purpose: the same frame, the same menu bar with underlined letters, a list on the left, the picked thing on the right, and a review before every save. Every drawing is exactly <b>100 columns</b> wide. The drawings show <b>your</b> six workspaces, your three screens and the apps on this desktop today.</p>
   <nav class="toc" aria-label="Contents">
-    <a href="#questions">Questions</a><a href="#workspaces">Workspaces</a><a href="#new">New</a><a href="#delete">Delete</a><a href="#apps">Apps</a><a href="#sharing">Sharing</a><a href="#save">Save</a><a href="#keys">Keys</a><a href="#plan">How it gets built</a>
+    <a href="#questions">Questions</a><a href="#workspaces">Workspaces</a><a href="#new">New</a><a href="#edit">Edit</a><a href="#delete">Delete</a><a href="#apps">Apps</a><a href="#sharing">Sharing</a><a href="#save">Save</a><a href="#keys">Keys</a><a href="#plan">How it gets built</a>
   </nav>
 </header>
 
@@ -30,6 +30,9 @@ body = f'''
       <li><b>Shared screens need no special rule:</b> their windows already belong to every workspace in the group, and the fill order counts them.</li>
       <li><b>Workspaces are yours to shape</b> (first draft review): <em>"If the user just want to have one, they only have one."</em> Create, name, edit and remove them as you please, from one up.</li>
       <li><b>Apps is two tables with arrows between them</b> (first draft review): apps on no workspace on the left with <kbd>[x]</kbd> ticks; your workspaces on the right, one open at a time showing its apps; <kbd>&gt;&gt;</kbd> sends the ticked ones to the open workspace, <kbd>&lt;&lt;</kbd> sends them back. Select All and Deselect All on top of each table, acting only on the rows showing.</li>
+      <li><b>Workspaces, second review:</b> New, Edit and Delete on top of the page, Move Up and Move Down on top of the list. <b>New and Edit happen right on the page</b>, no pop-up; Delete keeps its warning window. After a rename, a short yellow ⚠ note asks you to check the workspace's apps; it goes away on its own.</li>
+      <li><b>Apps: "perfect."</b></li>
+      <li><b>Sharing is a grid of switches:</b> the same table, with an Own / Shared switch in every cell instead of text, and a Save button at the bottom.</li>
     </ol>
   </div>
   <h2>Questions for you</h2>
@@ -38,6 +41,7 @@ body = f'''
     <li><b>More than nine?</b> You can have as many as you like, but Win + 1 … 9 only reach the first nine; the rest are one click away in the bar's Workspaces list. And at least one always stays (the last one can be renamed, not deleted). <span class="rec">Recommended: yes.</span></li>
     <li><b>One app, one workspace.</b> Your two tables already work that way: an app sits either on the left (no workspace) or in one workspace. To move Discord from Daily to Gaming: open Daily, send it back with <kbd>&lt;&lt;</kbd>, open Gaming, send it with <kbd>&gt;&gt;</kbd>. <span class="rec">Recommended: yes.</span></li>
     <li><b>Filters on the apps table</b> (top right, as for every table): a <b>Find</b> box and a <b>Category</b> list (All, Games, Utilities…). Headings sort with a click, ▲ ▼ showing which way. <span class="rec">Recommended: these two.</span> Any other filter you'd want?</li>
+    <li><b>Sharing, one group per screen:</b> with a switch per cell, every cell switched to Shared in a column shares that screen together. So each screen has at most one shared group. Your applet could do more (two separate groups on one screen), but nobody needs that, and the switches stay simple. <span class="rec">Recommended: one group per screen.</span></li>
     <li><b>The words:</b> "Select All" and "Deselect All" are yours. nogForge says "Tick All" and "Untick All" for the same thing. <span class="rec">Recommended: yours everywhere; nogForge follows in its next release.</span></li>
     <li><b>Deleting a workspace that has windows open:</b> it asks where they go (Daily picked for you). Nothing is ever closed. <span class="rec">Recommended: yes.</span></li>
     <li><b>The lists start from the launcher's groups</b>, once: Internet on Daily (11 apps), Office and Development on Work (15), Multimedia on Entertainment (6), Games on Gaming (7), the monitors on Monitoring (5), Settings on Settings (14); the other 26 open where you are. After that the lists are the only place this is set, and the launcher follows them too. <span class="rec">Recommended: yes.</span> Heads-up: Discord, Dropbox, Insync and the VPN start by themselves at login. They'll go to Daily quietly, without moving your screens.</li>
@@ -50,14 +54,20 @@ body = f'''
 
 <section id="workspaces">
   <h2>1 · Workspaces</h2>
-  <p class="prose">Yours to shape: one workspace or a dozen, any names, any order. Your workspaces down the left, with the Win key that reaches each one; ● marks the one on screen now. On the right, the picked one: its name, how many apps open there, whether it shares a screen, and what's open on it right now. Rename, create, delete and reorder from here. Moving a workspace up or down changes its Win number. At the bottom, the main switch: workspaces that span every screen, or Sway's own way, where each screen switches by itself.</p>
+  <p class="prose">Yours to shape: one workspace or a dozen, any names, any order. The buttons sit on top: <b>Move Up</b> and <b>Move Down</b> over the list (moving one changes its Win number), <b>New</b>, <b>Edit</b> and <b>Delete</b> over the page. Your workspaces down the left, with the Win key that reaches each; ● marks the one on screen now. On the right, the picked one: its name, how many apps open there, whether it shares a screen, and what's open on it right now. At the bottom, the main switch: workspaces that span every screen, or Sway's own way, where each screen switches by itself.</p>
   {T("workspaces")}
 </section>
 
 <section id="new">
   <h2>A new workspace</h2>
-  <p class="prose">A name and where it goes in the order. It starts empty; give it apps on the Apps page.</p>
+  <p class="prose">No pop-up. New adds a "(new)" line to the list and turns the page into a blank form: a name and where it goes in the order. It starts with no apps; give it some on the Apps page.</p>
   {T("new")}
+</section>
+
+<section id="edit">
+  <h2>Editing a workspace</h2>
+  <p class="prose">No pop-up either: Edit makes the Name field on the page editable, Enter keeps it, Esc puts it back. After a rename, the apps line turns <b>yellow with a ⚠</b> for a moment: the apps that opened on "Entertainment" now open on "Media", and that's worth a look on the Apps page. The note isn't kept: it goes away when you pick another workspace or leave the page.</p>
+  {T("edit")}
 </section>
 
 <section id="delete">
@@ -76,7 +86,7 @@ body = f'''
 
 <section id="sharing">
   <h2>3 · Sharing</h2>
-  <p class="prose">The grid you set by hand today in <code>[share]</code>: workspaces down, screens across. Linking a cell with the one above makes that screen keep the same apps in both workspaces. The drawing shows an <b>example</b>: the left screen shared by Daily, Work and Entertainment, so your chat or music could sit there while the other two screens change. Today nothing is shared. Screens are named the way displayForge names them (Main, Left, Right).</p>
+  <p class="prose">Workspaces down, screens across, and a switch in every cell: <b>Own</b> or <b>Shared</b>. Flip the cells of a screen to Shared in the workspaces that should keep the same apps on it. In the drawing, the left screen is switched to Shared in Daily, Work and Entertainment: whatever you put on the left screen (your chat, your music) stays there in those three, while the main and right screens change as you switch. One cell alone shares nothing; it takes two or more in a column. Nothing changes until you press <b>Save</b> at the bottom. Today nothing is shared.</p>
   {T("sharing")}
 </section>
 
@@ -93,10 +103,10 @@ body = f'''
     <tr><th>Keys</th><th>What happens</th></tr>
     <tr><td><kbd>Ctrl+W</kbd> <kbd>Ctrl+A</kbd> <kbd>Ctrl+S</kbd> <kbd>Ctrl+H</kbd> · <kbd>1</kbd>–<kbd>4</kbd></td><td>Workspaces, Apps, Sharing, Help</td></tr>
     <tr><td><kbd>↑</kbd> <kbd>↓</kbd> · <kbd>Tab</kbd></td><td>Pick in the list · move into the page</td></tr>
-    <tr><td><kbd>r</kbd> <kbd>n</kbd> <kbd>d</kbd> <kbd>+</kbd> <kbd>-</kbd> (Workspaces)</td><td>Rename, new, delete, move up, move down</td></tr>
+    <tr><td><kbd>n</kbd> <kbd>e</kbd> <kbd>d</kbd> <kbd>+</kbd> <kbd>-</kbd> (Workspaces)</td><td>New, edit, delete, move up, move down</td></tr>
     <tr><td><kbd>Space</kbd> <kbd>&gt;</kbd> <kbd>&lt;</kbd> <kbd>a</kbd> <kbd>u</kbd> <kbd>Tab</kbd> (Apps)</td><td>Tick an app · send the ticked ones to the open workspace · send them back · Select All · Deselect All (rows showing only) · switch side</td></tr>
     <tr><td><kbd>Enter</kbd> on a workspace (Apps)</td><td>Open it (the open one closes)</td></tr>
-    <tr><td><kbd>Space</kbd> <kbd>d</kbd> (Sharing)</td><td>Share with the one above · stop sharing</td></tr>
+    <tr><td><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>Space</kbd> (Sharing)</td><td>Pick a cell · switch it between Own and Shared</td></tr>
     <tr><td><kbd>F10</kbd></td><td>Save, with the review first</td></tr>
     <tr><td><kbd>Esc</kbd></td><td>Back · close a question</td></tr>
     <tr><td><kbd>F1</kbd> · <kbd>Q</kbd></td><td>Help · Quit (it asks first if something isn't saved)</td></tr>
