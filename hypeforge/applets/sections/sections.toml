@@ -51,7 +51,7 @@ categories = ["Education"]
 name = "Games"
 icon = "applications-games"
 workspace = 4
-apps = ["World_of_Warcraft_Pi5", "chrome-lmfjplffabieabgoopgbifbdkmaniojo-Default"]   # WoW (our realm), EVEFORGE (web app)
+apps = ["World_of_Warcraft_Pi5"]   # WoW (our realm): it declares no category
 categories = ["Game"]
 
 [[section]]
