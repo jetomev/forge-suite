@@ -434,7 +434,7 @@ class WorkspacesView(Vertical):
         try:
             if self.mode == "new":
                 after = self.query_one("#ws-after", Select).value
-                uid = self.session.add(name, int(after) if after not in (None, Select.BLANK) else None)
+                uid = self.session.add(name, int(after) if after not in (None, Select.NULL) else None)
                 self.picked = uid
                 self.app.notify(f"New workspace: {name.strip()}. Press F10 to save it.", timeout=5)
             elif self.mode == "edit" and self.picked is not None:
@@ -554,7 +554,7 @@ class AppsView(Vertical):
         rows = [self.row(a) for a in self.installed if a not in listed]
         if find:
             rows = [r for r in rows if find in r[1].lower() or find in r[0].lower()]
-        if cat not in ("All", Select.BLANK, None):
+        if cat not in ("All", Select.NULL, None):
             rows = [r for r in rows if r[2] == cat]
         return rows
 

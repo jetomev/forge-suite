@@ -296,7 +296,7 @@ class SettingsView(Horizontal):
         self._changed()
 
     def on_select_changed(self, e: Select.Changed) -> None:
-        if (e.select.id or "") != "f-size" or e.value is Select.BLANK:
+        if (e.select.id or "") != "f-size" or e.value is Select.NULL:
             return
         s = self.session.screen(self.picked)
         w, h = (int(v) for v in str(e.value).split("x"))
@@ -375,7 +375,7 @@ class ArrangeView(VerticalScroll):
         of = self.query_one("#a-of", Select)
         others = [(se.label(o.name), o.name) for o in se.pending if o.name != self.picked and o.on]
         keep = of.value if of.value in [v for _, v in others] else (
-            se.main if any(v == se.main for _, v in others) else (others[0][1] if others else Select.BLANK))
+            se.main if any(v == se.main for _, v in others) else (others[0][1] if others else Select.NULL))
         with of.prevent(Select.Changed):
             of.set_options(others)
             of.value = keep
@@ -384,7 +384,7 @@ class ArrangeView(VerticalScroll):
         se = self.session
         if not of:
             v = self.query_one("#a-of", Select).value
-            of = None if v is Select.BLANK else str(v)
+            of = None if v is Select.NULL else str(v)
         if not of or of == self.picked:
             return
         se.arrange(self.picked, where, of, self.query_one("#a-align", Choices).value)

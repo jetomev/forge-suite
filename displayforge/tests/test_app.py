@@ -428,6 +428,31 @@ class NoNameClashes(unittest.TestCase):
         self.assertIn("_name", live)        # the check really sees the name that bit us
 
 
+class OneScreen(unittest.TestCase):
+    """A computer with one screen (a laptop): nothing to arrange against. Textual 8 made
+    Select.BLANK plain False, so setting Arrange's "Of" list to it crashed the app at start
+    (found 2026-10-09 while building defaultappsForge; F-6)."""
+
+    # the same stand-ins as App (swaymsg, ddcutil, throwaway files), without App's three-screen tests
+    setUp_app, tearDown = App.setUp, App.tearDown
+
+    def setUp(self):
+        self.setUp_app()
+        one = [o for o in json.loads(DATA.read_text()) if o.get("name") == "DP-3"]
+        self.session = Session(S.parse(one), {"names": {}, "bus": {}}, main="DP-3")
+
+    def test_it_starts_and_arrange_says_there_is_nothing_to_arrange(self):
+        app = DisplayForgeApp(self.session, swaymsg=self.sway, ddcutil=self.ddc)
+
+        async def go():
+            async with app.run_test(size=(110, 34)) as pilot:
+                await pilot.pause()
+                await pilot.press("3")
+                await pilot.pause()
+                self.assertTrue(app.query_one("#sec-arrange").display)
+        asyncio.run(go())
+
+
 if __name__ == "__main__":
     unittest.main()
 
