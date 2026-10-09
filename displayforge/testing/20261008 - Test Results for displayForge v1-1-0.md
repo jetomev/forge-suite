@@ -15,10 +15,6 @@ Three runs on 2026-10-08, free-form rather than row by row:
 2. **Evening, the second look:** "bottom bar, awesome!". A menu opened by its number didn't close on the second press; the open menu wasn't lit; letters should follow one rule (the first letter, else the next free one); About and License (then Keys and the Manual too) belonged in the work area, not windows. → fixed in forgekit 0.10.0, picked up here.
 3. **Evening, the third look:** the page's own highlight stayed lit while Help or History was open. → fixed; Javier: **"perfect!"**
 
-## 3 · Still to run — on the installed package
+## 3 · The released version
 
-The matrix rows are run once more by Javier on the **locally built package**, installed through nog, before anything goes to the AUR (the release rule). Results go here.
-
-| Rows | Result |
-|---|---|
-| The matrix's rows for Javier | ⬜ waiting for the installed run |
+displayForge runs from the Forge Suite repository (no package yet), so the version Javier ran in his third run is the released one; he checked it again inside Settings next to the installed apps on 2026-10-08: **"all perfect!"** ✅
