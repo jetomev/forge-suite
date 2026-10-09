@@ -154,6 +154,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Phase 13 · Forge apps for the gaps
 - [ ] New Forge Suite apps for the jobs with no terminal app (one at a time, each its own project)
+- [x] **The launcher's Forge Suite group removed (Javier, 2026-10-08 late; D-63):** its apps moved into **Settings**, with **hypeForge Settings first** (its launcher entry was already installed) → displayForge, nogForge, grubForge, alacrittyForge, bitlaForge, Help & Keys, printer settings, then the rest by category. Repo + live `sections.toml` (backup kept); checked with the launcher's own sorting. They now open on workspace 6 (Settings), not on the screen you're on — flagged to Javier
 - [ ] **fileForge — our own file manager** (planned). **Until then (Javier, 2026-10-08): Thunar in Favorites, mc out** — done in the live `~/.config/hypeforge/applets/sections.toml` (backup next to it); Thunar 4.20.10 was already installed; the Favorites code shows all 18. When fileForge ships, it takes Thunar's place
 
 ## Phase 14 · Our own terminal apps for the rest

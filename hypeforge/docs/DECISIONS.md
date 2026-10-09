@@ -5,6 +5,16 @@
 
 ---
 
+## 2026-10-08 (late)
+
+### D-63 · The launcher's Forge Suite group is gone: its apps live in Settings, with hypeForge Settings first
+**Decided by Javier:** *"Everything inside the Forge Suite app launcher group, move it to Settings, and delete the Forge Suite group/folder. Then add the hypeForge Settings app to Settings too."*
+- The **Settings** section lists hypeForge Settings, then displayForge, nogForge, grubForge, alacrittyForge, bitlaForge and Help & Keys, then the printer settings and the other settings programs.
+- **What changes:** picked from the launcher, these apps now open on the **Settings workspace (6)**, like the rest of that section. The Forge Suite group opened them on the screen you were on (Javier, 2026-10-06); that rule went with the group. Javier can ask for it back for Settings.
+- Same day, same spirit: Thunar replaces mc in Favorites until fileForge exists.
+
+---
+
 ## 2026-10-08
 
 ### D-62 · Inside hypeForge Settings an app has no Quit; Settings closes it, and each app asks its own question

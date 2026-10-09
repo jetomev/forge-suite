@@ -24,14 +24,6 @@ favourites = []
 # `categories` catch every other app of that kind (from the app's own desktop entry), so the
 # menu is useful before anything is sorted. An app shows in the first section that claims it.
 [[section]]
-name = "Forge Suite"
-icon = "applications-system"
-# our own apps, together; they open on the screen you are on (Javier, 2026-10-06)
-workspace = ""
-apps = ["displayforge", "nogforge", "grubforge", "alacrittyforge", "bitlaforge", "hypeforge-help"]
-categories = []
-
-[[section]]
 name = "Daily"
 icon = "internet-web-browser"
 workspace = 1
@@ -70,7 +62,10 @@ categories = ["Monitor"]
 name = "Settings"
 icon = "preferences-system"
 workspace = 6
-apps = ["system-config-printer"]
+# hypeForge Settings first, then the Forge apps (the Forge Suite group moved here and was removed,
+# Javier 2026-10-08; D-63), then the rest
+apps = ["hypeforge-settings", "displayforge", "nogforge", "grubforge", "alacrittyforge", "bitlaforge",
+        "hypeforge-help", "system-config-printer"]
 categories = ["Settings", "System", "HardwareSettings", "Printing"]
 
 # The bottom of the first screen, top to bottom. Log Out, Reboot and Shutdown ask first
