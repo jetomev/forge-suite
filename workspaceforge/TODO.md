@@ -25,3 +25,4 @@
 
 ## Phase 3 · Release
 - [ ] Test matrix + Javier's run → 1.0.0, GitHub Release, AUR after his local test
+- [ ] **Only then, the public documentation** (Javier, 2026-10-09: "Documentation is updated only after the app is approved to publish"): the suite README's row, the kognogos.org card (drafted in homelab `fa3496b`, backed out), hypeForge's README and Help pages
