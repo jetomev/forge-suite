@@ -28,7 +28,8 @@ From Javier's run of every Forge app inside hypeForge Settings ([#49](https://gi
 - **About, License, Keys and the manual are pages in the work area**, not windows (`AboutView`,
   `LicenseView`, `ShortcutsView`, `ManualView`; `show_page`, `show_manual(title, pages, start)`);
   Help is lit while they show, and Esc goes back to the page you came from. `ManualScreen` stays,
-  now a window around `ManualView`.
+  now a window around `ManualView`. On these reading pages an app's one-letter keys don't fire
+  (S would save); numbers, Ctrl + letter, ?, Esc and F-keys still work.
 - **One dropdown at a time** ([#47](https://github.com/jetomev/forge-suite/issues/47)): a menu key pressed
   again closes its dropdown instead of stacking another; another menu's key or title switches to it.
 - **The terminal pane** ([#45](https://github.com/jetomev/forge-suite/issues/45)): passes the mouse to a
@@ -39,7 +40,7 @@ From Javier's run of every Forge app inside hypeForge Settings ([#49](https://gi
 - Checked: Textual lists Ctrl+I as another name for Tab and Ctrl+M for Enter, but a key matches only what
   was really pressed, so a Ctrl+I shortcut never takes Tab (a test keeps it so). On a plain text console
   Ctrl+I *is* Tab, so there the number is the way.
-- Tests: **137** (was 110). Warnings: **0** (was 0). Each new piece was switched off once to watch its
+- Tests: **138** (was 110). Warnings: **0** (was 0). Each new piece was switched off once to watch its
   tests fail. Two tests from the unreleased 0.10.0-dev were replaced; one of them could never fail.
 
 ### 0.9.0 — October 7, 2026 · the menu bar wraps ([#40](https://github.com/jetomev/forge-suite/issues/40))
