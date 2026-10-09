@@ -352,6 +352,35 @@ class MenuKeysForEveryEntry(unittest.IsolatedAsyncioTestCase):
             await pilot.pause(0.3)
             self.assertEqual(app.query_one("#sec-forge-manual").current, "start")
 
+    async def test_an_apps_letter_keys_sleep_on_reading_pages(self):
+        pages = [("start", "Start", "# Start\n\nhello")]
+
+        class Busy(self.Three):
+            BINDINGS = [Binding("s", "save", show=False)]
+            saved = 0
+
+            def action_save(self):
+                self.saved += 1
+
+        app = Busy()
+        async with app.run_test(size=(80, 20)) as pilot:
+            await pilot.press("ctrl+o")
+            await pilot.pause()
+            app.set_focus(None)
+            await pilot.press("s")
+            await pilot.pause()
+            self.assertEqual(app.saved, 1, "on an app page the letter works")
+            for opener in (lambda: app.action_act("about"), lambda: app.action_act("license"),
+                           lambda: app.action_act("shortcuts"), lambda: app.show_manual("M", pages)):
+                opener()
+                await pilot.pause(0.3)
+                await pilot.press("s")
+                await pilot.pause()
+                self.assertEqual(app.saved, 1, f"S did nothing on {app.query_one('#forge-work').current}")
+            await pilot.press("2")                 # numbers still work from a reading page
+            await pilot.pause()
+            self.assertEqual(self.active(app), ["menu-two"])
+
     async def test_hypeforge_count_is_the_same(self):
         app = self.Three(hypeforge=True)
         async with app.run_test(size=(80, 20)) as pilot:

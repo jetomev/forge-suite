@@ -423,6 +423,7 @@ class ForgeApp(App[None]):
         self._mark_active("help")
         view = self.query_one(f"#sec-{page}")
         if page != "forge-manual":              # the manual puts the keys in its contents list itself
+            view.can_focus = True                # (pages are not focusable while hidden)
             self.call_after_refresh(view.focus)
         self.refresh_hints()
 

@@ -176,13 +176,27 @@ class _PageView(VerticalScroll):
 
     BINDINGS = [Binding("escape", "back", "", show=False)]
     FORGE_HINTS = [("Esc", "back")]
-    can_focus = True
+    # not focusable until shown: at start Textual focuses the first focusable widget, hidden or
+    # not, and a hidden page holding the focus would silence the app's letter keys
+    can_focus = False
     DEFAULT_CSS = "_PageView { padding: 1 3; } _PageView > .forge-page-title { margin: 0 0 1 0; color: $forge-accent; text-style: bold; }"
+
+    def on_key(self, event) -> None:
+        quiet_letters(event)
 
     def action_back(self) -> None:
         back = getattr(self.app, "action_back_from_page", None)
         if back:
             back()
+
+
+def quiet_letters(event) -> None:
+    """On a reading page (About, License, Keys, the manual) an app's one-letter keys must not fire:
+    S would save, C start a clean-up (found by the nogForge 1.4.0 build). A plain letter stops
+    here, before it reaches the app; numbers, Ctrl + letter, ?, Esc and F-keys still pass."""
+    ch = event.character or ""
+    if len(ch) == 1 and ch.isalpha() and not event.key.startswith("ctrl+"):
+        event.stop()
 
 
 class AboutView(_PageView):

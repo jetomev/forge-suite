@@ -108,6 +108,10 @@ class ManualView(Vertical):
         if self._settled and e.option.id != self.current:
             self.open_page(e.option.id, remember=False)
 
+    def on_key(self, event) -> None:
+        from .dialogs import quiet_letters
+        quiet_letters(event)
+
     def on_markdown_link_clicked(self, e: Markdown.LinkClicked) -> None:
         e.prevent_default()
         target = e.href.lstrip("#")
