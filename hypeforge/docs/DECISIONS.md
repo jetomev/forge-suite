@@ -7,6 +7,11 @@
 
 ## 2026-10-08 (late)
 
+### D-65 · hypeForge Settings opens on a Home page of cards, each with an icon and three lines
+**Decided by Javier** (#46): from two layouts (rows like a table, or cards), **cards in two columns**; then *"can we add some icons to the left menu options representative of what they are, and in the Home page titles? … Per box, 3 rows of relevant content."* Verdict on 0.5.0: *"beautiful. Great for a first version!"*
+- Ten cards: Screens, Workspaces, Network, Sound, Printer, Night light, Passwords, Packages, Boot Menu, Terminal — real values, asked in the background, never able to freeze or crash the window. A card opens its page where Settings has one.
+- Icons from the Nerd Font every KognogOS terminal uses (not emoji); none on a plain text console.
+
 ### D-64 · The launcher's groups are the standard kinds of app; where an app opens is a separate choice
 **Decided by Javier:** *"I know we named them like the Workspaces, but in reality what should apply is the standard names all OS uses to classify the applications… so when people install something, or want to use something, they know where they are or should be."* On where they open: *"I will leave that to you."*
 - **Groups:** Development, Education, Games, Graphics, Internet, Multimedia, Office, Science, Settings, System, Utilities, Other — the freedesktop.org main categories, under the names GNOME, KDE and XFCE show. An app goes where its own desktop entry's Categories put it; when it names several, `claim_order` decides (Settings > Games > Multimedia > Graphics > Office > Development > Education > Science > Internet > System > Utilities). Apps that declare nothing (WoW, Chrome web apps, Rofi) are placed by hand. Empty groups are hidden; nothing is left only in "All apps" (95 of 95 placed).

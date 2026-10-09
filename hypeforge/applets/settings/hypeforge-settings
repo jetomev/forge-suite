@@ -24,7 +24,7 @@ import sys
 import tomllib
 from pathlib import Path
 
-VERSION = "0.4.0"
+VERSION = "0.5.0"
 HERE = Path(__file__).resolve().parent
 CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets/settings.toml"
 
@@ -37,9 +37,11 @@ def pages():
 
 
 def main():
+    sys.path.insert(0, str(HERE))
+    import home as H                       # the Home page's summaries (0.5.0, #46)
     from textual.app import ComposeResult
     from textual.binding import Binding
-    from textual.containers import Horizontal, Vertical
+    from textual.containers import Grid, Horizontal, Vertical, VerticalScroll
     from textual.widgets import OptionList, Static
     from textual.widgets.option_list import Option
     from rich.text import Text
@@ -64,6 +66,15 @@ def main():
         #hf-pane { height: 1fr; }
         #hf-empty { height: 1fr; padding: 2 3; color: $forge-muted; }
         #hf-running { height: 1; padding: 0 2; color: $forge-muted; background: $forge-surface; }
+        /* the Home page (0.5.0, Javier: cards, two columns) */
+        #hf-home { height: 1fr; padding: 1 2; }
+        #hf-home-title { margin: 0 0 1 1; color: $forge-accent; text-style: bold; }
+        #hf-cards { grid-size: 2; grid-gutter: 0 1; height: auto; }
+        .hf-card { height: 5; border: round $forge-border; border-title-color: $forge-accent;
+                   border-title-style: bold; padding: 0 1; color: $forge-text; }
+        .hf-card.has-page:hover { border: round $forge-accent; background: $forge-surface; }
+        .hf-card.no-page { border-title-color: $forge-muted; }
+        #hf-home-note { margin: 1 0 0 1; color: $forge-muted; }
         """
         MENU = [
             {"id": "settings", "title": "Settings", "kind": "section"},
@@ -82,10 +93,25 @@ def main():
         BINDINGS = []
         EXTRA = [("Manual", "manual"), ("License", "license"), ("About", "about"), ("Quit", "quit")]
 
+        class Card(Static):
+            """One Home card: a setting's name on the border, its summary inside; a click opens its page."""
+
+            def __init__(self, title: str, page: str | None, console: bool = False, **kw) -> None:
+                super().__init__("…", classes="hf-card " + ("has-page" if page else "no-page"), **kw)
+                self.border_title = H.icon(title, console) + title
+                self.page = page
+                if not page:
+                    self.tooltip = "No page of its own yet"
+
+            def on_click(self) -> None:
+                if self.page:
+                    self.app.open_named(self.page)
+
         def compose_sections(self) -> ComposeResult:
             with Horizontal(id="sec-settings"):
-                yield OptionList(*(Option(self._row(p), id=f"page-{i}") for i, p in enumerate(PAGES)),
-                                 *(Option(Text(name, style="bold"), id=f"extra-{act}") for name, act in self.EXTRA),
+                yield OptionList(Option(self._named("Home"), id="extra-home"),
+                                 *(Option(self._row(p), id=f"page-{i}") for i, p in enumerate(PAGES)),
+                                 *(Option(self._named(name), id=f"extra-{act}") for name, act in self.EXTRA),
                                  id="hf-pages")
                 with Vertical(id="hf-right"):
                     yield Static("Pick a page on the left: the app opens here, with its own menu bar, keys and "
@@ -94,6 +120,13 @@ def main():
                     # one pane per page (0.3.0, Javier: an app you leave stays open and comes back as it was)
                     for i in range(len(PAGES)):
                         yield TerminalPane(id=f"hf-pane-{i}", classes="hf-pane")
+                    # Home: how this computer is set up, a card per setting (0.5.0, #46)
+                    with VerticalScroll(id="hf-home", classes="hf-page"):
+                        yield Static("Home  ·  how this computer is set up", id="hf-home-title")
+                        with Grid(id="hf-cards"):
+                            for n, (title, _fn, page) in enumerate(H.CARDS):
+                                yield self.Card(title, page, self.forge_console, id=f"hf-card-{n}")
+                        yield Static("Click a card to open its page, or pick one on the left.", id="hf-home-note")
                     # About and License open on the right, like the apps (Javier, 2026-10-08: not in a window)
                     yield AboutView(self.ABOUT, id="hf-about", classes="hf-page")
                     yield LicenseView(self.LICENSE_NAME, self.LICENSE_NOTICE, id="hf-license", classes="hf-page")
@@ -108,10 +141,14 @@ def main():
                                      "here have no Quit of their own: Quit closes Settings and every app inside "
                                      "it. An app with something not saved asks you first, on its own page.")
 
-        @staticmethod
-        def _row(p) -> Text:
-            # names only (Javier, 2026-10-07: "people will click on them and find out")
-            return Text(p["name"], style="bold")
+        def _named(self, name: str, icon: str | None = None) -> Text:
+            # names only (Javier, 2026-10-07: "people will click on them and find out"), each with
+            # its icon (Javier, 2026-10-08); none on a text console
+            mark = "" if self.forge_console else ((icon + " ") if icon else H.icon(name))
+            return Text(mark + name, style="bold")
+
+        def _row(self, p) -> Text:
+            return self._named(p["name"], p.get("icon"))
 
         def on_mount(self) -> None:
             super().on_mount()
@@ -125,8 +162,34 @@ def main():
             want = (sys.argv[1] if len(sys.argv) > 1 else "").lower()
             for i, p in enumerate(PAGES):
                 if want and p["name"].lower().startswith(want):
-                    self.query_one("#hf-pages", OptionList).highlighted = i
+                    self.query_one("#hf-pages", OptionList).highlighted = i + 1     # Home is the first line
                     self.call_after_refresh(self.open_page, i)
+                    return
+            self.query_one("#hf-pages", OptionList).highlighted = 0
+            self.show_home()
+
+        def show_home(self) -> None:
+            """Home on the right, its cards asked afresh (a thread: a slow answer never freezes Settings)."""
+            self.show_right("#hf-home")
+            self.query_one("#hf-empty").display = False
+            self.run_worker(self._fill_cards, thread=True, exclusive=True, group="hf-home")
+
+        def _fill_cards(self) -> None:
+            rows = H.summaries()
+            self.call_from_thread(self._show_cards, rows)
+
+        def _show_cards(self, rows) -> None:
+            for n, (_title, lines, _page) in enumerate(rows):
+                self.query_one(f"#hf-card-{n}", Static).update(Text("\n".join(lines)))
+
+        def open_named(self, name: str) -> None:
+            """A card's click: the Settings page with that name, if there is one."""
+            for i, p in enumerate(PAGES):
+                if p["name"].lower() == name.lower():
+                    self.query_one("#hf-pages", OptionList).highlighted = i + 1
+                    self.open_page(i)
+                    return
+            self.notify(f"{name} has no page in Settings yet.", timeout=4)
 
         def on_option_list_option_selected(self, e: OptionList.OptionSelected) -> None:
             e.stop()
@@ -140,6 +203,8 @@ def main():
             self._quitting = False                # any choice on the list ends a quit in progress
             if act == "quit":
                 self.quit_all()
+            elif act == "home":
+                self.show_home()
             elif act in ("about", "license", "manual"):
                 self.show_right(f"#hf-{act}")
 
