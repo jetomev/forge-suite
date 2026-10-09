@@ -28,7 +28,8 @@
 - [x] Review and save: backup (20 kept), open windows carried to their workspace's new name/place, write (read back), the applet reloaded; quit asks to save
 - [x] Manual (5 pages), `--hypeforge`, the **Workspaces** page in hypeForge Settings (repo + live) and its Home card
 - [x] Tests: 33 (model 18, pages 15), 12 behaviours broken on purpose — 12 caught; 100 × 30 pictures checked by eye (found 3 bugs: a rename counted its apps as changes, sharing planned clashing renames, clipped text — fixed, with tests); text console preview clean; `scripts/bench-save.py` (rename + swap + delete on a hidden Sway) OK twice
-- [ ] **NEXT — Javier's first run** (hypeForge Settings → Workspaces, or `python3 main.py`)
+- [x] **Javier's first run (2026-10-09 ~13:40):** Workspaces "works well"; Apps "work well", but both tables should be at the same height → one header row across both sides, the tables start and end on the same lines (fixed the same hour)
+- [ ] **Sharing — Javier: "Not working for me, have to think better about this section."** Waiting for his thinking; meanwhile his call whether the page stays in 0.1.0
 - [ ] More than nine workspaces (D-6): the applet's cell naming changes first, with a bench test
 - [ ] Not yet tried: one or two screens (a VM), a real tty
 

@@ -47,12 +47,17 @@ WF_CSS = FORGE_CSS + """
              border-title-style: bold; padding: 0 1; margin: 1 1 0 0; }
 #wf-switch Horizontal { height: auto; }
 #wf-switch-words { width: 1fr; padding: 0 0 0 2; }
-#wf-pool-box { width: 1fr; height: 1fr; padding: 1 1 0 0; }
+#wf-apps-head { height: auto; padding: 1 0 0 0; }
+.wf-side { width: 1fr; height: auto; }
+#wf-pool-box { padding: 0 1 0 0; }
+#wf-right-head { padding: 0 0 0 1; }
+#wf-mid-head { width: 10; }
+#wf-apps-body { height: 1fr; }
 #wf-mid { width: 10; height: 1fr; align: center middle; }
 #wf-mid Button { width: 8; min-width: 8; margin: 1 0 0 0; }
 #wf-mid Static { width: 8; text-align: center; color: $forge-muted; }
-#wf-right { width: 1fr; height: 1fr; padding: 1 0 0 1; }
-#wf-pool { height: 1fr; }
+#wf-right { width: 1fr; height: 1fr; padding: 0 0 0 1; }
+#wf-pool { width: 1fr; height: 1fr; }
 .wf-ws-table { height: auto; max-height: 16; }
 .wf-filters { height: auto; padding: 0 0 1 0; }
 .wf-filters Input { width: 1fr; }
@@ -491,7 +496,7 @@ class WorkspacesView(Vertical):
 
 # ---- 2 · Apps -------------------------------------------------------------------------------------------
 
-class AppsView(Horizontal):
+class AppsView(Vertical):
     """2 · Apps: the apps on no workspace on the left, the workspaces on the right (one open at a
     time), >> and << between them (Javier's layout, D-3: "perfect")."""
 
@@ -507,23 +512,32 @@ class AppsView(Horizontal):
         self.shown_uids: list[int] = []
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="wf-pool-box"):
-            yield Static("", id="wf-pool-title")
-            cats = sorted({v["category"] for v in self.installed.values()})
-            with Horizontal(classes="wf-filters"):
-                yield Input(placeholder="Find", id="pool-find")
-                yield Select([("All categories", "All")] + [(c, c) for c in cats], value="All",
-                             allow_blank=False, id="pool-cat")
-            with Horizontal(classes="wf-buttons"):
-                yield Button("Select All (a)", id="pool-all")
-                yield Button("Deselect All (u)", id="pool-none")
+        # One header row across both sides, so the two tables start on the same line and end on the
+        # same line (Javier's first run, 2026-10-09: "both tables should be at the same height")
+        with Horizontal(id="wf-apps-head"):
+            with Vertical(id="wf-pool-box", classes="wf-side"):
+                yield Static("", id="wf-pool-title")
+                cats = sorted({v["category"] for v in self.installed.values()})
+                with Horizontal(classes="wf-filters"):
+                    yield Input(placeholder="Find", id="pool-find")
+                    yield Select([("All categories", "All")] + [(c, c) for c in cats], value="All",
+                                 allow_blank=False, id="pool-cat")
+                with Horizontal(classes="wf-buttons"):
+                    yield Button("Select All (a)", id="pool-all")
+                    yield Button("Deselect All (u)", id="pool-none")
+            yield Static("", id="wf-mid-head")
+            with Vertical(id="wf-right-head", classes="wf-side"):
+                yield Static("[$forge-accent b]Workspaces[/]  [$forge-muted]open one to see its apps[/]")
+                yield Static("\n[$forge-muted]When one of these apps opens, your screens go with it to its "
+                             "workspace, except in the first 30 seconds after login.[/]")
+        with Horizontal(id="wf-apps-body"):
             yield TickTable(id="wf-pool")
-        with Vertical(id="wf-mid"):
-            yield Button(">>", id="send", variant="primary")
-            yield Static("send")
-            yield Button("<<", id="back")
-            yield Static("back")
-        yield VerticalScroll(id="wf-right")
+            with Vertical(id="wf-mid"):
+                yield Button(">>", id="send", variant="primary")
+                yield Static("send")
+                yield Button("<<", id="back")
+                yield Static("back")
+            yield VerticalScroll(id="wf-right")
 
     def on_mount(self) -> None:
         self.refresh_view()
@@ -567,7 +581,7 @@ class AppsView(Horizontal):
         p = self.session.pending
         if self.open_uid is not None and not p.has(self.open_uid):
             self.open_uid = None
-        widgets = [Static("[$forge-accent b]Workspaces[/]  [$forge-muted]open one to see its apps[/]")]
+        widgets = []
         for i, w in enumerate(p.workspaces, 1):
             table = TickTable(id=f"wt-{w.uid}", classes="wf-ws-table")
             col = Collapsible(Horizontal(Button("Select All (a)", id=f"wsall-{w.uid}"),
@@ -575,8 +589,6 @@ class AppsView(Horizontal):
                               table, title=self._title(i, w), collapsed=w.uid != self.open_uid,
                               id=f"col-{w.uid}", classes="wf-col")
             widgets.append(col)
-        widgets.append(Static("\n[$forge-muted]When one of these apps opens, your screens go with it to its "
-                              "workspace — not in the first 30 seconds after login.[/]"))
         await right.mount(*widgets)
         self.shown_uids = [w.uid for w in p.workspaces]
         self._refresh_right()
@@ -636,7 +648,7 @@ class AppsView(Horizontal):
 
     def _left_has_focus(self) -> bool:
         f = self.app.focused
-        return f is not None and self.query_one("#wf-pool-box") in f.ancestors_with_self
+        return f is not None and any(self.query_one(s) in f.ancestors_with_self for s in ("#wf-pool-box", "#wf-pool"))
 
     def action_all(self, value: bool) -> None:
         if self._left_has_focus():
