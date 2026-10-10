@@ -49,7 +49,7 @@ The GitHub Project **"hypeForge · the look"** (jetomev) holds every task above 
   - **Critical eye (Claude):** the mid themes (Gray, Blue, Purple, Green, Pink, Red) sit near lightness 0.40, so they read close to their Dark sisters; contrast forces it ("the mid-gray dead zone": at 0.55–0.65 neither black nor white text reaches 7:1). Options for Javier: accept, or let mid themes use 4.5:1 body text and move up to ~0.50.
 - **04 · inventory** ✅ — 21 places a theme writes; F-52 #59, F-53 #60 (fixed); what Settings needs for Look.
 - **05 · wallpapers** ✅ — our own generator (`wallpapers/generate.py`, Python + Pillow + numpy, already installed): five moods (synthwave, skyline, mountains, circuit, sky-clouds as the anime-style stand-in), any palette, the same picture every time; light themes get calm "paper" versions. Licences read: Unsplash, Pexels and Wallhaven can't be shipped; Wikimedia Commons CC0/CC only, file by file, with credits. Ship the generator and make each wallpaper when a theme is picked (~6 s), or WebP (0.06–0.4 MB each).
-  - **Critical eye (Claude):** synthwave, skyline, mountains and circuit look good; **sky-clouds is the weak one** (the clouds sit low and clipped, with dark blobs inside) and gets another round before Javier sees it as final.
+  - **Critical eye (Claude):** synthwave, skyline, mountains and circuit look good; sky-clouds was the weak one (clouds low and clipped, dark blobs inside); redone the same day as three cumulus towers over a haze bank, flat cel shading, no blobs — still a little smooth.
 
 ## Questions for Javier (asked on the proposal pages, not before)
 

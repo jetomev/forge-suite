@@ -21,7 +21,7 @@
 | **Buildings** | City skyline in layers fading into haze, lit windows, neon signs, moon | Good. Reads as a flat illustrated city. | ✅ `skyline` |
 | **Nature** | Layered mountain ranges with mist in the valleys, moon or sun, pine trees | Very good. The classic "minimal mountains" look. | ✅ `mountains` |
 | **Technology** | Circuit board: routed copper lines, chips with pins, a blurred board behind for depth | Very good. | ✅ `circuit` |
-| **Anime (stand-in)** | Flat-painted (cel-shaded) clouds, power lines and pole, falling petals, shooting stars | Good *as a style*. It is not anime art. | ✅ `skyclouds` |
+| **Anime (stand-in)** | Cel-shaded cumulus towers in haze, small high clouds, moon or sun, a quiet power-line pole, a few petals | Good *as a style*. It is not anime art. | ✅ `skyclouds` |
 | Nature (extra) | Aurora, ocean waves, sand dunes | Good | ⬜ ideas |
 | Technology (extra) | Isometric blocks, data grids, soft bokeh light dots | Good | ⬜ ideas |
 | Abstract | Geometric tiling, gradient meshes, low-poly triangles | Very good, and works for every colour | ⬜ ideas |
@@ -93,14 +93,19 @@ These are stand-in palettes. The real 23 come from helper 3's colour research an
 What I fixed after looking at my own output (it took several rounds):
 
 - **Synthwave:** the first floor came out solid white because of a perspective maths mistake. I rewrote the grid with the correct formula, so lines thin out smoothly toward the horizon without shimmering. I also added more sun stripes and a stronger sun gradient.
-- **Clouds:** version 1 looked like bubble wrap, version 2 like cut-outs with dark outlines. The final version gives every puff its own rounded surface and splits it into three flat tones, the way anime backgrounds are painted, with a flat underside.
+- **Clouds (the hardest one, about eight rounds):** early versions looked like bubble wrap, then like cut-outs with dark outlines. After the coordinator's review (the main cloud sat low-left, clipped flat, with dark blobs inside, and the picture felt lopsided), I rebuilt it as a calm anime sky:
+  - three cumulus towers rise from the lower third, the tallest just left of centre to balance the pole on the right;
+  - their bases dissolve into a haze bank, so nothing is clipped;
+  - a row of distant clouds sits along the horizon, and four small clouds float higher up;
+  - the shading now comes only from each cloud's outline, never from the puffs inside, so holes and blobs can't happen: one lit tone, one flat shadow tone on the side away from the light, a thin highlight on the edge facing it, and a scalloped flat underside;
+  - the pole is slimmer and lower in contrast, with fewer wires, and there are fewer petals (none on grey themes, where they looked like dust).
 - **Mountains:** I removed thin vertical streaks and a visible seam under the moon (a shading switch flipped hard at the moon's position).
 - **Skyline:** each building now has its own shade, the far layer got tiny windows, and the neon became coloured, with horizontal signs.
 - **Light themes:** I raised the contrast on synthwave (it was washed out) and softened the circuit chips (they were too heavy).
 
 **Still rough (honest list):**
 
-- Anime clouds still show small saw-tooth shadows near their bases in places. They read as stylised, not broken, but a person would paint them cleaner.
+- The anime towers are clean but a little smooth: fewer billows inside than a painter would add, and the tallest one's crown can come out with a small overhang. It's calm, which is what was asked for; more detail inside is the next step if Javier wants it.
 - Slanted skyline roofs are simple wedges. Trees are simple triangles.
 - The White theme's synthwave and clouds are quiet by nature. A white theme with no colour has little to work with.
 - No automatic tests yet. Every check was by eye.

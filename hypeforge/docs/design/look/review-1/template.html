@@ -339,7 +339,7 @@ function walls(){
   const sets = [...new Set(D.walls.map(w => w.set))].sort((a,b)=>["purple","darkblue","white"].indexOf(a)-["purple","darkblue","white"].indexOf(b));
   $("walls").innerHTML = sets.map(s => `<div class="wset"><h3>${NAMES[s]||s}</h3><div class="wgrid">${
     ["synthwave","skyline","mountains","circuit","skyclouds"].map(m => D.walls.find(w=>w.set===s&&w.mood===m)).filter(Boolean).map(w =>
-      `<figure><img src="${w.src}" alt="${MOODS[w.mood]} wallpaper in ${NAMES[s]||s}" loading="lazy"><figcaption><b>${MOODS[w.mood]}</b><span>${w.mood}</span>${w.mood==="skyclouds"?'<span class="flag">being redone</span>':""}</figcaption></figure>`).join("")
+      `<figure><img src="${w.src}" alt="${MOODS[w.mood]} wallpaper in ${NAMES[s]||s}" loading="lazy"><figcaption><b>${MOODS[w.mood]}</b><span>${w.mood}</span></figcaption></figure>`).join("")
   }</div></div>`).join("");
 }
 

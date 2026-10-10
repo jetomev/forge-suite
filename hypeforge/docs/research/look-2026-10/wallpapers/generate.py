@@ -788,49 +788,57 @@ def m_circuit(p: Pal, rng):
 
 
 # ── motif: sky-clouds (anime-style stand-in) ────────────────────────────────
-def _paint_cloud(img, rng, cx, base, width, scale, tones, L3, th=(0.40, 0.02)):
-    """A cel-shaded cumulus built from puffs.
+def _cumulus_puffs(rng, cx, base, width, height, scale, lean=0.0):
+    """Puffs for one cloud: a broad base narrowing into a rounded tower."""
+    puffs = []
+    levels = max(3, int(height / (85 * scale)))
+    for li in range(levels):
+        f = li / (levels - 1)                      # 0 = bottom, 1 = top
+        w = width * (1 - 0.74 * f ** 0.85) * rng.uniform(0.85, 1.08)
+        xc = cx + lean * f * width * 0.18 + rng.normal(0, width * 0.05)
+        n = max(2, int(round(w / (95 * scale))))
+        for k in range(n):
+            u = (k + 0.5) / n * 2 - 1
+            r = (w / n) * rng.uniform(0.55, 0.95) + 18 * scale
+            r *= 1.0 + 0.35 * abs(u) * rng.uniform(0.5, 1.2)  # bulging shoulders
+            y = base - f * (height - r) - r * 0.35 + rng.normal(0, 10 * scale)
+            puffs.append((xc + u * (w / 2 - r * 0.45), y, r, f < 0.22 and levels >= 5))
+    # a rounded crown
+    top_w = width * 0.30
+    for _ in range(4):
+        r = top_w * rng.uniform(0.26, 0.40)
+        puffs.append((cx + lean * width * 0.18 + rng.uniform(-0.3, 0.3) * top_w,
+                      base - height + r * rng.uniform(0.95, 1.15), r, False))
+    return puffs
 
-    Each puff is a half-sphere; the nearest puff wins at every pixel, so each
-    one keeps its own rounded surface. The light direction then splits every
-    puff into lit / shade / core with hard edges, rendered at 2x and scaled
-    down so the edges stay smooth: the flat-painted anime cloud look.
+
+def _paint_cloud(img, puffs, base, height, scale, lit, shade, haze, L3, th=0.56, rng=None, hi=None):
+    """Cel-shaded cloud from puffs: two flat tones, no blobs.
+
+    The puffs make the outline. The shading is worked out from the outline
+    only (never from the puffs inside), so the body is one clean lit tone,
+    the side away from the light gets one flat shadow tone that follows the
+    scallops, the edge facing the light gets a thin highlight, and the
+    bottom row of puffs on big clouds is the flat shadowed underside.
+    Rendered at 2x and scaled down for clean edges.
     """
-    lit, shade, core, rim = tones
-    circles = []
-    n_t = int(rng.integers(2, 4))  # a few towers per cloud
-    towers = [(rng.uniform(-0.6, 0.6), rng.uniform(0.6, 1.0)) for _ in range(n_t)]
-    for _ in range(int(width / (20 * scale)) + 12):
-        u = rng.uniform(-1, 1)
-        env = max(0.0, 1 - u * u) ** 0.7
-        for tu, tw in towers:
-            env = max(env, tw * math.exp(-((u - tu) / 0.22) ** 2) * 1.5)
-        r = scale * (30 + 80 * env * rng.uniform(0.5, 1.0))
-        y = base - r * 0.45 - env * 190 * scale * rng.uniform(0.45, 1.0)
-        circles.append((cx + u * width / 2, y, r, 1.0))
-    for k in range(int(width / (50 * scale)) + 2):  # a flat row along the base
-        u = -0.8 + 1.6 * k / max(1, int(width / (50 * scale)) + 1)
-        env = max(0.0, 1 - u * u) ** 0.5
-        r = scale * (40 + 40 * env) * rng.uniform(0.8, 1.1)
-        circles.append((cx + u * width / 2 + rng.normal(0, 8), base - r * 0.15, r, 0.0))
-    pad = 6
-    x0 = int(max(0, min(c[0] - c[2] for c in circles) - pad))
-    x1 = int(min(W, max(c[0] + c[2] for c in circles) + pad))
-    y0 = int(max(0, min(c[1] - c[2] for c in circles) - pad))
-    y1 = int(min(H, base + pad))
+    pad = 4
+    x0 = int(max(0, min(c[0] - c[2] for c in puffs) - pad))
+    x1 = int(min(W, max(c[0] + c[2] for c in puffs) + pad))
+    y0 = int(max(0, min(c[1] - c[2] for c in puffs) - pad))
+    y1 = int(min(H, max(c[1] + c[2] for c in puffs) + pad))
     if x1 - x0 < 8 or y1 - y0 < 8:
         return img
     S2 = 2
     pw, ph = (x1 - x0) * S2, (y1 - y0) * S2
     zb = np.full((ph, pw), -1e9, np.float32)
-    nx = np.zeros((ph, pw), np.float32)
-    ny = np.zeros((ph, pw), np.float32)
-    nz = np.ones((ph, pw), np.float32)
+    dotm = np.zeros((ph, pw), np.float32)
     gy_, gx_ = np.mgrid[0:ph, 0:pw].astype(np.float32)
     gy_ = gy_ / S2 + y0
     gx_ = gx_ / S2 + x0
-    lowest = max(c[1] for c in circles)
-    for (x, y, r, front) in circles:
+    lx, ly, lz = L3
+    under = np.zeros((ph, pw), bool)
+    for (x, y, r, low) in puffs:
         bx0, bx1 = int(max(0, (x - r - x0) * S2)), int(min(pw, (x + r - x0) * S2 + 2))
         by0, by1 = int(max(0, (y - r - y0) * S2)), int(min(ph, (y + r - y0) * S2 + 2))
         if bx1 <= bx0 or by1 <= by0:
@@ -838,149 +846,148 @@ def _paint_cloud(img, rng, cx, base, width, scale, tones, L3, th=(0.40, 0.02)):
         dx = gx_[by0:by1, bx0:bx1] - x
         dy = gy_[by0:by1, bx0:bx1] - y
         h2 = r * r - dx * dx - dy * dy
-        inside = h2 > 0
-        hz_ = np.sqrt(np.maximum(h2, 0)) + ((y / lowest) * 140 * scale if front else -400 * scale)  # lower puffs in front, base row behind
-        win = inside & (hz_ > zb[by0:by1, bx0:bx1])
-        zb[by0:by1, bx0:bx1][win] = hz_[win]
-        nx[by0:by1, bx0:bx1][win] = (dx / r)[win]
-        ny[by0:by1, bx0:bx1][win] = (dy / r)[win]
-        nz[by0:by1, bx0:bx1][win] = (np.sqrt(np.maximum(h2, 0)) / r)[win]
-    M = (zb > -1e8).astype(np.float32) * (gy_ <= base)
-    lx, ly, lz = L3
-    dot = nx * lx + ny * ly + nz * lz
-    # the flat base sits in its own shadow when the light is above
-    dot -= smoothstep(base - 70 * scale, base, gy_) * (0.35 if ly < 0 else -0.25)
-    t_lit = (dot > th[0]).astype(np.float32)
-    t_sh = (dot > th[1]).astype(np.float32)
-    # a flat, evenly painted underside (no saw-teeth along the base)
-    band = smoothstep(base - 30 * scale - 0.6, base - 30 * scale + 0.6, gy_)
-    t_sh = np.maximum(t_sh, band)
-    t_lit = t_lit * (1 - band) + band * (1.0 if ly > 0 else 0.0)
-    rimz = (dot > th[0] + 0.45).astype(np.float32)
-    col = mix(core, shade, t_sh[..., None])
-    col = mix(col, lit, t_lit[..., None])
-    col = mix(col, rim, rimz[..., None] * 0.25)
-    # down to 1x (box filter = anti-aliased edges)
+        hz_ = np.sqrt(np.maximum(h2, 0))
+        z = hz_ + (y - base) * 0.6 + (0 if low else 0)  # lower puffs sit in front
+        win = (h2 > 0) & (z > zb[by0:by1, bx0:bx1])
+        zb[by0:by1, bx0:bx1][win] = z[win]
+        d = (dx * lx + dy * ly + hz_ * lz) / r
+        dotm[by0:by1, bx0:bx1][win] = d[win]
+        under[by0:by1, bx0:bx1][win] = low
+    M = (zb > -1e8).astype(np.float32)
+    # the underside: the bottom row of puffs is all shade, so its top edge is
+    # scalloped like the puffs themselves
+    # shading comes from the outline only (a soft dome over the whole cloud
+    # at two sizes: small for the puff scallops, large for volume), so the
+    # inside of the cloud can never show holes or blobs
+    hg = 0.5 * blur(M, 7 * scale * S2) + 0.5 * blur(M, 34 * scale * S2)
+    gyy, gxx = np.gradient(hg)
+    kk = 70.0 * S2
+    ng = np.sqrt((gxx * kk) ** 2 + (gyy * kk) ** 2 + 1)
+    dot_g = (-gxx * kk * lx - gyy * kk * ly + lz) / ng
+    t_lit = ((dot_g > th) & ~under).astype(np.float32)
+    t_hi = ((dot_g > 0.90) & ~under).astype(np.float32)
+    t_lit = (blur(t_lit, 2 * S2) > 0.5).astype(np.float32)
+    t_hi = (blur(t_hi, 2 * S2) > 0.5).astype(np.float32) * t_lit
+    # the shade gets a soft lift toward the bottom (light bouncing off the haze)
+    lift = smoothstep(base - height * 0.4, base + 40 * scale, gy_)[..., None] * 0.35
+    col = mix(mix(shade, haze, lift), lit, t_lit[..., None])
+    col = mix(col, hi if hi is not None else lit, t_hi[..., None])
+
     def down(a):
         return a.reshape(ph // S2, S2, pw // S2, S2, *a.shape[2:]).mean(axis=(1, 3))
     Md = down(M)
     cd = down(col * M[..., None]) / np.maximum(Md[..., None], 1e-4)
-    patch = img[y0:y1, x0:x1]
-    over(patch, Md, cd)
+    over(img[y0:y1, x0:x1], Md, cd)
     return img
 
 
 def m_skyclouds(p: Pal, rng):
-    if p.dark:  # dusk: deep sky over a glowing horizon, light from below
-        img = vgrad([(0, p.c0 * 0.85), (0.30, p.c1), (0.62, mix(p.c1, p.c2, 0.8)),
-                     (0.86, mix(p.c2, p.accent, 0.75)), (1, mix(p.accent, p.hot, 0.55))])
-        st = stars(rng, 1300, H * 0.55) * smoothstep(H * 0.55, H * 0.05, YY)
+    # light comes from the upper left (moon at night, sun by day)
+    lx_, ly_ = W * 0.20, H * 0.16
+    L3 = (-0.55, -0.55, 0.63)
+    if p.dark:
+        hazec = mix(p.c2, p.accent, 0.55)
+        img = vgrad([(0, p.c0 * 0.85), (0.32, p.c1), (0.62, mix(p.c1, p.c2, 0.8)), (1.0, hazec)])
+        st = stars(rng, 1100, H * 0.5) * smoothstep(H * 0.5, H * 0.05, YY) * 0.8
         img = screen(img, st[..., None] * p.hot)
-        # shooting stars: thin tapered streaks
-        def streaks(dr, s):
-            for _ in range(3):
-                x, y = rng.uniform(W * 0.1, W * 0.9), rng.uniform(H * 0.05, H * 0.35)
-                ln = rng.uniform(220, 480)
-                ang = math.radians(rng.uniform(150, 165))
-                for k in range(24):
-                    f0, f1 = k / 24, (k + 1) / 24
-                    dr.line([(x + math.cos(ang) * ln * f0) * s, (y + math.sin(ang) * ln * f0) * s,
-                             (x + math.cos(ang) * ln * f1) * s, (y + math.sin(ang) * ln * f1) * s],
-                            fill=int(255 * (1 - f0) ** 1.5), width=max(1, int(3 * s * (1 - f0))))
-        sm = shape_mask(streaks)
-        img = screen(img, (sm + blur(sm, 4) * 1.5)[..., None] * p.hot)
-        L3 = (-0.45, 0.30, 0.84)  # light from the low sun, left and below
-        tones = (mix(p.accent, p.hot, 0.45), mix(p.c1, p.c2, 0.62), mix(p.c1, p.c2, 0.42), p.hot)
-        hazec = mix(p.c2, p.accent, 0.45)
-    else:  # bright day: light from the top right
-        img = vgrad([(0, mix(p.c2, p.accent, 0.25)), (0.45, mix(p.c2, p.c1, 0.6)), (0.9, p.c0), (1, p.c0)])
-        sxy = (W * 0.82, H * 0.14)
-        d = np.sqrt((XX - sxy[0]) ** 2 + (YY - sxy[1]) ** 2)
-        img = screen(img, (np.exp(-d / 160) * 0.8 + np.exp(-d / 600) * 0.35)[..., None] * np.ones(3))
-        L3 = (0.50, -0.55, 0.67)
-        tones = (np.ones(3, np.float32), mix(p.c1, p.c2, 0.85), mix(p.c2, p.accent, 0.55), np.ones(3, np.float32))
+        d = np.sqrt((XX - lx_) ** 2 + (YY - ly_) ** 2)
+        moon = np.clip(46 - d + 0.5, 0, 1)
+        img = screen(img, (blur(moon, 50) * 0.8 + blur(moon, 260) * 0.7)[..., None] * p.accent * 0.6)
+        img = over(img, moon, p.hot)
+        lit = mix(p.accent, p.hot, 0.55)
+        shade = mix(p.c1, p.c2, 0.70)
+    else:
         hazec = p.c0
+        img = vgrad([(0, mix(p.c2, p.accent, 0.20)), (0.5, mix(p.c2, p.c1, 0.6)), (1.0, p.c0)])
+        d = np.sqrt((XX - lx_) ** 2 + (YY - ly_) ** 2)
+        img = screen(img, (np.exp(-d / 150) * 0.8 + np.exp(-d / 650) * 0.35)[..., None] * np.ones(3))
+        lit = mix(np.ones(3, np.float32), p.c1, 0.55)
+        shade = mix(p.c1, p.c2, 0.80)
 
-    # three depth bands of clouds: far (small, hazy), mid, near (big)
-    bands = [(H * 0.52, 0.45, 5, 0.55), (H * 0.70, 0.75, 4, 0.85), (H * 0.95, 1.25, 3, 1.0)]
-    for bi, (base, sc, count, al) in enumerate(bands):
-        xs = np.sort(rng.uniform(-0.1, 1.1, count)) * W
-        for x in xs:
-            width = rng.uniform(380, 820) * sc
-            bb = base + rng.uniform(-60, 60) * sc
-            tn = tuple(mix(hazec, t_, al) for t_ in tones)  # far clouds fade into the haze
-            _paint_cloud(img, rng, x, bb, width, sc, tn, L3, th=(0.40, 0.02) if p.dark else (0.42, -0.15))
-        # aerial haze between bands
-        haze = smoothstep(base - H * 0.45, base + H * 0.1, YY) * 0.18
-        img = over(img, haze, hazec)
+    def tones(depth):  # depth 0 = far (hazy) .. 1 = near
+        return mix(hazec, lit, 0.35 + 0.65 * depth), mix(hazec, shade, 0.25 + 0.75 * depth)
+    hi_ = mix(lit, p.hot, 0.6) if p.dark else np.ones(3, np.float32)
 
-    # utility pole + wires: the classic anime-sky foreground cue
-    ink = p.c0 * 0.45 if p.dark else mix(p.c4, p.c2, 0.2)
-    px = W * 0.86
+    # 1) small, high, far clouds: flat little cumulus
+    for x, y, w in [(0.62, 0.30, 300), (0.80, 0.42, 220), (0.13, 0.44, 260), (0.42, 0.20, 190)]:
+        x = (x + rng.uniform(-0.03, 0.03)) * W
+        y = (y + rng.uniform(-0.02, 0.02)) * H
+        hgt = w * rng.uniform(0.30, 0.38)
+        pf = _cumulus_puffs(rng, x, y, w, hgt, 0.28)
+        lt, sh = tones(0.35)
+        _paint_cloud(img, pf, y, hgt, 0.28, lt, sh, hazec, L3, rng=rng, hi=hi_)
+    img = over(img, smoothstep(H * 0.1, H * 0.9, YY) * 0.12, hazec)
+
+    # 2) a low row of distant clouds along the horizon
+    x = -100.0
+    while x < W + 100:
+        w = rng.uniform(260, 420)
+        hgt = w * rng.uniform(0.35, 0.55)
+        pf = _cumulus_puffs(rng, x, H * 0.84, w, hgt, 0.55)
+        lt, sh = tones(0.45)
+        _paint_cloud(img, pf, H * 0.84, hgt, 0.55, lt, sh, hazec, L3, rng=rng, hi=hi_)
+        x += w * rng.uniform(0.75, 1.0)
+    img = over(img, smoothstep(H * 0.55, H * 0.95, YY) * 0.35, hazec)
+
+    # 3) the main towers rising from the lower third (tallest left of centre,
+    #    to balance the pole on the right)
+    towers = [(0.36, 1.00, 1.00, 0.35), (0.72, 0.70, 0.85, -0.3), (0.04, 0.60, 0.75, 0.5)]
+    base = H * 1.02
+    for tx, th_, depth, lean in sorted(towers, key=lambda t: t[2]):
+        width = W * 0.44 * (0.70 + 0.30 * th_)
+        hgt = H * 0.60 * th_
+        cx = (tx + rng.uniform(-0.02, 0.02)) * W
+        pf = _cumulus_puffs(rng, cx, base, width, hgt, 1.0, lean)
+        lt, sh = tones(depth)
+        _paint_cloud(img, pf, base, hgt, 1.0, lt, sh, hazec, L3, rng=rng, hi=hi_)
+    # a haze bank along the bottom: the tower bases dissolve into it
+    img = over(img, smoothstep(H * 0.74, H * 1.0, YY) * 0.80, hazec)
+
+    # 4) the pole and wires: a quiet accent at the far right
+    ink = mix(p.c0 * 0.55, hazec, 0.18) if p.dark else mix(p.c2, p.c4, 0.55)
+    px = W * 0.915
 
     def pole(dr, s):
-        dr.polygon([((px - 14) * s, H * s), ((px - 9) * s, H * 0.18 * s),
-                    ((px + 9) * s, H * 0.18 * s), ((px + 14) * s, H * s)], fill=255)
-        for k, (yy_, half) in enumerate([(H * 0.22, 170), (H * 0.30, 135)]):
-            dr.rectangle([(px - half) * s, (yy_) * s, (px + half) * s, (yy_ + 13) * s], fill=255)
-            for ix in (-half + 18, -half / 2, half / 2, half - 18):
-                dr.rectangle([(px + ix - 6) * s, (yy_ - 16) * s, (px + ix + 6) * s, yy_ * s], fill=255)
-        dr.rectangle([(px - 30) * s, H * 0.42 * s, (px + 30) * s, (H * 0.42 + 40) * s], fill=255)  # transformer
-        for k, (yy_, half) in enumerate([(H * 0.22, 170), (H * 0.30, 135)]):
-            for ix in (-half + 18, -half / 2, half / 2, half - 18):
-                x0, y0 = px + ix, yy_ - 16
-                x1, y1 = -40, y0 + 120 + k * 60 + ix * 0.25
-                sag = 150 + 30 * k
-                pts = []
-                for j in range(65):
-                    t = j / 64
-                    pts.append(((x0 + (x1 - x0) * t) * s,
-                                (y0 + (y1 - y0) * t + sag * 4 * t * (1 - t)) * s))
-                dr.line(pts, fill=255, width=max(1, int(2.4 * s)))
-    pm = shape_mask(pole)
-    img = over(img, pm, ink)
+        dr.polygon([((px - 10) * s, H * s), ((px - 6) * s, H * 0.26 * s),
+                    ((px + 6) * s, H * 0.26 * s), ((px + 10) * s, H * s)], fill=255)
+        arms = [(H * 0.30, 120), (H * 0.36, 90)]
+        for yy_, half in arms:
+            dr.rectangle([(px - half) * s, yy_ * s, (px + half) * s, (yy_ + 9) * s], fill=255)
+        for k, (yy_, half) in enumerate(arms):
+            for ix in (-half + 12, half - 12) if k else (-half + 12, 0, half - 12):
+                x0_, y0_ = px + ix, yy_ - 2
+                x1_, y1_ = -40, y0_ + 70 + k * 50 + ix * 0.2
+                sag = 120 + 25 * k
+                pts = [((x0_ + (x1_ - x0_) * t) * s, (y0_ + (y1_ - y0_) * t + sag * 4 * t * (1 - t)) * s)
+                       for t in np.linspace(0, 1, 80)]
+                dr.line(pts, fill=255, width=max(1, int(1.8 * s)))
+    img = over(img, shape_mask(pole) * 0.92, ink)
 
-    # petals drifting across (tinted with the theme's accent)
-    pet_lit = mix(p.accent, p.hot, 0.55) if p.dark else mix(p.accent, p.c1, 0.35)
-    pet_sh = mix(p.accent, p.c2, 0.35) if p.dark else mix(p.accent, p.c4, 0.4)
-    for layer, (count, smin, smax, bl) in enumerate([(55, 7, 12, 0), (22, 14, 22, 0), (4, 34, 52, 5)] if p.dark else [(28, 8, 13, 0), (12, 15, 24, 0), (3, 34, 52, 5)]):
-        lm = np.zeros((H, W), np.float32)
-        dm = np.zeros((H, W), np.float32)
+    # 5) a few petals drifting down (tinted with the theme's accent)
+    if p.dark or float(p.accent.max() - p.accent.min()) >= 0.12:  # grey themes: none (they read as dust)
+        pet = mix(p.accent, p.hot, 0.5) if p.dark else mix(p.accent, p.c1, 0.3)
+        for count, smin, smax, bl, op in [(26, 6, 10, 0, 0.75), (9, 12, 18, 0, 0.8), (2, 28, 38, 5, 0.5)]:
+            def petals(dr, s, count=count, smin=smin, smax=smax):
+                for _ in range(count):
+                    y = rng.uniform(0.05, 0.95) * H
+                    x = (rng.uniform(0.25, 0.95) * W + (H - y) * 0.4) % W
+                    sz = rng.uniform(smin, smax)
+                    ang = rng.uniform(0, math.tau)
+                    squash = rng.uniform(0.35, 1.0)
+                    pts = []
+                    for j in range(40):
+                        t = j / 40 * math.tau
+                        rr = 1.0 - 0.28 * max(0.0, math.cos(t)) ** 18
+                        a_, b_ = math.cos(t) * sz * rr, math.sin(t) * sz * 0.58 * squash * (0.75 + 0.25 * math.cos(t))
+                        pts.append(((x + a_ * math.cos(ang) - b_ * math.sin(ang)) * s,
+                                    (y + a_ * math.sin(ang) + b_ * math.cos(ang)) * s))
+                    dr.polygon(pts, fill=255)
+            m = shape_mask(petals)
+            if bl:
+                m = blur(m, bl)
+            img = over(img, np.clip(m, 0, 1) * op, pet)
 
-        def petals(dr, s, count=count, smin=smin, smax=smax):
-            out = []
-            for _ in range(count):
-                x = rng.uniform(0, W)
-                y = rng.uniform(0, H) if layer < 2 else rng.uniform(H * 0.55, H)
-                if layer < 2:  # drift in a diagonal stream
-                    x = (x * 0.6 + (H - y) * 0.9 + rng.normal(0, 260)) % W
-                sz = rng.uniform(smin, smax)
-                ang = rng.uniform(0, math.tau)
-                squash = rng.uniform(0.35, 1.0)  # tumbling
-                pts = []
-                for j in range(40):
-                    t = j / 40 * math.tau
-                    rr = 1.0 - 0.28 * max(0.0, math.cos(t)) ** 18  # notch at the tip
-                    px_, py_ = math.cos(t) * sz * rr, math.sin(t) * sz * 0.58 * squash * (0.75 + 0.25 * math.cos(t))
-                    out_x = x + px_ * math.cos(ang) - py_ * math.sin(ang)
-                    out_y = y + px_ * math.sin(ang) + py_ * math.cos(ang)
-                    pts.append((out_x * s, out_y * s))
-                dr.polygon(pts, fill=255)
-            return out
-        if not p.dark and float(p.accent.max() - p.accent.min()) < 0.12:
-            break  # grey themes: grey petals read as dust, so leave them out
-        m = shape_mask(petals)
-        if bl:
-            m = blur(m, bl) * 1.1
-        img = over(img, np.clip(m, 0, 1) * (0.9 if layer < 2 else 0.75), pet_lit)
-        # tiny shade on the lower edge of each petal
-        img = over(img, np.clip(m - np.roll(m, -3, 0), 0, 1) * 0.6, pet_sh)
-
-    if p.dark:
-        img = vignette(img, 0.35)
-    else:
-        img = vignette(img, 0.08, p.c2)
-    return img
+    return vignette(img, 0.30) if p.dark else vignette(img, 0.06, p.c2)
 
 
 MOTIFS = {
