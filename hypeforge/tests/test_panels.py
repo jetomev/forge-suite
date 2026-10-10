@@ -17,6 +17,7 @@ import panelkit  # noqa: E402
 import power  # noqa: E402
 import start  # noqa: E402
 import quick  # noqa: E402
+import calendar_view as hfcalendar  # noqa: E402
 
 
 class Look(unittest.TestCase):
@@ -35,6 +36,14 @@ class Look(unittest.TestCase):
     def test_the_rice_is_round_and_mac_os_9_is_square(self):
         self.assertEqual(panelkit.Look("rice", "kognogos-mocha").radius, 14)
         self.assertEqual(panelkit.Look("mac-os-9", "light-gray").radius, 0)
+
+
+class ViewNames(unittest.TestCase):
+    def test_no_view_module_shadows_the_standard_library(self):
+        # views/ goes first on the import path: a view called calendar.py would replace Python's own
+        import sys as _sys
+        names = {p.stem for p in (HERE / "applets/panels/views").glob("*.py")}
+        self.assertFalse(names & set(_sys.stdlib_module_names), names & set(_sys.stdlib_module_names))
 
 
 class OnePanelPerView(unittest.TestCase):
@@ -188,6 +197,31 @@ class QuickSettings(unittest.TestCase):
                 self.assertEqual(quick.Backend(FakeRun({})).updates(), "2 updates ready · nog")
             finally:
                 quick.SNAPSHOT = old
+
+
+class CalendarPanel(unittest.TestCase):
+    def test_clear_all_hides_what_was_shown_but_not_what_comes_after(self):
+        notes = [{"id": "3"}, {"id": "7"}, {"id": "5"}]
+        with tempfile.TemporaryDirectory() as d:
+            old = hfcalendar.CLEARED
+            hfcalendar.CLEARED = Path(d) / "cleared"
+            try:
+                self.assertEqual([n["id"] for n in hfcalendar.visible(notes)], ["7", "5", "3"], "newest first")
+                hfcalendar.CLEARED.write_text("5")
+                self.assertEqual([n["id"] for n in hfcalendar.visible(notes)], ["7"])
+            finally:
+                hfcalendar.CLEARED = old
+
+    def test_a_notification_borrows_its_apps_icon(self):
+        entries = {"steam": {"name": "Steam", "icon": "steam"}}
+        self.assertEqual(hfcalendar.icon_for({"app_name": "Steam", "app_icon": "None"}, entries), "steam")
+        self.assertEqual(hfcalendar.icon_for({"app_name": "nog", "app_icon": "None"}, entries), "dialog-information")
+        self.assertEqual(hfcalendar.icon_for({"app_name": "x", "app_icon": "mail-unread"}, entries), "mail-unread")
+
+    def test_makos_none_is_nothing(self):
+        self.assertEqual(hfcalendar.plain("None"), "")
+        self.assertEqual(hfcalendar.plain(None), "")
+        self.assertEqual(hfcalendar.plain("Hi"), "Hi")
 
 
 if __name__ == "__main__":

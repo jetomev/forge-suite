@@ -46,6 +46,7 @@ def main() -> int:
     ap.add_argument("--theme", default="kognogos-mocha")
     ap.add_argument("--out")
     ap.add_argument("--scale", type=float, default=0.5, help="the picture's size against the screen")
+    ap.add_argument("--notes", action="store_true", help="send three sample notifications first")
     a = ap.parse_args()
     out = Path(a.out or HERE / f"logs/panel-preview-{a.view}-{a.style}-{a.theme}.png")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -64,9 +65,20 @@ def main() -> int:
     wall = ht.token(theme, "surface.sunken")
     (base / "sway.conf").write_text(f"output HEADLESS-1 resolution 2560x1440 bg {wall} solid_color\n"
                                     "xwayland disable\ndefault_border pixel 2\ngaps inner 10\n")
-    env = {k: v for k, v in os.environ.items() if k not in ("SWAYSOCK", "WAYLAND_DISPLAY", "DISPLAY", "I3SOCK")}
+    # the real bar is never signalled (its pgrep finds no waybar), and the bench has its own message
+    # bus, so a sample notification or a mode switch never reaches the desktop's
+    fakebin = base / "bin"
+    fakebin.mkdir()
+    (fakebin / "pgrep").write_text('#!/bin/sh\n[ "$1 $2" = "-x waybar" ] && exit 1\nexec /usr/bin/pgrep "$@"\n')
+    (fakebin / "pgrep").chmod(0o755)
+    env = {k: v for k, v in os.environ.items()
+           if k not in ("SWAYSOCK", "WAYLAND_DISPLAY", "DISPLAY", "I3SOCK", "DBUS_SESSION_BUS_ADDRESS")}
     env.update(XDG_RUNTIME_DIR=str(run), XDG_CONFIG_HOME=str(conf), WLR_BACKENDS="headless",
-               WLR_RENDERER="pixman", WLR_HEADLESS_OUTPUTS="1", WLR_LIBINPUT_NO_DEVICES="1", GDK_BACKEND="wayland")
+               WLR_RENDERER="pixman", WLR_HEADLESS_OUTPUTS="1", WLR_LIBINPUT_NO_DEVICES="1", GDK_BACKEND="wayland",
+               PATH=f"{fakebin}:{os.environ['PATH']}")
+    bus = subprocess.run(["dbus-daemon", "--session", "--fork", "--print-address=1", "--print-pid=1"],
+                         capture_output=True, text=True, env=env).stdout.split()
+    env["DBUS_SESSION_BUS_ADDRESS"], bus_pid = bus[0], int(bus[1])
     procs, log = [], open(base / "preview.log", "w")
     sock = None
     try:
@@ -85,6 +97,14 @@ def main() -> int:
                   "GLib.timeout_add_seconds(60, Gtk.main_quit); Gtk.main()")
         procs.append(subprocess.Popen([sys.executable, "-c", window], env=env, stdout=log, stderr=log))
         time.sleep(1.5)
+        if a.notes:   # sample notifications through the bench's own mako
+            procs.append(subprocess.Popen(["mako"], env=env, stdout=log, stderr=log))
+            time.sleep(1)
+            for app, summary, body in (("nog", "12 updates ready", "Tier 1 now; Tier 3 after its 7-day hold"),
+                                       ("Steam", "Download finished", "SuperTux is ready to play"),
+                                       ("nightForge", "Warm from 18:59", "4500 K until 07:02")):
+                subprocess.run(["notify-send", "-a", app, summary, body], env=env)
+            subprocess.run(["makoctl", "dismiss", "--all"], env=env)   # into the history, as after a while
         procs.append(subprocess.Popen([sys.executable, str(APPLETS / "panels/hypeforge-panel"), a.view,
                                        "--style", a.style, "--theme", a.theme], env=env, stdout=log, stderr=log))
         time.sleep(3 if a.view != "start" else 5)
@@ -105,6 +125,10 @@ def main() -> int:
                 p.wait(5)
             except subprocess.TimeoutExpired:
                 p.kill()
+        try:
+            os.kill(bus_pid, 15)   # the bench's own message bus, by the number it gave us
+        except (NameError, OSError):
+            pass
 
 
 if __name__ == "__main__":

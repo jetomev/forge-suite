@@ -19,12 +19,13 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "views"))
 
-VIEWS = ["power", "start", "quick"]
+# view name → its module (a module may not take a standard library's name: "calendar" is one)
+VIEWS = {"power": "power", "start": "start", "quick": "quick", "calendar": "calendar_view"}
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("view", choices=VIEWS)
+    ap.add_argument("view", choices=list(VIEWS))
     ap.add_argument("--style")
     ap.add_argument("--theme")
     ap.add_argument("--edges", help="where it sits: bottom, top, left, right, comma separated (the style's bar decides)")
@@ -33,7 +34,7 @@ def main() -> int:
     import panelkit
     if panelkit.close_open(a.view):
         return 0
-    view = importlib.import_module(a.view)
+    view = importlib.import_module(VIEWS[a.view])
     panel = view.build(panelkit.Look(a.style, a.theme), a)
     panel.run()
     return 0
