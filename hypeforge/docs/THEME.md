@@ -87,6 +87,8 @@ Graphical pop-ups from the bar (D-68 Q-2), all from one program: `applets/panels
 |---|---|---|
 | **power** | the Rice's R-5: Lock · Log Out · Restart · Shut Down as big round buttons over a dimmed screen; the last three ask ("Restart?") and a second press does it; the commands are the launcher's `[power]` | buttons `panel_tile`, the dangerous ones `panel_danger` on hover, labels `panel_text`, the dimming `panel_backdrop` at 78 % |
 
+| **start** | Windows 11's KDE-style Start (W-2): search on top, Favorites + the launcher's groups (with counts) + All apps on the left, the apps as a grid of icons on the right, your name and Lock · Log Out · Power at the bottom; an app opens on its own workspace (`hypeforge-sections launch`); typing searches every app, Enter opens the first; opens above the taskbar (`--edges bottom --margin bottom=60`, a style may place it elsewhere) | the card `panel_bg`, the selected group in bold, the avatar `panel_tile_on` |
+
 Roles (defaults): `panel_bg` surface.raised · `panel_text` / `_dim` text.primary / secondary · `panel_border` border.subtle · `panel_tile` / `_text` surface.overlay / text.primary · `panel_tile_on` / `_text` accent.base / accent.on · `panel_hover` surface.hover · `panel_selected` / `_text` selection.bg / fg · `panel_danger` status.danger · `panel_backdrop` surface.sunken. To tune with the Rice: Ember's buttons are close to the dimmed background.
 
 ## The pop-up lists — `sway/fuzzel/fuzzel.ini` → `~/.config/sway/fuzzel/`

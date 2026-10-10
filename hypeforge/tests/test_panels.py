@@ -15,6 +15,7 @@ sys.path.insert(0, str(HERE / "applets/panels"))
 sys.path.insert(0, str(HERE / "applets/panels/views"))
 import panelkit  # noqa: E402
 import power  # noqa: E402
+import start  # noqa: E402
 
 
 class Look(unittest.TestCase):
@@ -78,6 +79,46 @@ class PowerAsks(unittest.TestCase):
                 self.assertEqual(power.commands(), {"reboot": "systemctl reboot"})
             finally:
                 power.SECTIONS = old
+
+
+def entry(name, cats=()):
+    return {"name": name, "icon": name.lower(), "exec": name.lower(), "terminal": False, "categories": set(cats), "wmclass": ""}
+
+
+START_ENTRIES = {"google-chrome": entry("Google Chrome", ["Network"]), "steam": entry("Steam", ["Game"]),
+                 "chromium": entry("Chromium", ["Network"]), "gimp": entry("GIMP", ["Graphics"])}
+
+
+class StartPanel(unittest.TestCase):
+    def test_search_finds_every_word_and_names_starting_with_it_first(self):
+        self.assertEqual(start.matches(START_ENTRIES, "chrom"), ["chromium", "google-chrome"])
+        self.assertEqual(start.matches(START_ENTRIES, "google chr"), ["google-chrome"])
+        self.assertEqual(start.matches(START_ENTRIES, "steam"), ["steam"])
+        more = dict(START_ENTRIES, helper=entry("A Steam Helper"))
+        self.assertEqual(start.matches(more, "steam"), ["steam", "helper"],
+                         "Steam (starts with it) before A Steam Helper, though A sorts first")
+        self.assertEqual(start.matches(START_ENTRIES, "nothing-like-it"), [])
+
+    def test_the_groups_are_the_launchers_own_with_favorites_first_and_all_apps_last(self):
+        with tempfile.TemporaryDirectory() as d:
+            cfg = Path(d) / "sections.toml"
+            cfg.write_text('favourites = ["steam", "gone"]\nclaim_order = ["Games", "Internet"]\n'
+                           '[[section]]\nname = "Games"\ncategories = ["Game"]\n'
+                           '[[section]]\nname = "Internet"\ncategories = ["Network"]\n')
+            real = start.panelkit_launcher
+            def launcher():
+                mod = real()
+                mod.CONFIG = cfg
+                return mod
+            start.panelkit_launcher = launcher
+            try:
+                sets = start.groups(START_ENTRIES)
+            finally:
+                start.panelkit_launcher = real
+        names = [n for n, _ in sets]
+        self.assertEqual(names, ["Favorites", "Games", "Internet", "All apps"])
+        self.assertEqual(dict(sets)["Favorites"], ["steam"], "a favourite that isn't installed is left out")
+        self.assertEqual(len(dict(sets)["All apps"]), 4)
 
 
 if __name__ == "__main__":

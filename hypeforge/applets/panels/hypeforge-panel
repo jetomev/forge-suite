@@ -4,8 +4,8 @@
     hypeforge-panel <view> [--style S] [--theme T]
 
 Opens one of the graphical pop-ups the styles place on their bar; the same command again closes
-it (a bar button pressed twice). Views: power (the big-button power menu). More come one by one:
-the KDE-style Start, Quick Settings, the calendar, the workspaces strip.
+it (a bar button pressed twice). Views: power (the big-button power menu), start (the KDE-style
+Start). More come one by one: Quick Settings, the calendar, the workspaces strip.
 --style / --theme draw it in a look other than the active one (the preview bench uses this).
 """
 
@@ -19,7 +19,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "views"))
 
-VIEWS = ["power"]
+VIEWS = ["power", "start"]
 
 
 def main() -> int:
@@ -27,6 +27,8 @@ def main() -> int:
     ap.add_argument("view", choices=VIEWS)
     ap.add_argument("--style")
     ap.add_argument("--theme")
+    ap.add_argument("--edges", help="where it sits: bottom, top, left, right, comma separated (the style's bar decides)")
+    ap.add_argument("--margin", help="pixels from those edges, e.g. bottom=60,left=10")
     a = ap.parse_args()
     import panelkit
     if panelkit.close_open(a.view):

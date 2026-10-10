@@ -87,7 +87,7 @@ def main() -> int:
         time.sleep(1.5)
         procs.append(subprocess.Popen([sys.executable, str(APPLETS / "panels/hypeforge-panel"), a.view,
                                        "--style", a.style, "--theme", a.theme], env=env, stdout=log, stderr=log))
-        time.sleep(3)
+        time.sleep(3 if a.view != "start" else 5)
         shot = base / "shot.png"
         subprocess.run(["grim", "-s", str(a.scale), str(shot)], env=env, check=True)
         out.write_bytes(shot.read_bytes())
