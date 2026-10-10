@@ -100,7 +100,7 @@ class TodaysLook(Base):
         # dimmed; Mocha's focused frame is the 2:1 blend of border.subtle and border.strong
         self.apply("classic", "kognogos-mocha", say=lambda *_: None)
         fx = self.read("hypeforge/theme/fx.conf")
-        self.assertIn("gaps outer 10", fx)
+        self.assertIn("gaps outer 0", fx)
         self.assertIn("default_border pixel 2", fx)
         self.assertIn("client.focused          #585b70", fx)
         self.assertIn("client.unfocused        #313244", fx)
