@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "views"))
 
 # view name → its module (a module may not take a standard library's name: "calendar" is one)
-VIEWS = {"power": "power", "start": "start", "quick": "quick", "calendar": "calendar_view"}
+VIEWS = {"power": "power", "start": "start", "quick": "quick", "calendar": "calendar_view", "workspaces": "workspaces"}
 
 
 def main() -> int:

@@ -55,6 +55,9 @@ def main() -> int:
     run, conf = base / "r", base / "c"
     run.mkdir(mode=0o700)
     (conf / "hypeforge/applets").mkdir(parents=True)
+    (conf / "hypeforge/applets/workspaces.toml").write_text(
+        'enabled = true\nscreens = ["HEADLESS-1"]\n' + "".join(f'[[workspace]]\nname = "{n}"\n' for n in
+        ("Daily", "Work", "Entertainment", "Gaming", "Monitoring", "Settings")))
     real = Path.home() / ".config/hypeforge/applets/sections.toml"      # read only: groups, power
     if real.exists():
         (conf / "hypeforge/applets/sections.toml").write_text(real.read_text())
@@ -97,6 +100,18 @@ def main() -> int:
                   "GLib.timeout_add_seconds(60, Gtk.main_quit); Gtk.main()")
         procs.append(subprocess.Popen([sys.executable, "-c", window], env=env, stdout=log, stderr=log))
         time.sleep(1.5)
+        if a.view == "workspaces":   # the Workspaces applet, and stand-in windows of real apps on 1 and 4
+            procs.append(subprocess.Popen([sys.executable, str(APPLETS / "workspaces/hypeforge-workspaces")],
+                                          env=env, stdout=log, stderr=log))
+            time.sleep(1.5)
+            named = ("import gi, sys; gi.require_version('Gtk','3.0'); from gi.repository import Gtk, GLib; "
+                     "GLib.set_prgname(sys.argv[1]); w=Gtk.Window(); w.show_all(); "
+                     "GLib.timeout_add_seconds(60, Gtk.main_quit); Gtk.main()")
+            for ws, apps in ((1, ("google-chrome", "thunar")), (4, ("steam",)), (1, ("discord",))):
+                subprocess.run([sys.executable, str(APPLETS / "workspaces/hypeforge-workspaces"), "go", str(ws)], env=env)
+                for app in apps:
+                    procs.append(subprocess.Popen([sys.executable, "-c", named, app], env=env, stdout=log, stderr=log))
+                    time.sleep(0.8)
         if a.notes:   # sample notifications through the bench's own mako
             procs.append(subprocess.Popen(["mako"], env=env, stdout=log, stderr=log))
             time.sleep(1)

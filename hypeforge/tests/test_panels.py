@@ -18,6 +18,7 @@ import power  # noqa: E402
 import start  # noqa: E402
 import quick  # noqa: E402
 import calendar_view as hfcalendar  # noqa: E402
+import workspaces as wsview  # noqa: E402
 
 
 class Look(unittest.TestCase):
@@ -222,6 +223,27 @@ class CalendarPanel(unittest.TestCase):
         self.assertEqual(hfcalendar.plain("None"), "")
         self.assertEqual(hfcalendar.plain(None), "")
         self.assertEqual(hfcalendar.plain("Hi"), "Hi")
+
+
+class WorkspacesStrip(unittest.TestCase):
+    def test_sway_names_map_to_our_workspaces_on_every_screen(self):
+        self.assertEqual(wsview.index_of("4:Gaming", 6), 4)
+        self.assertEqual(wsview.index_of("14:Gaming", 6), 4, "the second screen adds 10")
+        self.assertEqual(wsview.index_of("24:Gaming", 6), 4)
+        self.assertIsNone(wsview.index_of("101:Shared", 6), "a shared space is no single workspace")
+        self.assertIsNone(wsview.index_of("9:Extra", 6))
+        self.assertIsNone(wsview.index_of("scratch", 6))
+
+    def test_apps_are_counted_once_per_workspace_across_screens(self):
+        from hfapps import Matcher
+        entries = {"steam": {"name": "Steam", "icon": "steam", "exec": "steam %U", "terminal": False,
+                             "categories": set(), "wmclass": ""}}
+        win = lambda i, a: {"id": i, "pid": i, "type": "con", "app_id": a, "nodes": [], "floating_nodes": []}
+        tree = {"nodes": [{"nodes": [{"name": "4:Gaming", "nodes": [win(1, "steam")], "floating_nodes": []}]},
+                          {"nodes": [{"name": "14:Gaming", "nodes": [win(2, "steam"), win(3, "mystery")], "floating_nodes": []}]}]}
+        per = wsview.apps_per_workspace(tree, entries, Matcher(entries), 6)
+        self.assertEqual(per[4], ["steam", "mystery"], "two Steam windows on two screens: one app")
+        self.assertEqual(per[1], [])
 
 
 if __name__ == "__main__":
