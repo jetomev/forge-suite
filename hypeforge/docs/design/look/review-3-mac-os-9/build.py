@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Build Review 2 of the look program: the Windows 11 style proposal, a live mock-up of a
+"""Build Review 3 of the look program: the Mac OS 9 style proposal, a live mock-up of a
 hypeForge screen that any of the 23 themes can dress, with the plain-Sway and SwayFX versions
 side by side. Writes index.html next to this file.
 
-    python3 docs/design/look/review-2-windows-11/build.py
+    python3 docs/design/look/review-3-mac-os-9/build.py
 """
 from __future__ import annotations
 
@@ -49,7 +49,7 @@ def data_uri(path: str) -> str:
 def main():
     order, now = review1.themes(ROOT / "docs/research/look-2026-10/palette/palettes.toml")
     lifted = {}   # Q-4 answered (D-70): middle to darker — the lighter option B is retired
-    style = tomllib.loads((LOOK / "styles/windows-11/style.toml").read_text())
+    style = tomllib.loads((LOOK / "styles/mac-os-9/style.toml").read_text())
     data = {
         "order": order, "now": now, "lifted": lifted, "emblem": review1.emblem(),
         "apps": [{"id": i, "name": n, "icon": data_uri(f)} for i, n, f in APPS],
@@ -58,7 +58,7 @@ def main():
     }
     page = (HERE / "template.html").read_text()
     page = page.replace("/*DATA*/null", json.dumps(data, separators=(",", ":")))
-    page = page.replace("<!--STYLE-->", (LOOK / "styles/windows-11/style.toml").read_text()
+    page = page.replace("<!--STYLE-->", (LOOK / "styles/mac-os-9/style.toml").read_text()
                         .replace("&", "&amp;").replace("<", "&lt;"))
     (HERE / "index.html").write_text(page)
     print(f"index.html: {len(order)} themes, {len(APPS)} apps, {len(page)//1024} KB")

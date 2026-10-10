@@ -21,7 +21,7 @@ Claude is the graphic design, UI/usability and development team and the critical
 | 1 | **Research** — compositor (Sway vs SwayFX), bars/trays/launchers/docks, theme system + colour science + 23 palettes, inventory of every themable piece, wallpapers | 10-10 | 5 helpers, Claude reviews | `docs/research/look-2026-10/01…05` |
 | 2 ✅ | **Foundation** — the theme file format (colours separate from shapes), the palette generator and its contrast report, the 23-theme swatch sheet, the wallpaper generator, the SwayFX decision (bench + a separate login session, Sway stays the default) | 10-10 → 10-11 | Claude | Javier reviews the swatches and the SwayFX question |
 | 3.1 ✅ approved (D-71) | **Proposal 1 · Windows 11** — a live mock-up of the three screens (bar, tray, launcher, windows), the 23 themes switchable, its wallpapers | 10-11 → 10-12 | Claude | Javier's review (approve / change) |
-| 3.2 | Proposal 2 · Mac OS 9.x | 10-12 → 10-13 | Claude | review |
+| 3.2 ✅ drawn | Proposal 2 · Mac OS 9.x | 10-12 → 10-13 | Claude | review |
 | 3.3 | Proposal 3 · modern macOS | 10-13 → 10-14 | Claude | review |
 | 3.4 | Proposal 4 · a modern Linux rice | 10-14 → 10-15 | Claude | review |
 | 3.5 | Proposal 5 · KDE | 10-15 → 10-16 | Claude | review |
@@ -67,3 +67,4 @@ Q-1 A · Q-2 A · Q-3 B · Q-4 "middle to darker", with white, black and grays i
 
 - **Review 1 · the foundation** — https://claude.ai/artifact/HDF7uAsEJRkMCFaQzLcfLV (`docs/design/look/review-1/`, built by `build.py`): the 23 themes on a live desktop, the wallpapers, Q-1…Q-5. Waiting for Javier's answers.
 - **Review 2 · Windows 11** — https://claude.ai/artifact/G4ij4oQ9AEV9n6xLTGT2xP (`docs/design/look/review-2-windows-11/`): bottom taskbar on every screen (centered or left), a KDE-style Start from `sections.toml`, Quick Settings (Wi-Fi, Bluetooth, Night light, Do Not Disturb, Screens, VPN), calendar + notifications, the tray drawer, a Workspaces panel; SwayFX vs plain Sway; W-1…W-5. **Approved 10-10: "A killer proposal. Sold!"** (D-71, Claude's picks). Its style file: `docs/design/look/styles/windows-11/style.toml`.
+- **Review 3 · Mac OS 9** — https://claude.ai/artifact/FRzPE4Y3L9NRpNLFPvQT5D (`docs/design/look/review-3-mac-os-9/`): the menu bar (emblem menu with group submenus · bold app name · Workspaces · Favorites · Window · Special · Help … clock · Application menu), real Sway title bars centred, the Control Strip bottom-left holding the tray and status icons, the crisp shadow on SwayFX; M-1…M-5. Style file `docs/design/look/styles/mac-os-9/style.toml`. Plain Sway draws all of it.

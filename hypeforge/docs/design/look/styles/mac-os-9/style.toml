@@ -1,0 +1,68 @@
+# hypeForge style · Mac OS 9 — PROPOSAL (look program, review 3; not approved yet)
+#
+# A STYLE is shapes, layout and which pieces the desktop uses. Colours never live here: every
+# part names a colour ROLE from the active theme. Any theme can wear this style; Light Gray is
+# the closest to Mac OS 9's Platinum. Schema: docs/research/look-2026-10/03-theme-system.md.
+
+[meta]
+name = "Mac OS 9"
+slug = "mac-os-9"
+schema = 1
+needs = []                       # plain Sway draws all of it: square windows, real title bars
+better_with = []                 # SwayFX adds only the optional crisp shadow ([fx])
+credit = "After Apple's Mac OS 9 (Platinum, 1999). Learned from, never copied."
+
+[shape]                          # pixels, at 100 % scale
+radius_window    = 0             # Mac OS 9 windows are square
+radius_control   = 4             # buttons
+radius_popup     = 0             # menus are square, with a hard shadow
+border_window    = 1             # a thin dark frame
+border_popup     = 1
+titlebar         = true          # Sway's own title bars: default_border normal 1
+titlebar_height  = 20
+titlebar_align   = "center"      # title_align center
+gap_inner        = 6
+gap_outer        = 6
+bar_height       = 22            # the menu bar
+menu_item_height = 20
+
+[layout]
+bar_position     = "top"
+bar_on           = "every-screen"             # the menu bar on all screens; the Application menu on each
+bar_left         = ["emblem-menu", "app-name", "workspaces", "favorites", "window-menu", "special-menu", "help-menu"]
+bar_right        = ["clock", "application-menu"]
+control_strip    = "bottom-left"              # a drawer of tiles: tray, clipboard, drives, network, sound, night light, screens, bell
+launcher         = "emblem-menu"              # the Apple-menu place: groups as submenus (sections.toml)
+power            = "special-menu"             # Restart · Shut Down · Log Out, where Mac OS 9 kept them
+clock_format     = ["%I:%M %p"]
+
+[roles]
+menubar_background   = "surface.overlay"
+menubar_text         = "text.primary"
+menubar_line         = "border.strong"        # the line under the menu bar
+menu_background      = "surface.overlay"
+menu_highlight       = "accent.base"          # the item under the mouse (Platinum's highlight colour)
+menu_highlight_text  = "accent.on"
+menu_disabled        = "text.muted"
+title_focused        = "surface.raised"
+title_focused_text   = "text.primary"
+title_unfocused      = "surface.base"
+title_unfocused_text = "text.muted"
+window_frame         = "border.strong"
+window_frame_dim     = "border.subtle"
+strip_background     = "surface.raised"
+
+[fx]                             # SwayFX login only — optional
+corner_radius      = 0
+shadows            = true        # Mac OS 9's crisp drop shadow: small and hard, down-right
+shadow_blur_radius = 3
+shadow_offset      = [2, 2]
+shadow_opacity     = 0.35
+blur               = false
+animations         = false
+
+[fonts]
+ui      = "Noto Sans"            # bold in the menu bar and title bars; a free Charcoal look-alike if one is found (M-4)
+ui_size = 10
+ui_bold = true
+mono    = "JetBrainsMono Nerd Font"

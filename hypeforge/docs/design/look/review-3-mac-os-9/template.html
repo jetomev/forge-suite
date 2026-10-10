@@ -1,0 +1,409 @@
+<title>hypeForge Look Review 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Noto+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: the brief and what to judge, then one large live screen (controls above it, theme
+   picker beside it), the three screens, how each piece is built, and the style file itself. */
+:root{
+  --paper:#f6f5f9; --card:#ffffff; --ink:#1d1b26; --ink-2:#55526a; --line:#e2e0ea;
+  --accent:#5b3fc0; --accent-soft:#ece7fb; --ok:#1f7a3a; --warn:#9a5b00; --no:#a3313a;
+  --f-display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"DejaVu Sans Mono",monospace;
+  --f-desk:"Noto Sans","IBM Plex Sans",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body);padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,4.4vw,44px);font-weight:750;letter-spacing:-.01em}
+h2{font-size:24px;font-weight:750}
+h3{font-size:16px;font-weight:600}
+p{margin:0}
+code{font-family:var(--f-mono);font-size:.92em}
+.eyebrow{font:600 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{max-width:70ch;color:var(--ink-2);font-size:16px}
+header{display:grid;gap:12px}
+.steps{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.steps span{font:500 12px/1 var(--f-mono);padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2)}
+.steps span.done{color:var(--ok);border-color:currentColor}
+.steps span.on{background:var(--accent);border-color:var(--accent);color:var(--card)}
+section{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
+.sec-head{display:grid;gap:6px}
+.sec-head p{max-width:74ch;color:var(--ink-2)}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.asks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.ask{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:8px;align-content:start;min-width:0}
+.ask .id{font:600 12px/1 var(--f-mono);color:var(--accent)}
+.ask p{color:var(--ink-2);font-size:14px}
+.rec{font:600 11px/1 var(--f-mono);padding:3px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.ask p .rec{white-space:normal;display:inline-block;line-height:1.35}
+.reply{background:var(--accent-soft);border-radius:10px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.reply code{font:500 14px/1.4 var(--f-mono);color:var(--ink);word-break:break-word}
+.copy{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:6px;padding:5px 10px;font:600 12px/1 var(--f-mono)}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:end}
+.seg{display:grid;gap:5px}
+.seg>span{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.seg div{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:transparent;color:var(--ink-2);padding:7px 11px;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--card);font-weight:600}
+.explore{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.picker{order:-1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:8px}
+#fams{display:flex;flex-wrap:wrap;gap:10px 22px}
+.fam{display:grid;gap:6px}
+.fam h3{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 9px 3px 3px;font-size:12.5px}
+.chip i{width:18px;height:18px;border-radius:50%;flex:none;border:1px solid rgba(127,127,127,.35)}
+.chip[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;font-weight:600}
+.stage{display:grid;gap:12px;min-width:0}
+.cap{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink-2)}
+.cap b{color:var(--ink)}
+
+/* ── the screen: 2560 × 1440 at 125 %; --px is one screen "pixel" ─────────────────────────── */
+.desk{aspect-ratio:16/9;width:100%;border-radius:6px;overflow:hidden;position:relative;container-type:inline-size;
+  font-family:var(--f-desk);color:var(--t-text);background:var(--t-sunken);box-shadow:0 1px 0 var(--line),0 18px 50px rgba(0,0,0,.22)}
+.desk *{box-sizing:border-box}
+.scr{position:absolute;inset:0;--px:calc(150cqi / 2560);font-size:calc(12 * var(--px))}
+.pattern{position:absolute;inset:0;background-color:var(--t-sunken);
+  background-image:radial-gradient(color-mix(in oklab,var(--t-accent) 22%,transparent) calc(1.2 * var(--px)),transparent calc(1.6 * var(--px)));
+  background-size:calc(8 * var(--px)) calc(8 * var(--px))}
+/* the menu bar */
+.mbar{position:absolute;left:0;right:0;top:0;height:calc(22 * var(--px));background:var(--t-overlay);color:var(--t-text);
+  border-bottom:calc(1 * var(--px)) solid var(--t-strong);display:flex;justify-content:space-between;align-items:stretch;z-index:3;font-weight:600}
+.mbar>div{display:flex;align-items:stretch}
+.mi{border:0;background:transparent;color:inherit;font:inherit;padding:0 calc(10 * var(--px));display:flex;align-items:center;gap:calc(6 * var(--px));cursor:pointer}
+.mi.open{background:var(--t-accent);color:var(--t-on)}
+.mi u{text-decoration-thickness:calc(1 * var(--px));text-underline-offset:calc(2 * var(--px))}
+.mi .emb{width:calc(16 * var(--px));height:calc(16 * var(--px));background-size:contain;background-repeat:no-repeat}
+.mi.app{font-weight:700}
+.mi img{width:calc(16 * var(--px));height:calc(16 * var(--px))}
+.mi .clk{font-weight:600}
+.sepv{width:calc(1 * var(--px));background:var(--t-subtle);margin:calc(4 * var(--px)) calc(2 * var(--px))}
+/* the menus */
+.menu{position:absolute;top:calc(22 * var(--px));min-width:calc(230 * var(--px));background:var(--t-overlay);color:var(--t-text);
+  border:calc(1 * var(--px)) solid var(--t-strong);box-shadow:calc(3 * var(--px)) calc(3 * var(--px)) 0 rgba(0,0,0,var(--t-shadow-a));
+  padding:calc(3 * var(--px)) 0;display:none;z-index:4;font-weight:500}
+.menu.show{display:block}
+.menu .it{display:flex;align-items:center;gap:calc(8 * var(--px));padding:0 calc(14 * var(--px)) 0 calc(20 * var(--px));height:calc(20 * var(--px));position:relative;white-space:nowrap}
+.menu .it img{width:calc(16 * var(--px));height:calc(16 * var(--px))}
+.menu .it .k{margin-left:auto;padding-left:calc(24 * var(--px));color:var(--t-muted);font-weight:400}
+.menu .it .ar{margin-left:auto;padding-left:calc(24 * var(--px))}
+.menu .it .ck{position:absolute;left:calc(6 * var(--px))}
+.menu .it.hl{background:var(--t-accent);color:var(--t-on)}
+.menu .it.hl .k{color:var(--t-on)}
+.menu .it.dis{color:var(--t-muted)}
+.menu hr{border:0;border-top:calc(1 * var(--px)) dotted var(--t-strong);margin:calc(3 * var(--px)) 0;opacity:.7}
+/* windows with real title bars */
+.tiles{position:absolute;left:calc(6 * var(--px));right:calc(6 * var(--px));top:calc(28 * var(--px));bottom:calc(6 * var(--px));
+  display:grid;grid-template-columns:1.35fr 1fr;grid-template-rows:1fr 1fr;gap:calc(6 * var(--px))}
+.win{background:var(--t-base);border:calc(1 * var(--px)) solid var(--t-subtle);min-height:0;min-width:0;overflow:hidden;display:flex;flex-direction:column}
+.win.focus{border-color:var(--t-strong);grid-row:1/3}
+.fx .win{box-shadow:calc(2 * var(--px)) calc(2 * var(--px)) calc(3 * var(--px)) rgba(0,0,0,.35)}
+.tt{height:calc(20 * var(--px));flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:calc(12 * var(--px));
+  background:var(--t-base);color:var(--t-muted);border-bottom:calc(1 * var(--px)) solid var(--t-subtle)}
+.win.focus .tt{background:var(--t-raised);color:var(--t-text);border-bottom-color:var(--t-strong)}
+.c-bar{display:flex;align-items:center;gap:calc(10 * var(--px));padding:calc(5 * var(--px)) calc(10 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-subtle);background:var(--t-raised)}
+.c-url{flex:1;height:calc(24 * var(--px));background:var(--t-overlay);border:calc(1 * var(--px)) solid var(--t-strong);display:flex;align-items:center;padding:0 calc(10 * var(--px));color:var(--t-text2);font-size:calc(12 * var(--px))}
+.c-url b{color:var(--t-text);font-weight:500}
+.dots{display:flex;gap:calc(12 * var(--px));color:var(--t-muted)}
+.c-page{flex:1;padding:calc(30 * var(--px)) calc(40 * var(--px));display:grid;align-content:start;gap:calc(14 * var(--px));overflow:hidden}
+.c-kicker{font:600 calc(11 * var(--px))/1 var(--f-mono);letter-spacing:.1em;color:var(--t-acctext);text-transform:uppercase}
+.c-h{font:700 calc(36 * var(--px))/1.1 var(--f-desk);color:var(--t-text)}
+.c-p{color:var(--t-text2);font-size:calc(14 * var(--px));max-width:36em;line-height:1.5}
+.c-btns{display:flex;gap:calc(10 * var(--px))}
+.b-acc{background:var(--t-accent);color:var(--t-on);padding:calc(6 * var(--px)) calc(16 * var(--px));border-radius:calc(4 * var(--px));font-weight:600;border:calc(1 * var(--px)) solid var(--t-strong);box-shadow:inset 0 0 0 calc(1 * var(--px)) var(--t-overlay)}
+.b-sec{background:var(--t-raised);border:calc(1 * var(--px)) solid var(--t-strong);padding:calc(6 * var(--px)) calc(16 * var(--px));border-radius:calc(4 * var(--px))}
+.term{flex:1;background:var(--t-tbg);color:var(--t-tfg);font:calc(12 * var(--px))/1.55 var(--f-mono);padding:calc(12 * var(--px)) calc(14 * var(--px));white-space:pre;overflow:hidden}
+.th-main{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(86 * var(--px)),1fr));gap:calc(10 * var(--px));padding:calc(14 * var(--px));align-content:start;flex:1}
+.fold{display:grid;justify-items:center;gap:calc(5 * var(--px));font-size:calc(11.5 * var(--px));color:var(--t-text)}
+.fold i{width:calc(42 * var(--px));height:calc(32 * var(--px));background:color-mix(in oklab,var(--t-accent) 70%,var(--t-base));border:calc(1 * var(--px)) solid var(--t-strong);position:relative}
+.fold i::before{content:"";position:absolute;left:calc(-1 * var(--px));top:calc(-6 * var(--px));width:45%;height:calc(6 * var(--px));background:inherit;border:calc(1 * var(--px)) solid var(--t-strong);border-bottom:0}
+.th-info{display:flex;justify-content:space-between;padding:calc(4 * var(--px)) calc(12 * var(--px));font-size:calc(11.5 * var(--px));color:var(--t-text2);border-bottom:calc(1 * var(--px)) solid var(--t-subtle)}
+/* the Control Strip */
+.strip{position:absolute;left:0;bottom:calc(14 * var(--px));height:calc(28 * var(--px));display:flex;align-items:stretch;z-index:3;
+  background:var(--t-raised);border:calc(1 * var(--px)) solid var(--t-strong);border-left:0;box-shadow:calc(2 * var(--px)) calc(2 * var(--px)) 0 rgba(0,0,0,var(--t-shadow-a))}
+.strip .tiles2{display:flex;align-items:stretch}
+.strip.closed .tiles2{display:none}
+.strip .tile{width:calc(32 * var(--px));display:grid;place-items:center;border-right:calc(1 * var(--px)) solid var(--t-subtle);position:relative;color:var(--t-text)}
+.strip .tile svg,.strip .tile img{width:calc(16 * var(--px));height:calc(16 * var(--px))}
+.strip .tile .dot{position:absolute;top:calc(4 * var(--px));right:calc(5 * var(--px));width:calc(6 * var(--px));height:calc(6 * var(--px));border-radius:50%;background:var(--t-accent)}
+.strip .moon{color:#e1ad01}
+.strip .handle{width:calc(14 * var(--px));border:0;background:var(--t-overlay);color:var(--t-text);cursor:pointer;display:grid;place-items:center;font-size:calc(10 * var(--px));border-left:calc(1 * var(--px)) solid var(--t-strong)}
+/* three screens */
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.trio{grid-template-columns:minmax(0,1fr)}}
+.mini{display:grid;gap:6px;min-width:0}
+.mini .m{aspect-ratio:16/9;border-radius:5px;overflow:hidden;position:relative;container-type:inline-size;background:var(--m-bg)}
+.mini .m .mb{position:absolute;left:0;right:0;top:0;height:6%;background:var(--m-bar);border-bottom:1px solid var(--m-line);display:flex;align-items:center;gap:3%;padding:0 2%;font:600 2.2cqi/1 var(--f-desk);color:var(--m-fg)}
+.mini .m .mb span:last-child{margin-left:auto}
+.mini .m .mt{position:absolute;inset:9% 1.5% 2% 1.5%;display:grid;gap:1.5%;grid-template-columns:var(--m-cols)}
+.mini .m .mt i{background:var(--m-win);border:1px solid var(--m-line);border-top:6px solid var(--m-title)}
+.mini p{font-size:13px;color:var(--ink-2)}
+.mini p b{color:var(--ink)}
+/* tables, boxes, the file */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+.st{font:600 11px/1 var(--f-mono);padding:4px 7px;border-radius:4px;white-space:nowrap;display:inline-block}
+.st.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 13%,transparent)}
+.st.build{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.st.fx{color:var(--accent);background:var(--accent-soft)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:8px;align-content:start;min-width:0}
+.box ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.box li::marker{color:var(--accent)}
+pre.file{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;font:12.5px/1.55 var(--f-mono);color:var(--ink)}
+footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">hypeForge · the look · review 3 of 7 · proposal 2 of 6</p>
+  <h1>Mac OS 9, tiled: the menu bar you love, Platinum windows, the Control Strip</h1>
+  <p class="lead">Mac OS 9's top menu bar, done our way: the emblem is the Apple menu, the app you're in sits in bold next to it, then Workspaces, Favorites, Window and Special. The clock and the Application menu (switch apps, hide them) are at the right. Windows still tile, with real Platinum title bars, and the Control Strip in the bottom-left corner holds everything that used to crowd the bar. Click every menu on the screen below.</p>
+  <div class="steps" aria-label="Where we are in the program">
+    <span class="done">1 · Foundation</span><span class="done">2 · Windows 11 ✓</span><span class="on">3 · Mac OS 9</span><span>4 · macOS</span><span>5 · Linux rice</span><span>6 · KDE</span><span>7 · COSMIC</span>
+  </div>
+</header>
+
+<section aria-labelledby="h-ask">
+  <div class="sec-head">
+    <p class="eyebrow">What I need from you</p>
+    <h2 id="h-ask">Five calls, and anything that feels off</h2>
+    <p>My pick is marked on each. The colours are the first palettes; the 60-30-10 ones (D-70) drop in next, same as on Windows 11.</p>
+  </div>
+  <div class="asks">
+    <article class="ask"><span class="id">M-1 · The menu bar</span><h3>These menus, in this order?</h3><p>Emblem · <b>App name</b> · Workspaces · Favorites · Window · Special · Help … clock · Application menu. Mac OS 9 put each app's own File and Edit menus here; Sway can't, so our menus take their place.</p><p><span class="rec">my pick: as drawn</span></p></article>
+    <article class="ask"><span class="id">M-2 · Title bars</span><h3>Real title bars on every window?</h3><p>The Mac OS 9 look: a bold, centred title, the focused one lighter. Each window loses 20 px of height. Off means borders only, like today.</p><p><span class="rec">my pick: on</span></p></article>
+    <article class="ask"><span class="id">M-3 · The Control Strip</span><h3>Status icons in the Control Strip?</h3><p>The tray, clipboard, drives, Wi-Fi, sound, night light, screens and the bell move into the bottom-left strip, which folds away with its tab. The menu bar stays clean, the way Mac OS 9 kept it.</p><p><span class="rec">my pick: the Control Strip</span></p></article>
+    <article class="ask"><span class="id">M-4 · The font</span><h3>Noto Sans bold, or a Charcoal look-alike?</h3><p>Mac OS 9's Charcoal font is Apple's; nog finds no free look-alike packaged today. Bold Noto Sans comes close; a look-alike would mean packaging a free font ourselves.</p><p><span class="rec">my pick: Noto Sans bold</span></p></article>
+    <article class="ask"><span class="id">M-5 · The shadow</span><h3>Mac OS 9's crisp shadow?</h3><p>On the SwayFX login, windows and menus get the small hard shadow Mac OS 9 had, down and to the right. Plain Sway: menus keep theirs, windows sit flat. Flip "Look" to compare.</p><p><span class="rec">my pick: crisp shadow with SwayFX</span></p></article>
+  </div>
+  <div class="reply"><span>Answer in our chat, like this:</span><code id="reply-text">M-1 as drawn · M-2 on · M-3 strip · M-4 Noto · M-5 shadow · and: …</code><button class="copy" id="copy" type="button">Copy</button></div>
+</section>
+
+<section aria-labelledby="h-screen">
+  <div class="sec-head">
+    <p class="eyebrow">The main screen</p>
+    <h2 id="h-screen">Click the menus, open the Control Strip</h2>
+    <p>The same three apps as on the Windows 11 page, so you can compare, drawn a little closer (150 %) so the menus are readable. The background is Mac OS 9's dotted desktop pattern in the theme's colours; the wallpapers drop in the same way.</p>
+  </div>
+  <div class="controls">
+    <div class="seg"><span>Look</span><div role="group" aria-label="Look"><button type="button" data-fx="fx" aria-pressed="true">SwayFX login</button><button type="button" data-fx="plain" aria-pressed="false">Plain Sway</button></div></div>
+    <div class="seg"><span>Open</span><div role="group" aria-label="Open a menu" id="panels">
+      <button type="button" data-p="" aria-pressed="false">Nothing</button><button type="button" data-p="emblem" aria-pressed="true">Emblem menu</button><button type="button" data-p="window" aria-pressed="false">Window</button><button type="button" data-p="special" aria-pressed="false">Special</button><button type="button" data-p="apps" aria-pressed="false">Application menu</button></div></div>
+    <div class="seg"><span>Control Strip</span><div role="group" aria-label="Control Strip"><button type="button" data-cs="open" aria-pressed="true">Open</button><button type="button" data-cs="closed" aria-pressed="false">Folded</button></div></div>
+  </div>
+  <div class="explore">
+    <div class="stage">
+      <div class="desk" id="desk"><div class="scr fx" id="scr">
+        <div class="pattern"></div>
+        <div class="mbar">
+          <div>
+            <button class="mi" data-open="emblem" title="The emblem menu (launcher)"><span class="emb" id="emb"></span></button>
+            <span class="mi app">Chrome</span>
+            <button class="mi" data-open="ws"><span><u>W</u>orkspaces</span></button>
+            <button class="mi" data-open="fav"><span><u>F</u>avorites</span></button>
+            <button class="mi" data-open="window">Window</button>
+            <button class="mi" data-open="special">Special</button>
+            <button class="mi" data-open="help">Help</button>
+          </div>
+          <div>
+            <span class="mi clk">12:30 PM</span><span class="sepv"></span>
+            <button class="mi" data-open="apps" title="Application menu"><img data-icon="chrome" alt="">Chrome</button>
+          </div>
+        </div>
+        <div class="menu" id="m-emblem" style="left:0"></div>
+        <div class="menu" id="m-sub"></div>
+        <div class="menu" id="m-window"></div>
+        <div class="menu" id="m-special"></div>
+        <div class="menu" id="m-apps" style="right:0"></div>
+        <div class="menu" id="m-ws"></div>
+        <div class="menu" id="m-fav"></div>
+        <div class="menu" id="m-help"></div>
+        <div class="tiles">
+          <div class="win focus"><div class="tt">KognogOS · the tier-aware distro · Chrome</div>
+            <div class="c-bar"><span class="dots">‹ › ⟳</span><span class="c-url"><b>kognogos.org</b></span><span class="dots">☆ ⋮</span></div>
+            <div class="c-page">
+              <span class="c-kicker">KognogOS · 0.9.0 beta</span>
+              <span class="c-h">An Arch desktop that waits<br>for packages to prove themselves.</span>
+              <span class="c-p">Tier-aware updates through nog, the Forge Suite for every setting, and hypeForge, the Sway desktop that keeps your apps in their workspaces.</span>
+              <span class="c-btns"><span class="b-acc">Download the beta</span><span class="b-sec">Read the guide</span></span>
+            </div>
+          </div>
+          <div class="win"><div class="tt">javier@tphome: ~/Programs/forge-suite</div><div class="term" id="term"></div></div>
+          <div class="win"><div class="tt">Programs</div><div class="th-info"><span>8 items</span><span>1.2 TB available</span></div>
+            <div class="th-main"><span class="fold"><i></i>forge-suite</span><span class="fold"><i></i>nog</span><span class="fold"><i></i>homelab</span><span class="fold"><i></i>kognog</span><span class="fold"><i></i>mindforge</span><span class="fold"><i></i>DecadeDrop</span><span class="fold"><i></i>aur-nightforge</span><span class="fold"><i></i>grubforge</span></div></div>
+        </div>
+        <div class="strip" id="strip"><div class="tiles2" id="strip-tiles"></div><button class="handle" id="handle" title="Fold the Control Strip">◀</button></div>
+      </div></div>
+      <div class="cap" id="cap"></div>
+    </div>
+    <aside class="picker" aria-label="Pick a theme"><div id="fams"></div><p style="font-size:12px;color:var(--ink-2)">Light Gray is the closest to Mac OS 9's Platinum. Colours are the first palettes; the 60-30-10 palettes (D-70) replace them next.</p></aside>
+  </div>
+</section>
+
+<section aria-labelledby="h-trio">
+  <div class="sec-head"><p class="eyebrow">All three screens</p><h2 id="h-trio">A menu bar on every screen</h2>
+  <p>Each screen's bar names the app you're in on that screen. The Control Strip lives on the main screen only.</p></div>
+  <div class="trio" id="trio"></div>
+</section>
+
+<section aria-labelledby="h-built">
+  <div class="sec-head"><p class="eyebrow">How it gets built</p><h2 id="h-built">Every piece, what makes it, and what's left to make</h2>
+  <p>This is the most plain-Sway style of the six: everything but the optional shadow works without SwayFX.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Piece</th><th>Made with</th><th>Status</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>The menu bar, top, every screen</td><td>Waybar (today's bar), a Mac OS 9 layout</td><td><span class="st ok">works today</span></td><td>Straight edges and a line underneath: plain CSS.</td></tr>
+      <tr><td>The emblem menu with group submenus</td><td>Waybar's real drop-down menus, written from <code>sections.toml</code></td><td><span class="st build">to build</span></td><td>Waybar reads a menu once at start, so a new app shows after a quick bar reload; the build step does that.</td></tr>
+      <tr><td>The app's name in bold</td><td>Waybar's window module</td><td><span class="st ok">works today</span></td><td>Shows the app's name, not the window's title.</td></tr>
+      <tr><td>Workspaces and Favorites</td><td>Today's two drop-down lists</td><td><span class="st ok">works today</span></td><td>Restyled square, with the theme's highlight.</td></tr>
+      <tr><td>Window menu</td><td>A drop-down whose items run Sway commands</td><td><span class="st build">to build</span></td><td>Float, tabs, send to a workspace or screen, put away, close: the keys you already have, now also by mouse.</td></tr>
+      <tr><td>Special menu</td><td>A drop-down: Lock, Log Out, Restart, Shut Down</td><td><span class="st build">to build</span></td><td>Today's power list, moved where Mac OS 9 kept it.</td></tr>
+      <tr><td>Application menu</td><td>A small applet of ours over Sway's window list</td><td><span class="st build">to build</span></td><td>"Hide" puts an app in the scratchpad (a hidden drawer); "Show All" brings everything back.</td></tr>
+      <tr><td>Title bars, centred, Platinum colours</td><td>Sway's own title bars: <code>default_border normal</code>, <code>title_align center</code></td><td><span class="st ok">works today</span></td><td>One flat colour per state; no pinstripes.</td></tr>
+      <tr><td>The Control Strip</td><td>A second, small Waybar at the bottom-left, with its drawer</td><td><span class="st build">to build</span></td><td>The tray, clipboard, drives, network, sound, night light, screens and bell move in from the top bar.</td></tr>
+      <tr><td>The crisp shadow</td><td>SwayFX <code>shadows</code>, a 3 px blur, offset 2 px</td><td><span class="st fx">SwayFX login</span></td><td>Menus draw their own shadow on plain Sway too.</td></tr>
+      <tr><td>Tiling, snapping, workspaces</td><td>Our Placement and Workspaces applets</td><td><span class="st ok">unchanged</span></td><td>6 px gaps so the desktop pattern shows between windows.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section aria-labelledby="h-cant">
+  <div class="sec-head"><p class="eyebrow">Honest limits</p><h2 id="h-cant">What this Mac OS 9 won't have</h2></div>
+  <div class="two">
+    <div class="box"><h3>Not on Sway</h3><ul>
+      <li>Each app's own File, Edit and View menus in the menu bar: apps keep their menus inside their windows.</li>
+      <li>The title bar's pinstripes and 3D edges, and its close, zoom and collapse boxes: Sway draws one flat colour and the title.</li>
+      <li>WindowShade (double-click a title to roll the window up).</li>
+      <li>Icons on the desktop (the hard disk, the Trash): Sway draws no desktop icons.</li>
+    </ul></div>
+    <div class="box"><h3>Different on purpose</h3><ul>
+      <li>Windows tile instead of overlapping; float one with Win + Shift + Space.</li>
+      <li>The emblem menu is the launcher: your groups as submenus, Favorites and recent apps on top.</li>
+      <li>The Control Strip holds the modern things Mac OS 9 never had (tray, clipboard, notifications).</li>
+    </ul></div>
+  </div>
+</section>
+
+<section aria-labelledby="h-file">
+  <div class="sec-head"><p class="eyebrow">For the theme apps later</p><h2 id="h-file">The style file this page is drawn from</h2>
+  <p>Shapes and layout only; colours come from the theme. <code>hypeforge/docs/design/look/styles/mac-os-9/style.toml</code></p></div>
+  <pre class="file"><!--STYLE--></pre>
+</section>
+
+<footer>Built by Javier and Claude for KognogOS. After Apple's Mac OS 9 Platinum design; app icons from candy-icons. Page: <code>hypeforge/docs/design/look/review-3-mac-os-9/</code>.</footer>
+</div>
+
+<script>
+const D = /*DATA*/null;
+const FAMS = [["neutral","Grays"],["blue","Blues"],["purple","Purples"],["green","Greens"],["pink","Pinks"],["red","Reds"],["multi","Multicolor"],["orange","Orange"],["kognog","KognogOS"]];
+let cur = D.order.includes("light-gray") ? "light-gray" : D.order[0], open = "emblem";
+const $ = id => document.getElementById(id);
+const icon = id => (D.apps.find(a => a.id === id) || {}).icon;
+const theme = s => D.now[s];
+const MAP = {sunken:"surface.sunken",base:"surface.base",raised:"surface.raised",overlay:"surface.overlay",hover:"surface.hover",
+  text:"text.primary",text2:"text.secondary",muted:"text.muted",accent:"accent.base",on:"accent.on",acctext:"accent.text",
+  subtle:"border.subtle",strong:"border.strong",tbg:"term.bg",tfg:"term.fg"};
+const sv = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${p}</svg>`;
+
+// a menu: [label, key?, flags] — flags: "hl" highlighted, "ar" submenu, "ck" checked, "dis" disabled; "-" = separator
+function menu(id, items, left){
+  const el = $(id);
+  if (left !== undefined) el.style.left = left;
+  el.innerHTML = items.map(i => i === "-" ? "<hr>" : `<div class="it ${i[2]||""}">${(i[2]||"").includes("ck")?'<span class="ck">✓</span>':""}${i[3]?`<img src="${icon(i[3])}" alt="">`:""}<span>${i[0]}</span>${(i[2]||"").includes("ar")?'<span class="ar">▸</span>':i[1]?`<span class="k">${i[1]}</span>`:""}</div>`).join("");
+}
+
+function build(){
+  document.querySelectorAll("img[data-icon]").forEach(i => i.src = icon(i.dataset.icon));
+  $("emb").style.backgroundImage = `url(${D.emblem})`;
+  menu("m-emblem", [["About This Computer"],"-",["hypeForge Settings","","", "settings"],["Favorites","","ar"],["Recent Apps","","ar"],"-",
+    ["Internet","","ar"],["Office","","ar"],["Games","","ar hl"],["Multimedia","","ar"],["Graphics","","ar"],["Development","","ar"],["System","","ar"],["Utilities","","ar"],"-",["All Apps…","Win + Space"]]);
+  menu("m-sub", [["Steam","","","steam"],["SuperTux"],["World of Warcraft"],["Factorio"]]);
+  menu("m-window", [["Float","Win + Shift + Space"],["Tabs","Win + T"],"-",["Send to Workspace","","ar"],["Send to Screen","","ar"],"-",["Put Away","Win + Shift + −"],["Bring Back","Win + −"],"-",["Close","Alt + F4"]]);
+  menu("m-special", [["Empty Trash","","dis"],"-",["Lock Screen","Win + Escape"],["Log Out Javier…"],"-",["Sleep"],["Restart…"],["Shut Down…"]]);
+  menu("m-apps", [["Hide Chrome"],["Hide Others"],["Show All","","dis"],"-",["Chrome","","ck","chrome"],["Alacritty","","","alacritty"],["Thunar","","","thunar"],["Discord","","","discord"],["Steam","","","steam"]]);
+  menu("m-ws", D.workspaces.map((w,i) => [`${i+1} · ${w}`, `Win + ${i+1}`, i===0?"ck":""]));
+  menu("m-fav", D.apps.slice(0,10).map(a => [a.name, "", "", a.id]));
+  menu("m-help", [["Keys","Win + F1"],["The hypeForge guide"],"-",["About hypeForge"]]);
+  const tiles = [["Wi-Fi",sv('<path d="M2 9a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/>')],["Bluetooth",sv('<path d="m7 7 10 10-5 4V3l5 4L7 17"/>')],
+    ["Sound",sv('<path d="M4 10v4h4l5 4V6L8 10H4zM16 9a4 4 0 0 1 0 6"/>')],["Night light",`<span class="moon">${sv('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>')}</span>`],
+    ["Screens",sv('<rect x="3" y="4" width="18" height="12" rx="1"/><path d="M8 20h8M12 16v4"/>')],["Clipboard",sv('<rect x="6" y="4" width="12" height="17" rx="1"/><path d="M9 4V2h6v2"/>')],
+    ["Drives",sv('<rect x="3" y="7" width="18" height="10" rx="1"/><circle cx="17" cy="12" r="1" fill="currentColor"/>')],["Printers",sv('<path d="M6 9V3h12v6M6 17H4v-7h16v7h-2M7 14h10v7H7z"/>')],
+    ["Notifications",sv('<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/>')+'<span class="dot"></span>']];
+  $("strip-tiles").innerHTML = tiles.map(([n,s]) => `<span class="tile" title="${n}">${s}</span>`).join("") + ["steam","discord","keepassxc"].map(i => `<span class="tile"><img src="${icon(i)}" alt=""></span>`).join("");
+  document.querySelectorAll(".mbar [data-open]").forEach(b => b.addEventListener("click", () => show(open === b.dataset.open ? "" : b.dataset.open)));
+  document.querySelectorAll("#panels button").forEach(b => b.addEventListener("click", () => show(b.dataset.p)));
+  document.querySelectorAll("[data-fx]").forEach(b => b.addEventListener("click", () => {
+    $("scr").classList.toggle("fx", b.dataset.fx === "fx"); $("scr").classList.toggle("plain", b.dataset.fx === "plain");
+    document.querySelectorAll("[data-fx]").forEach(x => x.setAttribute("aria-pressed", x === b)); paint(); }));
+  const strip = st => { $("strip").classList.toggle("closed", st === "closed"); $("handle").textContent = st === "closed" ? "▶" : "◀";
+    document.querySelectorAll("[data-cs]").forEach(x => x.setAttribute("aria-pressed", x.dataset.cs === st)); };
+  document.querySelectorAll("[data-cs]").forEach(b => b.addEventListener("click", () => strip(b.dataset.cs)));
+  $("handle").addEventListener("click", () => strip($("strip").classList.contains("closed") ? "open" : "closed"));
+  $("copy").addEventListener("click", () => {
+    navigator.clipboard?.writeText($("reply-text").textContent).then(() => { $("copy").textContent = "Copied"; })
+      .catch(() => { const r = document.createRange(); r.selectNodeContents($("reply-text")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
+  });
+}
+
+function show(p){
+  open = p;
+  const btn = p ? document.querySelector(`.mbar [data-open="${p}"]`) : null;
+  ["emblem","window","special","apps","ws","fav","help"].forEach(k => $("m-"+k).classList.toggle("show", k === p));
+  $("m-sub").classList.toggle("show", p === "emblem");
+  if (p === "emblem") { const m = $("m-emblem"), hl = m.querySelector(".it.hl");
+    $("m-sub").style.left = (m.offsetLeft + m.offsetWidth - 2) + "px"; $("m-sub").style.top = (m.offsetTop + hl.offsetTop - 4) + "px"; }
+  document.querySelectorAll(".mbar .mi").forEach(b => b.classList.toggle("open", b === btn));
+  if (btn && p !== "emblem" && p !== "apps") $("m-"+p).style.left = btn.offsetLeft + "px";
+  document.querySelectorAll("#panels button").forEach(b => b.setAttribute("aria-pressed", b.dataset.p === p));
+}
+
+function paint(){
+  const t = theme(cur), desk = $("desk");
+  for (const [k,v] of Object.entries(MAP)) desk.style.setProperty("--t-"+k, t[v]);
+  desk.style.setProperty("--t-shadow-a", t.tone === "white" || t.tone === "light" ? .35 : .6);
+  const c = k => `<span style="color:${t["term."+k]}">`;
+  $("term").innerHTML = `${c("green")}javier@tphome</span> ${c("blue")}~/Programs/forge-suite</span> $ nog upgrade\n${c("cyan")}::</span> 12 packages · Tier 1 now, Tier 3 after 7 days\n${c("yellow")}hold</span>  firefox 141.0 (Tier 3, 4 days left)\n${c("magenta")}done</span>  ${c("bright_black")}11 upgraded in 41 s</span>`;
+  document.querySelectorAll(".chip").forEach(b => b.setAttribute("aria-pressed", b.dataset.s === cur));
+  const fx = $("scr").classList.contains("fx");
+  $("cap").innerHTML = `<span><b>${t.name}</b></span><span>${fx ? "SwayFX login: Mac OS 9's crisp shadow" : "Plain Sway: flat windows, menus keep their shadow"}</span><span>menu bar ${t["surface.overlay"]} · highlight ${t["accent.base"]}</span>`;
+  trio();
+}
+
+function chips(){
+  $("fams").innerHTML = FAMS.map(([f,label]) => {
+    const list = D.order.filter(s => D.now[s].family === f);
+    return list.length ? `<div class="fam"><h3>${label}</h3><div class="chips">${list.map(s=>{const t=theme(s);
+      return `<button type="button" class="chip" data-s="${s}" aria-pressed="false"><i style="background:linear-gradient(135deg,${t["surface.base"]} 50%,${t["accent.base"]} 50%)"></i>${t.name}</button>`}).join("")}</div></div>` : "";
+  }).join("");
+  document.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => { cur = b.dataset.s; paint(); }));
+}
+
+function trio(){
+  const t = theme(cur);
+  const S = [["Left screen","Discord","1fr 1fr"],["Main screen","Chrome · with the Control Strip","1.35fr 1fr"],["Right screen","btop","1fr"]];
+  $("trio").innerHTML = S.map(([n,a,cols],i) => `<div class="mini"><div class="m" style="--m-bg:${t["surface.sunken"]};--m-win:${t["surface.base"]};--m-line:${t["border.strong"]};--m-title:${t["surface.raised"]};--m-bar:${t["surface.overlay"]};--m-fg:${t["text.primary"]};--m-cols:${cols}">
+    <div class="mb"><span>◆</span><span>${a.split(" ·")[0]}</span><span>12:30 PM</span></div>
+    <div class="mt">${i===1?'<i style="grid-row:1/3"></i><i></i><i></i>':i===0?'<i></i><i></i>':'<i></i>'}</div></div><p><b>${n}</b> · ${a}</p></div>`).join("");
+}
+
+build(); chips(); show("emblem"); paint();
+</script>
