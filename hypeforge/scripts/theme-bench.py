@@ -57,6 +57,8 @@ def home_for(base: Path) -> tuple[Path, dict]:
         (conf / dest).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / src, conf / dest)
     (conf / "sway/outputs").write_text("# the bench's screens\n")
+    (conf / "alacritty").mkdir(parents=True, exist_ok=True)
+    shutil.copy2(Path("~/.config/alacritty/alacritty.toml").expanduser(), conf / "alacritty/alacritty.toml")
     (conf / "hypeforge/applets").mkdir(parents=True, exist_ok=True)
     (conf / "hypeforge/applets/favourites.css").write_text("/* bench */\n")
     env = {k: v for k, v in os.environ.items() if k not in ("SWAYSOCK", "WAYLAND_DISPLAY", "DISPLAY", "I3SOCK", "DBUS_SESSION_BUS_ADDRESS")}
@@ -82,6 +84,14 @@ def static_checks(conf: Path, env: dict):
                 bad_fuzzel.append(f"{s}/{t}: {(r.stderr or r.stdout).strip()[-160:]}")
     check(not bad_sway, f"Sway accepts the wired config with all {n} looks" + (f" — {bad_sway[:2]}" if bad_sway else ""))
     check(not bad_fuzzel, f"fuzzel accepts the lists' look with all {n}" + (f" — {bad_fuzzel[:2]}" if bad_fuzzel else ""))
+    import tomllib
+    term = conf / "alacritty/themes/hypeForge-desktop.toml"
+    try:
+        tomllib.loads(term.read_text()); tomllib.loads((conf / "alacritty/alacritty.toml").read_text())
+        ok = Path(tomllib.loads((conf / "alacritty/alacritty.toml").read_text())["general"]["import"][0]).expanduser() == term
+    except Exception as e:
+        ok = False
+    check(ok, "the terminal's theme and Alacritty's settings read back, ours first in the imports")
     # the checks really check: a broken include must fail
     inc = conf / "hypeforge/theme/sway.conf"
     good = inc.read_text()

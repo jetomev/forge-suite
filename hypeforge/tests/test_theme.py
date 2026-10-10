@@ -133,5 +133,44 @@ class Safety(Base):
                     self.assertNotIn("{{", body, f"{s}/{t}: {path.name}")
 
 
+class Terminal(Base):
+    def setUp(self):
+        super().setUp()
+        cfg = self.place.root / "alacritty/alacritty.toml"
+        cfg.parent.mkdir(parents=True)
+        cfg.write_text('[general]\nimport = [\n    "~/.config/alacritty/themes/KognogOS-theme.toml",\n    "/etc/extra.toml",\n]\n\n[font]\nsize = 12\n')
+        self.cfg = cfg
+
+    def imports(self):
+        import tomllib
+        return tomllib.loads(self.cfg.read_text())["general"]["import"]
+
+    def test_the_terminal_follows_the_look(self):
+        self.apply(theme="ember")
+        imp = self.imports()
+        ours = self.place.root / "alacritty/themes/hypeForge-desktop.toml"
+        self.assertEqual(Path(imp[0]).expanduser(), ours, "our theme first: alacrittyForge's rule")
+        self.assertIn("/etc/extra.toml", imp, "other imports stay")
+        self.assertFalse(any("KognogOS-theme" in i for i in imp), "the old theme steps aside")
+        body = ours.read_text()
+        self.assertIn("Do not edit", body.splitlines()[0], "alacrittyForge shows it as locked")
+        import tomllib
+        self.assertEqual(tomllib.loads(body)["colors"]["primary"]["background"], ht.themes()["ember"]["term"]["bg"])
+        self.assertIn("size = 12", self.cfg.read_text(), "the rest of the settings untouched")
+
+    def test_a_theme_picked_in_alacrittyforge_wins(self):
+        self.apply(theme="ember")
+        self.cfg.write_text('[general]\nimport = ["~/.config/alacritty/themes/dracula.toml"]\n')
+        self.apply(theme="kognogos-mocha")
+        self.assertEqual(self.imports(), ["~/.config/alacritty/themes/dracula.toml"])
+        self.assertEqual(self.place.read_state()["terminal"], "own")
+
+    def test_undo_puts_the_old_import_back(self):
+        self.apply()
+        self.apply(theme="ember")
+        ht.undo(self.place, reload=False)
+        self.assertTrue(any("hypeForge-desktop" in i for i in self.imports()))
+
+
 if __name__ == "__main__":
     unittest.main()

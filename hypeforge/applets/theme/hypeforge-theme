@@ -70,6 +70,11 @@ OUTPUTS = [  # template → where it goes, under the config folder
     ("gtk-settings.ini.tmpl", "gtk-3.0/settings.ini"),
     ("gtk-settings.ini.tmpl", "gtk-4.0/settings.ini"),
 ]
+# The terminal follows the look (Javier, 2026-10-10: "yes"): a theme file alacrittyForge shows as
+# locked, first in Alacritty's import list. If the person later picks another theme in
+# alacrittyForge, that pick wins and the look stops touching the terminal ("own").
+TERMINAL = ("alacritty-colors.toml.tmpl", "alacritty/themes/hypeForge-desktop.toml")
+ALACRITTY = "alacritty/alacritty.toml"
 PLACEHOLDER = re.compile(r"\{\{\s*([^}|]+?)\s*(?:\|\s*([^}]+?))?\s*\}\}")
 
 
@@ -155,6 +160,8 @@ def fill(template: str, ctx: dict) -> str:
             return str(ctx["meta"][key[5:]])
         if key.startswith("shape:"):
             return str(shape_of(style, key[6:]))
+        if key.startswith("token:"):
+            return token(theme, key[6:])
         if key.startswith("names:"):
             return str(ctx["names"][key[6:]])
         if key == "sway:border":
@@ -294,7 +301,42 @@ def render(style_slug: str, theme_slug: str, place: Place, wallpaper: str | None
     files = {}
     for tmpl, rel in OUTPUTS:
         files[place.root / rel] = fill((TEMPLATES / tmpl).read_text(), ctx)
+    term = terminal_files(place, st, fill((TEMPLATES / TERMINAL[0]).read_text(), ctx))
+    files.update(term)
     return files, str(pic)
+
+
+IMPORT_RE = re.compile(r"(^\s*import\s*=\s*\[)(.*?)(\])", re.S | re.M)
+
+
+def terminal_files(place: "Place", st: dict, body: str) -> dict:
+    """The terminal's theme file and, when needed, Alacritty's settings with it first in the
+    import list. Nothing when the person keeps their own terminal theme, or has no Alacritty."""
+    cfg = place.root / ALACRITTY
+    if st.get("terminal", "theme") != "theme" or not cfg.exists():
+        return {}
+    ours = place.root / TERMINAL[1]
+    home = str(Path.home())
+    name = "~" + str(ours)[len(home):] if str(ours).startswith(home + "/") else str(ours)
+    text = cfg.read_text()
+    m = IMPORT_RE.search(text)
+    entries = re.findall(r'"([^"]+)"', m.group(2)) if m else []
+    if entries and st.get("terminal_wired") and Path(entries[0]).expanduser() != ours:
+        return {}                     # the person picked another theme in alacrittyForge: theirs wins
+    out = {ours: body}
+    if not entries or Path(entries[0]).expanduser() != ours:
+        others = [e for e in entries if Path(e).expanduser() != ours]
+        # alacrittyForge's rule: the theme is the first import; the old theme file steps aside
+        others = [e for e in others if "/alacritty/themes/" not in e]
+        block = "import = [\n" + "".join(f'    "{e}",\n' for e in [name] + others) + "]"
+        if m:
+            text = text[:m.start()] + block + text[m.end():]
+        elif "[general]" in text:
+            text = text.replace("[general]", "[general]\n" + block, 1)
+        else:
+            text = "[general]\n" + block + "\n\n" + text
+        out[cfg] = text
+    return out
 
 
 def apply(style_slug: str, theme_slug: str, place: Place, *, wallpaper: str | None = None, dry: bool = False,
@@ -319,8 +361,13 @@ def apply(style_slug: str, theme_slug: str, place: Place, *, wallpaper: str | No
         tmp.replace(p)
     if new_pic and Path(pic).exists():
         lock_picture(Path(pic), lock)
-    place.write_state({"style": style_slug, "theme": theme_slug, "wallpaper": wallpaper or st.get("wallpaper", "theme"),
-                       "picture": pic, "applied": dt.datetime.now().isoformat(timespec="seconds")})
+    term_on = (place.root / TERMINAL[1]) in files
+    new_state = {"style": style_slug, "theme": theme_slug, "wallpaper": wallpaper or st.get("wallpaper", "theme"),
+                 "picture": pic, "terminal": st.get("terminal", "theme") if term_on or not st.get("terminal_wired") else "own",
+                 "applied": dt.datetime.now().isoformat(timespec="seconds")}
+    if term_on or st.get("terminal_wired"):
+        new_state["terminal_wired"] = "yes"
+    place.write_state(new_state)
     if reload:
         reload_all(files_theme(theme_slug), say)
     return {"changed": changed, "picture": pic, "backup": saved}
