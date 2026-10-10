@@ -90,11 +90,13 @@ def main() -> int:
         env["SWAYSOCK"] = sock
         env["WAYLAND_DISPLAY"] = next((p.name for p in run.glob("wayland-*") if not p.name.endswith(".lock")), "wayland-1")
         procs.append(subprocess.Popen([sys.executable, str(APPLETS / "workspaces/hypeforge-workspaces")], env=env, stdout=log, stderr=log))
+        for name in ht.styles()[a.style].get("layout", {}).get("applets", []):   # the style's own (taskbar…)
+            procs.append(subprocess.Popen([sys.executable, str(APPLETS / name / f"hypeforge-{name}")], env=env, stdout=log, stderr=log))
         time.sleep(1.5)
         window = ("import gi, sys; gi.require_version('Gtk','3.0'); from gi.repository import Gtk, GLib; "
                   "GLib.set_prgname(sys.argv[1]); w=Gtk.Window(); w.add(Gtk.Label(label=sys.argv[1])); w.show_all(); "
                   "GLib.timeout_add_seconds(90, Gtk.main_quit); Gtk.main()")
-        for ws, names in ((3, ("spotify",)), (1, ("google-chrome", "thunar"))):
+        for ws, names in ((3, ("spotify",)), (1, ("google-chrome", "thunar", "gimp"))):
             subprocess.run([sys.executable, str(APPLETS / "workspaces/hypeforge-workspaces"), "go", str(ws)], env=env)
             for n in names:
                 procs.append(subprocess.Popen([sys.executable, "-c", window, n], env=env, stdout=log, stderr=log))

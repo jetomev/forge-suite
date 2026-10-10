@@ -229,6 +229,16 @@ def fx_value(style: dict, theme: dict, name: str) -> str:
     raise LookError(f"unknown SwayFX setting {name}")
 
 
+def sway_applets(style: dict) -> str:
+    """The applets a style's bar needs, started with Sway (look step 5): `[layout] applets` names
+    them (e.g. "taskbar"). exec_always runs at login and at every reload; each applet keeps one
+    copy, so a reload never doubles it. A style that needs none says so."""
+    names = style.get("layout", {}).get("applets", [])
+    lines = [f"exec_always {REPO / 'applets' / n / ('hypeforge-' + n)}" for n in names
+             if (REPO / "applets" / n / f"hypeforge-{n}").is_file()]
+    return "\n".join(["# the applets this style's bar needs"] + lines) if lines else "# this style's bar needs no extra applets"
+
+
 def sway_border(shape: dict) -> str:
     w = shape.get("border_window", SHAPE_DEFAULTS["border_window"])
     return f"normal {w}" if shape.get("titlebar") else f"pixel {w}"
@@ -266,6 +276,8 @@ def fill(template: str, ctx: dict) -> str:
             return sway_border(style.get("shape", {}))
         if key == "sway:titlebar":
             return sway_titlebar(style)
+        if key == "sway:applets":
+            return sway_applets(style)
         if key == "wallpaper":
             return ctx["wallpaper"]
         value = resolve(key, style, theme)

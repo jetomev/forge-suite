@@ -1,0 +1,71 @@
+/* hypeForge style · Windows 11, tiled (D-71) — the taskbar's look. Shapes from
+   styles/windows-11/style.toml (bar_height 48, radius_control 4, radius_pill for the search box,
+   bar_indicator 3 px); colours are names from colors.css (hypeforge-theme writes it). */
+@import url("../../hypeforge/applets/taskbar.css");
+@import url("../../hypeforge/theme/colors.css");
+
+* {
+  font-family: "Noto Sans", "Symbols Nerd Font", sans-serif;
+  font-size: 13px;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+
+window#waybar {
+  background: @hf_bar;
+  color: @hf_text;
+  border-top: 1px solid @hf_island_border;
+}
+
+tooltip { background: @hf_island; border: 1px solid @hf_island_border; border-radius: 8px; }
+tooltip label { color: @hf_text; }
+
+/* every button: Windows 11's soft square that lights up under the mouse */
+#custom-emblem, #custom-search, #custom-ws-title, #custom-chevron, #tray, #custom-clipboard,
+#custom-drives, #custom-printers, #network, #wireplumber, #bluetooth, #clock, #custom-notifications {
+  margin: 4px 2px;
+  padding: 0 10px;
+  border-radius: 4px;
+  color: @hf_text;
+}
+#custom-emblem:hover, #custom-search:hover, #custom-ws-title:hover, #custom-chevron:hover,
+#custom-clipboard:hover, #custom-drives:hover, #custom-printers:hover, #clock:hover, #custom-notifications:hover,
+#quick:hover { background: @hf_pill_hover; }
+
+#custom-emblem {
+  background-image: url("../../hypeforge/bar/launcher.png");
+  background-size: 24px 24px;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-width: 40px;
+  margin-left: 8px;
+}
+#custom-search {
+  background: @hf_shade;
+  border: 1px solid @hf_island_border;
+  border-radius: 999px;
+  min-width: 170px;
+  margin: 8px 6px;
+  padding: 0 14px;
+  color: @hf_subtext;
+}
+#custom-search label { }
+
+/* the Quick Settings group: three icons in one pill */
+#quick { margin: 4px 2px; border-radius: 4px; }
+#quick > * { margin: 0; padding: 0 7px; }
+#network, #wireplumber, #bluetooth { margin: 0; }
+
+#clock { font-size: 12px; padding: 0 12px; }
+#custom-notifications.unseen { color: @hf_bell; }
+#custom-notifications.dnd { color: @hf_alert; }
+#custom-clipboard.new, #custom-drives.has { color: @hf_new; }
+
+/* the pinned + running row (the Taskbar applet): a short line under running apps, a longer
+   accent line under the app in use, a soft square behind it */
+.app { min-width: 44px; margin: 4px 1px; border-radius: 4px; }
+.app.running { box-shadow: inset 0 -2px @hf_task_running; }
+.app.focused { box-shadow: inset 0 -3px @hf_task_focused; background-color: @hf_pill_hover; }
+.app.urgent { box-shadow: inset 0 -3px @hf_alert; }
+.app:hover { background-color: @hf_pill_hover; }

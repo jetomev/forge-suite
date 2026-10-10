@@ -150,6 +150,16 @@ class TheBarFollowsTheStyle(Base):
             placed = [m for k in ("modules-left", "modules-center", "modules-right") for m in cfg.get(k, [])]
             self.assertNotIn("mpris", placed, f"{bar}: mpris is placed again")
 
+    def test_windows_11_starts_its_taskbar_applet_and_the_rice_none(self):
+        self.apply("windows-11", "kognogos-mocha", say=lambda *_: None)
+        sway = self.read("hypeforge/theme/sway.conf")
+        self.assertIn("exec_always ", sway)
+        self.assertIn("applets/taskbar/hypeforge-taskbar", sway)
+        self.assertIn('"group/taskbar"', self.read("sway/waybar/config.jsonc"))
+        self.assertIn('"position": "bottom"', self.read("sway/waybar/config.jsonc"))
+        self.apply("rice", "kognogos-mocha", say=lambda *_: None)
+        self.assertNotIn("exec_always", self.read("hypeforge/theme/sway.conf"))
+
     def test_a_style_without_a_bar_leaves_the_bar_alone(self):
         st = dict(ht.styles()["rice"], meta=dict(ht.styles()["rice"]["meta"], slug="no-bar-here"))
         self.assertEqual(ht.bar_files(st), {})

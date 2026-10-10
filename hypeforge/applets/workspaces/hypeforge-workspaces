@@ -259,6 +259,12 @@ def number(grid):
     print(json.dumps({"text": str(i), "class": "wsnum", "tooltip": f"{i}. {grid.names[i - 1]}  (Win + W: the list)"}))
 
 
+def title(grid):
+    """The workspace on screen as "1 · Daily" (Windows 11's Workspaces button; a click opens the strip)."""
+    i = current() if 1 <= current() <= len(grid.names) else 1
+    print(json.dumps({"text": f"{i} · {grid.names[i - 1]}", "class": "wstitle", "tooltip": "Workspaces (Win + Tab)"}))
+
+
 def menu(grid):
     """The dropdown: every workspace in order, the one on screen selected. Opens under the button."""
     if hfmenu.close_open("workspaces"):  # a second click (or Win + Tab) closes it
@@ -439,8 +445,8 @@ def already_running():
 def main():
     args = sys.argv[1:]
     grid = Grid()
-    if args in (["label"], ["menu"], ["number"]):
-        {"label": label, "menu": menu, "number": number}[args[0]](grid)
+    if args in (["label"], ["menu"], ["number"], ["title"]):
+        {"label": label, "menu": menu, "number": number, "title": title}[args[0]](grid)
         return
     if args and args[0] in ("go", "move") and len(args) == 2:
         if grid.usable():

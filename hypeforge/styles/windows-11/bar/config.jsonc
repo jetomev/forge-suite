@@ -1,0 +1,119 @@
+// hypeForge style · Windows 11, tiled (D-71) — the taskbar. At the bottom on every screen, the icons
+// on the LEFT (Javier, W-1): Start (the KDE-style panel) · Search · the workspace on screen (a click
+// opens the workspaces strip) · the pinned + running apps (the Taskbar applet). Right: the hidden
+// icons behind a chevron (tray, clipboard, USB, printers), the Quick Settings group (network ·
+// volume · Bluetooth: a click opens the panel), the clock on two lines (a click: the calendar),
+// the bell. Pieces from modules.jsonc; colours from colors.css.
+{
+  "include": [
+    "${XDG_CONFIG_HOME:-$HOME/.config}/sway/waybar/modules.jsonc",
+    "${XDG_CONFIG_HOME:-$HOME/.config}/hypeforge/applets/workspaces.waybar.json",
+    "${XDG_CONFIG_HOME:-$HOME/.config}/hypeforge/applets/taskbar.waybar.json"
+  ],
+  "layer": "top",
+  "position": "bottom",
+  "height": 48,
+  "spacing": 0,
+  "modules-left": [
+    "custom/emblem",
+    "custom/search",
+    "custom/ws-title",
+    "group/taskbar"
+  ],
+  "modules-center": [],
+  "modules-right": [
+    "group/hidden-icons",
+    "group/quick",
+    "clock",
+    "custom/notifications"
+  ],
+  "custom/emblem": {
+    "format": " ",
+    "tooltip-format": "Start (Win + Space)",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel start --edges bottom,left --margin bottom=56,left=8"
+  },
+  "custom/search": {
+    "format": "󰍉  Search",
+    "tooltip": false,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel start --edges bottom,left --margin bottom=56,left=8",
+    "align": 0
+  },
+  "custom/ws-title": {
+    "exec": "~/Programs/forge-suite/hypeforge/applets/workspaces/hypeforge-workspaces title",
+    "return-type": "json",
+    "interval": "once",
+    "signal": 8,
+    "format": "󰕰  {}",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel workspaces --edges bottom,left --margin bottom=56,left=8"
+  },
+  "group/hidden-icons": {
+    "orientation": "inherit",
+    "modules": [
+      "custom/chevron",
+      "tray",
+      "custom/clipboard",
+      "custom/drives",
+      "custom/printers"
+    ],
+    "drawer": {
+      "transition-duration": 250,
+      "children-class": "hidden-icon",
+      "click-to-reveal": true,
+      "transition-left-to-right": false
+    }
+  },
+  "custom/chevron": {
+    "format": "󰅃",
+    "tooltip-format": "Show hidden icons"
+  },
+  "group/quick": {
+    "orientation": "inherit",
+    "modules": [
+      "network",
+      "wireplumber",
+      "bluetooth"
+    ]
+  },
+  "network": {
+    "format-ethernet": "󰈀",
+    "format-wifi": "{icon}",
+    "format-icons": [
+      "󰤯",
+      "󰤟",
+      "󰤢",
+      "󰤥",
+      "󰤨"
+    ],
+    "format-disconnected": "󰤭",
+    "format-disabled": "󰤮",
+    "tooltip-format": "Quick Settings",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --edges bottom,right --margin bottom=56,right=8"
+  },
+  "wireplumber": {
+    "format": "{icon}",
+    "format-muted": "󰝟",
+    "format-icons": [
+      "󰕿",
+      "󰖀",
+      "󰕾"
+    ],
+    "scroll-step": 5,
+    "max-volume": 100,
+    "tooltip-format": "Volume {volume} % · scroll to change",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --edges bottom,right --margin bottom=56,right=8"
+  },
+  "bluetooth": {
+    "format": "󰂯",
+    "format-off": "󰂲",
+    "format-disabled": "󰂲",
+    "format-connected": "󰂱",
+    "tooltip-format": "Quick Settings",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --edges bottom,right --margin bottom=56,right=8"
+  },
+  "clock": {
+    "format": "{:%I:%M %p\n%m/%d/%Y}",
+    "justify": "right",
+    "tooltip": false,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel calendar --edges bottom,right --margin bottom=56,right=8"
+  }
+}

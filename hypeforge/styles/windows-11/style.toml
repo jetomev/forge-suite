@@ -40,6 +40,7 @@ quick_settings   = "panel"                  # fallback "fuzzel-menu"
 calendar         = "panel"
 tray             = "drawer"                 # a chevron that opens the tray icons
 clock_format     = ["%I:%M %p", "%m/%d/%Y"]
+applets          = ["taskbar"]           # the pinned + running row needs its applet running (look step 5)
 
 [roles]                          # which colour role each part wears (never a hex)
 window_focused     = "window.focused"
