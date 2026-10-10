@@ -167,8 +167,11 @@ def fx_value(style: dict, theme: dict, name: str) -> str:
             return "# no effects on the bar, the lists or notifications in this style"
         out = []
         for ns in ("waybar", "launcher", "notifications"):   # Waybar, fuzzel, mako
+            # bar_shadows: a bar flush against the windows casts its shadow ON their frame and dims
+            # it (Javier's FX screenshot, 10-10); such styles say bar_shadows = false
+            shadows = fx.get("bar_shadows", fx.get("shadows")) if ns == "waybar" else fx.get("shadows")
             out.append(f'layer_effects "{ns}" {{\n    blur {onoff(fx.get("blur"))};\n    blur_ignore_transparent enable;\n'
-                       f'    shadows {onoff(fx.get("shadows"))};\n    corner_radius {r};\n}}')
+                       f'    shadows {onoff(shadows)};\n    corner_radius {r};\n}}')
         return "\n".join(out)
     raise LookError(f"unknown SwayFX setting {name}")
 

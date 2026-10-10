@@ -85,6 +85,16 @@ class TodaysLook(Base):
         self.assertIn("title_align center", sway)
         self.assertIn("font pango:Noto Sans Bold 10", sway)
 
+    def test_classic_keeps_its_bar_shadow_off_the_windows(self):
+        # Javier's FX screenshot (10-10): the bar's shadow dimmed the windows' top frame
+        self.apply("classic", "kognogos-mocha", say=lambda *_: None)
+        fx = self.read("hypeforge/theme/fx.conf")
+        bar = fx.split('layer_effects "waybar"')[1].split("}")[0]
+        lists = fx.split('layer_effects "launcher"')[1].split("}")[0]
+        self.assertIn("shadows disable", bar)
+        self.assertIn("shadows enable", lists, "the lists keep theirs")
+        self.assertIn("corner_radius 12", fx)
+
 
 class Safety(Base):
     def test_a_dry_run_writes_nothing(self):
