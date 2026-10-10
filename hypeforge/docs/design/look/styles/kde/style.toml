@@ -1,0 +1,74 @@
+# hypeForge style · KDE Plasma — PROPOSAL (look program, review 6; not approved yet)
+#
+# A STYLE is shapes, layout and which pieces the desktop uses. Colours never live here: every
+# part names a colour ROLE from the active theme (D-73). Dark Gray is the closest to Breeze Dark.
+# KognogOS ships Sway only (D-56): this is Plasma's look on hypeForge, with no KDE software.
+
+[meta]
+name = "KDE Plasma"
+slug = "kde"
+schema = 1
+needs = []                       # plain Sway: square windows, a solid panel
+better_with = ["swayfx"]         # Breeze's soft shadows, rounded windows, the frosted panel
+credit = "After KDE's Plasma 6 and its Breeze design, with thanks to the KDE community. Learned from, never copied."
+
+[shape]                          # pixels, at 100 % scale
+radius_window    = 8
+radius_control   = 4
+radius_popup     = 8
+radius_panel     = 10            # the floating panel (K-1)
+border_window    = 1
+titlebar         = true          # Breeze-style title bars (K-4): Sway's own, title on the left
+titlebar_height  = 28
+titlebar_align   = "left"
+gap_inner        = 8
+gap_outer        = 8
+bar_height       = 44            # the panel
+bar_margin       = 8             # it floats this far from the bottom edge
+
+[layout]
+bar_position     = "bottom"
+bar_style        = "floating"    # Plasma 6's floating panel (K-1)
+bar_on           = "every-screen"
+bar_left         = ["kickoff", "pager", "|", "task-manager"]   # pinned + running, icons only
+bar_right        = ["tray", "tray-popup", "clock-date", "peek"]
+launcher         = "panel-kickoff-list"     # KDE's own: categories left, a list with descriptions (K-3)
+pager            = "rectangles"             # one small rectangle per workspace, its apps as dots (K-2)
+tray_popup       = "one-popup"              # every tray applet in one popup with pages (K-5)
+krunner          = "fuzzel-top"             # Alt + Space: a search bar that drops from the top
+wallpaper        = "theme"                  # D-75
+clock_format     = ["%-I:%M %p", "%a %-m/%-d"]
+
+[roles]
+panel_background   = "surface.raised"       # frosted on SwayFX
+panel_text         = "text.primary"
+task_active        = "band.base"            # the line under the app in use
+task_running       = "text.muted"
+pager_active       = "band.base"
+pager_window       = "pop.base"
+title_focused      = "surface.raised"       # Breeze: the title bar matches the window, not the accent
+title_focused_text = "text.primary"
+title_unfocused    = "surface.base"
+title_unfocused_text = "text.muted"
+popup_background   = "surface.raised"
+popup_header       = "band.base"
+list_selected      = "band.soft"
+list_selected_bar  = "band.base"
+switch_on          = "pop.base"
+
+[fx]                             # SwayFX login only
+corner_radius      = 8
+shadows            = true
+shadow_blur_radius = 32          # Breeze's large, soft shadow
+shadow_offset      = [0, 6]
+shadow_opacity     = "effects.shadow_opacity"
+blur               = true        # the panel and its pop-ups
+blur_passes        = 2
+blur_radius        = 6
+bar_opacity        = 0.86
+animations         = false       # SwayFX #565/#569
+
+[fonts]
+ui      = "Noto Sans"            # Plasma's own default font
+ui_size = 10
+mono    = "JetBrainsMono Nerd Font"

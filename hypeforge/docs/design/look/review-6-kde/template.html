@@ -1,0 +1,457 @@
+<title>hypeForge Look Review 6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Noto+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: the brief and what to judge, then one large live screen (controls above it, theme
+   picker beside it), the three screens, how each piece is built, and the style file itself. */
+:root{
+  --paper:#f6f5f9; --card:#ffffff; --ink:#1d1b26; --ink-2:#55526a; --line:#e2e0ea;
+  --accent:#5b3fc0; --accent-soft:#ece7fb; --ok:#1f7a3a; --warn:#9a5b00; --no:#a3313a;
+  --f-display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"DejaVu Sans Mono",monospace;
+  --f-desk:"Noto Sans","IBM Plex Sans",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body);padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,4.4vw,44px);font-weight:750;letter-spacing:-.01em}
+h2{font-size:24px;font-weight:750}
+h3{font-size:16px;font-weight:600}
+p{margin:0}
+code{font-family:var(--f-mono);font-size:.92em}
+.eyebrow{font:600 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{max-width:70ch;color:var(--ink-2);font-size:16px}
+header{display:grid;gap:12px}
+.steps{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.steps span{font:500 12px/1 var(--f-mono);padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2)}
+.steps span.done{color:var(--ok);border-color:currentColor}
+.steps span.on{background:var(--accent);border-color:var(--accent);color:var(--card)}
+section{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
+.sec-head{display:grid;gap:6px}
+.sec-head p{max-width:74ch;color:var(--ink-2)}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.asks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.ask{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:8px;align-content:start;min-width:0}
+.ask .id{font:600 12px/1 var(--f-mono);color:var(--accent)}
+.ask p{color:var(--ink-2);font-size:14px}
+.rec{font:600 11px/1 var(--f-mono);padding:3px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.ask p .rec{white-space:normal;display:inline-block;line-height:1.35}
+.reply{background:var(--accent-soft);border-radius:10px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.reply code{font:500 14px/1.4 var(--f-mono);color:var(--ink);word-break:break-word}
+.copy{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:6px;padding:5px 10px;font:600 12px/1 var(--f-mono)}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:end}
+.seg{display:grid;gap:5px}
+.seg>span{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.seg div{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:transparent;color:var(--ink-2);padding:7px 11px;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--card);font-weight:600}
+.explore{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.picker{order:-1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:8px}
+#fams{display:flex;flex-wrap:wrap;gap:10px 22px}
+.fam{display:grid;gap:6px}
+.fam h3{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 9px 3px 3px;font-size:12.5px}
+.chip i{width:18px;height:18px;border-radius:50%;flex:none;border:1px solid rgba(127,127,127,.35)}
+.chip[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;font-weight:600}
+.stage{display:grid;gap:12px;min-width:0}
+.cap{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink-2)}
+.cap b{color:var(--ink)}
+
+/* ── the screen: 2560 × 1440 drawn at 140 %; --px is one screen "pixel" ───────────────────── */
+.desk{aspect-ratio:16/9;width:100%;border-radius:6px;overflow:hidden;position:relative;container-type:inline-size;
+  font-family:var(--f-desk);color:var(--t-text);background:var(--t-sunken);box-shadow:0 1px 0 var(--line),0 18px 50px rgba(0,0,0,.22)}
+.desk *{box-sizing:border-box}
+.scr{position:absolute;inset:0;--px:calc(140cqi / 2560);font-size:calc(12.5 * var(--px))}
+.wall{position:absolute;inset:0;background:var(--t-sunken) center/cover no-repeat}
+.frost{background:color-mix(in oklab,var(--t-raised) 86%,transparent);backdrop-filter:blur(calc(20 * var(--px))) saturate(1.3)}
+.plain .frost{background:var(--t-raised);backdrop-filter:none}
+/* the floating panel */
+.panelbar{position:absolute;left:calc(8 * var(--px));right:calc(8 * var(--px));bottom:calc(8 * var(--px));height:calc(44 * var(--px));display:flex;justify-content:space-between;align-items:center;padding:0 calc(6 * var(--px));z-index:5;color:var(--t-text);
+  border:calc(1 * var(--px)) solid var(--t-subtle);border-radius:calc(10 * var(--px));box-shadow:0 calc(4 * var(--px)) calc(16 * var(--px)) rgba(0,0,0,.3)}
+.plain .panelbar{box-shadow:none}
+.attached .panelbar{left:0;right:0;bottom:0;border-radius:0;border-width:calc(1 * var(--px)) 0 0}
+.pg{display:flex;align-items:center;gap:calc(2 * var(--px));height:100%}
+.tb{height:calc(38 * var(--px));min-width:calc(40 * var(--px));border:0;background:transparent;color:inherit;font:inherit;border-radius:calc(4 * var(--px));display:flex;align-items:center;justify-content:center;gap:calc(6 * var(--px));padding:0 calc(6 * var(--px));position:relative;cursor:pointer}
+.tb:hover,.tb.open{background:color-mix(in oklab,var(--t-band) 30%,transparent)}
+.tb img{width:calc(26 * var(--px));height:calc(26 * var(--px))}
+.tb .emb{width:calc(26 * var(--px));height:calc(26 * var(--px));background-size:contain;background-repeat:no-repeat}
+.tb svg{width:calc(18 * var(--px));height:calc(18 * var(--px))}
+.tb .ln{position:absolute;left:18%;right:18%;bottom:calc(1 * var(--px));height:calc(3 * var(--px));border-radius:2px;background:var(--t-muted)}
+.tb .ln.on{background:var(--t-band);left:8%;right:8%}
+.tb.act{background:color-mix(in oklab,var(--t-band) 22%,transparent)}
+.vsep{width:calc(1 * var(--px));height:60%;background:var(--t-subtle);margin:0 calc(4 * var(--px))}
+.pager{display:grid;grid-template-columns:repeat(3,calc(30 * var(--px)));grid-template-rows:repeat(2,calc(16 * var(--px)));gap:calc(2 * var(--px));padding:0 calc(4 * var(--px))}
+.pager i{border:calc(1 * var(--px)) solid var(--t-subtle);border-radius:calc(2 * var(--px));position:relative;background:color-mix(in oklab,var(--t-text) 5%,transparent)}
+.pager i.on{border-color:var(--t-band);background:color-mix(in oklab,var(--t-band) 35%,transparent)}
+.pager i b{position:absolute;width:calc(7 * var(--px));height:calc(5 * var(--px));background:var(--t-pop);border-radius:1px;top:calc(4 * var(--px));left:calc(4 * var(--px))}
+.pager i b+b{left:calc(13 * var(--px));top:calc(7 * var(--px))}
+.clock{display:grid;justify-items:center;line-height:1.2;font-size:calc(12 * var(--px));padding:0 calc(8 * var(--px))}
+.clock b{font-size:calc(14 * var(--px));font-weight:600}
+.peek{width:calc(10 * var(--px));align-self:stretch;margin:calc(6 * var(--px)) 0;border-left:calc(1 * var(--px)) solid var(--t-subtle)}
+/* windows with Breeze-style title bars */
+.tiles{position:absolute;left:calc(8 * var(--px));right:calc(8 * var(--px));top:calc(8 * var(--px));bottom:calc(60 * var(--px));
+  display:grid;grid-template-columns:1.35fr 1fr;grid-template-rows:1fr 1fr;gap:calc(8 * var(--px))}
+.win{background:var(--t-base);border:calc(1 * var(--px)) solid var(--t-subtle);min-height:0;min-width:0;overflow:hidden;display:flex;flex-direction:column}
+.win.focus{grid-row:1/3;border-color:var(--t-band)}
+.fx .win{border-radius:calc(8 * var(--px));box-shadow:0 calc(6 * var(--px)) calc(32 * var(--px)) rgba(0,0,0,var(--t-shadow-a))}
+.tt{height:calc(28 * var(--px));flex:none;display:flex;align-items:center;gap:calc(8 * var(--px));padding:0 calc(10 * var(--px));background:var(--t-base);color:var(--t-muted);border-bottom:calc(1 * var(--px)) solid var(--t-subtle);font-size:calc(12.5 * var(--px))}
+.win.focus .tt{background:var(--t-raised);color:var(--t-text)}
+.notitle .tt{display:none}
+.c-bar{display:flex;align-items:center;gap:calc(10 * var(--px));padding:calc(6 * var(--px)) calc(10 * var(--px));background:var(--t-band);color:var(--t-bandon)}
+.c-url{flex:1;height:calc(28 * var(--px));border-radius:calc(4 * var(--px));background:var(--t-bandstrong);display:flex;align-items:center;padding:0 calc(12 * var(--px));font-size:calc(12.5 * var(--px))}
+.c-page{flex:1;padding:calc(30 * var(--px)) calc(40 * var(--px));display:grid;align-content:start;gap:calc(14 * var(--px));overflow:hidden}
+.c-kicker{font:600 calc(11.5 * var(--px))/1 var(--f-mono);letter-spacing:.1em;color:var(--t-acctext);text-transform:uppercase}
+.c-h{font:700 calc(36 * var(--px))/1.1 var(--f-desk)}
+.c-p{color:var(--t-text2);font-size:calc(14 * var(--px));max-width:36em;line-height:1.5}
+.c-btns{display:flex;gap:calc(10 * var(--px))}
+.b-acc{background:var(--t-accent);color:var(--t-on);padding:calc(7 * var(--px)) calc(16 * var(--px));border-radius:calc(4 * var(--px));font-weight:600}
+.b-sec{background:var(--t-overlay);border:calc(1 * var(--px)) solid var(--t-strong);padding:calc(6 * var(--px)) calc(15 * var(--px));border-radius:calc(4 * var(--px))}
+.c-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(12 * var(--px))}
+.c-card{background:var(--t-overlay);border:calc(1 * var(--px)) solid var(--t-subtle);border-radius:calc(6 * var(--px));padding:calc(12 * var(--px));display:grid;gap:calc(4 * var(--px));font-size:calc(12.5 * var(--px));border-left:calc(3 * var(--px)) solid var(--t-band)}
+.c-card b{font-weight:600}.c-card span{color:var(--t-muted);font-size:calc(11.5 * var(--px))}
+.term{flex:1;background:var(--t-tbg);color:var(--t-tfg);font:calc(12.5 * var(--px))/1.55 var(--f-mono);padding:calc(12 * var(--px)) calc(14 * var(--px));white-space:pre;overflow:hidden}
+.dol{flex:1;display:grid;grid-template-columns:calc(160 * var(--px)) 1fr;min-height:0}
+.dol-side{background:var(--t-sunken);padding:calc(10 * var(--px)) calc(6 * var(--px));display:grid;align-content:start;gap:calc(1 * var(--px));font-size:calc(12.5 * var(--px));color:var(--t-text2);border-right:calc(1 * var(--px)) solid var(--t-subtle)}
+.dol-side small{font-size:calc(11 * var(--px));color:var(--t-muted);padding:calc(6 * var(--px)) calc(8 * var(--px)) calc(2 * var(--px))}
+.dol-side span{padding:calc(5 * var(--px)) calc(8 * var(--px));border-radius:calc(3 * var(--px));position:relative}
+.dol-side .sel{background:var(--t-bandsoft);color:var(--t-text)}
+.dol-side .sel::before{content:"";position:absolute;left:0;top:20%;bottom:20%;width:calc(3 * var(--px));background:var(--t-band);border-radius:2px}
+.dol-main{display:flex;flex-direction:column;min-height:0}
+.dol-crumb{display:flex;gap:calc(6 * var(--px));padding:calc(6 * var(--px)) calc(12 * var(--px));background:var(--t-raised);border-bottom:calc(1 * var(--px)) solid var(--t-subtle);font-size:calc(12.5 * var(--px))}
+.dol-crumb b{font-weight:600}
+.dol-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(86 * var(--px)),1fr));gap:calc(8 * var(--px));padding:calc(14 * var(--px));align-content:start}
+.fold{display:grid;justify-items:center;gap:calc(5 * var(--px));font-size:calc(11.5 * var(--px));padding:calc(4 * var(--px));border-radius:calc(4 * var(--px))}
+.fold.sel{background:var(--t-bandsoft);outline:calc(1 * var(--px)) solid var(--t-band)}
+.fold i{width:calc(46 * var(--px));height:calc(36 * var(--px));border-radius:calc(3 * var(--px));background:var(--t-bandtext);position:relative}
+.fold i::before{content:"";position:absolute;left:0;top:calc(-5 * var(--px));width:45%;height:calc(8 * var(--px));border-radius:calc(3 * var(--px)) calc(3 * var(--px)) 0 0;background:inherit}
+/* pop-ups */
+.pop{position:absolute;display:none;z-index:6;bottom:calc(60 * var(--px));color:var(--t-text);border:calc(1 * var(--px)) solid var(--t-subtle);border-radius:calc(8 * var(--px));box-shadow:0 calc(8 * var(--px)) calc(32 * var(--px)) rgba(0,0,0,var(--t-shadow-a));overflow:hidden}
+.pop.show{display:grid}
+.plain .pop{box-shadow:none}
+.attached .pop{bottom:calc(52 * var(--px))}
+.p-k{left:calc(8 * var(--px));width:calc(640 * var(--px));height:calc(640 * var(--px));grid-template-rows:auto 1fr auto}
+.k-head{display:flex;align-items:center;gap:calc(10 * var(--px));padding:calc(10 * var(--px)) calc(12 * var(--px));background:var(--t-band);color:var(--t-bandon)}
+.av{width:calc(34 * var(--px));height:calc(34 * var(--px));border-radius:50%;background:var(--t-bandon);color:var(--t-band);display:grid;place-items:center;font-weight:700;flex:none}
+.k-q{flex:1;height:calc(32 * var(--px));border-radius:calc(4 * var(--px));background:var(--t-raised);color:var(--t-muted);display:flex;align-items:center;padding:0 calc(10 * var(--px));gap:calc(8 * var(--px))}
+.k-q svg{width:calc(15 * var(--px));height:calc(15 * var(--px))}
+.k-body{display:grid;grid-template-columns:calc(220 * var(--px)) 1fr;min-height:0}
+.k-cat{border-right:calc(1 * var(--px)) solid var(--t-subtle);padding:calc(6 * var(--px));display:grid;align-content:start;gap:calc(1 * var(--px));background:var(--t-sunken)}
+.k-cat span{display:flex;align-items:center;gap:calc(8 * var(--px));padding:calc(6 * var(--px)) calc(10 * var(--px));border-radius:calc(4 * var(--px));position:relative;font-size:calc(12.5 * var(--px))}
+.k-cat span.sel{background:var(--t-bandsoft)}
+.k-cat span.sel::before{content:"";position:absolute;left:0;top:20%;bottom:20%;width:calc(3 * var(--px));background:var(--t-band);border-radius:2px}
+.k-cat span i{width:calc(14 * var(--px));height:calc(14 * var(--px));border-radius:calc(3 * var(--px));background:var(--t-bandtext);opacity:.8;flex:none}
+.k-list{padding:calc(6 * var(--px));display:grid;align-content:start;gap:calc(1 * var(--px));overflow:hidden}
+.k-list span{display:grid;grid-template-columns:calc(32 * var(--px)) 1fr;column-gap:calc(10 * var(--px));align-items:center;padding:calc(5 * var(--px)) calc(10 * var(--px));border-radius:calc(4 * var(--px))}
+.k-list span.hl{background:var(--t-bandsoft);outline:calc(1 * var(--px)) solid var(--t-band)}
+.k-list img{width:calc(30 * var(--px));height:calc(30 * var(--px));grid-row:1/3}
+.k-list b{font-weight:500;font-size:calc(13 * var(--px))}
+.k-list em{font-style:normal;color:var(--t-muted);font-size:calc(11.5 * var(--px))}
+.k-foot{display:flex;justify-content:space-between;align-items:center;padding:calc(6 * var(--px)) calc(10 * var(--px));border-top:calc(1 * var(--px)) solid var(--t-subtle);font-size:calc(12.5 * var(--px))}
+.k-tabs{display:flex;gap:calc(4 * var(--px))}
+.k-tabs span{padding:calc(5 * var(--px)) calc(12 * var(--px));border-radius:calc(4 * var(--px))}
+.k-tabs span.on{background:var(--t-bandsoft);box-shadow:inset 0 calc(-2 * var(--px)) 0 var(--t-band)}
+.k-pw{display:flex;gap:calc(4 * var(--px))}
+.k-pw span{display:flex;align-items:center;gap:calc(6 * var(--px));padding:calc(5 * var(--px)) calc(8 * var(--px));border-radius:calc(4 * var(--px))}
+.k-pw svg{width:calc(15 * var(--px));height:calc(15 * var(--px))}
+.p-t{right:calc(150 * var(--px));width:calc(400 * var(--px));grid-template-rows:auto auto 1fr}
+.t-head{display:flex;justify-content:space-between;align-items:center;padding:calc(8 * var(--px)) calc(12 * var(--px));background:var(--t-band);color:var(--t-bandon);font-weight:600;font-size:calc(13 * var(--px))}
+.t-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:calc(4 * var(--px));padding:calc(10 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-subtle)}
+.t-grid span{display:grid;justify-items:center;gap:calc(4 * var(--px));padding:calc(8 * var(--px)) calc(2 * var(--px));border-radius:calc(4 * var(--px));font-size:calc(11 * var(--px));text-align:center}
+.t-grid span.sel{background:var(--t-bandsoft);outline:calc(1 * var(--px)) solid var(--t-band)}
+.t-grid svg,.t-grid img{width:calc(22 * var(--px));height:calc(22 * var(--px))}
+.t-page{padding:calc(12 * var(--px)) calc(14 * var(--px));display:grid;gap:calc(12 * var(--px));align-content:start;font-size:calc(12.5 * var(--px))}
+.t-page h5{margin:0;font-size:calc(13 * var(--px));font-weight:600}
+.dev{display:grid;grid-template-columns:1fr auto;gap:calc(6 * var(--px)) calc(10 * var(--px));align-items:center}
+.dev small{color:var(--t-muted);font-size:calc(11 * var(--px))}
+.sl{grid-column:1/3;height:calc(4 * var(--px));border-radius:999px;background:var(--t-subtle);position:relative}
+.sl::before{content:"";position:absolute;inset:0 auto 0 0;width:var(--v);background:var(--t-pop);border-radius:inherit}
+.sl::after{content:"";position:absolute;left:var(--v);top:50%;width:calc(14 * var(--px));height:calc(14 * var(--px));transform:translate(-50%,-50%);border-radius:50%;background:var(--t-raised);border:calc(2 * var(--px)) solid var(--t-pop)}
+.sw{width:calc(34 * var(--px));height:calc(18 * var(--px));border-radius:999px;background:var(--t-pop);position:relative}
+.sw::after{content:"";position:absolute;right:calc(2 * var(--px));top:calc(2 * var(--px));width:calc(14 * var(--px));height:calc(14 * var(--px));border-radius:50%;background:var(--t-popon)}
+.p-c{right:calc(8 * var(--px));width:calc(330 * var(--px));padding:calc(12 * var(--px));gap:calc(8 * var(--px))}
+.p-c h5{margin:0;font-size:calc(14 * var(--px));font-weight:600}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:calc(2 * var(--px));font-size:calc(11.5 * var(--px));text-align:center}
+.cal-g span{height:calc(28 * var(--px));display:grid;place-items:center;border-radius:calc(4 * var(--px))}
+.cal-g .wd{color:var(--t-muted)}.cal-g .out{color:var(--t-muted);opacity:.6}
+.cal-g .today{background:var(--t-band);color:var(--t-bandon);font-weight:700}
+.p-r{top:0;bottom:auto;left:50%;transform:translateX(-50%);width:calc(720 * var(--px));border-top:0;border-radius:0 0 calc(8 * var(--px)) calc(8 * var(--px));grid-template-rows:auto auto}
+.r-q{display:flex;align-items:center;gap:calc(10 * var(--px));padding:calc(10 * var(--px)) calc(14 * var(--px));font-size:calc(15 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-subtle)}
+.r-q svg{width:calc(18 * var(--px));height:calc(18 * var(--px));color:var(--t-muted)}
+.r-r{padding:calc(6 * var(--px));display:grid;gap:calc(1 * var(--px))}
+.r-r span{display:grid;grid-template-columns:calc(28 * var(--px)) 1fr auto;align-items:center;column-gap:calc(10 * var(--px));padding:calc(5 * var(--px)) calc(10 * var(--px));border-radius:calc(4 * var(--px));font-size:calc(13 * var(--px))}
+.r-r span.hl{background:var(--t-bandsoft);outline:calc(1 * var(--px)) solid var(--t-band)}
+.r-r img{width:calc(26 * var(--px));height:calc(26 * var(--px))}
+.r-r em{font-style:normal;color:var(--t-muted);font-size:calc(11.5 * var(--px))}
+/* three screens, tables, boxes, the file */
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.trio{grid-template-columns:minmax(0,1fr)}}
+.mini{display:grid;gap:6px;min-width:0}
+.mini .m{aspect-ratio:16/9;border-radius:5px;overflow:hidden;position:relative;container-type:inline-size;background:var(--m-bg) center/cover}
+.mini .m .mb{position:absolute;left:1%;right:1%;bottom:1.5%;height:6.5%;border-radius:1cqi;background:var(--m-bar);border:1px solid var(--m-line)}
+.mini .m .mt{position:absolute;inset:1.5% 1.5% 10% 1.5%;display:grid;gap:1.5%;grid-template-columns:var(--m-cols)}
+.mini .m .mt i{background:var(--m-win);border:1px solid var(--m-line);border-top:5px solid var(--m-title);border-radius:4px}
+.mini p{font-size:13px;color:var(--ink-2)}
+.mini p b{color:var(--ink)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+.st{font:600 11px/1 var(--f-mono);padding:4px 7px;border-radius:4px;white-space:nowrap;display:inline-block}
+.st.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 13%,transparent)}
+.st.build{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.st.fx{color:var(--accent);background:var(--accent-soft)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:8px;align-content:start;min-width:0}
+.box ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.box li::marker{color:var(--accent)}
+pre.file{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;font:12.5px/1.55 var(--f-mono);color:var(--ink)}
+footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">hypeForge · the look · review 6 of 7 · proposal 5 of 6</p>
+  <h1>KDE Plasma, tiled: the floating panel, Kickoff, the pager and one tray for everything</h1>
+  <p class="lead">Plasma 6's look, built from hypeForge's own pieces and no KDE software (KognogOS ships Sway only). A floating panel at the bottom with Kickoff, a pager that shows your workspaces as little screens, your apps in the middle, and one tray pop-up that holds every setting. Windows get Breeze-style title bars. Dark Gray is the closest theme to Breeze Dark; Blue looks great too.</p>
+  <div class="steps" aria-label="Where we are in the program">
+    <span class="done">1 · Foundation ✓</span><span class="done">2 · Windows 11 ✓</span><span class="done">3 · Mac OS 9 ✓</span><span class="done">4 · macOS ✓</span><span class="done">5 · Linux rice ✓</span><span class="on">6 · KDE</span><span>7 · COSMIC</span>
+  </div>
+</header>
+
+<section aria-labelledby="h-ask">
+  <div class="sec-head">
+    <p class="eyebrow">What I need from you</p>
+    <h2 id="h-ask">Five calls, and anything that feels off</h2>
+    <p>My pick is marked on each. Tell me in your own words what doesn't feel like Plasma.</p>
+  </div>
+  <div class="asks">
+    <article class="ask"><span class="id">K-1 · The panel</span><h3>Floating, or attached to the edge?</h3><p>Plasma 6 floats its panel a few pixels off the bottom, with rounded ends. Attached runs it edge to edge, like Plasma 5. Try "Panel" above the screen.</p><p><span class="rec">my pick: floating</span></p></article>
+    <article class="ask"><span class="id">K-2 · Workspaces</span><h3>The pager?</h3><p>Your six workspaces as six little screens in the panel, the one you're on lit in the theme's colour, small marks where windows are. Click one to go there; hover for its name.</p><p><span class="rec">my pick: the pager</span></p></article>
+    <article class="ask"><span class="id">K-3 · Kickoff</span><h3>KDE's list, with descriptions?</h3><p>Categories on the left, apps as a list with what each one does under its name, you and the search on top, Applications/Places and the power buttons at the bottom. (Windows 11's Start is the grid version.)</p><p><span class="rec">my pick: the list</span></p></article>
+    <article class="ask"><span class="id">K-4 · Title bars</span><h3>Breeze-style title bars?</h3><p>A title bar on every window, title on the left, matching the window rather than the accent (Breeze's way). Each window gives up 28 px. Off means frames only. Try "Title bars".</p><p><span class="rec">my pick: on</span></p></article>
+    <article class="ask"><span class="id">K-5 · The tray</span><h3>One tray pop-up for everything?</h3><p>Plasma's way: one pop-up with every setting as an icon at the top (sound, network, Bluetooth, clipboard, drives, night light, notifications, printers), its page below. Instead of a separate pop-up for each.</p><p><span class="rec">my pick: one pop-up</span></p></article>
+  </div>
+  <div class="reply"><span>Answer in our chat, like this:</span><code id="reply-text">K-1 floating · K-2 pager · K-3 list · K-4 on · K-5 one pop-up · and: …</code><button class="copy" id="copy" type="button">Copy</button></div>
+</section>
+
+<section aria-labelledby="h-screen">
+  <div class="sec-head">
+    <p class="eyebrow">The main screen</p>
+    <h2 id="h-screen">Click the emblem, the tray arrow and the clock</h2>
+    <p>The same three apps as the other proposals, drawn at 140 %, on the theme's own wallpaper (D-75). Alt + Space would drop KRunner from the top: try it from "Open".</p>
+  </div>
+  <div class="controls">
+    <div class="seg"><span>Look</span><div role="group" aria-label="Look"><button type="button" data-fx="fx" aria-pressed="true">SwayFX login</button><button type="button" data-fx="plain" aria-pressed="false">Plain Sway</button></div></div>
+    <div class="seg"><span>Panel (K-1)</span><div role="group" aria-label="Panel"><button type="button" data-pn="float" aria-pressed="true">Floating</button><button type="button" data-pn="attached" aria-pressed="false">Attached</button></div></div>
+    <div class="seg"><span>Title bars (K-4)</span><div role="group" aria-label="Title bars"><button type="button" data-tt="on" aria-pressed="true">On</button><button type="button" data-tt="off" aria-pressed="false">Off</button></div></div>
+    <div class="seg"><span>Open</span><div role="group" aria-label="Open a pop-up" id="panels">
+      <button type="button" data-p="" aria-pressed="false">Nothing</button><button type="button" data-p="k" aria-pressed="true">Kickoff</button><button type="button" data-p="t" aria-pressed="false">Tray</button><button type="button" data-p="c" aria-pressed="false">Calendar</button><button type="button" data-p="r" aria-pressed="false">KRunner</button></div></div>
+  </div>
+  <div class="explore">
+    <div class="stage">
+      <div class="desk" id="desk"><div class="scr fx" id="scr">
+        <div class="wall" id="wall"></div>
+        <div class="tiles">
+          <div class="win focus"><div class="tt"><img data-icon="chrome" alt="" style="width:calc(16 * var(--px))">KognogOS · the tier-aware distro — Google Chrome</div>
+            <div class="c-bar"><span>‹ › ⟳</span><span class="c-url">kognogos.org</span><span>⋮</span></div>
+            <div class="c-page">
+              <span class="c-kicker">KognogOS · 0.9.0 beta</span>
+              <span class="c-h">An Arch desktop that waits<br>for packages to prove themselves.</span>
+              <span class="c-p">Tier-aware updates through nog, the Forge Suite for every setting, and hypeForge, the Sway desktop that keeps your apps in their workspaces.</span>
+              <span class="c-btns"><span class="b-acc">Download the beta</span><span class="b-sec">Read the guide</span></span>
+              <div class="c-cards"><div class="c-card"><b>nog 1.8.0</b><span>pacman, with patience</span></div><div class="c-card"><b>Forge Suite</b><span>10 apps on the AUR</span></div><div class="c-card"><b>hypeForge</b><span>Sway, our way</span></div></div>
+            </div></div>
+          <div class="win"><div class="tt"><img data-icon="alacritty" alt="" style="width:calc(16 * var(--px))">nog upgrade — Alacritty</div><div class="term" id="term"></div></div>
+          <div class="win"><div class="tt"><img data-icon="thunar" alt="" style="width:calc(16 * var(--px))">Programs — Thunar</div>
+            <div class="dol"><div class="dol-side"><small>Places</small><span>Home</span><span>Desktop</span><span>Documents</span><span>Downloads</span><span class="sel">Programs</span><small>Devices</small><span>media1 · 4 TB</span><span>media2 · 2 TB</span></div>
+              <div class="dol-main"><div class="dol-crumb"><span>Home</span>›<b>Programs</b></div><div class="dol-grid"><span class="fold sel"><i></i>forge-suite</span><span class="fold"><i></i>nog</span><span class="fold"><i></i>homelab</span><span class="fold"><i></i>kognog</span><span class="fold"><i></i>mindforge</span><span class="fold"><i></i>DecadeDrop</span></div></div></div></div>
+        </div>
+        <div class="panelbar frost">
+          <div class="pg">
+            <button class="tb" data-open="k" title="Kickoff"><span class="emb" id="emb"></span></button>
+            <span class="pager" id="pager" title="Workspaces"></span>
+            <span class="vsep"></span>
+            <span id="tasks" style="display:contents"></span>
+          </div>
+          <div class="pg">
+            <span id="tray" style="display:contents"></span>
+            <button class="tb" data-open="t" title="Show the tray"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 15 6-6 6 6"/></svg></button>
+            <button class="tb clock" data-open="c"><b>12:30 PM</b><span>Sat 10/10</span></button>
+            <span class="peek" title="Peek at the desktop"></span>
+          </div>
+        </div>
+        <div class="pop frost p-k" id="p-k" aria-label="Kickoff">
+          <div class="k-head"><span class="av">J</span><span class="k-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Search…</span></div>
+          <div class="k-body"><div class="k-cat" id="k-cat"></div><div class="k-list" id="k-list"></div></div>
+          <div class="k-foot"><span class="k-tabs"><span class="on">Applications</span><span>Places</span></span><span class="k-pw" id="k-pw"></span></div>
+        </div>
+        <div class="pop frost p-t" id="p-t" aria-label="The tray">
+          <div class="t-head"><span>Status and notifications</span><span>⚙</span></div>
+          <div class="t-grid" id="t-grid"></div>
+          <div class="t-page"><h5>Sound</h5>
+            <div class="dev"><span>Speakers · Realtek<br><small>default output</small></span><span>64%</span><span class="sl" style="--v:64%"></span></div>
+            <div class="dev"><span>G13 headset<br><small>output</small></span><span>40%</span><span class="sl" style="--v:40%"></span></div>
+            <div class="dev"><span>Microphone<br><small>input</small></span><span class="sw"></span></div>
+          </div>
+        </div>
+        <div class="pop frost p-c" id="p-c" aria-label="Calendar"><h5>October 2026</h5><div class="cal-g" id="cal-g"></div></div>
+        <div class="pop frost p-r" id="p-r" aria-label="KRunner"><div class="r-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>night</div><div class="r-r" id="r-r"></div></div>
+      </div></div>
+      <div class="cap" id="cap"></div>
+    </div>
+    <aside class="picker" aria-label="Pick a theme"><div id="fams"></div><p style="font-size:12px;color:var(--ink-2)">The approved 25 themes (D-73), each with its wallpaper (D-75). Dark Gray is the closest to Breeze Dark. The theme's colour on Chrome's toolbar, the pager, Kickoff's header and the selected rows; the pop on buttons, sliders and switches.</p></aside>
+  </div>
+</section>
+
+<section aria-labelledby="h-trio">
+  <div class="sec-head"><p class="eyebrow">All three screens</p><h2 id="h-trio">A panel on every screen</h2>
+  <p>Like Plasma with several screens: each panel shows the apps on its screen; the tray and the clock can live on all three or only the main one.</p></div>
+  <div class="trio" id="trio"></div>
+</section>
+
+<section aria-labelledby="h-built">
+  <div class="sec-head"><p class="eyebrow">How it gets built</p><h2 id="h-built">Every piece, what makes it, and what's left to make</h2>
+  <p>No KDE software anywhere: these are hypeForge's pieces dressed in Plasma's shapes.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Piece</th><th>Made with</th><th>Status</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>The floating panel</td><td>Waybar at the bottom, with margins and round ends</td><td><span class="st ok">works today</span></td><td>"Attached" is the same bar without the margins.</td></tr>
+      <tr><td>Apps in the panel (pinned + running)</td><td>The same Waybar part as Windows 11's taskbar and the Dock</td><td><span class="st build">to build</span></td><td>Built once, three styles use it.</td></tr>
+      <tr><td>The pager</td><td>A new small part of our Workspaces applet</td><td><span class="st build">to build</span></td><td>It already knows every workspace and its windows; the pager just draws them.</td></tr>
+      <tr><td>Kickoff, the list kind</td><td>Our panel (D-68), the Start code laid out as a list</td><td><span class="st build">to build</span></td><td>Descriptions come from each app's own desktop entry.</td></tr>
+      <tr><td>One tray pop-up with pages</td><td>Our panel; each page calls the app that owns it</td><td><span class="st build">to build</span></td><td>Shared with Quick Settings and Control Center.</td></tr>
+      <tr><td>KRunner</td><td>Today's launcher (fuzzel) at the top of the screen</td><td><span class="st ok">works today</span></td><td>Only its look file changes.</td></tr>
+      <tr><td>Breeze-style title bars</td><td>Sway's own: <code>default_border normal</code>, <code>title_align left</code></td><td><span class="st ok">works today</span></td><td>Sway can't show the app icon in the title; the page draws one to show where it would sit.</td></tr>
+      <tr><td>Soft shadows, rounded windows, frosted panel</td><td>SwayFX</td><td><span class="st fx">SwayFX login</span></td><td>Plain Sway: square and solid.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section aria-labelledby="h-cant">
+  <div class="sec-head"><p class="eyebrow">Honest limits</p><h2 id="h-cant">What this Plasma won't have</h2></div>
+  <div class="two">
+    <div class="box"><h3>Not on Sway</h3><ul>
+      <li>The app's icon and the minimize, maximize and close buttons in the title bar: Sway draws the title only.</li>
+      <li>The Overview (every window and workspace at once) and live window thumbnails on hover.</li>
+      <li>Desktop widgets (sticky notes, a clock on the wallpaper).</li>
+      <li>The panel turning solid by itself when a window is maximized.</li>
+    </ul></div>
+    <div class="box"><h3>Different on purpose</h3><ul>
+      <li>No KDE software at all: Plasma's look, hypeForge's pieces (D-56).</li>
+      <li>Windows tile; the pager is how you move between workspaces.</li>
+      <li>No animations (SwayFX #565 and #569).</li>
+    </ul></div>
+  </div>
+</section>
+
+<section aria-labelledby="h-file">
+  <div class="sec-head"><p class="eyebrow">For the theme apps later</p><h2 id="h-file">The style file this page is drawn from</h2>
+  <p><code>hypeforge/docs/design/look/styles/kde/style.toml</code></p></div>
+  <pre class="file"><!--STYLE--></pre>
+</section>
+
+<footer>Built by Javier and Claude for KognogOS. After KDE's Plasma 6 and Breeze, with thanks to the KDE community; wallpapers from our generator; app icons from candy-icons. Page: <code>hypeforge/docs/design/look/review-6-kde/</code>.</footer>
+</div>
+
+<script>
+const D = /*DATA*/null;
+const FAMS = [["kognog","KognogOS, the default"],["neutral","Grays"],["orange","Ember"],["blue","Blues"],["purple","Purples"],["green","Greens"],["pink","Pinks"],["red","Reds"],["multi","Multicolor"]];
+let cur = "dark-gray", open = "k";
+const $ = id => document.getElementById(id);
+const icon = id => (D.apps.find(a => a.id === id) || {}).icon;
+const theme = s => D.now[s];
+const MAP = {sunken:"surface.sunken",base:"surface.base",raised:"surface.raised",overlay:"surface.overlay",
+  text:"text.primary",text2:"text.secondary",muted:"text.muted",accent:"accent.base",on:"accent.on",acctext:"accent.text",
+  subtle:"border.subtle",strong:"border.strong",tbg:"term.bg",tfg:"term.fg",
+  band:"band.base",bandstrong:"band.strong",bandon:"band.on",bandsoft:"band.soft",bandtext:"band.text",pop:"pop.base",popon:"pop.on"};
+const sv = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${p}</svg>`;
+const DESC = {alacritty:"Terminal",thunar:"File manager",chrome:"Web browser",claude:"AI assistant",onlyoffice:"Office suite",obsidian:"Notes",whatsapp:"Messages",discord:"Chat and voice",spotify:"Music",steam:"Games store and library",keepassxc:"Password manager",btop:"System monitor",calc:"Calculator",settings:"Settings for everything"};
+
+function build(){
+  document.querySelectorAll("img[data-icon]").forEach(i => i.src = icon(i.dataset.icon));
+  $("emb").style.backgroundImage = `url(${D.emblem})`;
+  $("pager").innerHTML = D.workspaces.map((w,i) => `<i class="${i===0?"on":""}" title="${i+1} · ${w}">${[0,1,3].includes(i)?"<b></b>":""}${i===0?"<b></b>":""}</i>`).join("");
+  $("tasks").innerHTML = [["chrome","on"],["thunar","run"],["alacritty","run"],["claude",""],["discord","run"],["steam","run"],["spotify",""],["obsidian",""]]
+    .map(([id,s]) => `<button class="tb ${s==="on"?"act":""}" title="${D.apps.find(a=>a.id===id).name}"><img src="${icon(id)}" alt="">${s?`<span class="ln ${s==="on"?"on":""}"></span>`:""}</button>`).join("");
+  $("tray").innerHTML = [sv('<path d="M4 10v4h4l5 4V6L8 10H4zM16 9a4 4 0 0 1 0 6"/>'), sv('<path d="M2 9a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/>'), sv('<rect x="6" y="4" width="12" height="17" rx="1"/><path d="M9 4V2h6v2"/>'), sv('<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/>')]
+    .map(s => `<button class="tb">${s}</button>`).join("");
+  const cats = ["Favorites","All Applications","Development","Games","Graphics","Internet","Multimedia","Office","Settings","System","Utilities","Help"];
+  $("k-cat").innerHTML = cats.map((c,i) => `<span class="${i===0?"sel":""}"><i></i>${c}</span>`).join("");
+  $("k-list").innerHTML = D.apps.filter(a => !["downloads","trash"].includes(a.id)).slice(0,12).map((a,i) => `<span class="${i===2?"hl":""}"><img src="${a.icon}" alt=""><b>${a.name}</b><em>${DESC[a.id]||""}</em></span>`).join("");
+  $("k-pw").innerHTML = [["Sleep",'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'],["Restart",'<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>'],["Shut Down",'<path d="M12 3v8M6.4 6.4a8 8 0 1 0 11.2 0"/>'],["Leave…",'<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>']].map(([n,p]) => `<span>${sv(p)}${n}</span>`).join("");
+  $("t-grid").innerHTML = [["Sound",sv('<path d="M4 10v4h4l5 4V6L8 10H4zM16 9a4 4 0 0 1 0 6"/>'),1],["Networks",sv('<path d="M2 9a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/>')],["Bluetooth",sv('<path d="m7 7 10 10-5 4V3l5 4L7 17"/>')],["Clipboard",sv('<rect x="6" y="4" width="12" height="17" rx="1"/><path d="M9 4V2h6v2"/>')],
+    ["Drives",sv('<rect x="3" y="7" width="18" height="10" rx="1"/><circle cx="17" cy="12" r="1" fill="currentColor"/>')],["Night light",sv('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>')],["Notifications",sv('<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/>')],["Printers",sv('<path d="M6 9V3h12v6M6 17H4v-7h16v7h-2M7 14h10v7H7z"/>')]]
+    .map(([n,s,sel]) => `<span class="${sel?"sel":""}">${s}${n}</span>`).join("") + ["steam","discord","keepassxc","claude"].map(i => `<span><img src="${icon(i)}" alt="">${D.apps.find(a=>a.id===i).name}</span>`).join("");
+  let g = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d => `<span class="wd">${d}</span>`).join("");
+  for (const d of [27,28,29,30]) g += `<span class="out">${d}</span>`;
+  for (let d = 1; d <= 31; d++) g += `<span class="${d===10?"today":""}">${d}</span>`;
+  g += `<span class="out">1</span>`;
+  $("cal-g").innerHTML = g;
+  $("r-r").innerHTML = [["settings","Night light","nightForge · switch, warmth, schedule","hl"],["settings","Turn the night light off","nightForge",""],["calc","night = 21:00 → 07:02","10 h 2 min",""]].map(([i,n,d,h]) => `<span class="${h}"><img src="${icon(i)}" alt="">${n}<em>${d}</em></span>`).join("");
+  document.querySelectorAll(".panelbar [data-open]").forEach(b => b.addEventListener("click", () => show(open === b.dataset.open ? "" : b.dataset.open)));
+  document.querySelectorAll("#panels button").forEach(b => b.addEventListener("click", () => show(b.dataset.p)));
+  const seg = (attr, fn) => document.querySelectorAll(`[${attr}]`).forEach(b => b.addEventListener("click", () => { fn(b.getAttribute(attr)); document.querySelectorAll(`[${attr}]`).forEach(x => x.setAttribute("aria-pressed", x === b)); paint(); }));
+  seg("data-fx", v => { $("scr").classList.toggle("fx", v === "fx"); $("scr").classList.toggle("plain", v === "plain"); });
+  seg("data-pn", v => $("scr").classList.toggle("attached", v === "attached"));
+  seg("data-tt", v => $("scr").classList.toggle("notitle", v === "off"));
+  $("copy")?.addEventListener("click", () => {
+    navigator.clipboard?.writeText($("reply-text").textContent).then(() => { $("copy").textContent = "Copied"; })
+      .catch(() => { const r = document.createRange(); r.selectNodeContents($("reply-text")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
+  });
+}
+
+function show(p){
+  open = p;
+  ["k","t","c","r"].forEach(k => $("p-"+k).classList.toggle("show", k === p));
+  document.querySelectorAll(".panelbar [data-open]").forEach(b => b.classList.toggle("open", b.dataset.open === p));
+  document.querySelectorAll("#panels button").forEach(b => b.setAttribute("aria-pressed", b.dataset.p === p));
+}
+
+function paint(){
+  const t = theme(cur), desk = $("desk");
+  for (const [k,v] of Object.entries(MAP)) desk.style.setProperty("--t-"+k, t[v]);
+  desk.style.setProperty("--t-shadow-a", t.tone === "white" || t.tone === "light" ? .22 : .55);
+  $("wall").style.backgroundImage = D.walls[cur] ? `url(${D.walls[cur]})` : "none";
+  const c = k => `<span style="color:${t["term."+k]}">`, e = "</span>";
+  $("term").innerHTML = `${c("green")}javier@tphome${e} ${c("blue")}~/Programs/forge-suite${e} $ nog upgrade\n${c("cyan")}::${e} 12 packages · Tier 1 now, Tier 3 after 7 days\n${c("yellow")}hold${e}  firefox 141.0 (Tier 3, 4 days left)\n${c("magenta")}done${e}  ${c("bright_black")}11 upgraded in 41 s${e}`;
+  document.querySelectorAll(".chip").forEach(b => b.setAttribute("aria-pressed", b.dataset.s === cur));
+  const fx = $("scr").classList.contains("fx");
+  $("cap").innerHTML = `<span><b>${t.name}</b></span><span>${fx ? "SwayFX login: Breeze's soft shadows, rounded windows, a frosted panel" : "Plain Sway: the same layout, square and solid"}</span><span>band ${t["band.base"]} · pop ${t["pop.base"]}</span>`;
+  trio();
+}
+
+function chips(){
+  $("fams").innerHTML = FAMS.map(([f,label]) => {
+    const list = D.order.filter(s => D.now[s].family === f);
+    return list.length ? `<div class="fam"><h3>${label}</h3><div class="chips">${list.map(s=>{const t=theme(s);
+      return `<button type="button" class="chip" data-s="${s}" aria-pressed="false"><i style="background:linear-gradient(135deg,${t["surface.base"]} 33%,${t["band.base"]} 33% 66%,${t["pop.base"]} 66%)"></i>${t.name}</button>`}).join("")}</div></div>` : "";
+  }).join("");
+  document.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => { cur = b.dataset.s; paint(); }));
+}
+
+function trio(){
+  const t = theme(cur), w = D.walls[cur] ? `url(${D.walls[cur]})` : t["surface.sunken"];
+  const S = [["Left screen","Discord · its own panel","1fr 1fr"],["Main screen","Chrome, Alacritty, Thunar · the full panel","1.35fr 1fr"],["Right screen","btop · its own panel","1fr"]];
+  $("trio").innerHTML = S.map(([n,a,cols],i) => `<div class="mini"><div class="m" style="--m-bg:${w};--m-bar:${t["surface.raised"]};--m-line:${t["border.subtle"]};--m-win:${t["surface.base"]};--m-title:${t["surface.raised"]};--m-cols:${cols}">
+    <div class="mt">${i===1?'<i style="grid-row:1/3;border-color:'+t["band.base"]+'"></i><i></i><i></i>':i===0?'<i></i><i></i>':'<i></i>'}</div><div class="mb"></div></div><p><b>${n}</b> · ${a}</p></div>`).join("");
+}
+
+build(); chips(); show("k"); paint();
+</script>
