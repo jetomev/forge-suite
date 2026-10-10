@@ -160,6 +160,13 @@ class TheBarFollowsTheStyle(Base):
         self.apply("rice", "kognogos-mocha", say=lambda *_: None)
         self.assertNotIn("exec_always", self.read("hypeforge/theme/sway.conf"))
 
+    def test_every_file_the_bar_imports_exists_before_it_reloads(self):
+        # F-58: Waybar quits on a missing @import; Windows 11 imports taskbar.css, which its
+        # applet writes only once it runs — after the bar had already been told to reload
+        self.apply("windows-11", "kognogos-mocha", say=lambda *_: None)
+        self.assertTrue((self.place.root / "hypeforge/applets/taskbar.css").exists())
+        self.assertTrue((self.place.root / "hypeforge/theme/colors.css").exists())
+
     def test_a_style_without_a_bar_leaves_the_bar_alone(self):
         st = dict(ht.styles()["rice"], meta=dict(ht.styles()["rice"]["meta"], slug="no-bar-here"))
         self.assertEqual(ht.bar_files(st), {})

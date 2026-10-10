@@ -455,6 +455,21 @@ def with_corners(style: dict, choice: str) -> dict:
 BAR_LIVE = "sway/waybar"   # under the config folder: where Waybar reads config.jsonc and style.css
 
 
+def ensure_imports(place: "Place"):
+    """Every file the bar's stylesheet @imports must exist before the bar reloads: Waybar quits
+    on a missing import (F-58, 2026-10-10: switching to Windows 11, the bar reloaded before the
+    Taskbar applet had written taskbar.css for the first time, and went away). A missing one is
+    created empty; the applet fills it moments later and reloads the bar itself."""
+    css = place.root / BAR_LIVE / "style.css"
+    if not css.is_file():
+        return
+    for rel in re.findall(r'@import\s+url\("([^"]+)"\)', css.read_text()):
+        target = (css.parent / rel).resolve() if not rel.startswith(("/", "file:")) else Path(rel.replace("file://", ""))
+        if not target.exists():
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("/* placeholder: its applet writes this file when it starts (F-58) */\n")
+
+
 def bar_files(style: dict) -> dict:
     """The bar follows the style (look step 5): each style's layout (config.jsonc) and shapes
     (style.css), plus the module definitions every style shares (modules.jsonc: network, volume,
@@ -533,6 +548,7 @@ def apply(style_slug: str, theme_slug: str, place: Place, *, wallpaper: str | No
         tmp.replace(p)
     if new_pic and Path(pic).exists():
         lock_picture(Path(pic), lock)
+    ensure_imports(place)
     term_on = (place.root / TERMINAL[1]) in files
     new_state = {"style": style_slug, "theme": theme_slug, "wallpaper": wallpaper or st.get("wallpaper", "theme"),
                  "picture": pic, "corners": corners or st.get("corners", "style"),
