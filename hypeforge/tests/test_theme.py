@@ -141,6 +141,15 @@ class TheBarFollowsTheStyle(Base):
                       "the bar finds its pieces wherever its config folder is (the bench, the desktop)")
         self.assertIn("background: transparent", self.read("sway/waybar/style.css"))
 
+    def test_no_bar_places_waybars_mpris_module(self):
+        # F-57 (2026-10-10): Waybar 0.15's mpris module crashed the live bar (SIGSEGV in its
+        # playerctl callback) when a player started or stopped; the bench had no player to show it
+        import json, re
+        for bar in [Path(ht.REPO) / "sway/waybar/config.jsonc"] + sorted((Path(ht.REPO) / "styles").glob("*/bar/config.jsonc")):
+            cfg = json.loads("\n".join(l for l in bar.read_text().splitlines() if not l.strip().startswith("//")))
+            placed = [m for k in ("modules-left", "modules-center", "modules-right") for m in cfg.get(k, [])]
+            self.assertNotIn("mpris", placed, f"{bar}: mpris is placed again")
+
     def test_a_style_without_a_bar_leaves_the_bar_alone(self):
         st = dict(ht.styles()["rice"], meta=dict(ht.styles()["rice"]["meta"], slug="no-bar-here"))
         self.assertEqual(ht.bar_files(st), {})

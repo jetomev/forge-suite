@@ -1,6 +1,7 @@
 // hypeForge style · Linux rice (D-75) — the bar. One full-width bar, three solid areas, the
 // wallpaper showing between them (Javier, 2026-10-10). Left: the emblem and the workspace pills;
-// centre: the clock and what's playing; right: the system, the tray, the bell, the power buttons.
+// centre: the clock (what's playing comes back as our own piece: Waybar's mpris module crashed
+// the bar on 2026-10-10 when a player started or stopped); right: the system, the tray, the bell, the power buttons.
 // The pieces are defined in modules.jsonc (shared by every style); colours come from colors.css.
 {
   "include": [
@@ -19,8 +20,7 @@
     "group/workspace-pills"
   ],
   "modules-center": [
-    "clock",
-    "mpris"
+    "clock"
   ],
   "modules-right": [
     "cpu",
