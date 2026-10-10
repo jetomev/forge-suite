@@ -27,7 +27,10 @@ bar_margin       = 10            # the islands float this far from the screen ed
 
 [layout]
 bar_position     = "top"
-bar_style        = "one-island"  # one floating island with three areas (Javier, R-1)
+bar_style        = "full-three-areas"  # Javier, 2026-10-10 (after seeing Ember live): "the bar has to be full.
+                                       # If it is going to be 3 sections, then between them the background
+                                       # transparent so the background is visible." Full width, three solid
+                                       # areas, the wallpaper showing between them
 bar_on           = "every-screen"
 area_left        = ["emblem", "workspace-pills"]                 # pills: numbers; the active one wide, with its name (R-2)
 area_center      = ["clock", "now-playing"]

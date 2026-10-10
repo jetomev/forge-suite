@@ -266,7 +266,9 @@ THEMES = [
     dict(slug="gray",             name="Gray",             family="neutral", tone="mid",   hue=262, band_c=0.0, pop="neutral", cursor="dark",  gnome="blue"),
     dict(slug="dark-gray",        name="Dark Gray",        family="neutral", tone="dark",  hue=262, band_c=0.0, pop="neutral", cursor="dark",  gnome="blue"),
     dict(slug="black",            name="Black",            family="neutral", tone="black", hue=262, band_c=0.0, pop="hc", pop_l=.92, cursor="light", gnome="slate", hc=True),
-    dict(slug="ember",            name="Ember",            family="orange",  tone="dark",  hue=36,  band=BRAND["emblem_orange"], pop="orange", bar_bg="foundation", cursor="peach", gnome="orange"),
+    # Ember's band is the emblem orange taken deeper (Javier, 2026-10-10, on the live desktop: "to bright…
+    # little contrast with the text… on the darker side, and more contrast"): #942d00, white text 7.6:1
+    dict(slug="ember",            name="Ember",            family="orange",  tone="dark",  hue=36,  band="#942d00", pop="orange", bar_bg="foundation", cursor="peach", gnome="orange"),
     dict(slug="light-blue",       name="Light Blue",       family="blue",    tone="light", hue=258, band_c=.17, pop=("orange", 50, .18), cursor="blue", gnome="blue"),
     dict(slug="blue",             name="Blue",             family="blue",    tone="mid",   hue=258, band_c=.17, pop="blue",   cursor="blue",  gnome="blue"),
     dict(slug="dark-blue",        name="Dark Blue",        family="blue",    tone="dark",  hue=258, band_c=.15, pop="blue",   cursor="blue",  gnome="blue"),

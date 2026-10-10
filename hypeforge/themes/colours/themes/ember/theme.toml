@@ -30,11 +30,11 @@ secondary = "#bbb4b2"
 muted = "#989898"
 
 [band]
-base = "#d43a03"
-strong = "#a02900"
-on = "#fff8f7"
-soft = "#341912"
-text = "#ff987c"
+base = "#942d00"
+strong = "#681d00"
+on = "#fff8f6"
+soft = "#331a12"
+text = "#ff9877"
 
 [pop]
 base = "#f7e6c3"
@@ -54,23 +54,23 @@ subtle = "#3b3534"
 strong = "#b1aba9"
 
 [window]
-focused = "#ff987c"
+focused = "#ff9877"
 unfocused = "#3b3534"
-urgent = "#ea9cf7"
+urgent = "#f797e5"
 
 [bar]
 bg = "#0e0a09"
-shade = "#d43a03"
-hover = "#bc3200"
-fg = "#fff8f7"
-fg_dim = "#fff9f7"
-active_bg = "#fff8f7"
+shade = "#942d00"
+hover = "#7e2500"
+fg = "#fff8f6"
+fg_dim = "#e8c7bd"
+active_bg = "#fff8f6"
 active_fg = "#0e0a09"
 pop = "#f7e6c3"
 
 [selection]
-bg = "#d43a03"
-fg = "#fff8f7"
+bg = "#942d00"
+fg = "#fff8f6"
 
 [status]
 success = "#7bd77f"
@@ -103,8 +103,8 @@ bg = "#161110"
 fg = "#ddd6d4"
 cursor = "#f7e6c3"
 cursor_text = "#1a1304"
-selection_bg = "#d43a03"
-selection_fg = "#fff8f7"
+selection_bg = "#942d00"
+selection_fg = "#fff8f6"
 black = "#3d3836"
 bright_black = "#635d5c"
 white = "#c9c2c0"
