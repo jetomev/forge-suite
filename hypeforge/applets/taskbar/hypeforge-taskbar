@@ -21,7 +21,6 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import shlex
 import signal
 import subprocess
@@ -31,8 +30,8 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "common"))
 from hfsway import GET_TREE, SUBSCRIBE, EVENT_WINDOW, Sway  # noqa: E402
-from hfapps import app_names, apps, window_names  # noqa: E402
-from hficons import Icons  # noqa: E402
+from hfapps import Matcher, all_windows as windows, apps, window_names  # noqa: E402
+from hficons import Icons, icon_rules, safe  # noqa: E402
 from hfbar import signal_bar  # noqa: E402
 
 CONFIG_DIR = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets"
@@ -47,51 +46,12 @@ BAR_SIGNAL = 12           # Waybar redraws the taskbar on SIGRTMIN+12 (8-11 are 
 EXTRA = 10                # room for this many running apps that are not pinned
 
 
-def safe(app_id: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "-", app_id.lower()).strip("-") or "app"
-
-
 def pinned() -> list[str]:
     try:
         with open(SECTIONS, "rb") as f:
             return [a for a in tomllib.load(f).get("favourites", []) if isinstance(a, str)]
     except (OSError, tomllib.TOMLDecodeError):
         return []
-
-
-class Matcher:
-    """Which installed app a window belongs to: strong names first (its id, StartupWMClass,
-    a terminal's --class), then weak ones (its Name, the program it runs)."""
-
-    def __init__(self, entries: dict):
-        self.strong, self.weak = {}, {}
-        for app_id, app in sorted(entries.items()):
-            s, w = app_names(app_id, app)
-            for n in s:
-                self.strong.setdefault(n, app_id)
-            for n in w:
-                self.weak.setdefault(n, app_id)
-
-    def of_window(self, node) -> str | None:
-        names = window_names(node)
-        for table in (self.strong, self.weak):
-            for n in sorted(names):
-                if n in table:
-                    return table[n]
-        return None
-
-
-def windows(tree):
-    """Every window in the tree, in the order Sway keeps them, with whether it has focus."""
-    out = []
-
-    def walk(node):
-        if node.get("pid") and node.get("type") in ("con", "floating_con"):
-            out.append(node)
-        for child in node.get("nodes", []) + node.get("floating_nodes", []):
-            walk(child)
-    walk(tree)
-    return out
 
 
 def row(tree, entries: dict, matcher: Matcher, pins: list[str]):
@@ -171,15 +131,8 @@ def write_bar(pins: list[str], entries: dict, icons: Icons):
             "return-type": "json", "interval": "once", "signal": BAR_SIGNAL,
             "on-click": f"{me} click {s}", "on-click-middle": f"{me} new {s}", "tooltip": True,
         }
-    css = ["/* Written by hypeforge-taskbar. Do not edit by hand: the icons of the taskbar row. */",
-           ".app { background-repeat: no-repeat; background-position: center; background-size: 24px 24px; }"]
-    for app_id, app in sorted(entries.items()):
-        path = icons.find(app["icon"])
-        if path:
-            css.append(f'.app-{safe(app_id)} {{ background-image: url("file://{path}"); }}')
-    fallback = icons.find("application-x-executable")
-    if fallback:  # a window of no installed app (GTK's CSS has no attribute selectors: a class)
-        css.append(f'.app.noicon {{ background-image: url("file://{fallback}"); }}')
+    css = ["/* Written by hypeforge-taskbar. Do not edit by hand: the icons of the taskbar row. */"]
+    css += icon_rules(entries, icons)
     changed = False
     for path, text in ((BAR_FRAGMENT, json.dumps(fragment, indent=2) + "\n"), (BAR_STYLE, "\n".join(css) + "\n")):
         if not path.exists() or path.read_text() != text:

@@ -74,3 +74,22 @@ class Icons:
             found = next((str(self.pixmaps / f"{name}{e}") for e in EXTS if (self.pixmaps / f"{name}{e}").is_file()), None)
         self.cache[name] = found
         return found
+
+
+def safe(app_id: str) -> str:
+    """An app id as a CSS class name: lower case, anything else a dash."""
+    return re.sub(r"[^a-z0-9]+", "-", app_id.lower()).strip("-") or "app"
+
+
+def icon_rules(entries: dict, icons: "Icons") -> list[str]:
+    """A stylesheet rule per installed app, `.app-<id> { background-image: … }`, so a bar module
+    can show any app's icon by its class without the bar reloading; `.noicon` for the rest."""
+    css = [".app { background-repeat: no-repeat; background-position: center; background-size: 24px 24px; }"]
+    for app_id, app in sorted(entries.items()):
+        path = icons.find(app["icon"])
+        if path:
+            css.append(f'.app-{safe(app_id)} {{ background-image: url("file://{path}"); }}')
+    fallback = icons.find("application-x-executable")
+    if fallback:  # a window of no installed app (GTK's CSS has no attribute selectors: a class)
+        css.append(f'.app.noicon {{ background-image: url("file://{fallback}"); }}')
+    return css

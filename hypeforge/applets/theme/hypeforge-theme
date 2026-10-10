@@ -65,6 +65,10 @@ DEFAULT_ROLES = {
     "task_running": "text.secondary", "task_focused": "accent.base",
     # the pager: the box of the workspace on screen, the dots of windows, the boxes' line
     "pager_active": "band.base", "pager_window": "pop.base", "pager_border": "border.subtle",
+    # the Mac menus: the menu bar, its line, the drop-down menus and their highlighted item
+    "menubar_background": "surface.overlay", "menubar_text": "text.primary", "menubar_line": "border.strong",
+    "menu_background": "surface.overlay", "menu_highlight": "accent.base", "menu_highlight_text": "accent.on",
+    "menu_disabled": "text.muted",
 }
 # Classic's lists, notes, lock screen and GTK roles follow its bar's shades (today's look).
 OUTPUTS = [  # template → where it goes, under the config folder

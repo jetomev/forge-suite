@@ -79,6 +79,30 @@ window#waybar {{ background: transparent; color: @hf_text; }}
 .app:hover {{ background-color: @hf_pill_hover; }}
 '''
 
+# The Mac menus' test layout (Mac OS 9, D-72): the platinum menu bar, its drop-down menus
+MENUBAR = {
+    "layer": "top", "position": "top", "height": 24, "spacing": 0,
+    "include": ["{fragment}"],
+    "modules-left": ["group/menubar"],
+    "modules-right": ["clock", "custom/menu-appicon"],
+    "clock": {"format": "{:%I:%M %p}"},
+}
+MENUBAR_CSS = '''@import url("file://{colors}");
+@import url("file://{icons}");
+* {{ font-family: "Noto Sans", sans-serif; font-size: 13px; font-weight: bold; min-height: 0; }}
+window#waybar {{ background: @hf_menubar_bg; color: @hf_menubar_text; border-bottom: 1px solid @hf_menubar_line; }}
+#custom-menu-emblem {{ background-image: url("file://{emblem}"); background-size: 17px 17px; background-repeat: no-repeat;
+                       background-position: center; min-width: 30px; }}
+#custom-menu-app, #custom-menu-window, #custom-menu-special, #custom-menu-help, #clock {{ padding: 0 10px; }}
+#custom-menu-emblem:hover, #custom-menu-window:hover, #custom-menu-special:hover, #custom-menu-help:hover {{
+    background-color: @hf_menu_hl; color: @hf_menu_hl_text; }}
+#custom-menu-appicon {{ min-width: 30px; margin-right: 4px; }}
+.app {{ background-size: 18px 18px; }}
+menu {{ background: @hf_menu_bg; color: @hf_menubar_text; border: 1px solid @hf_menubar_line; padding: 2px 0; border-radius: 0; }}
+menuitem {{ padding: 3px 18px; font-weight: normal; }}
+menuitem:hover {{ background: @hf_menu_hl; color: @hf_menu_hl_text; }}
+'''
+
 # The pager part's test layout (KDE's K-2): a box per workspace, dots for its windows
 PAGER = {
     "layer": "top", "position": "top", "height": 44, "spacing": 0,
@@ -133,11 +157,12 @@ def load_theme_tool():
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--part", default="pills", choices=["pills", "taskbar", "pager"])
+    ap.add_argument("--part", default="pills", choices=["pills", "taskbar", "pager", "menubar"])
     ap.add_argument("--theme", default="kognogos-mocha")
     ap.add_argument("--style", default="rice")
     ap.add_argument("--switch", type=int, default=4, help="the workspace on screen in the picture")
     ap.add_argument("--out")
+    ap.add_argument("--open", type=int, nargs=1, help="menubar: click at this x to open a menu in the picture")
     a = ap.parse_args()
     out = Path(a.out or HERE / f"logs/bar-preview-{a.part}-{a.style}-{a.theme}.png")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -151,7 +176,14 @@ def main() -> int:
     ht.apply(a.style, a.theme, ht.Place(conf), wallpaper=None, reload=False, check_names=False,
              make_wallpaper=False, say=lambda *_: None)
     colors = conf / "hypeforge/theme/colors.css"
-    if a.part == "taskbar":
+    if a.part == "menubar":
+        real = Path.home() / ".config/hypeforge/applets/sections.toml"   # the real groups, read only
+        (conf / "hypeforge/applets/sections.toml").write_text(real.read_text())
+        fragment = conf / "hypeforge/applets/menubar.waybar.json"
+        (base / "bar.json").write_text(json.dumps(MENUBAR).replace("{fragment}", str(fragment)))
+        (base / "bar.css").write_text(MENUBAR_CSS.format(colors=colors, icons=conf / "hypeforge/applets/menubar.css",
+                                                         emblem=HERE / "assets/kognogos-emblem.png"))
+    elif a.part == "taskbar":
         (conf / "hypeforge/applets/sections.toml").write_text(
             'favourites = ["Alacritty", "thunar", "google-chrome", "com.anthropic.Claude", "steam", "spotify", "discord"]\n')
         fragment = conf / "hypeforge/applets/taskbar.waybar.json"
@@ -195,6 +227,12 @@ def main() -> int:
         window = ("import gi, sys; gi.require_version('Gtk','3.0'); from gi.repository import Gtk, GLib; "
                   "GLib.set_prgname(sys.argv[1]); w=Gtk.Window(); w.show_all(); "
                   "GLib.timeout_add_seconds(60, Gtk.main_quit); Gtk.main()")
+        if a.part == "menubar":
+            procs.append(subprocess.Popen([sys.executable, str(APPLETS / "menubar/hypeforge-menubar")],
+                                          env=env, stdout=log, stderr=log))
+            procs.append(subprocess.Popen([sys.executable, "-c", window, "google-chrome"],
+                                          env={**env, "GDK_BACKEND": "wayland"}, stdout=log, stderr=log))
+            time.sleep(1.5)
         if a.part == "taskbar":
             procs.append(subprocess.Popen([sys.executable, str(APPLETS / "taskbar/hypeforge-taskbar")],
                                           env=env, stdout=log, stderr=log))
@@ -213,8 +251,15 @@ def main() -> int:
         procs.append(subprocess.Popen(["waybar", "-c", str(base / "bar.json"), "-s", str(base / "bar.css")],
                                       env=env, stdout=log, stderr=log))
         time.sleep(3)
+        region = "0,0 2560x56"
+        if a.part == "menubar" and a.open:   # click a menu open (the hidden seat's pointer), then a submenu
+            ipc.ask(0, f"seat seat0 cursor set {a.open[0]} 12")
+            ipc.ask(0, "seat seat0 cursor press button1")
+            ipc.ask(0, "seat seat0 cursor release button1")
+            time.sleep(1.5)
+            region = "0,0 1100x620"
         shot = base / "shot.png"
-        subprocess.run(["grim", "-g", "0,0 2560x56", str(shot)], env=env, check=True)
+        subprocess.run(["grim", "-g", region, str(shot)], env=env, check=True)
         out.write_bytes(shot.read_bytes())
         print(out)
         return 0

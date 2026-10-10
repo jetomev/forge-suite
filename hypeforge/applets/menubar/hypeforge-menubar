@@ -1,0 +1,305 @@
+#!/usr/bin/env python3
+"""hypeForge applet · the Mac menus (look program step 3; Mac OS 9 D-72, macOS D-74).
+
+The menu bar's parts that Mac OS 9 and macOS share:
+  the emblem menu   (the Apple menu's place): About, your groups of apps as submenus, All Apps,
+                    hypeForge Settings — built from the launcher's own groups (sections.toml)
+  the app's name    the app you are in, in bold (its window title in the tooltip)
+  Window            close, float or tile, full screen, tabs, tuck away / bring back, move to a workspace
+  Special           lock, log out, restart, shut down (each asks first, like the ⏻ menu)
+  Help              the key chart, the guide
+  the Application menu (right end): the icon of the app you are in; a click lists the open apps
+
+Waybar's drop-down menus are GTK menus read once when the bar starts, so this writes them as
+files and asks the bar to reload only when something in them changes (apps installed or removed,
+the groups or workspaces edited). The app's name and icon follow every focus change.
+
+    hypeforge-menubar           keep the menus and the app's name current (one copy)
+    hypeforge-menubar apps      the Application menu's list (the bar calls it)
+
+Files: ~/.config/hypeforge/applets/menubar.waybar.json (Waybar "include"), menubar/*.xml (the
+menus), menubar.css (icons, @import-ed by a style's bar stylesheet); the name and icon in
+$XDG_RUNTIME_DIR/hypeforge-menubar/ (`cat`, SIGRTMIN+13).
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import shlex
+import signal
+import subprocess
+import sys
+import tomllib
+from pathlib import Path
+from xml.sax.saxutils import escape
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "common"))
+from hfsway import GET_TREE, SUBSCRIBE, EVENT_WINDOW, Sway  # noqa: E402
+from hfapps import Matcher, all_windows, apps  # noqa: E402
+from hficons import Icons, icon_rules, safe  # noqa: E402
+from hfbar import signal_bar  # noqa: E402
+import hfmenu  # noqa: E402
+
+CONFIG_DIR = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets"
+SECTIONS = CONFIG_DIR / "sections.toml"
+WORKSPACES = CONFIG_DIR / "workspaces.toml"
+BAR_FRAGMENT = CONFIG_DIR / "menubar.waybar.json"
+BAR_STYLE = CONFIG_DIR / "menubar.css"
+MENUS = CONFIG_DIR / "menubar"
+RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
+STATE = RUNTIME / "hypeforge-menubar"
+PIDFILE = RUNTIME / "hypeforge-menubar.pid"
+APPLETS = Path(__file__).resolve().parent.parent
+LAUNCHER = APPLETS / "sections/hypeforge-sections"
+WORKSPACES_APPLET = APPLETS / "workspaces/hypeforge-workspaces"
+HELP = APPLETS / "help/hypeforge-help"
+BAR_SIGNAL = 13           # Waybar redraws the app's name and icon on SIGRTMIN+13 (8-12 are taken)
+
+
+def load_launcher():
+    """The launcher's own grouping (one source of truth for which app is in which group)."""
+    import importlib.machinery
+    import importlib.util
+    loader = importlib.machinery.SourceFileLoader("hfsections", str(LAUNCHER))
+    spec = importlib.util.spec_from_loader("hfsections", loader)
+    mod = importlib.util.module_from_spec(spec)
+    loader.exec_module(mod)
+    return mod
+
+
+def workspace_names():
+    try:
+        with open(WORKSPACES, "rb") as f:
+            return [w["name"] for w in tomllib.load(f).get("workspace", [])][:9]
+    except (OSError, tomllib.TOMLDecodeError):
+        return []
+
+
+# ---- The menus, as GtkBuilder files ----------------------------------------------------------
+
+class Menu:
+    """A GTK menu description and its actions (id → command), written for Waybar.
+
+    Submenus are written as their own objects and named by the item that opens them: GTK 3
+    crashes (a segfault, and Waybar with it) when a submenu is written inside its item."""
+
+    def __init__(self):
+        self.lines, self.subs, self.actions, self.n = [], [], {}, 0
+
+    def _item(self, label, command):
+        self.n += 1
+        ident = f"i{self.n}"
+        self.actions[ident] = command
+        return (f'<child><object class="GtkMenuItem" id="{ident}">'
+                f'<property name="label">{escape(label)}</property></object></child>')
+
+    def item(self, label, command):
+        self.lines.append("  " + self._item(label, command))
+
+    def separator(self):
+        self.lines.append('  <child><object class="GtkSeparatorMenuItem"/></child>')
+
+    def submenu(self, label, entries):
+        """entries: [(label, command)]."""
+        sub = f"s{len(self.subs) + 1}"
+        self.subs.append(f'<object class="GtkMenu" id="{sub}">\n'
+                         + "\n".join("  " + self._item(lab, cmd) for lab, cmd in entries) + "\n</object>")
+        self.lines.append(f'  <child><object class="GtkMenuItem"><property name="label">{escape(label)}</property>'
+                          f'<property name="submenu">{sub}</property></object></child>')
+
+    def xml(self):
+        return ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- Written by hypeforge-menubar. Do not edit by hand. -->\n"
+                "<interface>\n" + "".join(s + "\n" for s in self.subs)
+                + '<object class="GtkMenu" id="menu">\n' + "\n".join(self.lines) + "\n</object>\n</interface>\n")
+
+
+def build_menus(entries: dict) -> dict[str, Menu]:
+    q = lambda p: shlex.quote(str(p))
+    launch = lambda app_id: f"{q(LAUNCHER)} launch {shlex.quote(app_id)}"
+    menus = {}
+
+    emblem = Menu()
+    emblem.item("About This Computer", "alacritty --class about-this-computer --hold -e fastfetch")
+    emblem.separator()
+    sections = load_launcher()
+    cfg = sections.load()
+    favourites = [a for a in cfg.get("favourites", []) if a in entries]
+    if favourites:
+        emblem.submenu("Favorites", [(entries[a]["name"], launch(a)) for a in favourites])
+    for section, members in sections.sort_into_sections(cfg, entries):
+        emblem.submenu(section["name"], [(entries[a]["name"], launch(a)) for a in members])
+    emblem.item("All Apps…", q(LAUNCHER))
+    emblem.separator()
+    emblem.item("hypeForge Settings", "hypeforge-settings")
+    menus["emblem"] = emblem
+
+    window = Menu()
+    window.item("Close Window", "swaymsg kill")
+    window.item("Float or Tile", "swaymsg floating toggle, border pixel")
+    window.item("Full Screen", "swaymsg fullscreen toggle")
+    window.item("Tabs or Side by Side", "swaymsg layout toggle tabbed split")
+    window.separator()
+    window.item("Tuck Away", "swaymsg move scratchpad")
+    window.item("Bring Back Tucked Away", "swaymsg scratchpad show")
+    names = workspace_names()
+    if names:
+        window.separator()
+        window.submenu("Move to Workspace", [(f"{i}. {n}", f"{q(WORKSPACES_APPLET)} move {i}")
+                                             for i, n in enumerate(names, 1)])
+    menus["window"] = window
+
+    special = Menu()
+    special.item("Lock Screen", f"{q(LAUNCHER)} power lock")
+    special.separator()
+    special.item("Log Out…", f"{q(LAUNCHER)} power logout")
+    special.item("Restart…", f"{q(LAUNCHER)} power reboot")
+    special.item("Shut Down…", f"{q(LAUNCHER)} power shutdown")
+    menus["special"] = special
+
+    help_ = Menu()
+    help_.item("Keys and Shortcuts", q(HELP))
+    help_.item("hypeForge Guide", f"{q(HELP)} start")
+    menus["help"] = help_
+    return menus
+
+
+def write_bar(entries: dict, icons: Icons) -> bool:
+    """The menus' files, the bar fragment and the icons' stylesheet. Reloads the bar if changed."""
+    MENUS.mkdir(parents=True, exist_ok=True)
+    me = shlex.quote(os.path.abspath(sys.argv[0]))
+    menus = build_menus(entries)
+    files = {}
+    fragment = {"group/menubar": {"orientation": "inherit", "modules": [
+        "custom/menu-emblem", "custom/menu-app", "custom/menu-window", "custom/menu-special", "custom/menu-help"]}}
+    # the emblem's button shows the emblem picture (a style's CSS); an empty label would hide it
+    titles = {"emblem": "\u2003", "window": "Window", "special": "Special", "help": "Help"}
+    for name, menu in menus.items():
+        path = MENUS / f"{name}.xml"
+        files[path] = menu.xml()
+        fragment[f"custom/menu-{name}"] = {"format": titles[name], "tooltip": False, "menu": "on-click",
+                                           "menu-file": str(path), "menu-actions": menu.actions}
+    for part in ("app", "appicon"):
+        fragment[f"custom/menu-{part}"] = {
+            "exec": f"cat {shlex.quote(str(STATE / f'{part}.json'))}", "return-type": "json",
+            "interval": "once", "signal": BAR_SIGNAL, "tooltip": True}
+    fragment["custom/menu-appicon"]["on-click"] = f"{me} apps"
+    files[BAR_FRAGMENT] = json.dumps(fragment, indent=2) + "\n"
+    files[BAR_STYLE] = "\n".join(["/* Written by hypeforge-menubar. Do not edit by hand: the Application menu's icons. */"]
+                                 + icon_rules(entries, icons)) + "\n"
+    changed = False
+    for path, text in files.items():
+        if not path.exists() or path.read_text() != text:
+            path.write_text(text)
+            changed = True
+    if changed:
+        signal_bar(signal.SIGUSR2)  # Waybar reads its menus again
+    return changed
+
+
+# ---- The app's name and icon -----------------------------------------------------------------
+
+def focused_app(tree, entries: dict, matcher: Matcher):
+    """(app id or None, its name, the window's title) of the window in use; the desktop if none."""
+    win = next((w for w in all_windows(tree) if w.get("focused")), None)
+    if win is None:
+        return None, "Desktop", ""
+    app_id = matcher.of_window(win)
+    name = entries[app_id]["name"] if app_id else (win.get("app_id") or (win.get("window_properties") or {}).get("class") or "Window")
+    return app_id, name, win.get("name") or ""
+
+
+def write_state(app_id, name, title) -> bool:
+    STATE.mkdir(exist_ok=True)
+    bodies = {
+        "app": {"text": escape(name), "class": "app-name", "tooltip": escape(title or name)},
+        "appicon": {"text": " ", "class": ["app", f"app-{safe(app_id)}" if app_id else "noicon", "appmenu"],
+                    "tooltip": "Open apps"},
+    }
+    changed = False
+    for part, body in bodies.items():
+        text = json.dumps(body) + "\n"
+        f = STATE / f"{part}.json"
+        if not f.exists() or f.read_text() != text:
+            f.write_text(text)
+            changed = True
+    return changed
+
+
+def stamp():
+    """What the menus depend on: the groups, the workspaces, the installed apps."""
+    dirs = [Path(d) / "applications" for d in os.environ.get("XDG_DATA_DIRS", "/usr/local/share:/usr/share").split(":") if d]
+    dirs.append(Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local/share")) / "applications")
+    return tuple(p.stat().st_mtime if p.exists() else 0 for p in [SECTIONS, WORKSPACES] + dirs)
+
+
+def keep_current():
+    entries, icons = apps(), Icons()
+    matcher, seen = Matcher(entries), stamp()
+    write_bar(entries, icons)
+    control, events = Sway(), Sway()
+    if write_state(*focused_app(control.ask(GET_TREE), entries, matcher)):
+        signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
+    events.ask(SUBSCRIBE, json.dumps(["window"]))
+    while True:
+        kind, event = events.receive()
+        if kind != EVENT_WINDOW or event.get("change") not in ("focus", "title", "close", "new"):
+            continue
+        now = stamp()
+        if now != seen:  # apps installed or removed, groups or workspaces edited: new menus
+            seen, entries = now, apps()
+            matcher = Matcher(entries)
+            write_bar(entries, icons)
+        if write_state(*focused_app(control.ask(GET_TREE), entries, matcher)):
+            signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
+
+
+# ---- The Application menu's list -------------------------------------------------------------
+
+def apps_menu():
+    """Every open app, the one in use marked; picking one goes to its window."""
+    if hfmenu.close_open("appmenu"):
+        return
+    sway, entries = Sway(), apps()
+    matcher = Matcher(entries)
+    rows, targets = [], []
+    for w in all_windows(sway.ask(GET_TREE)):
+        app_id = matcher.of_window(w)
+        name = entries[app_id]["name"] if app_id else (w.get("app_id") or "Window")
+        rows.append(f"{'●' if w.get('focused') else '  '}  {name} — {w.get('name') or ''}"[:90])
+        targets.append(w["id"])
+    if not rows:
+        return
+    look = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+    cmd = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", "Open apps  ", "--anchor", "top-right",
+           "--x-margin", "4", "--y-margin", "4", "--width", "60", "--lines", str(min(len(rows), 15))]
+    if os.path.isfile(look):
+        cmd[1:1] = ["--config", look]
+    picked = hfmenu.run("appmenu", cmd, "\n".join(rows))
+    if picked is not None and picked.strip().isdigit():
+        sway.run(f"[con_id={targets[int(picked)]}] focus")
+
+
+def main():
+    args = sys.argv[1:]
+    if args == ["apps"]:
+        apps_menu()
+        return
+    if args:
+        sys.exit(__doc__)
+    try:
+        pid = int(PIDFILE.read_text())
+        os.kill(pid, 0)
+        print("hypeforge-menubar: already running")
+        return
+    except (OSError, ValueError):
+        pass
+    PIDFILE.write_text(str(os.getpid()))
+    try:
+        keep_current()
+    finally:
+        PIDFILE.unlink(missing_ok=True)
+
+
+if __name__ == "__main__":
+    main()

@@ -173,11 +173,25 @@ def power_menu():
                   lines_shown=len(items), menu="power", extra=UNDER_RIGHT_END + ("--width", "22"))
     if choice is None:
         return
-    key, label, icon, ask = items[choice]
-    if ask and pick(cfg, [("No", "go-home"), (f"Yes, {label.lower()}", icon)], f"{ask}  ",
-                    lines_shown=2, menu="power", extra=UNDER_RIGHT_END + ("--width", "22")) != 1:
+    do_power(items[choice][0], UNDER_RIGHT_END)
+
+
+POWER = {"lock": ("Lock", "system-lock-screen", None), "logout": ("Log Out", "system-log-out", "Log out now?"),
+         "reboot": ("Reboot", "system-reboot", "Reboot now?"), "shutdown": ("Shut Down", "system-shutdown", "Shut down now?")}
+
+
+def do_power(key, where=UNDER_EMBLEM):
+    """One power action from sections.toml's [power], asking first with "No" selected (the ⏻ menu,
+    and the Mac menus' Special menu: `hypeforge-sections power reboot`)."""
+    cfg = load()
+    command = cfg.get("power", {}).get(key)
+    if key not in POWER or not command:
         return
-    subprocess.run(["swaymsg", "exec", power[key]], capture_output=True)
+    label, icon, ask = POWER[key]
+    if ask and pick(cfg, [("No", "go-home"), (f"Yes, {label.lower()}", icon)], f"{ask}  ",
+                    lines_shown=2, menu="power", extra=where + ("--width", "22")) != 1:
+        return
+    subprocess.run(["swaymsg", "exec", command], capture_output=True)
 
 
 def main():
@@ -186,6 +200,9 @@ def main():
         return
     if sys.argv[1:] == ["power"]:
         power_menu()
+        return
+    if len(sys.argv) == 3 and sys.argv[1] == "power":
+        do_power(sys.argv[2])
         return
     if sys.argv[1:] == ["favorites"]:
         favorites_menu()

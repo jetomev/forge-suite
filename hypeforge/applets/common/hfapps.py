@@ -140,6 +140,42 @@ def window_names(node):
     return names | {n.rsplit(".", 1)[-1] for n in names if "." in n and not n.endswith(".exe")}
 
 
+class Matcher:
+    """Which installed app a window belongs to: strong names first (its id, StartupWMClass,
+    a terminal's --class), then weak ones (its Name, the program it runs). Shared by the
+    taskbar row and the menu bar (look step 3)."""
+
+    def __init__(self, entries: dict):
+        self.strong, self.weak = {}, {}
+        for app_id, app in sorted(entries.items()):
+            s, w = app_names(app_id, app)
+            for n in s:
+                self.strong.setdefault(n, app_id)
+            for n in w:
+                self.weak.setdefault(n, app_id)
+
+    def of_window(self, node):
+        names = window_names(node)
+        for table in (self.strong, self.weak):
+            for n in sorted(names):
+                if n in table:
+                    return table[n]
+        return None
+
+
+def all_windows(tree):
+    """Every window in Sway's tree, tiled and floating, in the tree's order."""
+    out = []
+
+    def walk(node):
+        if node.get("pid") and node.get("type") in ("con", "floating_con"):
+            out.append(node)
+        for child in node.get("nodes", []) + node.get("floating_nodes", []):
+            walk(child)
+    walk(tree)
+    return out
+
+
 # ---- The workspaces' app lists ---------------------------------------------------------------
 
 def lists(path=WORKSPACES):

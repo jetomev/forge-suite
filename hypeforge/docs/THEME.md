@@ -75,6 +75,8 @@ Pieces the styles place in their bar; each is benched with `python3 scripts/bar-
 
 | **Pager** `group/pager` | KDE's K-2: a small box per workspace, the one on screen filled, its windows (all screens together) as dots, up to four then a +; a click goes there | the Workspaces applet, with the pills: `pager-<n>.json` beside them (same signal) | `@hf_pager_active` (band.base), `@hf_pager_window` (pop.base), `@hf_pager_border` (border.subtle) |
 
+| **Mac menus** `group/menubar` + `custom/menu-appicon` | Mac OS 9 / macOS (D-72, D-74): the emblem menu (About This Computer, Favorites and the launcher's groups as submenus, All Apps…, hypeForge Settings), the app in use in bold, **Window** (close, float or tile, full screen, tabs, tuck away / bring back, move to a workspace), **Special** (lock, log out, restart, shut down — each asks first, `hypeforge-sections power <what>`), **Help** (keys, guide); at the right end the app's icon, whose click lists the open apps | the **Menu bar applet** (`applets/menubar/hypeforge-menubar`): GtkBuilder files `~/.config/hypeforge/applets/menubar/*.xml` read by Waybar once (rewritten, and the bar reloaded, only when apps, groups or workspaces change); the name and icon as JSON (`cat`, SIGRTMIN+13). **Submenus are separate objects named by their item: GTK 3 segfaults on a submenu written inside its item** (Waybar with it; a test loads every menu in real GTK) | `@hf_menubar_bg` / `_text` / `_line`, `@hf_menu_bg`, `@hf_menu_hl` / `_hl_text`, `@hf_menu_disabled` |
+
 To tune with the Rice (step 5): in Blue the active pill is close to the bar area's own blue; in Ember the bar area is close to the background.
 
 ## The pop-up lists — `sway/fuzzel/fuzzel.ini` → `~/.config/sway/fuzzel/`
