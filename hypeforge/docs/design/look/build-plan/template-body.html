@@ -41,19 +41,13 @@ footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);paddin
 <div class="wrap">
 <header>
   <p class="eyebrow">hypeForge · the look · phase 4</p>
-  <h1>The build plan: from six approved styles to your desktop</h1>
+  <h1>The build plan: from six approved styles to your desktop (approved)</h1>
   <p class="lead">All six styles and the 25 themes are approved. This is the order I'd build them in, about three weeks of work. The shared pieces come first, because one taskbar part serves four styles and one panel code serves all six. Every step is tried on the hidden test desktop before it touches yours, and every step ends with you trying it. Nothing changes on your screen until you approve this plan.</p>
 </header>
 
 <section aria-labelledby="h-ask">
-  <div class="sec-head"><p class="eyebrow">What I need from you</p><h2 id="h-ask">Approve the order, and four calls</h2><p>My pick is marked on each.</p></div>
-  <div class="asks">
-    <article class="ask"><span class="id">B-1 · Which style first</span><h3>The rice first, then Windows 11?</h3><p>The rice is the quickest to finish (mostly the bar), so you'd live in a new look within about ten days. Windows 11 first instead means your favourite arrives first, about two days later.</p><p><span class="rec">my pick: rice, then Windows 11</span></p></article>
-    <article class="ask"><span class="id">B-2 · Today's look</span><h3>Keep it as a seventh style?</h3><p>Today's bar and windows could stay as "hypeForge Classic", the safe choice until you pick a favourite. Or it retires once the six exist.</p><p><span class="rec">my pick: keep it as Classic</span></p></article>
-    <article class="ask"><span class="id">B-3 · The switcher's name</span><h3>A Forge app to pick style, theme, wallpaper and roundness</h3><p>A terminal app like the others, inside hypeForge Settings as the "Look" page. A name: "themeForge"? "lookForge"? Yours?</p><p><span class="rec">my pick: themeForge</span></p></article>
-    <article class="ask"><span class="id">B-4 · KognogOS's default</span><h3>Which style ships as the default?</h3><p>Decide after you've lived with them for a while, or pick now.</p><p><span class="rec">my pick: decide later</span></p></article>
-  </div>
-  <div class="reply"><span>Answer in our chat, like this:</span><code id="reply-text">Plan OK · B-1 rice first · B-2 Classic · B-3 themeForge · B-4 later</code><button class="copy" id="copy" type="button">Copy</button></div>
+  <div class="sec-head"><p class="eyebrow">Approved · D-78, 10 October</p><h2 id="h-ask">The plan, with your order</h2>
+  <p>B-1 the styles go Linux Rice, Windows 11, Mac OS 9, KDE, COSMIC, macOS. B-2 today's look stays as <b>hypeForge Classic</b>. B-3 the switcher is <b>themeForge</b>: a Forge app, a full page in hypeForge Settings, and a tray icon for a quick switch in KognogOS colours. B-4 <b>the Linux Rice is KognogOS's default style</b>.</p></div>
 </section>
 
 <section aria-labelledby="h-tl">
@@ -95,7 +89,7 @@ const DAYS = 24;
 const STEPS = [
   {n:"1", name:"The theme engine", sub:"hypeforge-theme apply", from:"10-11", to:"10-13", gate:"Switch Mocha → Ember → back on your desktop; undo works", kind:"main",
    does:"One command that writes every program's look from a style and a theme: Sway, the bar, the lists, notifications, the lock screen, GTK apps, the terminal, Midnight Commander, and sets the theme's wallpaper. It keeps a backup and an undo. It also fixes F-52 (KDE rewrote the GTK look).",
-   items:["The 25 themes and six styles move from research into hypeforge/themes/ and hypeforge/styles/","Every program reads a generated file (include / @import), so a switch rewrites only those files","Wallpapers made on demand by our generator, cached","Today's look written as the \"hypeForge Classic\" style (B-2)"]},
+   items:["The 25 themes and six styles move from research into hypeforge/themes/ and hypeforge/styles/","Every program reads a generated file (include / @import), so a switch rewrites only those files","Wallpapers made on demand by our generator, cached","Today's look kept as the \"hypeForge Classic\" style (B-2)"]},
   {n:"2", name:"The SwayFX login", sub:"hypeForge FX", from:"10-13", to:"10-14", gate:"Log into hypeForge FX, try it, log back into Sway", kind:"main",
    does:"SwayFX 0.6 built by us into its own folder (/opt/swayfx), so it never replaces Sway, and a second entry on the login screen. It reads your normal config plus one effects file.",
    items:["Built from its signed source, installed by nog where possible","Benched: config check, 10 reloads with shadows, then a window inside today's Sway","Nvidia speed measured on your three screens"]},
@@ -105,14 +99,14 @@ const STEPS = [
   {n:"4", name:"The panel toolkit", sub:"our graphical pop-ups (D-68)", from:"10-16", to:"10-21", gate:"Open Start and Quick Settings from today's bar", kind:"main",
    does:"One Python + GTK base for every pop-up, and its views: Start / Launchpad / App Library / Kickoff, Quick Settings / Control Center / tray pages / applet pop-ups, the calendar with notifications, the workspaces strip, the big-button power menu.",
    items:["Each tile calls the app that owns it (nightForge, displayForge, mako, NetworkManager)","Every view follows the theme and the style's shapes","Keyboard first: arrows, Enter, Esc, the underlined letters"]},
-  {n:"5a", name:"Style · the Linux rice", sub:"the quickest win (B-1)", from:"10-21", to:"10-22", gate:"Live in it for a day", kind:"main", does:"One floating bar with three areas, pills, see-through terminals, the power buttons, the theme's wallpaper.", items:[]},
+  {n:"5a", name:"Style · the Linux Rice", sub:"KognogOS's default (B-4)", from:"10-21", to:"10-22", gate:"Live in it for a day", kind:"main", does:"One floating bar with three areas, pills, see-through terminals, the power buttons, the theme's wallpaper.", items:[]},
   {n:"5b", name:"Style · Windows 11", sub:"", from:"10-22", to:"10-24", gate:"Live in it for a day", kind:"main", does:"The taskbar on every screen (icons left), the KDE-style Start, Quick Settings, the calendar, the tray drawer.", items:[]},
   {n:"5c", name:"Style · Mac OS 9", sub:"", from:"10-24", to:"10-25", gate:"Live in it for a day", kind:"main", does:"The menu bar with the emblem menu, title bars, the Control Strip, the crisp shadow.", items:[]},
-  {n:"5d", name:"Style · macOS", sub:"", from:"10-25", to:"10-27", gate:"Live in it for a day", kind:"main", does:"The frosted menu bar, the Dock, Spotlight, Launchpad, Control Center, Notification Center.", items:[]},
-  {n:"5e", name:"Style · KDE Plasma", sub:"", from:"10-27", to:"10-28", gate:"Live in it for a day", kind:"main", does:"The floating panel, the pager, Kickoff's list, Breeze title bars, one tray pop-up.", items:[]},
-  {n:"5f", name:"Style · COSMIC", sub:"", from:"10-28", to:"10-29", gate:"Live in it for a day", kind:"main", does:"The panel and the dock, the App Library, applet pop-ups, the active hint, three roundness choices.", items:[]},
-  {n:"6", name:"The switcher app", sub:"themeForge? (B-3)", from:"10-29", to:"11-02", gate:"Your run of the app inside Settings", kind:"main",
-   does:"A Forge app (terminal, forgekit) and the Look page in hypeForge Settings: pick a style, a theme (with its wallpaper or your own), roundness, and whether SwayFX's effects are on.", items:["Shows each choice before saving, as the other Forge apps do","Same keys, same look as every Forge app"]},
+    {n:"5d", name:"Style · KDE Plasma", sub:"", from:"10-25", to:"10-26", gate:"Live in it for a day", kind:"main", does:"The floating panel, the pager, Kickoff's list, Breeze title bars, one tray pop-up.", items:[]},
+  {n:"5e", name:"Style · COSMIC", sub:"", from:"10-26", to:"10-27", gate:"Live in it for a day", kind:"main", does:"The panel and the dock, the App Library, applet pop-ups, the active hint, three roundness choices.", items:[]},
+  {n:"5f", name:"Style · macOS", sub:"", from:"10-27", to:"10-29", gate:"Live in it for a day", kind:"main", does:"The frosted menu bar, the Dock, Spotlight, Launchpad, Control Center, Notification Center.", items:[]},
+  {n:"6", name:"themeForge", sub:"app · Settings page · tray icon (B-3)", from:"10-29", to:"11-02", gate:"Your run of the app inside Settings", kind:"main",
+   does:"A Forge app (terminal, forgekit), its full page in hypeForge Settings, and a tray icon in KognogOS colours for a quick switch: pick a style, a theme (with its wallpaper or your own), roundness, and whether SwayFX's effects are on.", items:["Shows each choice before saving, as the other Forge apps do","The tray icon's menu: the seven styles and your favourite themes, one click each","Same keys, same look as every Forge app"]},
   {n:"7", name:"Documentation", sub:"alongside every step", from:"10-11", to:"11-03", gate:"", kind:"side",
    does:"THEME.md rewritten for styles and themes, the Help guide pages, decisions, the README; the public pages only after you approve publishing (D-docs rule).", items:[]},
 ];

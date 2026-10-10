@@ -7,6 +7,9 @@
 
 ## 2026-10-10
 
+### D-78 · The build plan approved: Rice first; today's look stays as Classic; themeForge; the Rice ships as the default (Javier)
+The phase-4 plan (shared pieces first, a test of Javier's after every step) with his answers: B-1 the styles in this order — **Linux Rice, Windows 11, Mac OS 9, KDE, COSMIC, macOS**; B-2 today's look stays as a seventh style, **hypeForge Classic**; B-3 the switcher is **themeForge**, a Forge app with **a full page in hypeForge Settings** and **a tray icon for a quick switch** (its icon in KognogOS colours, like nightForge's); B-4 **the Linux Rice is KognogOS's default style** (*"Linux Rice, of course :D"*).
+
 ### D-77 · Style 6 approved: COSMIC, tiled — all six styles approved (Javier)
 Review 7, all five as proposed: C-1 **the top panel and the dock**, C-2 **slightly round** by default (Round and Square stay choices in hypeForge Settings), C-3 **the active hint** (a 3 px frame in the theme's bright colour), C-4 **the launcher and the App Library** with group folders, C-5 **each applet its own pop-up**. No COSMIC software (D-56). Spec: `docs/design/look/styles/cosmic/style.toml`. With it all six styles of the look program are approved (D-71, D-72, D-74, D-75, D-76, D-77) on the approved 25 themes (D-73); next is the build plan (look program phase 4).
 
