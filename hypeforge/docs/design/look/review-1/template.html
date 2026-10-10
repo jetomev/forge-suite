@@ -1,0 +1,354 @@
+<title>hypeForge Look Review 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Noto+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: a review sheet — the brief and questions first, then a large live desktop with the
+   23 themes as a picker beside it, then the wallpapers, then what the research found. */
+:root{
+  --paper:#f6f5f9; --card:#ffffff; --ink:#1d1b26; --ink-2:#55526a; --line:#e2e0ea;
+  --accent:#5b3fc0; --accent-soft:#ece7fb; --ok:#1f7a3a; --warn:#9a5b00;
+  --f-display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"DejaVu Sans Mono",monospace;
+  --f-desk:"Noto Sans","IBM Plex Sans",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body);padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:1240px;margin:0 auto;display:grid;gap:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,4.4vw,44px);font-weight:750;letter-spacing:-.01em}
+h2{font-size:24px;font-weight:750}
+h3{font-size:16px;font-weight:600}
+p{margin:0}
+.eyebrow{font:600 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{max-width:68ch;color:var(--ink-2);font-size:16px}
+header{display:grid;gap:12px}
+.steps{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.steps span{font:500 12px/1 var(--f-mono);padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2)}
+.steps span.on{background:var(--accent);border-color:var(--accent);color:var(--card)}
+section{display:grid;gap:16px}
+.sec-head{display:grid;gap:6px}
+.sec-head p{max-width:72ch;color:var(--ink-2)}
+
+/* the questions */
+.asks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,370px),1fr));gap:14px}
+.ask{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:10px;align-content:start;min-width:0}
+.ask .id{font:600 12px/1 var(--f-mono);color:var(--accent)}
+.ask p{color:var(--ink-2);font-size:14px}
+.opts{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.opts li{display:flex;gap:8px;align-items:baseline;font-size:14px}
+.opts b{font:600 12px/1 var(--f-mono);min-width:1.6em;color:var(--ink)}
+.rec{font:600 11px/1 var(--f-mono);padding:3px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.reply{background:var(--accent-soft);border-radius:10px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.reply code{font:500 14px/1.4 var(--f-mono);color:var(--ink);word-break:break-word}
+button{font:inherit;cursor:pointer}
+.copy{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:6px;padding:5px 10px;font:600 12px/1 var(--f-mono)}
+.copy:focus-visible,.chip:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* the theme explorer */
+.explore{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+@media (max-width:980px){.explore{grid-template-columns:minmax(0,1fr)}}
+.picker{display:grid;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.fam{display:grid;gap:6px}
+.fam h3{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:4px 10px 4px 4px;font-size:13px}
+.chip i{width:20px;height:20px;border-radius:50%;flex:none;border:1px solid rgba(127,127,127,.35)}
+.chip[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;font-weight:600}
+.seg{display:grid;gap:6px}
+.seg div{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{flex:1;border:0;background:transparent;color:var(--ink-2);padding:7px 6px;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--card);font-weight:600}
+.seg small{color:var(--ink-2);font-size:12px}
+.meter{font:500 12px/1.5 var(--f-mono);color:var(--ink-2);display:grid;gap:2px}
+.meter b{color:var(--ok);font-weight:600}
+
+/* the little desktop: every colour from the theme, set as --t-* on .desk */
+.stage{display:grid;gap:10px;min-width:0}
+.desk{aspect-ratio:16/9;width:100%;border-radius:8px;overflow:hidden;position:relative;container-type:inline-size;
+  font-family:var(--f-desk);background:linear-gradient(160deg,var(--t-sunken),var(--t-base));display:flex;flex-direction:column;
+  box-shadow:0 1px 0 var(--line),0 14px 40px rgba(0,0,0,.18);transition:background .25s}
+.desk *{transition:background-color .25s,color .25s,border-color .25s}
+.d-bar{height:4.4cqi;min-height:22px;background:var(--t-bar);color:var(--t-barfg);display:flex;justify-content:space-between;align-items:stretch;font-size:max(9px,1.25cqi)}
+.d-grp{display:flex;align-items:center;gap:1.1cqi;padding:0 1.1cqi;background:var(--t-shade)}
+.d-grp u{text-decoration-thickness:1px;text-underline-offset:2px}
+.d-dim{color:var(--t-barfgdim)}
+.d-emb{width:2.2cqi;height:2.2cqi;min-width:12px;min-height:12px;background-size:contain;background-repeat:no-repeat}
+.d-ws{display:flex;gap:.35cqi}
+.d-ws span{min-width:2.1cqi;text-align:center;padding:.15cqi .45cqi;border-radius:2px}
+.d-ws .on{background:var(--t-activebg);color:var(--t-activefg);font-weight:600}
+.d-apps{display:flex;gap:1cqi;align-items:center}
+.d-apps i{width:1.9cqi;height:1.9cqi;min-width:10px;min-height:10px;border-radius:30%;display:block;position:relative}
+.d-apps i.on::after{content:"";position:absolute;left:0;right:0;bottom:-.75cqi;height:2px;background:var(--t-barfg)}
+.d-tray{display:flex;gap:.7cqi;align-items:center}
+.d-tray i{width:.9cqi;height:.9cqi;min-width:5px;min-height:5px;border-radius:50%;background:var(--t-barfgdim);display:block}
+.d-area{flex:1;display:grid;grid-template-columns:1.15fr 1fr;grid-template-rows:1.25fr 1fr;gap:1.1cqi;padding:1.1cqi 0 0;position:relative}
+.win{background:var(--t-base);border:max(1px,.16cqi) solid var(--t-unfocused);color:var(--t-text);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.win.focus{border-color:var(--t-focused);grid-row:1/3}
+.win.urgent{border-color:var(--t-urgent)}
+.w-pad{padding:1.2cqi 1.4cqi;display:flex;flex-direction:column;gap:.7cqi;font-size:max(8px,1.2cqi);min-height:0}
+.w-title{font-weight:600;font-size:max(9px,1.45cqi)}
+.w-2{color:var(--t-text2)} .w-m{color:var(--t-muted)}
+.rows{display:grid;gap:.25cqi;border:1px solid var(--t-subtle);background:var(--t-raised);padding:.4cqi}
+.rows div{padding:.35cqi .6cqi;display:flex;justify-content:space-between;gap:1cqi}
+.rows .sel{background:var(--t-selbg);color:var(--t-selfg)}
+.btns{display:flex;gap:.8cqi;align-items:center;margin-top:.3cqi}
+.b-acc{background:var(--t-accent);color:var(--t-on);padding:.45cqi 1.3cqi;border-radius:3px;font-weight:600}
+.b-sec{border:1px solid var(--t-strong);padding:calc(.45cqi - 1px) 1.2cqi;border-radius:3px}
+.link{color:var(--t-acctext);text-decoration:underline}
+.pills{display:flex;flex-wrap:wrap;gap:.5cqi}
+.pills span{padding:.2cqi .7cqi;border-radius:3px;font-weight:600;font-size:max(7px,1.05cqi)}
+.term{background:var(--t-tbg);color:var(--t-tfg);font-family:var(--f-mono);font-size:max(7px,1.08cqi);padding:1.1cqi 1.3cqi;line-height:1.55;flex:1;white-space:pre;overflow:hidden}
+.pop{position:absolute;left:8%;top:47%;width:36%;background:var(--t-overlay);border:1px solid var(--t-subtle);color:var(--t-text);font-size:max(8px,1.2cqi);
+  box-shadow:0 1.2cqi 3cqi rgba(0,0,0,var(--t-shadow-a));display:grid}
+.pop .q{padding:.8cqi 1.1cqi;border-bottom:1px solid var(--t-subtle);color:var(--t-text2)}
+.pop .q b{color:var(--t-acctext);font-weight:600}
+.pop div.r{padding:.55cqi 1.1cqi}
+.pop div.r.hl{background:var(--t-hover)}
+.note{position:absolute;right:1.1cqi;top:5.4cqi;width:27%;background:var(--t-raised);border:1px solid var(--t-subtle);color:var(--t-text);font-size:max(8px,1.15cqi);
+  padding:1cqi 1.2cqi;display:grid;gap:.3cqi;box-shadow:0 1cqi 2.4cqi rgba(0,0,0,var(--t-shadow-a))}
+.cap{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--ink-2)}
+.cap b{color:var(--ink)}
+
+/* wallpapers */
+.wsets{display:grid;gap:22px}
+.wset{display:grid;gap:8px}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:10px}
+figure{margin:0;display:grid;gap:5px;min-width:0}
+figure img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:6px;display:block;border:1px solid var(--line)}
+figcaption{font-size:13px;color:var(--ink-2);display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+figcaption b{color:var(--ink);font-weight:600}
+.flag{font:600 11px/1 var(--f-mono);padding:3px 6px;border-radius:4px;background:color-mix(in srgb,var(--warn) 16%,transparent);color:var(--warn)}
+
+/* research */
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:8px;align-content:start;min-width:0}
+.box ul{margin:0;padding-left:18px;display:grid;gap:5px;font-size:14px}
+.box li::marker{color:var(--accent)}
+footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){.desk,.desk *{transition:none}}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">hypeForge · the look · review 1 of 7</p>
+  <h1>The foundation: 23 colour themes, the wallpapers, and five questions</h1>
+  <p class="lead">Before the six styles, here is what every style will be dressed in. Click through the themes on the little desktop, look at the wallpapers, then answer the five questions at the top. They decide what the Windows 11 proposal (next) is allowed to use. About ten minutes.</p>
+  <div class="steps" aria-label="Where we are in the program">
+    <span class="on">1 · Foundation</span><span>2 · Windows 11</span><span>3 · Mac OS 9</span><span>4 · macOS</span><span>5 · Linux rice</span><span>6 · KDE</span><span>7 · COSMIC</span>
+  </div>
+</header>
+
+<section aria-labelledby="h-ask">
+  <div class="sec-head">
+    <p class="eyebrow">What I need from you</p>
+    <h2 id="h-ask">Five answers</h2>
+    <p>Each one has my pick marked. "Your pick is fine" is a perfectly good answer.</p>
+  </div>
+  <div class="asks">
+    <article class="ask">
+      <span class="id">Q-1 · SwayFX</span>
+      <h3>Can the rounded, shadowed looks use SwayFX?</h3>
+      <p>Plain Sway can't round corners, cast shadows or blur. SwayFX is Sway with those added, built on the same Sway 1.12 we run, and everything we have works on it. It would be a second login, "hypeForge FX"; plain Sway stays the default and every style is drawn for plain Sway first. Our rule D-56 says "Sway only".</p>
+      <ul class="opts">
+        <li><b>A</b><span>Yes, SwayFX counts as Sway, as a second login</span><span class="rec">my pick</span></li>
+        <li><b>B</b><span>No, plain Sway only: flat looks</span></li>
+      </ul>
+    </article>
+    <article class="ask">
+      <span class="id">Q-2 · Graphical pop-ups</span>
+      <h3>May the bar open small graphical panels?</h3>
+      <p>A KDE-style launcher, Windows-style Quick Settings, a calendar. They need no new installs: everything is already on the machine. The Forge apps stay in the terminal exactly as they are. Our rule D-57 says terminal apps first.</p>
+      <ul class="opts">
+        <li><b>A</b><span>Yes, small panels from the bar; Forge apps stay terminal</span><span class="rec">my pick</span></li>
+        <li><b>B</b><span>No, keep today's text lists (fuzzel) for everything</span></li>
+      </ul>
+    </article>
+    <article class="ask">
+      <span class="id">Q-3 · Wallpapers</span>
+      <h3>Our own pictures only?</h3>
+      <p>Our generator draws them, so they are ours to ship. Photo sites (Unsplash, Pexels, Wallhaven) don't allow shipping their pictures inside a system. Free-licence art from Wikimedia (CC0 or Creative Commons) is possible one file at a time, with credits.</p>
+      <ul class="opts">
+        <li><b>A</b><span>Our generator only</span><span class="rec">my pick</span></li>
+        <li><b>B</b><span>Our generator, plus hand-picked free-licence art</span></li>
+      </ul>
+    </article>
+    <article class="ask">
+      <span class="id">Q-4 · The middle themes</span>
+      <h3>Deeper or lighter middles?</h3>
+      <p>Gray, Blue, Purple, Green, Pink, Red and Multicolor read close to their Dark versions today. Strict readability (text 7 times brighter than its background) forces them down. The lighter option keeps text at 4.5 times, the standard minimum. Flip "Middle themes" next to the desktop to compare.</p>
+      <ul class="opts">
+        <li><b>A</b><span>Deeper: the strictest readability</span></li>
+        <li><b>B</b><span>Lighter: clearly "middle", standard readability</span><span class="rec">my pick</span></li>
+      </ul>
+    </article>
+    <article class="ask">
+      <span class="id">Q-5 · Four colour picks</span>
+      <h3>Small calls inside the palettes</h3>
+      <ul class="opts">
+        <li><b>a</b><span>Light Gray, Gray, Dark Gray: buttons in the emblem's blue <span class="rec">my pick</span> or the Kognog lavender?</span></li>
+        <li><b>b</b><span>The focused window's border: the theme's accent colour <span class="rec">my pick</span> or white like today?</span></li>
+        <li><b>c</b><span>"Needs attention" in the red and pink themes: moved to amber or purple so it stands out <span class="rec">my pick</span>, or always red?</span></li>
+        <li><b>d</b><span>The emblem's orange: the logo only <span class="rec">my pick</span>, or also an accent colour?</span></li>
+      </ul>
+    </article>
+  </div>
+  <div class="reply">
+    <span>Answer in our chat, like this:</span>
+    <code id="reply-text">Q-1 A · Q-2 A · Q-3 A · Q-4 B · Q-5 your picks</code>
+    <button class="copy" id="copy" type="button">Copy</button>
+  </div>
+</section>
+
+<section aria-labelledby="h-themes">
+  <div class="sec-head">
+    <p class="eyebrow">The colour themes</p>
+    <h2 id="h-themes">23 themes on one desktop</h2>
+    <p>Colours only. Corners, shadows and the bar's layout come with each style, so this desktop stays square on purpose. Every text and border on every theme is measured, and all 1,794 checks pass. White and Black are the high-contrast themes you asked for: grays only, colour just where it means something.</p>
+  </div>
+  <div class="explore">
+    <div class="stage">
+      <div class="desk" id="desk" role="img" aria-label="A hypeForge desktop in the chosen theme">
+        <div class="d-bar">
+          <div class="d-grp"><span class="d-emb" id="emb"></span><span class="d-dim"><u>W</u>orkspaces</span><span class="d-dim"><u>F</u>avorites</span>
+            <span class="d-ws"><span class="on">1</span><span>2</span><span>3</span><span>4</span><span>5</span></span></div>
+          <div class="d-grp d-apps" id="apps"></div>
+          <div class="d-grp"><span class="d-tray"><i></i><i></i><i></i><i></i></span><span>Sat 10 Oct</span><span>12:30 PM</span><span class="d-dim">⏻</span></div>
+        </div>
+        <div class="d-area">
+          <div class="win focus"><div class="w-pad">
+            <span class="w-title">Steam Library</span>
+            <span class="w-2">Secondary text: 214 games, 38 installed</span>
+            <div class="rows">
+              <div><span>SuperTux</span><span class="w-m">2.1 GB</span></div>
+              <div class="sel"><span>Sim Companies</span><span>played today</span></div>
+              <div><span>World of Warcraft</span><span class="w-m">63 GB</span></div>
+              <div><span>Factorio</span><span class="w-m">4.8 GB</span></div>
+            </div>
+            <span class="w-m">Muted: a hint, Ctrl + F to search</span>
+            <div class="btns"><span class="b-acc">Play</span><span class="b-sec">Properties</span><span class="link">store page</span></div>
+            <div class="pills" id="pills"></div>
+          </div></div>
+          <div class="win"><div class="term" id="term"></div></div>
+          <div class="win urgent"><div class="w-pad"><span class="w-title">Discord</span><span class="w-2">Needs attention: its border is the urgent colour</span></div></div>
+          <div class="pop" aria-hidden="true"><div class="q">Launch <b>fir</b>|</div><div class="r hl">Firefox</div><div class="r">Fire Starter</div><div class="r">Firmware Updater</div></div>
+          <div class="note" aria-hidden="true"><b>nightForge</b><span class="w-2">Warm until 07:02, by the sun</span></div>
+        </div>
+      </div>
+      <div class="cap" id="cap"></div>
+    </div>
+    <aside class="picker" aria-label="Pick a theme">
+      <div class="seg">
+        <span class="eyebrow">Middle themes (Q-4)</span>
+        <div role="group" aria-label="Middle themes"><button type="button" id="mid-a" aria-pressed="false">A · Deeper</button><button type="button" id="mid-b" aria-pressed="true">B · Lighter</button></div>
+        <small id="mid-note"></small>
+      </div>
+      <div id="fams"></div>
+      <div class="meter" id="meter"></div>
+    </aside>
+  </div>
+</section>
+
+<section aria-labelledby="h-walls">
+  <div class="sec-head">
+    <p class="eyebrow">The wallpapers</p>
+    <h2 id="h-walls">Five moods, made by our own generator</h2>
+    <p>Cyberpunk (synthwave), buildings (skyline), nature (mountains), technology (circuit) and an anime-style sky. Here they are in three of the 23 colours; any theme gets its own five in about six seconds each. On light themes glow can't show, so they turn calm and papery. Each screen can get its own picture, or one wide picture can span all three.</p>
+  </div>
+  <div class="wsets" id="walls"></div>
+</section>
+
+<section aria-labelledby="h-found">
+  <div class="sec-head">
+    <p class="eyebrow">What the research found</p>
+    <h2 id="h-found">What the six styles can and can't have</h2>
+    <p>Five research reports, all in <code>docs/research/look-2026-10/</code>. The short version, so the proposals don't promise what Sway can't do.</p>
+  </div>
+  <div class="two">
+    <div class="box"><h3>Yes, we can</h3><ul>
+      <li>Any bar layout: top or bottom, floating in the middle, a second bar as a dock, drawers that slide open, real drop-down menus. All with the Waybar we already run.</li>
+      <li>Rounded corners, shadows and blur on windows, bars and notifications, with SwayFX (Q-1).</li>
+      <li>A KDE-style launcher, Quick Settings and a calendar panel (Q-2), with nothing new to install.</li>
+      <li>Every program follows one theme file: Sway, the bar, the lists, notifications, the lock screen, GTK apps, the terminal.</li>
+    </ul></div>
+    <div class="box"><h3>No, Sway can't</h3><ul>
+      <li>An app's own File and Edit menus up in the top bar (Mac style).</li>
+      <li>The macOS dock's magnifying wave.</li>
+      <li>Minimizing windows (we can tuck them away instead).</li>
+      <li>A zoomed-out view of every workspace.</li>
+      <li>Animations: SwayFX has them, but they hide workspaces moved between screens, which we do all the time, so they stay off.</li>
+    </ul></div>
+  </div>
+</section>
+
+<footer>Built by Javier and Claude for KognogOS. Colours from <code>palette/generate.py</code> (Catppuccin Mocha is where Dark Purple comes from, with thanks). Page: <code>hypeforge/docs/design/look/review-1/</code>.</footer>
+</div>
+
+<script>
+const D = /*DATA*/null;
+const FAMS = [["neutral","Grays"],["blue","Blues"],["purple","Purples, the Kognog colours"],["green","Greens"],["pink","Pinks"],["red","Reds"],["multi","Multicolor"]];
+let cur = "purple", mid = "b";
+const $ = id => document.getElementById(id);
+
+function theme(s){ return (mid === "b" && D.lifted[s]) ? D.lifted[s] : D.now[s]; }
+function lum(h){ const c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4); return .2126*c[0]+.7152*c[1]+.0722*c[2]; }
+function ratio(a,b){ const [x,y]=[lum(a),lum(b)].sort((p,q)=>q-p); return (x+.05)/(y+.05); }
+
+const MAP = {sunken:"surface.sunken",base:"surface.base",raised:"surface.raised",overlay:"surface.overlay",hover:"surface.hover",
+  bar:"bar.bg",shade:"bar.shade",barfg:"bar.fg",barfgdim:"bar.fg_dim",activebg:"bar.active_bg",activefg:"bar.active_fg",
+  text:"text.primary",text2:"text.secondary",muted:"text.muted",accent:"accent.base",on:"accent.on",acctext:"accent.text",
+  subtle:"border.subtle",strong:"border.strong",focused:"window.focused",unfocused:"window.unfocused",urgent:"window.urgent",
+  selbg:"selection.bg",selfg:"selection.fg",tbg:"term.bg",tfg:"term.fg"};
+
+function paint(){
+  const t = theme(cur), desk = $("desk");
+  for (const [k,v] of Object.entries(MAP)) desk.style.setProperty("--t-"+k, t[v]);
+  desk.style.setProperty("--t-shadow-a", t.tone === "white" || t.tone === "light" ? .16 : .5);
+  $("apps").innerHTML = ["status.info","status.warning","accent.base","status.success","status.danger"].map((k,i)=>`<i class="${i===2?"on":""}" style="background:${t[k]}"></i>`).join("");
+  $("pills").innerHTML = ["success","warning","danger","info"].map(s=>`<span style="background:${t["status."+s]};color:${t["status.on_"+s]}">${s}</span>`).join("");
+  const c = k => `<span style="color:${t["term."+k]}">`;
+  $("term").innerHTML = `${c("green")}javier@tphome</span> ${c("blue")}~/Programs</span> $ nog upgrade\n${c("cyan")}::</span> 12 packages, Tier 1 now, Tier 3 in 7 days\n${c("yellow")}warning</span> firefox waits for its hold\n${c("red")}error</span>   none\n${c("magenta")}done</span>    ${c("bright_black")}in 41 s</span>`;
+  const r1 = ratio(t["text.primary"], t["surface.base"]), r2 = ratio(t["accent.on"], t["accent.base"]), r3 = ratio(t["bar.fg"], t["bar.bg"]);
+  $("cap").innerHTML = `<span><b>${t.name}</b> · ${t.tone === "mid" ? (mid === "b" ? "middle, lighter (B)" : "middle, deeper (A)") : t.tone}</span><span>text on a window <b>${r1.toFixed(1)}:1</b></span><span>text on a button <b>${r2.toFixed(1)}:1</b></span><span>bar text <b>${r3.toFixed(1)}:1</b></span>`;
+  $("meter").innerHTML = `<span>4.5:1 is the standard minimum for reading; 7:1 is the strictest level.</span><span>Window background <b>${t["surface.base"]}</b> · accent <b>${t["accent.base"]}</b></span>`;
+  document.querySelectorAll(".chip").forEach(b => b.setAttribute("aria-pressed", b.dataset.s === cur));
+  $("mid-note").textContent = t.tone === "mid" ? "This theme is a middle one: flip to compare." : "Changes Gray, Blue, Purple, Green, Pink, Red and Multicolor.";
+}
+
+function chips(){
+  $("fams").innerHTML = FAMS.map(([f,label]) => {
+    const list = D.order.filter(s => D.now[s].family === f || (f === "multi" && D.now[s].family.startsWith("multi")));
+    if (!list.length) return "";
+    return `<div class="fam"><h3>${label}</h3><div class="chips">${list.map(s=>{const t=theme(s);
+      return `<button type="button" class="chip" data-s="${s}" aria-pressed="false"><i style="background:linear-gradient(135deg,${t["surface.base"]} 50%,${t["accent.base"]} 50%)"></i>${t.name}</button>`}).join("")}</div></div>`;
+  }).join("");
+  document.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => { cur = b.dataset.s; paint(); }));
+}
+
+function walls(){
+  const NAMES = {purple:"Purple", darkblue:"Dark Blue", white:"White"}, MOODS = {synthwave:"Cyberpunk",skyline:"Buildings",mountains:"Nature",circuit:"Technology",skyclouds:"Anime-style sky"};
+  const sets = [...new Set(D.walls.map(w => w.set))].sort((a,b)=>["purple","darkblue","white"].indexOf(a)-["purple","darkblue","white"].indexOf(b));
+  $("walls").innerHTML = sets.map(s => `<div class="wset"><h3>${NAMES[s]||s}</h3><div class="wgrid">${
+    ["synthwave","skyline","mountains","circuit","skyclouds"].map(m => D.walls.find(w=>w.set===s&&w.mood===m)).filter(Boolean).map(w =>
+      `<figure><img src="${w.src}" alt="${MOODS[w.mood]} wallpaper in ${NAMES[s]||s}" loading="lazy"><figcaption><b>${MOODS[w.mood]}</b><span>${w.mood}</span>${w.mood==="skyclouds"?'<span class="flag">being redone</span>':""}</figcaption></figure>`).join("")
+  }</div></div>`).join("");
+}
+
+$("emb").style.backgroundImage = `url(${D.emblem})`;
+$("mid-a").addEventListener("click", () => { mid = "a"; $("mid-a").setAttribute("aria-pressed","true"); $("mid-b").setAttribute("aria-pressed","false"); chips(); paint(); });
+$("mid-b").addEventListener("click", () => { mid = "b"; $("mid-b").setAttribute("aria-pressed","true"); $("mid-a").setAttribute("aria-pressed","false"); chips(); paint(); });
+$("copy").addEventListener("click", () => {
+  const txt = $("reply-text").textContent;
+  navigator.clipboard?.writeText(txt).then(() => { $("copy").textContent = "Copied"; }).catch(() => { const r = document.createRange(); r.selectNodeContents($("reply-text")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
+});
+chips(); walls(); paint();
+</script>
