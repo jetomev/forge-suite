@@ -69,6 +69,12 @@ DEFAULT_ROLES = {
     "menubar_background": "surface.overlay", "menubar_text": "text.primary", "menubar_line": "border.strong",
     "menu_background": "surface.overlay", "menu_highlight": "accent.base", "menu_highlight_text": "accent.on",
     "menu_disabled": "text.muted",
+    # the pop-up panels (look step 4): Start, Quick Settings, calendar, the power buttons, …
+    "panel_bg": "surface.raised", "panel_text": "text.primary", "panel_text_dim": "text.secondary",
+    "panel_border": "border.subtle", "panel_tile": "surface.overlay", "panel_tile_text": "text.primary",
+    "panel_tile_on": "accent.base", "panel_tile_on_text": "accent.on", "panel_hover": "surface.hover",
+    "panel_selected": "selection.bg", "panel_selected_text": "selection.fg", "panel_danger": "status.danger",
+    "panel_backdrop": "surface.sunken",
 }
 # Classic's lists, notes, lock screen and GTK roles follow its bar's shades (today's look).
 OUTPUTS = [  # template → where it goes, under the config folder

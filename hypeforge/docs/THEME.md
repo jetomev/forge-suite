@@ -79,6 +79,16 @@ Pieces the styles place in their bar; each is benched with `python3 scripts/bar-
 
 To tune with the Rice (step 5): in Blue the active pill is close to the bar area's own blue; in Ember the bar area is close to the background.
 
+### The pop-up panels (look program step 4, 2026-10-10 →)
+
+Graphical pop-ups from the bar (D-68 Q-2), all from one program: `applets/panels/hypeforge-panel <view>` — Python + GTK 3 + gtk-layer-shell, nothing new installed. The shared core (`panels/panelkit.py`) gives every view the active style's corners and font and the active theme's colours (the theme engine's `panel_*` roles), a place on the screen in use, and closing by Escape, a click outside (a see-through backdrop) or the same button again. Benched with `python3 scripts/panel-preview.py <view> --style <s> --theme <t>` (a hidden Sway, photographed).
+
+| View | What it is | Colours |
+|---|---|---|
+| **power** | the Rice's R-5: Lock · Log Out · Restart · Shut Down as big round buttons over a dimmed screen; the last three ask ("Restart?") and a second press does it; the commands are the launcher's `[power]` | buttons `panel_tile`, the dangerous ones `panel_danger` on hover, labels `panel_text`, the dimming `panel_backdrop` at 78 % |
+
+Roles (defaults): `panel_bg` surface.raised · `panel_text` / `_dim` text.primary / secondary · `panel_border` border.subtle · `panel_tile` / `_text` surface.overlay / text.primary · `panel_tile_on` / `_text` accent.base / accent.on · `panel_hover` surface.hover · `panel_selected` / `_text` selection.bg / fg · `panel_danger` status.danger · `panel_backdrop` surface.sunken. To tune with the Rice: Ember's buttons are close to the dimmed background.
+
 ## The pop-up lists — `sway/fuzzel/fuzzel.ini` → `~/.config/sway/fuzzel/`
 
 The launcher, Workspaces, Favorites, the clipboard list and the notification list. They match the bar they drop from (Javier, 2026-10-05).
