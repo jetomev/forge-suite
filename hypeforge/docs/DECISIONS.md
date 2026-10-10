@@ -7,6 +7,9 @@
 
 ## 2026-10-10
 
+### D-74 · Style 3 approved: modern macOS, tiled (Javier)
+Review 4, all five as proposed: MA-1 the Dock **always there** (a second Waybar; windows tile above it), MA-2 **Spotlight and Launchpad**, MA-3 Control Center's blocks (Wi-Fi/Bluetooth/VPN, Do Not Disturb, Night light, Screens, sound, what's playing), MA-4 **Mac OS 9's menus kept** (Special moves into the emblem menu), MA-5 **frosted** bar, Dock and panels on SwayFX. Spec: `docs/design/look/styles/macos/style.toml`.
+
 ### D-73 · The foundation approved: palettes v2, 25 themes (Javier)
 Review 1, round 2: F-1 the black/white/gray/orange theme is called **Ember**; F-2 its pop stays **cream**; F-3 the light themes' pops are lively enough; F-4 **KognogOS Mocha** keeps its five tiny brightness changes from Catppuccin so it passes our readability checks. The 25 themes (`docs/research/look-2026-10/palette/palettes.toml`, schema 2) are the colours every style is drawn in; KognogOS Mocha is the default.
 
