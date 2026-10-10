@@ -3,6 +3,7 @@
 **1.0.1 released 2026-10-07** (F-2, #37), after **1.0.0 on 2026-10-06.** A Forge Suite app (terminal, forgekit) that answers every password question in a Sway session: the admin pop-up (polkit) and `sudo -A` / nog, in one floating box. Section of the Forge Suite (D-60). Closes hypeForge F-44 (#26) and F-42 (#24). Updated after every step.
 
 ## At the next release
+- [ ] **A compact password box** (Javier, 2026-10-10: "to much real state waste", 62) — design a ~56 × 11 layout for his approval, then the window size follows it; release 1.1.0
 - [ ] **The AUR description, at the next release** (Javier, 2026-10-09): the AUR `pkgdesc` (and `.SRCINFO`) gets the same "where it runs" words as the README, GitHub About and kognogos.org — distribution · desktop · plain text console. Not pushed on its own: AUR pushes stay one per proven version.
 
 ## Phase 0 · Research and design
