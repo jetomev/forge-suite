@@ -7,6 +7,9 @@
 
 ## 2026-10-10
 
+### D-76 · Style 5 approved: KDE Plasma, tiled (Javier)
+Review 6, all five as proposed: K-1 the **floating panel**, K-2 **the pager** (six little screens), K-3 **Kickoff as KDE's list** with descriptions, K-4 **Breeze-style title bars on**, K-5 **one tray pop-up** with a page per setting. Plasma's look from hypeForge's own pieces, no KDE software (D-56). Spec: `docs/design/look/styles/kde/style.toml`.
+
 ### D-75 · Style 4 approved: the Linux rice, tiled; every theme brings its wallpaper (Javier)
 Review 5: R-1 **one floating island with three areas** (not three separate islands): the emblem and workspace pills, the clock and what's playing, the system modules, tray and power; R-2 **numbered pills, the active one named**; R-3 **the wallpaper follows the theme, for every theme**: each of the 25 brings its own generated picture (`docs/design/look/review-5-rice/make-wallpapers.py`) and switching the theme switches the wallpaper, in every style, unless the person picked one of their own; R-4 a bright frame on the window in use (see-through, frosted terminals on SwayFX); R-5 the **big-button power menu**. Spec: `docs/design/look/styles/rice/style.toml`.
 
