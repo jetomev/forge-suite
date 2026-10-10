@@ -12,7 +12,7 @@ name = "hypeForge Classic"
 slug = "classic"
 schema = 1
 needs = []
-better_with = []
+better_with = ["swayfx"]   # soft corners and a shadow in the FX login
 credit = "hypeForge's own look, 2026-10-04 → (D-46)."
 
 [shape]                          # pixels
@@ -66,6 +66,15 @@ gtk_header_bg    = "bar.bg"
 gtk_header_fg    = "text.primary"
 gtk_sidebar_bg   = "bar.bg"
 gtk_card_bg      = "surface.raised"
+
+[fx]                             # the SwayFX login only (D-68): today's look, softened. Plain Sway ignores it.
+corner_radius      = 8
+shadows            = true
+shadow_blur_radius = 24
+shadow_offset      = [0, 6]
+shadow_opacity     = "effects.shadow_opacity"
+blur               = false
+animations         = false       # SwayFX #565/#569
 
 [fonts]
 ui      = "Noto Sans"
