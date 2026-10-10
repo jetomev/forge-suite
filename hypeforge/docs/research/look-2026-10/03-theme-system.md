@@ -2,18 +2,21 @@
 
 *Research helper 3 of 5 for the look program (D-67, `docs/look-program.md`), 2026-10-10. Read-only research: nothing outside `docs/research/look-2026-10/` was changed, nothing was installed, nothing restarted.*
 
-**What is here:** where the Kognog colours really come from; a list of named colour *roles* that every theme fills in; the readability rules each theme must pass; a generator that builds all 23 themes and checks them; and how each program on the desktop (Sway, Waybar, mako, fuzzel, gtklock, GTK apps, Alacritty, Midnight Commander, pointer and icons) would get its colours from one theme file.
+> **v2 (2026-10-10, after Javier's review):** every theme is now built the **60-30-10** way: a neutral foundation, a strong band in the theme colour, a harmony pop. There are two new themes: **KognogOS Mocha** (the default) and **Ember**. The *why* (design rules, harmonies, sources, before/after) is in **[03b-colour-design.md](03b-colour-design.md)**. This page is the format, the roles and the contract.
+
+**What is here:** where the Kognog colours really come from; a list of named colour *roles* that every theme fills in; the readability rules each theme must pass; a generator that builds all 25 themes and checks them; and how each program on the desktop (Sway, Waybar, mako, fuzzel, gtklock, GTK apps, Alacritty, Midnight Commander, pointer and icons) would get its colours from one theme file.
 
 **The files**
 
 | File | What it is |
 |---|---|
 | `palette/generate.py` | the generator: Python, standard library only. `python3 generate.py` rebuilds everything; `--check` fails if any rule fails |
-| `palette/palettes.toml` | all 23 themes in one machine-readable file (69 colours each, plus brand colours and names) |
+| `palette/palettes.toml` | all 25 themes in one machine-readable file (78 colours each in 13 groups, plus brand colours and names); `meta.order` lists KognogOS Mocha first |
 | `palette/themes/<slug>/theme.toml` | the same, one file per theme: the format proposed for the theme app |
-| `palette/contrast-report.md` | every rule, every theme, measured: 1,794 required pairs, the design checks, and every adjustment the generator made |
-| `palette/swatches.html` | the 23 themes side by side, each drawn as a tiny desktop (bar, two windows, buttons, status colours, terminal line). One file, opens offline |
-| `palette/render/{dark-purple,purple,white}/` | example files for each program, made from a theme, to prove the mapping works |
+| `palette/contrast-report.md` | every rule, every theme, measured: 2,124 required pairs, the 60-30-10 design checks, Mocha's deviations from Catppuccin, and every adjustment the generator made |
+| `palette/swatches.html` | the 25 themes side by side; each card shows its 60-30-10 split and a tiny desktop (the band on the bar, a panel header, the side panel and the selected row; the pop on toggles, typed letters, a badge and buttons). One file, opens offline |
+| `palette/render/{kognogos-mocha,purple,white,ember}/` | example files for each program, made from a theme, to prove the mapping works |
+| `03b-colour-design.md` | the design research behind v2 |
 
 ---
 
@@ -32,19 +35,20 @@ Sampled with Pillow from `hypeforge/assets/kognogos-emblem.png` (k-means over th
 | `wordmark_gray` | `#969696` | 0.673 · 0 | — | the "Kognog OS" letters in `logo.png` |
 | `kognog_mauve` | `#cba6f7` | 0.787 · 0.119 · 305° | — | os-release, boot ring, website, prompt |
 
-How the generator uses them (Claude's proposal, **for Javier to confirm**):
-- **The Purple family is the Kognog theme.** Purple and Dark Purple use mauve `#cba6f7` exactly as their accent. Dark Purple is tuned to land on today's look: base `#1e1e2e`, shade `#262637`, accent `#cba6f7`, the same as Catppuccin Mocha. Switching to it changes almost nothing you can see.
-- **The grays (White, Light Gray) and Light Blue use the emblem blue `#0363ef` exactly** as their accent. It already passes the contrast rules on light surfaces, so the logo's main colour gets a home too. On dark grays it is lightened to `#8ab9ff`, the same hue.
-- **The emblem orange is not an accent anywhere.** Orange is too close to "warning" and "danger", so it stays a brand colour for the logo. Every theme carries the six brand colours in a `[brand]` table that is **never adjusted and never used for text**.
+How v2 uses them (Javier's answers, 2026-10-10):
+- **Today's colours are their own theme: KognogOS Mocha**, faithful Catppuccin Mocha with mauve `#cba6f7` as its main accent. It is the default and first in the list. Javier: the Purple theme "is actually our KognogOS catppuccin mocha color combinations". The Purple family is now real purples.
+- **The gray themes' pop is the emblem blue** `#0363ef` (light) and the same hue lightened on dark grays (`#9dc2ff`). White and Black stay high-contrast grayscale.
+- **The emblem orange is brand-only, except in Ember**, where it is the band (`#d43a03`, the emblem orange one small step darker so white text passes 4.5:1).
+- Every theme carries the six brand colours in a `[brand]` table that is **never adjusted and never used for text**.
 
 ## 2 · Two kinds of file: a theme is colours, a style is shapes
 
-This follows decision H-1 in the look program: **any of the 23 colour themes works on any of the 6 styles.**
+This follows decision H-1 in the look program: **any of the 25 colour themes works on any of the 6 styles.**
 
-| | A **theme** (23) | A **style** (6) |
+| | A **theme** (25) | A **style** (6) |
 |---|---|---|
 | Holds | colours only | corners, border widths, gaps, shadow size and blur, bar height, fonts, which bar/launcher/dock, layout |
-| Example | Dark Purple, Light Green | Windows 11, Mac OS 9, KDE |
+| Example | KognogOS Mocha, Ember, Light Green | Windows 11, Mac OS 9, KDE |
 | File | `themes/<slug>/theme.toml` | `styles/<slug>/style.toml` |
 | Made by | `generate.py` (never edited by hand) | written by hand, one per style |
 
@@ -52,7 +56,7 @@ The style names *which colour role* goes where ("the focused border uses the acc
 
 ## 3 · The colour roles (the token list)
 
-A *token* is a named job, like "the main text colour" or "a raised panel". Each theme gives every token a colour. Programs ask for tokens, never for "purple". There are **69 colour tokens** in 12 groups, plus `[brand]` and `[names]`.
+A *token* is a named job, like "the main text colour" or "a raised panel". Each theme gives every token a colour. Programs ask for tokens, never for "purple". There are **78 colour tokens** in 13 groups, plus `[brand]` and `[names]`. v2 kept every v1 name and added two groups, `band` and `pop`. The surfaces, the text and the borders are the **foundation** (neutral).
 
 ### Surfaces: the layers, from deepest to highest
 
@@ -74,23 +78,57 @@ A *token* is a named job, like "the main text colour" or "a raised panel". Each 
 | `text.muted` | hints, placeholders, disabled text only, **never body text** | 3:1 |
 | `accent.on` | words on an accent fill (a button, the active workspace) | 4.5:1 |
 
-### Accent: the colour that pops
+### Band: the theme colour at full strength (~30 %)
 
 | Token | Job |
 |---|---|
-| `accent.base` | buttons, the active workspace, the focused window's border, the cursor |
-| `accent.hover` / `accent.pressed` | the same button when the mouse is over it / held down |
-| `accent.text` | the accent used as words: links, the letters you typed in a list (always passes 4.5:1) |
-| `accent.ring` | the keyboard focus ring |
+| `band.base` | the bar's areas, panel headers and title strips, the selected row |
+| `band.strong` | the bar behind its areas, a pressed band item (deeper, 7:1 with its text) |
+| `band.on` | words on the band (white, near-black or cream, whichever passes) |
+| `band.soft` | quiet band: side panels (Start's list of places, a settings sidebar), a selection that keeps normal text |
+| `band.text` | the band as a line or words on the foundation: **the focused window border**, section titles (4.5:1) |
+
+### Pop: the harmony colour for small important things (~10 %)
+
+| Token | Job |
+|---|---|
+| `pop.base` | toggles that are on, sliders, badges, buttons |
+| `pop.on` | words on the pop |
+| `pop.text` | the pop as words: the letters you typed in a list, links (4.5:1) |
+
+### Accent = the pop
+
+`accent.base`, `accent.on`, `accent.text` and `accent.ring` are **the pop**, so every program that already asks for "the accent" (GTK's `accent_bg_color`, fuzzel's `match`, buttons) gets it with no change. `accent.hover` and `accent.pressed` are its two states.
+
+### Who wears what
+
+| Part of the desktop | Token | Layer |
+|---|---|---|
+| The bar (behind) | `bar.bg` | band.strong (Ember and White: the foundation) |
+| The bar's areas (emblem, workspaces, apps, clock) | `bar.shade` | band.base |
+| Text on the bar | `bar.fg`, `bar.fg_dim` | band.on |
+| The active workspace | `bar.active_bg` / `_fg` | an inverted chip: band.on with band-coloured number. Multicolor: its own category colour |
+| The bell's dot, the clipboard's "new" mark | `bar.pop` | pop, lifted to stand out on the band |
+| Focused window border | `window.focused` | band.text |
+| Unfocused border | `window.unfocused` | border.subtle (foundation) |
+| Urgent border | `window.urgent` | status.danger, moved off red in red and pink themes |
+| Panel header, title strip | `band.base` / `band.on` | band |
+| Side panel | `band.soft` | band, quiet |
+| Selected row (lists, the launcher) | `selection.bg` / `.fg` | band.base / band.on |
+| Windows, pop-up lists, notifications, terminal | `surface.*`, `term.bg` | foundation |
+| Buttons, toggles that are on, sliders | `accent.base` / `accent.on` | pop |
+| Links, the letters you typed | `accent.text` | pop |
+| Badges, counters | `pop.base` / `pop.on` | pop |
+| Keyboard focus ring | `accent.ring` | pop |
 
 ### Lines, windows, bar, selection, status
 
 | Group | Tokens |
 |---|---|
 | `border` | `subtle` (a soft line between panels, decorative), `strong` (a line that must be seen: an input box, a button outline; 3:1) |
-| `window` | `focused` (= accent), `unfocused`, `urgent` (Sway's `client.*` colours) |
-| `bar` | `bg`, `shade` (the left, centre and right areas), `fg`, `fg_dim`, `hover`, `active_bg`, `active_fg` |
-| `selection` | `bg`, `fg`: the highlighted row in a list, selected text |
+| `window` | `focused` (= band.text), `unfocused`, `urgent` (Sway's `client.*` colours) |
+| `bar` | `bg`, `shade` (the left, centre and right areas), `fg`, `fg_dim`, `hover`, `active_bg`, `active_fg`, `pop` (the bell's dot); the bar wears the band |
+| `selection` | `bg`, `fg`: the highlighted row in a list, selected text (= the band) |
 | `status` | `success`, `warning`, `danger`, `info`, each with `on_<name>` for text on a filled chip |
 
 ### Effects, categories, terminal
@@ -98,7 +136,7 @@ A *token* is a named job, like "the main text colour" or "a raised panel". Each 
 | Group | Tokens |
 |---|---|
 | `effects` | `shadow` + `shadow_opacity` (black at 55 % on dark themes; a tinted dark at 18 % on light ones), `blur_tint` + `blur_opacity` (the frosted-glass colour, for SwayFX and the mock-ups) |
-| `cat` | eight category colours: red, orange, yellow, green, teal, blue, purple, pink. For workspaces in the Multicolor themes, file types in Midnight Commander, meters, charts. All 3:1 on the base and the bar |
+| `cat` | eight category colours: red, orange, yellow, green, teal, blue, purple, pink. For workspaces in the Multicolor themes, file types in Midnight Commander, meters, charts. All 3:1 on the base and the bar (in Multicolor also on the bar's areas, where the numbers sit) |
 | `term` | the terminal: `bg`, `fg`, `cursor`, `cursor_text`, `selection_*`, and the 16 standard colours (`black` … `bright_white`) tuned to that theme's background |
 
 ### Names (things that are not colours)
@@ -130,8 +168,8 @@ blur            = true      # frosted glass (SwayFX: blur enable)
 blur_radius     = 8
 
 [roles]                     # which colour token each part wears (never a hex)
-window_focused  = "accent.base"     # today's look uses "text.primary" (a white border)
-bar_background  = "surface.bar"
+window_focused  = "band.text"       # the theme's colour (Javier, Q-5); "text.primary" = a white border
+bar_background  = "bar.bg"
 bar_areas       = "bar.shade"
 popup_background = "surface.raised"
 
@@ -160,9 +198,13 @@ Starting values per style are the bar/launcher and compositor helpers' job (repo
 | `text.primary` | overlay, sunken, hover | 4.5 | 60 |
 | `text.secondary` | base, raised, overlay, sunken | 4.5 | 60 |
 | `text.muted` (hints only) | base, raised | 3 | 45 |
-| `accent.text` | base, raised, overlay | 4.5 | 60 |
-| `accent.base` | base, raised, overlay, bar | 3 | 30 |
-| `accent.on` | accent, its hover and pressed | 4.5 | 60 |
+| `text.primary` | band.soft | 4.5 | 60 |
+| `band.on` | band.base / band.strong | 4.5 / 7 | 60 / 75 |
+| `band.text` | base, raised | 4.5 | 60 |
+| `pop.text` (= accent.text) | base, raised, overlay | 4.5 | 60 |
+| `pop.base` (= accent.base) | base, raised, overlay | 3 | 30 |
+| `pop.on` on the pop; `accent.on` on its hover and pressed | — | 4.5 | 60 |
+| `bar.pop` | bar, its areas | 3 | 30 |
 | `accent.ring`, `border.strong` | base, raised | 3 | 30 |
 | `window.focused` | base **and the unfocused border** | 3 | 30 |
 | `window.urgent` | base | 3 | 30 |
@@ -172,74 +214,80 @@ Starting values per style are the bar/launcher and compositor helpers' job (repo
 | `selection.fg` on `selection.bg` | — | 4.5 | 60 |
 | each `status.*` on base and raised; `status.on_*` on its fill | — | 4.5 | 60 |
 | `term.fg` / the 6 normal colours / the 6 bright ones | term.bg | 7 / 4.5 / 3 | 75 / 60 / 45 |
-| each `cat.*` | base, bar | 3 | 30 |
+| each `cat.*` | base, bar (Multicolor: also the bar's areas) | 3 | 30 |
 
-78 pairs per theme. The focused-vs-unfocused rule matters most for a tiling desktop: the border is the *only* sign of which window has the keyboard.
+84 pairs per theme, 92 for Multicolor. **One rule moved in v2:** "the accent on the bar" became "`bar.pop` on the bar". The bar is now the band, and the pop that sits on it (the bell's dot) has its own lifted shade. The accent itself is still checked on every surface. The focused-vs-unfocused rule matters most for a tiling desktop: the border is the *only* sign of which window has the keyboard.
 
-### "Make things pop": four design rules on top
+### "Make things pop": the 60-30-10 design checks on top
 
-Passing contrast makes things readable. It does not make them *pop*. The generator also checks:
+Passing contrast makes things readable. It does not make them *pop*. The generator also checks (reasons and sources in 03b):
 
-1. **A visible ladder.** Neighbouring surfaces (sunken → base → raised → overlay) differ by at least 0.02 in OKLCH lightness, so a pop-up reads as a separate layer: connected, not fused.
-2. **A colour budget.** The accent carries at least 1.5× the colourfulness of the surfaces. The eye goes to the most colourful thing, so that has to be the thing you can click.
-3. **No look-alikes.** Each status colour stays at least ΔE 0.08 from the accent (ΔE = colour distance; 0.02 is "just noticeable"), and the urgent border at least 0.15 from the focused one. "Error" must never look like "selected".
-4. **A press that shows.** The pressed accent is at least ΔE 0.03 from the normal one.
+1. **A neutral foundation.** Its most colourful level stays at chroma ≤ 0.012 (a whisper of the hue). Neighbouring levels differ by ΔL ≥ 0.02, so a pop-up reads as a separate layer.
+2. **Band vs foundation: connected, not fused.** ΔL ≥ 0.10, and in coloured families ΔC ≥ 0.06.
+3. **Pop vs band: two colours, not two shades.** ΔE ≥ 0.15 (ΔE = colour distance; 0.02 is "just noticeable").
+4. **No look-alikes.** Each status colour stays ΔE ≥ 0.08 from the pop and the band line. The urgent border stays ΔE ≥ 0.15 from the focused one, so "error" never looks like "selected".
+5. **A press that shows.** The pressed accent is ΔE ≥ 0.03 from the normal one.
+6. **Colour share.** On a typical screen (60 % foundation, 30 % band, 10 % pop by area), where the colour actually lives. A coloured theme whose foundation carries more than 25 % of it reads monotone. v1's Blue: 56 %. v2's Blue: 9 %.
 
 ### The mid-gray dead zone (why "Gray" is darker than you might expect)
 
-Around OKLCH lightness 0.55 to 0.65, **neither black nor white text reaches 7:1.** A true middle gray cannot carry readable text. So the seven "mid" themes (Gray, Blue, Purple, Green, Pink, Red, Multicolor) sit at lightness about 0.40 with light text: rich, colourful surfaces, clearly lighter than the Dark ones (0.24) and nowhere near the Light ones (0.92). This is a physical limit, not a taste choice.
+Around OKLCH lightness 0.55 to 0.65, **neither black nor white text reaches 7:1.** A true middle gray cannot carry readable text. So the seven middle themes (Gray, Blue, Purple, Green, Pink, Red, Multicolor) put their foundation at **graphite, lightness ≈ 0.30**, with light text ("middle to darker", Javier). Their band sits at ≈ 0.47, the brightest a band can be and still carry white text at 4.5:1. The dark themes' foundation is charcoal ≈ 0.185; the light ones are off-white ≈ 0.955. This is a physical limit, not a taste choice.
 
 ## 6 · The generator
 
 ### How a theme is made
 
-Each theme is a one-line recipe in `THEMES` (in `generate.py`): its **tone** (white, light, mid, dark, black), the **hue and colourfulness of the surface tint**, and its **accent** (a pinned brand hex, or a lightness · colourfulness · hue). Everything is computed in **OKLCH**, where equal steps of lightness *look* equal (credit: Björn Ottosson's OKLab), so one ladder works for every hue. Colours a screen cannot show lose colourfulness, never lightness or hue.
+Each theme is a one-line recipe in `THEMES` (in `generate.py`): its **tone** (white, light, mid, dark, black), its **band** (hue and colourfulness, or a pinned brand hex as in Ember), and its **pop** (a harmony family from `POP`, a per-theme harmony, or a pinned hex). KognogOS Mocha is not generated. It is Catppuccin's palette placed by Catppuccin's style guide (03b, section 5). Everything is computed in **OKLCH**, where equal steps of lightness *look* equal (credit: Björn Ottosson's OKLab), so one ladder works for every hue. Colours a screen cannot show lose colourfulness, never lightness or hue.
 
-Then, in order: surfaces → text → accent (and the text on it, hover, pressed) → borders → status colours → window borders → bar → selection → effects → category colours → terminal. After each step the generator **measures the pairs on the final hex values** (what ships). When a pair fails, it **nudges**: it moves the lightness 0.005 at a time away from the background until the pair passes. If the text reaches pure white or black first, it moves the background instead. When a status colour sits too close to the accent (red "danger" in a red theme), it turns the hue first and changes lightness only if hue alone cannot do it. Every move is written into the report.
+Then, in order: foundation → text → band (and the text on it) → pop (and the text on it, hover, pressed) → borders → status colours → window borders → bar → selection → effects → category colours → terminal. After each step the generator **measures the pairs on the final hex values** (what ships). When a pair fails, it **nudges**: it moves the lightness 0.005 at a time away from the background until the pair passes. If the text reaches pure white or black first, it moves the background instead. When a status colour sits too close to the pop or the band (red "danger" in a red theme), it turns the hue first. When the pop sits too close to the band, it keeps its hue and changes lightness first, so gold stays gold. When a colour sits between two backgrounds (a category colour on a white window and a deep bar), it searches both ways for the smallest move. Every move is written into the report.
 
 ### The result (run on 2026-10-10)
 
 ```
-23 themes · 1794 required pairs · 1794 pass · 0 fail · 204 nudges
+25 themes · 2124 required pairs · 2124 pass · 0 fail · 233 nudges
 ```
 
-No design-rule warnings remain. The TOML files are read back with Python's own `tomllib` on every run. The generated Sway and fuzzel files pass their programs' own config checks (`sway -C`, `fuzzel --check-config`), and a deliberately broken file fails both, so the checks really are checking.
+(v1: 23 themes · 1,794 pairs, all passing. `--check` exits 0.)
 
-| Theme | Tone | Bar | Base | Raised | Text | Accent | Urgent | Pointer |
+No design-check flags remain. KognogOS Mocha carries one note: it is faithful Catppuccin, so its foundation keeps Mocha's tint and its band is its pane stack, with 5 tiny deviations listed in the report. The TOML files are read back with Python's own `tomllib` on every run. The generated Sway and fuzzel files pass their programs' own config checks (`sway -C`, `fuzzel --check-config`), and a deliberately broken file fails both, so the checks really are checking.
+
+| Theme | Tone | Foundation (window) | Band / strong | Text on band | Pop | Focused border | Urgent | Pointer |
 |---|---|---|---|---|---|---|---|---|
-| White | white | `#ededed` | `#f1f1f1` | `#f8f8f8` | `#1f1f1f` | `#0363ef` | `#af3c40` | dark |
-| Light Gray | light | `#d2d2d2` | `#dedede` | `#e6e6e6` | `#1f1f1f` | `#0363ef` | `#ad3a3e` | dark |
-| Gray | mid | `#313131` | `#4a4a4a` | `#525252` | `#f3f3f3` | `#95c0ff` | `#ffbcb8` | dark |
-| Dark Gray | dark | `#1a1a1a` | `#202020` | `#282828` | `#d7d7d7` | `#8ab9ff` | `#ffa09c` | dark |
-| Black | black | `#000000` | `#040404` | `#101010` | `#d7d7d7` | `#7fb3ff` | `#ffa09c` | light |
-| Dark Blue | dark | `#0f192c` | `#172031` | `#1f283a` | `#ccd8ed` | `#8ab9ff` | `#ffa09c` | blue |
-| Blue | mid | `#1b2d4f` | `#354666` | `#3d4e6e` | `#e1ecff` | `#8bdeff` | `#ffb9b6` | blue |
-| Light Blue | light | `#cdddee` | `#dae8f7` | `#e2f0ff` | `#17202a` | `#0363ef` | `#af3c40` | blue |
-| Light Purple | light | `#ddd7eb` | `#e8e3f5` | `#f1ebfd` | `#211d28` | `#793cbb` | `#af3c40` | mauve |
-| **Purple** | mid | `#322352` | `#493e69` | `#514672` | `#ece7ff` | **`#cba6f7`** | `#ffbbaa` | mauve |
-| **Dark Purple** | dark | `#181729` | **`#1e1e2e`** | **`#262637`** | `#d5d6e9` | **`#cba6f7`** | `#ffa28c` | mauve |
-| Light Green | light | `#cee0d1` | `#dbebde` | `#e3f4e6` | `#18221a` | `#007835` | `#af3c40` | green |
-| Green | mid | `#013820` | `#28503a` | `#305842` | `#dcf6e6` | `#a5eb7c` | `#ffbcb8` | green |
-| Dark Green | dark | `#0b1e13` | `#14241a` | `#1c2d22` | `#caddd0` | `#7bd77f` | `#ffa09c` | green |
-| Light Pink | light | `#ebd3dd` | `#f4e0e8` | `#fde8f1` | `#281b21` | `#bf2f77` | `#aa4600` | pink |
-| Pink | mid | `#442032` | `#5c3b4a` | `#644352` | `#ffe2ee` | `#ffb9d9` | `#fec348` | pink |
-| Dark Pink | dark | `#26131c` | `#2b1a22` | `#34222a` | `#e6d1da` | `#fc9ac9` | `#faab3f` | pink |
-| Light Red | light | `#edd4d1` | `#f7e0de` | `#ffe9e6` | `#291b1a` | `#be2323` | `#9a418c` | red |
-| Red | mid | `#4c1d1b` | `#643935` | `#6d413d` | `#ffe4e1` | `#ffac96` | `#dbd350` | red |
-| Dark Red | dark | `#281311` | `#2d1a19` | `#362221` | `#e9d1cf` | `#ff9089` | `#debb32` | red |
-| Light Multicolor | light | `#dbdbdb` | `#e6e6e6` | `#eeeeee` | `#1f1f1f` | `#793cbb` | `#af3c40` | dark |
-| Multicolor | mid | `#262626` | `#3e3e3e` | `#464646` | `#dfdfdf` | `#cba6f7` | `#ffb6a4` | dark |
-| Dark Multicolor | dark | `#1a1a1a` | `#202020` | `#282828` | `#d7d7d7` | `#cba6f7` | `#ffa28c` | dark |
+| **KognogOS Mocha** | dark | `#1e1e2e` | `#313244` / `#181825` | `#cdd6f4` | `#cba6f7` Catppuccin's many accents | `#b4befe` | `#f9e2af` | mauve |
+| White | white · hc | `#f1f1f1` | `#cecece` / `#cccccc` | `#141414` | `#222222` gray | `#2e2e2e` | `#af3c40` | dark |
+| Light Gray | light | `#dfdfdf` | `#717171` / `#262626` | `#fafafa` | `#0363ef` emblem blue | `#5d5d5d` | `#ad3a3e` | dark |
+| Gray | mid | `#2e2e2e` | `#5b5b5b` / `#424242` | `#fafafa` | `#9dc2ff` emblem blue | `#bebebe` | `#fbc044` | dark |
+| Dark Gray | dark | `#131313` | `#3d3d3d` / `#2b2b2b` | `#fafafa` | `#9dc2ff` emblem blue | `#b7b7b7` | `#faab3f` | dark |
+| Black | black · hc | `#040404` | `#262626` / `#1b1b1b` | `#fafafa` | `#e4e4e4` gray | `#d7d7d7` | `#ffa65e` | light |
+| Ember | dark | `#161110` | `#d43a03` / `#a02900` | `#fff8f7` | `#f7e6c3` cream | `#ff987c` | `#ea9cf7` | peach |
+| Light Blue | light | `#edf0f6` | `#276ed2` / `#002356` | `#f7faff` | `#b65400` orange | `#0b58bb` | `#a23d7b` | blue |
+| Blue | mid | `#2b2e32` | `#0555b7` / `#003e8b` | `#f7faff` | `#ffae33` amber | `#95c0ff` | `#ffb0ca` | blue |
+| Dark Blue | dark | `#101316` | `#003981` / `#00285f` | `#f7faff` | `#ffae33` amber | `#8ab9ff` | `#ff9abd` | blue |
+| Light Purple | light | `#f1eff5` | `#8650c7` / `#35005e` | `#fbf9ff` | `#00835e` mint | `#7239b0` | `#af3c40` | mauve |
+| Purple | mid | `#2e2d31` | `#6e3aa8` / `#551c8b` | `#fbf9ff` | `#61dbac` mint | `#cfafff` | `#ffb6a4` | mauve |
+| Dark Purple | dark | `#131216` | `#4d1e7c` / `#3b0267` | `#fbf9ff` | `#61dbac` mint | `#c7a2ff` | `#ffa09c` | mauve |
+| Light Green | light | `#edf2ed` | `#17843f` / `#003011` | `#f6fcf7` | `#c3337a` raspberry | `#007131` | `#aa4600` | green |
+| Green | mid | `#2b2f2c` | `#006e30` / `#005121` | `#f6fcf7` | `#edb836` gold | `#7cd591` | `#ffb2bd` | green |
+| Dark Green | dark | `#101411` | `#004b1e` / `#003614` | `#f6fcf7` | `#edb836` gold | `#7ccd8e` | `#ff9dac` | green |
+| Light Pink | light | `#f5eef1` | `#b73c7c` / `#4b002c` | `#fff8fb` | `#00817c` teal | `#9f2367` | `#9c5300` | pink |
+| Pink | mid | `#312c2e` | `#952c63` / `#78094b` | `#fff8fb` | `#4cd9d2` teal | `#ffa1cb` | `#ffbb69` | pink |
+| Dark Pink | dark | `#161113` | `#6b1344` / `#530031` | `#fff8fb` | `#4cd9d2` teal | `#f895c2` | `#faab3f` | pink |
+| Light Red | light | `#f5eeed` | `#c53634` / `#4f0005` | `#fffaee` | `#008085` deep teal | `#ac191f` | `#9a418c` | red |
+| Red | mid | `#322c2c` | `#a22626` / `#81000d` | `#fffaee` | `#ffe5af` gold | `#ffa69c` | `#c5c3ff` | red |
+| Dark Red | dark | `#161111` | `#76080f` / `#580006` | `#fffaee` | `#ffd16b` gold | `#ff968c` | `#ea9cf7` | red |
+| Light Multicolor | light | `#f0f0f0` | `#2e2e2e` / `#1b1b1b` | `#fafafa` | `#8b57be` mauve | `#5d5d5d` | `#af3c40` | dark |
+| Multicolor | mid | `#2e2e2e` | `#121212` / `#070707` | `#fafafa` | `#d3adff` mauve | `#bebebe` | `#fbc044` | dark |
+| Dark Multicolor | dark | `#131313` | `#2e2e2e` / `#1f1f1f` | `#fafafa` | `#d3adff` mauve | `#b7b7b7` | `#faab3f` | dark |
 
-**Multicolor** = a neutral gray base, the Kognog mauve as the main accent, and `multi = true`. That flag tells the style to paint each workspace number, and optionally each workspace's window border, from the eight `cat` colours (see the swatch sheet).
+**Multicolor** = a neutral foundation, a neutral-dark band, mauve for buttons and toggles, and `multi = true`. That flag tells the style to paint each workspace number from the eight `cat` colours (the active one as a filled chip in its colour), and optionally each workspace's focused border. All eight pass 3:1 on the window, the bar and the bar's areas.
 
 ### Trade-offs the generator found (for Javier's eye)
 
-- **Red themes:** red is the accent, so "danger" turns orange-red and the urgent border turns **yellow** (Red, Dark Red) or **purple** (Light Red). **Pink themes:** the urgent border turns **amber**. The alternative is a danger red that looks like the accent. The generator chose "different". Javier may prefer one fixed urgent colour for every theme, which is one line to change.
-- **The White theme's window background is `#f1f1f1`, not pure white.** Pure white is kept for the top layer (menus, dialogs) so the layers still show. This is how Windows 11 light works. Pure-white windows would flatten the ladder.
-- **Today's focused border is white (the text colour).** The themes use the accent so the focused window pops in colour. A style can choose `window_focused = "text.primary"` to keep today's look.
-- **Text is a little brighter than Mocha's** (`#d5d6e9` vs `#cdd6f4`): a touch less blue, same reading strength.
-- **The workspace numbers in the Multicolor sample** use the bar colour on a category colour (3:1, fine for bold numbers). The real build should use each colour's own "on" text.
+- **Light themes' pops are darker by necessity.** A pop must reach 3:1 on a white window. Dark amber turns brown and dark gold turns olive, so the light themes use a harmony that stays vivid when dark: Light Blue orange, Light Green raspberry, Light Red deep teal (03b, section 3).
+- **Urgent moves away from red in red and pink themes** (Javier, Q-5): lavender (Red), purple (Dark Red, Light Red), amber (Pink, Dark Pink). Ember's urgent is purple, away from orange.
+- **The pressed state of a dark theme's pop** loses some colour as well as lightness, so a click shows even when contrast leaves no room to darken.
+- **The White theme's window is `#f1f1f1`, not pure white.** Pure white is kept for menus and dialogs, so the layers still show.
+- **KognogOS Mocha deviates from Catppuccin in 5 colours by a hair** (each misses APCA by 0.5–5 points). Exact Catppuccin is one line per colour if Javier prefers it.
 
 ## 7 · How each program gets its colours
 
@@ -252,7 +300,7 @@ No design-rule warnings remain. The TOML files are read back with Python's own `
 | **mako** 1.11 | `mako-colors.conf`: colours, plus the low/critical sections | `include=~/.config/hypeforge/theme/mako-colors.conf` (`man 5 mako`: absolute or `~/` path) | `makoctl reload` |
 | **fuzzel** 1.15 | `fuzzel-colors.ini`: the whole `[colors]` section (8-digit hex, with alpha) | `include=…` in `[main]`; the included file keeps its own section header (`man 5 fuzzel.ini`) | none: read at every launch |
 | **gtklock** 4.0 | the same `colors.css` | `@import url("file:///home/…/.config/hypeforge/theme/colors.css");` at the top of `style.css` (GTK 3 CSS) | none: read at every lock |
-| **GTK 3 apps** (adw-gtk3 6.5) | `gtk.css`: libadwaita's named colours (`window_bg_color`, `accent_bg_color`, `card_bg_color`, `destructive_color`…), the same names `themes/gtk/gtk.css` sets today | copied to `~/.config/gtk-3.0/gtk.css`; `gsettings … gtk-theme` from `names.gtk_theme` | restart the app |
+| **GTK 3 apps** (adw-gtk3 6.5) | `gtk.css`: libadwaita's named colours (`window_bg_color`, `accent_bg_color`, `card_bg_color`, `destructive_color`…), the same names `themes/gtk/gtk.css` sets today. v2: title bars wear `band.base` / `band.on`, side panels `band.soft`, content the foundation, buttons the pop | copied to `~/.config/gtk-3.0/gtk.css`; `gsettings … gtk-theme` from `names.gtk_theme` | restart the app |
 | **GTK 4 / libadwaita** 1.9.4 | the same `gtk.css`, plus `:root { --window-bg-color: …; }` variables | `~/.config/gtk-4.0/gtk.css`. libadwaita 1.9 reads the `--…-color` variables (confirmed in the library); the old names are still accepted. `gsettings … color-scheme` from `names.color_scheme`, `accent-color` from `names.gnome_accent` | restart the app |
 | **Alacritty** 0.17 | `alacritty-colors.toml`: primary, cursor, selection, 16 colours | `[general] import = ["~/.config/hypeforge/theme/alacritty-colors.toml"]`, the same way it imports `KognogOS-theme.toml` today; alacrittyForge stays the editor | live, Alacritty watches its config (that it also watches imported files is not yet tested here: check on the bench) |
 | **Midnight Commander** 4.8.33 | `mc-aliases.ini`: only the `[aliases]` block | the skin `themes/mc/kognogos-mocha.ini` already names every colour through aliases (`Base`, `Mauve`, `Peach`…), so the apply step writes a full skin = this block + the fixed rest | next start of mc |
@@ -265,16 +313,20 @@ Rules for the apply step (from hypeForge's own rules): back up first and offer a
 
 **What the theme app needs** (forgekit / Forge Suite / hypeForge Settings): read `palettes.toml` (or the `themes/` folder) to list themes with a preview from `surface.base`, `surface.raised`, `accent.base` and `text.primary`; run the apply step; show the theme's contrast result from the report. It never edits a theme file. A custom theme is a new recipe run through the generator, so it gets checked like the others.
 
-## 8 · Open questions for Javier
+## 8 · Questions: answered and open
 
-1. **Neutral themes' accent:** the emblem blue (proposed) or the Kognog mauve everywhere?
-2. **Focused window border:** the accent (proposed, pops) or white like today?
-3. **Urgent in red and pink themes:** "different colour" (as generated: yellow / amber / purple) or one fixed urgent colour across all themes?
-4. **Emblem orange:** brand-only (proposed), or an accent for a 24th theme?
+**Answered by Javier (Q-5, 2026-10-10):** neutral themes' pop = the emblem blue; focused border = the theme's colour; urgent moves away from red in red and pink themes; emblem orange = brand only, except as Ember's colour. White and Black stay the high-contrast grayscale themes.
+
+**Open (v2):**
+1. **The name "Ember"** (a working name).
+2. **Ember's pop:** cream (as generated) or white with a gold hover?
+3. **Light themes' pops** (orange, mint-green, raspberry, teal): lively enough?
+4. **Mocha's 5 tiny deviations:** keep them (all rules pass) or exact Catppuccin?
 
 ## Commands run and sources
 
 - Read: `hypeforge/docs/THEME.md`, `docs/look-program.md`, `docs/DECISIONS.md` (D-46), `sway/config`, `sway/waybar/style.css`, `sway/fuzzel/fuzzel.ini`, `sway/mako/config`, `sway/gtklock/style.css`, `themes/gtk/{gtk.css,settings.ini}`, `themes/mc/kognogos-mocha.ini`, `themes/wiremix/wiremix.toml`, `~/.config/alacritty/themes/KognogOS-theme.toml`, `kognog/config/os-release`, `homelab/www/index.html` (CSS variables), both banner SVGs.
 - Sampled with Pillow 12.3: `assets/kognogos-emblem.png`, `kognog/logo/logo.png`, two wallpapers.
+- v2 (2026-10-10): Catppuccin's style guide and palette.json v1.8.0, Fluent 2 Color, Material Components `Color.md` (sources in 03b); headless Chrome screenshots of the v2 swatches, reviewed and iterated by eye (pink pop on the gray themes, muddy light-theme pops, olive gold, faint Multicolor numbers, White's flat bar: all fixed); v1's colour share measured from the v1 generator.
 - Checked on this machine: `pacman -Q` (versions above); `man 5 mako`, `man 5 fuzzel.ini`, `man 5 sway` (include support); `strings /usr/lib/libadwaita-1.so.0` (CSS variables); `/usr/share/icons` (cursor and icon themes); `sway -C` and `fuzzel --check-config` on generated and deliberately broken files; a headless Chrome screenshot of `swatches.html` (into the session scratch folder).
 - Colour science: Björn Ottosson, "A perceptual color space for image processing" (OKLab, 2020); W3C WCAG 2.2 (1.4.3, 1.4.6, 1.4.11, 2.4.13); APCA-W3 0.0.98G-4g (Myndex); CSS Color 4 gamut mapping (the idea of reducing chroma at fixed lightness). Catppuccin (catppuccin.com) for today's palette. Thank you to all of them.

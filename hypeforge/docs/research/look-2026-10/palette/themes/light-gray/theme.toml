@@ -10,88 +10,105 @@ family = "neutral"
 tone = "light"
 polarity = "light"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "emblem blue"
+schema = 2
 
 [surface]
-sunken = "#cecece"
-bar = "#d2d2d2"
-base = "#dedede"
-raised = "#e6e6e6"
+sunken = "#d6d6d6"
+bar = "#dbdbdb"
+base = "#dfdfdf"
+raised = "#e7e7e7"
 overlay = "#eeeeee"
-hover = "#c5c5c5"
+hover = "#cccccc"
 
 [text]
 primary = "#1f1f1f"
 secondary = "#4d4d4d"
 muted = "#747474"
 
+[band]
+base = "#717171"
+strong = "#262626"
+on = "#fafafa"
+soft = "#d6d6d6"
+text = "#5d5d5d"
+
+[pop]
+base = "#0363ef"
+on = "#f7faff"
+text = "#005adc"
+
 [accent]
 base = "#0363ef"
 on = "#f7faff"
+text = "#005adc"
+ring = "#0363ef"
 hover = "#0056d3"
 pressed = "#0f4cae"
-text = "#0058d9"
-ring = "#0363ef"
 
 [border]
-subtle = "#b4b4b4"
-strong = "#6c6c6c"
+subtle = "#b6b6b6"
+strong = "#6d6d6d"
 
 [window]
-focused = "#0363ef"
-unfocused = "#c5c5c5"
+focused = "#5d5d5d"
+unfocused = "#b6b6b6"
 urgent = "#ad3a3e"
 
 [bar]
-bg = "#d2d2d2"
-shade = "#e6e6e6"
-hover = "#c5c5c5"
-fg = "#1f1f1f"
-fg_dim = "#4d4d4d"
-active_bg = "#0363ef"
-active_fg = "#f7faff"
+bg = "#262626"
+shade = "#717171"
+hover = "#636363"
+fg = "#fafafa"
+fg_dim = "#f6f6f6"
+active_bg = "#fafafa"
+active_fg = "#262626"
+pop = "#afcdff"
 
 [selection]
-bg = "#95b4e6"
-fg = "#1f1f1f"
+bg = "#717171"
+fg = "#fafafa"
 
 [status]
-success = "#02721c"
+success = "#06731e"
 on_success = "#f6fcf6"
-warning = "#915100"
+warning = "#935300"
 on_warning = "#fff9f4"
 danger = "#ad3a3e"
 on_danger = "#fff8f8"
-info = "#006799"
+info = "#00699b"
 on_info = "#f6fbff"
 
 [effects]
-shadow = "#1f2227"
+shadow = "#1c222b"
 shadow_opacity = 0.18
 blur_tint = "#eeeeee"
 blur_opacity = 0.8
 
 [cat]
-red = "#b84d49"
-orange = "#b05a00"
-yellow = "#8a7300"
-green = "#308639"
-teal = "#008479"
-blue = "#3475c4"
-purple = "#885cb5"
-pink = "#af4d80"
+red = "#c85b56"
+orange = "#be6517"
+yellow = "#947b00"
+green = "#3a8f42"
+teal = "#008d82"
+blue = "#3d7ece"
+purple = "#9569c4"
+pink = "#be5a8d"
 
 [term]
-bg = "#dedede"
+bg = "#dfdfdf"
 fg = "#1f1f1f"
 cursor = "#0363ef"
 cursor_text = "#f7faff"
-selection_bg = "#95b4e6"
-selection_fg = "#1f1f1f"
-black = "#292929"
-bright_black = "#555555"
-white = "#b7b7b7"
-bright_white = "#cecece"
+selection_bg = "#717171"
+selection_fg = "#fafafa"
+black = "#2a2a2a"
+bright_black = "#575757"
+white = "#b9b9b9"
+bright_white = "#cfcfcf"
 red = "#9d3533"
 bright_red = "#8a0314"
 green = "#157123"
@@ -116,7 +133,7 @@ kognog_mauve = "#cba6f7"
 [names]
 gtk_theme = "adw-gtk3"
 color_scheme = "prefer-light"
-gnome_accent = "slate"
+gnome_accent = "blue"
 cursor = "catppuccin-mocha-dark-cursors"
 cursor_size = 24
 icons = "candy-icons"

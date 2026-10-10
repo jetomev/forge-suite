@@ -90,12 +90,12 @@ button{font:inherit;cursor:pointer;color:inherit}
 .fx .win{border-radius:calc(8 * var(--px));box-shadow:0 calc(8 * var(--px)) calc(24 * var(--px)) rgba(0,0,0,var(--t-shadow-a))}
 .plain .win.focus{border-width:calc(2 * var(--px))}
 /* Chrome */
-.c-tabs{display:flex;align-items:end;gap:calc(4 * var(--px));padding:calc(8 * var(--px)) calc(10 * var(--px)) 0;background:var(--t-sunken);height:calc(40 * var(--px))}
-.c-tab{height:calc(32 * var(--px));padding:0 calc(14 * var(--px));display:flex;align-items:center;gap:calc(8 * var(--px));color:var(--t-text2);font-size:calc(12.5 * var(--px));border-radius:calc(8 * var(--px)) calc(8 * var(--px)) 0 0;max-width:calc(220 * var(--px));white-space:nowrap;overflow:hidden}
-.c-tab.on{background:var(--t-base);color:var(--t-text)}
+.c-tabs{display:flex;align-items:end;gap:calc(4 * var(--px));padding:calc(8 * var(--px)) calc(10 * var(--px)) 0;background:var(--t-band);height:calc(40 * var(--px))}
+.c-tab{height:calc(32 * var(--px));padding:0 calc(14 * var(--px));display:flex;align-items:center;gap:calc(8 * var(--px));color:var(--t-bandon);font-size:calc(12.5 * var(--px));border-radius:calc(8 * var(--px)) calc(8 * var(--px)) 0 0;max-width:calc(220 * var(--px));white-space:nowrap;overflow:hidden}
+.c-tab.on{background:var(--t-raised);color:var(--t-text)}
 .c-tab img{width:calc(16 * var(--px));height:calc(16 * var(--px))}
-.c-bar{display:flex;align-items:center;gap:calc(10 * var(--px));padding:calc(6 * var(--px)) calc(10 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-subtle)}
-.c-url{flex:1;height:calc(30 * var(--px));border-radius:999px;background:var(--t-raised);display:flex;align-items:center;padding:0 calc(14 * var(--px));color:var(--t-text2);font-size:calc(13 * var(--px))}
+.c-bar{display:flex;align-items:center;gap:calc(10 * var(--px));padding:calc(6 * var(--px)) calc(10 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-subtle);background:var(--t-raised)}
+.c-url{flex:1;height:calc(30 * var(--px));border-radius:999px;background:var(--t-sunken);display:flex;align-items:center;padding:0 calc(14 * var(--px));color:var(--t-text2);font-size:calc(13 * var(--px))}
 .c-url b{color:var(--t-text);font-weight:500}
 .dots{display:flex;gap:calc(14 * var(--px));color:var(--t-muted);font-size:calc(14 * var(--px))}
 .c-page{flex:1;padding:calc(34 * var(--px)) calc(44 * var(--px));display:grid;align-content:start;gap:calc(16 * var(--px));overflow:hidden}
@@ -106,21 +106,21 @@ button{font:inherit;cursor:pointer;color:inherit}
 .b-acc{background:var(--t-accent);color:var(--t-on);padding:calc(8 * var(--px)) calc(18 * var(--px));border-radius:calc(4 * var(--px));font-weight:600;font-size:calc(13.5 * var(--px))}
 .b-sec{border:calc(1 * var(--px)) solid var(--t-strong);padding:calc(7 * var(--px)) calc(17 * var(--px));border-radius:calc(4 * var(--px));font-size:calc(13.5 * var(--px))}
 .c-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(12 * var(--px));margin-top:calc(10 * var(--px))}
-.c-card{background:var(--t-raised);border:calc(1 * var(--px)) solid var(--t-subtle);border-radius:calc(8 * var(--px));padding:calc(14 * var(--px));display:grid;gap:calc(6 * var(--px));font-size:calc(13 * var(--px))}
+.c-card{background:var(--t-overlay);border:calc(1 * var(--px)) solid var(--t-subtle);border-top:calc(3 * var(--px)) solid var(--t-band);border-radius:calc(8 * var(--px));padding:calc(14 * var(--px));display:grid;gap:calc(6 * var(--px));font-size:calc(13 * var(--px))}
 .c-card b{font-weight:600}
 .c-card span{color:var(--t-muted);font-size:calc(12 * var(--px))}
 /* Alacritty */
 .term{flex:1;background:var(--t-tbg);color:var(--t-tfg);font:calc(13 * var(--px))/1.55 var(--f-mono);padding:calc(14 * var(--px)) calc(16 * var(--px));white-space:pre;overflow:hidden}
 /* Thunar */
 .th{flex:1;display:grid;grid-template-columns:calc(170 * var(--px)) 1fr;min-height:0}
-.th-side{background:var(--t-sunken);padding:calc(12 * var(--px)) calc(8 * var(--px));display:grid;align-content:start;gap:calc(2 * var(--px));font-size:calc(13 * var(--px));color:var(--t-text2)}
+.th-side{background:var(--t-sunken);border-right:calc(1 * var(--px)) solid var(--t-subtle);padding:calc(12 * var(--px)) calc(8 * var(--px));display:grid;align-content:start;gap:calc(2 * var(--px));font-size:calc(13 * var(--px));color:var(--t-text2)}
 .th-side span{padding:calc(5 * var(--px)) calc(10 * var(--px));border-radius:calc(4 * var(--px))}
-.th-side .sel{background:var(--t-selbg);color:var(--t-selfg)}
+.th-side .sel{background:var(--t-band);color:var(--t-bandon)}
 .th-main{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(92 * var(--px)),1fr));gap:calc(10 * var(--px));padding:calc(16 * var(--px));align-content:start}
 .fold{display:grid;justify-items:center;gap:calc(6 * var(--px));font-size:calc(12 * var(--px));color:var(--t-text)}
-.fold i{width:calc(50 * var(--px));height:calc(38 * var(--px));border-radius:calc(4 * var(--px));background:color-mix(in oklab,var(--t-accent) 75%,var(--t-base));position:relative}
+.fold i{width:calc(50 * var(--px));height:calc(38 * var(--px));border-radius:calc(4 * var(--px));background:var(--t-bandtext);position:relative}
 .fold i::before{content:"";position:absolute;left:0;top:calc(-5 * var(--px));width:45%;height:calc(9 * var(--px));border-radius:calc(3 * var(--px)) calc(3 * var(--px)) 0 0;background:inherit}
-.w-head{display:flex;align-items:center;justify-content:space-between;padding:calc(8 * var(--px)) calc(12 * var(--px));font-size:calc(13 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-subtle);color:var(--t-text2)}
+.w-head{display:flex;align-items:center;justify-content:space-between;padding:calc(8 * var(--px)) calc(12 * var(--px));font-size:calc(13 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-subtle);color:var(--t-text);background:var(--t-raised);font-weight:600}
 
 /* the taskbar */
 .task{position:absolute;left:0;right:0;bottom:0;height:calc(48 * var(--px));background:var(--t-bar);color:var(--t-barfg);
@@ -135,6 +135,8 @@ button{font:inherit;cursor:pointer;color:inherit}
 .tb img{width:calc(24 * var(--px));height:calc(24 * var(--px));display:block}
 .tb .emb{width:calc(24 * var(--px));height:calc(24 * var(--px));background-size:contain;background-repeat:no-repeat}
 .tb svg{width:calc(18 * var(--px));height:calc(18 * var(--px))}
+.tb.wsb{background:var(--t-band);color:var(--t-bandon)}
+.tb.wsb:hover,.tb.wsb.open{background:var(--t-bandstrong)}
 .search{height:calc(34 * var(--px));min-width:calc(190 * var(--px));border-radius:999px;background:var(--t-raised);border:calc(1 * var(--px)) solid var(--t-subtle);justify-content:flex-start;padding:0 calc(14 * var(--px));color:var(--t-barfgdim)}
 .ind{position:absolute;bottom:calc(2 * var(--px));left:50%;transform:translateX(-50%);height:calc(3 * var(--px));width:calc(6 * var(--px));border-radius:999px;background:var(--t-muted)}
 .ind.on{width:calc(16 * var(--px));background:var(--t-accent)}
@@ -152,12 +154,12 @@ button{font:inherit;cursor:pointer;color:inherit}
 .left .p-start{left:calc(10 * var(--px));transform:none}
 .s-search{margin:calc(20 * var(--px)) calc(20 * var(--px)) calc(12 * var(--px));height:calc(38 * var(--px));border-radius:calc(4 * var(--px));background:var(--t-overlay);border:calc(1 * var(--px)) solid var(--t-subtle);border-bottom:calc(2 * var(--px)) solid var(--t-accent);display:flex;align-items:center;gap:calc(10 * var(--px));padding:0 calc(12 * var(--px));color:var(--t-muted);font-size:calc(13.5 * var(--px))}
 .s-body{display:grid;grid-template-columns:calc(190 * var(--px)) 1fr;min-height:0;padding:0 calc(12 * var(--px))}
-.s-side{display:grid;align-content:start;gap:calc(2 * var(--px));border-right:calc(1 * var(--px)) solid var(--t-subtle);padding-right:calc(10 * var(--px));font-size:calc(13 * var(--px));overflow:hidden}
-.s-side span{padding:calc(7 * var(--px)) calc(12 * var(--px));border-radius:calc(4 * var(--px));display:flex;justify-content:space-between;color:var(--t-text2);position:relative}
-.s-side span em{font-style:normal;color:var(--t-muted);font-size:calc(11.5 * var(--px))}
-.s-side span.sel{background:var(--t-selbg);color:var(--t-selfg)}
+.s-side{display:grid;align-content:start;gap:calc(2 * var(--px));background:var(--t-band);border-radius:calc(6 * var(--px));padding:calc(8 * var(--px));font-size:calc(13 * var(--px));overflow:hidden;margin-bottom:calc(12 * var(--px))}
+.s-side span{padding:calc(7 * var(--px)) calc(12 * var(--px));border-radius:calc(4 * var(--px));display:flex;justify-content:space-between;color:var(--t-bandon);position:relative}
+.s-side span em{font-style:normal;color:var(--t-bandon);opacity:.75;font-size:calc(11.5 * var(--px))}
+.s-side span.sel{background:var(--t-bandstrong);color:var(--t-bandon);font-weight:600}
 .s-side span.sel::before{content:"";position:absolute;left:0;top:25%;bottom:25%;width:calc(3 * var(--px));border-radius:999px;background:var(--t-accent)}
-.s-side hr{border:0;border-top:calc(1 * var(--px)) solid var(--t-subtle);margin:calc(6 * var(--px)) 0;width:100%}
+.s-side hr{border:0;border-top:calc(1 * var(--px)) solid color-mix(in oklab,var(--t-bandon) 35%,transparent);margin:calc(6 * var(--px)) 0;width:100%}
 .s-main{padding:calc(4 * var(--px)) calc(10 * var(--px)) 0 calc(18 * var(--px));display:grid;align-content:start;gap:calc(10 * var(--px));min-height:0;overflow:hidden}
 .s-main h4{margin:0;font-size:calc(13.5 * var(--px));font-weight:600;display:flex;justify-content:space-between}
 .s-main h4 em{font-style:normal;font-weight:400;color:var(--t-muted);font-size:calc(12 * var(--px))}
@@ -165,7 +167,7 @@ button{font:inherit;cursor:pointer;color:inherit}
 .s-app{display:grid;justify-items:center;gap:calc(6 * var(--px));padding:calc(10 * var(--px)) calc(4 * var(--px));border-radius:calc(4 * var(--px));font-size:calc(12 * var(--px));text-align:center;color:var(--t-text)}
 .s-app:hover{background:var(--t-hover)}
 .s-app img{width:calc(34 * var(--px));height:calc(34 * var(--px))}
-.s-foot{display:flex;justify-content:space-between;align-items:center;padding:calc(12 * var(--px)) calc(24 * var(--px));border-top:calc(1 * var(--px)) solid var(--t-subtle);background:var(--t-overlay);font-size:calc(13 * var(--px))}
+.s-foot{display:flex;justify-content:space-between;align-items:center;padding:calc(12 * var(--px)) calc(24 * var(--px));border-top:calc(1 * var(--px)) solid var(--t-subtle);background:var(--t-sunken);font-size:calc(13 * var(--px))}
 .s-user{display:flex;align-items:center;gap:calc(10 * var(--px))}
 .av{width:calc(30 * var(--px));height:calc(30 * var(--px));border-radius:50%;background:var(--t-accent);color:var(--t-on);display:grid;place-items:center;font-weight:600}
 .s-pw{display:flex;gap:calc(6 * var(--px))}
@@ -184,7 +186,7 @@ button{font:inherit;cursor:pointer;color:inherit}
 .sl b{height:calc(4 * var(--px));border-radius:999px;background:var(--t-strong);position:relative;opacity:.9}
 .sl b::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--v);border-radius:inherit;background:var(--t-accent)}
 .sl b::after{content:"";position:absolute;left:var(--v);top:50%;width:calc(16 * var(--px));height:calc(16 * var(--px));border-radius:50%;transform:translate(-50%,-50%);background:var(--t-accent);border:calc(4 * var(--px)) solid var(--t-raised)}
-.q-foot{display:flex;justify-content:space-between;align-items:center;padding:calc(10 * var(--px)) calc(18 * var(--px));border-top:calc(1 * var(--px)) solid var(--t-subtle);background:var(--t-overlay);font-size:calc(12 * var(--px));color:var(--t-text2)}
+.q-foot{display:flex;justify-content:space-between;align-items:center;padding:calc(10 * var(--px)) calc(18 * var(--px));border-top:calc(1 * var(--px)) solid var(--t-subtle);background:var(--t-sunken);font-size:calc(12 * var(--px));color:var(--t-text2)}
 .q-foot span{display:flex;gap:calc(8 * var(--px));align-items:center}
 .q-foot svg{width:calc(16 * var(--px));height:calc(16 * var(--px))}
 .p-cal{right:calc(10 * var(--px));width:calc(370 * var(--px));background:transparent!important;border:0;box-shadow:none;gap:calc(10 * var(--px));overflow:visible;backdrop-filter:none!important}
@@ -196,7 +198,7 @@ button{font:inherit;cursor:pointer;color:inherit}
 .n b{font-weight:600}.n span{color:var(--t-text2)}
 .n-head{display:flex;justify-content:space-between;font-size:calc(12.5 * var(--px));color:var(--t-text2);padding:0 calc(4 * var(--px))}
 .cal{padding:calc(14 * var(--px)) calc(16 * var(--px)) calc(16 * var(--px));display:grid;gap:calc(10 * var(--px))}
-.cal h5{margin:0;font-size:calc(13.5 * var(--px));font-weight:600}
+.cal h5{margin:calc(-14 * var(--px)) calc(-16 * var(--px)) 0;padding:calc(10 * var(--px)) calc(16 * var(--px));font-size:calc(13.5 * var(--px));font-weight:600;background:var(--t-band);color:var(--t-bandon);border-radius:calc(8 * var(--px)) calc(8 * var(--px)) 0 0}
 .cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:calc(2 * var(--px));font-size:calc(12 * var(--px));text-align:center}
 .cal-g span{height:calc(34 * var(--px));display:grid;place-items:center;border-radius:50%}
 .cal-g .wd{color:var(--t-muted);height:calc(24 * var(--px))}
@@ -208,7 +210,7 @@ button{font:inherit;cursor:pointer;color:inherit}
 .p-tray img{width:calc(20 * var(--px));height:calc(20 * var(--px))}
 .p-ws{left:50%;transform:translateX(-50%);width:calc(1400 * var(--px));padding:calc(18 * var(--px));grid-template-columns:repeat(6,1fr);gap:calc(14 * var(--px))}
 .ws{border-radius:calc(6 * var(--px));border:calc(1 * var(--px)) solid var(--t-subtle);background:var(--t-overlay);padding:calc(12 * var(--px));display:grid;gap:calc(10 * var(--px));font-size:calc(12.5 * var(--px))}
-.ws.on{border:calc(2 * var(--px)) solid var(--t-accent)}
+.ws.on{border:calc(2 * var(--px)) solid var(--t-band);background:var(--t-bandsoft)}
 .ws b{font-weight:600;display:flex;justify-content:space-between}
 .ws b em{font-style:normal;color:var(--t-muted);font-weight:400}
 .ws div{display:flex;flex-wrap:wrap;gap:calc(6 * var(--px));min-height:calc(28 * var(--px))}
@@ -254,24 +256,16 @@ footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);paddin
   <h1>Windows 11, tiled: the taskbar, the tray, a KDE-style Start, and soft windows</h1>
   <p class="lead">The Windows 11 look you love, on our tiling desktop. Windows still tile, workspaces and snapping still work exactly as they do now; what changes is how it looks and where things live. Click the Start button, the tray and the clock on the screen below, try the themes, and flip between the plain-Sway and SwayFX versions. Then answer the five questions.</p>
   <div class="steps" aria-label="Where we are in the program">
-    <span class="done">1 · Foundation</span><span class="on">2 · Windows 11</span><span>3 · Mac OS 9</span><span>4 · macOS</span><span>5 · Linux rice</span><span>6 · KDE</span><span>7 · COSMIC</span>
+    <span class="done">1 · Foundation</span><span class="on">2 · Windows 11 ✓</span><span>3 · Mac OS 9</span><span>4 · macOS</span><span>5 · Linux rice</span><span>6 · KDE</span><span>7 · COSMIC</span>
   </div>
 </header>
 
 <section aria-labelledby="h-ask">
   <div class="sec-head">
-    <p class="eyebrow">What I need from you</p>
-    <h2 id="h-ask">Five calls, and anything that feels off</h2>
-    <p>My pick is marked on each. Tell me in your own words what doesn't feel like Windows 11 to you; that's the most useful part.</p>
+    <p class="eyebrow">Approved · D-71, 10 October</p>
+    <h2 id="h-ask">Sold: “A killer proposal”</h2>
+    <p>Your answers are built in: W-1 icons on the left, W-2 the KDE-style Start as drawn, W-3 these six Quick Settings tiles, W-4 SwayFX, W-5 a taskbar on every screen. This page now wears the 60-30-10 palettes, with more contrast inside the windows: Chrome's tab strip in the theme's colour, its toolbar, address box and cards each on a different level, Thunar's side panel and selected folder set apart. Windows 11's own switch, a neutral or a coloured taskbar, is here too.</p>
   </div>
-  <div class="asks">
-    <article class="ask"><span class="id">W-1 · Taskbar icons</span><h3>Centered or on the left?</h3><p>Windows 11 centres them; it also lets you move them left. Try "Taskbar icons" above the screen.</p><p><span class="rec">my pick: centered</span></p></article>
-    <article class="ask"><span class="id">W-2 · Start</span><h3>The KDE-style Start: right as drawn?</h3><p>Search on top, your groups on the left, Favorites first, you and the power buttons at the bottom. An app opens in its own workspace, as today. Add a "Recent files" row, or keep it clean?</p><p><span class="rec">my pick: as drawn, no recent files</span></p></article>
-    <article class="ask"><span class="id">W-3 · Quick Settings</span><h3>Are these six the right tiles?</h3><p>Wi-Fi, Bluetooth, Night light (nightForge), Do Not Disturb, Screens (displayForge), VPN; volume and night warmth sliders; updates from nog and a door to hypeForge Settings. Swap any?</p><p><span class="rec">my pick: these six</span></p></article>
-    <article class="ask"><span class="id">W-4 · Windows</span><h3>Soft windows with SwayFX, square without?</h3><p>With SwayFX: 8 px rounded corners, a soft shadow, a see-through taskbar. Plain Sway: square windows, no shadow, solid taskbar; Start and the panels stay rounded either way.</p><p><span class="rec">my pick: SwayFX as the look, plain Sway as the safe login</span></p></article>
-    <article class="ask"><span class="id">W-5 · Three screens</span><h3>A taskbar on every screen?</h3><p>Like Windows: each screen shows its own apps and the clock; the tray and Quick Settings live on the main screen only.</p><p><span class="rec">my pick: every screen</span></p></article>
-  </div>
-  <div class="reply"><span>Answer in our chat, like this:</span><code id="reply-text">W-1 centered · W-2 as drawn · W-3 ok · W-4 FX · W-5 every screen · and: …</code><button class="copy" id="copy" type="button">Copy</button></div>
 </section>
 
 <section aria-labelledby="h-screen">
@@ -282,13 +276,14 @@ footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);paddin
   </div>
   <div class="controls">
     <div class="seg"><span>Look</span><div role="group" aria-label="Look"><button type="button" data-fx="fx" aria-pressed="true">SwayFX login</button><button type="button" data-fx="plain" aria-pressed="false">Plain Sway</button></div></div>
-    <div class="seg"><span>Taskbar icons (W-1)</span><div role="group" aria-label="Taskbar icons"><button type="button" data-al="center" aria-pressed="true">Centered</button><button type="button" data-al="left" aria-pressed="false">Left</button></div></div>
+    <div class="seg"><span>Taskbar icons (W-1: left)</span><div role="group" aria-label="Taskbar icons"><button type="button" data-al="left" aria-pressed="true">Left</button><button type="button" data-al="center" aria-pressed="false">Centered</button></div></div>
+    <div class="seg"><span>Taskbar colour</span><div role="group" aria-label="Taskbar colour"><button type="button" data-tc="neutral" aria-pressed="true">Neutral glass</button><button type="button" data-tc="band" aria-pressed="false">Theme colour</button></div></div>
     <div class="seg"><span>Open</span><div role="group" aria-label="Open a panel" id="panels">
       <button type="button" data-p="" aria-pressed="false">Nothing</button><button type="button" data-p="start" aria-pressed="true">Start</button><button type="button" data-p="qs" aria-pressed="false">Quick Settings</button><button type="button" data-p="cal" aria-pressed="false">Calendar</button><button type="button" data-p="tray" aria-pressed="false">Tray</button><button type="button" data-p="ws" aria-pressed="false">Workspaces</button></div></div>
   </div>
   <div class="explore">
     <div class="stage">
-      <div class="desk" id="desk"><div class="scr fx" id="scr">
+      <div class="desk" id="desk"><div class="scr fx left" id="scr">
         <div class="bloom"></div>
         <div class="tiles">
           <div class="win focus">
@@ -342,7 +337,7 @@ footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);paddin
           <div class="t-mid" id="t-mid">
             <button class="tb" data-open="start" title="Start"><span class="emb" id="emb"></span></button>
             <button class="tb search" data-open="start" title="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Search</button>
-            <button class="tb" data-open="ws" title="Workspaces"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="8" height="7" rx="1.5"/><rect x="13" y="4" width="8" height="7" rx="1.5"/><rect x="3" y="13" width="8" height="7" rx="1.5"/><rect x="13" y="13" width="8" height="7" rx="1.5"/></svg>1 · Daily</button>
+            <button class="tb wsb" data-open="ws" title="Workspaces"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="8" height="7" rx="1.5"/><rect x="13" y="4" width="8" height="7" rx="1.5"/><rect x="3" y="13" width="8" height="7" rx="1.5"/><rect x="13" y="13" width="8" height="7" rx="1.5"/></svg>1 · Daily</button>
             <span id="t-apps" style="display:contents"></span>
           </div>
           <div class="t-r">
@@ -358,7 +353,7 @@ footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);paddin
       </div></div>
       <div class="cap" id="cap"></div>
     </div>
-    <aside class="picker" aria-label="Pick a theme"><div id="fams"></div><p style="font-size:12px;color:var(--ink-2)">Colours are the first palettes; the 60-30-10 palettes (D-70) replace them next.</p></aside>
+    <aside class="picker" aria-label="Pick a theme"><div id="fams"></div><p style="font-size:12px;color:var(--ink-2)">60-30-10 palettes (D-70): neutral windows, the theme's colour on the tab strip, Start's side panel, the selected folder and the Workspaces button, the pop on buttons and toggles.</p></aside>
   </div>
 </section>
 
@@ -417,13 +412,13 @@ footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);paddin
 
 <script>
 const D = /*DATA*/null;
-const FAMS = [["neutral","Grays"],["blue","Blues"],["purple","Purples, the Kognog colours"],["green","Greens"],["pink","Pinks"],["red","Reds"],["multi","Multicolor"]];
-let cur = "purple", open = "start";
+const FAMS = [["kognog","KognogOS, the default"],["neutral","Grays"],["orange","Ember"],["blue","Blues"],["purple","Purples"],["green","Greens"],["pink","Pinks"],["red","Reds"],["multi","Multicolor"]];
+let cur = "blue", open = "start", tbar = "neutral";
 const $ = id => document.getElementById(id);
 const icon = id => (D.apps.find(a => a.id === id) || {}).icon;
 const theme = s => D.lifted[s] || D.now[s];
 const MAP = {sunken:"surface.sunken",base:"surface.base",raised:"surface.raised",overlay:"surface.overlay",hover:"surface.hover",
-  bar:"bar.bg",barhover:"bar.hover",barfg:"bar.fg",barfgdim:"bar.fg_dim",
+  band:"band.base",bandstrong:"band.strong",bandon:"band.on",bandsoft:"band.soft",bandtext:"band.text",
   text:"text.primary",text2:"text.secondary",muted:"text.muted",accent:"accent.base",on:"accent.on",acctext:"accent.text",
   subtle:"border.subtle",strong:"border.strong",focused:"window.focused",unfocused:"window.unfocused",
   selbg:"selection.bg",selfg:"selection.fg",tbg:"term.bg",tfg:"term.fg",info:"status.info"};
@@ -431,6 +426,9 @@ const MAP = {sunken:"surface.sunken",base:"surface.base",raised:"surface.raised"
 function paint(){
   const t = theme(cur), desk = $("desk");
   for (const [k,v] of Object.entries(MAP)) desk.style.setProperty("--t-"+k, t[v]);
+  // Windows 11's own switch: "show accent colour on Start and taskbar"
+  const B = tbar === "band" ? {bar:"bar.bg",barhover:"bar.hover",barfg:"bar.fg",barfgdim:"bar.fg_dim"} : {bar:"surface.raised",barhover:"surface.hover",barfg:"text.primary",barfgdim:"text.secondary"};
+  for (const [k,v] of Object.entries(B)) desk.style.setProperty("--t-"+k, t[v]);
   desk.style.setProperty("--t-shadow-a", t.tone === "white" || t.tone === "light" ? .18 : .5);
   const c = k => `<span style="color:${t["term."+k]}">`;
   $("term").innerHTML = `${c("green")}javier@tphome</span> ${c("blue")}~/Programs/forge-suite</span> $ nog upgrade\n${c("cyan")}::</span> 12 packages · Tier 1 now, Tier 3 after 7 days\n${c("yellow")}hold</span>  firefox 141.0 (Tier 3, 4 days left)\n${c("green")}ok</span>    mesa 25.2.4 · wlroots 0.19.2 · ...\n${c("magenta")}done</span>  ${c("bright_black")}11 upgraded in 41 s</span>\n\n${c("green")}javier@tphome</span> ${c("blue")}~/Programs/forge-suite</span> $ nightforge status\n☾ warm (4500 K) until 07:02, by the sun`;
@@ -486,10 +484,12 @@ function build(){
   document.querySelectorAll("[data-fx]").forEach(b => b.addEventListener("click", () => {
     $("scr").classList.toggle("fx", b.dataset.fx === "fx"); $("scr").classList.toggle("plain", b.dataset.fx === "plain");
     document.querySelectorAll("[data-fx]").forEach(x => x.setAttribute("aria-pressed", x === b)); paint(); trio(); }));
+  document.querySelectorAll("[data-tc]").forEach(b => b.addEventListener("click", () => { tbar = b.dataset.tc;
+    document.querySelectorAll("[data-tc]").forEach(x => x.setAttribute("aria-pressed", x === b)); paint(); }));
   document.querySelectorAll("[data-al]").forEach(b => b.addEventListener("click", () => {
     $("scr").classList.toggle("left", b.dataset.al === "left");
     document.querySelectorAll("[data-al]").forEach(x => x.setAttribute("aria-pressed", x === b)); }));
-  $("copy").addEventListener("click", () => {
+  $("copy")?.addEventListener("click", () => {
     navigator.clipboard?.writeText($("reply-text").textContent).then(() => { $("copy").textContent = "Copied"; })
       .catch(() => { const r = document.createRange(); r.selectNodeContents($("reply-text")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
   });

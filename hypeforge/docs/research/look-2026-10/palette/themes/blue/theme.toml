@@ -10,99 +10,116 @@ family = "blue"
 tone = "mid"
 polarity = "dark"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "amber"
+schema = 2
 
 [surface]
-sunken = "#263655"
-bar = "#1b2d4f"
-base = "#354666"
-raised = "#3d4e6e"
-overlay = "#455777"
-hover = "#526586"
+sunken = "#1e2124"
+bar = "#222528"
+base = "#2b2e32"
+raised = "#33363a"
+overlay = "#3b3e42"
+hover = "#4c4f53"
 
 [text]
-primary = "#e1ecff"
-secondary = "#c5d2e9"
-muted = "#a7b2c3"
+primary = "#d4d8dd"
+secondary = "#bec1c6"
+muted = "#a3a3a3"
+
+[band]
+base = "#0555b7"
+strong = "#003e8b"
+on = "#f7faff"
+soft = "#324259"
+text = "#95c0ff"
+
+[pop]
+base = "#ffae33"
+on = "#1c1105"
+text = "#ffb346"
 
 [accent]
-base = "#8bdeff"
-on = "#051920"
-hover = "#b8eaff"
-pressed = "#7acae9"
-text = "#8bdeff"
-ring = "#8bdeff"
+base = "#ffae33"
+on = "#1c1105"
+text = "#ffb346"
+ring = "#ffae33"
+hover = "#ffc57b"
+pressed = "#e0a454"
 
 [border]
-subtle = "#5e7092"
-strong = "#e8f1ff"
+subtle = "#53555a"
+strong = "#ced1d6"
 
 [window]
-focused = "#8bdeff"
-unfocused = "#5e7092"
-urgent = "#ffb9b6"
+focused = "#95c0ff"
+unfocused = "#53555a"
+urgent = "#ffb0ca"
 
 [bar]
-bg = "#1b2d4f"
-shade = "#3d4e6e"
-hover = "#526586"
-fg = "#e1ecff"
-fg_dim = "#c5d2e9"
-active_bg = "#8bdeff"
-active_fg = "#051920"
+bg = "#003e8b"
+shade = "#0555b7"
+hover = "#00489f"
+fg = "#f7faff"
+fg_dim = "#c3d4ee"
+active_bg = "#f7faff"
+active_fg = "#003e8b"
+pop = "#ffae33"
 
 [selection]
-bg = "#407083"
-fg = "#e1ecff"
+bg = "#0555b7"
+fg = "#f7faff"
 
 [status]
 success = "#88e48c"
-on_success = "#0d1a0d"
-warning = "#f9c345"
-on_warning = "#1c1505"
-danger = "#ffb9b6"
-on_danger = "#221010"
-info = "#00e8e3"
-on_info = "#031a19"
+on_success = "#0b170b"
+warning = "#d3d250"
+on_warning = "#151505"
+danger = "#ffb4b1"
+on_danger = "#200e0e"
+info = "#51dfff"
+on_info = "#02171c"
 
 [effects]
 shadow = "#000000"
 shadow_opacity = 0.45
-blur_tint = "#455777"
+blur_tint = "#3b3e42"
 blur_opacity = 0.72
 
 [cat]
-red = "#ffb0a8"
-orange = "#ffb481"
-yellow = "#e4c64f"
-green = "#8adf8d"
-teal = "#2ae4d3"
-blue = "#a2caff"
-purple = "#d7b6ff"
-pink = "#ffa9d2"
+red = "#ffaba3"
+orange = "#ffaf78"
+yellow = "#e1c34b"
+green = "#87dc8a"
+teal = "#22e1d0"
+blue = "#9cc7ff"
+purple = "#d5b1ff"
+pink = "#ffa3cf"
 
 [term]
-bg = "#354666"
-fg = "#e1ecff"
-cursor = "#8bdeff"
-cursor_text = "#051920"
-selection_bg = "#407083"
-selection_fg = "#e1ecff"
-black = "#607396"
-bright_black = "#899ec2"
-white = "#b8c5db"
-bright_white = "#e6efff"
-red = "#ffb2ab"
+bg = "#2b2e32"
+fg = "#d4d8dd"
+cursor = "#ffae33"
+cursor_text = "#1c1105"
+selection_bg = "#0555b7"
+selection_fg = "#f7faff"
+black = "#55585d"
+bright_black = "#7d8085"
+white = "#c1c4c9"
+bright_white = "#ebeff4"
+red = "#ffa098"
 bright_red = "#ffcdc8"
-green = "#84d987"
+green = "#81d584"
 bright_green = "#92f697"
-yellow = "#e9c14c"
+yellow = "#e1b942"
 bright_yellow = "#ffd661"
-blue = "#9fc9ff"
+blue = "#91c1ff"
 bright_blue = "#c3ddff"
-magenta = "#ffaaf7"
+magenta = "#f29dea"
 bright_magenta = "#ffc5f9"
-cyan = "#00dcdc"
+cyan = "#00d8d9"
 bright_cyan = "#00f9fa"
 
 [brand]

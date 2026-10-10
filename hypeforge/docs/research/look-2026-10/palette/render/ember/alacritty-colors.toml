@@ -1,0 +1,33 @@
+# hypeForge theme Ember (ember), generated — do not edit
+# Alacritty: [general] import = ["~/.config/hypeforge/theme/alacritty-colors.toml"]
+[colors.primary]
+background = "#161110"
+foreground = "#ddd6d4"
+
+[colors.cursor]
+text = "#1a1304"
+cursor = "#f7e6c3"
+
+[colors.selection]
+text = "#fff8f7"
+background = "#d43a03"
+
+[colors.normal]
+black = "#3d3836"
+red = "#ff958d"
+green = "#74c878"
+yellow = "#d5ae34"
+blue = "#7cb6ff"
+magenta = "#e995e2"
+cyan = "#00caca"
+white = "#c9c2c0"
+
+[colors.bright]
+black = "#635d5c"
+red = "#ffbab3"
+green = "#85e98a"
+yellow = "#f6c835"
+blue = "#add1ff"
+magenta = "#ffadf7"
+cyan = "#00ebeb"
+white = "#f4edeb"

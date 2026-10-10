@@ -10,7 +10,11 @@ family = "neutral"
 tone = "black"
 polarity = "dark"
 multi = false
-schema = 1
+hc = true
+default = false
+design = "60-30-10"
+pop_harmony = "gray"
+schema = 2
 
 [surface]
 sunken = "#000000"
@@ -25,45 +29,58 @@ primary = "#ebebeb"
 secondary = "#cecece"
 muted = "#b2b2b2"
 
+[band]
+base = "#262626"
+strong = "#1b1b1b"
+on = "#fafafa"
+soft = "#191919"
+text = "#d7d7d7"
+
+[pop]
+base = "#e4e4e4"
+on = "#141414"
+text = "#e4e4e4"
+
 [accent]
 base = "#e4e4e4"
-on = "#161616"
-hover = "#f5f5f5"
-pressed = "#cacaca"
+on = "#141414"
 text = "#e4e4e4"
 ring = "#e4e4e4"
+hover = "#f5f5f5"
+pressed = "#f8f8f8"
 
 [border]
 subtle = "#777777"
 strong = "#cccccc"
 
 [window]
-focused = "#e4e4e4"
+focused = "#d7d7d7"
 unfocused = "#777777"
-urgent = "#ffa09c"
+urgent = "#ffa65e"
 
 [bar]
-bg = "#000000"
-shade = "#101010"
-hover = "#2e2e2e"
-fg = "#ebebeb"
-fg_dim = "#cecece"
-active_bg = "#e4e4e4"
-active_fg = "#161616"
+bg = "#1b1b1b"
+shade = "#262626"
+hover = "#1b1b1b"
+fg = "#fafafa"
+fg_dim = "#b9b9b9"
+active_bg = "#fafafa"
+active_fg = "#1b1b1b"
+pop = "#e4e4e4"
 
 [selection]
-bg = "#202020"
-fg = "#ebebeb"
+bg = "#262626"
+fg = "#fafafa"
 
 [status]
 success = "#7bd77f"
-on_success = "#0d1a0d"
+on_success = "#0b170b"
 warning = "#eab532"
-on_warning = "#1c1505"
+on_warning = "#1a1304"
 danger = "#ffa09c"
-on_danger = "#221010"
+on_danger = "#200e0e"
 info = "#76c7ff"
-on_info = "#081822"
+on_info = "#061520"
 
 [effects]
 shadow = "#000000"
@@ -85,9 +102,9 @@ pink = "#f990c4"
 bg = "#040404"
 fg = "#ebebeb"
 cursor = "#e4e4e4"
-cursor_text = "#161616"
-selection_bg = "#202020"
-selection_fg = "#ebebeb"
+cursor_text = "#141414"
+selection_bg = "#262626"
+selection_fg = "#fafafa"
 black = "#252525"
 bright_black = "#494949"
 white = "#c4c4c4"

@@ -9,8 +9,8 @@ text = "#fafafa"
 cursor = "#222222"
 
 [colors.selection]
-text = "#000000"
-background = "#c3c3c3"
+text = "#141414"
+background = "#cecece"
 
 [colors.normal]
 black = "#373737"

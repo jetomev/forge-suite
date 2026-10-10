@@ -10,88 +10,105 @@ family = "pink"
 tone = "light"
 polarity = "light"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "teal"
+schema = 2
 
 [surface]
-sunken = "#e4d0d8"
-bar = "#ebd3dd"
-base = "#f4e0e8"
-raised = "#fde8f1"
-overlay = "#fff3f8"
-hover = "#dbc7d0"
+sunken = "#ebe4e7"
+bar = "#f0e9ec"
+base = "#f5eef1"
+raised = "#fcf6f8"
+overlay = "#ffffff"
+hover = "#e1dadd"
 
 [text]
-primary = "#281b21"
-secondary = "#57484f"
-muted = "#7d7076"
+primary = "#221e20"
+secondary = "#514b4d"
+muted = "#747474"
+
+[band]
+base = "#b73c7c"
+strong = "#4b002c"
+on = "#fff8fb"
+soft = "#ffdbe9"
+text = "#9f2367"
+
+[pop]
+base = "#00817c"
+on = "#f3fcfb"
+text = "#007974"
 
 [accent]
-base = "#bf2f77"
-on = "#fff8fa"
-hover = "#ae1a69"
-pressed = "#8d2959"
-text = "#ba2973"
-ring = "#bf2f77"
+base = "#00817c"
+on = "#f3fcfb"
+text = "#007974"
+ring = "#00817c"
+hover = "#00716d"
+pressed = "#00615d"
 
 [border]
-subtle = "#cab6be"
-strong = "#7f6d75"
+subtle = "#cac4c6"
+strong = "#807a7c"
 
 [window]
-focused = "#bf2f77"
-unfocused = "#d0bcc5"
-urgent = "#aa4600"
+focused = "#9f2367"
+unfocused = "#cac4c6"
+urgent = "#9c5300"
 
 [bar]
-bg = "#ebd3dd"
-shade = "#fde8f1"
-hover = "#dbc7d0"
-fg = "#281b21"
-fg_dim = "#57484f"
-active_bg = "#bf2f77"
-active_fg = "#fff8fa"
+bg = "#4b002c"
+shade = "#b73c7c"
+hover = "#a62b6d"
+fg = "#fff8fb"
+fg_dim = "#ffe6f0"
+active_bg = "#fff8fb"
+active_fg = "#4b002c"
+pop = "#49d8d0"
 
 [selection]
-bg = "#e3a4bb"
-fg = "#281b21"
+bg = "#b73c7c"
+fg = "#fff8fb"
 
 [status]
-success = "#0d7621"
+success = "#1b7e2a"
 on_success = "#f6fcf6"
 warning = "#985600"
 on_warning = "#fff9f4"
 danger = "#af3c40"
 on_danger = "#fff8f8"
-info = "#006c9f"
+info = "#0070a6"
 on_info = "#f6fbff"
 
 [effects]
-shadow = "#2e1b24"
+shadow = "#291e23"
 shadow_opacity = 0.18
-blur_tint = "#fff3f8"
+blur_tint = "#ffffff"
 blur_opacity = 0.8
 
 [cat]
-red = "#b84d49"
-orange = "#b05a00"
-yellow = "#8a7300"
-green = "#34893c"
-teal = "#00877c"
-blue = "#3475c4"
-purple = "#885cb5"
-pink = "#af4d80"
+red = "#c85b56"
+orange = "#c0671a"
+yellow = "#967d00"
+green = "#3a8f42"
+teal = "#008d82"
+blue = "#3e80d0"
+purple = "#976bc6"
+pink = "#bf5c8f"
 
 [term]
-bg = "#f4e0e8"
-fg = "#281b21"
-cursor = "#bf2f77"
-cursor_text = "#fff8fa"
-selection_bg = "#e3a4bb"
-selection_fg = "#281b21"
-black = "#392a31"
-bright_black = "#68575e"
-white = "#cbbac1"
-bright_white = "#e2d0d8"
+bg = "#f5eef1"
+fg = "#221e20"
+cursor = "#00817c"
+cursor_text = "#f3fcfb"
+selection_bg = "#b73c7c"
+selection_fg = "#fff8fb"
+black = "#3a3537"
+bright_black = "#696365"
+white = "#cdc7c9"
+bright_white = "#e4dde0"
 red = "#9d3533"
 bright_red = "#8a0314"
 green = "#157123"

@@ -86,7 +86,7 @@ button{font:inherit;cursor:pointer;color:inherit}
   border-bottom:calc(1 * var(--px)) solid var(--t-strong);display:flex;justify-content:space-between;align-items:stretch;z-index:3;font-weight:600}
 .mbar>div{display:flex;align-items:stretch}
 .mi{border:0;background:transparent;color:inherit;font:inherit;padding:0 calc(10 * var(--px));display:flex;align-items:center;gap:calc(6 * var(--px));cursor:pointer}
-.mi.open{background:var(--t-accent);color:var(--t-on)}
+.mi.open{background:var(--t-band);color:var(--t-bandon)}
 .mi u{text-decoration-thickness:calc(1 * var(--px));text-underline-offset:calc(2 * var(--px))}
 .mi .emb{width:calc(16 * var(--px));height:calc(16 * var(--px));background-size:contain;background-repeat:no-repeat}
 .mi.app{font-weight:700}
@@ -103,21 +103,21 @@ button{font:inherit;cursor:pointer;color:inherit}
 .menu .it .k{margin-left:auto;padding-left:calc(24 * var(--px));color:var(--t-muted);font-weight:400}
 .menu .it .ar{margin-left:auto;padding-left:calc(24 * var(--px))}
 .menu .it .ck{position:absolute;left:calc(6 * var(--px))}
-.menu .it.hl{background:var(--t-accent);color:var(--t-on)}
-.menu .it.hl .k{color:var(--t-on)}
+.menu .it.hl{background:var(--t-band);color:var(--t-bandon)}
+.menu .it.hl .k{color:var(--t-bandon)}
 .menu .it.dis{color:var(--t-muted)}
 .menu hr{border:0;border-top:calc(1 * var(--px)) dotted var(--t-strong);margin:calc(3 * var(--px)) 0;opacity:.7}
 /* windows with real title bars */
 .tiles{position:absolute;left:calc(6 * var(--px));right:calc(6 * var(--px));top:calc(28 * var(--px));bottom:calc(6 * var(--px));
   display:grid;grid-template-columns:1.35fr 1fr;grid-template-rows:1fr 1fr;gap:calc(6 * var(--px))}
 .win{background:var(--t-base);border:calc(1 * var(--px)) solid var(--t-subtle);min-height:0;min-width:0;overflow:hidden;display:flex;flex-direction:column}
-.win.focus{border-color:var(--t-strong);grid-row:1/3}
+.win.focus{border-color:var(--t-band);grid-row:1/3;box-shadow:0 0 0 calc(1 * var(--px)) var(--t-band)}
 .fx .win{box-shadow:calc(2 * var(--px)) calc(2 * var(--px)) calc(3 * var(--px)) rgba(0,0,0,.35)}
 .tt{height:calc(20 * var(--px));flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:calc(12 * var(--px));
   background:var(--t-base);color:var(--t-muted);border-bottom:calc(1 * var(--px)) solid var(--t-subtle)}
-.win.focus .tt{background:var(--t-raised);color:var(--t-text);border-bottom-color:var(--t-strong)}
-.c-bar{display:flex;align-items:center;gap:calc(10 * var(--px));padding:calc(5 * var(--px)) calc(10 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-subtle);background:var(--t-raised)}
-.c-url{flex:1;height:calc(24 * var(--px));background:var(--t-overlay);border:calc(1 * var(--px)) solid var(--t-strong);display:flex;align-items:center;padding:0 calc(10 * var(--px));color:var(--t-text2);font-size:calc(12 * var(--px))}
+.win.focus .tt{background:var(--t-overlay);color:var(--t-text);border-bottom-color:var(--t-band)}
+.c-bar{display:flex;align-items:center;gap:calc(10 * var(--px));padding:calc(5 * var(--px)) calc(10 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-strong);background:var(--t-raised)}
+.c-url{flex:1;height:calc(24 * var(--px));background:var(--t-sunken);border:calc(1 * var(--px)) solid var(--t-strong);display:flex;align-items:center;padding:0 calc(10 * var(--px));color:var(--t-text2);font-size:calc(12 * var(--px))}
 .c-url b{color:var(--t-text);font-weight:500}
 .dots{display:flex;gap:calc(12 * var(--px));color:var(--t-muted)}
 .c-page{flex:1;padding:calc(30 * var(--px)) calc(40 * var(--px));display:grid;align-content:start;gap:calc(14 * var(--px));overflow:hidden}
@@ -130,15 +130,15 @@ button{font:inherit;cursor:pointer;color:inherit}
 .term{flex:1;background:var(--t-tbg);color:var(--t-tfg);font:calc(12 * var(--px))/1.55 var(--f-mono);padding:calc(12 * var(--px)) calc(14 * var(--px));white-space:pre;overflow:hidden}
 .th-main{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(86 * var(--px)),1fr));gap:calc(10 * var(--px));padding:calc(14 * var(--px));align-content:start;flex:1}
 .fold{display:grid;justify-items:center;gap:calc(5 * var(--px));font-size:calc(11.5 * var(--px));color:var(--t-text)}
-.fold i{width:calc(42 * var(--px));height:calc(32 * var(--px));background:color-mix(in oklab,var(--t-accent) 70%,var(--t-base));border:calc(1 * var(--px)) solid var(--t-strong);position:relative}
+.fold i{width:calc(42 * var(--px));height:calc(32 * var(--px));background:var(--t-bandtext);border:calc(1 * var(--px)) solid var(--t-strong);position:relative}
 .fold i::before{content:"";position:absolute;left:calc(-1 * var(--px));top:calc(-6 * var(--px));width:45%;height:calc(6 * var(--px));background:inherit;border:calc(1 * var(--px)) solid var(--t-strong);border-bottom:0}
-.th-info{display:flex;justify-content:space-between;padding:calc(4 * var(--px)) calc(12 * var(--px));font-size:calc(11.5 * var(--px));color:var(--t-text2);border-bottom:calc(1 * var(--px)) solid var(--t-subtle)}
+.th-info{display:flex;justify-content:space-between;padding:calc(4 * var(--px)) calc(12 * var(--px));font-size:calc(11.5 * var(--px));color:var(--t-text2);border-bottom:calc(1 * var(--px)) solid var(--t-strong);background:var(--t-raised)}
 /* the Control Strip */
 .strip{position:absolute;left:0;bottom:calc(14 * var(--px));height:calc(28 * var(--px));display:flex;align-items:stretch;z-index:3;
-  background:var(--t-raised);border:calc(1 * var(--px)) solid var(--t-strong);border-left:0;box-shadow:calc(2 * var(--px)) calc(2 * var(--px)) 0 rgba(0,0,0,var(--t-shadow-a))}
+  background:var(--t-band);border:calc(1 * var(--px)) solid var(--t-strong);border-left:0;box-shadow:calc(2 * var(--px)) calc(2 * var(--px)) 0 rgba(0,0,0,var(--t-shadow-a))}
 .strip .tiles2{display:flex;align-items:stretch}
 .strip.closed .tiles2{display:none}
-.strip .tile{width:calc(32 * var(--px));display:grid;place-items:center;border-right:calc(1 * var(--px)) solid var(--t-subtle);position:relative;color:var(--t-text)}
+.strip .tile{width:calc(32 * var(--px));display:grid;place-items:center;border-right:calc(1 * var(--px)) solid var(--t-bandstrong);position:relative;color:var(--t-bandon)}
 .strip .tile svg,.strip .tile img{width:calc(16 * var(--px));height:calc(16 * var(--px))}
 .strip .tile .dot{position:absolute;top:calc(4 * var(--px));right:calc(5 * var(--px));width:calc(6 * var(--px));height:calc(6 * var(--px));border-radius:50%;background:var(--t-accent)}
 .strip .moon{color:#e1ad01}
@@ -178,24 +178,16 @@ footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);paddin
   <h1>Mac OS 9, tiled: the menu bar you love, Platinum windows, the Control Strip</h1>
   <p class="lead">Mac OS 9's top menu bar, done our way: the emblem is the Apple menu, the app you're in sits in bold next to it, then Workspaces, Favorites, Window and Special. The clock and the Application menu (switch apps, hide them) are at the right. Windows still tile, with real Platinum title bars, and the Control Strip in the bottom-left corner holds everything that used to crowd the bar. Click every menu on the screen below.</p>
   <div class="steps" aria-label="Where we are in the program">
-    <span class="done">1 · Foundation</span><span class="done">2 · Windows 11 ✓</span><span class="on">3 · Mac OS 9</span><span>4 · macOS</span><span>5 · Linux rice</span><span>6 · KDE</span><span>7 · COSMIC</span>
+    <span class="done">1 · Foundation</span><span class="done">2 · Windows 11 ✓</span><span class="on">3 · Mac OS 9 ✓</span><span>4 · macOS</span><span>5 · Linux rice</span><span>6 · KDE</span><span>7 · COSMIC</span>
   </div>
 </header>
 
 <section aria-labelledby="h-ask">
   <div class="sec-head">
-    <p class="eyebrow">What I need from you</p>
-    <h2 id="h-ask">Five calls, and anything that feels off</h2>
-    <p>My pick is marked on each. The colours are the first palettes; the 60-30-10 ones (D-70) drop in next, same as on Windows 11.</p>
+    <p class="eyebrow">Approved · D-72, 10 October</p>
+    <h2 id="h-ask">Approved as drawn</h2>
+    <p>Your answers are built in: M-1 the menu bar as drawn, M-2 title bars on, M-3 the Control Strip, M-4 Noto Sans bold, M-5 the crisp shadow with SwayFX. This page now wears the 60-30-10 palettes: the Platinum menu bar stays neutral, the theme's colour is the menu highlight, the focused window's frame and the Control Strip, and the pop is on buttons.</p>
   </div>
-  <div class="asks">
-    <article class="ask"><span class="id">M-1 · The menu bar</span><h3>These menus, in this order?</h3><p>Emblem · <b>App name</b> · Workspaces · Favorites · Window · Special · Help … clock · Application menu. Mac OS 9 put each app's own File and Edit menus here; Sway can't, so our menus take their place.</p><p><span class="rec">my pick: as drawn</span></p></article>
-    <article class="ask"><span class="id">M-2 · Title bars</span><h3>Real title bars on every window?</h3><p>The Mac OS 9 look: a bold, centred title, the focused one lighter. Each window loses 20 px of height. Off means borders only, like today.</p><p><span class="rec">my pick: on</span></p></article>
-    <article class="ask"><span class="id">M-3 · The Control Strip</span><h3>Status icons in the Control Strip?</h3><p>The tray, clipboard, drives, Wi-Fi, sound, night light, screens and the bell move into the bottom-left strip, which folds away with its tab. The menu bar stays clean, the way Mac OS 9 kept it.</p><p><span class="rec">my pick: the Control Strip</span></p></article>
-    <article class="ask"><span class="id">M-4 · The font</span><h3>Noto Sans bold, or a Charcoal look-alike?</h3><p>Mac OS 9's Charcoal font is Apple's; nog finds no free look-alike packaged today. Bold Noto Sans comes close; a look-alike would mean packaging a free font ourselves.</p><p><span class="rec">my pick: Noto Sans bold</span></p></article>
-    <article class="ask"><span class="id">M-5 · The shadow</span><h3>Mac OS 9's crisp shadow?</h3><p>On the SwayFX login, windows and menus get the small hard shadow Mac OS 9 had, down and to the right. Plain Sway: menus keep theirs, windows sit flat. Flip "Look" to compare.</p><p><span class="rec">my pick: crisp shadow with SwayFX</span></p></article>
-  </div>
-  <div class="reply"><span>Answer in our chat, like this:</span><code id="reply-text">M-1 as drawn · M-2 on · M-3 strip · M-4 Noto · M-5 shadow · and: …</code><button class="copy" id="copy" type="button">Copy</button></div>
 </section>
 
 <section aria-labelledby="h-screen">
@@ -255,7 +247,7 @@ footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);paddin
       </div></div>
       <div class="cap" id="cap"></div>
     </div>
-    <aside class="picker" aria-label="Pick a theme"><div id="fams"></div><p style="font-size:12px;color:var(--ink-2)">Light Gray is the closest to Mac OS 9's Platinum. Colours are the first palettes; the 60-30-10 palettes (D-70) replace them next.</p></aside>
+    <aside class="picker" aria-label="Pick a theme"><div id="fams"></div><p style="font-size:12px;color:var(--ink-2)">Light Gray is the closest to Mac OS 9's Platinum. 60-30-10 palettes (D-70): the neutral Platinum bar, the theme's colour on the menu highlight, the focused frame and the Control Strip, the pop on buttons.</p></aside>
   </div>
 </section>
 
@@ -314,14 +306,15 @@ footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);paddin
 
 <script>
 const D = /*DATA*/null;
-const FAMS = [["neutral","Grays"],["blue","Blues"],["purple","Purples"],["green","Greens"],["pink","Pinks"],["red","Reds"],["multi","Multicolor"],["orange","Orange"],["kognog","KognogOS"]];
+const FAMS = [["kognog","KognogOS, the default"],["neutral","Grays"],["orange","Ember"],["blue","Blues"],["purple","Purples"],["green","Greens"],["pink","Pinks"],["red","Reds"],["multi","Multicolor"]];
 let cur = D.order.includes("light-gray") ? "light-gray" : D.order[0], open = "emblem";
 const $ = id => document.getElementById(id);
 const icon = id => (D.apps.find(a => a.id === id) || {}).icon;
 const theme = s => D.now[s];
 const MAP = {sunken:"surface.sunken",base:"surface.base",raised:"surface.raised",overlay:"surface.overlay",hover:"surface.hover",
   text:"text.primary",text2:"text.secondary",muted:"text.muted",accent:"accent.base",on:"accent.on",acctext:"accent.text",
-  subtle:"border.subtle",strong:"border.strong",tbg:"term.bg",tfg:"term.fg"};
+  subtle:"border.subtle",strong:"border.strong",tbg:"term.bg",tfg:"term.fg",
+  band:"band.base",bandstrong:"band.strong",bandon:"band.on",bandsoft:"band.soft",bandtext:"band.text",focused:"window.focused"};
 const sv = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${p}</svg>`;
 
 // a menu: [label, key?, flags] — flags: "hl" highlighted, "ar" submenu, "ck" checked, "dis" disabled; "-" = separator
@@ -358,7 +351,7 @@ function build(){
     document.querySelectorAll("[data-cs]").forEach(x => x.setAttribute("aria-pressed", x.dataset.cs === st)); };
   document.querySelectorAll("[data-cs]").forEach(b => b.addEventListener("click", () => strip(b.dataset.cs)));
   $("handle").addEventListener("click", () => strip($("strip").classList.contains("closed") ? "open" : "closed"));
-  $("copy").addEventListener("click", () => {
+  $("copy")?.addEventListener("click", () => {
     navigator.clipboard?.writeText($("reply-text").textContent).then(() => { $("copy").textContent = "Copied"; })
       .catch(() => { const r = document.createRange(); r.selectNodeContents($("reply-text")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
   });

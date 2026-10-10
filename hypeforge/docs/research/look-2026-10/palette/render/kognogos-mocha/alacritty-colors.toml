@@ -1,0 +1,33 @@
+# hypeForge theme KognogOS Mocha (kognogos-mocha), generated — do not edit
+# Alacritty: [general] import = ["~/.config/hypeforge/theme/alacritty-colors.toml"]
+[colors.primary]
+background = "#1e1e2e"
+foreground = "#cdd6f4"
+
+[colors.cursor]
+text = "#11111b"
+cursor = "#f5e0dc"
+
+[colors.selection]
+text = "#cdd6f4"
+background = "#3b3d4f"
+
+[colors.normal]
+black = "#45475a"
+red = "#ff96b3"
+green = "#a6e3a1"
+yellow = "#f9e2af"
+blue = "#8bb6fc"
+magenta = "#f5c2e7"
+cyan = "#94e2d5"
+white = "#a6adc8"
+
+[colors.bright]
+black = "#585b70"
+red = "#f37799"
+green = "#89d88b"
+yellow = "#ebd391"
+blue = "#74a8fc"
+magenta = "#f2aede"
+cyan = "#6bd7ca"
+white = "#bac2de"

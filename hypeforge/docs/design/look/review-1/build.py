@@ -31,6 +31,8 @@ KEEP = {
     "selection": ["bg", "fg"],
     "status": ["success", "on_success", "warning", "on_warning", "danger", "on_danger", "info", "on_info"],
     "term": ["bg", "fg", "red", "green", "yellow", "blue", "magenta", "cyan", "bright_black"],
+    "band": ["base", "strong", "on", "soft", "text"],      # palettes v2 (D-70): the 30 %
+    "pop": ["base", "on", "text"],                         # and the 10 %
 }
 
 
@@ -56,8 +58,7 @@ def emblem() -> str:
 
 def main():
     order, now = themes(RES / "palette/palettes.toml")
-    _, lifted = themes(HERE / "data/mid-lifted.toml")
-    lifted = {s: t for s, t in lifted.items() if t["tone"] == "mid"}
+    lifted = {}   # Q-4 answered (D-70): middle to darker; data/mid-lifted.toml kept as the record of option B
     (HERE / "wallpapers").mkdir(exist_ok=True)
     walls = []
     for f in sorted(WALL.glob("*.preview.png")):

@@ -1,0 +1,84 @@
+/* hypeForge theme KognogOS Mocha (kognogos-mocha), generated — do not edit.
+   GTK 3 (adw-gtk3) reads the @define-color names; GTK 4 / libadwaita 1.6+ reads the :root
+   variables (and still accepts the old names). Copied to ~/.config/gtk-3.0/ and gtk-4.0/.
+   Title bars wear the band; side panels the quiet band; content the foundation; buttons the pop.
+   Theme name for gsettings: adw-gtk3-dark; color-scheme prefer-dark;
+   accent-color purple. */
+@define-color accent_color #d1acfe;
+@define-color accent_bg_color #cba6f7;
+@define-color accent_fg_color #1e1e2e;
+@define-color window_bg_color #1e1e2e;
+@define-color window_fg_color #cdd6f4;
+@define-color view_bg_color #1e1e2e;
+@define-color view_fg_color #cdd6f4;
+@define-color headerbar_bg_color #313244;
+@define-color headerbar_fg_color #cdd6f4;
+@define-color headerbar_border_color #181825;
+@define-color headerbar_backdrop_color #262637;
+@define-color sidebar_bg_color #45475a;
+@define-color sidebar_fg_color #cdd6f4;
+@define-color sidebar_backdrop_color #45475a;
+@define-color card_bg_color #262637;
+@define-color card_fg_color #cdd6f4;
+@define-color popover_bg_color #262637;
+@define-color popover_fg_color #cdd6f4;
+@define-color dialog_bg_color #262637;
+@define-color dialog_fg_color #cdd6f4;
+@define-color thumbnail_bg_color #262637;
+@define-color thumbnail_fg_color #cdd6f4;
+@define-color destructive_color #ff99b5;
+@define-color destructive_bg_color #ff99b5;
+@define-color destructive_fg_color #1e1e2e;
+@define-color success_color #a6e3a1;
+@define-color success_bg_color #a6e3a1;
+@define-color success_fg_color #1e1e2e;
+@define-color warning_color #f9e2af;
+@define-color warning_bg_color #f9e2af;
+@define-color warning_fg_color #1e1e2e;
+@define-color error_color #ff99b5;
+@define-color error_bg_color #ff99b5;
+@define-color error_fg_color #1e1e2e;
+@define-color borders #45475a;
+@define-color headerbar_shade_color rgba(0, 0, 0, 0.36);
+@define-color sidebar_shade_color rgba(0, 0, 0, 0.36);
+@define-color card_shade_color rgba(0, 0, 0, 0.36);
+@define-color popover_shade_color rgba(0, 0, 0, 0.36);
+@define-color shade_color rgba(0, 0, 0, 0.36);
+
+:root {
+  --accent-color: #d1acfe;
+  --accent-bg-color: #cba6f7;
+  --accent-fg-color: #1e1e2e;
+  --window-bg-color: #1e1e2e;
+  --window-fg-color: #cdd6f4;
+  --view-bg-color: #1e1e2e;
+  --view-fg-color: #cdd6f4;
+  --headerbar-bg-color: #313244;
+  --headerbar-fg-color: #cdd6f4;
+  --headerbar-border-color: #181825;
+  --headerbar-backdrop-color: #262637;
+  --sidebar-bg-color: #45475a;
+  --sidebar-fg-color: #cdd6f4;
+  --sidebar-backdrop-color: #45475a;
+  --card-bg-color: #262637;
+  --card-fg-color: #cdd6f4;
+  --popover-bg-color: #262637;
+  --popover-fg-color: #cdd6f4;
+  --dialog-bg-color: #262637;
+  --dialog-fg-color: #cdd6f4;
+  --thumbnail-bg-color: #262637;
+  --thumbnail-fg-color: #cdd6f4;
+  --destructive-color: #ff99b5;
+  --destructive-bg-color: #ff99b5;
+  --destructive-fg-color: #1e1e2e;
+  --success-color: #a6e3a1;
+  --success-bg-color: #a6e3a1;
+  --success-fg-color: #1e1e2e;
+  --warning-color: #f9e2af;
+  --warning-bg-color: #f9e2af;
+  --warning-fg-color: #1e1e2e;
+  --error-color: #ff99b5;
+  --error-bg-color: #ff99b5;
+  --error-fg-color: #1e1e2e;
+  --border-color: #45475a;
+}

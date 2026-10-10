@@ -4,9 +4,146 @@
 # Token meanings: docs/research/look-2026-10/03-theme-system.md
 
 [meta]
-schema = 1
-count = 23
-order = ["white", "light-gray", "gray", "dark-gray", "black", "dark-blue", "blue", "light-blue", "light-purple", "purple", "dark-purple", "light-green", "green", "dark-green", "light-pink", "pink", "dark-pink", "light-red", "red", "dark-red", "light-multicolor", "multicolor", "dark-multicolor"]
+schema = 2
+count = 25
+order = ["kognogos-mocha", "white", "light-gray", "gray", "dark-gray", "black", "ember", "light-blue", "blue", "dark-blue", "light-purple", "purple", "dark-purple", "light-green", "green", "dark-green", "light-pink", "pink", "dark-pink", "light-red", "red", "dark-red", "light-multicolor", "multicolor", "dark-multicolor"]
+
+[themes.kognogos-mocha.meta]
+name = "KognogOS Mocha"
+slug = "kognogos-mocha"
+family = "kognog"
+tone = "dark"
+polarity = "dark"
+multi = false
+hc = false
+default = true
+design = "60-30-10"
+pop_harmony = "Catppuccin's many accents"
+schema = 2
+
+[themes.kognogos-mocha.surface]
+sunken = "#11111b"
+bar = "#181825"
+base = "#1e1e2e"
+raised = "#262637"
+overlay = "#313244"
+hover = "#45475a"
+
+[themes.kognogos-mocha.text]
+primary = "#cdd6f4"
+secondary = "#bac2de"
+muted = "#959bb4"
+
+[themes.kognogos-mocha.band]
+base = "#313244"
+strong = "#181825"
+soft = "#45475a"
+on = "#cdd6f4"
+text = "#b4befe"
+
+[themes.kognogos-mocha.pop]
+base = "#cba6f7"
+on = "#1e1e2e"
+text = "#d1acfe"
+
+[themes.kognogos-mocha.accent]
+base = "#cba6f7"
+on = "#1e1e2e"
+text = "#d1acfe"
+ring = "#cba6f7"
+hover = "#d9b9ff"
+pressed = "#c3a8e5"
+
+[themes.kognogos-mocha.border]
+subtle = "#45475a"
+strong = "#7f849c"
+
+[themes.kognogos-mocha.window]
+focused = "#b4befe"
+unfocused = "#45475a"
+urgent = "#f9e2af"
+
+[themes.kognogos-mocha.bar]
+bg = "#181825"
+shade = "#262637"
+hover = "#45475a"
+fg = "#cdd6f4"
+fg_dim = "#bac2de"
+active_bg = "#cba6f7"
+active_fg = "#1e1e2e"
+pop = "#f9e2af"
+
+[themes.kognogos-mocha.selection]
+bg = "#3b3d4f"
+fg = "#cdd6f4"
+
+[themes.kognogos-mocha.status]
+success = "#a6e3a1"
+on_success = "#1e1e2e"
+warning = "#f9e2af"
+on_warning = "#1e1e2e"
+danger = "#ff99b5"
+on_danger = "#1e1e2e"
+info = "#94e2d5"
+on_info = "#1e1e2e"
+
+[themes.kognogos-mocha.effects]
+shadow = "#11111b"
+shadow_opacity = 0.6
+blur_tint = "#313244"
+blur_opacity = 0.72
+
+[themes.kognogos-mocha.cat]
+red = "#f38ba8"
+orange = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+blue = "#89b4fa"
+purple = "#cba6f7"
+pink = "#f5c2e7"
+
+[themes.kognogos-mocha.term]
+bg = "#1e1e2e"
+fg = "#cdd6f4"
+cursor = "#f5e0dc"
+cursor_text = "#11111b"
+selection_bg = "#3b3d4f"
+selection_fg = "#cdd6f4"
+black = "#45475a"
+bright_black = "#585b70"
+white = "#a6adc8"
+bright_white = "#bac2de"
+red = "#ff96b3"
+bright_red = "#f37799"
+green = "#a6e3a1"
+bright_green = "#89d88b"
+yellow = "#f9e2af"
+bright_yellow = "#ebd391"
+blue = "#8bb6fc"
+bright_blue = "#74a8fc"
+magenta = "#f5c2e7"
+bright_magenta = "#f2aede"
+cyan = "#94e2d5"
+bright_cyan = "#6bd7ca"
+
+[themes.kognogos-mocha.brand]
+emblem_blue = "#0363ef"
+emblem_blue_deep = "#0048b6"
+emblem_orange = "#d9400e"
+emblem_orange_deep = "#b93205"
+wordmark_gray = "#969696"
+kognog_mauve = "#cba6f7"
+
+[themes.kognogos-mocha.names]
+gtk_theme = "adw-gtk3-dark"
+color_scheme = "prefer-dark"
+gnome_accent = "purple"
+cursor = "catppuccin-mocha-mauve-cursors"
+cursor_size = 24
+icons = "candy-icons"
+icons_symbolic = "Papirus-Dark"
+wallpaper_set = "kognogos-mocha"
 
 [themes.white.meta]
 name = "White"
@@ -15,7 +152,11 @@ family = "neutral"
 tone = "white"
 polarity = "light"
 multi = false
-schema = 1
+hc = true
+default = false
+design = "60-30-10"
+pop_harmony = "gray"
+schema = 2
 
 [themes.white.surface]
 sunken = "#e6e6e6"
@@ -30,35 +171,48 @@ primary = "#000000"
 secondary = "#4a4a4a"
 muted = "#6d6d6d"
 
+[themes.white.band]
+base = "#cecece"
+strong = "#cccccc"
+on = "#141414"
+soft = "#e3e3e3"
+text = "#2e2e2e"
+
+[themes.white.pop]
+base = "#222222"
+on = "#fafafa"
+text = "#222222"
+
 [themes.white.accent]
 base = "#222222"
 on = "#fafafa"
-hover = "#161616"
-pressed = "#0b0b0b"
 text = "#222222"
 ring = "#222222"
+hover = "#161616"
+pressed = "#0b0b0b"
 
 [themes.white.border]
 subtle = "#8b8b8b"
 strong = "#505050"
 
 [themes.white.window]
-focused = "#222222"
+focused = "#2e2e2e"
 unfocused = "#8b8b8b"
 urgent = "#af3c40"
 
 [themes.white.bar]
-bg = "#ededed"
-shade = "#f8f8f8"
-hover = "#dcdcdc"
-fg = "#000000"
-fg_dim = "#4a4a4a"
-active_bg = "#222222"
-active_fg = "#fafafa"
+bg = "#e6e6e6"
+shade = "#cecece"
+hover = "#dedede"
+fg = "#141414"
+fg_dim = "#414141"
+active_bg = "#141414"
+active_fg = "#e6e6e6"
+pop = "#222222"
 
 [themes.white.selection]
-bg = "#c3c3c3"
-fg = "#000000"
+bg = "#cecece"
+fg = "#141414"
 
 [themes.white.status]
 success = "#1b7e2a"
@@ -71,28 +225,28 @@ info = "#0070a6"
 on_info = "#f6fbff"
 
 [themes.white.effects]
-shadow = "#1f2227"
+shadow = "#1c222b"
 shadow_opacity = 0.18
 blur_tint = "#ffffff"
 blur_opacity = 0.8
 
 [themes.white.cat]
-red = "#b84d49"
-orange = "#b05a00"
-yellow = "#8a7300"
-green = "#34893c"
-teal = "#00877c"
-blue = "#3475c4"
-purple = "#885cb5"
-pink = "#af4d80"
+red = "#bf534e"
+orange = "#b75f0b"
+yellow = "#917900"
+green = "#3a8f42"
+teal = "#008d82"
+blue = "#3a7bcb"
+purple = "#8e62bc"
+pink = "#b55386"
 
 [themes.white.term]
 bg = "#f1f1f1"
 fg = "#000000"
 cursor = "#222222"
 cursor_text = "#fafafa"
-selection_bg = "#c3c3c3"
-selection_fg = "#000000"
+selection_bg = "#cecece"
+selection_fg = "#141414"
 black = "#373737"
 bright_black = "#656565"
 white = "#cacaca"
@@ -135,88 +289,105 @@ family = "neutral"
 tone = "light"
 polarity = "light"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "emblem blue"
+schema = 2
 
 [themes.light-gray.surface]
-sunken = "#cecece"
-bar = "#d2d2d2"
-base = "#dedede"
-raised = "#e6e6e6"
+sunken = "#d6d6d6"
+bar = "#dbdbdb"
+base = "#dfdfdf"
+raised = "#e7e7e7"
 overlay = "#eeeeee"
-hover = "#c5c5c5"
+hover = "#cccccc"
 
 [themes.light-gray.text]
 primary = "#1f1f1f"
 secondary = "#4d4d4d"
 muted = "#747474"
 
+[themes.light-gray.band]
+base = "#717171"
+strong = "#262626"
+on = "#fafafa"
+soft = "#d6d6d6"
+text = "#5d5d5d"
+
+[themes.light-gray.pop]
+base = "#0363ef"
+on = "#f7faff"
+text = "#005adc"
+
 [themes.light-gray.accent]
 base = "#0363ef"
 on = "#f7faff"
+text = "#005adc"
+ring = "#0363ef"
 hover = "#0056d3"
 pressed = "#0f4cae"
-text = "#0058d9"
-ring = "#0363ef"
 
 [themes.light-gray.border]
-subtle = "#b4b4b4"
-strong = "#6c6c6c"
+subtle = "#b6b6b6"
+strong = "#6d6d6d"
 
 [themes.light-gray.window]
-focused = "#0363ef"
-unfocused = "#c5c5c5"
+focused = "#5d5d5d"
+unfocused = "#b6b6b6"
 urgent = "#ad3a3e"
 
 [themes.light-gray.bar]
-bg = "#d2d2d2"
-shade = "#e6e6e6"
-hover = "#c5c5c5"
-fg = "#1f1f1f"
-fg_dim = "#4d4d4d"
-active_bg = "#0363ef"
-active_fg = "#f7faff"
+bg = "#262626"
+shade = "#717171"
+hover = "#636363"
+fg = "#fafafa"
+fg_dim = "#f6f6f6"
+active_bg = "#fafafa"
+active_fg = "#262626"
+pop = "#afcdff"
 
 [themes.light-gray.selection]
-bg = "#95b4e6"
-fg = "#1f1f1f"
+bg = "#717171"
+fg = "#fafafa"
 
 [themes.light-gray.status]
-success = "#02721c"
+success = "#06731e"
 on_success = "#f6fcf6"
-warning = "#915100"
+warning = "#935300"
 on_warning = "#fff9f4"
 danger = "#ad3a3e"
 on_danger = "#fff8f8"
-info = "#006799"
+info = "#00699b"
 on_info = "#f6fbff"
 
 [themes.light-gray.effects]
-shadow = "#1f2227"
+shadow = "#1c222b"
 shadow_opacity = 0.18
 blur_tint = "#eeeeee"
 blur_opacity = 0.8
 
 [themes.light-gray.cat]
-red = "#b84d49"
-orange = "#b05a00"
-yellow = "#8a7300"
-green = "#308639"
-teal = "#008479"
-blue = "#3475c4"
-purple = "#885cb5"
-pink = "#af4d80"
+red = "#c85b56"
+orange = "#be6517"
+yellow = "#947b00"
+green = "#3a8f42"
+teal = "#008d82"
+blue = "#3d7ece"
+purple = "#9569c4"
+pink = "#be5a8d"
 
 [themes.light-gray.term]
-bg = "#dedede"
+bg = "#dfdfdf"
 fg = "#1f1f1f"
 cursor = "#0363ef"
 cursor_text = "#f7faff"
-selection_bg = "#95b4e6"
-selection_fg = "#1f1f1f"
-black = "#292929"
-bright_black = "#555555"
-white = "#b7b7b7"
-bright_white = "#cecece"
+selection_bg = "#717171"
+selection_fg = "#fafafa"
+black = "#2a2a2a"
+bright_black = "#575757"
+white = "#b9b9b9"
+bright_white = "#cfcfcf"
 red = "#9d3533"
 bright_red = "#8a0314"
 green = "#157123"
@@ -241,7 +412,7 @@ kognog_mauve = "#cba6f7"
 [themes.light-gray.names]
 gtk_theme = "adw-gtk3"
 color_scheme = "prefer-light"
-gnome_accent = "slate"
+gnome_accent = "blue"
 cursor = "catppuccin-mocha-dark-cursors"
 cursor_size = 24
 icons = "candy-icons"
@@ -255,99 +426,116 @@ family = "neutral"
 tone = "mid"
 polarity = "dark"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "emblem blue"
+schema = 2
 
 [themes.gray.surface]
-sunken = "#3a3a3a"
-bar = "#313131"
-base = "#4a4a4a"
-raised = "#525252"
-overlay = "#5b5b5b"
-hover = "#696969"
+sunken = "#202020"
+bar = "#242424"
+base = "#2e2e2e"
+raised = "#353535"
+overlay = "#3e3e3e"
+hover = "#4e4e4e"
 
 [themes.gray.text]
-primary = "#f3f3f3"
-secondary = "#d4d4d4"
-muted = "#b4b4b4"
+primary = "#d7d7d7"
+secondary = "#c1c1c1"
+muted = "#a3a3a3"
+
+[themes.gray.band]
+base = "#5b5b5b"
+strong = "#424242"
+on = "#fafafa"
+soft = "#414141"
+text = "#bebebe"
+
+[themes.gray.pop]
+base = "#9dc2ff"
+on = "#0c1421"
+text = "#a0c4ff"
 
 [themes.gray.accent]
-base = "#95c0ff"
-on = "#0d1624"
-hover = "#b0d0ff"
-pressed = "#8db3ea"
-text = "#b8d5ff"
-ring = "#95c0ff"
+base = "#9dc2ff"
+on = "#0c1421"
+text = "#a0c4ff"
+ring = "#9dc2ff"
+hover = "#b7d2ff"
+pressed = "#87b2f9"
 
 [themes.gray.border]
-subtle = "#747474"
-strong = "#f5f5f5"
+subtle = "#555555"
+strong = "#d1d1d1"
 
 [themes.gray.window]
-focused = "#95c0ff"
-unfocused = "#676767"
-urgent = "#ffbcb8"
+focused = "#bebebe"
+unfocused = "#555555"
+urgent = "#fbc044"
 
 [themes.gray.bar]
-bg = "#313131"
-shade = "#525252"
-hover = "#696969"
-fg = "#f3f3f3"
-fg_dim = "#d4d4d4"
-active_bg = "#95c0ff"
-active_fg = "#0d1624"
+bg = "#424242"
+shade = "#5b5b5b"
+hover = "#4d4d4d"
+fg = "#fafafa"
+fg_dim = "#d3d3d3"
+active_bg = "#fafafa"
+active_fg = "#424242"
+pop = "#9dc2ff"
 
 [themes.gray.selection]
-bg = "#597092"
-fg = "#f3f3f3"
+bg = "#5b5b5b"
+fg = "#fafafa"
 
 [themes.gray.status]
 success = "#88e48c"
-on_success = "#0d1a0d"
-warning = "#fac547"
-on_warning = "#1c1505"
-danger = "#ffbcb8"
-on_danger = "#221010"
-info = "#5ae0ff"
-on_info = "#04191f"
+on_success = "#0b170b"
+warning = "#f7c243"
+on_warning = "#1a1304"
+danger = "#ffb4b1"
+on_danger = "#200e0e"
+info = "#51dfff"
+on_info = "#02171c"
 
 [themes.gray.effects]
 shadow = "#000000"
 shadow_opacity = 0.45
-blur_tint = "#5b5b5b"
+blur_tint = "#3e3e3e"
 blur_opacity = 0.72
 
 [themes.gray.cat]
-red = "#ffb0a8"
-orange = "#ffb481"
-yellow = "#e4c64f"
-green = "#8adf8d"
-teal = "#2ae4d3"
-blue = "#a2caff"
-purple = "#d7b6ff"
-pink = "#ffa9d2"
+red = "#ffaba3"
+orange = "#ffaf78"
+yellow = "#e1c34b"
+green = "#87dc8a"
+teal = "#22e1d0"
+blue = "#9cc7ff"
+purple = "#d5b1ff"
+pink = "#ffa3cf"
 
 [themes.gray.term]
-bg = "#4a4a4a"
-fg = "#f3f3f3"
-cursor = "#95c0ff"
-cursor_text = "#0d1624"
-selection_bg = "#597092"
-selection_fg = "#f3f3f3"
-black = "#777777"
-bright_black = "#a1a1a1"
+bg = "#2e2e2e"
+fg = "#d7d7d7"
+cursor = "#9dc2ff"
+cursor_text = "#0c1421"
+selection_bg = "#5b5b5b"
+selection_fg = "#fafafa"
+black = "#585858"
+bright_black = "#808080"
 white = "#c4c4c4"
 bright_white = "#eeeeee"
-red = "#ffb7b0"
+red = "#ffa098"
 bright_red = "#ffcdc8"
-green = "#87dc8a"
+green = "#81d584"
 bright_green = "#92f697"
-yellow = "#ecc44f"
+yellow = "#e1b942"
 bright_yellow = "#ffd661"
-blue = "#a5ccff"
+blue = "#91c1ff"
 bright_blue = "#c3ddff"
-magenta = "#ffadf7"
+magenta = "#f29dea"
 bright_magenta = "#ffc5f9"
-cyan = "#00dede"
+cyan = "#00d8d9"
 bright_cyan = "#00f9fa"
 
 [themes.gray.brand]
@@ -361,7 +549,7 @@ kognog_mauve = "#cba6f7"
 [themes.gray.names]
 gtk_theme = "adw-gtk3-dark"
 color_scheme = "prefer-dark"
-gnome_accent = "slate"
+gnome_accent = "blue"
 cursor = "catppuccin-mocha-dark-cursors"
 cursor_size = 24
 icons = "candy-icons"
@@ -375,65 +563,82 @@ family = "neutral"
 tone = "dark"
 polarity = "dark"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "emblem blue"
+schema = 2
 
 [themes.dark-gray.surface]
-sunken = "#121212"
-bar = "#1a1a1a"
-base = "#202020"
-raised = "#282828"
-overlay = "#343434"
-hover = "#494949"
+sunken = "#0b0b0b"
+bar = "#0e0e0e"
+base = "#131313"
+raised = "#191919"
+overlay = "#222222"
+hover = "#333333"
 
 [themes.dark-gray.text]
 primary = "#d7d7d7"
-secondary = "#bcbcbc"
-muted = "#9d9d9d"
+secondary = "#b6b6b6"
+muted = "#989898"
+
+[themes.dark-gray.band]
+base = "#3d3d3d"
+strong = "#2b2b2b"
+on = "#fafafa"
+soft = "#222222"
+text = "#b7b7b7"
+
+[themes.dark-gray.pop]
+base = "#9dc2ff"
+on = "#0c1421"
+text = "#9dc2ff"
 
 [themes.dark-gray.accent]
-base = "#8ab9ff"
-on = "#0d1624"
-hover = "#a5c9ff"
-pressed = "#8db3ea"
-text = "#92beff"
-ring = "#8ab9ff"
+base = "#9dc2ff"
+on = "#0c1421"
+text = "#9dc2ff"
+ring = "#9dc2ff"
+hover = "#b7d2ff"
+pressed = "#87b2f9"
 
 [themes.dark-gray.border]
-subtle = "#464646"
-strong = "#bebebe"
+subtle = "#373737"
+strong = "#acacac"
 
 [themes.dark-gray.window]
-focused = "#8ab9ff"
-unfocused = "#464646"
-urgent = "#ffa09c"
+focused = "#b7b7b7"
+unfocused = "#373737"
+urgent = "#faab3f"
 
 [themes.dark-gray.bar]
-bg = "#1a1a1a"
-shade = "#282828"
-hover = "#494949"
-fg = "#d7d7d7"
-fg_dim = "#bcbcbc"
-active_bg = "#8ab9ff"
-active_fg = "#0d1624"
+bg = "#2b2b2b"
+shade = "#3d3d3d"
+hover = "#303030"
+fg = "#fafafa"
+fg_dim = "#c1c1c1"
+active_bg = "#fafafa"
+active_fg = "#2b2b2b"
+pop = "#9dc2ff"
 
 [themes.dark-gray.selection]
-bg = "#2f4463"
-fg = "#d7d7d7"
+bg = "#3d3d3d"
+fg = "#fafafa"
 
 [themes.dark-gray.status]
 success = "#7bd77f"
-on_success = "#0d1a0d"
+on_success = "#0b170b"
 warning = "#eab532"
-on_warning = "#1c1505"
+on_warning = "#1a1304"
 danger = "#ffa09c"
-on_danger = "#221010"
+on_danger = "#200e0e"
 info = "#00d4f8"
-on_info = "#04191f"
+on_info = "#02171c"
 
 [themes.dark-gray.effects]
 shadow = "#000000"
 shadow_opacity = 0.55
-blur_tint = "#343434"
+blur_tint = "#222222"
 blur_opacity = 0.72
 
 [themes.dark-gray.cat]
@@ -447,25 +652,25 @@ purple = "#cc9fff"
 pink = "#f990c4"
 
 [themes.dark-gray.term]
-bg = "#202020"
+bg = "#131313"
 fg = "#d7d7d7"
-cursor = "#8ab9ff"
-cursor_text = "#0d1624"
-selection_bg = "#2f4463"
-selection_fg = "#d7d7d7"
-black = "#484848"
-bright_black = "#6f6f6f"
+cursor = "#9dc2ff"
+cursor_text = "#0c1421"
+selection_bg = "#3d3d3d"
+selection_fg = "#fafafa"
+black = "#393939"
+bright_black = "#5f5f5f"
 white = "#c4c4c4"
 bright_white = "#eeeeee"
-red = "#ff9890"
+red = "#ff958d"
 bright_red = "#ffbab3"
 green = "#74c878"
 bright_green = "#85e98a"
-yellow = "#d8b138"
+yellow = "#d5ae34"
 bright_yellow = "#f6c835"
-blue = "#82b9ff"
+blue = "#7cb6ff"
 bright_blue = "#add1ff"
-magenta = "#ed98e5"
+magenta = "#e995e2"
 bright_magenta = "#ffadf7"
 cyan = "#00caca"
 bright_cyan = "#00ebeb"
@@ -481,7 +686,7 @@ kognog_mauve = "#cba6f7"
 [themes.dark-gray.names]
 gtk_theme = "adw-gtk3-dark"
 color_scheme = "prefer-dark"
-gnome_accent = "slate"
+gnome_accent = "blue"
 cursor = "catppuccin-mocha-dark-cursors"
 cursor_size = 24
 icons = "candy-icons"
@@ -495,7 +700,11 @@ family = "neutral"
 tone = "black"
 polarity = "dark"
 multi = false
-schema = 1
+hc = true
+default = false
+design = "60-30-10"
+pop_harmony = "gray"
+schema = 2
 
 [themes.black.surface]
 sunken = "#000000"
@@ -510,45 +719,58 @@ primary = "#ebebeb"
 secondary = "#cecece"
 muted = "#b2b2b2"
 
+[themes.black.band]
+base = "#262626"
+strong = "#1b1b1b"
+on = "#fafafa"
+soft = "#191919"
+text = "#d7d7d7"
+
+[themes.black.pop]
+base = "#e4e4e4"
+on = "#141414"
+text = "#e4e4e4"
+
 [themes.black.accent]
 base = "#e4e4e4"
-on = "#161616"
-hover = "#f5f5f5"
-pressed = "#cacaca"
+on = "#141414"
 text = "#e4e4e4"
 ring = "#e4e4e4"
+hover = "#f5f5f5"
+pressed = "#f8f8f8"
 
 [themes.black.border]
 subtle = "#777777"
 strong = "#cccccc"
 
 [themes.black.window]
-focused = "#e4e4e4"
+focused = "#d7d7d7"
 unfocused = "#777777"
-urgent = "#ffa09c"
+urgent = "#ffa65e"
 
 [themes.black.bar]
-bg = "#000000"
-shade = "#101010"
-hover = "#2e2e2e"
-fg = "#ebebeb"
-fg_dim = "#cecece"
-active_bg = "#e4e4e4"
-active_fg = "#161616"
+bg = "#1b1b1b"
+shade = "#262626"
+hover = "#1b1b1b"
+fg = "#fafafa"
+fg_dim = "#b9b9b9"
+active_bg = "#fafafa"
+active_fg = "#1b1b1b"
+pop = "#e4e4e4"
 
 [themes.black.selection]
-bg = "#202020"
-fg = "#ebebeb"
+bg = "#262626"
+fg = "#fafafa"
 
 [themes.black.status]
 success = "#7bd77f"
-on_success = "#0d1a0d"
+on_success = "#0b170b"
 warning = "#eab532"
-on_warning = "#1c1505"
+on_warning = "#1a1304"
 danger = "#ffa09c"
-on_danger = "#221010"
+on_danger = "#200e0e"
 info = "#76c7ff"
-on_info = "#081822"
+on_info = "#061520"
 
 [themes.black.effects]
 shadow = "#000000"
@@ -570,9 +792,9 @@ pink = "#f990c4"
 bg = "#040404"
 fg = "#ebebeb"
 cursor = "#e4e4e4"
-cursor_text = "#161616"
-selection_bg = "#202020"
-selection_fg = "#ebebeb"
+cursor_text = "#141414"
+selection_bg = "#262626"
+selection_fg = "#fafafa"
 black = "#252525"
 bright_black = "#494949"
 white = "#c4c4c4"
@@ -608,75 +830,92 @@ icons = "candy-icons"
 icons_symbolic = "Papirus-Dark"
 wallpaper_set = "black"
 
-[themes.dark-blue.meta]
-name = "Dark Blue"
-slug = "dark-blue"
-family = "blue"
+[themes.ember.meta]
+name = "Ember"
+slug = "ember"
+family = "orange"
 tone = "dark"
 polarity = "dark"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "cream"
+schema = 2
 
-[themes.dark-blue.surface]
-sunken = "#091222"
-bar = "#0f192c"
-base = "#172031"
-raised = "#1f283a"
-overlay = "#2a3446"
-hover = "#3e495c"
+[themes.ember.surface]
+sunken = "#0e0a09"
+bar = "#120d0c"
+base = "#161110"
+raised = "#1d1817"
+overlay = "#25201f"
+hover = "#373130"
 
-[themes.dark-blue.text]
-primary = "#ccd8ed"
-secondary = "#b1bdd1"
-muted = "#949dad"
+[themes.ember.text]
+primary = "#ddd6d4"
+secondary = "#bbb4b2"
+muted = "#989898"
 
-[themes.dark-blue.accent]
-base = "#8ab9ff"
-on = "#0d1624"
-hover = "#a5c9ff"
-pressed = "#90b3e7"
-text = "#92beff"
-ring = "#8ab9ff"
+[themes.ember.band]
+base = "#d43a03"
+strong = "#a02900"
+on = "#fff8f7"
+soft = "#341912"
+text = "#ff987c"
 
-[themes.dark-blue.border]
-subtle = "#3c4659"
-strong = "#b3bfd6"
+[themes.ember.pop]
+base = "#f7e6c3"
+on = "#1a1304"
+text = "#f7e6c3"
 
-[themes.dark-blue.window]
-focused = "#8ab9ff"
-unfocused = "#3c4659"
-urgent = "#ffa09c"
+[themes.ember.accent]
+base = "#f7e6c3"
+on = "#1a1304"
+text = "#f7e6c3"
+ring = "#f7e6c3"
+hover = "#fff8e9"
+pressed = "#e0d3b9"
 
-[themes.dark-blue.bar]
-bg = "#0f192c"
-shade = "#1f283a"
-hover = "#3e495c"
-fg = "#ccd8ed"
-fg_dim = "#b1bdd1"
-active_bg = "#8ab9ff"
-active_fg = "#0d1624"
+[themes.ember.border]
+subtle = "#3b3534"
+strong = "#b1aba9"
 
-[themes.dark-blue.selection]
-bg = "#2d4466"
-fg = "#ccd8ed"
+[themes.ember.window]
+focused = "#ff987c"
+unfocused = "#3b3534"
+urgent = "#ea9cf7"
 
-[themes.dark-blue.status]
+[themes.ember.bar]
+bg = "#0e0a09"
+shade = "#d43a03"
+hover = "#bc3200"
+fg = "#fff8f7"
+fg_dim = "#fff9f7"
+active_bg = "#fff8f7"
+active_fg = "#0e0a09"
+pop = "#f7e6c3"
+
+[themes.ember.selection]
+bg = "#d43a03"
+fg = "#fff8f7"
+
+[themes.ember.status]
 success = "#7bd77f"
-on_success = "#0d1a0d"
+on_success = "#0b170b"
 warning = "#eab532"
-on_warning = "#1c1505"
-danger = "#ffa09c"
-on_danger = "#221010"
-info = "#00d4f8"
-on_info = "#04191f"
+on_warning = "#1a1304"
+danger = "#ff9abd"
+on_danger = "#1f0e14"
+info = "#76c7ff"
+on_info = "#061520"
 
-[themes.dark-blue.effects]
+[themes.ember.effects]
 shadow = "#000000"
 shadow_opacity = 0.55
-blur_tint = "#2a3446"
+blur_tint = "#25201f"
 blur_opacity = 0.72
 
-[themes.dark-blue.cat]
+[themes.ember.cat]
 red = "#ff958d"
 orange = "#fb9d59"
 yellow = "#d3b63b"
@@ -686,31 +925,31 @@ blue = "#85baff"
 purple = "#cc9fff"
 pink = "#f990c4"
 
-[themes.dark-blue.term]
-bg = "#172031"
-fg = "#ccd8ed"
-cursor = "#8ab9ff"
-cursor_text = "#0d1624"
-selection_bg = "#2d4466"
-selection_fg = "#ccd8ed"
-black = "#3e495c"
-bright_black = "#647084"
-white = "#b9c5d9"
-bright_white = "#e6efff"
-red = "#ff9890"
+[themes.ember.term]
+bg = "#161110"
+fg = "#ddd6d4"
+cursor = "#f7e6c3"
+cursor_text = "#1a1304"
+selection_bg = "#d43a03"
+selection_fg = "#fff8f7"
+black = "#3d3836"
+bright_black = "#635d5c"
+white = "#c9c2c0"
+bright_white = "#f4edeb"
+red = "#ff958d"
 bright_red = "#ffbab3"
 green = "#74c878"
 bright_green = "#85e98a"
-yellow = "#d8b138"
+yellow = "#d5ae34"
 bright_yellow = "#f6c835"
-blue = "#82b9ff"
+blue = "#7cb6ff"
 bright_blue = "#add1ff"
-magenta = "#ed98e5"
+magenta = "#e995e2"
 bright_magenta = "#ffadf7"
 cyan = "#00caca"
 bright_cyan = "#00ebeb"
 
-[themes.dark-blue.brand]
+[themes.ember.brand]
 emblem_blue = "#0363ef"
 emblem_blue_deep = "#0048b6"
 emblem_orange = "#d9400e"
@@ -718,135 +957,15 @@ emblem_orange_deep = "#b93205"
 wordmark_gray = "#969696"
 kognog_mauve = "#cba6f7"
 
-[themes.dark-blue.names]
+[themes.ember.names]
 gtk_theme = "adw-gtk3-dark"
 color_scheme = "prefer-dark"
-gnome_accent = "blue"
-cursor = "catppuccin-mocha-blue-cursors"
+gnome_accent = "orange"
+cursor = "catppuccin-mocha-peach-cursors"
 cursor_size = 24
 icons = "candy-icons"
 icons_symbolic = "Papirus-Dark"
-wallpaper_set = "dark-blue"
-
-[themes.blue.meta]
-name = "Blue"
-slug = "blue"
-family = "blue"
-tone = "mid"
-polarity = "dark"
-multi = false
-schema = 1
-
-[themes.blue.surface]
-sunken = "#263655"
-bar = "#1b2d4f"
-base = "#354666"
-raised = "#3d4e6e"
-overlay = "#455777"
-hover = "#526586"
-
-[themes.blue.text]
-primary = "#e1ecff"
-secondary = "#c5d2e9"
-muted = "#a7b2c3"
-
-[themes.blue.accent]
-base = "#8bdeff"
-on = "#051920"
-hover = "#b8eaff"
-pressed = "#7acae9"
-text = "#8bdeff"
-ring = "#8bdeff"
-
-[themes.blue.border]
-subtle = "#5e7092"
-strong = "#e8f1ff"
-
-[themes.blue.window]
-focused = "#8bdeff"
-unfocused = "#5e7092"
-urgent = "#ffb9b6"
-
-[themes.blue.bar]
-bg = "#1b2d4f"
-shade = "#3d4e6e"
-hover = "#526586"
-fg = "#e1ecff"
-fg_dim = "#c5d2e9"
-active_bg = "#8bdeff"
-active_fg = "#051920"
-
-[themes.blue.selection]
-bg = "#407083"
-fg = "#e1ecff"
-
-[themes.blue.status]
-success = "#88e48c"
-on_success = "#0d1a0d"
-warning = "#f9c345"
-on_warning = "#1c1505"
-danger = "#ffb9b6"
-on_danger = "#221010"
-info = "#00e8e3"
-on_info = "#031a19"
-
-[themes.blue.effects]
-shadow = "#000000"
-shadow_opacity = 0.45
-blur_tint = "#455777"
-blur_opacity = 0.72
-
-[themes.blue.cat]
-red = "#ffb0a8"
-orange = "#ffb481"
-yellow = "#e4c64f"
-green = "#8adf8d"
-teal = "#2ae4d3"
-blue = "#a2caff"
-purple = "#d7b6ff"
-pink = "#ffa9d2"
-
-[themes.blue.term]
-bg = "#354666"
-fg = "#e1ecff"
-cursor = "#8bdeff"
-cursor_text = "#051920"
-selection_bg = "#407083"
-selection_fg = "#e1ecff"
-black = "#607396"
-bright_black = "#899ec2"
-white = "#b8c5db"
-bright_white = "#e6efff"
-red = "#ffb2ab"
-bright_red = "#ffcdc8"
-green = "#84d987"
-bright_green = "#92f697"
-yellow = "#e9c14c"
-bright_yellow = "#ffd661"
-blue = "#9fc9ff"
-bright_blue = "#c3ddff"
-magenta = "#ffaaf7"
-bright_magenta = "#ffc5f9"
-cyan = "#00dcdc"
-bright_cyan = "#00f9fa"
-
-[themes.blue.brand]
-emblem_blue = "#0363ef"
-emblem_blue_deep = "#0048b6"
-emblem_orange = "#d9400e"
-emblem_orange_deep = "#b93205"
-wordmark_gray = "#969696"
-kognog_mauve = "#cba6f7"
-
-[themes.blue.names]
-gtk_theme = "adw-gtk3-dark"
-color_scheme = "prefer-dark"
-gnome_accent = "blue"
-cursor = "catppuccin-mocha-blue-cursors"
-cursor_size = 24
-icons = "candy-icons"
-icons_symbolic = "Papirus-Dark"
-wallpaper_set = "blue"
+wallpaper_set = "ember"
 
 [themes.light-blue.meta]
 name = "Light Blue"
@@ -855,88 +974,105 @@ family = "blue"
 tone = "light"
 polarity = "light"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "orange"
+schema = 2
 
 [themes.light-blue.surface]
-sunken = "#cad8e6"
-bar = "#cdddee"
-base = "#dae8f7"
-raised = "#e2f0ff"
-overlay = "#f1f8ff"
-hover = "#c2cfde"
+sunken = "#e3e6ec"
+bar = "#e8ebf1"
+base = "#edf0f6"
+raised = "#f4f8fd"
+overlay = "#ffffff"
+hover = "#d9dde2"
 
 [themes.light-blue.text]
-primary = "#17202a"
-secondary = "#444e59"
-muted = "#6d767f"
+primary = "#1d1f23"
+secondary = "#4a4d52"
+muted = "#747474"
+
+[themes.light-blue.band]
+base = "#276ed2"
+strong = "#002356"
+on = "#f7faff"
+soft = "#d8e8ff"
+text = "#0b58bb"
+
+[themes.light-blue.pop]
+base = "#b65400"
+on = "#fff9f5"
+text = "#b05100"
 
 [themes.light-blue.accent]
-base = "#0363ef"
-on = "#f7faff"
-hover = "#0056d3"
-pressed = "#0f4cae"
-text = "#005de5"
-ring = "#0363ef"
+base = "#b65400"
+on = "#fff9f5"
+text = "#b05100"
+ring = "#b65400"
+hover = "#a04900"
+pressed = "#8b3f00"
 
 [themes.light-blue.border]
-subtle = "#b0becc"
-strong = "#687481"
+subtle = "#c2c6cb"
+strong = "#797c81"
 
 [themes.light-blue.window]
-focused = "#0363ef"
-unfocused = "#bac7d6"
-urgent = "#af3c40"
+focused = "#0b58bb"
+unfocused = "#c2c6cb"
+urgent = "#a23d7b"
 
 [themes.light-blue.bar]
-bg = "#cdddee"
-shade = "#e2f0ff"
-hover = "#c2cfde"
-fg = "#17202a"
-fg_dim = "#444e59"
-active_bg = "#0363ef"
-active_fg = "#f7faff"
+bg = "#002356"
+shade = "#276ed2"
+hover = "#145ec1"
+fg = "#f7faff"
+fg_dim = "#eef5ff"
+active_bg = "#f7faff"
+active_fg = "#002356"
+pop = "#ffbd98"
 
 [themes.light-blue.selection]
-bg = "#9cbaed"
-fg = "#17202a"
+bg = "#276ed2"
+fg = "#f7faff"
 
 [themes.light-blue.status]
-success = "#107823"
+success = "#1b7e2a"
 on_success = "#f6fcf6"
-warning = "#985600"
-on_warning = "#fff9f4"
+warning = "#846300"
+on_warning = "#fdfaf3"
 danger = "#af3c40"
 on_danger = "#fff8f8"
-info = "#006da2"
-on_info = "#f6fbff"
+info = "#007397"
+on_info = "#f4fbff"
 
 [themes.light-blue.effects]
-shadow = "#142332"
+shadow = "#1c222b"
 shadow_opacity = 0.18
-blur_tint = "#f1f8ff"
+blur_tint = "#ffffff"
 blur_opacity = 0.8
 
 [themes.light-blue.cat]
-red = "#b84d49"
-orange = "#b05a00"
-yellow = "#8a7300"
-green = "#34893c"
-teal = "#00877c"
-blue = "#3475c4"
-purple = "#885cb5"
-pink = "#af4d80"
+red = "#c85b56"
+orange = "#be6517"
+yellow = "#947b00"
+green = "#3a8f42"
+teal = "#008d82"
+blue = "#3d7ece"
+purple = "#9569c4"
+pink = "#be5a8d"
 
 [themes.light-blue.term]
-bg = "#dae8f7"
-fg = "#17202a"
-cursor = "#0363ef"
-cursor_text = "#f7faff"
-selection_bg = "#9cbaed"
-selection_fg = "#17202a"
-black = "#26303b"
-bright_black = "#525e6a"
-white = "#b5c1ce"
-bright_white = "#cbd7e5"
+bg = "#edf0f6"
+fg = "#1d1f23"
+cursor = "#b65400"
+cursor_text = "#fff9f5"
+selection_bg = "#276ed2"
+selection_fg = "#f7faff"
+black = "#34373b"
+bright_black = "#626569"
+white = "#c6c9ce"
+bright_white = "#dce0e5"
 red = "#9d3533"
 bright_red = "#8a0314"
 green = "#157123"
@@ -968,6 +1104,280 @@ icons = "candy-icons"
 icons_symbolic = "Papirus-Light"
 wallpaper_set = "light-blue"
 
+[themes.blue.meta]
+name = "Blue"
+slug = "blue"
+family = "blue"
+tone = "mid"
+polarity = "dark"
+multi = false
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "amber"
+schema = 2
+
+[themes.blue.surface]
+sunken = "#1e2124"
+bar = "#222528"
+base = "#2b2e32"
+raised = "#33363a"
+overlay = "#3b3e42"
+hover = "#4c4f53"
+
+[themes.blue.text]
+primary = "#d4d8dd"
+secondary = "#bec1c6"
+muted = "#a3a3a3"
+
+[themes.blue.band]
+base = "#0555b7"
+strong = "#003e8b"
+on = "#f7faff"
+soft = "#324259"
+text = "#95c0ff"
+
+[themes.blue.pop]
+base = "#ffae33"
+on = "#1c1105"
+text = "#ffb346"
+
+[themes.blue.accent]
+base = "#ffae33"
+on = "#1c1105"
+text = "#ffb346"
+ring = "#ffae33"
+hover = "#ffc57b"
+pressed = "#e0a454"
+
+[themes.blue.border]
+subtle = "#53555a"
+strong = "#ced1d6"
+
+[themes.blue.window]
+focused = "#95c0ff"
+unfocused = "#53555a"
+urgent = "#ffb0ca"
+
+[themes.blue.bar]
+bg = "#003e8b"
+shade = "#0555b7"
+hover = "#00489f"
+fg = "#f7faff"
+fg_dim = "#c3d4ee"
+active_bg = "#f7faff"
+active_fg = "#003e8b"
+pop = "#ffae33"
+
+[themes.blue.selection]
+bg = "#0555b7"
+fg = "#f7faff"
+
+[themes.blue.status]
+success = "#88e48c"
+on_success = "#0b170b"
+warning = "#d3d250"
+on_warning = "#151505"
+danger = "#ffb4b1"
+on_danger = "#200e0e"
+info = "#51dfff"
+on_info = "#02171c"
+
+[themes.blue.effects]
+shadow = "#000000"
+shadow_opacity = 0.45
+blur_tint = "#3b3e42"
+blur_opacity = 0.72
+
+[themes.blue.cat]
+red = "#ffaba3"
+orange = "#ffaf78"
+yellow = "#e1c34b"
+green = "#87dc8a"
+teal = "#22e1d0"
+blue = "#9cc7ff"
+purple = "#d5b1ff"
+pink = "#ffa3cf"
+
+[themes.blue.term]
+bg = "#2b2e32"
+fg = "#d4d8dd"
+cursor = "#ffae33"
+cursor_text = "#1c1105"
+selection_bg = "#0555b7"
+selection_fg = "#f7faff"
+black = "#55585d"
+bright_black = "#7d8085"
+white = "#c1c4c9"
+bright_white = "#ebeff4"
+red = "#ffa098"
+bright_red = "#ffcdc8"
+green = "#81d584"
+bright_green = "#92f697"
+yellow = "#e1b942"
+bright_yellow = "#ffd661"
+blue = "#91c1ff"
+bright_blue = "#c3ddff"
+magenta = "#f29dea"
+bright_magenta = "#ffc5f9"
+cyan = "#00d8d9"
+bright_cyan = "#00f9fa"
+
+[themes.blue.brand]
+emblem_blue = "#0363ef"
+emblem_blue_deep = "#0048b6"
+emblem_orange = "#d9400e"
+emblem_orange_deep = "#b93205"
+wordmark_gray = "#969696"
+kognog_mauve = "#cba6f7"
+
+[themes.blue.names]
+gtk_theme = "adw-gtk3-dark"
+color_scheme = "prefer-dark"
+gnome_accent = "blue"
+cursor = "catppuccin-mocha-blue-cursors"
+cursor_size = 24
+icons = "candy-icons"
+icons_symbolic = "Papirus-Dark"
+wallpaper_set = "blue"
+
+[themes.dark-blue.meta]
+name = "Dark Blue"
+slug = "dark-blue"
+family = "blue"
+tone = "dark"
+polarity = "dark"
+multi = false
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "amber"
+schema = 2
+
+[themes.dark-blue.surface]
+sunken = "#090b0f"
+bar = "#0c0e12"
+base = "#101316"
+raised = "#171a1d"
+overlay = "#1f2226"
+hover = "#303337"
+
+[themes.dark-blue.text]
+primary = "#d4d8dd"
+secondary = "#b3b6bb"
+muted = "#989898"
+
+[themes.dark-blue.band]
+base = "#003981"
+strong = "#00285f"
+on = "#f7faff"
+soft = "#142237"
+text = "#8ab9ff"
+
+[themes.dark-blue.pop]
+base = "#ffae33"
+on = "#1c1105"
+text = "#ffae33"
+
+[themes.dark-blue.accent]
+base = "#ffae33"
+on = "#1c1105"
+text = "#ffae33"
+ring = "#ffae33"
+hover = "#ffc57b"
+pressed = "#e0a454"
+
+[themes.dark-blue.border]
+subtle = "#34373b"
+strong = "#a9adb1"
+
+[themes.dark-blue.window]
+focused = "#8ab9ff"
+unfocused = "#34373b"
+urgent = "#ff9abd"
+
+[themes.dark-blue.bar]
+bg = "#00285f"
+shade = "#003981"
+hover = "#002d69"
+fg = "#f7faff"
+fg_dim = "#b3c4dd"
+active_bg = "#f7faff"
+active_fg = "#00285f"
+pop = "#ffae33"
+
+[themes.dark-blue.selection]
+bg = "#003981"
+fg = "#f7faff"
+
+[themes.dark-blue.status]
+success = "#7bd77f"
+on_success = "#0b170b"
+warning = "#c6c541"
+on_warning = "#151505"
+danger = "#ffa09c"
+on_danger = "#200e0e"
+info = "#00d4f8"
+on_info = "#02171c"
+
+[themes.dark-blue.effects]
+shadow = "#000000"
+shadow_opacity = 0.55
+blur_tint = "#1f2226"
+blur_opacity = 0.72
+
+[themes.dark-blue.cat]
+red = "#ff958d"
+orange = "#fb9d59"
+yellow = "#d3b63b"
+green = "#7acf7e"
+teal = "#00d3c3"
+blue = "#85baff"
+purple = "#cc9fff"
+pink = "#f990c4"
+
+[themes.dark-blue.term]
+bg = "#101316"
+fg = "#d4d8dd"
+cursor = "#ffae33"
+cursor_text = "#1c1105"
+selection_bg = "#003981"
+selection_fg = "#f7faff"
+black = "#37393d"
+bright_black = "#5c5f64"
+white = "#c1c4c9"
+bright_white = "#ebeff4"
+red = "#ff958d"
+bright_red = "#ffbab3"
+green = "#74c878"
+bright_green = "#85e98a"
+yellow = "#d5ae34"
+bright_yellow = "#f6c835"
+blue = "#7cb6ff"
+bright_blue = "#add1ff"
+magenta = "#e995e2"
+bright_magenta = "#ffadf7"
+cyan = "#00caca"
+bright_cyan = "#00ebeb"
+
+[themes.dark-blue.brand]
+emblem_blue = "#0363ef"
+emblem_blue_deep = "#0048b6"
+emblem_orange = "#d9400e"
+emblem_orange_deep = "#b93205"
+wordmark_gray = "#969696"
+kognog_mauve = "#cba6f7"
+
+[themes.dark-blue.names]
+gtk_theme = "adw-gtk3-dark"
+color_scheme = "prefer-dark"
+gnome_accent = "blue"
+cursor = "catppuccin-mocha-blue-cursors"
+cursor_size = 24
+icons = "candy-icons"
+icons_symbolic = "Papirus-Dark"
+wallpaper_set = "dark-blue"
+
 [themes.light-purple.meta]
 name = "Light Purple"
 slug = "light-purple"
@@ -975,88 +1385,105 @@ family = "purple"
 tone = "light"
 polarity = "light"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "mint"
+schema = 2
 
 [themes.light-purple.surface]
-sunken = "#d8d2e4"
-bar = "#ddd7eb"
-base = "#e8e3f5"
-raised = "#f1ebfd"
-overlay = "#f8f5ff"
-hover = "#d0cadc"
+sunken = "#e7e5eb"
+bar = "#eceaf0"
+base = "#f1eff5"
+raised = "#f9f7fc"
+overlay = "#ffffff"
+hover = "#dddbe1"
 
 [themes.light-purple.text]
-primary = "#211d28"
-secondary = "#4f4a58"
-muted = "#76727e"
+primary = "#201e22"
+secondary = "#4e4c51"
+muted = "#747474"
+
+[themes.light-purple.band]
+base = "#8650c7"
+strong = "#35005e"
+on = "#fbf9ff"
+soft = "#ebe0ff"
+text = "#7239b0"
+
+[themes.light-purple.pop]
+base = "#00835e"
+on = "#f4fcf8"
+text = "#007c59"
 
 [themes.light-purple.accent]
-base = "#793cbb"
-on = "#fbf9ff"
-hover = "#6b2baa"
-pressed = "#572d86"
-text = "#793cbb"
-ring = "#793cbb"
+base = "#00835e"
+on = "#f4fcf8"
+text = "#007c59"
+ring = "#00835e"
+hover = "#007252"
+pressed = "#006246"
 
 [themes.light-purple.border]
-subtle = "#beb9ca"
-strong = "#757080"
+subtle = "#c6c4ca"
+strong = "#7c7b80"
 
 [themes.light-purple.window]
-focused = "#793cbb"
-unfocused = "#beb9ca"
+focused = "#7239b0"
+unfocused = "#c6c4ca"
 urgent = "#af3c40"
 
 [themes.light-purple.bar]
-bg = "#ddd7eb"
-shade = "#f1ebfd"
-hover = "#d0cadc"
-fg = "#211d28"
-fg_dim = "#4f4a58"
-active_bg = "#793cbb"
-active_fg = "#fbf9ff"
+bg = "#35005e"
+shade = "#8650c7"
+hover = "#7840b6"
+fg = "#fbf9ff"
+fg_dim = "#f1eaff"
+active_bg = "#fbf9ff"
+active_fg = "#35005e"
+pop = "#60daaa"
 
 [themes.light-purple.selection]
-bg = "#c2ade4"
-fg = "#211d28"
+bg = "#8650c7"
+fg = "#fbf9ff"
 
 [themes.light-purple.status]
-success = "#0d7621"
-on_success = "#f6fcf6"
+success = "#457900"
+on_success = "#f7fcf5"
 warning = "#985600"
 on_warning = "#fff9f4"
 danger = "#af3c40"
 on_danger = "#fff8f8"
-info = "#006da2"
+info = "#0070a6"
 on_info = "#f6fbff"
 
 [themes.light-purple.effects]
-shadow = "#241e30"
+shadow = "#231f2a"
 shadow_opacity = 0.18
-blur_tint = "#f8f5ff"
+blur_tint = "#ffffff"
 blur_opacity = 0.8
 
 [themes.light-purple.cat]
-red = "#b84d49"
-orange = "#b05a00"
-yellow = "#8a7300"
-green = "#34893c"
-teal = "#00877c"
-blue = "#3475c4"
-purple = "#885cb5"
-pink = "#af4d80"
+red = "#c85b56"
+orange = "#be6517"
+yellow = "#947b00"
+green = "#3a8f42"
+teal = "#008d82"
+blue = "#3d7ece"
+purple = "#9569c4"
+pink = "#be5a8d"
 
 [themes.light-purple.term]
-bg = "#e8e3f5"
-fg = "#211d28"
-cursor = "#793cbb"
-cursor_text = "#fbf9ff"
-selection_bg = "#c2ade4"
-selection_fg = "#211d28"
-black = "#312c3a"
-bright_black = "#5e5969"
-white = "#c1bccc"
-bright_white = "#d8d3e3"
+bg = "#f1eff5"
+fg = "#201e22"
+cursor = "#00835e"
+cursor_text = "#f4fcf8"
+selection_bg = "#8650c7"
+selection_fg = "#fbf9ff"
+black = "#37363a"
+bright_black = "#656469"
+white = "#cac8cd"
+bright_white = "#e0dee4"
 red = "#9d3533"
 bright_red = "#8a0314"
 green = "#157123"
@@ -1095,99 +1522,116 @@ family = "purple"
 tone = "mid"
 polarity = "dark"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "mint"
+schema = 2
 
 [themes.purple.surface]
-sunken = "#3a2e58"
-bar = "#322352"
-base = "#493e69"
-raised = "#514672"
-overlay = "#594e7b"
-hover = "#675c8a"
+sunken = "#212024"
+bar = "#252428"
+base = "#2e2d31"
+raised = "#363439"
+overlay = "#3e3d41"
+hover = "#4f4d52"
 
 [themes.purple.text]
-primary = "#ece7ff"
-secondary = "#d2cde6"
-muted = "#b2aec1"
+primary = "#d8d6dc"
+secondary = "#c2c0c5"
+muted = "#a1a1a1"
+
+[themes.purple.band]
+base = "#6e3aa8"
+strong = "#551c8b"
+on = "#fbf9ff"
+soft = "#453b55"
+text = "#cfafff"
+
+[themes.purple.pop]
+base = "#61dbac"
+on = "#051810"
+text = "#61dbac"
 
 [themes.purple.accent]
-base = "#cba6f7"
-on = "#191221"
-hover = "#d9b9ff"
-pressed = "#c0a5e1"
-text = "#dec4ff"
-ring = "#cba6f7"
+base = "#61dbac"
+on = "#051810"
+text = "#61dbac"
+ring = "#61dbac"
+hover = "#73ecbc"
+pressed = "#6ec29f"
 
 [themes.purple.border]
-subtle = "#736896"
-strong = "#f1edff"
+subtle = "#565459"
+strong = "#d2d0d5"
 
 [themes.purple.window]
-focused = "#cba6f7"
-unfocused = "#665b88"
-urgent = "#ffbbaa"
+focused = "#cfafff"
+unfocused = "#565459"
+urgent = "#ffb6a4"
 
 [themes.purple.bar]
-bg = "#322352"
-shade = "#514672"
-hover = "#675c8a"
-fg = "#ece7ff"
-fg_dim = "#d2cde6"
-active_bg = "#cba6f7"
-active_fg = "#191221"
+bg = "#551c8b"
+shade = "#6e3aa8"
+hover = "#602a98"
+fg = "#fbf9ff"
+fg_dim = "#d6cce8"
+active_bg = "#fbf9ff"
+active_fg = "#551c8b"
+pop = "#61dbac"
 
 [themes.purple.selection]
-bg = "#726286"
-fg = "#ece7ff"
+bg = "#6e3aa8"
+fg = "#fbf9ff"
 
 [themes.purple.status]
-success = "#88e48c"
-on_success = "#0d1a0d"
+success = "#a3df76"
+on_success = "#0e1708"
 warning = "#f7c243"
-on_warning = "#1c1505"
-danger = "#ffb9b6"
-on_danger = "#221010"
+on_warning = "#1a1304"
+danger = "#ffb4b1"
+on_danger = "#200e0e"
 info = "#94d3ff"
-on_info = "#081822"
+on_info = "#061520"
 
 [themes.purple.effects]
 shadow = "#000000"
 shadow_opacity = 0.45
-blur_tint = "#594e7b"
+blur_tint = "#3e3d41"
 blur_opacity = 0.72
 
 [themes.purple.cat]
-red = "#ffb0a8"
-orange = "#ffb481"
-yellow = "#e4c64f"
-green = "#8adf8d"
-teal = "#2ae4d3"
-blue = "#a2caff"
-purple = "#d7b6ff"
-pink = "#ffa9d2"
+red = "#ffaba3"
+orange = "#ffaf78"
+yellow = "#e1c34b"
+green = "#87dc8a"
+teal = "#22e1d0"
+blue = "#9cc7ff"
+purple = "#d5b1ff"
+pink = "#ffa3cf"
 
 [themes.purple.term]
-bg = "#493e69"
-fg = "#ece7ff"
-cursor = "#cba6f7"
-cursor_text = "#191221"
-selection_bg = "#726286"
-selection_fg = "#ece7ff"
-black = "#766b99"
-bright_black = "#a094c5"
-white = "#c5c0d9"
-bright_white = "#efebff"
-red = "#ffb2ab"
+bg = "#2e2d31"
+fg = "#d8d6dc"
+cursor = "#61dbac"
+cursor_text = "#051810"
+selection_bg = "#6e3aa8"
+selection_fg = "#fbf9ff"
+black = "#59575c"
+bright_black = "#817f84"
+white = "#c5c3c8"
+bright_white = "#efedf3"
+red = "#ffa098"
 bright_red = "#ffcdc8"
-green = "#84d987"
+green = "#81d584"
 bright_green = "#92f697"
-yellow = "#e9c14c"
+yellow = "#e1b942"
 bright_yellow = "#ffd661"
-blue = "#9fc9ff"
+blue = "#91c1ff"
 bright_blue = "#c3ddff"
-magenta = "#fea8f6"
+magenta = "#f29dea"
 bright_magenta = "#ffc5f9"
-cyan = "#00dadb"
+cyan = "#00d8d9"
 bright_cyan = "#00f9fa"
 
 [themes.purple.brand]
@@ -1215,65 +1659,82 @@ family = "purple"
 tone = "dark"
 polarity = "dark"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "mint"
+schema = 2
 
 [themes.dark-purple.surface]
-sunken = "#11101f"
-bar = "#181729"
-base = "#1e1e2e"
-raised = "#262637"
-overlay = "#323243"
-hover = "#464759"
+sunken = "#0c0a0e"
+bar = "#0f0e11"
+base = "#131216"
+raised = "#1a191d"
+overlay = "#222125"
+hover = "#333236"
 
 [themes.dark-purple.text]
-primary = "#d5d6e9"
-secondary = "#bbbccf"
-muted = "#9b9baa"
+primary = "#d8d6dc"
+secondary = "#b7b5ba"
+muted = "#989898"
+
+[themes.dark-purple.band]
+base = "#4d1e7c"
+strong = "#3b0267"
+on = "#fbf9ff"
+soft = "#261c34"
+text = "#c7a2ff"
+
+[themes.dark-purple.pop]
+base = "#61dbac"
+on = "#051810"
+text = "#61dbac"
 
 [themes.dark-purple.accent]
-base = "#cba6f7"
-on = "#191221"
-hover = "#d9b9ff"
-pressed = "#c0a5e1"
-text = "#d1acfe"
-ring = "#cba6f7"
+base = "#61dbac"
+on = "#051810"
+text = "#61dbac"
+ring = "#61dbac"
+hover = "#73ecbc"
+pressed = "#6ec29f"
 
 [themes.dark-purple.border]
-subtle = "#444456"
-strong = "#bcbdd2"
+subtle = "#37363a"
+strong = "#adabb1"
 
 [themes.dark-purple.window]
-focused = "#cba6f7"
-unfocused = "#444456"
-urgent = "#ffa28c"
+focused = "#c7a2ff"
+unfocused = "#37363a"
+urgent = "#ffa09c"
 
 [themes.dark-purple.bar]
-bg = "#181729"
-shade = "#262637"
-hover = "#464759"
-fg = "#d5d6e9"
-fg_dim = "#bbbccf"
-active_bg = "#cba6f7"
-active_fg = "#191221"
+bg = "#3b0267"
+shade = "#4d1e7c"
+hover = "#400b6d"
+fg = "#fbf9ff"
+fg_dim = "#c5bbd7"
+active_bg = "#fbf9ff"
+active_fg = "#3b0267"
+pop = "#61dbac"
 
 [themes.dark-purple.selection]
-bg = "#4a3b5d"
-fg = "#d5d6e9"
+bg = "#4d1e7c"
+fg = "#fbf9ff"
 
 [themes.dark-purple.status]
-success = "#7bd77f"
-on_success = "#0d1a0d"
+success = "#97d269"
+on_success = "#0e1708"
 warning = "#eab532"
-on_warning = "#1c1505"
+on_warning = "#1a1304"
 danger = "#ffa09c"
-on_danger = "#221010"
+on_danger = "#200e0e"
 info = "#76c7ff"
-on_info = "#081822"
+on_info = "#061520"
 
 [themes.dark-purple.effects]
 shadow = "#000000"
 shadow_opacity = 0.55
-blur_tint = "#323243"
+blur_tint = "#222125"
 blur_opacity = 0.72
 
 [themes.dark-purple.cat]
@@ -1287,25 +1748,25 @@ purple = "#cc9fff"
 pink = "#f990c4"
 
 [themes.dark-purple.term]
-bg = "#1e1e2e"
-fg = "#d5d6e9"
-cursor = "#cba6f7"
-cursor_text = "#191221"
-selection_bg = "#4a3b5d"
-selection_fg = "#d5d6e9"
-black = "#464758"
-bright_black = "#6d6e81"
-white = "#c1c2d6"
-bright_white = "#ecedff"
-red = "#ff9890"
+bg = "#131216"
+fg = "#d8d6dc"
+cursor = "#61dbac"
+cursor_text = "#051810"
+selection_bg = "#4d1e7c"
+selection_fg = "#fbf9ff"
+black = "#3a383d"
+bright_black = "#605e63"
+white = "#c5c3c8"
+bright_white = "#efedf3"
+red = "#ff958d"
 bright_red = "#ffbab3"
 green = "#74c878"
 bright_green = "#85e98a"
-yellow = "#d8b138"
+yellow = "#d5ae34"
 bright_yellow = "#f6c835"
-blue = "#82b9ff"
+blue = "#7cb6ff"
 bright_blue = "#add1ff"
-magenta = "#ed98e5"
+magenta = "#e995e2"
 bright_magenta = "#ffadf7"
 cyan = "#00caca"
 bright_cyan = "#00ebeb"
@@ -1335,88 +1796,105 @@ family = "green"
 tone = "light"
 polarity = "light"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "raspberry"
+schema = 2
 
 [themes.light-green.surface]
-sunken = "#cbdbcd"
-bar = "#cee0d1"
-base = "#dbebde"
-raised = "#e3f4e6"
-overlay = "#ecfcee"
-hover = "#c3d3c5"
+sunken = "#e3e8e3"
+bar = "#e8ede8"
+base = "#edf2ed"
+raised = "#f4f9f5"
+overlay = "#ffffff"
+hover = "#d9deda"
 
 [themes.light-green.text]
-primary = "#18221a"
-secondary = "#455147"
-muted = "#6d786f"
+primary = "#1d201d"
+secondary = "#4a4e4b"
+muted = "#747474"
+
+[themes.light-green.band]
+base = "#17843f"
+strong = "#003011"
+on = "#f6fcf7"
+soft = "#d3efd8"
+text = "#007131"
+
+[themes.light-green.pop]
+base = "#c3337a"
+on = "#fff8fa"
+text = "#c3337a"
 
 [themes.light-green.accent]
-base = "#007835"
-on = "#f6fcf7"
-hover = "#00672d"
-pressed = "#095727"
-text = "#007835"
-ring = "#007835"
+base = "#c3337a"
+on = "#fff8fa"
+text = "#c3337a"
+ring = "#c3337a"
+hover = "#b11e6b"
+pressed = "#912c5c"
 
 [themes.light-green.border]
-subtle = "#b1c1b4"
-strong = "#69776b"
+subtle = "#c2c7c3"
+strong = "#797d79"
 
 [themes.light-green.window]
-focused = "#007835"
-unfocused = "#b3c3b5"
-urgent = "#af3c40"
+focused = "#007131"
+unfocused = "#c2c7c3"
+urgent = "#aa4600"
 
 [themes.light-green.bar]
-bg = "#cee0d1"
-shade = "#e3f4e6"
-hover = "#c3d3c5"
-fg = "#18221a"
-fg_dim = "#455147"
-active_bg = "#007835"
-active_fg = "#f6fcf7"
+bg = "#003011"
+shade = "#17843f"
+hover = "#007433"
+fg = "#f6fcf7"
+fg_dim = "#ebffee"
+active_bg = "#f6fcf7"
+active_fg = "#003011"
+pop = "#ffbad4"
 
 [themes.light-green.selection]
-bg = "#99c6a2"
-fg = "#18221a"
+bg = "#17843f"
+fg = "#f6fcf7"
 
 [themes.light-green.status]
-success = "#696700"
-on_success = "#fafbf3"
+success = "#007a6c"
+on_success = "#f3fcfa"
 warning = "#985600"
 on_warning = "#fff9f4"
 danger = "#af3c40"
 on_danger = "#fff8f8"
-info = "#006da2"
+info = "#0070a6"
 on_info = "#f6fbff"
 
 [themes.light-green.effects]
-shadow = "#152619"
+shadow = "#1b241d"
 shadow_opacity = 0.18
-blur_tint = "#ecfcee"
+blur_tint = "#ffffff"
 blur_opacity = 0.8
 
 [themes.light-green.cat]
-red = "#b84d49"
-orange = "#b05a00"
-yellow = "#8a7300"
-green = "#34893c"
-teal = "#00877c"
-blue = "#3475c4"
-purple = "#885cb5"
-pink = "#af4d80"
+red = "#c85b56"
+orange = "#c0671a"
+yellow = "#967d00"
+green = "#3a8f42"
+teal = "#008d82"
+blue = "#3e80d0"
+purple = "#976bc6"
+pink = "#bf5c8f"
 
 [themes.light-green.term]
-bg = "#dbebde"
-fg = "#18221a"
-cursor = "#007835"
-cursor_text = "#f6fcf7"
-selection_bg = "#99c6a2"
-selection_fg = "#18221a"
-black = "#263328"
-bright_black = "#536055"
-white = "#b6c4b8"
-bright_white = "#ccdace"
+bg = "#edf2ed"
+fg = "#1d201d"
+cursor = "#c3337a"
+cursor_text = "#fff8fa"
+selection_bg = "#17843f"
+selection_fg = "#f6fcf7"
+black = "#343834"
+bright_black = "#626662"
+white = "#c5cac6"
+bright_white = "#dce1dd"
 red = "#9d3533"
 bright_red = "#8a0314"
 green = "#157123"
@@ -1455,99 +1933,116 @@ family = "green"
 tone = "mid"
 polarity = "dark"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "gold"
+schema = 2
 
 [themes.green.surface]
-sunken = "#17402b"
-bar = "#013820"
-base = "#28503a"
-raised = "#305842"
-overlay = "#38614a"
-hover = "#466f58"
+sunken = "#1e221e"
+bar = "#222622"
+base = "#2b2f2c"
+raised = "#333733"
+overlay = "#3b3f3b"
+hover = "#4b504c"
 
 [themes.green.text]
-primary = "#dcf6e6"
-secondary = "#bfd8c8"
-muted = "#a3b7aa"
+primary = "#d4d9d5"
+secondary = "#bfc4c0"
+muted = "#a3a3a3"
+
+[themes.green.band]
+base = "#006e30"
+strong = "#005121"
+on = "#f6fcf7"
+soft = "#324736"
+text = "#7cd591"
+
+[themes.green.pop]
+base = "#edb836"
+on = "#1a1304"
+text = "#efba39"
 
 [themes.green.accent]
-base = "#a5eb7c"
-on = "#10190b"
-hover = "#b5fc8c"
-pressed = "#9fd283"
-text = "#a5eb7c"
-ring = "#a5eb7c"
+base = "#edb836"
+on = "#1a1304"
+text = "#efba39"
+ring = "#edb836"
+hover = "#fec84b"
+pressed = "#d2ab57"
 
 [themes.green.border]
-subtle = "#527b63"
-strong = "#d0fde1"
+subtle = "#525753"
+strong = "#cdd2ce"
 
 [themes.green.window]
-focused = "#a5eb7c"
-unfocused = "#527b63"
-urgent = "#ffbcb8"
+focused = "#7cd591"
+unfocused = "#525753"
+urgent = "#ffb2bd"
 
 [themes.green.bar]
-bg = "#013820"
-shade = "#305842"
-hover = "#466f58"
-fg = "#dcf6e6"
-fg_dim = "#bfd8c8"
-active_bg = "#a5eb7c"
-active_fg = "#10190b"
+bg = "#005121"
+shade = "#006e30"
+hover = "#005e28"
+fg = "#f6fcf7"
+fg_dim = "#c6e0ca"
+active_bg = "#f6fcf7"
+active_fg = "#005121"
+pop = "#edb836"
 
 [themes.green.selection]
-bg = "#567545"
-fg = "#dcf6e6"
+bg = "#006e30"
+fg = "#f6fcf7"
 
 [themes.green.status]
-success = "#46e9ba"
-on_success = "#061a14"
-warning = "#fac547"
-on_warning = "#1c1505"
-danger = "#ffbcb8"
-on_danger = "#221010"
+success = "#bcd961"
+on_success = "#121606"
+warning = "#bcd961"
+on_warning = "#121606"
+danger = "#ffb4b1"
+on_danger = "#200e0e"
 info = "#94d3ff"
-on_info = "#081822"
+on_info = "#061520"
 
 [themes.green.effects]
 shadow = "#000000"
 shadow_opacity = 0.45
-blur_tint = "#38614a"
+blur_tint = "#3b3f3b"
 blur_opacity = 0.72
 
 [themes.green.cat]
-red = "#ffb0a8"
-orange = "#ffb481"
-yellow = "#e4c64f"
-green = "#8adf8d"
-teal = "#2ae4d3"
-blue = "#a2caff"
-purple = "#d7b6ff"
-pink = "#ffa9d2"
+red = "#ffaba3"
+orange = "#ffaf78"
+yellow = "#e1c34b"
+green = "#87dc8a"
+teal = "#22e1d0"
+blue = "#9cc7ff"
+purple = "#d5b1ff"
+pink = "#ffa3cf"
 
 [themes.green.term]
-bg = "#28503a"
-fg = "#dcf6e6"
-cursor = "#a5eb7c"
-cursor_text = "#10190b"
-selection_bg = "#567545"
-selection_fg = "#dcf6e6"
-black = "#547e66"
-bright_black = "#7ea98f"
-white = "#b2cbbc"
-bright_white = "#dcf6e6"
-red = "#ffb5ae"
+bg = "#2b2f2c"
+fg = "#d4d9d5"
+cursor = "#edb836"
+cursor_text = "#1a1304"
+selection_bg = "#006e30"
+selection_fg = "#f6fcf7"
+black = "#555956"
+bright_black = "#7d827e"
+white = "#c1c6c1"
+bright_white = "#ebf0ec"
+red = "#ffa098"
 bright_red = "#ffcdc8"
-green = "#85da89"
+green = "#81d584"
 bright_green = "#92f697"
-yellow = "#ebc34d"
+yellow = "#e1b942"
 bright_yellow = "#ffd661"
-blue = "#a2caff"
+blue = "#91c1ff"
 bright_blue = "#c3ddff"
-magenta = "#ffadf7"
+magenta = "#f29dea"
 bright_magenta = "#ffc5f9"
-cyan = "#00dcdc"
+cyan = "#00d8d9"
 bright_cyan = "#00f9fa"
 
 [themes.green.brand]
@@ -1575,65 +2070,82 @@ family = "green"
 tone = "dark"
 polarity = "dark"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "gold"
+schema = 2
 
 [themes.dark-green.surface]
-sunken = "#07160c"
-bar = "#0b1e13"
-base = "#14241a"
-raised = "#1c2d22"
-overlay = "#28392d"
-hover = "#3c4e42"
+sunken = "#090c09"
+bar = "#0c0f0d"
+base = "#101411"
+raised = "#171b17"
+overlay = "#1f2320"
+hover = "#303431"
 
 [themes.dark-green.text]
-primary = "#caddd0"
-secondary = "#afc2b5"
-muted = "#91a096"
+primary = "#d4d9d5"
+secondary = "#b2b7b3"
+muted = "#989898"
+
+[themes.dark-green.band]
+base = "#004b1e"
+strong = "#003614"
+on = "#f6fcf7"
+soft = "#142718"
+text = "#7ccd8e"
+
+[themes.dark-green.pop]
+base = "#edb836"
+on = "#1a1304"
+text = "#edb836"
 
 [themes.dark-green.accent]
-base = "#7bd77f"
-on = "#0d1a0d"
-hover = "#8be78f"
-pressed = "#7fc181"
-text = "#7bd77f"
-ring = "#7bd77f"
+base = "#edb836"
+on = "#1a1304"
+text = "#edb836"
+ring = "#edb836"
+hover = "#fec84b"
+pressed = "#d2ab57"
 
 [themes.dark-green.border]
-subtle = "#394b3f"
-strong = "#b0c5b6"
+subtle = "#343834"
+strong = "#a9aeaa"
 
 [themes.dark-green.window]
-focused = "#7bd77f"
-unfocused = "#394b3f"
-urgent = "#ffa09c"
+focused = "#7ccd8e"
+unfocused = "#343834"
+urgent = "#ff9dac"
 
 [themes.dark-green.bar]
-bg = "#0b1e13"
-shade = "#1c2d22"
-hover = "#3c4e42"
-fg = "#caddd0"
-fg_dim = "#afc2b5"
-active_bg = "#7bd77f"
-active_fg = "#0d1a0d"
+bg = "#003614"
+shade = "#004b1e"
+hover = "#003c17"
+fg = "#f6fcf7"
+fg_dim = "#b1cab5"
+active_bg = "#f6fcf7"
+active_fg = "#003614"
+pop = "#edb836"
 
 [themes.dark-green.selection]
-bg = "#274d29"
-fg = "#caddd0"
+bg = "#004b1e"
+fg = "#f6fcf7"
 
 [themes.dark-green.status]
-success = "#00dbc3"
-on_success = "#041a17"
-warning = "#eab532"
-on_warning = "#1c1505"
+success = "#00d9d6"
+on_success = "#021817"
+warning = "#ffa473"
+on_warning = "#1f1007"
 danger = "#ffa09c"
-on_danger = "#221010"
+on_danger = "#200e0e"
 info = "#76c7ff"
-on_info = "#081822"
+on_info = "#061520"
 
 [themes.dark-green.effects]
 shadow = "#000000"
 shadow_opacity = 0.55
-blur_tint = "#28392d"
+blur_tint = "#1f2320"
 blur_opacity = 0.72
 
 [themes.dark-green.cat]
@@ -1647,25 +2159,25 @@ purple = "#cc9fff"
 pink = "#f990c4"
 
 [themes.dark-green.term]
-bg = "#14241a"
-fg = "#caddd0"
-cursor = "#7bd77f"
-cursor_text = "#0d1a0d"
-selection_bg = "#274d29"
-selection_fg = "#caddd0"
-black = "#3c4d41"
-bright_black = "#627568"
-white = "#b7cabd"
-bright_white = "#e1f4e7"
-red = "#ff9b93"
+bg = "#101411"
+fg = "#d4d9d5"
+cursor = "#edb836"
+cursor_text = "#1a1304"
+selection_bg = "#004b1e"
+selection_fg = "#f6fcf7"
+black = "#363a37"
+bright_black = "#5c605d"
+white = "#c1c6c1"
+bright_white = "#ebf0ec"
+red = "#ff958d"
 bright_red = "#ffbab3"
 green = "#74c878"
 bright_green = "#85e98a"
-yellow = "#d8b138"
+yellow = "#d5ae34"
 bright_yellow = "#f6c835"
-blue = "#82b9ff"
+blue = "#7cb6ff"
 bright_blue = "#add1ff"
-magenta = "#ed98e5"
+magenta = "#e995e2"
 bright_magenta = "#ffadf7"
 cyan = "#00caca"
 bright_cyan = "#00ebeb"
@@ -1695,88 +2207,105 @@ family = "pink"
 tone = "light"
 polarity = "light"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "teal"
+schema = 2
 
 [themes.light-pink.surface]
-sunken = "#e4d0d8"
-bar = "#ebd3dd"
-base = "#f4e0e8"
-raised = "#fde8f1"
-overlay = "#fff3f8"
-hover = "#dbc7d0"
+sunken = "#ebe4e7"
+bar = "#f0e9ec"
+base = "#f5eef1"
+raised = "#fcf6f8"
+overlay = "#ffffff"
+hover = "#e1dadd"
 
 [themes.light-pink.text]
-primary = "#281b21"
-secondary = "#57484f"
-muted = "#7d7076"
+primary = "#221e20"
+secondary = "#514b4d"
+muted = "#747474"
+
+[themes.light-pink.band]
+base = "#b73c7c"
+strong = "#4b002c"
+on = "#fff8fb"
+soft = "#ffdbe9"
+text = "#9f2367"
+
+[themes.light-pink.pop]
+base = "#00817c"
+on = "#f3fcfb"
+text = "#007974"
 
 [themes.light-pink.accent]
-base = "#bf2f77"
-on = "#fff8fa"
-hover = "#ae1a69"
-pressed = "#8d2959"
-text = "#ba2973"
-ring = "#bf2f77"
+base = "#00817c"
+on = "#f3fcfb"
+text = "#007974"
+ring = "#00817c"
+hover = "#00716d"
+pressed = "#00615d"
 
 [themes.light-pink.border]
-subtle = "#cab6be"
-strong = "#7f6d75"
+subtle = "#cac4c6"
+strong = "#807a7c"
 
 [themes.light-pink.window]
-focused = "#bf2f77"
-unfocused = "#d0bcc5"
-urgent = "#aa4600"
+focused = "#9f2367"
+unfocused = "#cac4c6"
+urgent = "#9c5300"
 
 [themes.light-pink.bar]
-bg = "#ebd3dd"
-shade = "#fde8f1"
-hover = "#dbc7d0"
-fg = "#281b21"
-fg_dim = "#57484f"
-active_bg = "#bf2f77"
-active_fg = "#fff8fa"
+bg = "#4b002c"
+shade = "#b73c7c"
+hover = "#a62b6d"
+fg = "#fff8fb"
+fg_dim = "#ffe6f0"
+active_bg = "#fff8fb"
+active_fg = "#4b002c"
+pop = "#49d8d0"
 
 [themes.light-pink.selection]
-bg = "#e3a4bb"
-fg = "#281b21"
+bg = "#b73c7c"
+fg = "#fff8fb"
 
 [themes.light-pink.status]
-success = "#0d7621"
+success = "#1b7e2a"
 on_success = "#f6fcf6"
 warning = "#985600"
 on_warning = "#fff9f4"
 danger = "#af3c40"
 on_danger = "#fff8f8"
-info = "#006c9f"
+info = "#0070a6"
 on_info = "#f6fbff"
 
 [themes.light-pink.effects]
-shadow = "#2e1b24"
+shadow = "#291e23"
 shadow_opacity = 0.18
-blur_tint = "#fff3f8"
+blur_tint = "#ffffff"
 blur_opacity = 0.8
 
 [themes.light-pink.cat]
-red = "#b84d49"
-orange = "#b05a00"
-yellow = "#8a7300"
-green = "#34893c"
-teal = "#00877c"
-blue = "#3475c4"
-purple = "#885cb5"
-pink = "#af4d80"
+red = "#c85b56"
+orange = "#c0671a"
+yellow = "#967d00"
+green = "#3a8f42"
+teal = "#008d82"
+blue = "#3e80d0"
+purple = "#976bc6"
+pink = "#bf5c8f"
 
 [themes.light-pink.term]
-bg = "#f4e0e8"
-fg = "#281b21"
-cursor = "#bf2f77"
-cursor_text = "#fff8fa"
-selection_bg = "#e3a4bb"
-selection_fg = "#281b21"
-black = "#392a31"
-bright_black = "#68575e"
-white = "#cbbac1"
-bright_white = "#e2d0d8"
+bg = "#f5eef1"
+fg = "#221e20"
+cursor = "#00817c"
+cursor_text = "#f3fcfb"
+selection_bg = "#b73c7c"
+selection_fg = "#fff8fb"
+black = "#3a3537"
+bright_black = "#696365"
+white = "#cdc7c9"
+bright_white = "#e4dde0"
 red = "#9d3533"
 bright_red = "#8a0314"
 green = "#157123"
@@ -1815,99 +2344,116 @@ family = "pink"
 tone = "mid"
 polarity = "dark"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "teal"
+schema = 2
 
 [themes.pink.surface]
-sunken = "#4b2b3a"
-bar = "#442032"
-base = "#5c3b4a"
-raised = "#644352"
-overlay = "#6d4b5b"
-hover = "#7c5969"
+sunken = "#241f21"
+bar = "#282325"
+base = "#312c2e"
+raised = "#393436"
+overlay = "#413c3e"
+hover = "#524d4f"
 
 [themes.pink.text]
-primary = "#ffe2ee"
-secondary = "#e4c8d4"
-muted = "#c0aab3"
+primary = "#dcd5d8"
+secondary = "#c7c0c3"
+muted = "#a3a3a3"
+
+[themes.pink.band]
+base = "#952c63"
+strong = "#78094b"
+on = "#fff8fb"
+soft = "#543743"
+text = "#ffa1cb"
+
+[themes.pink.pop]
+base = "#4cd9d2"
+on = "#021817"
+text = "#4cd9d2"
 
 [themes.pink.accent]
-base = "#ffb9d9"
-on = "#201018"
-hover = "#ffd3e6"
-pressed = "#e7a8c5"
-text = "#ffbcdb"
-ring = "#ffb9d9"
+base = "#4cd9d2"
+on = "#021817"
+text = "#4cd9d2"
+ring = "#4cd9d2"
+hover = "#60eae2"
+pressed = "#62c0ba"
 
 [themes.pink.border]
-subtle = "#886474"
-strong = "#ffe9f3"
+subtle = "#595356"
+strong = "#d5cfd1"
 
 [themes.pink.window]
-focused = "#ffb9d9"
-unfocused = "#886474"
-urgent = "#fec348"
+focused = "#ffa1cb"
+unfocused = "#595356"
+urgent = "#ffbb69"
 
 [themes.pink.bar]
-bg = "#442032"
-shade = "#644352"
-hover = "#7c5969"
-fg = "#ffe2ee"
-fg_dim = "#e4c8d4"
-active_bg = "#ffb9d9"
-active_fg = "#201018"
+bg = "#78094b"
+shade = "#952c63"
+hover = "#851b55"
+fg = "#fff8fb"
+fg_dim = "#e9c9d6"
+active_bg = "#fff8fb"
+active_fg = "#78094b"
+pop = "#4cd9d2"
 
 [themes.pink.selection]
-bg = "#835d6f"
-fg = "#ffe2ee"
+bg = "#952c63"
+fg = "#fff8fb"
 
 [themes.pink.status]
 success = "#88e48c"
-on_success = "#0d1a0d"
+on_success = "#0b170b"
 warning = "#f7c243"
-on_warning = "#1c1505"
-danger = "#ffbc9d"
-on_danger = "#21120a"
+on_warning = "#1a1304"
+danger = "#ffb6a4"
+on_danger = "#1f0f0b"
 info = "#94d3ff"
-on_info = "#081822"
+on_info = "#061520"
 
 [themes.pink.effects]
 shadow = "#000000"
 shadow_opacity = 0.45
-blur_tint = "#6d4b5b"
+blur_tint = "#413c3e"
 blur_opacity = 0.72
 
 [themes.pink.cat]
-red = "#ffb0a8"
-orange = "#ffb481"
-yellow = "#e4c64f"
-green = "#8adf8d"
-teal = "#2ae4d3"
-blue = "#a2caff"
-purple = "#d7b6ff"
-pink = "#ffa9d2"
+red = "#ffaba3"
+orange = "#ffaf78"
+yellow = "#e1c34b"
+green = "#87dc8a"
+teal = "#22e1d0"
+blue = "#9cc7ff"
+purple = "#d5b1ff"
+pink = "#ffa3cf"
 
 [themes.pink.term]
-bg = "#5c3b4a"
-fg = "#ffe2ee"
-cursor = "#ffb9d9"
-cursor_text = "#201018"
-selection_bg = "#835d6f"
-selection_fg = "#ffe2ee"
-black = "#8b6777"
-bright_black = "#b790a1"
-white = "#d7bbc7"
-bright_white = "#ffe7f1"
-red = "#ffb2ab"
+bg = "#312c2e"
+fg = "#dcd5d8"
+cursor = "#4cd9d2"
+cursor_text = "#021817"
+selection_bg = "#952c63"
+selection_fg = "#fff8fb"
+black = "#5c5658"
+bright_black = "#847e81"
+white = "#c8c2c4"
+bright_white = "#f3ecef"
+red = "#ffa098"
 bright_red = "#ffcdc8"
-green = "#84d987"
+green = "#81d584"
 bright_green = "#92f697"
-yellow = "#e9c14c"
+yellow = "#e1b942"
 bright_yellow = "#ffd661"
-blue = "#9fc9ff"
+blue = "#91c1ff"
 bright_blue = "#c3ddff"
-magenta = "#fea8f6"
+magenta = "#f29dea"
 bright_magenta = "#ffc5f9"
-cyan = "#00dadb"
+cyan = "#00d8d9"
 bright_cyan = "#00f9fa"
 
 [themes.pink.brand]
@@ -1935,65 +2481,82 @@ family = "pink"
 tone = "dark"
 polarity = "dark"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "teal"
+schema = 2
 
 [themes.dark-pink.surface]
-sunken = "#1c0c14"
-bar = "#26131c"
-base = "#2b1a22"
-raised = "#34222a"
-overlay = "#402e36"
-hover = "#56424b"
+sunken = "#0e0a0b"
+bar = "#110d0f"
+base = "#161113"
+raised = "#1d181a"
+overlay = "#252022"
+hover = "#363133"
 
 [themes.dark-pink.text]
-primary = "#e6d1da"
-secondary = "#ccb7c0"
-muted = "#a8989f"
+primary = "#dcd5d8"
+secondary = "#bab4b6"
+muted = "#989898"
+
+[themes.dark-pink.band]
+base = "#6b1344"
+strong = "#530031"
+on = "#fff8fb"
+soft = "#301a24"
+text = "#f895c2"
+
+[themes.dark-pink.pop]
+base = "#4cd9d2"
+on = "#021817"
+text = "#4cd9d2"
 
 [themes.dark-pink.accent]
-base = "#fc9ac9"
-on = "#201018"
-hover = "#ffb4d7"
-pressed = "#e49bbd"
-text = "#ff9ecd"
-ring = "#fc9ac9"
+base = "#4cd9d2"
+on = "#021817"
+text = "#4cd9d2"
+ring = "#4cd9d2"
+hover = "#60eae2"
+pressed = "#62c0ba"
 
 [themes.dark-pink.border]
-subtle = "#533f48"
-strong = "#cfb7c1"
+subtle = "#3a3537"
+strong = "#b1aaad"
 
 [themes.dark-pink.window]
-focused = "#fc9ac9"
-unfocused = "#533f48"
+focused = "#f895c2"
+unfocused = "#3a3537"
 urgent = "#faab3f"
 
 [themes.dark-pink.bar]
-bg = "#26131c"
-shade = "#34222a"
-hover = "#56424b"
-fg = "#e6d1da"
-fg_dim = "#ccb7c0"
-active_bg = "#fc9ac9"
-active_fg = "#201018"
+bg = "#530031"
+shade = "#6b1344"
+hover = "#5b0037"
+fg = "#fff8fb"
+fg_dim = "#d8b8c5"
+active_bg = "#fff8fb"
+active_fg = "#530031"
+pop = "#4cd9d2"
 
 [themes.dark-pink.selection]
-bg = "#5d3448"
-fg = "#e6d1da"
+bg = "#6b1344"
+fg = "#fff8fb"
 
 [themes.dark-pink.status]
 success = "#7bd77f"
-on_success = "#0d1a0d"
+on_success = "#0b170b"
 warning = "#eab532"
-on_warning = "#1c1505"
+on_warning = "#1a1304"
 danger = "#ffa28c"
-on_danger = "#22110d"
+on_danger = "#1f0f0b"
 info = "#76c7ff"
-on_info = "#081822"
+on_info = "#061520"
 
 [themes.dark-pink.effects]
 shadow = "#000000"
 shadow_opacity = 0.55
-blur_tint = "#402e36"
+blur_tint = "#252022"
 blur_opacity = 0.72
 
 [themes.dark-pink.cat]
@@ -2007,25 +2570,25 @@ purple = "#cc9fff"
 pink = "#f990c4"
 
 [themes.dark-pink.term]
-bg = "#2b1a22"
-fg = "#e6d1da"
-cursor = "#fc9ac9"
-cursor_text = "#201018"
-selection_bg = "#5d3448"
-selection_fg = "#e6d1da"
-black = "#56424b"
-bright_black = "#7e6972"
-white = "#d3bdc6"
-bright_white = "#fee8f1"
-red = "#ff9890"
+bg = "#161113"
+fg = "#dcd5d8"
+cursor = "#4cd9d2"
+cursor_text = "#021817"
+selection_bg = "#6b1344"
+selection_fg = "#fff8fb"
+black = "#3d383a"
+bright_black = "#635d5f"
+white = "#c8c2c4"
+bright_white = "#f3ecef"
+red = "#ff958d"
 bright_red = "#ffbab3"
 green = "#74c878"
 bright_green = "#85e98a"
-yellow = "#d8b138"
+yellow = "#d5ae34"
 bright_yellow = "#f6c835"
-blue = "#82b9ff"
+blue = "#7cb6ff"
 bright_blue = "#add1ff"
-magenta = "#ed98e5"
+magenta = "#e995e2"
 bright_magenta = "#ffadf7"
 cyan = "#00caca"
 bright_cyan = "#00ebeb"
@@ -2055,88 +2618,105 @@ family = "red"
 tone = "light"
 polarity = "light"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "deep teal"
+schema = 2
 
 [themes.light-red.surface]
-sunken = "#e6d0ce"
-bar = "#edd4d1"
-base = "#f7e0de"
-raised = "#ffe9e6"
-overlay = "#fff4f3"
-hover = "#dec8c6"
+sunken = "#ebe4e3"
+bar = "#f0e9e8"
+base = "#f5eeed"
+raised = "#fdf6f5"
+overlay = "#ffffff"
+hover = "#e2dad9"
 
 [themes.light-red.text]
-primary = "#291b1a"
-secondary = "#594947"
-muted = "#7f716f"
+primary = "#231e1d"
+secondary = "#514b4b"
+muted = "#747474"
+
+[themes.light-red.band]
+base = "#c53634"
+strong = "#4f0005"
+on = "#fffaee"
+soft = "#ffddd9"
+text = "#ac191f"
+
+[themes.light-red.pop]
+base = "#008085"
+on = "#f3fcfd"
+text = "#00797f"
 
 [themes.light-red.accent]
-base = "#be2323"
-on = "#fff8f7"
-hover = "#ac0311"
-pressed = "#8a201d"
-text = "#be2323"
-ring = "#be2323"
+base = "#008085"
+on = "#f3fcfd"
+text = "#00797f"
+ring = "#008085"
+hover = "#007075"
+pressed = "#006064"
 
 [themes.light-red.border]
-subtle = "#ccb6b4"
-strong = "#816e6c"
+subtle = "#cbc4c3"
+strong = "#807a79"
 
 [themes.light-red.window]
-focused = "#be2323"
-unfocused = "#ccb6b4"
+focused = "#ac191f"
+unfocused = "#cbc4c3"
 urgent = "#9a418c"
 
 [themes.light-red.bar]
-bg = "#edd4d1"
-shade = "#ffe9e6"
-hover = "#dec8c6"
-fg = "#291b1a"
-fg_dim = "#594947"
-active_bg = "#be2323"
-active_fg = "#fff8f7"
+bg = "#4f0005"
+shade = "#c53634"
+hover = "#b32325"
+fg = "#fffaee"
+fg_dim = "#ffe8e5"
+active_bg = "#fffaee"
+active_fg = "#4f0005"
+pop = "#46d6de"
 
 [themes.light-red.selection]
-bg = "#e8a69d"
-fg = "#291b1a"
+bg = "#c53634"
+fg = "#fffaee"
 
 [themes.light-red.status]
-success = "#0d7621"
+success = "#1b7e2a"
 on_success = "#f6fcf6"
 warning = "#985600"
 on_warning = "#fff9f4"
 danger = "#a93b69"
 on_danger = "#fff8fa"
-info = "#006c9f"
+info = "#0070a6"
 on_info = "#f6fbff"
 
 [themes.light-red.effects]
-shadow = "#311b19"
+shadow = "#2b1e1d"
 shadow_opacity = 0.18
-blur_tint = "#fff4f3"
+blur_tint = "#ffffff"
 blur_opacity = 0.8
 
 [themes.light-red.cat]
-red = "#b84d49"
-orange = "#b05a00"
-yellow = "#8a7300"
-green = "#34893c"
-teal = "#00877c"
-blue = "#3475c4"
-purple = "#885cb5"
-pink = "#af4d80"
+red = "#c85b56"
+orange = "#c0671a"
+yellow = "#967d00"
+green = "#3a8f42"
+teal = "#008d82"
+blue = "#3e80d0"
+purple = "#976bc6"
+pink = "#bf5c8f"
 
 [themes.light-red.term]
-bg = "#f7e0de"
-fg = "#291b1a"
-cursor = "#be2323"
-cursor_text = "#fff8f7"
-selection_bg = "#e8a69d"
-selection_fg = "#291b1a"
-black = "#3b2a29"
-bright_black = "#6a5755"
-white = "#cebab8"
-bright_white = "#e4d1ce"
+bg = "#f5eeed"
+fg = "#231e1d"
+cursor = "#008085"
+cursor_text = "#f3fcfd"
+selection_bg = "#c53634"
+selection_fg = "#fffaee"
+black = "#3b3534"
+bright_black = "#696362"
+white = "#cec7c6"
+bright_white = "#e5dedd"
 red = "#9d3533"
 bright_red = "#8a0314"
 green = "#157123"
@@ -2175,99 +2755,116 @@ family = "red"
 tone = "mid"
 polarity = "dark"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "gold"
+schema = 2
 
 [themes.red.surface]
-sunken = "#522926"
-bar = "#4c1d1b"
-base = "#643935"
-raised = "#6d413d"
-overlay = "#764945"
-hover = "#855753"
+sunken = "#241f1e"
+bar = "#282322"
+base = "#322c2c"
+raised = "#393433"
+overlay = "#423c3b"
+hover = "#534d4c"
 
 [themes.red.text]
-primary = "#ffe4e1"
-secondary = "#e7c9c6"
-muted = "#c2aba8"
+primary = "#ddd6d5"
+secondary = "#c8c1c0"
+muted = "#a3a3a3"
+
+[themes.red.band]
+base = "#a22626"
+strong = "#81000d"
+on = "#fffaee"
+soft = "#573834"
+text = "#ffa69c"
+
+[themes.red.pop]
+base = "#ffe5af"
+on = "#1a1304"
+text = "#ffe5af"
 
 [themes.red.accent]
-base = "#ffac96"
-on = "#22110c"
-hover = "#ffc4b4"
-pressed = "#eb9e89"
-text = "#ffc0ae"
-ring = "#ffac96"
+base = "#ffe5af"
+on = "#1a1304"
+text = "#ffe5af"
+ring = "#ffe5af"
+hover = "#fff8e9"
+pressed = "#f6cf7a"
 
 [themes.red.border]
-subtle = "#91625e"
-strong = "#ffebe9"
+subtle = "#5a5453"
+strong = "#d6cfce"
 
 [themes.red.window]
-focused = "#ffac96"
-unfocused = "#8c5e5a"
-urgent = "#dbd350"
+focused = "#ffa69c"
+unfocused = "#5a5453"
+urgent = "#c5c3ff"
 
 [themes.red.bar]
-bg = "#4c1d1b"
-shade = "#6d413d"
-hover = "#855753"
-fg = "#ffe4e1"
-fg_dim = "#e7c9c6"
-active_bg = "#ffac96"
-active_fg = "#22110c"
+bg = "#81000d"
+shade = "#a22626"
+hover = "#901117"
+fg = "#fffaee"
+fg_dim = "#eecbc7"
+active_bg = "#fffaee"
+active_fg = "#81000d"
+pop = "#ffe5af"
 
 [themes.red.selection]
-bg = "#8d5e51"
-fg = "#ffe4e1"
+bg = "#a22626"
+fg = "#fffaee"
 
 [themes.red.status]
 success = "#88e48c"
-on_success = "#0d1a0d"
+on_success = "#0b170b"
 warning = "#f7c243"
-on_warning = "#1c1505"
-danger = "#fec348"
-on_danger = "#1d1506"
+on_warning = "#1a1304"
+danger = "#ffadda"
+on_danger = "#1d0e17"
 info = "#94d3ff"
-on_info = "#081822"
+on_info = "#061520"
 
 [themes.red.effects]
 shadow = "#000000"
 shadow_opacity = 0.45
-blur_tint = "#764945"
+blur_tint = "#423c3b"
 blur_opacity = 0.72
 
 [themes.red.cat]
-red = "#ffb0a8"
-orange = "#ffb481"
-yellow = "#e4c64f"
-green = "#8adf8d"
-teal = "#2ae4d3"
-blue = "#a2caff"
-purple = "#d7b6ff"
-pink = "#ffa9d2"
+red = "#ffaba3"
+orange = "#ffaf78"
+yellow = "#e1c34b"
+green = "#87dc8a"
+teal = "#22e1d0"
+blue = "#9cc7ff"
+purple = "#d5b1ff"
+pink = "#ffa3cf"
 
 [themes.red.term]
-bg = "#643935"
-fg = "#ffe4e1"
-cursor = "#ffac96"
-cursor_text = "#22110c"
-selection_bg = "#8d5e51"
-selection_fg = "#ffe4e1"
-black = "#946561"
-bright_black = "#c18e8a"
-white = "#dabcb9"
-bright_white = "#ffe9e6"
-red = "#ffb2ab"
+bg = "#322c2c"
+fg = "#ddd6d5"
+cursor = "#ffe5af"
+cursor_text = "#1a1304"
+selection_bg = "#a22626"
+selection_fg = "#fffaee"
+black = "#5c5656"
+bright_black = "#857e7e"
+white = "#c9c2c1"
+bright_white = "#f4ecec"
+red = "#ffa098"
 bright_red = "#ffcdc8"
-green = "#84d987"
+green = "#81d584"
 bright_green = "#92f697"
-yellow = "#e9c14c"
+yellow = "#e1b942"
 bright_yellow = "#ffd661"
-blue = "#9fc9ff"
+blue = "#91c1ff"
 bright_blue = "#c3ddff"
-magenta = "#fea8f6"
+magenta = "#f29dea"
 bright_magenta = "#ffc5f9"
-cyan = "#00dadb"
+cyan = "#00d8d9"
 bright_cyan = "#00f9fa"
 
 [themes.red.brand]
@@ -2295,65 +2892,82 @@ family = "red"
 tone = "dark"
 polarity = "dark"
 multi = false
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "gold"
+schema = 2
 
 [themes.dark-red.surface]
-sunken = "#1e0d0b"
-bar = "#281311"
-base = "#2d1a19"
-raised = "#362221"
-overlay = "#422e2c"
-hover = "#584341"
+sunken = "#0e0a09"
+bar = "#120d0c"
+base = "#161111"
+raised = "#1d1817"
+overlay = "#252020"
+hover = "#373131"
 
 [themes.dark-red.text]
-primary = "#e9d1cf"
-secondary = "#cfb7b5"
-muted = "#aa9896"
+primary = "#ddd6d5"
+secondary = "#bbb4b3"
+muted = "#989898"
+
+[themes.dark-red.band]
+base = "#76080f"
+strong = "#580006"
+on = "#fffaee"
+soft = "#331917"
+text = "#ff968c"
+
+[themes.dark-red.pop]
+base = "#ffd16b"
+on = "#1a1304"
+text = "#ffd16b"
 
 [themes.dark-red.accent]
-base = "#ff9089"
-on = "#22100f"
-hover = "#ff9089"
-pressed = "#ef9a94"
-text = "#ffa39c"
-ring = "#ff9089"
+base = "#ffd16b"
+on = "#1a1304"
+text = "#ffd16b"
+ring = "#ffd16b"
+hover = "#ffe5af"
+pressed = "#e6be6a"
 
 [themes.dark-red.border]
-subtle = "#55403e"
-strong = "#d2b8b5"
+subtle = "#3b3534"
+strong = "#b1aaaa"
 
 [themes.dark-red.window]
-focused = "#ff9089"
-unfocused = "#55403e"
-urgent = "#debb32"
+focused = "#ff968c"
+unfocused = "#3b3534"
+urgent = "#ea9cf7"
 
 [themes.dark-red.bar]
-bg = "#281311"
-shade = "#362221"
-hover = "#584341"
-fg = "#e9d1cf"
-fg_dim = "#cfb7b5"
-active_bg = "#ff9089"
-active_fg = "#22100f"
+bg = "#580006"
+shade = "#76080f"
+hover = "#610007"
+fg = "#fffaee"
+fg_dim = "#ddbbb7"
+active_bg = "#fffaee"
+active_fg = "#580006"
+pop = "#ffd16b"
 
 [themes.dark-red.selection]
-bg = "#67302e"
-fg = "#e9d1cf"
+bg = "#76080f"
+fg = "#fffaee"
 
 [themes.dark-red.status]
 success = "#7bd77f"
-on_success = "#0d1a0d"
+on_success = "#0b170b"
 warning = "#eab532"
-on_warning = "#1c1505"
-danger = "#ffa65e"
-on_danger = "#201208"
+on_warning = "#1a1304"
+danger = "#ff96d1"
+on_danger = "#1d0e17"
 info = "#76c7ff"
-on_info = "#081822"
+on_info = "#061520"
 
 [themes.dark-red.effects]
 shadow = "#000000"
 shadow_opacity = 0.55
-blur_tint = "#422e2c"
+blur_tint = "#252020"
 blur_opacity = 0.72
 
 [themes.dark-red.cat]
@@ -2367,25 +2981,25 @@ purple = "#cc9fff"
 pink = "#f990c4"
 
 [themes.dark-red.term]
-bg = "#2d1a19"
-fg = "#e9d1cf"
-cursor = "#ff9089"
-cursor_text = "#22100f"
-selection_bg = "#67302e"
-selection_fg = "#e9d1cf"
-black = "#584240"
-bright_black = "#806967"
-white = "#d5bebb"
-bright_white = "#ffe9e6"
-red = "#ff9890"
+bg = "#161111"
+fg = "#ddd6d5"
+cursor = "#ffd16b"
+cursor_text = "#1a1304"
+selection_bg = "#76080f"
+selection_fg = "#fffaee"
+black = "#3d3837"
+bright_black = "#635d5d"
+white = "#c9c2c1"
+bright_white = "#f4ecec"
+red = "#ff958d"
 bright_red = "#ffbab3"
 green = "#74c878"
 bright_green = "#85e98a"
-yellow = "#d8b138"
+yellow = "#d5ae34"
 bright_yellow = "#f6c835"
-blue = "#82b9ff"
+blue = "#7cb6ff"
 bright_blue = "#add1ff"
-magenta = "#ed98e5"
+magenta = "#e995e2"
 bright_magenta = "#ffadf7"
 cyan = "#00caca"
 bright_cyan = "#00ebeb"
@@ -2415,88 +3029,105 @@ family = "multi"
 tone = "light"
 polarity = "light"
 multi = true
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "mauve"
+schema = 2
 
 [themes.light-multicolor.surface]
-sunken = "#d6d6d6"
-bar = "#dbdbdb"
-base = "#e6e6e6"
-raised = "#eeeeee"
-overlay = "#f7f7f7"
-hover = "#cecece"
+sunken = "#e6e6e6"
+bar = "#ebebeb"
+base = "#f0f0f0"
+raised = "#f8f8f8"
+overlay = "#ffffff"
+hover = "#dcdcdc"
 
 [themes.light-multicolor.text]
 primary = "#1f1f1f"
 secondary = "#4d4d4d"
 muted = "#747474"
 
-[themes.light-multicolor.accent]
-base = "#793cbb"
+[themes.light-multicolor.band]
+base = "#2e2e2e"
+strong = "#1b1b1b"
+on = "#fafafa"
+soft = "#e6e6e6"
+text = "#5d5d5d"
+
+[themes.light-multicolor.pop]
+base = "#8b57be"
 on = "#fbf9ff"
-hover = "#6b2baa"
-pressed = "#572d86"
-text = "#793cbb"
-ring = "#793cbb"
+text = "#8854bb"
+
+[themes.light-multicolor.accent]
+base = "#8b57be"
+on = "#fbf9ff"
+text = "#8854bb"
+ring = "#8b57be"
+hover = "#7c48ae"
+pressed = "#68448d"
 
 [themes.light-multicolor.border]
-subtle = "#bcbcbc"
-strong = "#737373"
+subtle = "#c5c5c5"
+strong = "#7c7c7c"
 
 [themes.light-multicolor.window]
-focused = "#793cbb"
-unfocused = "#bcbcbc"
+focused = "#5d5d5d"
+unfocused = "#c5c5c5"
 urgent = "#af3c40"
 
 [themes.light-multicolor.bar]
-bg = "#dbdbdb"
-shade = "#eeeeee"
-hover = "#cecece"
-fg = "#1f1f1f"
-fg_dim = "#4d4d4d"
-active_bg = "#793cbb"
-active_fg = "#fbf9ff"
+bg = "#1b1b1b"
+shade = "#2e2e2e"
+hover = "#222222"
+fg = "#fafafa"
+fg_dim = "#bbbbbb"
+active_bg = "#fafafa"
+active_fg = "#1b1b1b"
+pop = "#9d69d2"
 
 [themes.light-multicolor.selection]
-bg = "#c2ade4"
-fg = "#1f1f1f"
+bg = "#2e2e2e"
+fg = "#fafafa"
 
 [themes.light-multicolor.status]
-success = "#107823"
+success = "#1b7e2a"
 on_success = "#f6fcf6"
 warning = "#985600"
 on_warning = "#fff9f4"
 danger = "#af3c40"
 on_danger = "#fff8f8"
-info = "#006da2"
+info = "#0070a6"
 on_info = "#f6fbff"
 
 [themes.light-multicolor.effects]
-shadow = "#1f2227"
+shadow = "#1c222b"
 shadow_opacity = 0.18
-blur_tint = "#f7f7f7"
+blur_tint = "#ffffff"
 blur_opacity = 0.8
 
 [themes.light-multicolor.cat]
-red = "#b84d49"
-orange = "#b05a00"
-yellow = "#8a7300"
-green = "#34893c"
-teal = "#00877c"
-blue = "#3475c4"
-purple = "#885cb5"
-pink = "#af4d80"
+red = "#cb5e58"
+orange = "#c1681c"
+yellow = "#977e00"
+green = "#3c9143"
+teal = "#008f84"
+blue = "#4081d2"
+purple = "#986cc7"
+pink = "#c15d90"
 
 [themes.light-multicolor.term]
-bg = "#e6e6e6"
+bg = "#f0f0f0"
 fg = "#1f1f1f"
-cursor = "#793cbb"
+cursor = "#8b57be"
 cursor_text = "#fbf9ff"
-selection_bg = "#c2ade4"
-selection_fg = "#1f1f1f"
-black = "#2f2f2f"
-bright_black = "#5c5c5c"
-white = "#bfbfbf"
-bright_white = "#d6d6d6"
+selection_bg = "#2e2e2e"
+selection_fg = "#fafafa"
+black = "#373737"
+bright_black = "#656565"
+white = "#c9c9c9"
+bright_white = "#dfdfdf"
 red = "#9d3533"
 bright_red = "#8a0314"
 green = "#157123"
@@ -2535,97 +3166,114 @@ family = "multi"
 tone = "mid"
 polarity = "dark"
 multi = true
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "mauve"
+schema = 2
 
 [themes.multicolor.surface]
-sunken = "#2f2f2f"
-bar = "#262626"
-base = "#3e3e3e"
-raised = "#464646"
-overlay = "#4e4e4e"
-hover = "#5c5c5c"
+sunken = "#202020"
+bar = "#242424"
+base = "#2e2e2e"
+raised = "#353535"
+overlay = "#3e3e3e"
+hover = "#4e4e4e"
 
 [themes.multicolor.text]
-primary = "#dfdfdf"
-secondary = "#cccccc"
-muted = "#ababab"
+primary = "#d7d7d7"
+secondary = "#c1c1c1"
+muted = "#a3a3a3"
+
+[themes.multicolor.band]
+base = "#121212"
+strong = "#070707"
+on = "#fafafa"
+soft = "#414141"
+text = "#bebebe"
+
+[themes.multicolor.pop]
+base = "#d3adff"
+on = "#17101f"
+text = "#d6b4ff"
 
 [themes.multicolor.accent]
-base = "#cba6f7"
-on = "#191221"
-hover = "#d9b9ff"
-pressed = "#c0a5e1"
-text = "#dbbeff"
-ring = "#cba6f7"
+base = "#d3adff"
+on = "#17101f"
+text = "#d6b4ff"
+ring = "#d3adff"
+hover = "#dec3ff"
+pressed = "#c6a0f2"
 
 [themes.multicolor.border]
-subtle = "#676767"
-strong = "#e6e6e6"
+subtle = "#555555"
+strong = "#d1d1d1"
 
 [themes.multicolor.window]
-focused = "#cba6f7"
-unfocused = "#626262"
-urgent = "#ffb6a4"
+focused = "#bebebe"
+unfocused = "#555555"
+urgent = "#fbc044"
 
 [themes.multicolor.bar]
-bg = "#262626"
-shade = "#464646"
-hover = "#5c5c5c"
-fg = "#dfdfdf"
-fg_dim = "#cccccc"
-active_bg = "#cba6f7"
-active_fg = "#191221"
+bg = "#070707"
+shade = "#121212"
+hover = "#070707"
+fg = "#fafafa"
+fg_dim = "#b2b2b2"
+active_bg = "#fafafa"
+active_fg = "#070707"
+pop = "#d3adff"
 
 [themes.multicolor.selection]
-bg = "#6c5c80"
-fg = "#dfdfdf"
+bg = "#121212"
+fg = "#fafafa"
 
 [themes.multicolor.status]
 success = "#88e48c"
-on_success = "#0d1a0d"
+on_success = "#0b170b"
 warning = "#f7c243"
-on_warning = "#1c1505"
+on_warning = "#1a1304"
 danger = "#ffb4b1"
-on_danger = "#221010"
+on_danger = "#200e0e"
 info = "#94d3ff"
-on_info = "#081822"
+on_info = "#061520"
 
 [themes.multicolor.effects]
 shadow = "#000000"
 shadow_opacity = 0.45
-blur_tint = "#4e4e4e"
+blur_tint = "#3e3e3e"
 blur_opacity = 0.72
 
 [themes.multicolor.cat]
-red = "#ffb0a8"
-orange = "#ffb481"
-yellow = "#e4c64f"
-green = "#8adf8d"
-teal = "#2ae4d3"
-blue = "#a2caff"
-purple = "#d7b6ff"
-pink = "#ffa9d2"
+red = "#ffaba3"
+orange = "#ffaf78"
+yellow = "#e1c34b"
+green = "#87dc8a"
+teal = "#22e1d0"
+blue = "#9cc7ff"
+purple = "#d5b1ff"
+pink = "#ffa3cf"
 
 [themes.multicolor.term]
-bg = "#3e3e3e"
-fg = "#dfdfdf"
-cursor = "#cba6f7"
-cursor_text = "#191221"
-selection_bg = "#6c5c80"
-selection_fg = "#dfdfdf"
-black = "#6a6a6a"
-bright_black = "#949494"
+bg = "#2e2e2e"
+fg = "#d7d7d7"
+cursor = "#d3adff"
+cursor_text = "#17101f"
+selection_bg = "#121212"
+selection_fg = "#fafafa"
+black = "#585858"
+bright_black = "#808080"
 white = "#c4c4c4"
 bright_white = "#eeeeee"
-red = "#ffada6"
+red = "#ffa098"
 bright_red = "#ffcdc8"
 green = "#81d584"
 bright_green = "#92f697"
-yellow = "#e6be48"
+yellow = "#e1b942"
 bright_yellow = "#ffd661"
-blue = "#96c4ff"
+blue = "#91c1ff"
 bright_blue = "#c3ddff"
-magenta = "#faa5f2"
+magenta = "#f29dea"
 bright_magenta = "#ffc5f9"
 cyan = "#00d8d9"
 bright_cyan = "#00f9fa"
@@ -2655,65 +3303,82 @@ family = "multi"
 tone = "dark"
 polarity = "dark"
 multi = true
-schema = 1
+hc = false
+default = false
+design = "60-30-10"
+pop_harmony = "mauve"
+schema = 2
 
 [themes.dark-multicolor.surface]
-sunken = "#121212"
-bar = "#1a1a1a"
-base = "#202020"
-raised = "#282828"
-overlay = "#343434"
-hover = "#494949"
+sunken = "#0b0b0b"
+bar = "#0e0e0e"
+base = "#131313"
+raised = "#191919"
+overlay = "#222222"
+hover = "#333333"
 
 [themes.dark-multicolor.text]
 primary = "#d7d7d7"
-secondary = "#bcbcbc"
-muted = "#9d9d9d"
+secondary = "#b6b6b6"
+muted = "#989898"
+
+[themes.dark-multicolor.band]
+base = "#2e2e2e"
+strong = "#1f1f1f"
+on = "#fafafa"
+soft = "#222222"
+text = "#b7b7b7"
+
+[themes.dark-multicolor.pop]
+base = "#d3adff"
+on = "#17101f"
+text = "#d3adff"
 
 [themes.dark-multicolor.accent]
-base = "#cba6f7"
-on = "#191221"
-hover = "#d9b9ff"
-pressed = "#c0a5e1"
-text = "#d1acfe"
-ring = "#cba6f7"
+base = "#d3adff"
+on = "#17101f"
+text = "#d3adff"
+ring = "#d3adff"
+hover = "#dec3ff"
+pressed = "#c6a0f2"
 
 [themes.dark-multicolor.border]
-subtle = "#464646"
-strong = "#bebebe"
+subtle = "#373737"
+strong = "#acacac"
 
 [themes.dark-multicolor.window]
-focused = "#cba6f7"
-unfocused = "#464646"
-urgent = "#ffa28c"
+focused = "#b7b7b7"
+unfocused = "#373737"
+urgent = "#faab3f"
 
 [themes.dark-multicolor.bar]
-bg = "#1a1a1a"
-shade = "#282828"
-hover = "#494949"
-fg = "#d7d7d7"
-fg_dim = "#bcbcbc"
-active_bg = "#cba6f7"
-active_fg = "#191221"
+bg = "#1f1f1f"
+shade = "#2e2e2e"
+hover = "#222222"
+fg = "#fafafa"
+fg_dim = "#bbbbbb"
+active_bg = "#fafafa"
+active_fg = "#1f1f1f"
+pop = "#d3adff"
 
 [themes.dark-multicolor.selection]
-bg = "#4a3b5d"
-fg = "#d7d7d7"
+bg = "#2e2e2e"
+fg = "#fafafa"
 
 [themes.dark-multicolor.status]
 success = "#7bd77f"
-on_success = "#0d1a0d"
+on_success = "#0b170b"
 warning = "#eab532"
-on_warning = "#1c1505"
+on_warning = "#1a1304"
 danger = "#ffa09c"
-on_danger = "#221010"
+on_danger = "#200e0e"
 info = "#76c7ff"
-on_info = "#081822"
+on_info = "#061520"
 
 [themes.dark-multicolor.effects]
 shadow = "#000000"
 shadow_opacity = 0.55
-blur_tint = "#343434"
+blur_tint = "#222222"
 blur_opacity = 0.72
 
 [themes.dark-multicolor.cat]
@@ -2727,25 +3392,25 @@ purple = "#cc9fff"
 pink = "#f990c4"
 
 [themes.dark-multicolor.term]
-bg = "#202020"
+bg = "#131313"
 fg = "#d7d7d7"
-cursor = "#cba6f7"
-cursor_text = "#191221"
-selection_bg = "#4a3b5d"
-selection_fg = "#d7d7d7"
-black = "#484848"
-bright_black = "#6f6f6f"
+cursor = "#d3adff"
+cursor_text = "#17101f"
+selection_bg = "#2e2e2e"
+selection_fg = "#fafafa"
+black = "#393939"
+bright_black = "#5f5f5f"
 white = "#c4c4c4"
 bright_white = "#eeeeee"
-red = "#ff9890"
+red = "#ff958d"
 bright_red = "#ffbab3"
 green = "#74c878"
 bright_green = "#85e98a"
-yellow = "#d8b138"
+yellow = "#d5ae34"
 bright_yellow = "#f6c835"
-blue = "#82b9ff"
+blue = "#7cb6ff"
 bright_blue = "#add1ff"
-magenta = "#ed98e5"
+magenta = "#e995e2"
 bright_magenta = "#ffadf7"
 cyan = "#00caca"
 bright_cyan = "#00ebeb"

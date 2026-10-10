@@ -1,0 +1,84 @@
+/* hypeForge theme Ember (ember), generated — do not edit.
+   GTK 3 (adw-gtk3) reads the @define-color names; GTK 4 / libadwaita 1.6+ reads the :root
+   variables (and still accepts the old names). Copied to ~/.config/gtk-3.0/ and gtk-4.0/.
+   Title bars wear the band; side panels the quiet band; content the foundation; buttons the pop.
+   Theme name for gsettings: adw-gtk3-dark; color-scheme prefer-dark;
+   accent-color orange. */
+@define-color accent_color #f7e6c3;
+@define-color accent_bg_color #f7e6c3;
+@define-color accent_fg_color #1a1304;
+@define-color window_bg_color #161110;
+@define-color window_fg_color #ddd6d4;
+@define-color view_bg_color #161110;
+@define-color view_fg_color #ddd6d4;
+@define-color headerbar_bg_color #d43a03;
+@define-color headerbar_fg_color #fff8f7;
+@define-color headerbar_border_color #a02900;
+@define-color headerbar_backdrop_color #1d1817;
+@define-color sidebar_bg_color #341912;
+@define-color sidebar_fg_color #ddd6d4;
+@define-color sidebar_backdrop_color #341912;
+@define-color card_bg_color #1d1817;
+@define-color card_fg_color #ddd6d4;
+@define-color popover_bg_color #1d1817;
+@define-color popover_fg_color #ddd6d4;
+@define-color dialog_bg_color #1d1817;
+@define-color dialog_fg_color #ddd6d4;
+@define-color thumbnail_bg_color #1d1817;
+@define-color thumbnail_fg_color #ddd6d4;
+@define-color destructive_color #ff9abd;
+@define-color destructive_bg_color #ff9abd;
+@define-color destructive_fg_color #1f0e14;
+@define-color success_color #7bd77f;
+@define-color success_bg_color #7bd77f;
+@define-color success_fg_color #0b170b;
+@define-color warning_color #eab532;
+@define-color warning_bg_color #eab532;
+@define-color warning_fg_color #1a1304;
+@define-color error_color #ff9abd;
+@define-color error_bg_color #ff9abd;
+@define-color error_fg_color #1f0e14;
+@define-color borders #3b3534;
+@define-color headerbar_shade_color rgba(0, 0, 0, 0.36);
+@define-color sidebar_shade_color rgba(0, 0, 0, 0.36);
+@define-color card_shade_color rgba(0, 0, 0, 0.36);
+@define-color popover_shade_color rgba(0, 0, 0, 0.36);
+@define-color shade_color rgba(0, 0, 0, 0.36);
+
+:root {
+  --accent-color: #f7e6c3;
+  --accent-bg-color: #f7e6c3;
+  --accent-fg-color: #1a1304;
+  --window-bg-color: #161110;
+  --window-fg-color: #ddd6d4;
+  --view-bg-color: #161110;
+  --view-fg-color: #ddd6d4;
+  --headerbar-bg-color: #d43a03;
+  --headerbar-fg-color: #fff8f7;
+  --headerbar-border-color: #a02900;
+  --headerbar-backdrop-color: #1d1817;
+  --sidebar-bg-color: #341912;
+  --sidebar-fg-color: #ddd6d4;
+  --sidebar-backdrop-color: #341912;
+  --card-bg-color: #1d1817;
+  --card-fg-color: #ddd6d4;
+  --popover-bg-color: #1d1817;
+  --popover-fg-color: #ddd6d4;
+  --dialog-bg-color: #1d1817;
+  --dialog-fg-color: #ddd6d4;
+  --thumbnail-bg-color: #1d1817;
+  --thumbnail-fg-color: #ddd6d4;
+  --destructive-color: #ff9abd;
+  --destructive-bg-color: #ff9abd;
+  --destructive-fg-color: #1f0e14;
+  --success-color: #7bd77f;
+  --success-bg-color: #7bd77f;
+  --success-fg-color: #0b170b;
+  --warning-color: #eab532;
+  --warning-bg-color: #eab532;
+  --warning-fg-color: #1a1304;
+  --error-color: #ff9abd;
+  --error-bg-color: #ff9abd;
+  --error-fg-color: #1f0e14;
+  --border-color: #3b3534;
+}

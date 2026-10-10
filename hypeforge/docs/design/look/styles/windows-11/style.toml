@@ -29,7 +29,7 @@ bar_indicator    = [3, 16, 6]    # height, width when focused, width when runnin
 
 [layout]
 bar_position     = "bottom"
-bar_align        = "center"      # "left" is Windows 11's other choice (W-1)
+bar_align        = "left"        # Javier, W-1 (D-71); "center" is Windows 11's default
 bar_on           = "every-screen"           # the second and third screens: apps of that screen + the clock
 bar_left         = []                       # Windows' Widgets corner: empty (we have no widgets board)
 bar_center       = ["start", "search", "workspaces", "apps"]
