@@ -54,10 +54,24 @@ def pinned() -> list[str]:
         return []
 
 
+SCRATCH = "__i3_scratch"     # Sway's hidden spot: where the Tuck applet puts windows away
+
+
+def tucked_ids(tree) -> set[int]:
+    """The windows tucked away (in Sway's scratchpad), minimised in all but name."""
+    out = set()
+    for output in tree.get("nodes", []):
+        for ws in output.get("nodes", []):
+            if ws.get("name") == SCRATCH:
+                out |= {w["id"] for w in windows(ws)}
+    return out
+
+
 def row(tree, entries: dict, matcher: Matcher, pins: list[str]):
     """The icons, left to right: [{"id", "name", "icon", "pinned", "windows": [con ids], "focused",
     "urgent"}]. Pinned ones first, in Favorites' order; then running ones, first opened first."""
     seen: dict[str, dict] = {}
+    hidden = tucked_ids(tree)
     for p in pins:
         if p in entries:
             seen[p] = {"id": p, "name": entries[p]["name"], "icon": entries[p]["icon"], "pinned": True,
@@ -77,6 +91,8 @@ def row(tree, entries: dict, matcher: Matcher, pins: list[str]):
                                    "noicon": bool(entry.get("noicon"))}
             extra.append(app_id)
         item["windows"].append(w["id"])
+        if w["id"] in hidden:
+            item.setdefault("tucked", []).append(w["id"])
         item["focused"] |= bool(w.get("focused"))
         item["urgent"] |= bool(w.get("urgent"))
     return [seen[p] for p in pins if p in seen] + [seen[a] for a in extra][:EXTRA]
@@ -103,6 +119,8 @@ def write_state(items: list[dict], pins: list[str]) -> bool:
             body = {"text": "", "class": "empty"}
         else:
             state = "focused" if item["focused"] else "running" if item["windows"] else "idle"
+            if item["windows"] and len(item.get("tucked", [])) == len(item["windows"]):
+                state = "tucked"           # every window of it tucked away: a dimmed icon
             classes = ["app", f"app-{safe(item['id'])}", state, "pinned" if item["pinned"] else "unpinned"]
             if item["urgent"]:
                 classes.append("urgent")
@@ -155,6 +173,9 @@ def click(slot: str, new: bool = False):
         return
     sway = Sway()
     wins = item["windows"]
+    if item.get("tucked"):             # bring a tucked-away window back, on top
+        sway.run(f"[con_id={item['tucked'][0]}] scratchpad show")
+        return
     focused = next((n["id"] for n in windows(sway.ask(GET_TREE)) if n.get("focused")), None)
     target = wins[(wins.index(focused) + 1) % len(wins)] if focused in wins else wins[0]
     sway.run(f"[con_id={target}] focus")

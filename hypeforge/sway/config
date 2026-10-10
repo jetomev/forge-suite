@@ -327,6 +327,9 @@ exec ~/Programs/forge-suite/hypeforge/applets/workspaces/hypeforge-workspaces
 # hypeForge: applet 2 · Window Placement (D-50) — new windows fill a fixed order of spots.
 # Switched on and off in ~/.config/hypeforge/applets/placement.toml (enabled = true/false).
 exec ~/Programs/forge-suite/hypeforge/applets/placement/hypeforge-placement
+# A click on a window tucks away the floating windows covering it, like minimised (Javier, 2026-10-10;
+# Sway always draws floating windows above tiled ones). Its taskbar icon or Win + − brings it back.
+exec ~/Programs/forge-suite/hypeforge/applets/tuck/hypeforge-tuck
 
 # hypeForge: applet 5 · Window Rules (D-53) — which windows float instead of taking a spot.
 # Switched on and off in ~/.config/hypeforge/applets/rules.toml (enabled = true/false).

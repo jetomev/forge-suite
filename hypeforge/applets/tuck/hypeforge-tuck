@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""hypeForge applet · a click on a window tucks away the floating windows covering it.
+
+Javier, 2026-10-10: a terminal floats over Chrome (tiled, full screen); he clicks Chrome — and the
+terminal stays on top. In Sway a floating window is always drawn above the tiled ones, so it can't
+"go behind". The closest thing: it is tucked away, like minimised (Sway's scratchpad). Its icon on
+the taskbar, Win + − or (later) Alt + Tab bring it back on top.
+
+The rule, on every focus change to a TILED window:
+  - a floating window on the same workspace that COVERS it (their areas overlap) is tucked away;
+  - one beside it, not covering it, stays where it is;
+  - one of the same app (a "Save as…" dialog of the window clicked) stays — dialogs never vanish;
+  - a sticky window (shown on every workspace) stays.
+
+    hypeforge-tuck              keep watching (started at login; one copy)
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import sys
+from pathlib import Path
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "common"))
+from hfsway import GET_TREE, SUBSCRIBE, EVENT_WINDOW, Sway  # noqa: E402
+
+RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
+PIDFILE = RUNTIME / "hypeforge-tuck.pid"
+SCRATCH = "__i3_scratch"
+
+
+def overlap(a: dict, b: dict) -> bool:
+    return (a["x"] < b["x"] + b["width"] and b["x"] < a["x"] + a["width"]
+            and a["y"] < b["y"] + b["height"] and b["y"] < a["y"] + a["height"])
+
+
+def windows_in(node: dict) -> list[dict]:
+    out = []
+    if node.get("pid"):
+        out.append(node)
+    for child in node.get("nodes", []) + node.get("floating_nodes", []):
+        out.extend(windows_in(child))
+    return out
+
+
+def workspaces(tree: dict):
+    for output in tree.get("nodes", []):
+        for ws in output.get("nodes", []):
+            if ws.get("type") == "workspace":
+                yield ws
+
+
+def same_app(a: dict, b: dict) -> bool:
+    if a.get("pid") and a.get("pid") == b.get("pid"):
+        return True
+    ida = (a.get("app_id") or (a.get("window_properties") or {}).get("class") or "").lower()
+    idb = (b.get("app_id") or (b.get("window_properties") or {}).get("class") or "").lower()
+    return bool(ida) and ida == idb
+
+
+def to_tuck(tree: dict) -> list[int]:
+    """The floating windows to tuck away now: those covering the focused TILED window on its
+    workspace, not of its app, not sticky. Nothing when the focus is on a floating window."""
+    for ws in workspaces(tree):
+        if ws.get("name") == SCRATCH:
+            continue
+        tiled = [w for n in ws.get("nodes", []) for w in windows_in(n)]
+        focused = next((w for w in tiled if w.get("focused")), None)
+        if focused is None:
+            continue
+        out = []
+        for f in (w for n in ws.get("floating_nodes", []) for w in windows_in(n)):
+            transient = (f.get("window_properties") or {}).get("transient_for")
+            if f.get("sticky") or transient or same_app(f, focused):
+                continue
+            if overlap(f["rect"], focused["rect"]):
+                out.append(f["id"])
+        return out
+    return []
+
+
+def watch():
+    control, events = Sway(), Sway()
+    events.ask(SUBSCRIBE, json.dumps(["window"]))
+    while True:
+        kind, event = events.receive()
+        if kind != EVENT_WINDOW or event.get("change") != "focus":
+            continue
+        if (event.get("container") or {}).get("type") == "floating_con":
+            continue                       # a floating window came forward: nothing to tuck
+        ids = to_tuck(control.ask(GET_TREE))
+        if ids:
+            control.run(*[f"[con_id={i}] move scratchpad" for i in ids])
+
+
+def main():
+    if sys.argv[1:]:
+        sys.exit(__doc__)
+    try:
+        os.kill(int(PIDFILE.read_text()), 0)
+        print("hypeforge-tuck: already running")
+        return
+    except (OSError, ValueError):
+        pass
+    PIDFILE.write_text(str(os.getpid()))
+    try:
+        watch()
+    finally:
+        PIDFILE.unlink(missing_ok=True)
+
+
+if __name__ == "__main__":
+    main()
