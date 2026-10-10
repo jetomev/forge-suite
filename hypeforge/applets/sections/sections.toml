@@ -97,3 +97,13 @@ name = "Other"
 icon = "applications-other"
 other = true
 categories = []
+
+# The power menu (the bar's ⏻) and the bottom of the launcher's first screen, top to bottom.
+# Log Out, Reboot and Shutdown ask first ("No" is selected, so a stray Enter does nothing).
+# Lock: gtklock (its look: ~/.config/gtklock/style.css). Restored 2026-10-10 (F-54): the F-50
+# commit 5604f73 removed this table by mistake along with the old [workspaces] lines.
+[power]
+lock = "gtklock -d"
+logout = "swaymsg exit"
+reboot = "systemctl reboot"
+shutdown = "systemctl poweroff"

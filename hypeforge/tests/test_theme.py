@@ -113,12 +113,12 @@ class Safety(Base):
         self.assertEqual(self.read("mako/config"), before)
         self.assertEqual(self.place.read_state()["theme"], "kognogos-mocha")
 
-    def test_the_first_undo_removes_what_the_first_apply_made(self):
+    def test_the_first_look_cannot_be_undone(self):
+        """Undoing it would delete the files the configs include (Sway would lose its colours)."""
         self.apply()
-        ht.undo(self.place, reload=False)
-        self.assertFalse((self.place.root / "mako/config").exists())
         with self.assertRaises(ht.LookError):
             ht.undo(self.place, reload=False)
+        self.assertTrue((self.place.root / "hypeforge/theme/sway.conf").exists())
 
     def test_only_twenty_backups(self):
         for i in range(24):

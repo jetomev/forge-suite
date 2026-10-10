@@ -359,6 +359,10 @@ def undo(place: Place, reload: bool = True, say=print) -> Path:
     if not last:
         raise LookError("nothing to undo yet")
     b = last[-1]
+    if not (b / "hypeforge/theme/state.toml").exists():
+        # the first look ever: going "back" would remove the files Sway, the bar and the lists now include
+        raise LookError("this is the first look applied here; there is no earlier look to go back to "
+                        "(apply another style or theme instead)")
     targets = (b / ".targets").read_text().split("\n") if (b / ".targets").exists() else []
     for rel in targets:
         src, dest = b / rel, place.root / rel
@@ -389,6 +393,7 @@ def main(argv=None) -> int:
     a = sub.add_parser("apply")
     a.add_argument("style"); a.add_argument("theme")
     a.add_argument("--dry-run", action="store_true"); a.add_argument("--no-reload", action="store_true")
+    a.add_argument("--wallpaper", help='"theme" (the theme\'s own picture) or a picture file of yours')
     w = sub.add_parser("wallpaper"); w.add_argument("choice", help='"theme" or a picture file')
     u = sub.add_parser("undo"); u.add_argument("--no-reload", action="store_true")
     for p in (a, w, u):
@@ -404,7 +409,8 @@ def main(argv=None) -> int:
             print(f"style {st.get('style', '—')} · theme {st.get('theme', '—')} · wallpaper {st.get('wallpaper', 'theme')}" if st else "nothing applied yet")
         elif args.cmd == "apply":
             print(f"\n  The look: {args.style} · {args.theme}\n")
-            r = apply(args.style, args.theme, place, dry=args.dry_run, reload=not args.no_reload)
+            wp = args.wallpaper if args.wallpaper in (None, "theme") else str(Path(args.wallpaper).expanduser().resolve())
+            r = apply(args.style, args.theme, place, wallpaper=wp, dry=args.dry_run, reload=not args.no_reload)
             if not args.dry_run:
                 print(f"  {len(r['changed'])} file(s) changed; the old ones are kept (hypeforge-theme undo)\n")
         elif args.cmd == "wallpaper":
