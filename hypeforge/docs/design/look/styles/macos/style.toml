@@ -27,6 +27,7 @@ dock_icon        = 48
 dock_running     = "dot"         # a small dot under apps that are open
 
 [layout]
+wallpaper        = "theme"       # the theme's own generated picture unless the person picked one (D-75)
 bar_position     = "top"
 bar_on           = "every-screen"
 bar_left         = ["emblem-menu", "app-name", "workspaces", "favorites", "window-menu", "help-menu"]

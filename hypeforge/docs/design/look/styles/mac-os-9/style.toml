@@ -27,6 +27,7 @@ bar_height       = 22            # the menu bar
 menu_item_height = 20
 
 [layout]
+wallpaper        = "theme"       # the theme's own generated picture unless the person picked one (D-75)
 bar_position     = "top"
 bar_on           = "every-screen"             # the menu bar on all screens; the Application menu on each
 bar_left         = ["emblem-menu", "app-name", "workspaces", "favorites", "window-menu", "special-menu", "help-menu"]

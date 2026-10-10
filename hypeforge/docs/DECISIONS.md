@@ -7,6 +7,9 @@
 
 ## 2026-10-10
 
+### D-75 · Style 4 approved: the Linux rice, tiled; every theme brings its wallpaper (Javier)
+Review 5: R-1 **one floating island with three areas** (not three separate islands): the emblem and workspace pills, the clock and what's playing, the system modules, tray and power; R-2 **numbered pills, the active one named**; R-3 **the wallpaper follows the theme, for every theme**: each of the 25 brings its own generated picture (`docs/design/look/review-5-rice/make-wallpapers.py`) and switching the theme switches the wallpaper, in every style, unless the person picked one of their own; R-4 a bright frame on the window in use (see-through, frosted terminals on SwayFX); R-5 the **big-button power menu**. Spec: `docs/design/look/styles/rice/style.toml`.
+
 ### D-74 · Style 3 approved: modern macOS, tiled (Javier)
 Review 4, all five as proposed: MA-1 the Dock **always there** (a second Waybar; windows tile above it), MA-2 **Spotlight and Launchpad**, MA-3 Control Center's blocks (Wi-Fi/Bluetooth/VPN, Do Not Disturb, Night light, Screens, sound, what's playing), MA-4 **Mac OS 9's menus kept** (Special moves into the emblem menu), MA-5 **frosted** bar, Dock and panels on SwayFX. Spec: `docs/design/look/styles/macos/style.toml`.
 

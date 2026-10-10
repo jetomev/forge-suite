@@ -1,4 +1,4 @@
-# hypeForge style · Linux rice — PROPOSAL (look program, review 5; not approved yet)
+# hypeForge style · Linux rice — APPROVED by Javier 2026-10-10 (review 5, D-75)
 #
 # "Ricing" is what the Linux community calls dressing a desktop up by hand: floating bars,
 # big gaps, rounded see-through terminals, a wallpaper that sets the mood. This style is our
@@ -14,7 +14,8 @@ credit = "After the r/unixporn community's work, with thanks. Learned from, neve
 
 [shape]                          # pixels, at 100 % scale
 radius_window    = 12
-radius_island    = 12            # each part of the bar is its own floating island
+radius_island    = 12            # the floating bar
+radius_area      = 8             # its three areas inside it
 radius_pill      = 999           # workspace pills
 radius_popup     = 14
 border_window    = 2             # a bright frame on the window in use
@@ -26,14 +27,14 @@ bar_margin       = 10            # the islands float this far from the screen ed
 
 [layout]
 bar_position     = "top"
-bar_style        = "islands"     # three islands: left, centre, right (R-1)
+bar_style        = "one-island"  # one floating island with three areas (Javier, R-1)
 bar_on           = "every-screen"
-island_left      = ["emblem", "workspace-pills"]                 # pills: numbers; the active one wide, with its name (R-2)
-island_center    = ["clock", "now-playing"]
-island_right     = ["cpu", "memory", "network", "volume", "night-light", "tray", "power"]
+area_left        = ["emblem", "workspace-pills"]                 # pills: numbers; the active one wide, with its name (R-2)
+area_center      = ["clock", "now-playing"]
+area_right       = ["cpu", "memory", "network", "volume", "night-light", "tray", "power"]
 launcher         = "fuzzel"      # restyled: centred, rounded, a bright frame
 power            = "panel-buttons"  # big round buttons over a dimmed screen (R-5)
-wallpaper        = "generated"   # the theme's own picture from our generator (R-3)
+wallpaper        = "theme"       # the theme's own generated picture (D-75: every theme, every style)
 
 [roles]
 island_background  = "surface.base"           # frosted on SwayFX

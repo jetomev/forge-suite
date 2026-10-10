@@ -82,8 +82,10 @@ button{font:inherit;cursor:pointer;color:inherit}
 .frost{background:color-mix(in oklab,var(--t-base) 80%,transparent);backdrop-filter:blur(calc(22 * var(--px))) saturate(1.4)}
 .plain .frost{background:var(--t-base);backdrop-filter:none}
 /* the islands */
-.bar{position:absolute;left:calc(10 * var(--px));right:calc(10 * var(--px));top:calc(10 * var(--px));height:calc(38 * var(--px));display:flex;justify-content:space-between;gap:calc(10 * var(--px));z-index:5}
-.isl{display:flex;align-items:center;gap:calc(8 * var(--px));padding:0 calc(10 * var(--px));border:calc(2 * var(--px)) solid var(--t-band);border-radius:calc(12 * var(--px));color:var(--t-text)}
+.bar{position:absolute;left:calc(10 * var(--px));right:calc(10 * var(--px));top:calc(10 * var(--px));height:calc(38 * var(--px));display:flex;justify-content:space-between;z-index:5}
+.isl{display:flex;align-items:center;gap:calc(8 * var(--px));padding:0 calc(6 * var(--px));border:calc(2 * var(--px)) solid var(--t-band);border-radius:calc(12 * var(--px));color:var(--t-text)}
+.area{display:flex;align-items:center;gap:calc(8 * var(--px));padding:0 calc(10 * var(--px));align-self:stretch;margin:calc(4 * var(--px)) 0;border-radius:calc(8 * var(--px));background:color-mix(in oklab,var(--t-text) 6%,transparent)}
+.area.mid{position:absolute;left:50%;top:0;bottom:0;transform:translateX(-50%)}
 .isl .emb{width:calc(20 * var(--px));height:calc(20 * var(--px));background-size:contain;background-repeat:no-repeat}
 .pills{display:flex;align-items:center;gap:calc(6 * var(--px))}
 .pill{height:calc(22 * var(--px));min-width:calc(22 * var(--px));border-radius:999px;display:grid;place-items:center;padding:0 calc(7 * var(--px));font-weight:600;color:var(--t-muted)}
@@ -150,9 +152,8 @@ button{font:inherit;cursor:pointer;color:inherit}
 @media (max-width:640px){.trio{grid-template-columns:minmax(0,1fr)}}
 .mini{display:grid;gap:6px;min-width:0}
 .mini .m{aspect-ratio:16/9;border-radius:5px;overflow:hidden;position:relative;container-type:inline-size;background:var(--m-bg) center/cover}
-.mini .m .mb{position:absolute;left:1.5%;right:1.5%;top:2.5%;height:5.5%;display:flex;justify-content:space-between}
-.mini .m .mb i{border-radius:1cqi;background:var(--m-isl);border:1px solid var(--m-acc);width:22%}
-.mini .m .mb i:nth-child(2){width:12%}
+.mini .m .mb{position:absolute;left:1.5%;right:1.5%;top:2.5%;height:5.5%;border-radius:1cqi;background:var(--m-isl);border:1px solid var(--m-acc)}
+.mini .m .mb i{display:none}
 .mini .m .mt{position:absolute;inset:11% 2% 2% 2%;display:grid;gap:2%;grid-template-columns:var(--m-cols)}
 .mini .m .mt i{background:var(--m-win);border:1px solid var(--m-line);border-radius:1cqi;opacity:.9}
 .mini p{font-size:13px;color:var(--ink-2)}
@@ -180,24 +181,16 @@ footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);paddin
   <h1>The Linux rice: floating islands, big gaps, see-through terminals, a mood on the wall</h1>
   <p class="lead">"Ricing" is what the Linux community calls dressing a desktop up by hand, the setups people show off on r/unixporn. This is our take: the bar breaks into three floating islands, workspaces are pills, terminals let the wallpaper glow through, and every theme brings its own generated wallpaper. It is the most terminal-proud of the six, so it fits the Forge Suite's philosophy best. Pick a theme and watch the whole mood change.</p>
   <div class="steps" aria-label="Where we are in the program">
-    <span class="done">1 · Foundation ✓</span><span class="done">2 · Windows 11 ✓</span><span class="done">3 · Mac OS 9 ✓</span><span class="done">4 · macOS ✓</span><span class="on">5 · Linux rice</span><span>6 · KDE</span><span>7 · COSMIC</span>
+    <span class="done">1 · Foundation ✓</span><span class="done">2 · Windows 11 ✓</span><span class="done">3 · Mac OS 9 ✓</span><span class="done">4 · macOS ✓</span><span class="on">5 · Linux rice ✓</span><span>6 · KDE</span><span>7 · COSMIC</span>
   </div>
 </header>
 
 <section aria-labelledby="h-ask">
   <div class="sec-head">
-    <p class="eyebrow">What I need from you</p>
-    <h2 id="h-ask">Five calls, and anything that feels off</h2>
-    <p>My pick is marked on each. Tell me in your own words what doesn't feel like a rice you'd show off.</p>
+    <p class="eyebrow">Approved · D-75, 10 October</p>
+    <h2 id="h-ask">Approved, as one floating bar</h2>
+    <p>Your answers are built in: R-1 one floating island with three areas (drawn so now), R-2 numbered pills with the active one named, R-3 the wallpaper follows the theme, for every theme, R-4 the bright frame, R-5 the big-button power menu.</p>
   </div>
-  <div class="asks">
-    <article class="ask"><span class="id">R-1 · The bar</span><h3>Three floating islands?</h3><p>Left: the emblem and the workspace pills. Centre: the clock and what's playing. Right: CPU, memory, network, sound, night light, the tray and power. Or one long floating bar instead.</p><p><span class="rec">my pick: three islands</span></p></article>
-    <article class="ask"><span class="id">R-2 · Workspaces</span><h3>Numbered pills, the active one with its name?</h3><p>Small numbered pills; a workspace with windows is a shade brighter; the one you're on stretches wide in the theme's colour and says "1 · Daily". Or icons instead of numbers.</p><p><span class="rec">my pick: numbers, the active one named</span></p></article>
-    <article class="ask"><span class="id">R-3 · The wallpaper</span><h3>Each theme's own generated wallpaper?</h3><p>Every one of the 25 themes now has its own picture from our generator (on this page: synthwave suns, neon skylines, circuit boards, misty mountains). Picking a theme changes the wallpaper with it, unless you chose one yourself.</p><p><span class="rec">my pick: yes, it follows the theme</span></p></article>
-    <article class="ask"><span class="id">R-4 · Windows</span><h3>A bright frame on the window in use?</h3><p>A 2 px frame in the theme's bright colour, 12 px corners, others dimmed a touch, terminals see-through and frosted (SwayFX). Plain Sway keeps the frame and the gaps, square and solid.</p><p><span class="rec">my pick: yes</span></p></article>
-    <article class="ask"><span class="id">R-5 · The power menu</span><h3>Big round buttons over a blurred screen?</h3><p>The power island opens five big buttons (Lock, Log out, Sleep, Restart, Shut down) over the dimmed desktop, keys 1–5. Or keep today's list.</p><p><span class="rec">my pick: big buttons</span></p></article>
-  </div>
-  <div class="reply"><span>Answer in our chat, like this:</span><code id="reply-text">R-1 islands · R-2 numbers · R-3 yes · R-4 yes · R-5 buttons · and: …</code><button class="copy" id="copy" type="button">Copy</button></div>
 </section>
 
 <section aria-labelledby="h-screen">
@@ -215,10 +208,10 @@ footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);paddin
     <div class="stage">
       <div class="desk" id="desk"><div class="scr fx" id="scr">
         <div class="wall" id="wall"></div>
-        <div class="bar">
-          <div class="isl frost"><button class="lnch" data-open="l" title="Launcher"><span class="emb" id="emb"></span></button><span class="pills" id="pills"></span></div>
-          <div class="isl frost"><span class="mod clk"><b>12:30</b></span><span class="sep"></span><span class="mod"><i>♪</i>Ziggy Stardust · Bowie</span></div>
-          <div class="isl frost" id="right"></div>
+        <div class="bar isl frost">
+          <div class="area"><button class="lnch" data-open="l" title="Launcher"><span class="emb" id="emb"></span></button><span class="pills" id="pills"></span></div>
+          <div class="area mid"><span class="mod clk"><b>12:30</b></span><span class="sep"></span><span class="mod"><i>♪</i>Ziggy Stardust · Bowie</span></div>
+          <div class="area" id="right"></div>
         </div>
         <div class="tiles">
           <div class="win focus see"><div class="term" id="ff"></div></div>
@@ -231,13 +224,13 @@ footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);paddin
       </div></div>
       <div class="cap" id="cap"></div>
     </div>
-    <aside class="picker" aria-label="Pick a theme"><div id="fams"></div><p style="font-size:12px;color:var(--ink-2)">The approved 25 themes (D-73), each with its own wallpaper from our generator. The islands' frame and the active workspace wear the theme's colour; the module icons and the power button wear its pop.</p></aside>
+    <aside class="picker" aria-label="Pick a theme"><div id="fams"></div><p style="font-size:12px;color:var(--ink-2)">The approved 25 themes (D-73), each with its own wallpaper from our generator. The floating bar's frame and the active workspace wear the theme's colour; the module icons and the power button wear its pop.</p></aside>
   </div>
 </section>
 
 <section aria-labelledby="h-trio">
-  <div class="sec-head"><p class="eyebrow">All three screens</p><h2 id="h-trio">Islands on every screen, one wallpaper across</h2>
-  <p>Each screen gets its own islands. The wallpaper can be the same picture on all three or one wide picture spanning them (the generator can do both).</p></div>
+  <div class="sec-head"><p class="eyebrow">All three screens</p><h2 id="h-trio">The floating bar on every screen, one wallpaper across</h2>
+  <p>Each screen gets its own floating bar. The wallpaper can be the same picture on all three or one wide picture spanning them (the generator can do both).</p></div>
   <div class="trio" id="trio"></div>
 </section>
 

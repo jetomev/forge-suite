@@ -28,6 +28,7 @@ bar_icon         = 24
 bar_indicator    = [3, 16, 6]    # height, width when focused, width when running in the background
 
 [layout]
+wallpaper        = "theme"       # the theme's own generated picture unless the person picked one (D-75)
 bar_position     = "bottom"
 bar_align        = "left"        # Javier, W-1 (D-71); "center" is Windows 11's default
 bar_on           = "every-screen"           # the second and third screens: apps of that screen + the clock
