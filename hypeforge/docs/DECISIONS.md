@@ -7,6 +7,9 @@
 
 ## 2026-10-10
 
+### D-73 · The foundation approved: palettes v2, 25 themes (Javier)
+Review 1, round 2: F-1 the black/white/gray/orange theme is called **Ember**; F-2 its pop stays **cream**; F-3 the light themes' pops are lively enough; F-4 **KognogOS Mocha** keeps its five tiny brightness changes from Catppuccin so it passes our readability checks. The 25 themes (`docs/research/look-2026-10/palette/palettes.toml`, schema 2) are the colours every style is drawn in; KognogOS Mocha is the default.
+
 ### D-72 · Style 2 approved: Mac OS 9, tiled (Javier)
 Review 3, all five as proposed: M-1 the menu bar as drawn (emblem menu with group submenus · bold app name · Workspaces · Favorites · Window · Special · Help … clock · Application menu), M-2 **real title bars on** (centred), M-3 **the Control Strip** holds the tray and status icons, M-4 **Noto Sans bold**, M-5 **the crisp shadow with SwayFX**. Spec: `docs/design/look/styles/mac-os-9/style.toml`. Its colours follow D-70 and the in-window contrast note of D-71.
 

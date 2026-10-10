@@ -150,50 +150,9 @@ footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);paddin
 
 <section aria-labelledby="h-ask">
   <div class="sec-head">
-    <p class="eyebrow">What your answers changed</p>
-    <h2 id="h-ask">Round 1, done; four small questions left</h2>
-  </div>
-  <div class="asks">
-    <article class="ask">
-      <span class="id">Done · your answers</span>
-      <h3>Built in</h3>
-      <ul class="opts">
-        <li><b>Q-1</b><span>SwayFX as a second login, "hypeForge FX"; plain Sway stays the default (D-68)</span></li>
-        <li><b>Q-2</b><span>Small graphical panels from the bar; the Forge apps stay terminal (D-68)</span></li>
-        <li><b>Q-3</b><span>Our generator, plus hand-picked free-licence art with credits (D-69)</span></li>
-        <li><b>Q-4</b><span>Middle themes "middle to darker", white, black and grays inside every theme, more contrast (D-70)</span></li>
-        <li><b>Q-5</b><span>My picks: emblem blue for the grays, the focused border in the theme's colour, urgent away from red in red and pink themes, the orange for its own theme (D-70)</span></li>
-      </ul>
-    </article>
-    <article class="ask">
-      <span class="id">F-1 · A name</span>
-      <h3>"Ember" for the black, white, gray and orange theme?</h3>
-      <p>Near-black windows, the emblem's orange as the band, cream as the pop.</p>
-      <ul class="opts"><li><b>A</b><span>Ember</span><span class="rec">my pick</span></li><li><b>B</b><span>Your name for it</span></li></ul>
-    </article>
-    <article class="ask">
-      <span class="id">F-2 · Ember's pop</span>
-      <h3>Cream, or something louder?</h3>
-      <p>Cream keeps Ember calm and classy next to the orange. A bright yellow or a cool teal would make it louder.</p>
-      <ul class="opts"><li><b>A</b><span>Cream</span><span class="rec">my pick</span></li><li><b>B</b><span>Yellow</span></li><li><b>C</b><span>Teal</span></li></ul>
-    </article>
-    <article class="ask">
-      <span class="id">F-3 · Light themes</span>
-      <h3>Are the light themes' pops lively enough?</h3>
-      <p>On white, a pop has to be dark enough to read, so Light Blue's orange and Light Green's raspberry sit deeper than their dark-theme cousins. Look at Light Blue, Light Purple and Light Green.</p>
-      <ul class="opts"><li><b>A</b><span>Lively enough</span><span class="rec">my pick</span></li><li><b>B</b><span>Louder, even if buttons then carry dark text</span></li></ul>
-    </article>
-    <article class="ask">
-      <span class="id">F-4 · KognogOS Mocha</span>
-      <h3>Five tiny changes from Catppuccin</h3>
-      <p>To pass our readability checks, Mocha's muted text, its mauve used as letters, its red and two terminal colours are a hair brighter than Catppuccin's own. You'd only see it side by side.</p>
-      <ul class="opts"><li><b>A</b><span>Keep the five tiny changes</span><span class="rec">my pick</span></li><li><b>B</b><span>Catppuccin exact, even where it reads a bit soft</span></li></ul>
-    </article>
-  </div>
-  <div class="reply">
-    <span>Answer in our chat, like this:</span>
-    <code id="reply-text">F-1 A · F-2 A · F-3 A · F-4 A</code>
-    <button class="copy" id="copy" type="button">Copy</button>
+    <p class="eyebrow">Approved · D-73, 10 October</p>
+    <h2 id="h-ask">The foundation is locked</h2>
+    <p>Round 1 (D-68, D-69, D-70) and round 2: F-1 the orange theme is Ember, F-2 its pop stays cream, F-3 the light themes' pops are lively enough, F-4 KognogOS Mocha keeps its five tiny changes. These 25 themes are what every style is drawn in; KognogOS Mocha is the default.</p>
   </div>
 </section>
 
@@ -326,7 +285,7 @@ function walls(){
 }
 
 $("emb").style.backgroundImage = `url(${D.emblem})`;
-$("copy").addEventListener("click", () => {
+$("copy")?.addEventListener("click", () => {
   const txt = $("reply-text").textContent;
   navigator.clipboard?.writeText(txt).then(() => { $("copy").textContent = "Copied"; }).catch(() => { const r = document.createRange(); r.selectNodeContents($("reply-text")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
 });

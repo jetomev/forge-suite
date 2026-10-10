@@ -19,7 +19,7 @@ Claude is the graphic design, UI/usability and development team and the critical
 |---|---|---|---|---|
 | 0 | Ship nightForge 1.0 | 10-10 | Claude, Javier (install test) | GitHub ✅ · AUR after the test · site · Vault |
 | 1 | **Research** — compositor (Sway vs SwayFX), bars/trays/launchers/docks, theme system + colour science + 23 palettes, inventory of every themable piece, wallpapers | 10-10 | 5 helpers, Claude reviews | `docs/research/look-2026-10/01…05` |
-| 2 ✅ | **Foundation** — the theme file format (colours separate from shapes), the palette generator and its contrast report, the 23-theme swatch sheet, the wallpaper generator, the SwayFX decision (bench + a separate login session, Sway stays the default) | 10-10 → 10-11 | Claude | Javier reviews the swatches and the SwayFX question |
+| 2 ✅ approved (D-73) | **Foundation** — the theme file format (colours separate from shapes), the palette generator and its contrast report, the 23-theme swatch sheet, the wallpaper generator, the SwayFX decision (bench + a separate login session, Sway stays the default) | 10-10 → 10-11 | Claude | Javier reviews the swatches and the SwayFX question |
 | 3.1 ✅ approved (D-71) | **Proposal 1 · Windows 11** — a live mock-up of the three screens (bar, tray, launcher, windows), the 23 themes switchable, its wallpapers | 10-11 → 10-12 | Claude | Javier's review (approve / change) |
 | 3.2 ✅ approved (D-72) | Proposal 2 · Mac OS 9.x | 10-12 → 10-13 | Claude | review |
 | 3.3 | Proposal 3 · modern macOS | 10-13 → 10-14 | Claude | review |
