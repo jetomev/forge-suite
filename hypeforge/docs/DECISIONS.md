@@ -7,6 +7,9 @@
 
 ## 2026-10-10
 
+### D-71 · Style 1 approved: Windows 11, tiled (Javier)
+Review 2: *"A killer proposal. Sold!"* — with Claude's picks on W-1…W-5: taskbar icons **centered** (left stays an option), the **KDE-style Start** as drawn (no recent files), the six Quick Settings tiles (Wi-Fi, Bluetooth, Night light, Do Not Disturb, Screens, VPN), **soft windows with SwayFX** and square ones on plain Sway, **a taskbar on every screen** (tray and Quick Settings on the main one). The style file `docs/design/look/styles/windows-11/style.toml` is the approved spec; it is built after the six reviews (look program phase 4).
+
 ### D-70 · Colour themes are 60-30-10, not one colour everywhere (Javier)
 Javier on review 1: the samples were "too one sided of the color… extremely monotone". Every colour theme now mixes **white, black and grays** with its colour: about 60 % neutral foundation (windows, panels), 30 % the theme's colour in big secondary places (the bar, panel headers, selected rows, the focused border), 10 % a contrasting "pop" colour for small important things, plus more contrast between layers. Middle themes sit **"middle to darker"**. A new **black · white · dark gray · orange** theme (the emblem's orange). "The Kognog colours" are **KognogOS Mocha**, today's Catppuccin Mocha combination, its own theme, not "purple". Q-5 picks: neutral themes use the emblem blue; the focused border wears the theme's colour; urgent moves away from red in red/pink themes; the emblem orange is the orange theme's colour, otherwise the logo's.
 
