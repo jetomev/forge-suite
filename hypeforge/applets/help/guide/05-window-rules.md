@@ -7,7 +7,7 @@ Settings, password windows, picture-in-picture video, Steam's side windows and m
 
 ## How to use it
 
-- **Win + Shift + Space** floats a window, or puts it back in its spot.
+- **Win + Shift + Space** floats a window, or puts it back in its spot. A floating window keeps its frame; to resize it, hold **Win** and drag with the **right** mouse button (Win + left button moves it).
 - **Win + left mouse button** drags it, **Win + right mouse button** resizes it.
 - **Win + Shift + Tab** switches the focus between floating and tiled windows.
 

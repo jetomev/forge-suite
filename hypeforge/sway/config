@@ -212,8 +212,10 @@ input type:keyboard {
     # Make the current focus fullscreen
     bindsym $mod+Shift+f fullscreen
 
-    # Toggle the current focus between tiling and floating mode
-    bindsym $mod+Shift+space floating toggle
+    # Toggle the current focus between tiling and floating mode. "border pixel" keeps our frame:
+    # floated, some apps (Alacritty…) ask to draw their own frame and draw none, which left the
+    # window with no border and nothing to grab to resize (F-55, 2026-10-10)
+    bindsym $mod+Shift+space floating toggle, border pixel
 
     # Swap focus between the tiling area and the floating area
     # hypeForge: Win + Space opens the launcher now; this moved to Win + Shift + Tab
