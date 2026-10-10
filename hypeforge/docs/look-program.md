@@ -45,7 +45,8 @@ The GitHub Project **"hypeForge · the look"** (jetomev) holds every task above 
 
 - **01 · compositor** ✅ — SwayFX 0.6 is built on Sway 1.12 (ours); config and applets compatible. Its package replaces Sway, so side by side = our own build in `/opt/swayfx` + a second login "hypeForge FX". Animations stay off (workspaces can vanish moving between screens, #565 #569); shadows only after a 10-reload bench (#566). Plan: every style designed for plain Sway first, the eye candy in one optional `fx.conf`.
 - **02 · bar, tray, launcher** ✅ — Waybar 0.15 can do all six styles (top/bottom, several bars, floating centred, drawers, real drop-down menus); one Waybar + a layout and shape file per style + the theme's colour tokens. Not possible on Sway: an app's own File/Edit menus in the top bar, the macOS dock's magnifying wave, minimize, a workspace overview. Our own graphical pop-ups (a KDE-style launcher, Quick Settings, calendar) need **zero new packages** (Python + GTK3 + layer-shell are installed).
-- **03 · theme system + 23 palettes** — running.
+- **03 · theme system + 23 palettes** ✅ — 69 colour roles, shapes in a separate `style.toml`; `palette/generate.py` (stdlib, own OKLCH maths) builds all 23: 1794 required contrast pairs, all pass (WCAG 2.2 + APCA). Dark Purple = today's Mocha look. The emblem is **blue #0363ef + orange #d9400e**; the Kognog purple is the OS accent #cba6f7. Every program can include a generated file (checked on the installed versions; Alacritty's live reload of an imported file still to bench).
+  - **Critical eye (Claude):** the mid themes (Gray, Blue, Purple, Green, Pink, Red) sit near lightness 0.40, so they read close to their Dark sisters; contrast forces it ("the mid-gray dead zone": at 0.55–0.65 neither black nor white text reaches 7:1). Options for Javier: accept, or let mid themes use 4.5:1 body text and move up to ~0.50.
 - **04 · inventory** ✅ — 21 places a theme writes; F-52 #59, F-53 #60 (fixed); what Settings needs for Look.
 - **05 · wallpapers** — running.
 
@@ -53,4 +54,5 @@ The GitHub Project **"hypeForge · the look"** (jetomev) holds every task above 
 
 - **Q-1 · SwayFX:** D-56 says KognogOS ships with Sway only. Does SwayFX (Sway with eye candy, as a second login) count as Sway? Needed for rounded corners, shadows, blur.
 - **Q-2 · graphical pop-ups:** D-57 says terminal apps first. Are small graphical pop-ups from the bar (a KDE-style launcher, Quick Settings, a calendar) OK, while the Forge apps stay in the terminal?
+- **Q-4 · palette choices:** neutral themes' accent — emblem blue (proposed) or Kognog mauve? Focused window border — the accent (proposed) or white like today? Urgent in red/pink themes — moved to amber/purple (proposed) or one fixed colour? The emblem orange — brand only (proposed) or an accent?
 - **Q-3 · wallpapers:** our own generated pictures, or also licensed photos/illustrations?

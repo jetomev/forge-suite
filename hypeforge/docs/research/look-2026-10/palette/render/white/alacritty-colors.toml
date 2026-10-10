@@ -1,0 +1,33 @@
+# hypeForge theme White (white), generated — do not edit
+# Alacritty: [general] import = ["~/.config/hypeforge/theme/alacritty-colors.toml"]
+[colors.primary]
+background = "#f1f1f1"
+foreground = "#1f1f1f"
+
+[colors.cursor]
+text = "#f7faff"
+cursor = "#0363ef"
+
+[colors.selection]
+text = "#1f1f1f"
+background = "#a6c5f8"
+
+[colors.normal]
+black = "#373737"
+red = "#9d3533"
+green = "#157123"
+yellow = "#735a00"
+blue = "#195daa"
+magenta = "#873a82"
+cyan = "#006c6c"
+white = "#cacaca"
+
+[colors.bright]
+black = "#656565"
+red = "#8a0314"
+green = "#005813"
+yellow = "#594500"
+blue = "#00468c"
+magenta = "#73176f"
+cyan = "#005353"
+white = "#e0e0e0"

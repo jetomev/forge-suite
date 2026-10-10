@@ -1,0 +1,33 @@
+# hypeForge theme Purple (purple), generated — do not edit
+# Alacritty: [general] import = ["~/.config/hypeforge/theme/alacritty-colors.toml"]
+[colors.primary]
+background = "#493e69"
+foreground = "#ece7ff"
+
+[colors.cursor]
+text = "#191221"
+cursor = "#cba6f7"
+
+[colors.selection]
+text = "#ece7ff"
+background = "#726286"
+
+[colors.normal]
+black = "#766b99"
+red = "#ffb2ab"
+green = "#84d987"
+yellow = "#e9c14c"
+blue = "#9fc9ff"
+magenta = "#fea8f6"
+cyan = "#00dadb"
+white = "#c5c0d9"
+
+[colors.bright]
+black = "#a094c5"
+red = "#ffcdc8"
+green = "#92f697"
+yellow = "#ffd661"
+blue = "#c3ddff"
+magenta = "#ffc5f9"
+cyan = "#00f9fa"
+white = "#efebff"
