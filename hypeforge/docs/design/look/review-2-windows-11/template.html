@@ -1,0 +1,507 @@
+<title>hypeForge Look Review 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Noto+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: the brief and what to judge, then one large live screen (controls above it, theme
+   picker beside it), the three screens, how each piece is built, and the style file itself. */
+:root{
+  --paper:#f6f5f9; --card:#ffffff; --ink:#1d1b26; --ink-2:#55526a; --line:#e2e0ea;
+  --accent:#5b3fc0; --accent-soft:#ece7fb; --ok:#1f7a3a; --warn:#9a5b00; --no:#a3313a;
+  --f-display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"DejaVu Sans Mono",monospace;
+  --f-desk:"Noto Sans","IBM Plex Sans",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body);padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,4.4vw,44px);font-weight:750;letter-spacing:-.01em}
+h2{font-size:24px;font-weight:750}
+h3{font-size:16px;font-weight:600}
+p{margin:0}
+code{font-family:var(--f-mono);font-size:.92em}
+.eyebrow{font:600 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{max-width:70ch;color:var(--ink-2);font-size:16px}
+header{display:grid;gap:12px}
+.steps{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.steps span{font:500 12px/1 var(--f-mono);padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2)}
+.steps span.done{color:var(--ok);border-color:currentColor}
+.steps span.on{background:var(--accent);border-color:var(--accent);color:var(--card)}
+section{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
+.sec-head{display:grid;gap:6px}
+.sec-head p{max-width:74ch;color:var(--ink-2)}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.asks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.ask{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:8px;align-content:start;min-width:0}
+.ask .id{font:600 12px/1 var(--f-mono);color:var(--accent)}
+.ask p{color:var(--ink-2);font-size:14px}
+.rec{font:600 11px/1 var(--f-mono);padding:3px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.ask p .rec{white-space:normal;display:inline-block;line-height:1.35}
+.reply{background:var(--accent-soft);border-radius:10px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.reply code{font:500 14px/1.4 var(--f-mono);color:var(--ink);word-break:break-word}
+.copy{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:6px;padding:5px 10px;font:600 12px/1 var(--f-mono)}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:end}
+.seg{display:grid;gap:5px}
+.seg>span{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.seg div{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:transparent;color:var(--ink-2);padding:7px 11px;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--card);font-weight:600}
+.explore{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.picker{order:-1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:8px}
+#fams{display:flex;flex-wrap:wrap;gap:10px 22px}
+.fam{display:grid;gap:6px}
+.fam h3{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 9px 3px 3px;font-size:12.5px}
+.chip i{width:18px;height:18px;border-radius:50%;flex:none;border:1px solid rgba(127,127,127,.35)}
+.chip[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;font-weight:600}
+.stage{display:grid;gap:12px;min-width:0}
+.cap{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink-2)}
+.cap b{color:var(--ink)}
+
+/* ── the screen: 2560 × 1440 at 125 %; --px is one Windows "pixel" ───────────────────────── */
+.desk{aspect-ratio:16/9;width:100%;border-radius:6px;overflow:hidden;position:relative;container-type:inline-size;
+  font-family:var(--f-desk);color:var(--t-text);background:var(--t-sunken);box-shadow:0 1px 0 var(--line),0 18px 50px rgba(0,0,0,.22)}
+.desk *{box-sizing:border-box}
+.scr{position:absolute;inset:0;--px:calc(125cqi / 2560);font-size:calc(14 * var(--px))}
+.bloom{position:absolute;inset:0;background:
+  radial-gradient(55% 75% at 28% 105%,color-mix(in oklab,var(--t-accent) 70%,transparent),transparent 70%),
+  radial-gradient(45% 65% at 78% -5%,color-mix(in oklab,var(--t-info) 55%,transparent),transparent 72%),
+  radial-gradient(40% 60% at 92% 95%,color-mix(in oklab,var(--t-accent) 35%,transparent),transparent 70%),
+  linear-gradient(160deg,var(--t-sunken),var(--t-base))}
+.tiles{position:absolute;left:calc(8 * var(--px));right:calc(8 * var(--px));top:calc(8 * var(--px));bottom:calc(56 * var(--px));
+  display:grid;grid-template-columns:1.35fr 1fr;grid-template-rows:1fr 1fr;gap:calc(8 * var(--px))}
+.win{background:var(--t-base);border:calc(1 * var(--px)) solid var(--t-unfocused);min-height:0;min-width:0;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.win.focus{border-color:var(--t-focused);grid-row:1/3}
+.fx .win{border-radius:calc(8 * var(--px));box-shadow:0 calc(8 * var(--px)) calc(24 * var(--px)) rgba(0,0,0,var(--t-shadow-a))}
+.plain .win.focus{border-width:calc(2 * var(--px))}
+/* Chrome */
+.c-tabs{display:flex;align-items:end;gap:calc(4 * var(--px));padding:calc(8 * var(--px)) calc(10 * var(--px)) 0;background:var(--t-sunken);height:calc(40 * var(--px))}
+.c-tab{height:calc(32 * var(--px));padding:0 calc(14 * var(--px));display:flex;align-items:center;gap:calc(8 * var(--px));color:var(--t-text2);font-size:calc(12.5 * var(--px));border-radius:calc(8 * var(--px)) calc(8 * var(--px)) 0 0;max-width:calc(220 * var(--px));white-space:nowrap;overflow:hidden}
+.c-tab.on{background:var(--t-base);color:var(--t-text)}
+.c-tab img{width:calc(16 * var(--px));height:calc(16 * var(--px))}
+.c-bar{display:flex;align-items:center;gap:calc(10 * var(--px));padding:calc(6 * var(--px)) calc(10 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-subtle)}
+.c-url{flex:1;height:calc(30 * var(--px));border-radius:999px;background:var(--t-raised);display:flex;align-items:center;padding:0 calc(14 * var(--px));color:var(--t-text2);font-size:calc(13 * var(--px))}
+.c-url b{color:var(--t-text);font-weight:500}
+.dots{display:flex;gap:calc(14 * var(--px));color:var(--t-muted);font-size:calc(14 * var(--px))}
+.c-page{flex:1;padding:calc(34 * var(--px)) calc(44 * var(--px));display:grid;align-content:start;gap:calc(16 * var(--px));overflow:hidden}
+.c-kicker{font:600 calc(12 * var(--px))/1 var(--f-mono);letter-spacing:.1em;color:var(--t-acctext);text-transform:uppercase}
+.c-h{font:700 calc(40 * var(--px))/1.1 var(--f-desk);color:var(--t-text);letter-spacing:-.01em}
+.c-p{color:var(--t-text2);font-size:calc(15 * var(--px));max-width:36em;line-height:1.5}
+.c-btns{display:flex;gap:calc(10 * var(--px))}
+.b-acc{background:var(--t-accent);color:var(--t-on);padding:calc(8 * var(--px)) calc(18 * var(--px));border-radius:calc(4 * var(--px));font-weight:600;font-size:calc(13.5 * var(--px))}
+.b-sec{border:calc(1 * var(--px)) solid var(--t-strong);padding:calc(7 * var(--px)) calc(17 * var(--px));border-radius:calc(4 * var(--px));font-size:calc(13.5 * var(--px))}
+.c-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(12 * var(--px));margin-top:calc(10 * var(--px))}
+.c-card{background:var(--t-raised);border:calc(1 * var(--px)) solid var(--t-subtle);border-radius:calc(8 * var(--px));padding:calc(14 * var(--px));display:grid;gap:calc(6 * var(--px));font-size:calc(13 * var(--px))}
+.c-card b{font-weight:600}
+.c-card span{color:var(--t-muted);font-size:calc(12 * var(--px))}
+/* Alacritty */
+.term{flex:1;background:var(--t-tbg);color:var(--t-tfg);font:calc(13 * var(--px))/1.55 var(--f-mono);padding:calc(14 * var(--px)) calc(16 * var(--px));white-space:pre;overflow:hidden}
+/* Thunar */
+.th{flex:1;display:grid;grid-template-columns:calc(170 * var(--px)) 1fr;min-height:0}
+.th-side{background:var(--t-sunken);padding:calc(12 * var(--px)) calc(8 * var(--px));display:grid;align-content:start;gap:calc(2 * var(--px));font-size:calc(13 * var(--px));color:var(--t-text2)}
+.th-side span{padding:calc(5 * var(--px)) calc(10 * var(--px));border-radius:calc(4 * var(--px))}
+.th-side .sel{background:var(--t-selbg);color:var(--t-selfg)}
+.th-main{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(92 * var(--px)),1fr));gap:calc(10 * var(--px));padding:calc(16 * var(--px));align-content:start}
+.fold{display:grid;justify-items:center;gap:calc(6 * var(--px));font-size:calc(12 * var(--px));color:var(--t-text)}
+.fold i{width:calc(50 * var(--px));height:calc(38 * var(--px));border-radius:calc(4 * var(--px));background:color-mix(in oklab,var(--t-accent) 75%,var(--t-base));position:relative}
+.fold i::before{content:"";position:absolute;left:0;top:calc(-5 * var(--px));width:45%;height:calc(9 * var(--px));border-radius:calc(3 * var(--px)) calc(3 * var(--px)) 0 0;background:inherit}
+.w-head{display:flex;align-items:center;justify-content:space-between;padding:calc(8 * var(--px)) calc(12 * var(--px));font-size:calc(13 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-subtle);color:var(--t-text2)}
+
+/* the taskbar */
+.task{position:absolute;left:0;right:0;bottom:0;height:calc(48 * var(--px));background:var(--t-bar);color:var(--t-barfg);
+  border-top:calc(1 * var(--px)) solid var(--t-subtle);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 calc(10 * var(--px))}
+.fx .task{background:color-mix(in oklab,var(--t-bar) 84%,transparent);backdrop-filter:blur(calc(14 * var(--px))) saturate(1.3)}
+.left .task{grid-template-columns:auto 1fr auto}
+.t-mid{display:flex;align-items:center;gap:calc(4 * var(--px));justify-self:center}
+.left .t-mid{justify-self:start;grid-column:1}
+.t-r{display:flex;align-items:center;gap:calc(4 * var(--px));justify-self:end;grid-column:3}
+.tb{height:calc(40 * var(--px));min-width:calc(40 * var(--px));border:0;background:transparent;border-radius:calc(4 * var(--px));display:flex;align-items:center;justify-content:center;gap:calc(8 * var(--px));padding:0 calc(8 * var(--px));position:relative;color:inherit;font-size:calc(12.5 * var(--px))}
+.tb:hover,.tb.open{background:var(--t-barhover)}
+.tb img{width:calc(24 * var(--px));height:calc(24 * var(--px));display:block}
+.tb .emb{width:calc(24 * var(--px));height:calc(24 * var(--px));background-size:contain;background-repeat:no-repeat}
+.tb svg{width:calc(18 * var(--px));height:calc(18 * var(--px))}
+.search{height:calc(34 * var(--px));min-width:calc(190 * var(--px));border-radius:999px;background:var(--t-raised);border:calc(1 * var(--px)) solid var(--t-subtle);justify-content:flex-start;padding:0 calc(14 * var(--px));color:var(--t-barfgdim)}
+.ind{position:absolute;bottom:calc(2 * var(--px));left:50%;transform:translateX(-50%);height:calc(3 * var(--px));width:calc(6 * var(--px));border-radius:999px;background:var(--t-muted)}
+.ind.on{width:calc(16 * var(--px));background:var(--t-accent)}
+.qs-pill{gap:calc(10 * var(--px));padding:0 calc(10 * var(--px))}
+.clock{display:grid;justify-items:end;line-height:1.25;font-size:calc(12 * var(--px));padding:0 calc(8 * var(--px))}
+.badge{position:absolute;top:calc(7 * var(--px));right:calc(7 * var(--px));width:calc(7 * var(--px));height:calc(7 * var(--px));border-radius:50%;background:var(--t-accent)}
+
+/* the pop-up panels */
+.panel{position:absolute;bottom:calc(60 * var(--px));background:var(--t-raised);color:var(--t-text);border:calc(1 * var(--px)) solid var(--t-subtle);
+  border-radius:calc(8 * var(--px));box-shadow:0 calc(8 * var(--px)) calc(32 * var(--px)) rgba(0,0,0,var(--t-shadow-a));display:none;overflow:hidden}
+.panel.show{display:grid}
+.fx .panel{background:color-mix(in oklab,var(--t-raised) 88%,transparent);backdrop-filter:blur(calc(24 * var(--px))) saturate(1.3)}
+.plain .panel{box-shadow:none}
+.p-start{left:50%;transform:translateX(-50%);width:calc(680 * var(--px));height:calc(590 * var(--px));grid-template-rows:auto 1fr auto}
+.left .p-start{left:calc(10 * var(--px));transform:none}
+.s-search{margin:calc(20 * var(--px)) calc(20 * var(--px)) calc(12 * var(--px));height:calc(38 * var(--px));border-radius:calc(4 * var(--px));background:var(--t-overlay);border:calc(1 * var(--px)) solid var(--t-subtle);border-bottom:calc(2 * var(--px)) solid var(--t-accent);display:flex;align-items:center;gap:calc(10 * var(--px));padding:0 calc(12 * var(--px));color:var(--t-muted);font-size:calc(13.5 * var(--px))}
+.s-body{display:grid;grid-template-columns:calc(190 * var(--px)) 1fr;min-height:0;padding:0 calc(12 * var(--px))}
+.s-side{display:grid;align-content:start;gap:calc(2 * var(--px));border-right:calc(1 * var(--px)) solid var(--t-subtle);padding-right:calc(10 * var(--px));font-size:calc(13 * var(--px));overflow:hidden}
+.s-side span{padding:calc(7 * var(--px)) calc(12 * var(--px));border-radius:calc(4 * var(--px));display:flex;justify-content:space-between;color:var(--t-text2);position:relative}
+.s-side span em{font-style:normal;color:var(--t-muted);font-size:calc(11.5 * var(--px))}
+.s-side span.sel{background:var(--t-selbg);color:var(--t-selfg)}
+.s-side span.sel::before{content:"";position:absolute;left:0;top:25%;bottom:25%;width:calc(3 * var(--px));border-radius:999px;background:var(--t-accent)}
+.s-side hr{border:0;border-top:calc(1 * var(--px)) solid var(--t-subtle);margin:calc(6 * var(--px)) 0;width:100%}
+.s-main{padding:calc(4 * var(--px)) calc(10 * var(--px)) 0 calc(18 * var(--px));display:grid;align-content:start;gap:calc(10 * var(--px));min-height:0;overflow:hidden}
+.s-main h4{margin:0;font-size:calc(13.5 * var(--px));font-weight:600;display:flex;justify-content:space-between}
+.s-main h4 em{font-style:normal;font-weight:400;color:var(--t-muted);font-size:calc(12 * var(--px))}
+.s-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:calc(6 * var(--px))}
+.s-app{display:grid;justify-items:center;gap:calc(6 * var(--px));padding:calc(10 * var(--px)) calc(4 * var(--px));border-radius:calc(4 * var(--px));font-size:calc(12 * var(--px));text-align:center;color:var(--t-text)}
+.s-app:hover{background:var(--t-hover)}
+.s-app img{width:calc(34 * var(--px));height:calc(34 * var(--px))}
+.s-foot{display:flex;justify-content:space-between;align-items:center;padding:calc(12 * var(--px)) calc(24 * var(--px));border-top:calc(1 * var(--px)) solid var(--t-subtle);background:var(--t-overlay);font-size:calc(13 * var(--px))}
+.s-user{display:flex;align-items:center;gap:calc(10 * var(--px))}
+.av{width:calc(30 * var(--px));height:calc(30 * var(--px));border-radius:50%;background:var(--t-accent);color:var(--t-on);display:grid;place-items:center;font-weight:600}
+.s-pw{display:flex;gap:calc(6 * var(--px))}
+.s-pw span{width:calc(32 * var(--px));height:calc(32 * var(--px));border-radius:calc(4 * var(--px));display:grid;place-items:center;color:var(--t-text2)}
+.s-pw svg{width:calc(16 * var(--px));height:calc(16 * var(--px))}
+.p-qs{right:calc(10 * var(--px));width:calc(370 * var(--px));grid-template-rows:auto auto auto}
+.q-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(10 * var(--px));padding:calc(18 * var(--px)) calc(18 * var(--px)) calc(8 * var(--px))}
+.q-t{display:grid;gap:calc(6 * var(--px));font-size:calc(11.5 * var(--px));text-align:center}
+.q-t i{height:calc(46 * var(--px));border-radius:calc(4 * var(--px));background:var(--t-overlay);border:calc(1 * var(--px)) solid var(--t-subtle);display:grid;place-items:center;color:var(--t-text)}
+.q-t.on i{background:var(--t-accent);border-color:var(--t-accent);color:var(--t-on)}
+.q-t svg{width:calc(18 * var(--px));height:calc(18 * var(--px))}
+.q-t small{display:block;color:var(--t-muted);font-size:calc(10.5 * var(--px))}
+.q-sl{display:grid;gap:calc(12 * var(--px));padding:calc(10 * var(--px)) calc(20 * var(--px)) calc(18 * var(--px))}
+.sl{display:grid;grid-template-columns:calc(22 * var(--px)) 1fr calc(44 * var(--px));align-items:center;gap:calc(10 * var(--px));font-size:calc(11.5 * var(--px));color:var(--t-text2)}
+.sl svg{width:calc(18 * var(--px));height:calc(18 * var(--px));color:var(--t-text)}
+.sl b{height:calc(4 * var(--px));border-radius:999px;background:var(--t-strong);position:relative;opacity:.9}
+.sl b::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--v);border-radius:inherit;background:var(--t-accent)}
+.sl b::after{content:"";position:absolute;left:var(--v);top:50%;width:calc(16 * var(--px));height:calc(16 * var(--px));border-radius:50%;transform:translate(-50%,-50%);background:var(--t-accent);border:calc(4 * var(--px)) solid var(--t-raised)}
+.q-foot{display:flex;justify-content:space-between;align-items:center;padding:calc(10 * var(--px)) calc(18 * var(--px));border-top:calc(1 * var(--px)) solid var(--t-subtle);background:var(--t-overlay);font-size:calc(12 * var(--px));color:var(--t-text2)}
+.q-foot span{display:flex;gap:calc(8 * var(--px));align-items:center}
+.q-foot svg{width:calc(16 * var(--px));height:calc(16 * var(--px))}
+.p-cal{right:calc(10 * var(--px));width:calc(370 * var(--px));background:transparent!important;border:0;box-shadow:none;gap:calc(10 * var(--px));overflow:visible;backdrop-filter:none!important}
+.card{background:var(--t-raised);border:calc(1 * var(--px)) solid var(--t-subtle);border-radius:calc(8 * var(--px));box-shadow:0 calc(8 * var(--px)) calc(28 * var(--px)) rgba(0,0,0,var(--t-shadow-a))}
+.fx .card{background:color-mix(in oklab,var(--t-raised) 88%,transparent);backdrop-filter:blur(calc(24 * var(--px)))}
+.plain .card{box-shadow:none}
+.n{padding:calc(12 * var(--px)) calc(14 * var(--px));display:grid;grid-template-columns:calc(28 * var(--px)) 1fr;gap:calc(4 * var(--px)) calc(12 * var(--px));font-size:calc(12.5 * var(--px))}
+.n img{width:calc(28 * var(--px));height:calc(28 * var(--px));grid-row:1/3}
+.n b{font-weight:600}.n span{color:var(--t-text2)}
+.n-head{display:flex;justify-content:space-between;font-size:calc(12.5 * var(--px));color:var(--t-text2);padding:0 calc(4 * var(--px))}
+.cal{padding:calc(14 * var(--px)) calc(16 * var(--px)) calc(16 * var(--px));display:grid;gap:calc(10 * var(--px))}
+.cal h5{margin:0;font-size:calc(13.5 * var(--px));font-weight:600}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:calc(2 * var(--px));font-size:calc(12 * var(--px));text-align:center}
+.cal-g span{height:calc(34 * var(--px));display:grid;place-items:center;border-radius:50%}
+.cal-g .wd{color:var(--t-muted);height:calc(24 * var(--px))}
+.cal-g .out{color:var(--t-muted);opacity:.6}
+.cal-g .today{background:var(--t-accent);color:var(--t-on);font-weight:600}
+.p-tray{right:calc(330 * var(--px));width:calc(150 * var(--px));padding:calc(10 * var(--px));grid-template-columns:repeat(3,1fr);gap:calc(4 * var(--px))}
+.p-tray span{height:calc(40 * var(--px));display:grid;place-items:center;border-radius:calc(4 * var(--px))}
+.p-tray span:hover{background:var(--t-hover)}
+.p-tray img{width:calc(20 * var(--px));height:calc(20 * var(--px))}
+.p-ws{left:50%;transform:translateX(-50%);width:calc(1400 * var(--px));padding:calc(18 * var(--px));grid-template-columns:repeat(6,1fr);gap:calc(14 * var(--px))}
+.ws{border-radius:calc(6 * var(--px));border:calc(1 * var(--px)) solid var(--t-subtle);background:var(--t-overlay);padding:calc(12 * var(--px));display:grid;gap:calc(10 * var(--px));font-size:calc(12.5 * var(--px))}
+.ws.on{border:calc(2 * var(--px)) solid var(--t-accent)}
+.ws b{font-weight:600;display:flex;justify-content:space-between}
+.ws b em{font-style:normal;color:var(--t-muted);font-weight:400}
+.ws div{display:flex;flex-wrap:wrap;gap:calc(6 * var(--px));min-height:calc(28 * var(--px))}
+.ws img{width:calc(26 * var(--px));height:calc(26 * var(--px))}
+.ws small{color:var(--t-muted);font-size:calc(11 * var(--px))}
+
+/* three screens */
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.trio{grid-template-columns:minmax(0,1fr)}}
+.mini{display:grid;gap:6px;min-width:0}
+.mini .m{aspect-ratio:16/9;border-radius:5px;overflow:hidden;position:relative;container-type:inline-size;background:var(--m-bg)}
+.mini .m .mt{position:absolute;inset:6% 2% 10% 2%;display:grid;gap:2%;grid-template-columns:var(--m-cols)}
+.mini .m .mt i{background:var(--m-win);border:1px solid var(--m-line);border-radius:var(--m-r)}
+.mini .m .mt i.f{border-color:var(--m-acc)}
+.mini .m .mb{position:absolute;left:0;right:0;bottom:0;height:7.5%;background:var(--m-bar);display:flex;align-items:center;justify-content:center;gap:1.4%}
+.mini .m .mb i{width:2.6cqi;height:2.6cqi;border-radius:.6cqi;background:var(--m-ico)}
+.mini .m .mb i.s{background:var(--m-acc)}
+.mini .m .mb em{position:absolute;right:2%;font:normal 2.2cqi/1 var(--f-desk);color:var(--m-fg)}
+.mini p{font-size:13px;color:var(--ink-2)}
+.mini p b{color:var(--ink)}
+
+/* how it is built */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+.st{font:600 11px/1 var(--f-mono);padding:4px 7px;border-radius:4px;white-space:nowrap;display:inline-block}
+.st.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 13%,transparent)}
+.st.build{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.st.fx{color:var(--accent);background:var(--accent-soft)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:8px;align-content:start;min-width:0}
+.box ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.box li::marker{color:var(--accent)}
+pre.file{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;font:12.5px/1.55 var(--f-mono);color:var(--ink)}
+footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">hypeForge · the look · review 2 of 7 · proposal 1 of 6</p>
+  <h1>Windows 11, tiled: the taskbar, the tray, a KDE-style Start, and soft windows</h1>
+  <p class="lead">The Windows 11 look you love, on our tiling desktop. Windows still tile, workspaces and snapping still work exactly as they do now; what changes is how it looks and where things live. Click the Start button, the tray and the clock on the screen below, try the themes, and flip between the plain-Sway and SwayFX versions. Then answer the five questions.</p>
+  <div class="steps" aria-label="Where we are in the program">
+    <span class="done">1 · Foundation</span><span class="on">2 · Windows 11</span><span>3 · Mac OS 9</span><span>4 · macOS</span><span>5 · Linux rice</span><span>6 · KDE</span><span>7 · COSMIC</span>
+  </div>
+</header>
+
+<section aria-labelledby="h-ask">
+  <div class="sec-head">
+    <p class="eyebrow">What I need from you</p>
+    <h2 id="h-ask">Five calls, and anything that feels off</h2>
+    <p>My pick is marked on each. Tell me in your own words what doesn't feel like Windows 11 to you; that's the most useful part.</p>
+  </div>
+  <div class="asks">
+    <article class="ask"><span class="id">W-1 · Taskbar icons</span><h3>Centered or on the left?</h3><p>Windows 11 centres them; it also lets you move them left. Try "Taskbar icons" above the screen.</p><p><span class="rec">my pick: centered</span></p></article>
+    <article class="ask"><span class="id">W-2 · Start</span><h3>The KDE-style Start: right as drawn?</h3><p>Search on top, your groups on the left, Favorites first, you and the power buttons at the bottom. An app opens in its own workspace, as today. Add a "Recent files" row, or keep it clean?</p><p><span class="rec">my pick: as drawn, no recent files</span></p></article>
+    <article class="ask"><span class="id">W-3 · Quick Settings</span><h3>Are these six the right tiles?</h3><p>Wi-Fi, Bluetooth, Night light (nightForge), Do Not Disturb, Screens (displayForge), VPN; volume and night warmth sliders; updates from nog and a door to hypeForge Settings. Swap any?</p><p><span class="rec">my pick: these six</span></p></article>
+    <article class="ask"><span class="id">W-4 · Windows</span><h3>Soft windows with SwayFX, square without?</h3><p>With SwayFX: 8 px rounded corners, a soft shadow, a see-through taskbar. Plain Sway: square windows, no shadow, solid taskbar; Start and the panels stay rounded either way.</p><p><span class="rec">my pick: SwayFX as the look, plain Sway as the safe login</span></p></article>
+    <article class="ask"><span class="id">W-5 · Three screens</span><h3>A taskbar on every screen?</h3><p>Like Windows: each screen shows its own apps and the clock; the tray and Quick Settings live on the main screen only.</p><p><span class="rec">my pick: every screen</span></p></article>
+  </div>
+  <div class="reply"><span>Answer in our chat, like this:</span><code id="reply-text">W-1 centered · W-2 as drawn · W-3 ok · W-4 FX · W-5 every screen · and: …</code><button class="copy" id="copy" type="button">Copy</button></div>
+</section>
+
+<section aria-labelledby="h-screen">
+  <div class="sec-head">
+    <p class="eyebrow">The main screen</p>
+    <h2 id="h-screen">Click around: Start, the tray, the clock</h2>
+    <p>One of your three 2560 × 1440 screens, at Windows' usual 125 % size. Chrome, Alacritty and Thunar are tiled the way the Placement applet tiles them today. The background is a soft colour bloom from the theme; the generated wallpapers drop in the same way.</p>
+  </div>
+  <div class="controls">
+    <div class="seg"><span>Look</span><div role="group" aria-label="Look"><button type="button" data-fx="fx" aria-pressed="true">SwayFX login</button><button type="button" data-fx="plain" aria-pressed="false">Plain Sway</button></div></div>
+    <div class="seg"><span>Taskbar icons (W-1)</span><div role="group" aria-label="Taskbar icons"><button type="button" data-al="center" aria-pressed="true">Centered</button><button type="button" data-al="left" aria-pressed="false">Left</button></div></div>
+    <div class="seg"><span>Open</span><div role="group" aria-label="Open a panel" id="panels">
+      <button type="button" data-p="" aria-pressed="false">Nothing</button><button type="button" data-p="start" aria-pressed="true">Start</button><button type="button" data-p="qs" aria-pressed="false">Quick Settings</button><button type="button" data-p="cal" aria-pressed="false">Calendar</button><button type="button" data-p="tray" aria-pressed="false">Tray</button><button type="button" data-p="ws" aria-pressed="false">Workspaces</button></div></div>
+  </div>
+  <div class="explore">
+    <div class="stage">
+      <div class="desk" id="desk"><div class="scr fx" id="scr">
+        <div class="bloom"></div>
+        <div class="tiles">
+          <div class="win focus">
+            <div class="c-tabs"><span class="c-tab on"><img data-icon="chrome" alt="">KognogOS · the tier-aware distro</span><span class="c-tab"><img data-icon="whatsapp" alt="">WhatsApp</span><span class="c-tab"><img data-icon="claude" alt="">Claude</span></div>
+            <div class="c-bar"><span class="dots">‹ › ⟳</span><span class="c-url"><b>kognogos.org</b></span><span class="dots">☆ ⋮</span></div>
+            <div class="c-page">
+              <span class="c-kicker">KognogOS · 0.9.0 beta</span>
+              <span class="c-h">An Arch desktop that waits<br>for packages to prove themselves.</span>
+              <span class="c-p">Tier-aware updates through nog, the Forge Suite for every setting, and hypeForge, the Sway desktop that keeps your apps in their workspaces.</span>
+              <span class="c-btns"><span class="b-acc">Download the beta</span><span class="b-sec">Read the guide</span></span>
+              <div class="c-cards"><div class="c-card"><b>nog 1.8.0</b><span>pacman, with patience</span></div><div class="c-card"><b>Forge Suite</b><span>10 apps on the AUR</span></div><div class="c-card"><b>hypeForge</b><span>Sway, our way</span></div></div>
+            </div>
+          </div>
+          <div class="win"><div class="term" id="term"></div></div>
+          <div class="win"><div class="w-head"><span>Programs</span><span>12 folders</span></div><div class="th"><div class="th-side"><span>Home</span><span>Desktop</span><span>Documents</span><span>Downloads</span><span class="sel">Programs</span><span>Pictures</span><span>Trash</span></div>
+            <div class="th-main"><span class="fold"><i></i>forge-suite</span><span class="fold"><i></i>nog</span><span class="fold"><i></i>homelab</span><span class="fold"><i></i>kognog</span><span class="fold"><i></i>mindforge</span><span class="fold"><i></i>DecadeDrop</span><span class="fold"><i></i>aur-nightforge</span><span class="fold"><i></i>grubforge</span></div></div></div>
+        </div>
+
+        <div class="panel p-start" id="p-start" aria-label="Start">
+          <div class="s-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Search apps, files and settings</div>
+          <div class="s-body">
+            <div class="s-side" id="s-side"></div>
+            <div class="s-main"><h4>Favorites <em>opens in its workspace</em></h4><div class="s-grid" id="s-grid"></div></div>
+          </div>
+          <div class="s-foot"><span class="s-user"><span class="av">J</span>Javier</span><span class="s-pw">
+            <span title="Lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+            <span title="Log out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg></span>
+            <span title="Power"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v8M6.4 6.4a8 8 0 1 0 11.2 0"/></svg></span></span></div>
+        </div>
+
+        <div class="panel p-qs" id="p-qs" aria-label="Quick Settings">
+          <div class="q-tiles" id="q-tiles"></div>
+          <div class="q-sl">
+            <div class="sl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10v4h4l5 4V6L8 10H4zM16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg><b style="--v:64%"></b><span>64 %</span></div>
+            <div class="sl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><b style="--v:50%"></b><span>4500 K</span></div>
+          </div>
+          <div class="q-foot"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>12 updates · nog</span><span title="hypeForge Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Settings</span></div>
+        </div>
+
+        <div class="panel p-cal" id="p-cal" aria-label="Notifications and calendar">
+          <div class="n-head"><span>Notifications</span><span>Clear all</span></div>
+          <div class="card n"><img data-icon="settings" alt=""><b>nog · 12 updates ready</b><span>Tier 1 now; Tier 3 after its 7-day hold</span></div>
+          <div class="card n"><img data-icon="steam" alt=""><b>Steam</b><span>SuperTux finished downloading</span></div>
+          <div class="card cal"><h5>Saturday, October 10</h5><div class="cal-g" id="cal-g"></div></div>
+        </div>
+
+        <div class="panel p-tray" id="p-tray" aria-label="Tray"></div>
+        <div class="panel p-ws" id="p-ws" aria-label="Workspaces"></div>
+
+        <div class="task">
+          <div class="t-mid" id="t-mid">
+            <button class="tb" data-open="start" title="Start"><span class="emb" id="emb"></span></button>
+            <button class="tb search" data-open="start" title="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Search</button>
+            <button class="tb" data-open="ws" title="Workspaces"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="8" height="7" rx="1.5"/><rect x="13" y="4" width="8" height="7" rx="1.5"/><rect x="3" y="13" width="8" height="7" rx="1.5"/><rect x="13" y="13" width="8" height="7" rx="1.5"/></svg>1 · Daily</button>
+            <span id="t-apps" style="display:contents"></span>
+          </div>
+          <div class="t-r">
+            <button class="tb" data-open="tray" title="Show hidden icons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 15 6-6 6 6"/></svg></button>
+            <button class="tb qs-pill" data-open="qs" title="Quick Settings">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/><circle cx="12" cy="19.5" r="1" fill="currentColor"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10v4h4l5 4V6L8 10H4zM16 9a4 4 0 0 1 0 6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 7 10 10-5 4V3l5 4L7 17"/></svg></button>
+            <button class="tb clock" data-open="cal" title="Calendar"><span>12:30 PM</span><span>10/10/2026</span></button>
+            <button class="tb" data-open="cal" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/></svg><span class="badge"></span></button>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap" id="cap"></div>
+    </div>
+    <aside class="picker" aria-label="Pick a theme"><div id="fams"></div><p style="font-size:12px;color:var(--ink-2)">Middle themes use the lighter option (Q-4 B) until you answer.</p></aside>
+  </div>
+</section>
+
+<section aria-labelledby="h-trio">
+  <div class="sec-head"><p class="eyebrow">All three screens</p><h2 id="h-trio">Each screen gets its own taskbar (W-5)</h2>
+  <p>The left and right screens show only the apps on that screen and the clock. Start opens on the screen you clicked; the tray and Quick Settings stay on the main screen.</p></div>
+  <div class="trio" id="trio"></div>
+</section>
+
+<section aria-labelledby="h-built">
+  <div class="sec-head"><p class="eyebrow">How it gets built</p><h2 id="h-built">Every piece, what makes it, and what's left to make</h2>
+  <p>Nothing on this list needs a new package except SwayFX itself (Q-1). "To build" means we write it: a small applet or a Waybar part, tested on the hidden bench before it reaches your desktop.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Piece</th><th>Made with</th><th>Status</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Taskbar at the bottom, on every screen</td><td>Waybar (today's bar), a bottom layout per style</td><td><span class="st ok">works today</span></td><td>Same modules as now; only the layout and shapes change.</td></tr>
+      <tr><td>Pinned and running apps as one row</td><td>A small Waybar part of ours, reading Favorites</td><td><span class="st build">to build</span></td><td>Waybar's own app list only shows open windows, never pinned ones.</td></tr>
+      <tr><td>The line under an app (focused, running)</td><td>Waybar CSS</td><td><span class="st ok">works today</span></td><td>Long accent line on the focused app, a short dot elsewhere.</td></tr>
+      <tr><td>Start (KDE-style)</td><td>Our own panel, Python + GTK, no new installs; reads <code>sections.toml</code></td><td><span class="st build">to build</span></td><td>Needs Q-2. Until then the button opens today's launcher (fuzzel).</td></tr>
+      <tr><td>Search pill</td><td>Opens Start with the cursor in its search box</td><td><span class="st build">to build</span></td><td>Searches apps first; files and settings later.</td></tr>
+      <tr><td>Workspaces button</td><td>Today's Workspaces list; the panel shows each workspace's apps</td><td><span class="st ok">works today</span><span class="st build">panel: to build</span></td><td>Cards show which apps are where, not live pictures: Sway can't draw window previews.</td></tr>
+      <tr><td>Tray behind a chevron</td><td>Waybar's drawer</td><td><span class="st ok">works today</span></td><td>It hides all tray icons together; picking which stay out needs our own tray.</td></tr>
+      <tr><td>Quick Settings</td><td>Our own panel; each tile calls the app that owns it</td><td><span class="st build">to build</span></td><td>Night light → nightForge, Screens → displayForge, Do Not Disturb → mako, Wi-Fi → NetworkManager.</td></tr>
+      <tr><td>Calendar and notifications</td><td>Our own panel + mako's history</td><td><span class="st build">to build</span></td><td>Today's bell list keeps working meanwhile.</td></tr>
+      <tr><td>Rounded windows, shadows, see-through taskbar</td><td>SwayFX's <code>corner_radius</code>, <code>shadows</code>, <code>blur</code></td><td><span class="st fx">SwayFX login</span></td><td>Plain Sway: square windows with a 1 px line, solid taskbar.</td></tr>
+      <tr><td>Tiling, snapping, workspaces</td><td>Our Placement and Workspaces applets</td><td><span class="st ok">unchanged</span></td><td>Only the gaps change: 8 px, edges included.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section aria-labelledby="h-cant">
+  <div class="sec-head"><p class="eyebrow">Honest limits</p><h2 id="h-cant">What this Windows 11 won't have</h2></div>
+  <div class="two">
+    <div class="box"><h3>Not on Sway</h3><ul>
+      <li>The snap-layouts menu over a window's maximize button: Sway windows have no title-bar buttons. Our Win + arrow keys and Placement do the snapping.</li>
+      <li>Minimize: windows can be tucked into a hidden spot (the scratchpad) instead.</li>
+      <li>Live window previews when you hover an app on the taskbar.</li>
+      <li>The Widgets board (weather, news) in the left corner, so that corner stays empty.</li>
+    </ul></div>
+    <div class="box"><h3>Different on purpose</h3><ul>
+      <li>Start is KDE-style (groups and Favorites), as you asked, not Windows' grid of pins plus "Recommended".</li>
+      <li>Every app still opens in its own workspace, from Start, the taskbar or a terminal.</li>
+      <li>No animations: SwayFX's animations can make a workspace vanish when it moves between screens, and ours do that all the time.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section aria-labelledby="h-file">
+  <div class="sec-head"><p class="eyebrow">For the theme apps later</p><h2 id="h-file">The style file this page is drawn from</h2>
+  <p>Shapes and layout only; colours always come from the theme you pick. Lives at <code>hypeforge/docs/design/look/styles/windows-11/style.toml</code> while it's a proposal.</p></div>
+  <pre class="file"><!--STYLE--></pre>
+</section>
+
+<footer>Built by Javier and Claude for KognogOS. After Microsoft's Windows 11 design; app icons from candy-icons, the desktop's icon theme. Page: <code>hypeforge/docs/design/look/review-2-windows-11/</code>.</footer>
+</div>
+
+<script>
+const D = /*DATA*/null;
+const FAMS = [["neutral","Grays"],["blue","Blues"],["purple","Purples, the Kognog colours"],["green","Greens"],["pink","Pinks"],["red","Reds"],["multi","Multicolor"]];
+let cur = "purple", open = "start";
+const $ = id => document.getElementById(id);
+const icon = id => (D.apps.find(a => a.id === id) || {}).icon;
+const theme = s => D.lifted[s] || D.now[s];
+const MAP = {sunken:"surface.sunken",base:"surface.base",raised:"surface.raised",overlay:"surface.overlay",hover:"surface.hover",
+  bar:"bar.bg",barhover:"bar.hover",barfg:"bar.fg",barfgdim:"bar.fg_dim",
+  text:"text.primary",text2:"text.secondary",muted:"text.muted",accent:"accent.base",on:"accent.on",acctext:"accent.text",
+  subtle:"border.subtle",strong:"border.strong",focused:"window.focused",unfocused:"window.unfocused",
+  selbg:"selection.bg",selfg:"selection.fg",tbg:"term.bg",tfg:"term.fg",info:"status.info"};
+
+function paint(){
+  const t = theme(cur), desk = $("desk");
+  for (const [k,v] of Object.entries(MAP)) desk.style.setProperty("--t-"+k, t[v]);
+  desk.style.setProperty("--t-shadow-a", t.tone === "white" || t.tone === "light" ? .18 : .5);
+  const c = k => `<span style="color:${t["term."+k]}">`;
+  $("term").innerHTML = `${c("green")}javier@tphome</span> ${c("blue")}~/Programs/forge-suite</span> $ nog upgrade\n${c("cyan")}::</span> 12 packages · Tier 1 now, Tier 3 after 7 days\n${c("yellow")}hold</span>  firefox 141.0 (Tier 3, 4 days left)\n${c("green")}ok</span>    mesa 25.2.4 · wlroots 0.19.2 · ...\n${c("magenta")}done</span>  ${c("bright_black")}11 upgraded in 41 s</span>\n\n${c("green")}javier@tphome</span> ${c("blue")}~/Programs/forge-suite</span> $ nightforge status\n☾ warm (4500 K) until 07:02, by the sun`;
+  document.querySelectorAll(".chip").forEach(b => b.setAttribute("aria-pressed", b.dataset.s === cur));
+  const fx = $("scr").classList.contains("fx");
+  $("cap").innerHTML = `<span><b>${t.name}</b></span><span>${fx ? "SwayFX login: rounded, shadows, see-through" : "Plain Sway: square windows, solid taskbar"}</span><span>taskbar ${t["bar.bg"]} · accent ${t["accent.base"]}</span>`;
+}
+
+function chips(){
+  $("fams").innerHTML = FAMS.map(([f,label]) => {
+    const list = D.order.filter(s => D.now[s].family === f);
+    return list.length ? `<div class="fam"><h3>${label}</h3><div class="chips">${list.map(s=>{const t=theme(s);
+      return `<button type="button" class="chip" data-s="${s}" aria-pressed="false"><i style="background:linear-gradient(135deg,${t["surface.base"]} 50%,${t["accent.base"]} 50%)"></i>${t.name}</button>`}).join("")}</div></div>` : "";
+  }).join("");
+  document.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => { cur = b.dataset.s; paint(); trio(); }));
+}
+
+function show(p){
+  open = p;
+  ["start","qs","cal","tray","ws"].forEach(k => $("p-"+k).classList.toggle("show", k === p));
+  document.querySelectorAll("#panels button").forEach(b => b.setAttribute("aria-pressed", b.dataset.p === p));
+  document.querySelectorAll(".task .tb").forEach(b => b.classList.toggle("open", b.dataset.open === p && p !== ""));
+}
+
+function build(){
+  document.querySelectorAll("img[data-icon]").forEach(i => i.src = icon(i.dataset.icon));
+  $("emb").style.backgroundImage = `url(${D.emblem})`;
+  // taskbar apps: pinned + running; focused = chrome
+  const bar = [["chrome","on"],["thunar","run"],["alacritty","run"],["claude",""],["discord","run"],["steam","run"],["spotify",""],["obsidian",""]];
+  $("t-apps").innerHTML = bar.map(([id,s]) => `<button class="tb" title="${D.apps.find(a=>a.id===id).name}"><img src="${icon(id)}" alt="">${s ? `<span class="ind ${s==="on"?"on":""}"></span>` : ""}</button>`).join("");
+  const groups = [["Favorites",14],["All apps",87],null,["Internet",9],["Office",6],["Games",11],["Multimedia",8],["Graphics",4],["Development",7],["System",12],["Settings",10],["Utilities",9]];
+  $("s-side").innerHTML = groups.map((g,i) => g ? `<span class="${i===0?"sel":""}">${g[0]}<em>${g[1]}</em></span>` : "<hr>").join("");
+  $("s-grid").innerHTML = D.apps.map(a => `<span class="s-app"><img src="${a.icon}" alt="">${a.name}</span>`).join("");
+  const sv = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${p}</svg>`;
+  const tiles = [["Wi-Fi","tphome",1,sv('<path d="M2 9a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/>')],
+    ["Bluetooth","G13",1,sv('<path d="m7 7 10 10-5 4V3l5 4L7 17"/>')],
+    ["Night light","until 07:02",1,sv('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>')],
+    ["Do Not Disturb","off",0,sv('<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>')],
+    ["Screens","3 screens",0,sv('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>')],
+    ["VPN","off",0,sv('<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/>')]];
+  $("q-tiles").innerHTML = tiles.map(([n,s,on,ic]) => `<span class="q-t ${on?"on":""}"><i>${ic}</i><span>${n}<small>${s}</small></span></span>`).join("");
+  // October 2026 starts on a Thursday
+  let g = ["Su","Mo","Tu","We","Th","Fr","Sa"].map(d => `<span class="wd">${d}</span>`).join("");
+  for (const d of [27,28,29,30]) g += `<span class="out">${d}</span>`;
+  for (let d = 1; d <= 31; d++) g += `<span class="${d===10?"today":""}">${d}</span>`;
+  g += `<span class="out">1</span>`;
+  $("cal-g").innerHTML = g;
+  $("p-tray").innerHTML = ["steam","discord","keepassxc","claude","spotify","btop"].map(i => `<span><img src="${icon(i)}" alt=""></span>`).join("");
+  const wsApps = {Daily:["chrome","thunar","alacritty","whatsapp"],Work:["onlyoffice","obsidian","claude"],Entertainment:["spotify","discord"],Gaming:["steam"],Monitoring:["btop"],Settings:["settings","keepassxc"]};
+  $("p-ws").innerHTML = D.workspaces.map((w,i) => `<div class="ws ${i===0?"on":""}"><b>${w}<em>${i+1}</em></b><div>${(wsApps[w]||[]).map(a=>`<img src="${icon(a)}" alt="">`).join("")}</div><small>${(wsApps[w]||[]).length} open</small></div>`).join("");
+  document.querySelectorAll(".task .tb[data-open]").forEach(b => b.addEventListener("click", () => show(open === b.dataset.open ? "" : b.dataset.open)));
+  document.querySelectorAll("#panels button").forEach(b => b.addEventListener("click", () => show(b.dataset.p)));
+  document.querySelectorAll("[data-fx]").forEach(b => b.addEventListener("click", () => {
+    $("scr").classList.toggle("fx", b.dataset.fx === "fx"); $("scr").classList.toggle("plain", b.dataset.fx === "plain");
+    document.querySelectorAll("[data-fx]").forEach(x => x.setAttribute("aria-pressed", x === b)); paint(); trio(); }));
+  document.querySelectorAll("[data-al]").forEach(b => b.addEventListener("click", () => {
+    $("scr").classList.toggle("left", b.dataset.al === "left");
+    document.querySelectorAll("[data-al]").forEach(x => x.setAttribute("aria-pressed", x === b)); }));
+  $("copy").addEventListener("click", () => {
+    navigator.clipboard?.writeText($("reply-text").textContent).then(() => { $("copy").textContent = "Copied"; })
+      .catch(() => { const r = document.createRange(); r.selectNodeContents($("reply-text")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
+  });
+}
+
+function trio(){
+  const t = theme(cur), fx = $("scr").classList.contains("fx");
+  const S = [["Left screen","2 apps · its own taskbar and clock","1fr 1fr",2],["Main screen","the full taskbar: Start, tray, Quick Settings","1.35fr 1fr",8],["Right screen","1 app · its own taskbar and clock","1fr",1]];
+  $("trio").innerHTML = S.map(([n,d,cols,k],i) => `<div class="mini"><div class="m" style="--m-bg:${t["surface.sunken"]};--m-win:${t["surface.base"]};--m-line:${t["window.unfocused"]};--m-acc:${t["accent.base"]};--m-bar:${t["bar.bg"]};--m-ico:${t["text.muted"]};--m-fg:${t["bar.fg"]};--m-cols:${cols};--m-r:${fx?"4px":"0"}">
+    <div class="mt">${i===1?'<i class="f" style="grid-row:1/3"></i><i></i><i></i>':i===0?'<i></i><i></i>':'<i></i>'}</div>
+    <div class="mb">${i===1?'<i class="s"></i>':""}${Array.from({length:k},()=>"<i></i>").join("")}<em>12:30 PM</em></div></div><p><b>${n}</b> · ${d}</p></div>`).join("");
+}
+
+build(); chips(); show("start"); paint(); trio();
+</script>

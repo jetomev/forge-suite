@@ -19,8 +19,8 @@ Claude is the graphic design, UI/usability and development team and the critical
 |---|---|---|---|---|
 | 0 | Ship nightForge 1.0 | 10-10 | Claude, Javier (install test) | GitHub ✅ · AUR after the test · site · Vault |
 | 1 | **Research** — compositor (Sway vs SwayFX), bars/trays/launchers/docks, theme system + colour science + 23 palettes, inventory of every themable piece, wallpapers | 10-10 | 5 helpers, Claude reviews | `docs/research/look-2026-10/01…05` |
-| 2 | **Foundation** — the theme file format (colours separate from shapes), the palette generator and its contrast report, the 23-theme swatch sheet, the wallpaper generator, the SwayFX decision (bench + a separate login session, Sway stays the default) | 10-10 → 10-11 | Claude | Javier reviews the swatches and the SwayFX question |
-| 3.1 | **Proposal 1 · Windows 11** — a live mock-up of the three screens (bar, tray, launcher, windows), the 23 themes switchable, its wallpapers | 10-11 → 10-12 | Claude | Javier's review (approve / change) |
+| 2 ✅ | **Foundation** — the theme file format (colours separate from shapes), the palette generator and its contrast report, the 23-theme swatch sheet, the wallpaper generator, the SwayFX decision (bench + a separate login session, Sway stays the default) | 10-10 → 10-11 | Claude | Javier reviews the swatches and the SwayFX question |
+| 3.1 ✅ drawn | **Proposal 1 · Windows 11** — a live mock-up of the three screens (bar, tray, launcher, windows), the 23 themes switchable, its wallpapers | 10-11 → 10-12 | Claude | Javier's review (approve / change) |
 | 3.2 | Proposal 2 · Mac OS 9.x | 10-12 → 10-13 | Claude | review |
 | 3.3 | Proposal 3 · modern macOS | 10-13 → 10-14 | Claude | review |
 | 3.4 | Proposal 4 · a modern Linux rice | 10-14 → 10-15 | Claude | review |
@@ -58,3 +58,8 @@ The GitHub Project **"hypeForge · the look"** (jetomev) holds every task above 
 - **Q-2 · graphical pop-ups:** D-57 says terminal apps first. Are small graphical pop-ups from the bar (a KDE-style launcher, Quick Settings, a calendar) OK, while the Forge apps stay in the terminal?
 - **Q-4 · palette choices:** neutral themes' accent — emblem blue (proposed) or Kognog mauve? Focused window border — the accent (proposed) or white like today? Urgent in red/pink themes — moved to amber/purple (proposed) or one fixed colour? The emblem orange — brand only (proposed) or an accent?
 - **Q-3 · wallpapers:** our own generated pictures, or also licensed photos/illustrations?
+
+## Review pages
+
+- **Review 1 · the foundation** — https://claude.ai/artifact/HDF7uAsEJRkMCFaQzLcfLV (`docs/design/look/review-1/`, built by `build.py`): the 23 themes on a live desktop, the wallpapers, Q-1…Q-5. Waiting for Javier's answers.
+- **Review 2 · Windows 11** — https://claude.ai/artifact/G4ij4oQ9AEV9n6xLTGT2xP (`docs/design/look/review-2-windows-11/`): bottom taskbar on every screen (centered or left), a KDE-style Start from `sections.toml`, Quick Settings (Wi-Fi, Bluetooth, Night light, Do Not Disturb, Screens, VPN), calendar + notifications, the tray drawer, a Workspaces panel; SwayFX vs plain Sway; W-1…W-5. Its style file: `docs/design/look/styles/windows-11/style.toml` (proposal).

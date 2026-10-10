@@ -1,0 +1,74 @@
+# hypeForge style · Windows 11 — PROPOSAL (look program, review 2; not approved yet)
+#
+# A STYLE is shapes, layout and which pieces the desktop uses. Colours never live here: every
+# part names a colour ROLE from the active theme (themes/<slug>/theme.toml, 69 roles).
+# Any of the 23 themes can wear this style. Schema: docs/research/look-2026-10/03-theme-system.md.
+
+[meta]
+name = "Windows 11"
+slug = "windows-11"
+schema = 1
+# Plain Sway draws everything except rounded windows, window shadows and see-through blur;
+# those three come from the "fx" table and only load in the SwayFX login (Q-1).
+needs = []
+better_with = ["swayfx"]
+credit = "After Microsoft's Windows 11 design (Fluent). Learned from, never copied."
+
+[shape]                          # pixels, at 100 % scale
+radius_window    = 8             # SwayFX corner_radius; plain Sway: square
+radius_control   = 4             # buttons, inputs, list rows, taskbar buttons
+radius_popup     = 8             # Start, Quick Settings, calendar, notifications, lists
+radius_pill      = 999           # the search box, the Quick Settings group in the tray
+border_window    = 1             # default_border pixel 1 (Windows 11's hairline)
+border_popup     = 1
+gap_inner        = 8             # between tiled windows
+gap_outer        = 8             # at the screen edges and above the taskbar
+bar_height       = 48
+bar_icon         = 24
+bar_indicator    = [3, 16, 6]    # height, width when focused, width when running in the background
+
+[layout]
+bar_position     = "bottom"
+bar_align        = "center"      # "left" is Windows 11's other choice (W-1)
+bar_on           = "every-screen"           # the second and third screens: apps of that screen + the clock
+bar_left         = []                       # Windows' Widgets corner: empty (we have no widgets board)
+bar_center       = ["start", "search", "workspaces", "apps"]
+bar_right        = ["tray-drawer", "quick-settings", "clock-two-lines", "notifications"]
+start            = "panel-kickoff"          # a KDE-style launcher panel (Q-2); fallback "fuzzel"
+quick_settings   = "panel"                  # fallback "fuzzel-menu"
+calendar         = "panel"
+tray             = "drawer"                 # a chevron that opens the tray icons
+clock_format     = ["%I:%M %p", "%m/%d/%Y"]
+
+[roles]                          # which colour role each part wears (never a hex)
+window_focused     = "window.focused"
+window_unfocused   = "window.unfocused"
+window_urgent      = "window.urgent"
+bar_background     = "bar.bg"
+bar_button_hover   = "bar.hover"
+bar_text           = "bar.fg"
+bar_indicator      = "accent.base"           # the focused app's line
+bar_indicator_dim  = "text.muted"            # apps running elsewhere
+popup_background   = "surface.raised"
+popup_border       = "border.subtle"
+popup_tile_on      = "accent.base"
+popup_tile_on_text = "accent.on"
+popup_tile_off     = "surface.overlay"
+
+[fx]                             # SwayFX login only (fx.conf); plain Sway ignores this table
+corner_radius      = 8
+shadows            = true
+shadow_blur_radius = 24
+shadow_offset      = [0, 8]
+shadow_opacity     = "effects.shadow_opacity"
+blur               = true        # behind the taskbar and the panels ("mica")
+blur_passes        = 2
+blur_radius        = 6
+bar_opacity        = 0.86
+dim_inactive       = 0.0
+animations         = false       # SwayFX #565/#569: workspaces moved between screens can vanish
+
+[fonts]
+ui      = "Noto Sans"
+ui_size = 10.5
+mono    = "JetBrainsMono Nerd Font"
