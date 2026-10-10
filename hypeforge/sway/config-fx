@@ -1,0 +1,6 @@
+# hypeForge FX — the SwayFX login (D-68). Everything of the normal hypeForge session, then the
+# style's effects: rounded corners, shadows, blur, written by hypeforge-theme. Plain Sway never
+# reads this file, so the normal login stays exactly as it is.
+# Copied to ~/.config/sway/config-fx; started by ~/.local/opt/swayfx/bin/hypeforge-fx.
+include ~/.config/sway/config
+include ~/.config/hypeforge/theme/fx.conf

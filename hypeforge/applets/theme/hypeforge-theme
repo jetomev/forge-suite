@@ -69,6 +69,7 @@ OUTPUTS = [  # template → where it goes, under the config folder
     ("gtk.css.tmpl", "gtk-4.0/gtk.css"),
     ("gtk-settings.ini.tmpl", "gtk-3.0/settings.ini"),
     ("gtk-settings.ini.tmpl", "gtk-4.0/settings.ini"),
+    ("fx.conf.tmpl", "hypeforge/theme/fx.conf"),        # only the SwayFX login includes it
 ]
 # The terminal follows the look (Javier, 2026-10-10: "yes"): a theme file alacrittyForge shows as
 # locked, first in Alacritty's import list. If the person later picks another theme in
@@ -133,6 +134,45 @@ def shape_of(style: dict, name: str):
     return v
 
 
+def fx_value(style: dict, theme: dict, name: str) -> str:
+    """One SwayFX setting from the style's [fx] table; a style without one gets no effects."""
+    fx = style.get("fx", {})
+    onoff = lambda v: "enable" if v else "disable"
+    if name == "corner_radius":
+        v = fx.get("corner_radius", 0)
+        if isinstance(v, str) and v.startswith("shape."):
+            v = shape_of(style, v[6:])
+        return str(int(v))
+    if name in ("shadows", "blur"):
+        return onoff(fx.get(name, False))
+    if name == "shadow_blur_radius":
+        return str(fx.get("shadow_blur_radius", 20))
+    if name == "shadow_offset":
+        x, y = fx.get("shadow_offset", [0, 0])
+        return f"{x} {y}"
+    if name == "shadow_color":
+        a = fx.get("shadow_opacity", "effects.shadow_opacity")
+        if isinstance(a, str):
+            a = token(theme, a)
+        return token(theme, "effects.shadow") + f"{round(float(a) * 255):02x}"
+    if name == "blur_passes":
+        return str(fx.get("blur_passes", 2))
+    if name == "blur_radius":
+        return str(fx.get("blur_radius", 5))
+    if name == "dim_inactive":
+        return str(fx.get("default_dim_inactive", fx.get("dim_inactive", 0.0)))
+    if name == "layers":
+        r = shape_of(style, "radius_popup")
+        if not fx.get("blur") and not fx.get("shadows"):
+            return "# no effects on the bar, the lists or notifications in this style"
+        out = []
+        for ns in ("waybar", "launcher", "notifications"):   # Waybar, fuzzel, mako
+            out.append(f'layer_effects "{ns}" {{\n    blur {onoff(fx.get("blur"))};\n    blur_ignore_transparent enable;\n'
+                       f'    shadows {onoff(fx.get("shadows"))};\n    corner_radius {r};\n}}')
+        return "\n".join(out)
+    raise LookError(f"unknown SwayFX setting {name}")
+
+
 def sway_border(shape: dict) -> str:
     w = shape.get("border_window", SHAPE_DEFAULTS["border_window"])
     return f"normal {w}" if shape.get("titlebar") else f"pixel {w}"
@@ -164,6 +204,8 @@ def fill(template: str, ctx: dict) -> str:
             return token(theme, key[6:])
         if key.startswith("names:"):
             return str(ctx["names"][key[6:]])
+        if key.startswith("fx:"):
+            return fx_value(style, theme, key[3:])
         if key == "sway:border":
             return sway_border(style.get("shape", {}))
         if key == "sway:titlebar":

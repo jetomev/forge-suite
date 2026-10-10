@@ -1,0 +1,4 @@
+#!/bin/sh
+# The "hypeForge FX" login: SwayFX 0.6 (built into ~/.local/opt/swayfx, beside Sway, D-68),
+# started for the NVIDIA driver like the normal session, reading config-fx.
+exec "$HOME/.local/opt/swayfx/bin/sway" --unsupported-gpu -c "$HOME/.config/sway/config-fx" "$@"
