@@ -22,7 +22,7 @@ ACTIONS = [("lock", "Lock", "system-lock-screen", False),
            ("reboot", "Restart", "system-reboot", True),
            ("shutdown", "Shut Down", "system-shutdown", True)]
 CSS = """
-.hf-power button {{ border-radius: 999px; min-width: 112px; min-height: 112px; padding: 0; }}
+.hf-power button {{ border-radius: {pill}px; min-width: 112px; min-height: 112px; padding: 0; }}
 .hf-power .hf-label {{ margin-top: 12px; color: {text}; font-size: {size}pt; font-weight: bold; }}
 """
 
@@ -83,7 +83,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         column.pack_start(text, False, False, 0)
         row.pack_start(column, False, False, 0)
     provider = Gtk.CssProvider()
-    provider.load_from_data(CSS.format(text=look.colour["panel_text"], size=look.size * 1.3).encode())
+    provider.load_from_data(CSS.format(text=look.colour["panel_text"], size=look.size * 1.3, pill=look.pill).encode())
     Gtk.StyleContext.add_provider_for_screen(row.get_screen() or panelkit.Gdk.Screen.get_default(), provider,
                                              Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1)
     panel = panelkit.Panel("power", row, look, edges=(), dim=True, card=False)

@@ -6,6 +6,7 @@ layout) and a THEME (colours), sets the theme's wallpaper, and can go back (D-78
     hypeforge-theme current                   what is applied now
     hypeforge-theme apply <style> <theme>     write every look file, then reload what's running
     hypeforge-theme wallpaper theme|<file>    follow the theme's picture, or keep one of yours
+    hypeforge-theme corners straight|rounded|style   square corners everywhere, rounded, or the style's own
     hypeforge-theme undo                      put back the files from before the last apply
 
 Options for apply: --dry-run (print what would change, write nothing), --no-reload,
@@ -377,7 +378,7 @@ def backup(place: Place, targets: list[Path]) -> Path | None:
 
 # ── apply ───────────────────────────────────────────────────────────────────────────────────
 def render(style_slug: str, theme_slug: str, place: Place, wallpaper: str | None = None,
-           check_names: bool = True, make_wallpaper: bool = True) -> tuple[dict, str]:
+           check_names: bool = True, make_wallpaper: bool = True, corners: str | None = None) -> tuple[dict, str]:
     sts, ths = styles(), themes()
     if style_slug not in sts:
         raise LookError(f"no style called {style_slug} (hypeforge-theme list shows them)")
@@ -385,6 +386,7 @@ def render(style_slug: str, theme_slug: str, place: Place, wallpaper: str | None
         raise LookError(f"no theme called {theme_slug} (hypeforge-theme list shows them)")
     style, theme = sts[style_slug], ths[theme_slug]
     st = place.read_state()
+    style = with_corners(style, corners or st.get("corners", "style"))
     mode = wallpaper or st.get("wallpaper", "theme")
     if mode == "theme":
         pic = theme_wallpaper(theme_slug, theme, place.cache, make=make_wallpaper)
@@ -405,6 +407,39 @@ def render(style_slug: str, theme_slug: str, place: Place, wallpaper: str | None
     return files, str(pic)
 
 
+CORNERS = ("style", "straight", "rounded")   # Javier, 2026-10-10: "for all themes, we need an option
+                                             # to switch between rounded and straight corners"
+ROUNDED = {"radius_window": 12, "radius_popup": 10, "radius_island": 12, "radius_area": 8, "radius_control": 6}
+
+
+def with_corners(style: dict, choice: str) -> dict:
+    """The style with the person's corners: "style" keeps the style's own; "straight" makes every
+    corner square (windows, the bar's areas, pills, pop-ups, lists, notifications, the FX login);
+    "rounded" rounds the ones a style left square (its pills and bar keep their own shape)."""
+    if choice not in CORNERS:
+        raise LookError(f"corners are {', '.join(CORNERS)} — not {choice}")
+    if choice == "style":
+        return style
+    out = {k: (dict(v) if isinstance(v, dict) else v) for k, v in style.items()}
+    shape = dict(out.get("shape", {}))
+    fx = dict(out.get("fx", {}))
+    for k in list(shape) + [k for k in ROUNDED if k not in shape]:
+        if not k.startswith("radius_"):
+            continue
+        v = shape.get(k, 0)
+        if choice == "straight":
+            shape[k] = {kk: 0 for kk in v} if isinstance(v, dict) else 0
+        elif not isinstance(v, dict) and not v and k in ROUNDED:
+            shape[k] = ROUNDED[k]
+    if choice == "straight":
+        fx["corner_radius"] = 0
+    elif not fx.get("corner_radius"):
+        fx["corner_radius"] = ROUNDED["radius_window"]
+    out["shape"], out["fx"] = shape, fx
+    out["corners"] = choice
+    return out
+
+
 BAR_LIVE = "sway/waybar"   # under the config folder: where Waybar reads config.jsonc and style.css
 
 
@@ -419,7 +454,11 @@ def bar_files(style: dict) -> dict:
     out = {}
     if (src / "config.jsonc").is_file() and (src / "style.css").is_file():
         out[f"{BAR_LIVE}/config.jsonc"] = (src / "config.jsonc").read_text()
-        out[f"{BAR_LIVE}/style.css"] = (src / "style.css").read_text()
+        css = (src / "style.css").read_text()
+        if style.get("corners") == "straight":   # every corner of the bar square: areas, pills, hovers
+            css = re.sub(r"border-radius:\s*[^;]+;", "border-radius: 0;", css)
+            css = "/* corners: straight (hypeforge-theme corners) */\n" + css
+        out[f"{BAR_LIVE}/style.css"] = css
     shared = REPO / "sway/waybar/modules.jsonc"
     if out and shared.is_file():
         out[f"{BAR_LIVE}/modules.jsonc"] = shared.read_text()
@@ -460,8 +499,9 @@ def terminal_files(place: "Place", st: dict, body: str) -> dict:
 
 
 def apply(style_slug: str, theme_slug: str, place: Place, *, wallpaper: str | None = None, dry: bool = False,
-          reload: bool = True, check_names: bool = True, make_wallpaper: bool = True, say=print) -> dict:
-    files, pic = render(style_slug, theme_slug, place, wallpaper, check_names, make_wallpaper)
+          reload: bool = True, check_names: bool = True, make_wallpaper: bool = True, say=print,
+          corners: str | None = None) -> dict:
+    files, pic = render(style_slug, theme_slug, place, wallpaper, check_names, make_wallpaper, corners)
     st = place.read_state()
     lock = place.root / "gtklock/background.jpg"
     new_pic = pic != st.get("picture")
@@ -483,7 +523,8 @@ def apply(style_slug: str, theme_slug: str, place: Place, *, wallpaper: str | No
         lock_picture(Path(pic), lock)
     term_on = (place.root / TERMINAL[1]) in files
     new_state = {"style": style_slug, "theme": theme_slug, "wallpaper": wallpaper or st.get("wallpaper", "theme"),
-                 "picture": pic, "terminal": st.get("terminal", "theme") if term_on or not st.get("terminal_wired") else "own",
+                 "picture": pic, "corners": corners or st.get("corners", "style"),
+                 "terminal": st.get("terminal", "theme") if term_on or not st.get("terminal_wired") else "own",
                  "applied": dt.datetime.now().isoformat(timespec="seconds")}
     if term_on or st.get("terminal_wired"):
         new_state["terminal_wired"] = "yes"
@@ -561,9 +602,12 @@ def main(argv=None) -> int:
     a.add_argument("style"); a.add_argument("theme")
     a.add_argument("--dry-run", action="store_true"); a.add_argument("--no-reload", action="store_true")
     a.add_argument("--wallpaper", help='"theme" (the theme\'s own picture) or a picture file of yours')
+    a.add_argument("--corners", choices=CORNERS, help="straight, rounded, or the style's own (style)")
     w = sub.add_parser("wallpaper"); w.add_argument("choice", help='"theme" or a picture file')
+    c = sub.add_parser("corners"); c.add_argument("choice", choices=CORNERS,
+                                                  help="straight (every corner square), rounded, or style (each style's own)")
     u = sub.add_parser("undo"); u.add_argument("--no-reload", action="store_true")
-    for p in (a, w, u):
+    for p in (a, w, u, c):
         p.add_argument("--root", type=Path, help="write under this folder instead of ~/.config (the bench)")
     args = ap.parse_args(argv)
     place = Place(getattr(args, "root", None))
@@ -573,11 +617,13 @@ def main(argv=None) -> int:
             print("Themes:"); [print(f"  {k:<18} {v['meta']['name']}") for k, v in themes().items()]
         elif args.cmd == "current":
             st = place.read_state()
-            print(f"style {st.get('style', '—')} · theme {st.get('theme', '—')} · wallpaper {st.get('wallpaper', 'theme')}" if st else "nothing applied yet")
+            print(f"style {st.get('style', '—')} · theme {st.get('theme', '—')} · corners {st.get('corners', 'style')} · "
+                  f"wallpaper {st.get('wallpaper', 'theme')}" if st else "nothing applied yet")
         elif args.cmd == "apply":
             print(f"\n  The look: {args.style} · {args.theme}\n")
             wp = args.wallpaper if args.wallpaper in (None, "theme") else str(Path(args.wallpaper).expanduser().resolve())
-            r = apply(args.style, args.theme, place, wallpaper=wp, dry=args.dry_run, reload=not args.no_reload)
+            r = apply(args.style, args.theme, place, wallpaper=wp, dry=args.dry_run, reload=not args.no_reload,
+                      corners=args.corners)
             if not args.dry_run:
                 print(f"  {len(r['changed'])} file(s) changed; the old ones are kept (hypeforge-theme undo)\n")
         elif args.cmd == "wallpaper":
@@ -587,6 +633,12 @@ def main(argv=None) -> int:
             choice = args.choice if args.choice == "theme" else str(Path(args.choice).expanduser().resolve())
             apply(st["style"], st["theme"], place, wallpaper=choice, reload=True)
             print("  wallpaper:", choice)
+        elif args.cmd == "corners":
+            st = place.read_state()
+            if not st:
+                raise LookError("apply a style and theme first")
+            apply(st["style"], st["theme"], place, corners=args.choice, reload=True)
+            print("  corners:", args.choice)
         elif args.cmd == "undo":
             undo(place, reload=not args.no_reload)
             print("  the look from before the last apply is back")

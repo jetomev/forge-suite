@@ -38,9 +38,9 @@ CSS = """
 .hf-quick .hf-tile-name {{ font-size: {small}pt; }}
 .hf-quick .hf-tile-sub {{ font-size: {tiny}pt; color: {dim}; }}
 .hf-quick button.on .hf-tile-sub {{ color: {on_text}; }}
-.hf-quick scale trough {{ min-height: 4px; border-radius: 999px; background: {track}; }}
-.hf-quick scale highlight {{ border-radius: 999px; background: {accent}; }}
-.hf-quick scale slider {{ min-width: 16px; min-height: 16px; border-radius: 999px; background: {accent};
+.hf-quick scale trough {{ min-height: 4px; border-radius: {pill}px; background: {track}; }}
+.hf-quick scale highlight {{ border-radius: {pill}px; background: {accent}; }}
+.hf-quick scale slider {{ min-width: 16px; min-height: 16px; border-radius: {pill}px; background: {accent};
                           border: 3px solid {card}; box-shadow: none; }}
 .hf-quick .hf-foot {{ border-top: 1px solid {line}; padding-top: 8px; }}
 """
@@ -218,7 +218,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     provider = Gtk.CssProvider()
     provider.load_from_data(CSS.format(small=look.size * 0.95, tiny=look.size * 0.8, dim=c["panel_text_dim"],
                                        on_text=c["panel_tile_on_text"], track=c["panel_tile"], accent=c["panel_tile_on"],
-                                       card=c["panel_bg"], line=c["panel_border"]).encode())
+                                       card=c["panel_bg"], line=c["panel_border"], pill=look.pill).encode())
     Gtk.StyleContext.add_provider_for_screen(panelkit.Gdk.Screen.get_default(), provider,
                                              Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1)
     be, night = Backend(), Night()

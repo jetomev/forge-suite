@@ -44,8 +44,9 @@ def main() -> int:
     ap.add_argument("--theme", default="kognogos-mocha")
     ap.add_argument("--out")
     ap.add_argument("--scale", type=float, default=0.5)
+    ap.add_argument("--corners", default="style", help="straight, rounded or style (hypeforge-theme corners)")
     a = ap.parse_args()
-    out = Path(a.out or HERE / f"logs/style-preview-{a.style}-{a.theme}.png")
+    out = Path(a.out or HERE / f"logs/style-preview-{a.style}-{a.theme}{'' if a.corners == 'style' else '-' + a.corners}.png")
     out.parent.mkdir(parents=True, exist_ok=True)
     base = Path(tempfile.mkdtemp(prefix="hfsty.", dir="/tmp"))
     run, conf = base / "r", base / "c"
@@ -61,7 +62,7 @@ def main() -> int:
     sys.path.insert(0, str(APPLETS / "panels"))
     import panelkit
     ht = panelkit.theme_tool()
-    ht.apply(a.style, a.theme, ht.Place(conf), reload=False, check_names=False, say=lambda *_: None)
+    ht.apply(a.style, a.theme, ht.Place(conf), reload=False, check_names=False, say=lambda *_: None, corners=a.corners)
     (base / "sway.conf").write_text(f"output HEADLESS-1 resolution 2560x1440\nxwayland disable\n"
                                     f"include {conf}/hypeforge/theme/sway.conf\n")
     fakebin = base / "bin"

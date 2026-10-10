@@ -154,6 +154,36 @@ class TheBarFollowsTheStyle(Base):
         self.assertEqual(self.read("sway/waybar/config.jsonc"), before)
 
 
+class Corners(Base):
+    """Javier, 2026-10-10: rounded or straight corners, for every style with every theme."""
+
+    def test_straight_makes_every_corner_square(self):
+        self.apply("rice", "kognogos-mocha", corners="straight", say=lambda *_: None)
+        import re
+        css = self.read("sway/waybar/style.css")
+        self.assertFalse(re.findall(r"border-radius:\s*[1-9]", css), "no rounded corner left on the bar")
+        self.assertIn("corner_radius 0", self.read("hypeforge/theme/fx.conf"))
+        self.assertIn("radius=0", self.read("hypeforge/theme/fuzzel-colors.ini").replace(" ", ""))
+        self.assertIn("border-radius=0", self.read("mako/config"))
+        self.assertEqual(self.place.read_state()["corners"], "straight", "the choice is remembered")
+
+    def test_the_choice_stays_through_the_next_apply(self):
+        self.apply("rice", "kognogos-mocha", corners="straight", say=lambda *_: None)
+        self.apply("windows-11", "blue", say=lambda *_: None)
+        self.assertIn("corner_radius 0", self.read("hypeforge/theme/fx.conf"))
+
+    def test_rounded_rounds_a_square_style_and_style_keeps_its_own(self):
+        os9 = ht.styles()["mac-os-9"]
+        self.assertEqual(ht.with_corners(os9, "rounded")["shape"]["radius_window"], 12)
+        self.assertIs(ht.with_corners(os9, "style"), os9)
+        cosmic = ht.with_corners(ht.styles()["cosmic"], "straight")
+        self.assertEqual(ht.shape_of(cosmic, "radius_window"), 0, "COSMIC's roundness choice gives way too")
+
+    def test_a_wrong_choice_stops_before_writing(self):
+        with self.assertRaises(ht.LookError):
+            ht.with_corners(ht.styles()["rice"], "wavy")
+
+
 class Safety(Base):
     def test_a_dry_run_writes_nothing(self):
         r = self.apply(dry=True, say=lambda *_: None)

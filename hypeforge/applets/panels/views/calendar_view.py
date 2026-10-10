@@ -34,7 +34,7 @@ CSS = """
 .hf-note-app {{ font-weight: bold; }}
 .hf-note-body {{ color: {dim}; font-size: {small}pt; }}
 .hf-calendar calendar {{ background: transparent; color: {text}; border: none; padding: 4px; }}
-.hf-calendar calendar:selected {{ background: {accent}; color: {on_accent}; border-radius: 999px; }}
+.hf-calendar calendar:selected {{ background: {accent}; color: {on_accent}; border-radius: {pill}px; }}
 .hf-calendar calendar.header {{ border: none; }}
 .hf-calendar calendar.button {{ color: {dim}; }}
 .hf-calendar calendar:indeterminate {{ color: {muted}; }}
@@ -92,7 +92,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     provider = Gtk.CssProvider()
     provider.load_from_data(CSS.format(dim=c["panel_text_dim"], small=look.size * 0.9, text=c["panel_text"],
                                        accent=c["panel_tile_on"], on_accent=c["panel_tile_on_text"],
-                                       muted=c["panel_border"]).encode())
+                                       muted=c["panel_border"], pill=look.pill).encode())
     Gtk.StyleContext.add_provider_for_screen(panelkit.Gdk.Screen.get_default(), provider,
                                              Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1)
     b = bell()

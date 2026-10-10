@@ -63,6 +63,10 @@ Which package brings each font: [FONTS.md](FONTS.md).
 | Hover on any button | `#45475a` | — |
 | Clock | `Mon 05 Oct   08:13 PM` | — |
 
+### Corners (D-81, 2026-10-10)
+
+`hypeforge-theme corners straight|rounded|style` (or `apply … --corners …`), saved with the look and kept through later changes: **straight** = every corner square (style shapes `radius_*` → 0, the FX login's `corner_radius 0`, every `border-radius` in the style's bar stylesheet → 0, the panels' round buttons and sliders square); **rounded** = a square style gets windows 12 · pop-ups 10 · bar areas 12 · inner areas 8 · controls 6 (its bar stylesheet keeps its own); **style** = the style's own (the default). `hypeforge-theme current` shows it. The lock screen's password box (22 px, `sway/gtklock/style.css`) doesn't follow yet.
+
 ### The bar follows the style (look program step 5, 2026-10-10 →)
 
 `hypeforge-theme apply` now writes the bar too: each style's **layout** (`config.jsonc`: which pieces, where) and **shapes** (`style.css`) into `~/.config/sway/waybar/`, plus **`modules.jsonc`, the pieces every style shares** (network, Bluetooth, volume, clipboard, USB drives, printers, the bell, the tray, the emblem, the power buttons, CPU, memory, what's playing, the clock — `sway/waybar/modules.jsonc`, so a fix there reaches every style). hypeForge Classic's bar is the hand-made one in `sway/waybar/` (unchanged); another style's is `styles/<slug>/bar/`; a style without one leaves the bar alone. Backups and `undo` cover the bar like every other file. Bars find their includes with `${XDG_CONFIG_HOME:-$HOME/.config}/…`, so the same file works on the desktop and on the hidden bench. Whole-style bench: `python3 scripts/style-preview.py --style <s> --theme <t>`.

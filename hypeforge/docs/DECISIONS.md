@@ -7,6 +7,9 @@
 
 ## 2026-10-10
 
+### D-81 · Corners are the person's choice, for every style and theme (Javier, 2026-10-10)
+On the Rice, live: *"for all themes, we need an option to switch between rounded and straight corners for sure. I am liking the straight corners a lot."* A setting saved with the look, `hypeforge-theme corners straight|rounded|style`: **straight** makes every corner square — the bar's areas and pills, pop-up panels (their round buttons and sliders too), the launcher's lists, notifications, the FX login's windows; **rounded** rounds what a style left square (windows 12, pop-ups 10); **style** (the default) keeps each style's own. It stays through later style or theme changes; COSMIC's roundness choice gives way to it. Not yet covered: the lock screen's own stylesheet (a fixed file, `sway/gtklock/style.css`).
+
 ### D-80 · hypeForge FX: a quiet frame and room at the screen edges (Javier, 2026-10-10, replaces D-79's "no frame")
 With no frame line (D-79) the tiled windows looked flat: Mocha's windows and the dark wallpaper are almost the same colour, a dark shadow on a dark background doesn't show, and windows ran to the screen edges. Four looks were rendered on the hidden SwayFX; Javier picked **C**: a **quiet 2 px frame** (the window in use `border.subtle*2+border.strong` = Mocha `#585b70`, the others `surface.overlay` = `#313244`), **10 px at the screen edges** (first 20 — 10 inner + 10 outer — then, Javier 17:55: "too much": `gap_outer = 0`, the edges equal the space between windows), the others still dimmed 0.12. Quiet colours also hide most of F-56's corner notch (it shows with a bright frame). Plain Sway unchanged. New in the theme step: a colour may blend roles (`role*2+role`).
 

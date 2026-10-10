@@ -57,8 +57,10 @@ class Look:
         st = ht.Place().read_state()
         self.style_slug = style or st.get("style", "classic")
         self.theme_slug = theme or st.get("theme", "kognogos-mocha")
-        self.style = ht.styles()[self.style_slug]
+        self.style = ht.with_corners(ht.styles()[self.style_slug], st.get("corners", "style"))
         self.theme = ht.themes()[self.theme_slug]
+        self.straight = self.style.get("corners") == "straight"
+        self.pill = 0 if self.straight else 999       # round things (buttons, sliders) follow the corners too
         self.colour = {r: ht.resolve(r, self.style, self.theme) for r in self.ROLES}
         shape = self.style.get("shape", {})
         self.radius = int(shape.get("radius_popup", 0) if not isinstance(shape.get("radius_popup"), dict)

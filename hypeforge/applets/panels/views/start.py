@@ -34,7 +34,7 @@ CSS = """
 .hf-start .hf-app {{ padding: 10px 4px; min-width: 120px; }}
 .hf-start .hf-app label {{ font-size: {small}pt; }}
 .hf-start .hf-foot {{ border-top: 1px solid {line}; padding-top: 10px; margin-top: 6px; }}
-.hf-start .hf-avatar {{ background: {accent}; color: {on_accent}; border-radius: 999px; min-width: 30px; min-height: 30px;
+.hf-start .hf-avatar {{ background: {accent}; color: {on_accent}; border-radius: {pill}px; min-width: 30px; min-height: 30px;
                         font-weight: bold; }}
 .hf-start .hf-count {{ color: {dim}; font-size: {small}pt; }}
 """
@@ -85,7 +85,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     c = look.colour
     provider = Gtk.CssProvider()
     provider.load_from_data(CSS.format(small=look.size * 0.92, line=c["panel_border"], accent=c["panel_tile_on"],
-                                       on_accent=c["panel_tile_on_text"], dim=c["panel_text_dim"]).encode())
+                                       on_accent=c["panel_tile_on_text"], dim=c["panel_text_dim"], pill=look.pill).encode())
     Gtk.StyleContext.add_provider_for_screen(panelkit.Gdk.Screen.get_default(), provider,
                                              Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1)
 
