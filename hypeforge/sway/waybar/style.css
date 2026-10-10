@@ -1,12 +1,11 @@
 /* The favourites' icons, written by `hypeforge-sections bar` (applet 4) — @import comes first */
 @import url("../../hypeforge/applets/favourites.css");
 
-/* hypeForge — the top bar's look. Catppuccin Mocha until the KognogOS palette (Phase 12, D-46). */
-@define-color hf_bar      #181825;
-@define-color hf_text     #cdd6f4;
-@define-color hf_subtext  #a6adc8;
-@define-color hf_active   #cdd6f4;
-@define-color hf_inactive #45475a;
+/* The look's colours (hf_bar, hf_shade, hf_text, hf_alert…), written by hypeforge-theme from the
+   chosen style and theme (D-78). Every colour below is one of these names. */
+@import url("../../hypeforge/theme/colors.css");
+
+/* hypeForge — the top bar's look. */
 
 * {
   font-family: sans-serif;
@@ -40,7 +39,7 @@ window#waybar {
 /* The left side — the emblem, Workspaces, Favorites — wears a lighter shade (Javier,
    2026-10-05: "a visual distinction"); straight edges for now. */
 .modules-left {
-  background-color: #262637;
+  background-color: @hf_shade;
   padding-right: 6px;
 }
 
@@ -108,20 +107,20 @@ window#waybar {
 
 #custom-power:hover {
   background: @hf_inactive;
-  color: #f38ba8;
+  color: @hf_alert;
 }
 
 /* The right side — the tray, the clipboard, the bell, a line, the date and time — wears the
    same shade, straight edges (Javier, 2026-10-05). */
 #indicators {
-  background-color: #262637;
+  background-color: @hf_shade;
   padding-left: 6px;
 }
 
 /* The centre: the open apps, one icon per window, on the same shade (Javier, 2026-10-05).
    Click: go to it · middle click: close it. The one in use is lit. */
 #taskbar {
-  background-color: #262637;
+  background-color: @hf_shade;
   padding: 0 6px;
 }
 
@@ -149,7 +148,7 @@ window#waybar {
 }
 
 #tray > .needs-attention {
-  background-color: #f38ba8;
+  background-color: @hf_alert;
 }
 
 /* Network, Bluetooth, volume: icons like the clipboard's; the volume shows its number */
@@ -166,19 +165,19 @@ window#waybar {
 }
 
 #custom-drives.has {
-  color: #89b4fa;
+  color: @hf_new;
 }
 
 /* The printer (applet 12): lit while printing, red when a printer is stopped */
 #custom-printers.busy {
-  color: #89b4fa;
+  color: @hf_new;
 }
 #custom-printers.stopped {
-  color: #f38ba8;
+  color: @hf_alert;
 }
 
 #network.disconnected, #bluetooth.off, #bluetooth.disabled, #wireplumber.muted {
-  color: #f38ba8;
+  color: @hf_alert;
 }
 
 /* The clipboard (applet 9) */
@@ -195,7 +194,7 @@ window#waybar {
 }
 
 #custom-clipboard.new {
-  color: #89b4fa;
+  color: @hf_new;
 }
 
 /* The bell (applet 7): grey when nothing is new, light with a count when something is,
@@ -213,9 +212,9 @@ window#waybar {
 }
 
 #custom-notifications.unseen {
-  color: #f9e2af;
+  color: @hf_bell;
 }
 
 #custom-notifications.dnd {
-  color: #f38ba8;
+  color: @hf_alert;
 }

@@ -1,5 +1,6 @@
-/* hypeForge — gtklock's look: the KognogOS wallpaper, a big clock, and one rounded password
-   box in Catppuccin Mocha (base 1e1e2e, surface 313244, text cdd6f4, mauve cba6f7). */
+/* hypeForge — gtklock's look: the wallpaper blurred, a big clock, and one rounded password box.
+   The colours are the look's (hypeforge-theme writes colors.css from the style and theme, D-78). */
+@import url("../hypeforge/theme/colors.css");
 
 window {
     /* The KognogOS wallpaper, blurred and darkened 20 % (assets/lock/, made once with Pillow:
@@ -7,11 +8,11 @@ window {
     background-image: url("background.jpg");
     background-size: cover;
     background-position: center;
-    background-color: #1e1e2e;
+    background-color: @hf_lock_bg;
 }
 
 label {
-    color: #cdd6f4;
+    color: @hf_lock_text;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
@@ -30,26 +31,26 @@ entry {
     min-height: 44px;
     padding: 0 16px;
     border-radius: 22px;
-    border: 2px solid #45475a;
-    background: rgba(30, 30, 46, 0.85);
-    color: #cdd6f4;
-    caret-color: #cba6f7;
+    border: 2px solid @hf_lock_border;
+    background: @hf_lock_field;
+    color: @hf_lock_text;
+    caret-color: @hf_lock_focus;
     font-size: 16pt;
     box-shadow: none;
 }
 
 entry:focus {
-    border-color: #cba6f7;
+    border-color: @hf_lock_focus;
 }
 
 button {
     border-radius: 22px;
-    border: 2px solid #45475a;
-    background: rgba(30, 30, 46, 0.85);
-    color: #cdd6f4;
+    border: 2px solid @hf_lock_border;
+    background: @hf_lock_field;
+    color: @hf_lock_text;
     box-shadow: none;
 }
 
 #error-label, #warning-label {
-    color: #f38ba8;
+    color: @hf_lock_error;
 }

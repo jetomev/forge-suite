@@ -51,7 +51,7 @@ def data_uri(path: str) -> str:
 def main():
     order, now = review1.themes(ROOT / "docs/research/look-2026-10/palette/palettes.toml")
     lifted = {}   # Q-4 answered (D-70): middle to darker — the lighter option B is retired
-    style = tomllib.loads((LOOK / "styles/cosmic/style.toml").read_text())
+    style = tomllib.loads((ROOT / "styles/cosmic/style.toml").read_text())
     data = {
         "order": order, "now": now, "lifted": lifted, "emblem": review1.emblem(),
         "apps": [{"id": i, "name": n, "icon": data_uri(f)} for i, n, f in APPS],
@@ -62,7 +62,7 @@ def main():
     }
     page = (HERE / "template.html").read_text()
     page = page.replace("/*DATA*/null", json.dumps(data, separators=(",", ":")))
-    page = page.replace("<!--STYLE-->", (LOOK / "styles/cosmic/style.toml").read_text()
+    page = page.replace("<!--STYLE-->", (ROOT / "styles/cosmic/style.toml").read_text()
                         .replace("&", "&amp;").replace("<", "&lt;"))
     (HERE / "index.html").write_text(page)
     print(f"index.html: {len(order)} themes, {len(APPS)} apps, {len(page)//1024} KB")

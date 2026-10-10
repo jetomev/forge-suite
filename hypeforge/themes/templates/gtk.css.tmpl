@@ -1,0 +1,56 @@
+/* hypeForge — KognogOS Mocha for GTK apps (swappy, galculator, gtklock's widgets, dialogs…).
+   The theme underneath is adw-gtk3 (dark), which reads these named colours; GTK 4 apps
+   (libadwaita) read the same names. Catppuccin Mocha with the bar's own shades and mauve as the
+   accent. Copied to ~/.config/gtk-3.0/gtk.css and ~/.config/gtk-4.0/gtk.css (Javier,
+   2026-10-05: replace KDE's look before KDE goes). Written by hypeforge-theme from themes/templates/gtk.css.tmpl (style {{meta:style}}, theme {{meta:theme}}). */
+
+/* accent */
+@define-color accent_color {{gtk_accent}};
+@define-color accent_bg_color {{gtk_accent}};
+@define-color accent_fg_color {{gtk_accent_fg}};
+
+/* windows and content */
+@define-color window_bg_color {{gtk_window_bg}};
+@define-color window_fg_color {{gtk_fg}};
+@define-color view_bg_color {{gtk_view_bg}};
+@define-color view_fg_color {{gtk_fg}};
+
+/* title bars, side panels — the bar's colour */
+@define-color headerbar_bg_color {{gtk_header_bg}};
+@define-color headerbar_fg_color {{gtk_header_fg}};
+@define-color headerbar_border_color {{gtk_border}};
+@define-color headerbar_backdrop_color {{gtk_header_bg}};
+@define-color headerbar_shade_color rgba(0, 0, 0, 0.36);
+@define-color sidebar_bg_color {{gtk_sidebar_bg}};
+@define-color sidebar_fg_color {{gtk_sidebar_fg}};
+@define-color sidebar_backdrop_color {{gtk_sidebar_bg}};
+@define-color sidebar_shade_color rgba(0, 0, 0, 0.36);
+
+/* cards, menus, pop-ups, dialogs — the bar's shade */
+@define-color card_bg_color {{gtk_card_bg}};
+@define-color card_fg_color {{gtk_fg}};
+@define-color card_shade_color rgba(0, 0, 0, 0.36);
+@define-color popover_bg_color {{gtk_card_bg}};
+@define-color popover_fg_color {{gtk_fg}};
+@define-color popover_shade_color rgba(0, 0, 0, 0.36);
+@define-color dialog_bg_color {{gtk_card_bg}};
+@define-color dialog_fg_color {{gtk_fg}};
+@define-color thumbnail_bg_color {{gtk_card_bg}};
+@define-color thumbnail_fg_color {{gtk_fg}};
+
+/* states */
+@define-color destructive_color {{gtk_danger}};
+@define-color destructive_bg_color {{gtk_danger}};
+@define-color destructive_fg_color {{gtk_danger_fg}};
+@define-color success_color {{gtk_success}};
+@define-color success_bg_color {{gtk_success}};
+@define-color success_fg_color {{gtk_success_fg}};
+@define-color warning_color {{gtk_warning}};
+@define-color warning_bg_color {{gtk_warning}};
+@define-color warning_fg_color {{gtk_warning_fg}};
+@define-color error_color {{gtk_danger}};
+@define-color error_bg_color {{gtk_danger}};
+@define-color error_fg_color {{gtk_danger_fg}};
+@define-color borders {{gtk_border}};
+@define-color shade_color rgba(0, 0, 0, 0.36);
+@define-color scrollbar_outline_color rgba(0, 0, 0, 0.5);

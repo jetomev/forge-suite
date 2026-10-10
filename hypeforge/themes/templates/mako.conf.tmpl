@@ -1,0 +1,60 @@
+# Written by hypeforge-theme from themes/templates/mako.conf.tmpl — edit the template, not this file.
+# Style: {{meta:style}} · theme: {{meta:theme}}
+# hypeForge — notifications in the Sway session: mako (D-57, Javier 2026-10-05).
+# Copied to ~/.config/mako/config. Top right, under the bar, on the screen in use; 5 seconds;
+# urgent ones stay until clicked. Catppuccin Mocha. Click: close it. Win + N closes them all,
+# Win + Shift + N brings back the last one closed (sway/config). A notifications Forge app
+# will set this file later (D-59).
+
+# where: top right of the screen in use (output empty = the focused screen)
+anchor=top-right
+output=
+layer=top
+outer-margin=10
+margin=6
+width=420
+height=200
+max-visible=5
+max-history=20
+sort=-time
+
+# how long
+default-timeout=5000
+ignore-timeout=0
+
+# look — the bar's: its shade, a 1 px hover-grey border, straight corners, the bar's font size
+# (Javier, 2026-10-05: "match the notification pop-ups to the bar too")
+font=Noto Sans 10.5
+background-color={{note_bg}}
+text-color={{note_text}}
+border-color={{note_border}}
+border-size={{shape:border_popup}}
+border-radius={{shape:radius_popup}}
+padding=10
+icons=1
+max-icon-size=40
+progress-color=over {{note_progress}}
+
+# the bell on the bar redraws when a notification arrives (applet 7)
+on-notify=exec ~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications changed
+
+# what a click does
+on-button-left=dismiss
+on-button-right=dismiss-all
+on-button-middle=invoke-default-action
+
+# a notification that offers something (a screenshot: "Draw on it"): a left click does it
+[actionable]
+on-button-left=invoke-default-action
+
+[urgency=low]
+border-color={{note_low_border}}
+text-color={{note_low_text}}
+
+[urgency=critical]
+border-color={{note_critical}}
+default-timeout=0
+
+# Do Not Disturb (right click on the bell): pop-ups hidden, still kept in the list
+[mode=do-not-disturb]
+invisible=1

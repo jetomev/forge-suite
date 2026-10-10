@@ -31,7 +31,7 @@ set $menu exec fuzzel --config ~/.config/sway/fuzzel/fuzzel.ini
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # hypeForge: the KognogOS wallpaper (Javier, 2026-10-04), shown by swaybg.
 # The Semi logo in Catppuccin Mocha, the palette in use; the others: /usr/share/wallpapers/kognog/
-output * bg "/usr/share/wallpapers/kognog/Kognog OS Semi - Logo Catpuccin Mocha.png" fill
+# the wallpaper: set by hypeforge-theme in ~/.config/hypeforge/theme/sway.conf (below)
 # hypeForge: the three Sceptre Y27 screens share one name and serial, so they are named by
 # connector: DP-2 left, DP-3 middle, DP-1 right, each 2560x1440 at 144 Hz
 output DP-2 mode 2560x1440@144Hz position 0 0
@@ -47,34 +47,16 @@ include ~/.config/sway/outputs
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
-### Windows: borders, colours, gaps
-# hypeForge: borders and gaps (Javier, 2026-10-04). Colours are named here so the KognogOS
-# brand palette (Phase 12) can replace them in one place; for now Catppuccin Mocha.
-set $hf_active    #cdd6f4
-set $hf_inactive  #45475a
-set $hf_titlebar  #181825
-set $hf_text      #cdd6f4
-set $hf_subtext   #a6adc8
-set $hf_urgent    #f38ba8
-
-# class                 title-bar edge  title-bar  title text  next-split  window border
-client.focused          $hf_active      $hf_titlebar $hf_text  $hf_active  $hf_active
-client.focused_inactive $hf_inactive    $hf_titlebar $hf_subtext $hf_inactive $hf_inactive
-client.unfocused        $hf_inactive    $hf_titlebar $hf_subtext $hf_inactive $hf_inactive
-client.urgent           $hf_urgent      $hf_titlebar $hf_text  $hf_urgent  $hf_urgent
-
-# 2-pixel border only, no title bar (Javier, 2026-10-04: "Border only + tabs works wonders", D-46).
-# Windows that share a space use tabs (Win + W); Sway's tab row is the stand-in for our folder tabs.
-default_border pixel 2
-default_floating_border pixel 2
+### Windows: borders, colours, gaps, the pointer, the wallpaper
+# All of it comes from the look: hypeforge-theme writes this file from the chosen style
+# (shapes) and theme (colours) — D-78. Today's look is the "hypeForge Classic" style with the
+# KognogOS Mocha theme: 2 px borders, no title bars (D-46), 10 px between windows, none at the
+# edges. To change it: hypeforge-theme apply <style> <theme> (later: themeForge).
+include ~/.config/hypeforge/theme/sway.conf
 
 # The mouse stays where it is when the focus moves to another screen (Javier, 2026-10-04:
 # clicking a workspace on the bar dragged the pointer to the middle of screen 1)
 mouse_warping none
-
-# 10 px between windows and at the screen edges
-gaps inner 10
-gaps outer 0
 
 ### Idle configuration
 # hypeForge (Javier, 2026-10-05, D-57): lock after 30 minutes untouched, screens off after
@@ -95,7 +77,7 @@ exec swayidle -w \
 # hypeForge: Catppuccin Mocha Dark, 24 px (Javier, 2026-10-05) — KDE's breeze_cursors before.
 # Sets Sway's own pointer and the one older (X11) apps get; GTK apps read the same name from
 # gsettings (cursor-theme). See docs/THEME.md.
-seat * xcursor_theme catppuccin-mocha-dark-cursors 24
+# the pointer's theme: set by hypeforge-theme (~/.config/hypeforge/theme/sway.conf)
 
 ### Input configuration
 # hypeForge: US-International with dead keys, as on this computer (' + a = á, ~ + n = ñ;

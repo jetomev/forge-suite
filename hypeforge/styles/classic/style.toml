@@ -1,0 +1,73 @@
+# hypeForge style · hypeForge Classic — today's look, kept as a style (Javier, D-78 B-2)
+#
+# The look hypeForge has had since 2026-10-04: a straight top bar with shaded areas, 2 px
+# window borders and no title bars, square lists and notifications. With the KognogOS Mocha
+# theme it gives back exactly today's desktop (the five tiny Mocha changes of D-73 aside).
+#
+# Shapes live here; colours come from the theme through the ROLES below. A role names a theme
+# token ("group.key"); a role this file leaves out takes hypeforge-theme's default.
+
+[meta]
+name = "hypeForge Classic"
+slug = "classic"
+schema = 1
+needs = []
+better_with = []
+credit = "hypeForge's own look, 2026-10-04 → (D-46)."
+
+[shape]                          # pixels
+radius_window    = 0
+radius_popup     = 0             # pop-up lists and notifications
+border_window    = 2             # default_border pixel 2 (D-46)
+border_popup     = 1
+titlebar         = false         # border only, no title bars (D-46)
+gap_inner        = 10
+gap_outer        = 0
+
+[layout]
+bar_position     = "top"
+wallpaper        = "theme"       # D-75; a picture the person picked wins
+
+[roles]                          # today's colours, role by role (docs/THEME.md)
+bar_bg           = "bar.bg"
+bar_shade        = "bar.shade"
+bar_fg           = "text.primary"
+bar_fg_dim       = "text.secondary"
+bar_hover        = "surface.hover"
+bar_alert        = "status.danger"   # Do Not Disturb, errors
+bar_new          = "cat.blue"        # the clipboard / USB count when something is new
+bar_bell         = "status.warning"  # the bell when something is new
+window_focused   = "text.primary"    # today's light border on the window in use
+window_unfocused = "border.subtle"
+window_urgent    = "status.danger"
+titlebar_bg      = "bar.bg"
+title_text       = "text.primary"
+title_text_dim   = "text.secondary"
+list_bg          = "bar.shade"
+list_text        = "text.primary"
+list_prompt      = "text.secondary"
+list_match       = "accent.base"     # the letters you typed
+list_selection   = "surface.hover"
+list_selection_text = "text.primary"
+list_border      = "border.subtle"
+note_bg          = "bar.shade"
+note_text        = "text.primary"
+note_border      = "border.subtle"
+note_low_border  = "surface.overlay"
+note_low_text    = "text.secondary"
+note_critical    = "status.danger"
+note_progress    = "surface.overlay"
+lock_bg          = "surface.base"
+lock_text        = "text.primary"
+lock_border      = "border.subtle"
+lock_focus       = "accent.base"
+lock_error       = "status.danger"
+gtk_header_bg    = "bar.bg"
+gtk_header_fg    = "text.primary"
+gtk_sidebar_bg   = "bar.bg"
+gtk_card_bg      = "bar.shade"
+
+[fonts]
+ui      = "Noto Sans"
+ui_size = 10
+mono    = "JetBrainsMono Nerd Font"

@@ -1,0 +1,25 @@
+# Written by hypeforge-theme — do not edit: pick another style or theme instead.
+# Style: {{meta:style}} · theme: {{meta:theme}} · {{meta:when}}
+# sway/config includes this file where its window colours used to be.
+
+set $hf_active    {{window_focused}}
+set $hf_inactive  {{window_unfocused}}
+set $hf_titlebar  {{titlebar_bg}}
+set $hf_text      {{title_text}}
+set $hf_subtext   {{title_text_dim}}
+set $hf_urgent    {{window_urgent}}
+
+# class                 title-bar edge  title-bar    title text   next-split   window border
+client.focused          $hf_active      $hf_titlebar $hf_text     $hf_active   $hf_active
+client.focused_inactive $hf_inactive    $hf_titlebar $hf_subtext  $hf_inactive $hf_inactive
+client.unfocused        $hf_inactive    $hf_titlebar $hf_subtext  $hf_inactive $hf_inactive
+client.urgent           $hf_urgent      $hf_titlebar $hf_text     $hf_urgent   $hf_urgent
+
+default_border {{sway:border}}
+default_floating_border {{sway:border}}
+{{sway:titlebar}}
+gaps inner {{shape:gap_inner}}
+gaps outer {{shape:gap_outer}}
+
+seat * xcursor_theme {{names:cursor}} {{names:cursor_size}}
+output * bg "{{wallpaper}}" fill

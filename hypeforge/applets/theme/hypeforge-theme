@@ -1,0 +1,427 @@
+#!/usr/bin/env python3
+"""hypeForge's look, applied: one command writes every program's look from a STYLE (shapes,
+layout) and a THEME (colours), sets the theme's wallpaper, and can go back (D-78, step 1).
+
+    hypeforge-theme list                      the styles and the themes
+    hypeforge-theme current                   what is applied now
+    hypeforge-theme apply <style> <theme>     write every look file, then reload what's running
+    hypeforge-theme wallpaper theme|<file>    follow the theme's picture, or keep one of yours
+    hypeforge-theme undo                      put back the files from before the last apply
+
+Options for apply: --dry-run (print what would change, write nothing), --no-reload,
+--root DIR (write under DIR instead of ~/.config: the hidden bench uses this).
+
+What it writes (the configs include or import these, so a switch rewrites only them):
+  ~/.config/hypeforge/theme/sway.conf          window colours, borders, gaps, pointer, wallpaper
+  ~/.config/hypeforge/theme/colors.css          the bar's and the lock screen's colours
+  ~/.config/hypeforge/theme/fuzzel-colors.ini   the pop-up lists
+  ~/.config/mako/config                          notifications (whole file, from its template)
+  ~/.config/gtk-3.0|gtk-4.0/gtk.css, settings.ini  GTK apps (also undoes what a KDE login wrote, F-52)
+  ~/.config/gtklock/background.jpg               the lock screen's blurred copy of the wallpaper
+Every apply keeps a backup of what it replaces (the last 20).
+"""
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tomllib
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[2]                      # hypeforge/
+COLOURS = REPO / "themes/colours/palettes.toml"
+STYLES = REPO / "styles"
+TEMPLATES = REPO / "themes/templates"
+WALLGEN = REPO / "docs/research/look-2026-10/wallpapers/generate.py"
+KEEP_BACKUPS = 20
+
+# Every role the templates use, and the theme token it wears unless the style says otherwise.
+# The defaults are the theme's own 60-30-10 choices (D-70): its bar, its window frames, its pop.
+DEFAULT_ROLES = {
+    "bar_bg": "bar.bg", "bar_shade": "bar.shade", "bar_fg": "bar.fg", "bar_fg_dim": "bar.fg_dim",
+    "bar_hover": "bar.hover", "bar_alert": "status.danger", "bar_new": "status.info", "bar_bell": "status.warning",
+    "window_focused": "window.focused", "window_unfocused": "window.unfocused", "window_urgent": "window.urgent",
+    "titlebar_bg": "surface.raised", "title_text": "text.primary", "title_text_dim": "text.muted",
+    "list_bg": "surface.raised", "list_text": "text.primary", "list_prompt": "text.secondary",
+    "list_match": "pop.text", "list_selection": "band.base", "list_selection_text": "band.on", "list_border": "border.subtle",
+    "note_bg": "surface.raised", "note_text": "text.primary", "note_border": "border.subtle",
+    "note_low_border": "surface.overlay", "note_low_text": "text.secondary", "note_critical": "status.danger",
+    "note_progress": "surface.overlay",
+    "lock_bg": "surface.base", "lock_text": "text.primary", "lock_border": "border.subtle",
+    "lock_focus": "accent.base", "lock_error": "status.danger",
+    "gtk_accent": "accent.base", "gtk_accent_fg": "accent.on", "gtk_window_bg": "surface.base", "gtk_view_bg": "surface.base",
+    "gtk_fg": "text.primary", "gtk_header_bg": "bar.bg", "gtk_header_fg": "bar.fg", "gtk_border": "border.subtle",
+    "gtk_sidebar_bg": "surface.sunken", "gtk_sidebar_fg": "text.primary", "gtk_card_bg": "surface.raised",
+    "gtk_danger": "status.danger", "gtk_danger_fg": "status.on_danger", "gtk_success": "status.success",
+    "gtk_success_fg": "status.on_success", "gtk_warning": "status.warning", "gtk_warning_fg": "status.on_warning",
+}
+# Classic's lists, notes, lock screen and GTK roles follow its bar's shades (today's look).
+OUTPUTS = [  # template → where it goes, under the config folder
+    ("sway.conf.tmpl", "hypeforge/theme/sway.conf"),
+    ("colors.css.tmpl", "hypeforge/theme/colors.css"),
+    ("fuzzel-colors.ini.tmpl", "hypeforge/theme/fuzzel-colors.ini"),
+    ("mako.conf.tmpl", "mako/config"),
+    ("gtk.css.tmpl", "gtk-3.0/gtk.css"),
+    ("gtk.css.tmpl", "gtk-4.0/gtk.css"),
+    ("gtk-settings.ini.tmpl", "gtk-3.0/settings.ini"),
+    ("gtk-settings.ini.tmpl", "gtk-4.0/settings.ini"),
+]
+PLACEHOLDER = re.compile(r"\{\{\s*([^}|]+?)\s*(?:\|\s*([^}]+?))?\s*\}\}")
+
+
+class LookError(Exception):
+    """Something the person can fix: a name that doesn't exist, a missing picture…"""
+
+
+# ── reading styles and themes ───────────────────────────────────────────────────────────────
+def themes() -> dict:
+    d = tomllib.loads(COLOURS.read_text())
+    return {slug: d["themes"][slug] for slug in d["meta"]["order"]}
+
+
+def styles() -> dict:
+    out = {}
+    for f in sorted(STYLES.glob("*/style.toml")):
+        s = tomllib.loads(f.read_text())
+        out[s["meta"]["slug"]] = s
+    return out
+
+
+def token(theme: dict, path: str) -> str:
+    group, _, key = path.partition(".")
+    try:
+        v = theme[group][key]
+    except KeyError:
+        raise LookError(f"the theme has no colour called {path}") from None
+    return v
+
+
+def resolve(role: str, style: dict, theme: dict) -> str:
+    path = style.get("roles", {}).get(role) or DEFAULT_ROLES.get(role)
+    if not path:
+        raise LookError(f"no colour for the role {role}")
+    return token(theme, path)
+
+
+# ── the templates ───────────────────────────────────────────────────────────────────────────
+def hex_rgb(h: str) -> tuple[int, int, int]:
+    h = h.lstrip("#")
+    return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+
+
+# A shape the style leaves out takes hypeForge's own (today's) value.
+SHAPE_DEFAULTS = {"border_window": 2, "border_popup": 1, "radius_window": 0, "radius_popup": 0,
+                  "gap_inner": 10, "gap_outer": 0, "titlebar": False}
+
+
+def shape_of(style: dict, name: str):
+    shape = style.get("shape", {})
+    v = shape.get(name, SHAPE_DEFAULTS.get(name))
+    if isinstance(v, dict):                    # COSMIC: one value per roundness choice (C-2)
+        v = v.get(shape.get("roundness", ""), next(iter(v.values())))
+    if v is None:
+        raise LookError(f"the style {style['meta']['slug']} has no shape {name}")
+    return v
+
+
+def sway_border(shape: dict) -> str:
+    w = shape.get("border_window", SHAPE_DEFAULTS["border_window"])
+    return f"normal {w}" if shape.get("titlebar") else f"pixel {w}"
+
+
+def sway_titlebar(style: dict) -> str:
+    shape, fonts = style.get("shape", {}), style.get("fonts", {})
+    if not shape.get("titlebar"):
+        return "# no title bars in this style"
+    lines = [f"title_align {shape.get('titlebar_align', 'center')}"]
+    if fonts.get("ui"):
+        bold = " Bold" if fonts.get("ui_bold") else ""
+        lines.append(f"font pango:{fonts['ui']}{bold} {fonts.get('ui_size', 10)}")
+    pad = max(1, (shape.get("titlebar_height", 24) - 16) // 2)
+    lines.append(f"titlebar_padding 6 {pad}")
+    return "\n".join(lines)
+
+
+def fill(template: str, ctx: dict) -> str:
+    style, theme = ctx["style"], ctx["theme"]
+
+    def one(m: re.Match) -> str:
+        key, flt = m.group(1), m.group(2)
+        if key.startswith("meta:"):
+            return str(ctx["meta"][key[5:]])
+        if key.startswith("shape:"):
+            return str(shape_of(style, key[6:]))
+        if key.startswith("names:"):
+            return str(ctx["names"][key[6:]])
+        if key == "sway:border":
+            return sway_border(style.get("shape", {}))
+        if key == "sway:titlebar":
+            return sway_titlebar(style)
+        if key == "wallpaper":
+            return ctx["wallpaper"]
+        value = resolve(key, style, theme)
+        if not flt:
+            return value
+        if flt == "hex8":
+            return value.lstrip("#") + "ff"
+        if flt.startswith("alpha("):
+            a = float(flt[6:-1])
+            r, g, b = hex_rgb(value)
+            return f"rgba({r}, {g}, {b}, {a})"
+        raise LookError(f"unknown filter {flt}")
+
+    return PLACEHOLDER.sub(one, template)
+
+
+# ── names that must exist on the machine ────────────────────────────────────────────────────
+def _found(kind: str, name: str) -> bool:
+    dirs = {"icons": ["/usr/share/icons", "~/.local/share/icons", "~/.icons"],
+            "themes": ["/usr/share/themes", "~/.local/share/themes", "~/.themes"]}[kind]
+    return any((Path(d).expanduser() / name).is_dir() for d in dirs)
+
+
+def names_for(theme: dict, check: bool = True) -> dict:
+    n = dict(theme["names"])
+    n["prefer_dark"] = "true" if theme["meta"]["polarity"] == "dark" else "false"
+    if check:
+        for key, kind in (("cursor", "icons"), ("icons", "icons"), ("gtk_theme", "themes")):
+            if not _found(kind, n[key]):
+                raise LookError(f"{n[key]} ({key}) is not installed, so this theme can't be applied yet")
+    return n
+
+
+# ── wallpapers ──────────────────────────────────────────────────────────────────────────────
+def wall_job(slug: str, t: dict) -> tuple[str, str, list[str]]:
+    """The same picture the look program showed for each theme (review-5-rice/make-wallpapers.py)."""
+    m = t["meta"]
+    if m["polarity"] == "light" and slug != "light-gray":
+        return "mountains", "light", [t["surface"]["overlay"], t["surface"]["sunken"], t["band"]["soft"], t["band"]["base"], t["band"]["strong"]]
+    motif = ("circuit" if m["family"] == "neutral" and slug not in ("white", "black") else
+             "skyline" if slug == "kognogos-mocha" or m["tone"] == "mid" else "synthwave")
+    return motif, "dark", [t["surface"]["sunken"], t["band"]["strong"], t["band"]["base"], t["band"]["text"], t["pop"]["base"]]
+
+
+def theme_wallpaper(slug: str, t: dict, cache: Path, make: bool = True) -> Path:
+    out = cache / f"{slug}.png"
+    if out.exists() or not make:
+        return out
+    motif, mode, cols = wall_job(slug, t)
+    cache.mkdir(parents=True, exist_ok=True)
+    r = subprocess.run(["python3", str(WALLGEN), "--colors", *[c.lstrip("#") for c in cols], "--mode", mode,
+                        "--motif", motif, "--out", str(out), "--preview", "0"], capture_output=True, text=True)
+    if r.returncode or not out.exists():
+        raise LookError(f"the wallpaper for {slug} could not be made: {r.stderr.strip()[-200:]}")
+    return out
+
+
+def lock_picture(src: Path, dest: Path):
+    """gtklock can't blur live: a blurred, 20 % darker copy (how assets/lock/ was made)."""
+    from PIL import Image, ImageEnhance, ImageFilter
+    im = Image.open(src).convert("RGB")
+    im.thumbnail((2560, 1440))
+    im = ImageEnhance.Brightness(im.filter(ImageFilter.GaussianBlur(18))).enhance(0.8)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    tmp = dest.with_suffix(".tmp.jpg")
+    im.save(tmp, quality=88)
+    tmp.replace(dest)
+
+
+# ── state, backups ──────────────────────────────────────────────────────────────────────────
+class Place:
+    def __init__(self, root: Path | None = None):
+        self.root = root or Path(os.environ.get("XDG_CONFIG_HOME", "~/.config")).expanduser()
+        self.dir = self.root / "hypeforge/theme"
+        self.state = self.dir / "state.toml"
+        self.backups = self.dir / "backups"
+        cache = Path(os.environ.get("XDG_CACHE_HOME", "~/.cache")).expanduser()
+        self.cache = (self.root / ".cache-wallpapers") if root else cache / "hypeforge/wallpapers"
+
+    def read_state(self) -> dict:
+        try:
+            return tomllib.loads(self.state.read_text())
+        except (OSError, tomllib.TOMLDecodeError):
+            return {}
+
+    def write_state(self, st: dict):
+        self.dir.mkdir(parents=True, exist_ok=True)
+        q = lambda v: '"' + str(v).replace("\\", "\\\\").replace('"', '\\"') + '"'
+        body = "# hypeforge-theme's memory: what is applied. Change it with hypeforge-theme, not by hand.\n"
+        body += "".join(f"{k} = {q(v)}\n" for k, v in st.items())
+        self.state.write_text(body)
+
+
+def backup(place: Place, targets: list[Path]) -> Path | None:
+    have = [t for t in targets if t.exists()]
+    # always a record, even when nothing existed yet: undo then removes what the apply created
+    stamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+    dest = place.backups / stamp
+    for t in have + ([place.state] if place.state.exists() else []):
+        rel = t.relative_to(place.root)
+        (dest / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(t, dest / rel)
+    dest.mkdir(parents=True, exist_ok=True)
+    (dest / ".targets").write_text("\n".join(str(t.relative_to(place.root)) for t in targets))
+    old = sorted(p for p in place.backups.iterdir() if p.is_dir())
+    for p in old[:-KEEP_BACKUPS]:
+        shutil.rmtree(p)
+    return dest
+
+
+# ── apply ───────────────────────────────────────────────────────────────────────────────────
+def render(style_slug: str, theme_slug: str, place: Place, wallpaper: str | None = None,
+           check_names: bool = True, make_wallpaper: bool = True) -> tuple[dict, str]:
+    sts, ths = styles(), themes()
+    if style_slug not in sts:
+        raise LookError(f"no style called {style_slug} (hypeforge-theme list shows them)")
+    if theme_slug not in ths:
+        raise LookError(f"no theme called {theme_slug} (hypeforge-theme list shows them)")
+    style, theme = sts[style_slug], ths[theme_slug]
+    st = place.read_state()
+    mode = wallpaper or st.get("wallpaper", "theme")
+    if mode == "theme":
+        pic = theme_wallpaper(theme_slug, theme, place.cache, make=make_wallpaper)
+    else:
+        pic = Path(mode).expanduser()
+        if not pic.is_file():
+            raise LookError(f"the wallpaper {pic} doesn't exist")
+    ctx = {"style": style, "theme": theme, "names": names_for(theme, check_names), "wallpaper": str(pic),
+           "meta": {"style": style["meta"]["name"], "theme": theme["meta"]["name"],
+                    "when": dt.datetime.now().strftime("%Y-%m-%d %H:%M")}}
+    files = {}
+    for tmpl, rel in OUTPUTS:
+        files[place.root / rel] = fill((TEMPLATES / tmpl).read_text(), ctx)
+    return files, str(pic)
+
+
+def apply(style_slug: str, theme_slug: str, place: Place, *, wallpaper: str | None = None, dry: bool = False,
+          reload: bool = True, check_names: bool = True, make_wallpaper: bool = True, say=print) -> dict:
+    files, pic = render(style_slug, theme_slug, place, wallpaper, check_names, make_wallpaper)
+    st = place.read_state()
+    lock = place.root / "gtklock/background.jpg"
+    new_pic = pic != st.get("picture")
+    changed = [p for p, body in files.items() if not p.exists() or p.read_text() != body]
+    if dry:
+        for p in changed:
+            say(f"  would write {p}")
+        if new_pic:
+            say(f"  would set the wallpaper {pic} and the lock screen's copy")
+        return {"changed": changed, "picture": pic, "backup": None}
+    targets = list(files) + ([lock] if new_pic else [])
+    saved = backup(place, targets)
+    for p, body in files.items():                       # every file first, then reload: never half
+        p.parent.mkdir(parents=True, exist_ok=True)
+        tmp = p.with_name(p.name + ".hftmp")
+        tmp.write_text(body)
+        tmp.replace(p)
+    if new_pic and Path(pic).exists():
+        lock_picture(Path(pic), lock)
+    place.write_state({"style": style_slug, "theme": theme_slug, "wallpaper": wallpaper or st.get("wallpaper", "theme"),
+                       "picture": pic, "applied": dt.datetime.now().isoformat(timespec="seconds")})
+    if reload:
+        reload_all(files_theme(theme_slug), say)
+    return {"changed": changed, "picture": pic, "backup": saved}
+
+
+def files_theme(theme_slug: str) -> dict:
+    return themes()[theme_slug]
+
+
+def reload_all(theme: dict, say=print):
+    """Tell what is running to read the new files. Each step is skipped quietly when its program
+    isn't there; nothing is stopped or started here (processes are signalled by exact name only)."""
+    def run(*cmd):
+        try:
+            return subprocess.run(cmd, capture_output=True, text=True, timeout=15).returncode == 0
+        except (OSError, subprocess.TimeoutExpired):
+            return False
+    if os.environ.get("SWAYSOCK") and run("swaymsg", "reload"):
+        say("  Sway reloaded (windows, gaps, pointer, wallpaper)")
+    if run("pkill", "-USR2", "-x", "waybar"):
+        say("  the bar restyled")
+    if run("makoctl", "reload"):
+        say("  notifications restyled")
+    n = names_for(theme, check=False)
+    gs = [("gtk-theme", n["gtk_theme"]), ("icon-theme", n["icons"]), ("cursor-theme", n["cursor"]),
+          ("cursor-size", str(n["cursor_size"])), ("color-scheme", n["color_scheme"]), ("accent-color", n["gnome_accent"])]
+    if shutil.which("gsettings"):
+        ok = all(run("gsettings", "set", "org.gnome.desktop.interface", k, v) for k, v in gs)
+        say("  GTK apps told (they pick it up when they next open)" if ok else "  GTK settings: some keys refused (older GTK?)")
+
+
+def undo(place: Place, reload: bool = True, say=print) -> Path:
+    if not place.backups.is_dir():
+        raise LookError("nothing to undo yet")
+    last = sorted(p for p in place.backups.iterdir() if p.is_dir())
+    if not last:
+        raise LookError("nothing to undo yet")
+    b = last[-1]
+    targets = (b / ".targets").read_text().split("\n") if (b / ".targets").exists() else []
+    for rel in targets:
+        src, dest = b / rel, place.root / rel
+        if src.exists():
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dest)
+        elif dest.exists():
+            dest.unlink()                               # it didn't exist before that apply
+    st = b / "hypeforge/theme/state.toml"
+    if st.exists():
+        shutil.copy2(st, place.state)
+    elif place.state.exists():
+        place.state.unlink()
+    shutil.rmtree(b)
+    if reload:
+        cur = place.read_state()
+        if cur.get("theme") in themes():
+            reload_all(themes()[cur["theme"]], say)
+    return b
+
+
+# ── the command ─────────────────────────────────────────────────────────────────────────────
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(prog="hypeforge-theme", description=__doc__.split("\n\n")[0])
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("list")
+    sub.add_parser("current")
+    a = sub.add_parser("apply")
+    a.add_argument("style"); a.add_argument("theme")
+    a.add_argument("--dry-run", action="store_true"); a.add_argument("--no-reload", action="store_true")
+    w = sub.add_parser("wallpaper"); w.add_argument("choice", help='"theme" or a picture file')
+    u = sub.add_parser("undo"); u.add_argument("--no-reload", action="store_true")
+    for p in (a, w, u):
+        p.add_argument("--root", type=Path, help="write under this folder instead of ~/.config (the bench)")
+    args = ap.parse_args(argv)
+    place = Place(getattr(args, "root", None))
+    try:
+        if args.cmd == "list":
+            print("Styles:"); [print(f"  {k:<12} {v['meta']['name']}") for k, v in styles().items()]
+            print("Themes:"); [print(f"  {k:<18} {v['meta']['name']}") for k, v in themes().items()]
+        elif args.cmd == "current":
+            st = place.read_state()
+            print(f"style {st.get('style', '—')} · theme {st.get('theme', '—')} · wallpaper {st.get('wallpaper', 'theme')}" if st else "nothing applied yet")
+        elif args.cmd == "apply":
+            print(f"\n  The look: {args.style} · {args.theme}\n")
+            r = apply(args.style, args.theme, place, dry=args.dry_run, reload=not args.no_reload)
+            if not args.dry_run:
+                print(f"  {len(r['changed'])} file(s) changed; the old ones are kept (hypeforge-theme undo)\n")
+        elif args.cmd == "wallpaper":
+            st = place.read_state()
+            if not st:
+                raise LookError("apply a style and theme first")
+            choice = args.choice if args.choice == "theme" else str(Path(args.choice).expanduser().resolve())
+            apply(st["style"], st["theme"], place, wallpaper=choice, reload=True)
+            print("  wallpaper:", choice)
+        elif args.cmd == "undo":
+            undo(place, reload=not args.no_reload)
+            print("  the look from before the last apply is back")
+    except LookError as e:
+        print(f"\n  Not done: {e}\n", file=sys.stderr)
+        return 2
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
