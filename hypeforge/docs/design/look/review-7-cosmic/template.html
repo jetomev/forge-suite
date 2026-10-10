@@ -1,0 +1,427 @@
+<title>hypeForge Look Review 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Noto+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: the brief and what to judge, then one large live screen (controls above it, theme
+   picker beside it), the three screens, how each piece is built, and the style file itself. */
+:root{
+  --paper:#f6f5f9; --card:#ffffff; --ink:#1d1b26; --ink-2:#55526a; --line:#e2e0ea;
+  --accent:#5b3fc0; --accent-soft:#ece7fb; --ok:#1f7a3a; --warn:#9a5b00; --no:#a3313a;
+  --f-display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"DejaVu Sans Mono",monospace;
+  --f-desk:"Noto Sans","IBM Plex Sans",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body);padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,4.4vw,44px);font-weight:750;letter-spacing:-.01em}
+h2{font-size:24px;font-weight:750}
+h3{font-size:16px;font-weight:600}
+p{margin:0}
+code{font-family:var(--f-mono);font-size:.92em}
+.eyebrow{font:600 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{max-width:70ch;color:var(--ink-2);font-size:16px}
+header{display:grid;gap:12px}
+.steps{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.steps span{font:500 12px/1 var(--f-mono);padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2)}
+.steps span.done{color:var(--ok);border-color:currentColor}
+.steps span.on{background:var(--accent);border-color:var(--accent);color:var(--card)}
+section{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
+.sec-head{display:grid;gap:6px}
+.sec-head p{max-width:74ch;color:var(--ink-2)}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.asks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.ask{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:8px;align-content:start;min-width:0}
+.ask .id{font:600 12px/1 var(--f-mono);color:var(--accent)}
+.ask p{color:var(--ink-2);font-size:14px}
+.rec{font:600 11px/1 var(--f-mono);padding:3px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.ask p .rec{white-space:normal;display:inline-block;line-height:1.35}
+.reply{background:var(--accent-soft);border-radius:10px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.reply code{font:500 14px/1.4 var(--f-mono);color:var(--ink);word-break:break-word}
+.copy{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:6px;padding:5px 10px;font:600 12px/1 var(--f-mono)}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:end}
+.seg{display:grid;gap:5px}
+.seg>span{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.seg div{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:transparent;color:var(--ink-2);padding:7px 11px;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--card);font-weight:600}
+.explore{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.picker{order:-1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:8px}
+#fams{display:flex;flex-wrap:wrap;gap:10px 22px}
+.fam{display:grid;gap:6px}
+.fam h3{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 9px 3px 3px;font-size:12.5px}
+.chip i{width:18px;height:18px;border-radius:50%;flex:none;border:1px solid rgba(127,127,127,.35)}
+.chip[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;font-weight:600}
+.stage{display:grid;gap:12px;min-width:0}
+.cap{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink-2)}
+.cap b{color:var(--ink)}
+
+/* ── the screen: 2560 × 1440 drawn at 140 %; --px is one screen "pixel" ───────────────────── */
+.desk{aspect-ratio:16/9;width:100%;border-radius:6px;overflow:hidden;position:relative;container-type:inline-size;
+  font-family:var(--f-desk);color:var(--t-text);background:var(--t-sunken);box-shadow:0 1px 0 var(--line),0 18px 50px rgba(0,0,0,.22)}
+.desk *{box-sizing:border-box}
+.scr{position:absolute;inset:0;--px:calc(140cqi / 2560);font-size:calc(12.5 * var(--px));--rw:8;--rc:6;--rp:8}
+.scr.round{--rw:16;--rc:999;--rp:16}
+.scr.square{--rw:0;--rc:0;--rp:0}
+.plain{--rw:0 !important}
+.wall{position:absolute;inset:0;background:var(--t-sunken) center/cover no-repeat}
+.frost{background:color-mix(in oklab,var(--t-raised) 90%,transparent);backdrop-filter:blur(calc(20 * var(--px))) saturate(1.3)}
+.plain .frost{background:var(--t-raised);backdrop-filter:none}
+/* the top panel */
+.top{position:absolute;left:0;right:0;top:0;height:calc(36 * var(--px));display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 calc(6 * var(--px));z-index:5;color:var(--t-text)}
+.top>div{display:flex;align-items:center;gap:calc(4 * var(--px))}
+.top>div:last-child{justify-self:end}
+.pb{height:calc(28 * var(--px));border:0;background:transparent;color:inherit;font:inherit;padding:0 calc(12 * var(--px));display:flex;align-items:center;gap:calc(7 * var(--px));border-radius:calc(var(--rc) * var(--px));cursor:pointer;font-weight:500}
+.pb:hover,.pb.open{background:var(--t-bandsoft)}
+.pb svg{width:calc(17 * var(--px));height:calc(17 * var(--px))}
+.pb.tile.on{color:var(--t-poptext)}
+.pb img{width:calc(17 * var(--px));height:calc(17 * var(--px))}
+/* windows with COSMIC's active hint */
+.tiles{position:absolute;left:calc(8 * var(--px));right:calc(8 * var(--px));top:calc(44 * var(--px));bottom:calc(80 * var(--px));
+  display:grid;grid-template-columns:1.35fr 1fr;grid-template-rows:1fr 1fr;gap:calc(8 * var(--px))}
+.win{background:var(--t-base);border:calc(1 * var(--px)) solid var(--t-subtle);min-height:0;min-width:0;overflow:hidden;display:flex;flex-direction:column;border-radius:calc(var(--rw) * var(--px))}
+.win.focus{grid-row:1/3;outline:calc(3 * var(--px)) solid var(--t-bandtext);outline-offset:calc(1 * var(--px))}
+.nohint .win.focus{outline:0}
+.fx .win{box-shadow:0 calc(8 * var(--px)) calc(28 * var(--px)) rgba(0,0,0,var(--t-shadow-a))}
+.hb{height:calc(40 * var(--px));flex:none;display:flex;align-items:center;gap:calc(10 * var(--px));padding:0 calc(10 * var(--px));background:var(--t-raised);border-bottom:calc(1 * var(--px)) solid var(--t-subtle)}
+.hb .t{flex:1;text-align:center;font-weight:600;font-size:calc(13 * var(--px))}
+.hb .ctl{display:flex;gap:calc(8 * var(--px))}
+.hb .ctl i{width:calc(20 * var(--px));height:calc(20 * var(--px));border-radius:50%;background:color-mix(in oklab,var(--t-text) 12%,transparent);display:block}
+.c-tabs{display:flex;align-items:end;gap:calc(4 * var(--px));padding:calc(8 * var(--px)) calc(12 * var(--px)) 0;background:var(--t-band);height:calc(40 * var(--px))}
+.c-tab{height:calc(32 * var(--px));padding:0 calc(14 * var(--px));display:flex;align-items:center;gap:calc(8 * var(--px));color:var(--t-bandon);font-size:calc(12.5 * var(--px));border-radius:calc(min(var(--rw),8) * var(--px)) calc(min(var(--rw),8) * var(--px)) 0 0;max-width:calc(220 * var(--px));white-space:nowrap;overflow:hidden}
+.c-tab.on{background:var(--t-raised);color:var(--t-text)}
+.c-tab img{width:calc(16 * var(--px));height:calc(16 * var(--px))}
+.c-bar{display:flex;align-items:center;gap:calc(10 * var(--px));padding:calc(6 * var(--px)) calc(12 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-subtle);background:var(--t-raised)}
+.c-url{flex:1;height:calc(30 * var(--px));border-radius:calc(var(--rc) * var(--px));background:var(--t-sunken);display:flex;align-items:center;padding:0 calc(14 * var(--px));color:var(--t-text2);font-size:calc(13 * var(--px))}
+.c-page{flex:1;padding:calc(30 * var(--px)) calc(40 * var(--px));display:grid;align-content:start;gap:calc(14 * var(--px));overflow:hidden}
+.c-kicker{font:600 calc(11.5 * var(--px))/1 var(--f-mono);letter-spacing:.1em;color:var(--t-acctext);text-transform:uppercase}
+.c-h{font:700 calc(36 * var(--px))/1.1 var(--f-desk)}
+.c-p{color:var(--t-text2);font-size:calc(14 * var(--px));max-width:36em;line-height:1.5}
+.c-btns{display:flex;gap:calc(10 * var(--px))}
+.b-acc{background:var(--t-accent);color:var(--t-on);padding:calc(7 * var(--px)) calc(18 * var(--px));border-radius:calc(var(--rc) * var(--px));font-weight:600}
+.b-sec{background:var(--t-overlay);border:calc(1 * var(--px)) solid var(--t-subtle);padding:calc(6 * var(--px)) calc(17 * var(--px));border-radius:calc(var(--rc) * var(--px))}
+.c-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(12 * var(--px))}
+.c-card{background:var(--t-overlay);border-radius:calc(var(--rw) * var(--px));padding:calc(14 * var(--px));display:grid;gap:calc(4 * var(--px));font-size:calc(12.5 * var(--px));border-top:calc(3 * var(--px)) solid var(--t-band)}
+.c-card b{font-weight:600}.c-card span{color:var(--t-muted);font-size:calc(11.5 * var(--px))}
+.term{flex:1;background:var(--t-tbg);color:var(--t-tfg);font:calc(12.5 * var(--px))/1.55 var(--f-mono);padding:calc(12 * var(--px)) calc(14 * var(--px));white-space:pre;overflow:hidden}
+.fm{flex:1;display:grid;grid-template-columns:calc(160 * var(--px)) 1fr;min-height:0}
+.fm-side{background:var(--t-sunken);padding:calc(10 * var(--px)) calc(8 * var(--px));display:grid;align-content:start;gap:calc(2 * var(--px));font-size:calc(12.5 * var(--px));color:var(--t-text2)}
+.fm-side span{padding:calc(6 * var(--px)) calc(10 * var(--px));border-radius:calc(var(--rc) * var(--px))}
+.fm-side .sel{background:var(--t-band);color:var(--t-bandon)}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(86 * var(--px)),1fr));gap:calc(8 * var(--px));padding:calc(14 * var(--px));align-content:start}
+.fold{display:grid;justify-items:center;gap:calc(5 * var(--px));font-size:calc(11.5 * var(--px))}
+.fold i{width:calc(46 * var(--px));height:calc(36 * var(--px));border-radius:calc(min(var(--rw),6) * var(--px));background:var(--t-bandtext);position:relative}
+.fold i::before{content:"";position:absolute;left:0;top:calc(-5 * var(--px));width:45%;height:calc(8 * var(--px));border-radius:calc(min(var(--rw),4) * var(--px)) calc(min(var(--rw),4) * var(--px)) 0 0;background:inherit}
+/* the dock */
+.dock{position:absolute;bottom:calc(8 * var(--px));left:50%;transform:translateX(-50%);height:calc(62 * var(--px));display:flex;align-items:center;gap:calc(6 * var(--px));padding:0 calc(10 * var(--px));z-index:4;border:calc(1 * var(--px)) solid var(--t-subtle);border-radius:calc(var(--rp) * var(--px))}
+.nodock .dock{display:none}
+.nodock .tiles{bottom:calc(8 * var(--px))}
+.dock .d{position:relative;display:grid;place-items:center;width:calc(48 * var(--px));height:calc(48 * var(--px));border-radius:calc(var(--rc) * var(--px))}
+.dock .d img{width:calc(42 * var(--px));height:calc(42 * var(--px))}
+.dock .d.run::after{content:"";position:absolute;bottom:calc(-5 * var(--px));width:calc(12 * var(--px));height:calc(3 * var(--px));border-radius:2px;background:var(--t-bandtext)}
+.dock .d.lib{background:var(--t-bandsoft)}
+.dock .d.lib svg{width:calc(26 * var(--px));height:calc(26 * var(--px))}
+.dock .sep{width:calc(1 * var(--px));height:calc(40 * var(--px));background:var(--t-subtle);margin:0 calc(4 * var(--px))}
+/* pop-ups */
+.pop{position:absolute;display:none;z-index:6;color:var(--t-text);border:calc(1 * var(--px)) solid var(--t-subtle);border-radius:calc(var(--rp) * var(--px));box-shadow:0 calc(10 * var(--px)) calc(32 * var(--px)) rgba(0,0,0,var(--t-shadow-a));overflow:hidden}
+.pop.show{display:grid}
+.plain .pop{box-shadow:none}
+.p-l{top:calc(60 * var(--px));left:50%;transform:translateX(-50%);width:calc(660 * var(--px))}
+.l-q{display:flex;align-items:center;gap:calc(10 * var(--px));margin:calc(10 * var(--px));padding:0 calc(14 * var(--px));height:calc(40 * var(--px));border-radius:calc(var(--rc) * var(--px));background:var(--t-sunken);font-size:calc(15 * var(--px));border:calc(2 * var(--px)) solid var(--t-band)}
+.l-q svg{width:calc(17 * var(--px));height:calc(17 * var(--px));color:var(--t-muted)}
+.l-r{padding:0 calc(10 * var(--px)) calc(10 * var(--px));display:grid;gap:calc(2 * var(--px))}
+.l-r>span{display:grid;grid-template-columns:calc(30 * var(--px)) 1fr auto;align-items:center;column-gap:calc(12 * var(--px));padding:calc(6 * var(--px)) calc(10 * var(--px));border-radius:calc(var(--rc) * var(--px));font-size:calc(13.5 * var(--px))}
+.l-r>span.hl{background:var(--t-band);color:var(--t-bandon)}
+.l-r img{width:calc(28 * var(--px));height:calc(28 * var(--px))}
+.l-r em{font-style:normal;font-size:calc(11.5 * var(--px));opacity:.75}
+.l-r kbd{font:calc(11 * var(--px))/1 var(--f-mono);padding:calc(3 * var(--px)) calc(6 * var(--px));border-radius:calc(4 * var(--px));background:color-mix(in oklab,var(--t-text) 12%,transparent)}
+.p-lib{top:calc(44 * var(--px));left:50%;transform:translateX(-50%);width:calc(1100 * var(--px));padding:calc(18 * var(--px));gap:calc(16 * var(--px))}
+.lib-top{display:flex;justify-content:center}
+.lib-q{width:calc(320 * var(--px));height:calc(34 * var(--px));border-radius:calc(var(--rc) * var(--px));background:var(--t-sunken);display:flex;align-items:center;justify-content:center;color:var(--t-muted)}
+.lib-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:calc(14 * var(--px))}
+.lib-grid span{display:grid;justify-items:center;gap:calc(6 * var(--px));font-size:calc(12 * var(--px));padding:calc(8 * var(--px));border-radius:calc(var(--rw) * var(--px));text-align:center}
+.lib-grid span.hl{background:var(--t-bandsoft);outline:calc(2 * var(--px)) solid var(--t-band)}
+.lib-grid img{width:calc(56 * var(--px));height:calc(56 * var(--px))}
+.lib-folders{display:flex;gap:calc(8 * var(--px));justify-content:center;flex-wrap:wrap;border-top:calc(1 * var(--px)) solid var(--t-subtle);padding-top:calc(14 * var(--px))}
+.lib-folders span{display:flex;align-items:center;gap:calc(8 * var(--px));padding:calc(6 * var(--px)) calc(12 * var(--px));border-radius:calc(var(--rc) * var(--px));background:var(--t-overlay);font-size:calc(12.5 * var(--px))}
+.lib-folders span.on{background:var(--t-band);color:var(--t-bandon);font-weight:600}
+.lib-folders span i{display:grid;grid-template-columns:1fr 1fr;gap:1px;width:calc(16 * var(--px));height:calc(16 * var(--px))}
+.lib-folders span i b{background:currentColor;opacity:.6;border-radius:1px}
+.p-snd{top:calc(40 * var(--px));right:calc(110 * var(--px));width:calc(340 * var(--px));padding:calc(12 * var(--px));gap:calc(12 * var(--px));font-size:calc(12.5 * var(--px))}
+.p-snd h5{margin:0;font-size:calc(13 * var(--px));font-weight:600;display:flex;justify-content:space-between}
+.sl{display:grid;grid-template-columns:calc(20 * var(--px)) 1fr calc(40 * var(--px));align-items:center;gap:calc(10 * var(--px))}
+.sl svg{width:calc(18 * var(--px));height:calc(18 * var(--px))}
+.sl b{height:calc(6 * var(--px));border-radius:999px;background:var(--t-subtle);position:relative}
+.sl b::before{content:"";position:absolute;inset:0 auto 0 0;width:var(--v);background:var(--t-pop);border-radius:inherit}
+.sl b::after{content:"";position:absolute;left:var(--v);top:50%;width:calc(16 * var(--px));height:calc(16 * var(--px));transform:translate(-50%,-50%);border-radius:50%;background:var(--t-pop)}
+.dev{display:flex;justify-content:space-between;align-items:center;padding:calc(6 * var(--px)) calc(10 * var(--px));border-radius:calc(var(--rc) * var(--px))}
+.dev.sel{background:var(--t-bandsoft)}
+.dev small{color:var(--t-muted)}
+.sw{width:calc(34 * var(--px));height:calc(18 * var(--px));border-radius:999px;background:var(--t-pop);position:relative;flex:none}
+.sw::after{content:"";position:absolute;right:calc(2 * var(--px));top:calc(2 * var(--px));width:calc(14 * var(--px));height:calc(14 * var(--px));border-radius:50%;background:var(--t-popon)}
+.sw.off{background:var(--t-subtle)}.sw.off::after{right:auto;left:calc(2 * var(--px));background:var(--t-text2)}
+.p-ws{top:calc(44 * var(--px));left:calc(8 * var(--px));padding:calc(12 * var(--px));grid-template-columns:repeat(6,calc(170 * var(--px)));gap:calc(10 * var(--px))}
+.ws{border-radius:calc(var(--rw) * var(--px));background:var(--t-overlay);padding:calc(10 * var(--px));display:grid;gap:calc(8 * var(--px));font-size:calc(12.5 * var(--px));border:calc(2 * var(--px)) solid transparent}
+.ws.on{border-color:var(--t-bandtext);background:var(--t-bandsoft)}
+.ws b{font-weight:600;display:flex;justify-content:space-between}
+.ws b em{font-style:normal;color:var(--t-muted);font-weight:400}
+.ws div{display:flex;flex-wrap:wrap;gap:calc(6 * var(--px));min-height:calc(26 * var(--px))}
+.ws img{width:calc(24 * var(--px));height:calc(24 * var(--px))}
+/* three screens, tables, boxes, the file */
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.trio{grid-template-columns:minmax(0,1fr)}}
+.mini{display:grid;gap:6px;min-width:0}
+.mini .m{aspect-ratio:16/9;border-radius:5px;overflow:hidden;position:relative;container-type:inline-size;background:var(--m-bg) center/cover}
+.mini .m .mb{position:absolute;left:0;right:0;top:0;height:6%;background:var(--m-bar)}
+.mini .m .mt{position:absolute;inset:8% 1.5% var(--m-bot) 1.5%;display:grid;gap:1.5%;grid-template-columns:var(--m-cols)}
+.mini .m .mt i{background:var(--m-win);border:1px solid var(--m-line);border-radius:var(--m-r)}
+.mini .m .dk{position:absolute;bottom:2%;left:50%;transform:translateX(-50%);height:8%;width:36%;border-radius:var(--m-r);background:var(--m-bar)}
+.mini p{font-size:13px;color:var(--ink-2)}
+.mini p b{color:var(--ink)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+.st{font:600 11px/1 var(--f-mono);padding:4px 7px;border-radius:4px;white-space:nowrap;display:inline-block}
+.st.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 13%,transparent)}
+.st.build{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.st.fx{color:var(--accent);background:var(--accent-soft)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:8px;align-content:start;min-width:0}
+.box ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.box li::marker{color:var(--accent)}
+pre.file{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;font:12.5px/1.55 var(--f-mono);color:var(--ink)}
+footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">hypeForge · the look · review 7 of 7 · proposal 6 of 6</p>
+  <h1>COSMIC, tiled: a clean top panel, the dock, the App Library, and the active hint</h1>
+  <p class="lead">System76's COSMIC is the closest of the six to what hypeForge already is: a desktop that tiles. Its look on our pieces, with no COSMIC software: a top panel with Workspaces and Applications on the left, the clock in the middle and small applets on the right; a dock at the bottom; the App Library with your groups as folders; and the active hint, a frame in the theme's colour around the window you're in. COSMIC lets you pick how round everything is, so this page does too.</p>
+  <div class="steps" aria-label="Where we are in the program">
+    <span class="done">1 · Foundation ✓</span><span class="done">2 · Windows 11 ✓</span><span class="done">3 · Mac OS 9 ✓</span><span class="done">4 · macOS ✓</span><span class="done">5 · Linux rice ✓</span><span class="done">6 · KDE ✓</span><span class="on">7 · COSMIC</span>
+  </div>
+</header>
+
+<section aria-labelledby="h-ask">
+  <div class="sec-head">
+    <p class="eyebrow">What I need from you</p>
+    <h2 id="h-ask">Five calls, and anything that feels off</h2>
+    <p>My pick is marked on each. The last proposal: after this, the build.</p>
+  </div>
+  <div class="asks">
+    <article class="ask"><span class="id">C-1 · Panel and dock</span><h3>Both, like COSMIC's default?</h3><p>The top panel always; the dock at the bottom with the App Library button, your favourites and what's running. Or the top panel alone, windows using the full height. Try "Dock".</p><p><span class="rec">my pick: both</span></p></article>
+    <article class="ask"><span class="id">C-2 · Roundness</span><h3>Which of COSMIC's three, by default?</h3><p>Round (16 px, pill buttons), Slightly round (8 px) or Square (0). All three would be a choice in hypeForge Settings; Square is the one plain Sway can draw for windows. Try "Roundness".</p><p><span class="rec">my pick: slightly round</span></p></article>
+    <article class="ask"><span class="id">C-3 · The active hint</span><h3>A frame around the window you're in?</h3><p>COSMIC's tiling hint: a 3 px frame in the theme's bright colour, a pixel outside the window, so you always know where you are across three screens. Try "Active hint".</p><p><span class="rec">my pick: yes</span></p></article>
+    <article class="ask"><span class="id">C-4 · Finding apps</span><h3>The launcher and the App Library, both?</h3><p>Win opens the launcher: a search box near the top with results and their keys (today's launcher, restyled). The dock's first button opens the App Library: every app as a grid, your groups as folders under it (our panel, shared with Launchpad).</p><p><span class="rec">my pick: both</span></p></article>
+    <article class="ask"><span class="id">C-5 · Applets</span><h3>Each applet its own small pop-up?</h3><p>COSMIC's way: sound, network, Bluetooth, notifications each open their own pop-up from their icon. (KDE's way is one tray pop-up for all.)</p><p><span class="rec">my pick: each its own</span></p></article>
+  </div>
+  <div class="reply"><span>Answer in our chat, like this:</span><code id="reply-text">C-1 both · C-2 slightly round · C-3 yes · C-4 both · C-5 each · and: …</code><button class="copy" id="copy" type="button">Copy</button></div>
+</section>
+
+<section aria-labelledby="h-screen">
+  <div class="sec-head">
+    <p class="eyebrow">The main screen</p>
+    <h2 id="h-screen">Click Workspaces, Applications, the sound icon and the dock's first button</h2>
+    <p>The same three apps as the other proposals, drawn at 140 %, on the theme's own wallpaper. Chrome draws its own header bar, as COSMIC's apps do.</p>
+  </div>
+  <div class="controls">
+    <div class="seg"><span>Look</span><div role="group" aria-label="Look"><button type="button" data-fx="fx" aria-pressed="true">SwayFX login</button><button type="button" data-fx="plain" aria-pressed="false">Plain Sway</button></div></div>
+    <div class="seg"><span>Roundness (C-2)</span><div role="group" aria-label="Roundness"><button type="button" data-rd="round" aria-pressed="false">Round</button><button type="button" data-rd="slight" aria-pressed="true">Slightly round</button><button type="button" data-rd="square" aria-pressed="false">Square</button></div></div>
+    <div class="seg"><span>Dock (C-1)</span><div role="group" aria-label="Dock"><button type="button" data-dk="on" aria-pressed="true">On</button><button type="button" data-dk="off" aria-pressed="false">Off</button></div></div>
+    <div class="seg"><span>Active hint (C-3)</span><div role="group" aria-label="Active hint"><button type="button" data-ah="on" aria-pressed="true">On</button><button type="button" data-ah="off" aria-pressed="false">Off</button></div></div>
+    <div class="seg"><span>Open</span><div role="group" aria-label="Open a pop-up" id="panels">
+      <button type="button" data-p="" aria-pressed="false">Nothing</button><button type="button" data-p="l" aria-pressed="true">Launcher</button><button type="button" data-p="lib" aria-pressed="false">App Library</button><button type="button" data-p="snd" aria-pressed="false">Sound</button><button type="button" data-p="ws" aria-pressed="false">Workspaces</button></div></div>
+  </div>
+  <div class="explore">
+    <div class="stage">
+      <div class="desk" id="desk"><div class="scr fx" id="scr">
+        <div class="wall" id="wall"></div>
+        <div class="top frost">
+          <div><button class="pb" data-open="ws">Workspaces</button><button class="pb" data-open="lib">Applications</button></div>
+          <div><button class="pb">Sat Oct 10&nbsp;&nbsp;12:30 PM</button></div>
+          <div id="applets"></div>
+        </div>
+        <div class="tiles">
+          <div class="win focus">
+            <div class="c-tabs"><span class="c-tab on"><img data-icon="chrome" alt="">KognogOS · the tier-aware distro</span><span class="c-tab"><img data-icon="whatsapp" alt="">WhatsApp</span><span class="c-tab"><img data-icon="claude" alt="">Claude</span></div>
+            <div class="c-bar"><span>‹ › ⟳</span><span class="c-url">kognogos.org</span><span>⋮</span></div>
+            <div class="c-page">
+              <span class="c-kicker">KognogOS · 0.9.0 beta</span>
+              <span class="c-h">An Arch desktop that waits<br>for packages to prove themselves.</span>
+              <span class="c-p">Tier-aware updates through nog, the Forge Suite for every setting, and hypeForge, the Sway desktop that keeps your apps in their workspaces.</span>
+              <span class="c-btns"><span class="b-acc">Download the beta</span><span class="b-sec">Read the guide</span></span>
+              <div class="c-cards"><div class="c-card"><b>nog 1.8.0</b><span>pacman, with patience</span></div><div class="c-card"><b>Forge Suite</b><span>10 apps on the AUR</span></div><div class="c-card"><b>hypeForge</b><span>Sway, our way</span></div></div>
+            </div></div>
+          <div class="win"><div class="term" id="term"></div></div>
+          <div class="win"><div class="hb"><span>‹ ›</span><span class="t">Programs</span><span class="ctl"><i></i></span></div>
+            <div class="fm"><div class="fm-side"><span>Home</span><span>Desktop</span><span>Documents</span><span>Downloads</span><span class="sel">Programs</span><span>media1</span></div><div class="fm-grid"><span class="fold"><i></i>forge-suite</span><span class="fold"><i></i>nog</span><span class="fold"><i></i>homelab</span><span class="fold"><i></i>kognog</span><span class="fold"><i></i>mindforge</span><span class="fold"><i></i>DecadeDrop</span></div></div></div>
+        </div>
+        <div class="dock frost" id="dock"></div>
+        <div class="pop frost p-l" id="p-l" aria-label="Launcher"><div class="l-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>disc</div><div class="l-r" id="l-r"></div></div>
+        <div class="pop frost p-lib" id="p-lib" aria-label="App Library"><div class="lib-top"><span class="lib-q">Search apps</span></div><div class="lib-grid" id="lib-grid"></div><div class="lib-folders" id="lib-folders"></div></div>
+        <div class="pop frost p-snd" id="p-snd" aria-label="Sound"></div>
+        <div class="pop frost p-ws" id="p-ws" aria-label="Workspaces"></div>
+      </div></div>
+      <div class="cap" id="cap"></div>
+    </div>
+    <aside class="picker" aria-label="Pick a theme"><div id="fams"></div><p style="font-size:12px;color:var(--ink-2)">The approved 25 themes (D-73), each with its wallpaper (D-75). Dark Blue is the closest to COSMIC's own dark. The theme's colour on the active hint, the dock's running lines, the launcher's top result and the selected folder; the pop on buttons, sliders and switches.</p></aside>
+  </div>
+</section>
+
+<section aria-labelledby="h-trio">
+  <div class="sec-head"><p class="eyebrow">All three screens</p><h2 id="h-trio">The panel on every screen, the dock on the main one</h2>
+  <p>COSMIC can put a panel and a dock on each screen; this keeps the dock on the main screen so the side screens keep their height.</p></div>
+  <div class="trio" id="trio"></div>
+</section>
+
+<section aria-labelledby="h-built">
+  <div class="sec-head"><p class="eyebrow">How it gets built</p><h2 id="h-built">Every piece, what makes it, and what's left to make</h2>
+  <p>By now almost everything here is shared with an approved style, so COSMIC costs very little on top.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Piece</th><th>Made with</th><th>Status</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>The top panel</td><td>Waybar at the top, three areas</td><td><span class="st ok">works today</span></td><td>Workspaces and Applications as text buttons, the clock centred.</td></tr>
+      <tr><td>The dock</td><td>The same second Waybar as macOS's Dock</td><td><span class="st build">to build</span></td><td>Shared with macOS, Windows 11 and KDE.</td></tr>
+      <tr><td>Launcher</td><td>Today's launcher (fuzzel) near the top, with key hints</td><td><span class="st ok">works today</span></td><td>Only its look file changes.</td></tr>
+      <tr><td>App Library with group folders</td><td>Our panel (D-68): the Launchpad grid with folders</td><td><span class="st build">to build</span></td><td>Shared with macOS's Launchpad.</td></tr>
+      <tr><td>Applets with their own pop-ups</td><td>Our panel, one page each</td><td><span class="st build">to build</span></td><td>The pages are the same as KDE's tray pages, opened one at a time.</td></tr>
+      <tr><td>Workspaces strip</td><td>Our panel over the Workspaces applet</td><td><span class="st build">to build</span></td><td>Shared with Windows 11's and macOS's Workspaces panel.</td></tr>
+      <tr><td>The active hint</td><td>Sway's own focused border, 3 px, in the theme's bright colour</td><td><span class="st ok">works today</span></td><td>On plain Sway it sits on the window's edge rather than a pixel outside it.</td></tr>
+      <tr><td>Round / Slightly round / Square</td><td>The style file's three radius sets; SwayFX for windows</td><td><span class="st fx">SwayFX login</span></td><td>Plain Sway draws Square windows; the panel, dock and pop-ups follow the choice either way.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section aria-labelledby="h-cant">
+  <div class="sec-head"><p class="eyebrow">Honest limits</p><h2 id="h-cant">What this COSMIC won't have</h2></div>
+  <div class="two">
+    <div class="box"><h3>Not on Sway</h3><ul>
+      <li>COSMIC's workspace overview with live window pictures; the Workspaces strip shows which apps are where.</li>
+      <li>Window stacks with tabs drawn by the desktop in COSMIC's shape; Sway's tabs (Win + T) take their place.</li>
+      <li>The tiling toggle per workspace exactly as COSMIC does it: our Placement applet always tiles, with floating one key away.</li>
+    </ul></div>
+    <div class="box"><h3>Different on purpose</h3><ul>
+      <li>No COSMIC software (D-56): its look, hypeForge's pieces.</li>
+      <li>The App Library opens on your groups, and every app still opens in its own workspace.</li>
+      <li>No animations (SwayFX #565 and #569).</li>
+    </ul></div>
+  </div>
+</section>
+
+<section aria-labelledby="h-file">
+  <div class="sec-head"><p class="eyebrow">For the theme apps later</p><h2 id="h-file">The style file this page is drawn from</h2>
+  <p><code>hypeforge/docs/design/look/styles/cosmic/style.toml</code></p></div>
+  <pre class="file"><!--STYLE--></pre>
+</section>
+
+<footer>Built by Javier and Claude for KognogOS. After System76's COSMIC, with thanks; wallpapers from our generator; app icons from candy-icons. Page: <code>hypeforge/docs/design/look/review-7-cosmic/</code>.</footer>
+</div>
+
+<script>
+const D = /*DATA*/null;
+const FAMS = [["kognog","KognogOS, the default"],["neutral","Grays"],["orange","Ember"],["blue","Blues"],["purple","Purples"],["green","Greens"],["pink","Pinks"],["red","Reds"],["multi","Multicolor"]];
+let cur = "dark-blue", open = "l";
+const $ = id => document.getElementById(id);
+const icon = id => (D.apps.find(a => a.id === id) || {}).icon;
+const theme = s => D.now[s];
+const MAP = {sunken:"surface.sunken",base:"surface.base",raised:"surface.raised",overlay:"surface.overlay",
+  text:"text.primary",text2:"text.secondary",muted:"text.muted",accent:"accent.base",on:"accent.on",acctext:"accent.text",
+  subtle:"border.subtle",tbg:"term.bg",tfg:"term.fg",
+  band:"band.base",bandon:"band.on",bandsoft:"band.soft",bandtext:"band.text",pop:"pop.base",popon:"pop.on",poptext:"pop.text"};
+const sv = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${p}</svg>`;
+
+function build(){
+  document.querySelectorAll("img[data-icon]").forEach(i => i.src = icon(i.dataset.icon));
+  $("applets").innerHTML = `<button class="pb tile on" title="Tiling">${sv('<rect x="3" y="4" width="8" height="16" rx="1"/><rect x="13" y="4" width="8" height="7" rx="1"/><rect x="13" y="13" width="8" height="7" rx="1"/>')}</button>`
+    + ["steam","discord"].map(i => `<button class="pb"><img src="${icon(i)}" alt=""></button>`).join("")
+    + `<button class="pb">${sv('<path d="M2 9a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/>')}</button>`
+    + `<button class="pb" data-open="snd">${sv('<path d="M4 10v4h4l5 4V6L8 10H4zM16 9a4 4 0 0 1 0 6"/>')}</button>`
+    + `<button class="pb">${sv('<path d="m7 7 10 10-5 4V3l5 4L7 17"/>')}</button>`
+    + `<button class="pb">${sv('<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/>')}</button>`
+    + `<button class="pb">${sv('<path d="M12 3v8M6.4 6.4a8 8 0 1 0 11.2 0"/>')}</button>`;
+  $("dock").innerHTML = `<span class="d lib" data-open="lib" title="App Library">${sv('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>')}</span><span class="sep"></span>`
+    + [["thunar",1],["chrome",1],["alacritty",1],["claude",0],["onlyoffice",0],["obsidian",0],["discord",1],["spotify",1],["steam",1],["settings",0]].map(([id,r]) => `<span class="d ${r?"run":""}"><img src="${icon(id)}" alt=""></span>`).join("");
+  $("l-r").innerHTML = [["discord","Discord","Chat and voice · opens in Entertainment","hl","1"],["steam","Steam · Disco Elysium","Games","","2"],["settings","Display settings","displayForge","","3"]]
+    .map(([i,n,d,h,k]) => `<span class="${h}"><img src="${icon(i)}" alt=""><span>${n}<br><em>${d}</em></span><kbd>Ctrl ${k}</kbd></span>`).join("");
+  $("lib-grid").innerHTML = D.apps.filter(a => !["downloads","trash"].includes(a.id)).map((a,i) => `<span class="${i===7?"hl":""}"><img src="${a.icon}" alt="">${a.name}</span>`).join("");
+  $("lib-folders").innerHTML = ["Library home","Internet","Office","Games","Multimedia","Graphics","Development","System","Settings","Utilities"].map((g,i) => `<span class="${i===0?"on":""}"><i><b></b><b></b><b></b><b></b></i>${g}</span>`).join("");
+  $("p-snd").innerHTML = `<h5><span>Sound</span><span>⚙</span></h5>
+    <div class="sl">${sv('<path d="M4 10v4h4l5 4V6L8 10H4zM16 9a4 4 0 0 1 0 6"/>')}<b style="--v:64%"></b><span>64%</span></div>
+    <div class="sl">${sv('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>')}<b style="--v:80%"></b><span>80%</span></div>
+    <div class="dev sel"><span>Speakers · Realtek<br><small>output</small></span><span class="sw"></span></div>
+    <div class="dev"><span>G13 headset<br><small>output</small></span><span class="sw off"></span></div>
+    <div class="dev"><span><b>Ziggy Stardust</b><br><small>David Bowie · Spotify</small></span><span>⏮ ⏸ ⏭</span></div>`;
+  const wsApps = {Daily:["chrome","thunar","alacritty","whatsapp"],Work:["onlyoffice","obsidian","claude"],Entertainment:["spotify","discord"],Gaming:["steam"],Monitoring:["btop"],Settings:["settings","keepassxc"]};
+  $("p-ws").innerHTML = D.workspaces.map((w,i) => `<div class="ws ${i===0?"on":""}"><b>${w}<em>${i+1}</em></b><div>${(wsApps[w]||[]).map(a=>`<img src="${icon(a)}" alt="">`).join("")}</div></div>`).join("");
+  document.querySelectorAll("[data-open]").forEach(b => b.addEventListener("click", () => show(open === b.dataset.open ? "" : b.dataset.open)));
+  document.querySelectorAll("#panels button").forEach(b => b.addEventListener("click", () => show(b.dataset.p)));
+  const seg = (attr, fn) => document.querySelectorAll(`[${attr}]`).forEach(b => b.addEventListener("click", () => { fn(b.getAttribute(attr)); document.querySelectorAll(`[${attr}]`).forEach(x => x.setAttribute("aria-pressed", x === b)); paint(); }));
+  seg("data-fx", v => { $("scr").classList.toggle("fx", v === "fx"); $("scr").classList.toggle("plain", v === "plain"); });
+  seg("data-rd", v => { $("scr").classList.toggle("round", v === "round"); $("scr").classList.toggle("square", v === "square"); });
+  seg("data-dk", v => $("scr").classList.toggle("nodock", v === "off"));
+  seg("data-ah", v => $("scr").classList.toggle("nohint", v === "off"));
+  $("copy")?.addEventListener("click", () => {
+    navigator.clipboard?.writeText($("reply-text").textContent).then(() => { $("copy").textContent = "Copied"; })
+      .catch(() => { const r = document.createRange(); r.selectNodeContents($("reply-text")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
+  });
+}
+
+function show(p){
+  open = p;
+  ["l","lib","snd","ws"].forEach(k => $("p-"+k).classList.toggle("show", k === p));
+  document.querySelectorAll(".top [data-open]").forEach(b => b.classList.toggle("open", b.dataset.open === p));
+  document.querySelectorAll("#panels button").forEach(b => b.setAttribute("aria-pressed", b.dataset.p === p));
+}
+
+function paint(){
+  const t = theme(cur), desk = $("desk");
+  for (const [k,v] of Object.entries(MAP)) desk.style.setProperty("--t-"+k, t[v]);
+  desk.style.setProperty("--t-shadow-a", t.tone === "white" || t.tone === "light" ? .22 : .55);
+  $("wall").style.backgroundImage = D.walls[cur] ? `url(${D.walls[cur]})` : "none";
+  const c = k => `<span style="color:${t["term."+k]}">`, e = "</span>";
+  $("term").innerHTML = `${c("green")}javier@tphome${e} ${c("blue")}~/Programs/forge-suite${e} $ nog upgrade\n${c("cyan")}::${e} 12 packages · Tier 1 now, Tier 3 after 7 days\n${c("yellow")}hold${e}  firefox 141.0 (Tier 3, 4 days left)\n${c("magenta")}done${e}  ${c("bright_black")}11 upgraded in 41 s${e}`;
+  document.querySelectorAll(".chip").forEach(b => b.setAttribute("aria-pressed", b.dataset.s === cur));
+  const s = $("scr").classList, fx = s.contains("fx");
+  const rd = s.contains("round") ? "Round" : s.contains("square") ? "Square" : "Slightly round";
+  $("cap").innerHTML = `<span><b>${t.name}</b></span><span>${rd}</span><span>${fx ? "SwayFX login: shadows, frost, rounded windows" : "Plain Sway: square windows; panel, dock and pop-ups keep the roundness"}</span><span>band ${t["band.base"]} · pop ${t["pop.base"]}</span>`;
+  trio();
+}
+
+function chips(){
+  $("fams").innerHTML = FAMS.map(([f,label]) => {
+    const list = D.order.filter(s => D.now[s].family === f);
+    return list.length ? `<div class="fam"><h3>${label}</h3><div class="chips">${list.map(s=>{const t=theme(s);
+      return `<button type="button" class="chip" data-s="${s}" aria-pressed="false"><i style="background:linear-gradient(135deg,${t["surface.base"]} 33%,${t["band.base"]} 33% 66%,${t["pop.base"]} 66%)"></i>${t.name}</button>`}).join("")}</div></div>` : "";
+  }).join("");
+  document.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => { cur = b.dataset.s; paint(); }));
+}
+
+function trio(){
+  const t = theme(cur), w = D.walls[cur] ? `url(${D.walls[cur]})` : t["surface.sunken"], sq = $("scr").classList.contains("square");
+  const S = [["Left screen","Discord · the panel","1fr 1fr",0],["Main screen","the panel and the dock","1.35fr 1fr",1],["Right screen","btop · the panel","1fr",0]];
+  $("trio").innerHTML = S.map(([n,a,cols,dk],i) => `<div class="mini"><div class="m" style="--m-bg:${w};--m-bar:${t["surface.raised"]};--m-line:${t["border.subtle"]};--m-win:${t["surface.base"]};--m-cols:${cols};--m-r:${sq?"0":"5px"};--m-bot:${dk?"12%":"2%"}">
+    <div class="mb"></div><div class="mt">${i===1?'<i style="grid-row:1/3;outline:2px solid '+t["band.text"]+'"></i><i></i><i></i>':i===0?'<i></i><i></i>':'<i></i>'}</div>${dk?'<div class="dk"></div>':""}</div><p><b>${n}</b> · ${a}</p></div>`).join("");
+}
+
+build(); chips(); show("l"); paint();
+</script>

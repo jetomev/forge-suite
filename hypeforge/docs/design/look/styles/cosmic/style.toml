@@ -1,0 +1,70 @@
+# hypeForge style · COSMIC — PROPOSAL (look program, review 7; not approved yet)
+#
+# A STYLE is shapes, layout and which pieces the desktop uses. Colours never live here: every
+# part names a colour ROLE from the active theme (D-73). Dark Blue is the closest to COSMIC's
+# default dark. KognogOS ships Sway only (D-56): COSMIC's look on hypeForge, no COSMIC software.
+
+[meta]
+name = "COSMIC"
+slug = "cosmic"
+schema = 1
+needs = []                       # plain Sway: "Square" roundness, solid panel and dock
+better_with = ["swayfx"]         # "Round" and "Slightly round" windows, shadows, frost
+credit = "After System76's COSMIC desktop (Pop!_OS), with thanks. Learned from, never copied."
+
+[shape]                          # pixels, at 100 % scale; COSMIC's three roundness choices (C-2)
+roundness        = "slightly-round"          # "round" · "slightly-round" · "square"
+radius_window    = { round = 16, slightly-round = 8, square = 0 }
+radius_control   = { round = 999, slightly-round = 6, square = 0 }
+radius_popup     = { round = 16, slightly-round = 8, square = 0 }
+border_window    = 1
+active_hint      = 3             # COSMIC's frame around the window in use (C-3)
+gap_inner        = 8
+gap_outer        = 8
+bar_height       = 36            # the top panel
+dock_height      = 60
+dock_icon        = 42
+
+[layout]
+bar_position     = "top"
+bar_on           = "every-screen"
+bar_left         = ["workspaces-button", "applications-button"]
+bar_center       = ["clock-date"]
+bar_right        = ["tiling-toggle", "tray", "network", "sound", "bluetooth", "notifications", "power"]
+dock             = "bottom-center"           # panel + dock, COSMIC's default (C-1)
+dock_items       = ["app-library", "favorites", "running"]
+launcher         = "fuzzel-top"              # Super: the search pop-up, centred near the top (C-4)
+app_library      = "panel-grid-folders"      # every app as a grid, your groups as folders (C-4)
+applets          = "separate-popups"         # each status icon its own small pop-up (C-5)
+workspaces       = "panel-strip"             # the Workspaces button: a strip of workspace cards
+wallpaper        = "theme"                   # D-75
+clock_format     = ["%a %b %-d  %-I:%M %p"]
+
+[roles]
+panel_background   = "surface.raised"
+panel_text         = "text.primary"
+button_active      = "band.soft"
+dock_background    = "surface.raised"
+dock_running       = "band.text"              # a short line under open apps
+active_hint        = "band.text"
+popup_background   = "surface.raised"
+popup_header       = "band.base"
+toggle_on          = "pop.base"
+slider             = "pop.base"
+library_folder     = "surface.overlay"
+library_selected   = "band.base"
+
+[fx]                             # SwayFX login only
+corner_radius      = "shape.radius_window"   # follows the roundness choice
+shadows            = true
+shadow_blur_radius = 28
+shadow_offset      = [0, 8]
+blur               = true        # panel, dock and pop-ups
+blur_radius        = 6
+bar_opacity        = 0.9
+animations         = false       # SwayFX #565/#569
+
+[fonts]
+ui      = "Noto Sans"            # COSMIC uses Open Sans / Fira; Noto Sans is our UI face everywhere
+ui_size = 10.5
+mono    = "JetBrainsMono Nerd Font"
