@@ -7,7 +7,7 @@ hypeforge-theme into the bench's folder, opens a few windows so some workspaces 
 Waybar with a small test layout and photographs the top of the screen. Nothing touches the real
 desktop: not its Sway, its bar, its applets or its settings.
 
-    bar-preview.py [--theme kognogos-mocha] [--style rice] [--out picture.png] [--switch N]
+    bar-preview.py [--part pills|taskbar] [--theme kognogos-mocha] [--style rice] [--out picture.png]
 
 Writes the picture (default: logs/bar-preview-<style>-<theme>.png) and prints where it is.
 """
@@ -60,6 +60,25 @@ BAR = {
     "memory": {"format": "  {percentage}%"},
 }
 
+# The taskbar part's test layout: the row in the centre, its icons' stylesheet imported
+TASKBAR = {
+    "layer": "top", "position": "top", "height": 48, "spacing": 0,
+    "include": ["{fragment}"],
+    "modules-center": ["group/taskbar"],
+}
+TASKBAR_CSS = '''@import url("file://{colors}");
+@import url("file://{icons}");
+* {{ font-size: 13px; min-height: 0; }}
+window#waybar {{ background: transparent; color: @hf_text; }}
+.modules-center {{ background: @hf_bar; border-radius: 10px; margin: 6px 0 0 0; padding: 0 6px; }}
+/* the taskbar row (look step 3): one icon per app; a line under running apps, a longer one on the app in use */
+.app {{ min-width: 40px; margin: 4px 2px; padding: 0; border-radius: 6px; }}
+.app.running {{ box-shadow: inset 0 -2px @hf_task_running; }}
+.app.focused {{ box-shadow: inset 0 -3px @hf_task_focused; background-color: @hf_pill_hover; }}
+.app.urgent {{ box-shadow: inset 0 -3px @hf_alert; }}
+.app:hover {{ background-color: @hf_pill_hover; }}
+'''
+
 CSS = '''@import url("file://{colors}");
 * {{ font-family: "JetBrainsMono Nerd Font", monospace; font-size: 13px; min-height: 0; }}
 window#waybar {{ background: transparent; color: @hf_text; }}
@@ -98,12 +117,13 @@ def load_theme_tool():
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--part", default="pills", choices=["pills", "taskbar"])
     ap.add_argument("--theme", default="kognogos-mocha")
     ap.add_argument("--style", default="rice")
     ap.add_argument("--switch", type=int, default=4, help="the workspace on screen in the picture")
     ap.add_argument("--out")
     a = ap.parse_args()
-    out = Path(a.out or HERE / f"logs/bar-preview-{a.style}-{a.theme}.png")
+    out = Path(a.out or HERE / f"logs/bar-preview-{a.part}-{a.style}-{a.theme}.png")
     out.parent.mkdir(parents=True, exist_ok=True)
 
     base = Path(tempfile.mkdtemp(prefix="hfbar.", dir="/tmp"))   # short: the IPC socket path must fit
@@ -114,9 +134,17 @@ def main() -> int:
     ht = load_theme_tool()
     ht.apply(a.style, a.theme, ht.Place(conf), wallpaper=None, reload=False, check_names=False,
              make_wallpaper=False, say=lambda *_: None)
-    fragment = conf / "hypeforge/applets/workspaces.waybar.json"
-    (base / "bar.json").write_text(json.dumps(BAR).replace("{fragment}", str(fragment)))
-    (base / "bar.css").write_text(CSS.format(colors=conf / "hypeforge/theme/colors.css"))
+    colors = conf / "hypeforge/theme/colors.css"
+    if a.part == "taskbar":
+        (conf / "hypeforge/applets/sections.toml").write_text(
+            'favourites = ["Alacritty", "thunar", "google-chrome", "com.anthropic.Claude", "steam", "spotify", "discord"]\n')
+        fragment = conf / "hypeforge/applets/taskbar.waybar.json"
+        (base / "bar.json").write_text(json.dumps(TASKBAR).replace("{fragment}", str(fragment)))
+        (base / "bar.css").write_text(TASKBAR_CSS.format(colors=colors, icons=conf / "hypeforge/applets/taskbar.css"))
+    else:
+        fragment = conf / "hypeforge/applets/workspaces.waybar.json"
+        (base / "bar.json").write_text(json.dumps(BAR).replace("{fragment}", str(fragment)))
+        (base / "bar.css").write_text(CSS.format(colors=colors))
     wall = ht.token(ht.themes()[a.theme], "surface.sunken")
     (base / "sway.conf").write_text(f"output {SCREEN} resolution 2560x1440 bg {wall} solid_color\n"
                                     "xwayland disable\ndefault_border pixel 2\ngaps inner 10\n")
@@ -147,14 +175,24 @@ def main() -> int:
                                       env=env, stdout=log, stderr=log))
         time.sleep(1.5)
         # busy workspaces: a window on 1 and on 3 (an X-less GTK window, as the bench does)
-        window = ("import gi; gi.require_version('Gtk','3.0'); from gi.repository import Gtk, GLib; "
-                  "w=Gtk.Window(); w.show_all(); GLib.timeout_add_seconds(60, Gtk.main_quit); Gtk.main()")
-        for ws in (1, 3):
+        window = ("import gi, sys; gi.require_version('Gtk','3.0'); from gi.repository import Gtk, GLib; "
+                  "GLib.set_prgname(sys.argv[1]); w=Gtk.Window(); w.show_all(); "
+                  "GLib.timeout_add_seconds(60, Gtk.main_quit); Gtk.main()")
+        if a.part == "taskbar":
+            procs.append(subprocess.Popen([sys.executable, str(APPLETS / "taskbar/hypeforge-taskbar")],
+                                          env=env, stdout=log, stderr=log))
+            # stand-ins named like real apps: Chrome and Thunar are pinned, GIMP is not; Chrome twice
+            for name in ("thunar", "gimp", "google-chrome", "google-chrome"):
+                procs.append(subprocess.Popen([sys.executable, "-c", window, name], env={**env, "GDK_BACKEND": "wayland"},
+                                              stdout=log, stderr=log))
+                time.sleep(1.0)
+        for ws in (1, 3) if a.part == "pills" else ():
             subprocess.run([sys.executable, str(APPLETS / "workspaces/hypeforge-workspaces"), "go", str(ws)], env=env)
-            procs.append(subprocess.Popen([sys.executable, "-c", window], env={**env, "GDK_BACKEND": "wayland"},
+            procs.append(subprocess.Popen([sys.executable, "-c", window, "bench"], env={**env, "GDK_BACKEND": "wayland"},
                                           stdout=log, stderr=log))
             time.sleep(1.2)
-        subprocess.run([sys.executable, str(APPLETS / "workspaces/hypeforge-workspaces"), "go", str(a.switch)], env=env)
+        if a.part == "pills":
+            subprocess.run([sys.executable, str(APPLETS / "workspaces/hypeforge-workspaces"), "go", str(a.switch)], env=env)
         procs.append(subprocess.Popen(["waybar", "-c", str(base / "bar.json"), "-s", str(base / "bar.css")],
                                       env=env, stdout=log, stderr=log))
         time.sleep(3)

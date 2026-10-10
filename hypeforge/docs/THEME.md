@@ -71,6 +71,8 @@ Pieces the styles place in their bar; each is benched with `python3 scripts/bar-
 |---|---|---|---|
 | **Workspace pills** `group/workspace-pills` | one pill per workspace: the number; **the active one wide, with its name**; a workspace with windows on any screen underlined | the Workspaces applet writes `$XDG_RUNTIME_DIR/hypeforge-pills/<n>.json` on every switch and when a window opens, closes or moves; each pill is `cat` of its file (redrawn on SIGRTMIN+8); a click goes there | `@hf_pill_active` / `_active_text` (band.base / band.on), `@hf_pill_busy` (text.secondary), `@hf_pill_empty` (text.muted), `@hf_pill_hover` (bar.hover); a style may name its own roles |
 
+| **Taskbar row** `group/taskbar` | your Favorites pinned (always there, in their order), then any other app with a window; one icon per app; a line under running apps, a thicker one in the theme's accent under the app in use, a highlight behind it; a click goes to the app's windows in turn, or opens a pinned one on its workspace (the launcher's rule); middle click: another window | the **Taskbar applet** (`applets/taskbar/hypeforge-taskbar`, one copy, follows window events): one JSON per slot in `$XDG_RUNTIME_DIR/hypeforge-taskbar/` (`cat`, SIGRTMIN+12), `taskbar.waybar.json` (7 pinned + 10 running slots), `taskbar.css` (an icon rule per installed app, from the icon theme via `common/hficons.py`) | `@hf_task_running` (text.secondary), `@hf_task_focused` (accent.base); the highlight `@hf_pill_hover` |
+
 To tune with the Rice (step 5): in Blue the active pill is close to the bar area's own blue; in Ember the bar area is close to the background.
 
 ## The pop-up lists — `sway/fuzzel/fuzzel.ini` → `~/.config/sway/fuzzel/`

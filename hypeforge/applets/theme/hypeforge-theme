@@ -61,6 +61,8 @@ DEFAULT_ROLES = {
     # the bar parts (look step 3): workspace pills; a style that shows them may name its own roles
     "pill_active": "band.base", "pill_active_text": "band.on", "pill_busy": "text.secondary",
     "pill_empty": "text.muted", "pill_hover": "bar.hover",
+    # the taskbar row: the line under a running app, and under the app in use
+    "task_running": "text.secondary", "task_focused": "accent.base",
 }
 # Classic's lists, notes, lock screen and GTK roles follow its bar's shades (today's look).
 OUTPUTS = [  # template → where it goes, under the config folder
