@@ -63,6 +63,14 @@ Which package brings each font: [FONTS.md](FONTS.md).
 | Hover on any button | `#45475a` | — |
 | Clock | `Mon 05 Oct   08:13 PM` | — |
 
+### The bar follows the style (look program step 5, 2026-10-10 →)
+
+`hypeforge-theme apply` now writes the bar too: each style's **layout** (`config.jsonc`: which pieces, where) and **shapes** (`style.css`) into `~/.config/sway/waybar/`, plus **`modules.jsonc`, the pieces every style shares** (network, Bluetooth, volume, clipboard, USB drives, printers, the bell, the tray, the emblem, the power buttons, CPU, memory, what's playing, the clock — `sway/waybar/modules.jsonc`, so a fix there reaches every style). hypeForge Classic's bar is the hand-made one in `sway/waybar/` (unchanged); another style's is `styles/<slug>/bar/`; a style without one leaves the bar alone. Backups and `undo` cover the bar like every other file. Bars find their includes with `${XDG_CONFIG_HOME:-$HOME/.config}/…`, so the same file works on the desktop and on the hidden bench. Whole-style bench: `python3 scripts/style-preview.py --style <s> --theme <t>`.
+
+| Style | Bar |
+|---|---|
+| **Linux rice** (D-75) | one full-width bar, **three solid areas** with the wallpaper showing between them (radius 12, a 2 px outline `@hf_island_border`, 10 px from the screen's edges): the emblem + the **workspace pills** · the clock + what's playing · CPU, memory, network, Bluetooth, volume, clipboard, USB, printers, the tray, the bell, the **power buttons** (the panel). JetBrainsMono Nerd Font 14 px; icons `@hf_icon` (pop.text). Kept beyond the approved list: the clipboard, USB, printer and bell buttons (they work, and the desktop would miss them) |
+
 ### The bar parts (look program step 3, 2026-10-10 →)
 
 Pieces the styles place in their bar; each is benched with `python3 scripts/bar-preview.py --style <s> --theme <t>` (a hidden Sway with one 2560×1440 screen, the real Workspaces applet, Waybar with a test layout; the picture goes to `logs/`).

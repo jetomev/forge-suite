@@ -1,0 +1,42 @@
+// hypeForge style · Linux rice (D-75) — the bar. One full-width bar, three solid areas, the
+// wallpaper showing between them (Javier, 2026-10-10). Left: the emblem and the workspace pills;
+// centre: the clock and what's playing; right: the system, the tray, the bell, the power buttons.
+// The pieces are defined in modules.jsonc (shared by every style); colours come from colors.css.
+{
+  "include": [
+    "${XDG_CONFIG_HOME:-$HOME/.config}/sway/waybar/modules.jsonc",
+    "${XDG_CONFIG_HOME:-$HOME/.config}/hypeforge/applets/workspaces.waybar.json"
+  ],
+  "layer": "top",
+  "position": "top",
+  "height": 38,
+  "spacing": 0,
+  "margin-top": 10,
+  "margin-left": 10,
+  "margin-right": 10,
+  "modules-left": [
+    "custom/emblem",
+    "group/workspace-pills"
+  ],
+  "modules-center": [
+    "clock",
+    "mpris"
+  ],
+  "modules-right": [
+    "cpu",
+    "memory",
+    "network",
+    "bluetooth",
+    "wireplumber",
+    "custom/clipboard",
+    "custom/drives",
+    "custom/printers",
+    "tray",
+    "custom/notifications",
+    "custom/power-panel"
+  ],
+  "clock": {
+    "format": "{:%a %d %b  %I:%M %p}",
+    "tooltip": false
+  }
+}

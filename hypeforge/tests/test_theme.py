@@ -122,6 +122,38 @@ class TodaysLook(Base):
         self.assertEqual(ht.token(th, "surface.overlay"), "#313244")
 
 
+class TheBarFollowsTheStyle(Base):
+    """Look step 5: each style brings its bar's layout and stylesheet; Classic's is the hand-made
+    one in sway/waybar/; all of them share modules.jsonc."""
+
+    def test_classic_writes_todays_bar_unchanged(self):
+        self.apply("classic", "kognogos-mocha", say=lambda *_: None)
+        repo = Path(ht.REPO) / "sway/waybar"
+        self.assertEqual(self.read("sway/waybar/config.jsonc"), (repo / "config.jsonc").read_text())
+        self.assertEqual(self.read("sway/waybar/style.css"), (repo / "style.css").read_text())
+        self.assertIn('"cpu"', self.read("sway/waybar/modules.jsonc"))
+
+    def test_the_rice_brings_its_own_bar(self):
+        self.apply("rice", "kognogos-mocha", say=lambda *_: None)
+        bar = self.read("sway/waybar/config.jsonc")
+        self.assertIn('"group/workspace-pills"', bar)
+        self.assertIn("${XDG_CONFIG_HOME:-$HOME/.config}/sway/waybar/modules.jsonc", bar,
+                      "the bar finds its pieces wherever its config folder is (the bench, the desktop)")
+        self.assertIn("background: transparent", self.read("sway/waybar/style.css"))
+
+    def test_a_style_without_a_bar_leaves_the_bar_alone(self):
+        st = dict(ht.styles()["rice"], meta=dict(ht.styles()["rice"]["meta"], slug="no-bar-here"))
+        self.assertEqual(ht.bar_files(st), {})
+
+    def test_undo_brings_the_old_bar_back(self):
+        self.apply("classic", "kognogos-mocha", say=lambda *_: None)
+        before = self.read("sway/waybar/config.jsonc")
+        self.apply("rice", "kognogos-mocha", say=lambda *_: None)
+        self.assertNotEqual(self.read("sway/waybar/config.jsonc"), before)
+        ht.undo(self.place, reload=False, say=lambda *_: None)
+        self.assertEqual(self.read("sway/waybar/config.jsonc"), before)
+
+
 class Safety(Base):
     def test_a_dry_run_writes_nothing(self):
         r = self.apply(dry=True, say=lambda *_: None)

@@ -75,6 +75,8 @@ DEFAULT_ROLES = {
     "panel_tile_on": "accent.base", "panel_tile_on_text": "accent.on", "panel_hover": "surface.hover",
     "panel_selected": "selection.bg", "panel_selected_text": "selection.fg", "panel_danger": "status.danger",
     "panel_backdrop": "surface.sunken",
+    # a style's bar areas ("islands"), their outline and the bar's icons (the Rice names its own)
+    "island_background": "bar.bg", "island_border": "border.subtle", "module_icon": "bar.fg",
 }
 # Classic's lists, notes, lock screen and GTK roles follow its bar's shades (today's look).
 OUTPUTS = [  # template → where it goes, under the config folder
@@ -398,7 +400,30 @@ def render(style_slug: str, theme_slug: str, place: Place, wallpaper: str | None
         files[place.root / rel] = fill((TEMPLATES / tmpl).read_text(), ctx)
     term = terminal_files(place, st, fill((TEMPLATES / TERMINAL[0]).read_text(), ctx))
     files.update(term)
+    for rel, body in bar_files(style).items():
+        files[place.root / rel] = body
     return files, str(pic)
+
+
+BAR_LIVE = "sway/waybar"   # under the config folder: where Waybar reads config.jsonc and style.css
+
+
+def bar_files(style: dict) -> dict:
+    """The bar follows the style (look step 5): each style's layout (config.jsonc) and shapes
+    (style.css), plus the module definitions every style shares (modules.jsonc: network, volume,
+    clipboard, USB drives, printers, the bell, the tray, power, clock…). hypeForge Classic's bar is
+    the hand-made one in sway/waybar/; another style's is styles/<slug>/bar/. A style without a bar
+    folder leaves the bar as it is. Colours stay in colors.css, which every bar stylesheet imports."""
+    slug = style["meta"]["slug"]
+    src = REPO / "sway/waybar" if slug == "classic" else STYLES / slug / "bar"
+    out = {}
+    if (src / "config.jsonc").is_file() and (src / "style.css").is_file():
+        out[f"{BAR_LIVE}/config.jsonc"] = (src / "config.jsonc").read_text()
+        out[f"{BAR_LIVE}/style.css"] = (src / "style.css").read_text()
+    shared = REPO / "sway/waybar/modules.jsonc"
+    if out and shared.is_file():
+        out[f"{BAR_LIVE}/modules.jsonc"] = shared.read_text()
+    return out
 
 
 IMPORT_RE = re.compile(r"(^\s*import\s*=\s*\[)(.*?)(\])", re.S | re.M)

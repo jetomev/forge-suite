@@ -1,0 +1,60 @@
+/* hypeForge style · Linux rice (D-75) — the bar's look. Shapes from styles/rice/style.toml
+   (radius_island 12, border_island 2, bar_height 38, bar_margin 10); every colour is a name from
+   colors.css, which hypeforge-theme writes from the theme in use. */
+@import url("../../hypeforge/theme/colors.css");
+
+* {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 14px;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+
+window#waybar {
+  background: transparent;           /* the wallpaper shows between the three areas */
+  color: @hf_text;
+}
+
+.modules-left, .modules-center, .modules-right {
+  background: @hf_island;
+  border: 2px solid @hf_island_border;
+  border-radius: 12px;
+  padding: 0 6px;
+}
+
+tooltip { background: @hf_island; border: 1px solid @hf_island_border; border-radius: 8px; }
+tooltip label { color: @hf_text; }
+
+/* the emblem: the KognogOS picture, a click opens the apps */
+#custom-emblem {
+  background-image: url("../../hypeforge/bar/launcher.png");
+  background-size: 18px 18px;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-width: 34px;
+}
+
+/* the workspace pills (R-2): numbers; the active one wide with its name; busy ones underlined */
+.pill { border-radius: 999px; padding: 0 9px; margin: 6px 2px; min-width: 14px; color: @hf_pill_empty; }
+.pill.busy { color: @hf_pill_busy; box-shadow: inset 0 -2px @hf_pill_busy; border-radius: 0; margin: 6px 6px; padding: 0 2px; }
+.pill.active { background: @hf_pill_active; color: @hf_pill_active_text; padding: 0 14px; font-weight: bold; }
+.pill:hover { background: @hf_pill_hover; }
+
+/* every piece: room, the theme's icon colour, a soft hover */
+#clock, #mpris, #cpu, #memory, #network, #bluetooth, #wireplumber, #tray,
+#custom-clipboard, #custom-drives, #custom-printers, #custom-notifications, #custom-power-panel {
+  padding: 0 9px;
+  color: @hf_icon;
+}
+#clock { color: @hf_text; font-weight: bold; }
+#mpris { color: @hf_subtext; }
+#cpu:hover, #memory:hover, #network:hover, #bluetooth:hover, #wireplumber:hover, #custom-clipboard:hover,
+#custom-drives:hover, #custom-printers:hover, #custom-notifications:hover, #custom-power-panel:hover {
+  background: @hf_pill_hover; border-radius: 8px;
+}
+#wireplumber.muted, #network.disconnected { color: @hf_alert; }
+#custom-notifications.unseen { color: @hf_bell; }
+#custom-notifications.dnd { color: @hf_alert; }
+#custom-clipboard.new, #custom-drives.has { color: @hf_new; }
+#custom-power-panel { color: @hf_alert; padding-right: 12px; }

@@ -1,0 +1,127 @@
+// hypeForge — the bar's pieces every style shares (look program step 5). Each style's own
+// config.jsonc says WHERE they go; this file says WHAT they are, so a fix here reaches every
+// style. Written to ~/.config/sway/waybar/modules.jsonc by hypeforge-theme. Classic's own
+// config.jsonc still defines its pieces itself (unchanged since it was approved).
+{
+  "network": {
+    "format-ethernet": "󰈀",
+    "format-wifi": "{icon}",
+    "format-icons": [
+      "󰤯",
+      "󰤟",
+      "󰤢",
+      "󰤥",
+      "󰤨"
+    ],
+    "format-disconnected": "󰤭",
+    "format-disabled": "󰤮",
+    "tooltip-format-ethernet": "Wired: {ifname}\n{ipaddr}",
+    "tooltip-format-wifi": "Wi-Fi: {essid} ({signalStrength} %)\n{ipaddr}",
+    "tooltip-format-disconnected": "Not connected",
+    "on-click": "networkmanager_dmenu",
+    "on-click-right": "hypeforge-nmtui"
+  },
+  "bluetooth": {
+    "format": "󰂯",
+    "format-off": "󰂲",
+    "format-disabled": "󰂲",
+    "format-connected": "󰂱 {num_connections}",
+    "tooltip-format": "Bluetooth {status}",
+    "tooltip-format-connected": "Bluetooth: {device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}",
+    "on-click": "alacritty --class hf-bluetooth -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e bluetui",
+    "on-click-right": "sh -c 'bluetoothctl show | grep -q \"Powered: yes\" && bluetoothctl power off || bluetoothctl power on'"
+  },
+  "wireplumber": {
+    "format": "{icon} {volume}",
+    "format-muted": "󰝟",
+    "format-icons": [
+      "󰕿",
+      "󰖀",
+      "󰕾"
+    ],
+    "scroll-step": 5,
+    "max-volume": 100,
+    "tooltip-format": "{node_name}: {volume} %\nScroll: louder / quieter · click: mute · right click: the mixer",
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-click-right": "alacritty --class hf-mixer -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e wiremix"
+  },
+  "custom/drives": {
+    "exec": "~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives bar",
+    "return-type": "json",
+    "interval": 60,
+    "signal": 11,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives menu"
+  },
+  "custom/printers": {
+    "exec": "~/Programs/forge-suite/hypeforge/applets/printers/hypeforge-printers bar",
+    "return-type": "json",
+    "interval": 10,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/printers/hypeforge-printers menu",
+    "on-click-right": "~/Programs/forge-suite/hypeforge/applets/printers/hypeforge-printers settings"
+  },
+  "tray": {
+    "icon-size": 16,
+    "spacing": 10
+  },
+  "custom/clipboard": {
+    "exec": "~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard bar",
+    "return-type": "json",
+    "interval": 60,
+    "signal": 10,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard list",
+    "on-click-right": "~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard clear"
+  },
+  "custom/notifications": {
+    "exec": "~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications bar",
+    "return-type": "json",
+    "interval": 30,
+    "signal": 9,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications list",
+    "on-click-right": "~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications dnd"
+  },
+  "clock": {
+    "format": "{:%a %d %b   %I:%M %p}",
+    "tooltip": false
+  },
+  "custom/emblem": {
+    "format": " ",
+    "tooltip-format": "Apps (Win + Space)",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections"
+  },
+  "custom/power-panel": {
+    "format": "󰐥",
+    "tooltip-format": "Lock · Log Out · Restart · Shut Down",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel power"
+  },
+  "cpu": {
+    "format": "󰍛 {usage}%",
+    "interval": 5,
+    "tooltip-format": "Processor: {usage} % busy"
+  },
+  "memory": {
+    "format": "󰘚 {percentage}%",
+    "interval": 10,
+    "tooltip-format": "Memory: {used:0.1f} of {total:0.1f} GB"
+  },
+  "mpris": {
+    "format": "{player_icon} {dynamic}",
+    "format-paused": "{status_icon} {dynamic}",
+    "dynamic-len": 40,
+    "dynamic-order": [
+      "title",
+      "artist"
+    ],
+    "player-icons": {
+      "default": "󰐊",
+      "spotify": "",
+      "chromium": "󰊯",
+      "firefox": "󰈹"
+    },
+    "status-icons": {
+      "paused": "󰏤"
+    },
+    "tooltip-format": "{player}: {title} — {artist}",
+    "on-click": "playerctl play-pause"
+  }
+}
