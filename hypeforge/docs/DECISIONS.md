@@ -7,6 +7,9 @@
 
 ## 2026-10-10
 
+### D-79 · hypeForge FX: rounded windows without a frame line, the others dimmed (Javier, 2026-10-10)
+F-56: SwayFX 0.6 draws a notch where a big window's rounded corner meets its frame line, and the curve is stepped; not a setting, not the shadows (tested with every shadow off), and a one-pixel patch fixed only half. Javier picked **1 + 3**: in the FX login, windows keep their 12 px rounded corners and shadow but **no frame line** (`[fx] frame = false`), and the focus shows by **dimming the other windows a little** (`dim_inactive = 0.12`); the float key keeps "no frame" in FX (`bindsym --no-warn`, or SwayFX shows its config-errors bar). Plain Sway keeps its 2 px frame. And the notch is **reported to SwayFX** with our reproduction (Javier's OK).
+
 ### D-78 · The build plan approved: Rice first; today's look stays as Classic; themeForge; the Rice ships as the default (Javier)
 The phase-4 plan (shared pieces first, a test of Javier's after every step) with his answers: B-1 the styles in this order — **Linux Rice, Windows 11, Mac OS 9, KDE, COSMIC, macOS**; B-2 today's look stays as a seventh style, **hypeForge Classic**; B-3 the switcher is **themeForge**, a Forge app with **a full page in hypeForge Settings** and **a tray icon for a quick switch** (its icon in KognogOS colours, like nightForge's); B-4 **the Linux Rice is KognogOS's default style** (*"Linux Rice, of course :D"*).
 

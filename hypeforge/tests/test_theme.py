@@ -95,6 +95,17 @@ class TodaysLook(Base):
         self.assertIn("shadows enable", lists, "the lists keep theirs")
         self.assertIn("corner_radius 12", fx)
 
+    def test_classic_drops_the_frame_line_in_fx_without_a_warning(self):
+        # F-56 (Javier's pick, 10-10): no frame line in FX, the others dimmed; the float key is
+        # redefined with --no-warn, or SwayFX shows its "errors in your config" bar
+        self.apply("classic", "kognogos-mocha", say=lambda *_: None)
+        fx = self.read("hypeforge/theme/fx.conf")
+        self.assertIn("default_border none", fx)
+        self.assertIn("default_dim_inactive 0.12", fx)
+        self.assertIn("bindsym --no-warn $mod+Shift+space floating toggle, border none", fx)
+        sway = self.read("hypeforge/theme/sway.conf")
+        self.assertIn("default_border pixel 2", sway, "plain Sway keeps its frame")
+
 
 class Safety(Base):
     def test_a_dry_run_writes_nothing(self):

@@ -159,6 +159,13 @@ def fx_value(style: dict, theme: dict, name: str) -> str:
         return str(fx.get("blur_passes", 2))
     if name == "blur_radius":
         return str(fx.get("blur_radius", 5))
+    if name == "frame":
+        if fx.get("frame", True):
+            return "# windows keep their frame line in this style"
+        return ("# no frame line in FX (F-56): SwayFX draws a notch where a big window's rounded corner meets\n"
+                "# its frame; the shadow carries the depth, the dimmed others show which window has focus\n"
+                "default_border none\ndefault_floating_border none\n"
+                "bindsym --no-warn $mod+Shift+space floating toggle, border none")
     if name == "dim_inactive":
         return str(fx.get("default_dim_inactive", fx.get("dim_inactive", 0.0)))
     if name == "layers":
