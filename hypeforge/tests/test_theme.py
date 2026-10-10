@@ -95,16 +95,31 @@ class TodaysLook(Base):
         self.assertIn("shadows enable", lists, "the lists keep theirs")
         self.assertIn("corner_radius 12", fx)
 
-    def test_classic_drops_the_frame_line_in_fx_without_a_warning(self):
-        # F-56 (Javier's pick, 10-10): no frame line in FX, the others dimmed; the float key is
-        # redefined with --no-warn, or SwayFX shows its "errors in your config" bar
+    def test_classic_has_a_quiet_frame_in_fx(self):
+        # D-80 (Javier, 10-10, look C): a quiet 2 px frame + 10 px at the screen edges + the others
+        # dimmed; Mocha's focused frame is the 2:1 blend of border.subtle and border.strong
         self.apply("classic", "kognogos-mocha", say=lambda *_: None)
         fx = self.read("hypeforge/theme/fx.conf")
-        self.assertIn("default_border none", fx)
+        self.assertIn("gaps outer 10", fx)
+        self.assertIn("default_border pixel 2", fx)
+        self.assertIn("client.focused          #585b70", fx)
+        self.assertIn("client.unfocused        #313244", fx)
         self.assertIn("default_dim_inactive 0.12", fx)
-        self.assertIn("bindsym --no-warn $mod+Shift+space floating toggle, border none", fx)
+        self.assertNotIn("bindsym", fx, "no key is redefined (SwayFX would show its config-errors bar)")
         sway = self.read("hypeforge/theme/sway.conf")
-        self.assertIn("default_border pixel 2", sway, "plain Sway keeps its frame")
+        self.assertIn("gaps outer 0", sway, "plain Sway keeps today's edges")
+
+    def test_a_style_without_a_frame_redefines_the_float_key_quietly(self):
+        st = ht.styles()["classic"]
+        st = dict(st, fx=dict(st["fx"], frame=False))
+        out = ht.fx_value(st, ht.themes()["kognogos-mocha"], "frame")
+        self.assertIn("default_border none", out)
+        self.assertIn("bindsym --no-warn $mod+Shift+space", out)
+
+    def test_a_blend_of_two_roles(self):
+        th = ht.themes()["kognogos-mocha"]
+        self.assertEqual(ht.token(th, "border.subtle*2+border.strong"), "#585b70")
+        self.assertEqual(ht.token(th, "surface.overlay"), "#313244")
 
 
 class Safety(Base):

@@ -98,6 +98,16 @@ def styles() -> dict:
 
 
 def token(theme: dict, path: str) -> str:
+    """A colour role, or a blend of roles: "border.subtle*2+border.strong" = two parts of one,
+    one of the other (still only the theme's own colours, mixed)."""
+    if "+" in path:
+        parts = []
+        for term in path.split("+"):
+            name, _, w = term.strip().partition("*")
+            parts.append((token(theme, name), float(w or 1)))
+        total = sum(w for _, w in parts)
+        rgb = [round(sum(int(c[1 + 2 * i:3 + 2 * i], 16) * w for c, w in parts) / total) for i in range(3)]
+        return "#" + "".join(f"{v:02x}" for v in rgb)
     group, _, key = path.partition(".")
     try:
         v = theme[group][key]
@@ -160,12 +170,28 @@ def fx_value(style: dict, theme: dict, name: str) -> str:
     if name == "blur_radius":
         return str(fx.get("blur_radius", 5))
     if name == "frame":
-        if fx.get("frame", True):
-            return "# windows keep their frame line in this style"
-        return ("# no frame line in FX (F-56): SwayFX draws a notch where a big window's rounded corner meets\n"
-                "# its frame; the shadow carries the depth, the dimmed others show which window has focus\n"
-                "default_border none\ndefault_floating_border none\n"
-                "bindsym --no-warn $mod+Shift+space floating toggle, border none")
+        frame = fx.get("frame", True)
+        gap = fx.get("gap_outer")
+        out = [f"gaps outer {int(gap)}"] if gap is not None else []
+        if frame is True:
+            out.insert(0, "# windows keep their frame line in this style")
+        elif frame == "quiet":
+            # D-80 (Javier, 10-10): a quiet frame — dark enough that SwayFX's corner notch on big
+            # windows (F-56) barely shows, light enough to outline windows on a dark wallpaper
+            f = token(theme, fx.get("frame_focused", "border.subtle"))
+            u = token(theme, fx.get("frame_unfocused", "surface.overlay"))
+            w = int(fx.get("frame_width", 2))
+            out = ["# a quiet frame in FX (D-80): outlines the windows, hides the corner notch (F-56)"] + out + [
+                f"default_border pixel {w}", f"default_floating_border pixel {w}",
+                f"client.focused          {f} $hf_titlebar $hf_text    {f} {f}",
+                f"client.focused_inactive {u} $hf_titlebar $hf_subtext {u} {u}",
+                f"client.unfocused        {u} $hf_titlebar $hf_subtext {u} {u}"]
+        else:
+            out = ["# no frame line in FX (F-56): SwayFX draws a notch where a big window's rounded corner meets",
+                   "# its frame; the shadow carries the depth, the dimmed others show which window has focus"] + out + [
+                   "default_border none", "default_floating_border none",
+                   "bindsym --no-warn $mod+Shift+space floating toggle, border none"]
+        return "\n".join(out)
     if name == "dim_inactive":
         return str(fx.get("default_dim_inactive", fx.get("dim_inactive", 0.0)))
     if name == "layers":

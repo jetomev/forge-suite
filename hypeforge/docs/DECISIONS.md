@@ -7,6 +7,9 @@
 
 ## 2026-10-10
 
+### D-80 · hypeForge FX: a quiet frame and room at the screen edges (Javier, 2026-10-10, replaces D-79's "no frame")
+With no frame line (D-79) the tiled windows looked flat: Mocha's windows and the dark wallpaper are almost the same colour, a dark shadow on a dark background doesn't show, and windows ran to the screen edges. Four looks were rendered on the hidden SwayFX; Javier picked **C**: a **quiet 2 px frame** (the window in use `border.subtle*2+border.strong` = Mocha `#585b70`, the others `surface.overlay` = `#313244`), **10 px at the screen edges** (`[fx] gap_outer`), the others still dimmed 0.12. Quiet colours also hide most of F-56's corner notch (it shows with a bright frame). Plain Sway unchanged. New in the theme step: a colour may blend roles (`role*2+role`).
+
 ### D-79 · hypeForge FX: rounded windows without a frame line, the others dimmed (Javier, 2026-10-10)
 F-56: SwayFX 0.6 draws a notch where a big window's rounded corner meets its frame line, and the curve is stepped; not a setting, not the shadows (tested with every shadow off), and a one-pixel patch fixed only half. Javier picked **1 + 3**: in the FX login, windows keep their 12 px rounded corners and shadow but **no frame line** (`[fx] frame = false`), and the focus shows by **dimming the other windows a little** (`dim_inactive = 0.12`); the float key keeps "no frame" in FX (`bindsym --no-warn`, or SwayFX shows its config-errors bar). Plain Sway keeps its 2 px frame. And the notch is **reported to SwayFX** with our reproduction (Javier's OK).
 
