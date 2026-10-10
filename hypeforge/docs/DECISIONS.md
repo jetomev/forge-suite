@@ -7,6 +7,9 @@
 
 ## 2026-10-10
 
+### D-77 · Style 6 approved: COSMIC, tiled — all six styles approved (Javier)
+Review 7, all five as proposed: C-1 **the top panel and the dock**, C-2 **slightly round** by default (Round and Square stay choices in hypeForge Settings), C-3 **the active hint** (a 3 px frame in the theme's bright colour), C-4 **the launcher and the App Library** with group folders, C-5 **each applet its own pop-up**. No COSMIC software (D-56). Spec: `docs/design/look/styles/cosmic/style.toml`. With it all six styles of the look program are approved (D-71, D-72, D-74, D-75, D-76, D-77) on the approved 25 themes (D-73); next is the build plan (look program phase 4).
+
 ### D-76 · Style 5 approved: KDE Plasma, tiled (Javier)
 Review 6, all five as proposed: K-1 the **floating panel**, K-2 **the pager** (six little screens), K-3 **Kickoff as KDE's list** with descriptions, K-4 **Breeze-style title bars on**, K-5 **one tray pop-up** with a page per setting. Plasma's look from hypeForge's own pieces, no KDE software (D-56). Spec: `docs/design/look/styles/kde/style.toml`.
 
