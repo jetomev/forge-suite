@@ -51,6 +51,10 @@ The GitHub Project **"hypeForge · the look"** (jetomev) holds every task above 
 - **05 · wallpapers** ✅ — our own generator (`wallpapers/generate.py`, Python + Pillow + numpy, already installed): five moods (synthwave, skyline, mountains, circuit, sky-clouds as the anime-style stand-in), any palette, the same picture every time; light themes get calm "paper" versions. Licences read: Unsplash, Pexels and Wallhaven can't be shipped; Wikimedia Commons CC0/CC only, file by file, with credits. Ship the generator and make each wallpaper when a theme is picked (~6 s), or WebP (0.06–0.4 MB each).
   - **Critical eye (Claude):** synthwave, skyline, mountains and circuit look good; sky-clouds was the weak one (clouds low and clipped, dark blobs inside); redone the same day as three cumulus towers over a haze bank, flat cel shading, no blobs — still a little smooth.
 
+## Javier's answers on review 1 (2026-10-10)
+
+Q-1 A · Q-2 A · Q-3 B · Q-4 "middle to darker", with white, black and grays inside every colour theme so none is monotone, more colour combinations the way a graphic designer would, a black/white/dark-gray/orange theme, and "the Kognog colours" are KognogOS Mocha (Catppuccin Mocha), not purple · Q-5 my picks, following those notes. Recorded as D-68, D-69, D-70. Next: palettes v2 (60-30-10), then review 1 again with them.
+
 ## Questions for Javier (asked on the proposal pages, not before)
 
 - **Answered (Javier, 10-10): White and Black are the high-contrast themes** — grayscale styling, not pure: grays only, a near-black / near-white gray accent, stronger text (primary ≥ 7:1 everywhere) and borders; colour only where it means something (status, urgent, the terminal). Done in `palette/generate.py` (`hc=True`).

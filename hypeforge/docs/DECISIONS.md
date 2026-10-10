@@ -7,6 +7,15 @@
 
 ## 2026-10-10
 
+### D-70 · Colour themes are 60-30-10, not one colour everywhere (Javier)
+Javier on review 1: the samples were "too one sided of the color… extremely monotone". Every colour theme now mixes **white, black and grays** with its colour: about 60 % neutral foundation (windows, panels), 30 % the theme's colour in big secondary places (the bar, panel headers, selected rows, the focused border), 10 % a contrasting "pop" colour for small important things, plus more contrast between layers. Middle themes sit **"middle to darker"**. A new **black · white · dark gray · orange** theme (the emblem's orange). "The Kognog colours" are **KognogOS Mocha**, today's Catppuccin Mocha combination, its own theme, not "purple". Q-5 picks: neutral themes use the emblem blue; the focused border wears the theme's colour; urgent moves away from red in red/pink themes; the emblem orange is the orange theme's colour, otherwise the logo's.
+
+### D-69 · Wallpapers: our generator, plus hand-picked free-licence art (Javier)
+Q-3 B: the generator makes every theme's five; real illustrations and photos may be added one file at a time from sources whose licence allows shipping (Wikimedia Commons CC0 / CC BY / CC BY-SA), with a credits file. Unsplash, Pexels and Wallhaven are out (their terms forbid it).
+
+### D-68 · SwayFX as a second login; graphical panels from the bar (Javier, amends D-56 and D-57)
+Q-1 A: **SwayFX counts as Sway** — Sway 1.12 with rounded corners, shadows and blur. It comes as a second login ("hypeForge FX"); plain Sway stays the default and the safe one, and every style is drawn for plain Sway first, the effects in one optional file. Animations stay off (SwayFX #565/#569). Q-2 A: **small graphical panels may open from the bar** (Start, Quick Settings, calendar, workspaces), Python + GTK with no new packages. The Forge apps stay terminal apps, as they are.
+
 ### D-67 · The look program: six styles × 23 colour themes, still tiling (Javier)
 *"Where a beautifully stylised Windows 11 desktop exists, what classic Mac OS 9 functionality offered, and KognogOS identity meets."* Six styles proposed and reviewed one by one (Windows 11, Mac OS 9.x, modern macOS, a Linux rice, KDE, COSMIC), each with 23 colour themes and five wallpapers per colour; rounding, shades, shadows, borders; contrast that makes things pop; all inside Sway's (and SwayFX's) capabilities, still tiling with our workspaces and placement. Forge Suite terminal apps keep their look for now. Everything documented for a later theme app. Claude runs it with up to five research helpers; a GitHub Project holds the plan and timeline. The plan: `docs/look-program.md`.
 
