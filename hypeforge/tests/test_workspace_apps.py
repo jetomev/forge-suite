@@ -287,3 +287,55 @@ class Breaker(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Pills(unittest.TestCase):
+    """The workspace pills (look step 3, the Rice's R-2): numbers, the active one wide with its
+    name, busy ones marked; one small file per pill so the bar redraws them with `cat`."""
+
+    def setUp(self):
+        self.dir = tempfile.TemporaryDirectory()
+        cfg = Path(self.dir.name) / "workspaces.toml"
+        cfg.write_text(LISTS)
+        self.ws = load(HERE / "applets/workspaces/hypeforge-workspaces", "hfworkspaces_pills")
+        self.ws.CONFIG = cfg
+        self.ws.PILLS = Path(self.dir.name) / "pills"
+        self.ws.BAR_FRAGMENT = Path(self.dir.name) / "workspaces.waybar.json"
+        self.ws.signal_bar = lambda *a: None
+        self.grid = self.ws.Grid()
+
+    def tearDown(self):
+        self.dir.cleanup()
+
+    def pill(self, i):
+        import json
+        return json.loads((self.ws.PILLS / f"{i}.json").read_text())
+
+    def test_the_active_pill_is_named_the_others_are_numbers(self):
+        self.ws.write_pills(self.grid, 4, busy={1, 4})
+        self.assertEqual(self.pill(4), {"text": "4  Gaming", "class": ["pill", "active"], "tooltip": "4. Gaming"})
+        self.assertEqual(self.pill(1)["text"], "1")
+        self.assertEqual(self.pill(1)["class"], ["pill", "busy"])
+        self.assertEqual(self.pill(2)["class"], ["pill", "empty"])
+
+    def test_nothing_changed_writes_nothing_new(self):
+        self.assertTrue(self.ws.write_pills(self.grid, 1, busy=set()))
+        self.assertFalse(self.ws.write_pills(self.grid, 1, busy=set()), "the bar is only told when a pill changed")
+        self.assertTrue(self.ws.write_pills(self.grid, 1, busy={3}))
+
+    def test_busy_counts_every_screen(self):
+        win = {"id": 7, "pid": 99, "nodes": [], "floating_nodes": []}
+        tree = {"nodes": [{"name": "DP-3", "nodes": [{"name": "1:Daily", "nodes": [], "floating_nodes": []}]},
+                          {"name": "DP-2", "nodes": [{"name": "13:Entertainment", "nodes": [], "floating_nodes": [win]}]}]}
+        self.assertEqual(self.ws.busy_workspaces(FakeSway(tree, []), self.grid), {3},
+                         "a floating window on screen 2 makes workspace 3 busy")
+
+    def test_the_bar_gets_a_pill_per_workspace_that_reads_its_file(self):
+        import json
+        self.ws.write_bar(self.grid)
+        bar = json.loads(self.ws.BAR_FRAGMENT.read_text())
+        self.assertEqual(bar["group/workspace-pills"]["modules"], [f"custom/pill-{i}" for i in range(1, 6)])
+        self.assertIn("cat ", bar["custom/pill-2"]["exec"])
+        self.assertTrue(bar["custom/pill-2"]["exec"].endswith("2.json"))
+        self.assertTrue(bar["custom/pill-2"]["on-click"].endswith(" go 2"))
+        self.assertEqual(bar["custom/pill-2"]["signal"], self.ws.BAR_SIGNAL)

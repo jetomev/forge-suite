@@ -48,6 +48,7 @@ CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hyp
 BAR_FRAGMENT = CONFIG.with_name("workspaces.waybar.json")  # read by the bar (Waybar "include")
 RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
 PIDFILE = RUNTIME / "hypeforge-workspaces.pid"
+PILLS = RUNTIME / "hypeforge-pills"   # one small JSON per workspace pill; the bar reads them with cat
 MOD = "Mod4"        # the Windows key
 BAR_SIGNAL = 8      # Waybar redraws the workspace buttons on SIGRTMIN+8
 
@@ -90,10 +91,46 @@ def current():
         return 1
 
 
-def set_current(index):
+def set_current(index, grid=None):
     if current() != index or not CURRENT.exists():
         CURRENT.write_text(str(index))
+        if grid is not None:
+            write_pills(grid, index)
         signal_bar(signal.SIGRTMIN + BAR_SIGNAL)  # the buttons redraw
+
+
+def busy_workspaces(sway, grid):
+    """The workspaces (1, 2, …) with at least one window on any screen."""
+    busy = set()
+    for out in sway.ask(GET_TREE).get("nodes", []):
+        for ws in out.get("nodes", []):
+            i = grid.index_of.get(ws.get("name"))
+            if i and find(ws, lambda n: n.get("pid")):
+                busy.add(i)
+    return busy
+
+
+def write_pills(grid, active, busy=None):
+    """The workspace pills (look program step 3, the Rice's R-2: numbers, the active one wide with
+    its name). One file per workspace, so the bar redraws them with `cat`, not a program each.
+    Returns True when something changed."""
+    PILLS.mkdir(exist_ok=True)
+    if busy is None:
+        try:
+            busy = set(json.loads((PILLS / "busy").read_text()))
+        except (OSError, ValueError):
+            busy = set()
+    changed = False
+    for i, name in enumerate(grid.names, 1):
+        state = "active" if i == active else "busy" if i in busy else "empty"
+        body = json.dumps({"text": f"{i}  {name}" if state == "active" else str(i),
+                           "class": ["pill", state], "tooltip": f"{i}. {name}"}) + "\n"
+        f = PILLS / f"{i}.json"
+        if not f.exists() or f.read_text() != body:
+            f.write_text(body)
+            changed = True
+    (PILLS / "busy").write_text(json.dumps(sorted(busy)))
+    return changed
 
 
 # ---- What the keys and the bar call ----------------------------------------------------------
@@ -116,7 +153,7 @@ def go(sway, grid, index):
                 if p != here and shown.get(screen) != grid.cells[index, p]]
     commands.append(f"workspace {quoted(grid.cells[index, here])}")
     sway.run(*commands)
-    set_current(index)
+    set_current(index, grid)
 
 
 def move(sway, grid, index):
@@ -153,7 +190,19 @@ def write_bar(grid):
             "on-click": f"{me} menu",
             "tooltip": True,
         },
+        # The workspace pills (look step 3; the Rice places "group/workspace-pills"): a click goes there
+        "group/workspace-pills": {"orientation": "inherit",
+                                  "modules": [f"custom/pill-{i}" for i in range(1, len(grid.names) + 1)]},
     }
+    for i in range(1, len(grid.names) + 1):
+        fragment[f"custom/pill-{i}"] = {
+            "exec": f"cat {shlex.quote(str(PILLS / f'{i}.json'))}",
+            "return-type": "json",
+            "interval": "once",
+            "signal": BAR_SIGNAL,
+            "on-click": f"{me} go {i}",
+            "tooltip": True,
+        }
     text = json.dumps(fragment, indent=2) + "\n"
     if not BAR_FRAGMENT.exists() or BAR_FRAGMENT.read_text() != text:
         BAR_FRAGMENT.write_text(text)
@@ -222,6 +271,7 @@ def setup(sway, grid):
         i = int(number) % 10 if number.isdigit() and int(number) < 100 and ":" in ws["name"] else start
         target = grid.cells.get((i, p), grid.cells[start, p])
         sway.run(f'[workspace="^{re.escape(ws["name"])}$"] move container to workspace {quoted(target)}')
+    write_pills(grid, start, busy_workspaces(sway, grid))
     CURRENT.unlink(missing_ok=True)  # so set_current redraws the bar
     go(sway, grid, start)
 
@@ -309,6 +359,9 @@ def keep_in_step(grid):
         if kind == EVENT_WINDOW:
             if event.get("change") == "new":
                 arrive(control, grid, index_of_app, event["container"])
+            if event.get("change") in ("new", "close", "move"):
+                if write_pills(grid, current(), busy_workspaces(control, grid)):
+                    signal_bar(signal.SIGRTMIN + BAR_SIGNAL)  # a pill turned busy or empty
             continue
         if kind != EVENT_WORKSPACE:
             continue

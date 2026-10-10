@@ -58,6 +58,9 @@ DEFAULT_ROLES = {
     "gtk_sidebar_bg": "surface.sunken", "gtk_sidebar_fg": "text.primary", "gtk_card_bg": "surface.raised",
     "gtk_danger": "status.danger", "gtk_danger_fg": "status.on_danger", "gtk_success": "status.success",
     "gtk_success_fg": "status.on_success", "gtk_warning": "status.warning", "gtk_warning_fg": "status.on_warning",
+    # the bar parts (look step 3): workspace pills; a style that shows them may name its own roles
+    "pill_active": "band.base", "pill_active_text": "band.on", "pill_busy": "text.secondary",
+    "pill_empty": "text.muted", "pill_hover": "bar.hover",
 }
 # Classic's lists, notes, lock screen and GTK roles follow its bar's shades (today's look).
 OUTPUTS = [  # template → where it goes, under the config folder

@@ -63,6 +63,16 @@ Which package brings each font: [FONTS.md](FONTS.md).
 | Hover on any button | `#45475a` | — |
 | Clock | `Mon 05 Oct   08:13 PM` | — |
 
+### The bar parts (look program step 3, 2026-10-10 →)
+
+Pieces the styles place in their bar; each is benched with `python3 scripts/bar-preview.py --style <s> --theme <t>` (a hidden Sway with one 2560×1440 screen, the real Workspaces applet, Waybar with a test layout; the picture goes to `logs/`).
+
+| Part | What it shows | Made by | Colours (`colors.css`) |
+|---|---|---|---|
+| **Workspace pills** `group/workspace-pills` | one pill per workspace: the number; **the active one wide, with its name**; a workspace with windows on any screen underlined | the Workspaces applet writes `$XDG_RUNTIME_DIR/hypeforge-pills/<n>.json` on every switch and when a window opens, closes or moves; each pill is `cat` of its file (redrawn on SIGRTMIN+8); a click goes there | `@hf_pill_active` / `_active_text` (band.base / band.on), `@hf_pill_busy` (text.secondary), `@hf_pill_empty` (text.muted), `@hf_pill_hover` (bar.hover); a style may name its own roles |
+
+To tune with the Rice (step 5): in Blue the active pill is close to the bar area's own blue; in Ember the bar area is close to the background.
+
 ## The pop-up lists — `sway/fuzzel/fuzzel.ini` → `~/.config/sway/fuzzel/`
 
 The launcher, Workspaces, Favorites, the clipboard list and the notification list. They match the bar they drop from (Javier, 2026-10-05).
