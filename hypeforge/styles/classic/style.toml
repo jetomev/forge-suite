@@ -68,7 +68,7 @@ gtk_sidebar_bg   = "bar.bg"
 gtk_card_bg      = "surface.raised"
 
 [fx]                             # the SwayFX login only (D-68): today's look, softened. Plain Sway ignores it.
-corner_radius      = 8
+corner_radius      = 12            # 8 looked stair-stepped with the 2 px frame on SwayFX; 12 reads clean (Javier, 10-10)
 shadows            = true
 shadow_blur_radius = 24
 shadow_offset      = [0, 6]
