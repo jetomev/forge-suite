@@ -63,6 +63,8 @@ DEFAULT_ROLES = {
     "pill_empty": "text.muted", "pill_hover": "bar.hover",
     # the taskbar row: the line under a running app, and under the app in use
     "task_running": "text.secondary", "task_focused": "accent.base",
+    # the pager: the box of the workspace on screen, the dots of windows, the boxes' line
+    "pager_active": "band.base", "pager_window": "pop.base", "pager_border": "border.subtle",
 }
 # Classic's lists, notes, lock screen and GTK roles follow its bar's shades (today's look).
 OUTPUTS = [  # template → where it goes, under the config folder

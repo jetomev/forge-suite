@@ -73,6 +73,8 @@ Pieces the styles place in their bar; each is benched with `python3 scripts/bar-
 
 | **Taskbar row** `group/taskbar` | your Favorites pinned (always there, in their order), then any other app with a window; one icon per app; a line under running apps, a thicker one in the theme's accent under the app in use, a highlight behind it; a click goes to the app's windows in turn, or opens a pinned one on its workspace (the launcher's rule); middle click: another window | the **Taskbar applet** (`applets/taskbar/hypeforge-taskbar`, one copy, follows window events): one JSON per slot in `$XDG_RUNTIME_DIR/hypeforge-taskbar/` (`cat`, SIGRTMIN+12), `taskbar.waybar.json` (7 pinned + 10 running slots), `taskbar.css` (an icon rule per installed app, from the icon theme via `common/hficons.py`) | `@hf_task_running` (text.secondary), `@hf_task_focused` (accent.base); the highlight `@hf_pill_hover` |
 
+| **Pager** `group/pager` | KDE's K-2: a small box per workspace, the one on screen filled, its windows (all screens together) as dots, up to four then a +; a click goes there | the Workspaces applet, with the pills: `pager-<n>.json` beside them (same signal) | `@hf_pager_active` (band.base), `@hf_pager_window` (pop.base), `@hf_pager_border` (border.subtle) |
+
 To tune with the Rice (step 5): in Blue the active pill is close to the bar area's own blue; in Ember the bar area is close to the background.
 
 ## The pop-up lists — `sway/fuzzel/fuzzel.ini` → `~/.config/sway/fuzzel/`

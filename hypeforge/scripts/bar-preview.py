@@ -79,6 +79,22 @@ window#waybar {{ background: transparent; color: @hf_text; }}
 .app:hover {{ background-color: @hf_pill_hover; }}
 '''
 
+# The pager part's test layout (KDE's K-2): a box per workspace, dots for its windows
+PAGER = {
+    "layer": "top", "position": "top", "height": 44, "spacing": 0,
+    "include": ["{fragment}"],
+    "modules-left": ["group/pager"],
+}
+PAGER_CSS = '''@import url("file://{colors}");
+* {{ font-family: "Noto Sans", sans-serif; min-height: 0; }}
+window#waybar {{ background: transparent; }}
+.modules-left {{ background: @hf_bar; border-radius: 8px; margin: 6px 10px 0; padding: 0 6px; }}
+.pager {{ border: 1px solid @hf_pager_border; border-radius: 3px; min-width: 40px; margin: 6px 2px; padding: 0 4px;
+          color: @hf_pager_window; font-size: 7px; }}
+.pager.active {{ background: @hf_pager_active; }}
+.pager:hover {{ border-color: @hf_pager_window; }}
+'''
+
 CSS = '''@import url("file://{colors}");
 * {{ font-family: "JetBrainsMono Nerd Font", monospace; font-size: 13px; min-height: 0; }}
 window#waybar {{ background: transparent; color: @hf_text; }}
@@ -117,7 +133,7 @@ def load_theme_tool():
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--part", default="pills", choices=["pills", "taskbar"])
+    ap.add_argument("--part", default="pills", choices=["pills", "taskbar", "pager"])
     ap.add_argument("--theme", default="kognogos-mocha")
     ap.add_argument("--style", default="rice")
     ap.add_argument("--switch", type=int, default=4, help="the workspace on screen in the picture")
@@ -143,8 +159,9 @@ def main() -> int:
         (base / "bar.css").write_text(TASKBAR_CSS.format(colors=colors, icons=conf / "hypeforge/applets/taskbar.css"))
     else:
         fragment = conf / "hypeforge/applets/workspaces.waybar.json"
-        (base / "bar.json").write_text(json.dumps(BAR).replace("{fragment}", str(fragment)))
-        (base / "bar.css").write_text(CSS.format(colors=colors))
+        layout, css = (PAGER, PAGER_CSS) if a.part == "pager" else (BAR, CSS)
+        (base / "bar.json").write_text(json.dumps(layout).replace("{fragment}", str(fragment)))
+        (base / "bar.css").write_text(css.format(colors=colors))
     wall = ht.token(ht.themes()[a.theme], "surface.sunken")
     (base / "sway.conf").write_text(f"output {SCREEN} resolution 2560x1440 bg {wall} solid_color\n"
                                     "xwayland disable\ndefault_border pixel 2\ngaps inner 10\n")
@@ -186,12 +203,12 @@ def main() -> int:
                 procs.append(subprocess.Popen([sys.executable, "-c", window, name], env={**env, "GDK_BACKEND": "wayland"},
                                               stdout=log, stderr=log))
                 time.sleep(1.0)
-        for ws in (1, 3) if a.part == "pills" else ():
+        for ws in {"pills": (1, 3), "pager": (1, 1, 1, 3, 3, 5)}.get(a.part, ()):
             subprocess.run([sys.executable, str(APPLETS / "workspaces/hypeforge-workspaces"), "go", str(ws)], env=env)
             procs.append(subprocess.Popen([sys.executable, "-c", window, "bench"], env={**env, "GDK_BACKEND": "wayland"},
                                           stdout=log, stderr=log))
             time.sleep(1.2)
-        if a.part == "pills":
+        if a.part in ("pills", "pager"):
             subprocess.run([sys.executable, str(APPLETS / "workspaces/hypeforge-workspaces"), "go", str(a.switch)], env=env)
         procs.append(subprocess.Popen(["waybar", "-c", str(base / "bar.json"), "-s", str(base / "bar.css")],
                                       env=env, stdout=log, stderr=log))

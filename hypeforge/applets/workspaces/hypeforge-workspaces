@@ -99,15 +99,28 @@ def set_current(index, grid=None):
         signal_bar(signal.SIGRTMIN + BAR_SIGNAL)  # the buttons redraw
 
 
-def busy_workspaces(sway, grid):
-    """The workspaces (1, 2, …) with at least one window on any screen."""
-    busy = set()
+def window_counts(sway, grid):
+    """{workspace (1, 2, …): how many windows it has, on every screen together} — busy ones only."""
+    counts = {}
+
+    def count(node):
+        n = 1 if node.get("pid") else 0
+        return n + sum(count(c) for c in node.get("nodes", []) + node.get("floating_nodes", []))
     for out in sway.ask(GET_TREE).get("nodes", []):
         for ws in out.get("nodes", []):
             i = grid.index_of.get(ws.get("name"))
-            if i and find(ws, lambda n: n.get("pid")):
-                busy.add(i)
-    return busy
+            n = count(ws) if i else 0
+            if n:
+                counts[i] = counts.get(i, 0) + n
+    return counts
+
+
+def busy_workspaces(sway, grid):
+    """The workspaces (1, 2, …) with at least one window on any screen."""
+    return set(window_counts(sway, grid))
+
+
+PAGER_DOTS = 4   # the pager shows up to this many windows as dots, then a +
 
 
 def write_pills(grid, active, busy=None):
@@ -117,9 +130,12 @@ def write_pills(grid, active, busy=None):
     PILLS.mkdir(exist_ok=True)
     if busy is None:
         try:
-            busy = set(json.loads((PILLS / "busy").read_text()))
+            busy = json.loads((PILLS / "busy").read_text())
         except (OSError, ValueError):
-            busy = set()
+            busy = {}
+    if not isinstance(busy, dict):  # a set of busy workspaces: one window each, as far as we know
+        busy = {i: 1 for i in busy}
+    busy = {int(k): v for k, v in busy.items()}
     changed = False
     for i, name in enumerate(grid.names, 1):
         state = "active" if i == active else "busy" if i in busy else "empty"
@@ -129,7 +145,16 @@ def write_pills(grid, active, busy=None):
         if not f.exists() or f.read_text() != body:
             f.write_text(body)
             changed = True
-    (PILLS / "busy").write_text(json.dumps(sorted(busy)))
+        # the pager (KDE's K-2): a small rectangle per workspace, its windows as dots
+        n = busy.get(i, 0)
+        dots = " ".join(["●"] * min(n, PAGER_DOTS)) + (" +" if n > PAGER_DOTS else "")
+        body = json.dumps({"text": dots or " ", "class": ["pager", state],
+                           "tooltip": f"{i}. {name}" + (f"  ({n} window{'s' if n != 1 else ''})" if n else "")}) + "\n"
+        f = PILLS / f"pager-{i}.json"
+        if not f.exists() or f.read_text() != body:
+            f.write_text(body)
+            changed = True
+    (PILLS / "busy").write_text(json.dumps({str(k): v for k, v in sorted(busy.items())}))
     return changed
 
 
@@ -194,7 +219,17 @@ def write_bar(grid):
         "group/workspace-pills": {"orientation": "inherit",
                                   "modules": [f"custom/pill-{i}" for i in range(1, len(grid.names) + 1)]},
     }
+    fragment["group/pager"] = {"orientation": "inherit",
+                               "modules": [f"custom/pager-{i}" for i in range(1, len(grid.names) + 1)]}
     for i in range(1, len(grid.names) + 1):
+        fragment[f"custom/pager-{i}"] = {
+            "exec": f"cat {shlex.quote(str(PILLS / f'pager-{i}.json'))}",
+            "return-type": "json",
+            "interval": "once",
+            "signal": BAR_SIGNAL,
+            "on-click": f"{me} go {i}",
+            "tooltip": True,
+        }
         fragment[f"custom/pill-{i}"] = {
             "exec": f"cat {shlex.quote(str(PILLS / f'{i}.json'))}",
             "return-type": "json",
@@ -271,7 +306,7 @@ def setup(sway, grid):
         i = int(number) % 10 if number.isdigit() and int(number) < 100 and ":" in ws["name"] else start
         target = grid.cells.get((i, p), grid.cells[start, p])
         sway.run(f'[workspace="^{re.escape(ws["name"])}$"] move container to workspace {quoted(target)}')
-    write_pills(grid, start, busy_workspaces(sway, grid))
+    write_pills(grid, start, window_counts(sway, grid))
     CURRENT.unlink(missing_ok=True)  # so set_current redraws the bar
     go(sway, grid, start)
 
@@ -360,7 +395,7 @@ def keep_in_step(grid):
             if event.get("change") == "new":
                 arrive(control, grid, index_of_app, event["container"])
             if event.get("change") in ("new", "close", "move"):
-                if write_pills(grid, current(), busy_workspaces(control, grid)):
+                if write_pills(grid, current(), window_counts(control, grid)):
                     signal_bar(signal.SIGRTMIN + BAR_SIGNAL)  # a pill turned busy or empty
             continue
         if kind != EVENT_WORKSPACE:

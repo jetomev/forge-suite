@@ -339,3 +339,27 @@ class Pills(unittest.TestCase):
         self.assertTrue(bar["custom/pill-2"]["exec"].endswith("2.json"))
         self.assertTrue(bar["custom/pill-2"]["on-click"].endswith(" go 2"))
         self.assertEqual(bar["custom/pill-2"]["signal"], self.ws.BAR_SIGNAL)
+
+    def test_the_pager_shows_each_workspaces_windows_as_dots(self):
+        self.ws.write_pills(self.grid, 2, busy={1: 2, 3: 6})
+        import json
+        pager = lambda i: json.loads((self.ws.PILLS / f"pager-{i}.json").read_text())
+        self.assertEqual(pager(1)["text"], "● ●")
+        self.assertEqual(pager(1)["class"], ["pager", "busy"])
+        self.assertEqual(pager(3)["text"], "● ● ● ● +", "more than four: a +")
+        self.assertEqual(pager(2)["class"], ["pager", "active"])
+        self.assertEqual(pager(2)["text"], " ", "an empty workspace keeps its box")
+        self.assertIn("6 windows", pager(3)["tooltip"])
+
+    def test_window_counts_add_up_every_screen(self):
+        a, b, c = ({"id": n, "pid": n, "nodes": [], "floating_nodes": []} for n in (1, 2, 3))
+        tree = {"nodes": [{"name": "DP-3", "nodes": [{"name": "1:Daily", "nodes": [a, b], "floating_nodes": []}]},
+                          {"name": "DP-2", "nodes": [{"name": "11:Daily", "nodes": [], "floating_nodes": [c]}]}]}
+        self.assertEqual(self.ws.window_counts(FakeSway(tree, []), self.grid), {1: 3})
+
+    def test_the_bar_gets_a_pager_box_per_workspace(self):
+        import json
+        self.ws.write_bar(self.grid)
+        bar = json.loads(self.ws.BAR_FRAGMENT.read_text())
+        self.assertEqual(bar["group/pager"]["modules"], [f"custom/pager-{i}" for i in range(1, 6)])
+        self.assertTrue(bar["custom/pager-3"]["exec"].endswith("pager-3.json"))
