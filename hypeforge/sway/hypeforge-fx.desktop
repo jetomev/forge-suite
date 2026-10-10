@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Sway (hypeForge FX)
+Comment=hypeForge with SwayFX's effects: rounded corners, shadows, blur (D-68). The normal "Sway (hypeForge)" login is untouched.
+Exec=/home/jetomev/.local/opt/swayfx/bin/hypeforge-fx
+Type=Application
+DesktopNames=sway;wlroots
