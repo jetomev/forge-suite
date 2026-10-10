@@ -98,6 +98,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Phase 12 · Our own look
 - [ ] **The look program (D-67, 2026-10-10)** — `docs/look-program.md`: research (5 helpers) → foundation (theme format, 23 palettes, wallpapers, SwayFX decision) → six proposals one by one (Windows 11 · Mac OS 9 · modern macOS · Linux rice · KDE · COSMIC) → build the chosen → document for the theme apps. GitHub Project "hypeForge · the look" (waits for the project permission)
+  - **10-10: 25 themes + all six styles approved (D-67…D-77)**; the phase-4 build plan proposed (page YRE9tomstVMQVuS8V6N9Lq) — waits for Javier: B-1…B-4
   - Inventory done (`docs/research/look-2026-10/04-inventory.md`): **F-52 #59** (a KDE login rewrote the GTK look) · **F-53 #60** fixed (lists' prompt + width) · to fold into the theme work: notification icons likely never show (mako `icon-path` unset, unconfirmed), two dropdowns placed by arithmetic (`sections:147`, `workspaces:187`), the bar's colours half named (shade ×3, red ×6), five lists hard-code `--font`, Sway's tab font unset, Alacritty's #1a1a1a vs the desktop's #1e1e2e, gsettings accent `blue` vs gtk.css mauve
 - [ ] **Applet 3 · Folder tabs** (D-47): small left-aligned tabs like folders in a holder, rounded tops, our colours; replaces Sway's even tab row
 - [ ] **Our own bar** (Javier, 10-04): Waybar for now; once the setup is done, our own bar as a hypeForge applet — a Waybar fork or a small one of our own, decided then
