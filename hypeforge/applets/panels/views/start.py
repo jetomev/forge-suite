@@ -10,6 +10,7 @@ first one shown; Escape closes.
 from __future__ import annotations
 
 import getpass
+import os
 import pwd
 import shlex
 import sys
@@ -26,6 +27,7 @@ from hficons import Icons  # noqa: E402
 LAUNCHER = panelkit.APPLETS / "sections/hypeforge-sections"
 COLUMNS = 4
 ICON = 40
+CELL_W, CELL_H = 124, 96
 CSS = """
 .hf-start {{ min-width: 700px; }}
 .hf-start .hf-side button {{ padding: 7px 12px; }}
@@ -101,8 +103,12 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     main = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
     heading = Gtk.Label(xalign=0)
     heading.get_style_context().add_class("hf-title")
+    # Packed from the top-left, every icon the same size, empty space left BELOW (Javier, 10-10:
+    # "icons should be always arranged top to bottom, left to right, and its area of occupancy
+    # always the same"): no stretching to fill the page
     grid = Gtk.FlowBox(max_children_per_line=COLUMNS, min_children_per_line=COLUMNS, homogeneous=True,
-                       selection_mode=Gtk.SelectionMode.NONE, column_spacing=4, row_spacing=4)
+                       selection_mode=Gtk.SelectionMode.NONE, column_spacing=4, row_spacing=4,
+                       valign=Gtk.Align.START, halign=Gtk.Align.START, vexpand=False)
     scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
     scroll.set_min_content_height(420)
     scroll.set_propagate_natural_width(True)
@@ -148,6 +154,8 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
             button.add(col)
             button.set_tooltip_text(app["name"])
             button.connect("clicked", open_app, app_id)
+            button.set_size_request(CELL_W, CELL_H)            # one size for every icon, however many
+            button.set_valign(Gtk.Align.START)
             grid.add(button)
         grid.show_all()
 
@@ -201,7 +209,8 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         foot.pack_end(b, False, False, 0)
     root.pack_start(foot, False, False, 0)
 
-    pick(None, 0)
+    first = int(os.environ.get("HYPEFORGE_START_GROUP", "0"))   # the bench opens a given group
+    pick(None, first if 0 <= first < len(sets) else 0)
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["bottom"]
     margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"bottom": 60}
     panel = panelkit.Panel("start", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()})

@@ -8,7 +8,10 @@ button (or key) again closes its list; opening another list closes the one on sc
 import os
 import signal
 import subprocess
+import sys
 from pathlib import Path
+
+BACKDROP = Path(__file__).resolve().with_name("hfbackdrop.py")   # a click anywhere else closes the list
 
 OPEN = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-menu.open"  # "<pid> <name>"
 
@@ -31,7 +34,20 @@ def run(name, command, text):
     menu = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                             stderr=subprocess.DEVNULL)
     OPEN.write_text(f"{menu.pid} {name}")
+    shade = None
+    if os.environ.get("WAYLAND_DISPLAY") and BACKDROP.exists():   # Javier, 2026-10-10: close on a click elsewhere
+        try:
+            shade = subprocess.Popen([sys.executable, str(BACKDROP), str(menu.pid)],
+                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except OSError:
+            shade = None
     out, _ = menu.communicate(text.encode())
+    if shade is not None:
+        shade.terminate()
+        try:
+            shade.wait(2)
+        except subprocess.TimeoutExpired:
+            shade.kill()
     try:
         if OPEN.read_text().split()[0] == str(menu.pid):
             OPEN.unlink()

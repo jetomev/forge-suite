@@ -167,6 +167,22 @@ class TheBarFollowsTheStyle(Base):
         self.assertTrue((self.place.root / "hypeforge/applets/taskbar.css").exists())
         self.assertTrue((self.place.root / "hypeforge/theme/colors.css").exists())
 
+    def test_a_hover_never_wipes_a_buttons_picture(self):
+        # Javier, 10-10: on Windows 11 the emblem vanished under the mouse — a hover rule set
+        # "background:", which also clears the background picture; hovers set the colour only
+        import re
+        for css in sorted((Path(ht.REPO) / "styles").glob("*/bar/style.css")):
+            for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css.read_text()):
+                if ":hover" in sel:
+                    self.assertNotRegex(body, r"(?<![-\w])background:", f"{css.parent.parent.name}: {sel.strip()}")
+
+    def test_windows_11_has_no_search_pill_and_javiers_quick_order(self):
+        import json
+        bar = Path(ht.REPO) / "styles/windows-11/bar/config.jsonc"
+        cfg = json.loads("\n".join(l for l in bar.read_text().splitlines() if not l.strip().startswith("//")))
+        self.assertNotIn("custom/search", cfg["modules-left"])
+        self.assertEqual(cfg["group/quick"]["modules"], ["wireplumber", "network", "bluetooth"])
+
     def test_a_style_without_a_bar_leaves_the_bar_alone(self):
         st = dict(ht.styles()["rice"], meta=dict(ht.styles()["rice"]["meta"], slug="no-bar-here"))
         self.assertEqual(ht.bar_files(st), {})

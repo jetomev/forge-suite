@@ -1,8 +1,9 @@
 // hypeForge style · Windows 11, tiled (D-71) — the taskbar. At the bottom on every screen, the icons
-// on the LEFT (Javier, W-1): Start (the KDE-style panel) · Search · the workspace on screen (a click
+// on the LEFT (Javier, W-1): Start (the KDE-style panel; its search is inside it — the bar's Search pill went: Javier, "if it is just a meme that opens
+// the launcher, it is not worth it") · the workspace on screen (a click
 // opens the workspaces strip) · the pinned + running apps (the Taskbar applet). Right: the hidden
-// icons behind a chevron (tray, clipboard, USB, printers), the Quick Settings group (network ·
-// volume · Bluetooth: a click opens the panel), the clock on two lines (a click: the calendar),
+// icons behind a chevron (tray, clipboard, USB, printers), the Quick Settings group (volume ·
+// network · Bluetooth, in Javier's order: a click opens the panel), the clock on two lines (a click: the calendar),
 // the bell. Pieces from modules.jsonc; colours from colors.css.
 {
   "include": [
@@ -16,7 +17,6 @@
   "spacing": 0,
   "modules-left": [
     "custom/emblem",
-    "custom/search",
     "custom/ws-title",
     "group/taskbar"
   ],
@@ -31,12 +31,6 @@
     "format": " ",
     "tooltip-format": "Start (Win + Space)",
     "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel start --edges bottom,left --margin bottom=56,left=8"
-  },
-  "custom/search": {
-    "format": "󰍉  Search",
-    "tooltip": false,
-    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel start --edges bottom,left --margin bottom=56,left=8",
-    "align": 0
   },
   "custom/ws-title": {
     "exec": "~/Programs/forge-suite/hypeforge/applets/workspaces/hypeforge-workspaces title",
@@ -69,8 +63,8 @@
   "group/quick": {
     "orientation": "inherit",
     "modules": [
-      "network",
       "wireplumber",
+      "network",
       "bluetooth"
     ]
   },

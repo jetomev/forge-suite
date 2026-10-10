@@ -1,5 +1,5 @@
 /* hypeForge style · Windows 11, tiled (D-71) — the taskbar's look. Shapes from
-   styles/windows-11/style.toml (bar_height 48, radius_control 4, radius_pill for the search box,
+   styles/windows-11/style.toml (bar_height 48, radius_control 4, radius_pill,
    bar_indicator 3 px); colours are names from colors.css (hypeforge-theme writes it). */
 @import url("../../hypeforge/applets/taskbar.css");
 @import url("../../hypeforge/theme/colors.css");
@@ -21,17 +21,18 @@ window#waybar {
 tooltip { background: @hf_island; border: 1px solid @hf_island_border; border-radius: 8px; }
 tooltip label { color: @hf_text; }
 
-/* every button: Windows 11's soft square that lights up under the mouse */
-#custom-emblem, #custom-search, #custom-ws-title, #custom-chevron, #tray, #custom-clipboard,
+/* every button: Windows 11's soft square that lights up under the mouse — the hover changes
+   the background COLOUR only, so the emblem picture stays (Javier, 10-10) */
+#custom-emblem, #custom-ws-title, #custom-chevron, #tray, #custom-clipboard,
 #custom-drives, #custom-printers, #network, #wireplumber, #bluetooth, #clock, #custom-notifications {
   margin: 4px 2px;
   padding: 0 10px;
   border-radius: 4px;
   color: @hf_text;
 }
-#custom-emblem:hover, #custom-search:hover, #custom-ws-title:hover, #custom-chevron:hover,
+#custom-emblem:hover, #custom-ws-title:hover, #custom-chevron:hover,
 #custom-clipboard:hover, #custom-drives:hover, #custom-printers:hover, #clock:hover, #custom-notifications:hover,
-#quick:hover { background: @hf_pill_hover; }
+#quick:hover { background-color: @hf_pill_hover; }
 
 #custom-emblem {
   background-image: url("../../hypeforge/bar/launcher.png");
@@ -41,17 +42,6 @@ tooltip label { color: @hf_text; }
   min-width: 40px;
   margin-left: 8px;
 }
-#custom-search {
-  background: @hf_shade;
-  border: 1px solid @hf_island_border;
-  border-radius: 999px;
-  min-width: 170px;
-  margin: 8px 6px;
-  padding: 0 14px;
-  color: @hf_subtext;
-}
-#custom-search label { }
-
 /* the Quick Settings group: three icons in one pill */
 #quick { margin: 4px 2px; border-radius: 4px; }
 #quick > * { margin: 0; padding: 0 7px; }
@@ -69,3 +59,8 @@ tooltip label { color: @hf_text; }
 .app.focused { box-shadow: inset 0 -3px @hf_task_focused; background-color: @hf_pill_hover; }
 .app.urgent { box-shadow: inset 0 -3px @hf_alert; }
 .app:hover { background-color: @hf_pill_hover; }
+
+/* the tray's own icons (Insync, Dropbox, Steam, the night light…) light up too (Javier, 10-10) */
+#tray > widget { border-radius: 4px; padding: 0 4px; }
+#tray > widget:hover { background-color: @hf_pill_hover; }
+#tray > .needs-attention { background-color: @hf_alert; }

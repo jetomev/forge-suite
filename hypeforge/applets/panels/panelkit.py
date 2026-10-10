@@ -164,14 +164,12 @@ class Panel:
                                                  Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
         monitor = screen_in_use()
 
-        # the backdrop: a see-through (or dimmed) layer under the panel that closes it when clicked
-        self.backdrop = Gtk.Window()
-        self.backdrop.get_style_context().add_class("hf-backdrop")
-        if dim:
-            self.backdrop.get_style_context().add_class("dim")
-        self._layer(self.backdrop, GtkLayerShell.Layer.TOP, monitor, ["top", "bottom", "left", "right"], {})
-        self._transparent(self.backdrop)
-        self.backdrop.connect("button-press-event", lambda *_: self.close())
+        # the backdrops: a see-through layer on EVERY screen under the panel — a click anywhere
+        # else closes it (Javier, 2026-10-10); `dim` darkens the panel's own screen
+        sys.path.insert(0, str(APPLETS / "common"))
+        import hfbackdrop
+        self.backdrops = hfbackdrop.backdrops(self.close, dim_monitor=monitor if dim else None,
+                                              dim_rgba=look.rgba("panel_backdrop", 0.78) if dim else None)
 
         self.window = Gtk.Window()
         self.window.get_style_context().add_class("hf-panel")
@@ -185,7 +183,7 @@ class Panel:
             content = box
         self.window.add(content)
         self.window.connect("key-press-event", self._key)
-        for w in (self.backdrop, self.window):
+        for w in self.backdrops + [self.window]:
             w.connect("destroy", lambda *_: self.close())
 
     @staticmethod
@@ -222,7 +220,8 @@ class Panel:
         pidfile(self.view).write_text(str(os.getpid()))
         signal.signal(signal.SIGTERM, lambda *_: GLib.idle_add(self.close))
         GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGTERM, lambda *_: (self.close(), False)[1])
-        self.backdrop.show_all()
+        for w in self.backdrops:
+            w.show_all()
         self.window.show_all()
         try:
             Gtk.main()

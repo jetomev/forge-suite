@@ -39,7 +39,7 @@ tooltip label { color: @hf_text; }
 .pill { border-radius: 999px; padding: 0 9px; margin: 6px 2px; min-width: 14px; color: @hf_pill_empty; }
 .pill.busy { color: @hf_pill_busy; box-shadow: inset 0 -2px @hf_pill_busy; border-radius: 0; margin: 6px 6px; padding: 0 2px; }
 .pill.active { background: @hf_pill_active; color: @hf_pill_active_text; padding: 0 14px; font-weight: bold; }
-.pill:hover { background: @hf_pill_hover; }
+.pill:hover { background-color: @hf_pill_hover; }
 
 /* every piece: room, the theme's icon colour, a soft hover */
 #clock, #mpris, #cpu, #memory, #network, #bluetooth, #wireplumber, #tray,
@@ -51,10 +51,15 @@ tooltip label { color: @hf_text; }
 #mpris { color: @hf_subtext; }
 #cpu:hover, #memory:hover, #network:hover, #bluetooth:hover, #wireplumber:hover, #custom-clipboard:hover,
 #custom-drives:hover, #custom-printers:hover, #custom-notifications:hover, #custom-power-panel:hover {
-  background: @hf_pill_hover; border-radius: 8px;
+  background-color: @hf_pill_hover; border-radius: 8px;
 }
 #wireplumber.muted, #network.disconnected { color: @hf_alert; }
 #custom-notifications.unseen { color: @hf_bell; }
 #custom-notifications.dnd { color: @hf_alert; }
 #custom-clipboard.new, #custom-drives.has { color: @hf_new; }
 #custom-power-panel { color: @hf_alert; padding-right: 12px; }
+
+/* the tray's own icons (Insync, Dropbox, Steam, the night light…) light up too (Javier, 10-10) */
+#tray > widget { border-radius: 8px; padding: 0 4px; }
+#tray > widget:hover { background-color: @hf_pill_hover; }
+#tray > .needs-attention { background-color: @hf_alert; }
