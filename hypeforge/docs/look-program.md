@@ -40,3 +40,17 @@ The GitHub Project **"hypeForge · the look"** (jetomev) holds every task above 
 - **H-1 (Claude):** colours and shapes are separate files: a *theme* (23) is colours only; a *style* (6) is shapes, layout and which bar/launcher/dock. Any theme on any style.
 - **H-2 (Claude):** mock-ups are HTML/CSS drawings of Javier's real layout (three screens, his bar, his apps), driven by the same tokens the configs will use, so what he approves is what gets built.
 - **H-3 (Claude, to confirm with Javier):** wallpapers are made by our own generator (no licences to worry about); photos or illustrations (real anime art) only from sources whose licence allows shipping them.
+
+## Research so far (2026-10-10)
+
+- **01 · compositor** ✅ — SwayFX 0.6 is built on Sway 1.12 (ours); config and applets compatible. Its package replaces Sway, so side by side = our own build in `/opt/swayfx` + a second login "hypeForge FX". Animations stay off (workspaces can vanish moving between screens, #565 #569); shadows only after a 10-reload bench (#566). Plan: every style designed for plain Sway first, the eye candy in one optional `fx.conf`.
+- **02 · bar, tray, launcher** ✅ — Waybar 0.15 can do all six styles (top/bottom, several bars, floating centred, drawers, real drop-down menus); one Waybar + a layout and shape file per style + the theme's colour tokens. Not possible on Sway: an app's own File/Edit menus in the top bar, the macOS dock's magnifying wave, minimize, a workspace overview. Our own graphical pop-ups (a KDE-style launcher, Quick Settings, calendar) need **zero new packages** (Python + GTK3 + layer-shell are installed).
+- **03 · theme system + 23 palettes** — running.
+- **04 · inventory** ✅ — 21 places a theme writes; F-52 #59, F-53 #60 (fixed); what Settings needs for Look.
+- **05 · wallpapers** — running.
+
+## Questions for Javier (asked on the proposal pages, not before)
+
+- **Q-1 · SwayFX:** D-56 says KognogOS ships with Sway only. Does SwayFX (Sway with eye candy, as a second login) count as Sway? Needed for rounded corners, shadows, blur.
+- **Q-2 · graphical pop-ups:** D-57 says terminal apps first. Are small graphical pop-ups from the bar (a KDE-style launcher, Quick Settings, a calendar) OK, while the Forge apps stay in the terminal?
+- **Q-3 · wallpapers:** our own generated pictures, or also licensed photos/illustrations?
