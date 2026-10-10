@@ -1,0 +1,363 @@
+<title>hypeForge Look Review 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Noto+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: the brief and what to judge, then one large live screen (controls above it, theme
+   picker beside it), the three screens, how each piece is built, and the style file itself. */
+:root{
+  --paper:#f6f5f9; --card:#ffffff; --ink:#1d1b26; --ink-2:#55526a; --line:#e2e0ea;
+  --accent:#5b3fc0; --accent-soft:#ece7fb; --ok:#1f7a3a; --warn:#9a5b00; --no:#a3313a;
+  --f-display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"DejaVu Sans Mono",monospace;
+  --f-desk:"Noto Sans","IBM Plex Sans",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body);padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,4.4vw,44px);font-weight:750;letter-spacing:-.01em}
+h2{font-size:24px;font-weight:750}
+h3{font-size:16px;font-weight:600}
+p{margin:0}
+code{font-family:var(--f-mono);font-size:.92em}
+.eyebrow{font:600 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{max-width:70ch;color:var(--ink-2);font-size:16px}
+header{display:grid;gap:12px}
+.steps{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.steps span{font:500 12px/1 var(--f-mono);padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2)}
+.steps span.done{color:var(--ok);border-color:currentColor}
+.steps span.on{background:var(--accent);border-color:var(--accent);color:var(--card)}
+section{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
+.sec-head{display:grid;gap:6px}
+.sec-head p{max-width:74ch;color:var(--ink-2)}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.asks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.ask{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:8px;align-content:start;min-width:0}
+.ask .id{font:600 12px/1 var(--f-mono);color:var(--accent)}
+.ask p{color:var(--ink-2);font-size:14px}
+.rec{font:600 11px/1 var(--f-mono);padding:3px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.ask p .rec{white-space:normal;display:inline-block;line-height:1.35}
+.reply{background:var(--accent-soft);border-radius:10px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.reply code{font:500 14px/1.4 var(--f-mono);color:var(--ink);word-break:break-word}
+.copy{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:6px;padding:5px 10px;font:600 12px/1 var(--f-mono)}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:end}
+.seg{display:grid;gap:5px}
+.seg>span{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.seg div{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:transparent;color:var(--ink-2);padding:7px 11px;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--card);font-weight:600}
+.explore{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.picker{order:-1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:8px}
+#fams{display:flex;flex-wrap:wrap;gap:10px 22px}
+.fam{display:grid;gap:6px}
+.fam h3{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 9px 3px 3px;font-size:12.5px}
+.chip i{width:18px;height:18px;border-radius:50%;flex:none;border:1px solid rgba(127,127,127,.35)}
+.chip[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;font-weight:600}
+.stage{display:grid;gap:12px;min-width:0}
+.cap{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink-2)}
+.cap b{color:var(--ink)}
+
+/* ── the screen: 2560 × 1440 drawn at 140 %; --px is one screen "pixel" ───────────────────── */
+.desk{aspect-ratio:16/9;width:100%;border-radius:6px;overflow:hidden;position:relative;container-type:inline-size;
+  font-family:var(--f-mono);color:var(--t-text);background:var(--t-sunken);box-shadow:0 1px 0 var(--line),0 18px 50px rgba(0,0,0,.22)}
+.desk *{box-sizing:border-box}
+.scr{position:absolute;inset:0;--px:calc(140cqi / 2560);font-size:calc(12.5 * var(--px))}
+.wall{position:absolute;inset:0;background:var(--t-sunken) center/cover no-repeat}
+.frost{background:color-mix(in oklab,var(--t-base) 80%,transparent);backdrop-filter:blur(calc(22 * var(--px))) saturate(1.4)}
+.plain .frost{background:var(--t-base);backdrop-filter:none}
+/* the islands */
+.bar{position:absolute;left:calc(10 * var(--px));right:calc(10 * var(--px));top:calc(10 * var(--px));height:calc(38 * var(--px));display:flex;justify-content:space-between;gap:calc(10 * var(--px));z-index:5}
+.isl{display:flex;align-items:center;gap:calc(8 * var(--px));padding:0 calc(10 * var(--px));border:calc(2 * var(--px)) solid var(--t-band);border-radius:calc(12 * var(--px));color:var(--t-text)}
+.isl .emb{width:calc(20 * var(--px));height:calc(20 * var(--px));background-size:contain;background-repeat:no-repeat}
+.pills{display:flex;align-items:center;gap:calc(6 * var(--px))}
+.pill{height:calc(22 * var(--px));min-width:calc(22 * var(--px));border-radius:999px;display:grid;place-items:center;padding:0 calc(7 * var(--px));font-weight:600;color:var(--t-muted)}
+.pill.busy{color:var(--t-text2);background:color-mix(in oklab,var(--t-text) 10%,transparent)}
+.pill.on{background:var(--t-band);color:var(--t-bandon);padding:0 calc(14 * var(--px))}
+.mod{display:flex;align-items:center;gap:calc(5 * var(--px));padding:0 calc(6 * var(--px));white-space:nowrap}
+.mod i{font-style:normal;color:var(--t-poptext)}
+.mod b{font-weight:600}
+.clk b{font-size:calc(14 * var(--px))}
+.isl .sep{width:calc(1 * var(--px));align-self:stretch;margin:calc(9 * var(--px)) 0;background:var(--t-subtle)}
+.pw{width:calc(26 * var(--px));height:calc(26 * var(--px));border-radius:50%;display:grid;place-items:center;background:var(--t-pop);color:var(--t-popon);font-weight:700;border:0;cursor:pointer;font-family:inherit}
+.isl img{width:calc(16 * var(--px));height:calc(16 * var(--px))}
+.isl button.lnch{border:0;background:transparent;cursor:pointer;padding:0;display:grid}
+/* windows */
+.tiles{position:absolute;left:calc(14 * var(--px));right:calc(14 * var(--px));top:calc(62 * var(--px));bottom:calc(14 * var(--px));
+  display:grid;grid-template-columns:1.1fr 1fr;grid-template-rows:1fr 1fr;gap:calc(14 * var(--px))}
+.win{border:calc(2 * var(--px)) solid var(--t-subtle);min-height:0;min-width:0;overflow:hidden;display:flex;flex-direction:column;background:var(--t-tbg)}
+.win.focus{grid-row:1/3;border-color:var(--t-bandtext)}
+.fx .win{border-radius:calc(12 * var(--px));box-shadow:0 calc(6 * var(--px)) calc(24 * var(--px)) rgba(0,0,0,.35)}
+.fx .win.see{background:color-mix(in oklab,var(--t-tbg) 82%,transparent);backdrop-filter:blur(calc(14 * var(--px)))}
+.fx .win:not(.focus){filter:brightness(.94)}
+.term{flex:1;color:var(--t-tfg);font:calc(13 * var(--px))/1.5 var(--f-mono);padding:calc(16 * var(--px)) calc(20 * var(--px));white-space:pre;overflow:hidden}
+.ff{display:grid;grid-template-columns:auto 1fr;gap:calc(26 * var(--px));align-items:start;white-space:normal}
+.ff>span{white-space:pre}
+.blocks{display:flex;gap:0;margin-top:calc(10 * var(--px))}
+.blocks i{width:calc(26 * var(--px));height:calc(16 * var(--px));display:block}
+.bt{display:grid;gap:calc(8 * var(--px))}
+.bt .r{display:grid;grid-template-columns:calc(70 * var(--px)) 1fr calc(48 * var(--px));align-items:center;gap:calc(10 * var(--px))}
+.bt .bar2{height:calc(10 * var(--px));border-radius:3px;background:color-mix(in oklab,var(--t-tfg) 12%,transparent);position:relative;overflow:hidden}
+.bt .bar2 b{position:absolute;inset:0 auto 0 0;width:var(--v);background:var(--c)}
+.spark{display:flex;align-items:end;gap:calc(2 * var(--px));height:calc(54 * var(--px));margin-top:calc(6 * var(--px))}
+.spark i{flex:1;background:var(--c);opacity:.85;border-radius:2px 2px 0 0}
+.wtitle{display:flex;justify-content:space-between;color:var(--t-muted);font-size:calc(11.5 * var(--px));margin-bottom:calc(10 * var(--px))}
+.wtitle b{color:var(--t-poptext);font-weight:600}
+.ed{display:grid;grid-template-columns:calc(30 * var(--px)) 1fr;column-gap:calc(12 * var(--px))}
+.ed .ln{color:var(--t-muted);text-align:right}
+.ed .cur{background:color-mix(in oklab,var(--t-band) 35%,transparent)}
+.status{display:flex;justify-content:space-between;background:var(--t-band);color:var(--t-bandon);padding:calc(3 * var(--px)) calc(12 * var(--px));font-size:calc(11.5 * var(--px));font-weight:600}
+/* pop-ups */
+.panel{position:absolute;display:none;z-index:7}
+.panel.show{display:grid}
+.p-l{top:22%;left:50%;transform:translateX(-50%);width:calc(620 * var(--px));border:calc(2 * var(--px)) solid var(--t-bandtext);border-radius:calc(14 * var(--px));overflow:hidden;color:var(--t-text);box-shadow:0 calc(14 * var(--px)) calc(44 * var(--px)) rgba(0,0,0,.45)}
+.l-q{display:flex;align-items:center;gap:calc(12 * var(--px));padding:calc(14 * var(--px)) calc(18 * var(--px));font-size:calc(16 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-subtle)}
+.l-q i{font-style:normal;color:var(--t-poptext)}
+.l-q b{font-weight:400}.l-q b::after{content:"▏";color:var(--t-poptext)}
+.l-r{padding:calc(8 * var(--px));display:grid;gap:calc(3 * var(--px))}
+.l-r span{display:flex;align-items:center;gap:calc(12 * var(--px));padding:calc(8 * var(--px)) calc(12 * var(--px));border-radius:calc(8 * var(--px));font-size:calc(14 * var(--px))}
+.l-r span.hl{background:var(--t-band);color:var(--t-bandon)}
+.l-r span em{margin-left:auto;font-style:normal;font-size:calc(11.5 * var(--px));opacity:.7}
+.l-r img{width:calc(24 * var(--px));height:calc(24 * var(--px))}
+.p-pw{inset:0;place-content:center;gap:calc(40 * var(--px));background:color-mix(in oklab,var(--t-sunken) 55%,transparent);backdrop-filter:blur(calc(30 * var(--px)))}
+.plain .p-pw{background:color-mix(in oklab,var(--t-sunken) 90%,transparent);backdrop-filter:none}
+.pw-row{display:flex;gap:calc(34 * var(--px))}
+.pwb{display:grid;justify-items:center;gap:calc(12 * var(--px));color:var(--t-text);font-size:calc(14 * var(--px))}
+.pwb i{width:calc(120 * var(--px));height:calc(120 * var(--px));border-radius:calc(28 * var(--px));display:grid;place-items:center;background:color-mix(in oklab,var(--t-base) 85%,transparent);border:calc(2 * var(--px)) solid var(--t-subtle)}
+.pwb.hl i{background:var(--t-pop);color:var(--t-popon);border-color:var(--t-pop)}
+.pwb svg{width:calc(44 * var(--px));height:calc(44 * var(--px))}
+.pw-hint{text-align:center;color:var(--t-text2);font-size:calc(13 * var(--px))}
+.p-n{top:calc(60 * var(--px));right:calc(14 * var(--px));width:calc(380 * var(--px));border-radius:calc(12 * var(--px));border:calc(2 * var(--px)) solid var(--t-band);padding:calc(12 * var(--px)) calc(14 * var(--px));grid-template-columns:calc(34 * var(--px)) 1fr;gap:calc(4 * var(--px)) calc(12 * var(--px));color:var(--t-text);font-size:calc(12.5 * var(--px))}
+.p-n img{width:calc(34 * var(--px));height:calc(34 * var(--px));grid-row:1/3}
+.p-n b{font-weight:700}.p-n span{color:var(--t-text2)}
+/* three screens, tables, boxes, the file */
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.trio{grid-template-columns:minmax(0,1fr)}}
+.mini{display:grid;gap:6px;min-width:0}
+.mini .m{aspect-ratio:16/9;border-radius:5px;overflow:hidden;position:relative;container-type:inline-size;background:var(--m-bg) center/cover}
+.mini .m .mb{position:absolute;left:1.5%;right:1.5%;top:2.5%;height:5.5%;display:flex;justify-content:space-between}
+.mini .m .mb i{border-radius:1cqi;background:var(--m-isl);border:1px solid var(--m-acc);width:22%}
+.mini .m .mb i:nth-child(2){width:12%}
+.mini .m .mt{position:absolute;inset:11% 2% 2% 2%;display:grid;gap:2%;grid-template-columns:var(--m-cols)}
+.mini .m .mt i{background:var(--m-win);border:1px solid var(--m-line);border-radius:1cqi;opacity:.9}
+.mini p{font-size:13px;color:var(--ink-2)}
+.mini p b{color:var(--ink)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+.st{font:600 11px/1 var(--f-mono);padding:4px 7px;border-radius:4px;white-space:nowrap;display:inline-block}
+.st.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 13%,transparent)}
+.st.build{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.st.fx{color:var(--accent);background:var(--accent-soft)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:8px;align-content:start;min-width:0}
+.box ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.box li::marker{color:var(--accent)}
+pre.file{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;font:12.5px/1.55 var(--f-mono);color:var(--ink)}
+footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">hypeForge · the look · review 5 of 7 · proposal 4 of 6</p>
+  <h1>The Linux rice: floating islands, big gaps, see-through terminals, a mood on the wall</h1>
+  <p class="lead">"Ricing" is what the Linux community calls dressing a desktop up by hand, the setups people show off on r/unixporn. This is our take: the bar breaks into three floating islands, workspaces are pills, terminals let the wallpaper glow through, and every theme brings its own generated wallpaper. It is the most terminal-proud of the six, so it fits the Forge Suite's philosophy best. Pick a theme and watch the whole mood change.</p>
+  <div class="steps" aria-label="Where we are in the program">
+    <span class="done">1 · Foundation ✓</span><span class="done">2 · Windows 11 ✓</span><span class="done">3 · Mac OS 9 ✓</span><span class="done">4 · macOS ✓</span><span class="on">5 · Linux rice</span><span>6 · KDE</span><span>7 · COSMIC</span>
+  </div>
+</header>
+
+<section aria-labelledby="h-ask">
+  <div class="sec-head">
+    <p class="eyebrow">What I need from you</p>
+    <h2 id="h-ask">Five calls, and anything that feels off</h2>
+    <p>My pick is marked on each. Tell me in your own words what doesn't feel like a rice you'd show off.</p>
+  </div>
+  <div class="asks">
+    <article class="ask"><span class="id">R-1 · The bar</span><h3>Three floating islands?</h3><p>Left: the emblem and the workspace pills. Centre: the clock and what's playing. Right: CPU, memory, network, sound, night light, the tray and power. Or one long floating bar instead.</p><p><span class="rec">my pick: three islands</span></p></article>
+    <article class="ask"><span class="id">R-2 · Workspaces</span><h3>Numbered pills, the active one with its name?</h3><p>Small numbered pills; a workspace with windows is a shade brighter; the one you're on stretches wide in the theme's colour and says "1 · Daily". Or icons instead of numbers.</p><p><span class="rec">my pick: numbers, the active one named</span></p></article>
+    <article class="ask"><span class="id">R-3 · The wallpaper</span><h3>Each theme's own generated wallpaper?</h3><p>Every one of the 25 themes now has its own picture from our generator (on this page: synthwave suns, neon skylines, circuit boards, misty mountains). Picking a theme changes the wallpaper with it, unless you chose one yourself.</p><p><span class="rec">my pick: yes, it follows the theme</span></p></article>
+    <article class="ask"><span class="id">R-4 · Windows</span><h3>A bright frame on the window in use?</h3><p>A 2 px frame in the theme's bright colour, 12 px corners, others dimmed a touch, terminals see-through and frosted (SwayFX). Plain Sway keeps the frame and the gaps, square and solid.</p><p><span class="rec">my pick: yes</span></p></article>
+    <article class="ask"><span class="id">R-5 · The power menu</span><h3>Big round buttons over a blurred screen?</h3><p>The power island opens five big buttons (Lock, Log out, Sleep, Restart, Shut down) over the dimmed desktop, keys 1–5. Or keep today's list.</p><p><span class="rec">my pick: big buttons</span></p></article>
+  </div>
+  <div class="reply"><span>Answer in our chat, like this:</span><code id="reply-text">R-1 islands · R-2 numbers · R-3 yes · R-4 yes · R-5 buttons · and: …</code><button class="copy" id="copy" type="button">Copy</button></div>
+</section>
+
+<section aria-labelledby="h-screen">
+  <div class="sec-head">
+    <p class="eyebrow">The main screen</p>
+    <h2 id="h-screen">Pick a theme: the wallpaper, the islands and the frames change with it</h2>
+    <p>Fastfetch telling the world what you run, btop watching the machine, and fresh (your editor) open on a theme file. Click the emblem for the launcher and the round power button for the power menu.</p>
+  </div>
+  <div class="controls">
+    <div class="seg"><span>Look</span><div role="group" aria-label="Look"><button type="button" data-fx="fx" aria-pressed="true">SwayFX login</button><button type="button" data-fx="plain" aria-pressed="false">Plain Sway</button></div></div>
+    <div class="seg"><span>Open</span><div role="group" aria-label="Open a pop-up" id="panels">
+      <button type="button" data-p="" aria-pressed="true">Nothing</button><button type="button" data-p="l" aria-pressed="false">Launcher</button><button type="button" data-p="pw" aria-pressed="false">Power menu</button><button type="button" data-p="n" aria-pressed="false">A notification</button></div></div>
+  </div>
+  <div class="explore">
+    <div class="stage">
+      <div class="desk" id="desk"><div class="scr fx" id="scr">
+        <div class="wall" id="wall"></div>
+        <div class="bar">
+          <div class="isl frost"><button class="lnch" data-open="l" title="Launcher"><span class="emb" id="emb"></span></button><span class="pills" id="pills"></span></div>
+          <div class="isl frost"><span class="mod clk"><b>12:30</b></span><span class="sep"></span><span class="mod"><i>♪</i>Ziggy Stardust · Bowie</span></div>
+          <div class="isl frost" id="right"></div>
+        </div>
+        <div class="tiles">
+          <div class="win focus see"><div class="term" id="ff"></div></div>
+          <div class="win see"><div class="term" id="bt"></div></div>
+          <div class="win"><div class="term" id="ed" style="padding:0;display:flex;flex-direction:column"></div></div>
+        </div>
+        <div class="panel frost p-l" id="p-l" aria-label="Launcher"><div class="l-q"><i>❯</i><b>st</b></div><div class="l-r" id="l-r"></div></div>
+        <div class="panel p-pw" id="p-pw" aria-label="Power menu"><div class="pw-row" id="pw-row"></div><p class="pw-hint">1 Lock · 2 Log out · 3 Sleep · 4 Restart · 5 Shut down · Esc to close</p></div>
+        <div class="panel frost p-n" id="p-n" aria-label="A notification"><img data-icon="settings" alt=""><b>nog · 12 updates ready</b><span>Tier 1 now; Tier 3 after its 7-day hold</span></div>
+      </div></div>
+      <div class="cap" id="cap"></div>
+    </div>
+    <aside class="picker" aria-label="Pick a theme"><div id="fams"></div><p style="font-size:12px;color:var(--ink-2)">The approved 25 themes (D-73), each with its own wallpaper from our generator. The islands' frame and the active workspace wear the theme's colour; the module icons and the power button wear its pop.</p></aside>
+  </div>
+</section>
+
+<section aria-labelledby="h-trio">
+  <div class="sec-head"><p class="eyebrow">All three screens</p><h2 id="h-trio">Islands on every screen, one wallpaper across</h2>
+  <p>Each screen gets its own islands. The wallpaper can be the same picture on all three or one wide picture spanning them (the generator can do both).</p></div>
+  <div class="trio" id="trio"></div>
+</section>
+
+<section aria-labelledby="h-built">
+  <div class="sec-head"><p class="eyebrow">How it gets built</p><h2 id="h-built">Every piece, what makes it, and what's left to make</h2>
+  <p>The cheapest style of the six: almost all of it is Waybar's CSS and settings we already have.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Piece</th><th>Made with</th><th>Status</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Three floating islands</td><td>Waybar: margins, a see-through background, three groups each with its own rounded frame</td><td><span class="st ok">works today</span></td><td>CSS only.</td></tr>
+      <tr><td>Workspace pills, the active one named</td><td>Our Workspaces part of the bar, restyled</td><td><span class="st ok">works today</span></td><td>"Busy" pills (with windows) need one more class from the applet: a small change.</td></tr>
+      <tr><td>CPU, memory, network, sound</td><td>Waybar's own modules</td><td><span class="st ok">works today</span></td><td>On the desktop they show Nerd Font icons in the theme's pop colour; this page writes their names instead.</td></tr>
+      <tr><td>What's playing</td><td>Waybar's media module (MPRIS)</td><td><span class="st ok">works today</span></td><td>Any player that speaks the standard (Spotify, Chrome, mpv).</td></tr>
+      <tr><td>Launcher</td><td>Today's launcher (fuzzel), restyled</td><td><span class="st ok">works today</span></td><td>Rounded, a bright frame, a ❯ prompt.</td></tr>
+      <tr><td>Power menu with big buttons</td><td>Our panel (D-68)</td><td><span class="st build">to build</span></td><td>Same panel code as the other styles; today's list stays meanwhile.</td></tr>
+      <tr><td>The theme's own wallpaper</td><td>Our generator, run when a theme is picked (~6 s)</td><td><span class="st build">to build</span></td><td>The pictures exist; the step that makes and sets them on theme change is the work.</td></tr>
+      <tr><td>See-through, frosted terminals</td><td>Alacritty's own opacity + SwayFX blur</td><td><span class="st fx">SwayFX login</span></td><td>Plain Sway can show see-through terminals, but without the frost behind them.</td></tr>
+      <tr><td>Rounded windows, dimmed inactive ones</td><td>SwayFX <code>corner_radius</code>, <code>default_dim_inactive</code></td><td><span class="st fx">SwayFX login</span></td><td>Plain Sway: square, every window full brightness.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section aria-labelledby="h-cant">
+  <div class="sec-head"><p class="eyebrow">Honest limits</p><h2 id="h-cant">What this rice won't have</h2></div>
+  <div class="two">
+    <div class="box"><h3>Not on Sway</h3><ul>
+      <li>Gradient window frames (one colour per state only).</li>
+      <li>Animated windows sliding and popping in: SwayFX's animations stay off (#565, #569).</li>
+      <li>Hyprland-only tricks people show off (wobbly windows, shaders on the screen).</li>
+    </ul></div>
+    <div class="box"><h3>Different on purpose</h3><ul>
+      <li>Every piece is a hypeForge piece: the islands are our bar, the pills our Workspaces, the launcher ours.</li>
+      <li>Nothing from swaync, eww or other big add-ons: our rules keep the install small.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section aria-labelledby="h-file">
+  <div class="sec-head"><p class="eyebrow">For the theme apps later</p><h2 id="h-file">The style file this page is drawn from</h2>
+  <p><code>hypeforge/docs/design/look/styles/rice/style.toml</code></p></div>
+  <pre class="file"><!--STYLE--></pre>
+</section>
+
+<footer>Built by Javier and Claude for KognogOS. With thanks to the r/unixporn community, whose work taught us the look; wallpapers from our own generator; app icons from candy-icons. Page: <code>hypeforge/docs/design/look/review-5-rice/</code>.</footer>
+</div>
+
+<script>
+const D = /*DATA*/null;
+const FAMS = [["kognog","KognogOS, the default"],["neutral","Grays"],["orange","Ember"],["blue","Blues"],["purple","Purples"],["green","Greens"],["pink","Pinks"],["red","Reds"],["multi","Multicolor"]];
+let cur = "dark-purple", open = "";
+const $ = id => document.getElementById(id);
+const icon = id => (D.apps.find(a => a.id === id) || {}).icon;
+const theme = s => D.now[s];
+const MAP = {sunken:"surface.sunken",base:"surface.base",raised:"surface.raised",overlay:"surface.overlay",
+  text:"text.primary",text2:"text.secondary",muted:"text.muted",subtle:"border.subtle",tbg:"term.bg",tfg:"term.fg",
+  band:"band.base",bandstrong:"band.strong",bandon:"band.on",bandtext:"band.text",pop:"pop.base",popon:"pop.on",poptext:"pop.text"};
+const sv = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${p}</svg>`;
+
+function build(){
+  document.querySelectorAll("img[data-icon]").forEach(i => i.src = icon(i.dataset.icon));
+  $("emb").style.backgroundImage = `url(${D.emblem})`;
+  $("pills").innerHTML = D.workspaces.map((w,i) => `<span class="pill ${i===0?"on":[1,3,4].includes(i)?"busy":""}">${i===0?`1 · ${w}`:i+1}</span>`).join("");
+  $("right").innerHTML = `<span class="mod"><i>CPU</i><b>12%</b></span><span class="mod"><i>RAM</i><b>7.1</b>G</span><span class="mod"><i>NET</i>tphome</span><span class="mod"><i>VOL</i><b>64%</b></span><span class="mod"><i>☾</i>4500K</span><span class="sep"></span><img src="${icon("steam")}" alt=""><img src="${icon("discord")}" alt=""><img src="${icon("keepassxc")}" alt=""><button class="pw" data-open="pw" title="Power">⏻</button>`;
+  $("l-r").innerHTML = [["steam","Steam","Games","hl"],["spotify","Spotify","Multimedia",""],["settings","hypeForge Settings","Settings",""],["alacritty","Alacritty","System",""]].map(([i,n,g,h]) => `<span class="${h}"><img src="${icon(i)}" alt="">${n}<em>${g}</em></span>`).join("");
+  $("pw-row").innerHTML = [["Lock",'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'],["Log out",'<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>'],["Sleep",'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'],["Restart",'<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>'],["Shut down",'<path d="M12 3v8M6.4 6.4a8 8 0 1 0 11.2 0"/>']]
+    .map(([n,p],i) => `<span class="pwb ${i===4?"hl":""}"><i>${sv(p)}</i>${n}</span>`).join("");
+  document.querySelectorAll("[data-open]").forEach(b => b.addEventListener("click", () => show(open === b.dataset.open ? "" : b.dataset.open)));
+  document.querySelectorAll("#panels button").forEach(b => b.addEventListener("click", () => show(b.dataset.p)));
+  document.querySelectorAll("[data-fx]").forEach(b => b.addEventListener("click", () => {
+    $("scr").classList.toggle("fx", b.dataset.fx === "fx"); $("scr").classList.toggle("plain", b.dataset.fx === "plain");
+    document.querySelectorAll("[data-fx]").forEach(x => x.setAttribute("aria-pressed", x === b)); paint(); }));
+  $("copy")?.addEventListener("click", () => {
+    navigator.clipboard?.writeText($("reply-text").textContent).then(() => { $("copy").textContent = "Copied"; })
+      .catch(() => { const r = document.createRange(); r.selectNodeContents($("reply-text")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
+  });
+}
+
+function show(p){
+  open = p;
+  ["l","pw","n"].forEach(k => $("p-"+k).classList.toggle("show", k === p));
+  document.querySelectorAll("#panels button").forEach(b => b.setAttribute("aria-pressed", b.dataset.p === p));
+}
+
+function paint(){
+  const t = theme(cur), desk = $("desk");
+  for (const [k,v] of Object.entries(MAP)) desk.style.setProperty("--t-"+k, t[v]);
+  $("wall").style.backgroundImage = D.walls[cur] ? `url(${D.walls[cur]})` : "none";
+  const c = k => `<span style="color:${t["term."+k]}">`, e = "</span>";
+  const k = (col, s) => `${c(col)}${s}${e}`;   // one coloured piece, always closed
+  const logo = [k("blue","      ▄▄▄▄▄▄▄"), k("blue","   ▄█████████▄"), k("blue","  █████")+k("bright_black","▀▀▀")+k("blue","████"),
+    k("blue","  ████")+k("bright_black","  ▄ ")+k("blue","████"), k("red","  ▀████")+k("bright_black","▀▀")+k("red","████▀"), k("red","    ▀███████▀"), k("red","       ▀▀▀")].join("\n");
+  const L = (k,v) => `${c("magenta")}${k.padEnd(9)}${e}${v}`;
+  $("ff").innerHTML = `${c("green")}javier@tphome${e} ${c("blue")}~${e} ❯ fastfetch\n<div class="ff"><span>${logo}</span><span>${c("cyan")}javier${e}@${c("cyan")}tphome${e}\n──────────────\n${[["OS","KognogOS 0.9.0 beta x86_64"],["Kernel","7.2.7-zen1"],["Packages","1529 (nog)"],["Shell","fish 4.9.3"],["WM","Sway 1.12 · hypeForge"],["Theme",t.name],["Terminal","Alacritty 0.17"],["CPU","Ryzen 7 7700"],["GPU","GeForce RTX 3060"],["Memory","7.1 / 31 GiB"]].map(([k,v]) => L(k,v)).join("\n")}\n<span class="blocks">${["black","red","green","yellow","blue","magenta","cyan","fg"].map(k => `<i style="background:${t["term."+k] || t["term.fg"]}"></i>`).join("")}</span></span></div>`;
+  const bars = [["CPU",12,"green"],["mem",23,"blue"],["swap",0,"magenta"],["disk",61,"yellow"]];
+  $("bt").innerHTML = `<div class="wtitle"><span>btop</span><b>4 cores busy · 41°C</b></div><div class="bt">${bars.map(([n,v,k]) => `<span class="r"><span>${n}</span><span class="bar2" style="--v:${Math.max(v,2)}%;--c:${t["term."+k]}"><b></b></span><span>${v}%</span></span>`).join("")}</div><div class="spark" style="--c:${t["term.cyan"]}">${[3,5,4,8,6,12,9,7,14,11,6,5,9,13,8,6,4,7,10,12,9,6,5,8,11,7,5,4,6,9].map(h => `<i style="height:${h*6}%"></i>`).join("")}</div>`;
+  const kw = s => `${c("magenta")}${s}${e}`, st = s => `${c("green")}${s}${e}`, nm = s => `${c("yellow")}${s}${e}`, cm = s => `${c("bright_black")}${s}${e}`;
+  const lines = [cm("# hypeForge · the look"), `${kw("[active]")}`, `style = ${st('"rice"')}`, `theme = ${st(`"${cur}"`)}`, `wallpaper = ${st('"generated"')}`, "", `${kw("[fx]")}`, `blur = ${nm("true")}`, `corner_radius = ${nm("12")}`, `terminal_opacity = ${nm("0.82")}`];
+  $("ed").innerHTML = `<div style="padding:calc(14 * var(--px)) calc(16 * var(--px));flex:1"><div class="ed">${lines.map((l,i) => `<span class="ln">${i+1}</span><span class="${i===3?"cur":""}">${l||" "}</span>`).join("")}</div></div><div class="status"><span>fresh · look.toml</span><span>4:12 · TOML</span></div>`;
+  document.querySelectorAll(".chip").forEach(b => b.setAttribute("aria-pressed", b.dataset.s === cur));
+  const fx = $("scr").classList.contains("fx");
+  $("cap").innerHTML = `<span><b>${t.name}</b></span><span>${fx ? "SwayFX login: frosted islands and terminals, rounded windows" : "Plain Sway: the same islands and gaps, solid and square"}</span><span>band ${t["band.base"]} · pop ${t["pop.base"]}</span>`;
+  trio();
+}
+
+function chips(){
+  $("fams").innerHTML = FAMS.map(([f,label]) => {
+    const list = D.order.filter(s => D.now[s].family === f);
+    return list.length ? `<div class="fam"><h3>${label}</h3><div class="chips">${list.map(s=>{const t=theme(s);
+      return `<button type="button" class="chip" data-s="${s}" aria-pressed="false"><i style="background:linear-gradient(135deg,${t["surface.base"]} 33%,${t["band.base"]} 33% 66%,${t["pop.base"]} 66%)"></i>${t.name}</button>`}).join("")}</div></div>` : "";
+  }).join("");
+  document.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => { cur = b.dataset.s; paint(); }));
+}
+
+function trio(){
+  const t = theme(cur), w = D.walls[cur] ? `url(${D.walls[cur]})` : t["surface.sunken"];
+  const S = [["Left screen","Discord","1fr 1fr"],["Main screen","fastfetch, btop, fresh","1.1fr 1fr"],["Right screen","btop","1fr"]];
+  $("trio").innerHTML = S.map(([n,a,cols],i) => `<div class="mini"><div class="m" style="--m-bg:${w};--m-isl:${t["surface.base"]};--m-acc:${t["band.base"]};--m-win:${t["term.bg"]};--m-line:${t["border.subtle"]};--m-cols:${cols}">
+    <div class="mb"><i></i><i></i><i></i></div>
+    <div class="mt">${i===1?'<i style="grid-row:1/3;border-color:'+t["band.text"]+'"></i><i></i><i></i>':i===0?'<i></i><i></i>':'<i></i>'}</div></div><p><b>${n}</b> · ${a}</p></div>`).join("");
+}
+
+build(); chips(); show(""); paint();
+</script>

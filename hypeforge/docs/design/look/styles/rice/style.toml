@@ -1,0 +1,66 @@
+# hypeForge style · Linux rice — PROPOSAL (look program, review 5; not approved yet)
+#
+# "Ricing" is what the Linux community calls dressing a desktop up by hand: floating bars,
+# big gaps, rounded see-through terminals, a wallpaper that sets the mood. This style is our
+# take, built from the same pieces as the others. Colours come from the active theme (D-73).
+
+[meta]
+name = "Linux rice"
+slug = "rice"
+schema = 1
+needs = []                       # plain Sway: square windows, solid islands
+better_with = ["swayfx"]         # rounded windows, see-through terminals and frosted islands
+credit = "After the r/unixporn community's work, with thanks. Learned from, never copied."
+
+[shape]                          # pixels, at 100 % scale
+radius_window    = 12
+radius_island    = 12            # each part of the bar is its own floating island
+radius_pill      = 999           # workspace pills
+radius_popup     = 14
+border_window    = 2             # a bright frame on the window in use
+border_island    = 2
+gap_inner        = 14
+gap_outer        = 14
+bar_height       = 38
+bar_margin       = 10            # the islands float this far from the screen edge
+
+[layout]
+bar_position     = "top"
+bar_style        = "islands"     # three islands: left, centre, right (R-1)
+bar_on           = "every-screen"
+island_left      = ["emblem", "workspace-pills"]                 # pills: numbers; the active one wide, with its name (R-2)
+island_center    = ["clock", "now-playing"]
+island_right     = ["cpu", "memory", "network", "volume", "night-light", "tray", "power"]
+launcher         = "fuzzel"      # restyled: centred, rounded, a bright frame
+power            = "panel-buttons"  # big round buttons over a dimmed screen (R-5)
+wallpaper        = "generated"   # the theme's own picture from our generator (R-3)
+
+[roles]
+island_background  = "surface.base"           # frosted on SwayFX
+island_border      = "band.base"
+pill_active        = "band.base"
+pill_active_text   = "band.on"
+pill_busy          = "text.secondary"         # a workspace with windows on it
+pill_empty         = "text.muted"
+module_icon        = "pop.text"
+window_focused     = "band.text"              # the bright frame (R-4)
+window_unfocused   = "border.subtle"
+terminal_background = "term.bg"               # 82 % on SwayFX, frosted
+power_button_hover = "pop.base"
+
+[fx]                             # SwayFX login only
+corner_radius      = 12
+shadows            = true
+shadow_blur_radius = 24
+shadow_offset      = [0, 6]
+blur               = true        # islands, terminals, the launcher, the power menu
+blur_passes        = 3
+blur_radius        = 6
+terminal_opacity   = 0.82        # Alacritty's own window.opacity, so the frosted wallpaper shows
+default_dim_inactive = 0.08      # windows not in use dim a touch
+animations         = false       # SwayFX #565/#569
+
+[fonts]
+ui      = "JetBrainsMono Nerd Font"  # rices lean on one mono font everywhere, icons included
+ui_size = 10.5
+mono    = "JetBrainsMono Nerd Font"
