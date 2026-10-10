@@ -45,7 +45,8 @@ def history():
 def fuzzel(lines, prompt):
     # Under the bar's right end, where its icon is (Javier, 2026-10-05)
     cmd = ["fuzzel", "--dmenu", "--anchor", "top-right", "--x-margin", "4", "--y-margin", "4",
-           "--font", "Noto Sans:size=9",  # two points under the other lists (Javier, 2026-10-05) "--prompt", prompt, "--width", "70",
+           "--font", "Noto Sans:size=9",  # two points under the other lists (Javier, 2026-10-05)
+           "--prompt", prompt, "--width", "70",   # these sat inside the note above until 10-10 (F-53)
            "--lines", str(max(1, min(len(lines), 15)))]
     if os.path.isfile(FUZZEL):
         cmd[1:1] = ["--config", FUZZEL]
