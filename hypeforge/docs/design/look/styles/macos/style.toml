@@ -1,0 +1,75 @@
+# hypeForge style · modern macOS — PROPOSAL (look program, review 4; not approved yet)
+#
+# A STYLE is shapes, layout and which pieces the desktop uses. Colours never live here: every
+# part names a colour ROLE from the active theme (palettes v2, D-73). Any of the 25 themes can
+# wear it. Schema: docs/research/look-2026-10/03-theme-system.md.
+
+[meta]
+name = "macOS"
+slug = "macos"
+schema = 1
+needs = []                       # plain Sway: square windows, solid menu bar and Dock
+better_with = ["swayfx"]         # the frosted glass, rounded windows and deep shadows are SwayFX's
+credit = "After Apple's macOS (Sonoma and Sequoia). Learned from, never copied."
+
+[shape]                          # pixels, at 100 % scale
+radius_window    = 12            # SwayFX corner_radius
+radius_control   = 6
+radius_popup     = 14            # Control Center, Spotlight, Notification Center
+radius_module    = 12            # the rounded blocks inside Control Center
+radius_dock      = 18
+border_window    = 1
+gap_inner        = 10
+gap_outer        = 10
+bar_height       = 26            # the menu bar
+dock_height      = 64
+dock_icon        = 48
+dock_running     = "dot"         # a small dot under apps that are open
+
+[layout]
+bar_position     = "top"
+bar_on           = "every-screen"
+bar_left         = ["emblem-menu", "app-name", "workspaces", "favorites", "window-menu", "help-menu"]
+bar_right        = ["tray", "control-center", "spotlight", "clock", "notification-center"]
+dock             = "bottom-center"           # a second Waybar, always shown (MA-1); windows tile above it
+dock_items       = ["favorites", "running", "|", "downloads", "trash"]
+spotlight        = "fuzzel"                  # today's launcher, restyled: a wide rounded search bar, centred
+launchpad        = "panel-grid"              # our panel (D-68): every app as a grid, groups as tabs
+control_center   = "panel"
+notification_center = "panel"
+clock_format     = ["%a %b %-d  %-I:%M %p"]
+
+[roles]
+menubar_background = "surface.raised"        # frosted on SwayFX (blur + 0.72 opacity)
+menubar_text       = "text.primary"
+menu_highlight     = "band.base"
+menu_highlight_text = "band.on"
+dock_background    = "surface.overlay"       # frosted on SwayFX
+dock_running_dot   = "text.primary"
+dock_separator     = "border.subtle"
+module_background  = "surface.overlay"
+module_on          = "pop.base"              # Wi-Fi on, Bluetooth on: a filled circle
+module_on_icon     = "pop.on"
+spotlight_selected = "band.base"
+window_focused     = "window.focused"
+sidebar            = "surface.sunken"        # Finder-style side panels
+sidebar_selected   = "band.soft"
+
+[fx]                             # SwayFX login only
+corner_radius      = 12
+shadows            = true
+shadow_blur_radius = 40          # macOS's deep, soft shadow
+shadow_offset      = [0, 12]
+shadow_opacity     = "effects.shadow_opacity"
+blur               = true        # the menu bar, the Dock and every panel ("vibrancy")
+blur_passes        = 3
+blur_radius        = 8
+bar_opacity        = 0.72
+dock_opacity       = 0.62
+dim_inactive       = 0.0
+animations         = false       # SwayFX #565/#569
+
+[fonts]
+ui      = "Noto Sans"            # the closest free match to San Francisco's calm
+ui_size = 10.5
+mono    = "JetBrainsMono Nerd Font"

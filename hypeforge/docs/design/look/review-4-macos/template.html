@@ -1,0 +1,496 @@
+<title>hypeForge Look Review 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Noto+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: the brief and what to judge, then one large live screen (controls above it, theme
+   picker beside it), the three screens, how each piece is built, and the style file itself. */
+:root{
+  --paper:#f6f5f9; --card:#ffffff; --ink:#1d1b26; --ink-2:#55526a; --line:#e2e0ea;
+  --accent:#5b3fc0; --accent-soft:#ece7fb; --ok:#1f7a3a; --warn:#9a5b00; --no:#a3313a;
+  --f-display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"DejaVu Sans Mono",monospace;
+  --f-desk:"Noto Sans","IBM Plex Sans",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body);padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,4.4vw,44px);font-weight:750;letter-spacing:-.01em}
+h2{font-size:24px;font-weight:750}
+h3{font-size:16px;font-weight:600}
+p{margin:0}
+code{font-family:var(--f-mono);font-size:.92em}
+.eyebrow{font:600 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{max-width:70ch;color:var(--ink-2);font-size:16px}
+header{display:grid;gap:12px}
+.steps{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.steps span{font:500 12px/1 var(--f-mono);padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2)}
+.steps span.done{color:var(--ok);border-color:currentColor}
+.steps span.on{background:var(--accent);border-color:var(--accent);color:var(--card)}
+section{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
+.sec-head{display:grid;gap:6px}
+.sec-head p{max-width:74ch;color:var(--ink-2)}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.asks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.ask{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:8px;align-content:start;min-width:0}
+.ask .id{font:600 12px/1 var(--f-mono);color:var(--accent)}
+.ask p{color:var(--ink-2);font-size:14px}
+.rec{font:600 11px/1 var(--f-mono);padding:3px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.ask p .rec{white-space:normal;display:inline-block;line-height:1.35}
+.reply{background:var(--accent-soft);border-radius:10px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.reply code{font:500 14px/1.4 var(--f-mono);color:var(--ink);word-break:break-word}
+.copy{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:6px;padding:5px 10px;font:600 12px/1 var(--f-mono)}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:end}
+.seg{display:grid;gap:5px}
+.seg>span{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.seg div{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:transparent;color:var(--ink-2);padding:7px 11px;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--card);font-weight:600}
+.explore{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.picker{order:-1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:8px}
+#fams{display:flex;flex-wrap:wrap;gap:10px 22px}
+.fam{display:grid;gap:6px}
+.fam h3{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 9px 3px 3px;font-size:12.5px}
+.chip i{width:18px;height:18px;border-radius:50%;flex:none;border:1px solid rgba(127,127,127,.35)}
+.chip[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;font-weight:600}
+.stage{display:grid;gap:12px;min-width:0}
+.cap{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink-2)}
+.cap b{color:var(--ink)}
+
+/* ── the screen: 2560 × 1440 drawn at 140 %; --px is one screen "pixel" ───────────────────── */
+.desk{aspect-ratio:16/9;width:100%;border-radius:6px;overflow:hidden;position:relative;container-type:inline-size;
+  font-family:var(--f-desk);color:var(--t-text);background:var(--t-sunken);box-shadow:0 1px 0 var(--line),0 18px 50px rgba(0,0,0,.22)}
+.desk *{box-sizing:border-box}
+.scr{position:absolute;inset:0;--px:calc(140cqi / 2560);font-size:calc(13 * var(--px))}
+.wall{position:absolute;inset:0;background:
+  radial-gradient(70% 90% at 15% 110%,color-mix(in oklab,var(--t-band) 90%,transparent),transparent 70%),
+  radial-gradient(60% 80% at 85% 105%,color-mix(in oklab,var(--t-pop) 55%,transparent),transparent 70%),
+  radial-gradient(70% 70% at 60% -10%,color-mix(in oklab,var(--t-bandtext) 45%,transparent),transparent 70%),
+  linear-gradient(170deg,var(--t-bandstrong),var(--t-sunken))}
+.glass{background:color-mix(in oklab,var(--t-raised) 72%,transparent);backdrop-filter:blur(calc(30 * var(--px))) saturate(1.6)}
+.plain .glass{background:var(--t-raised);backdrop-filter:none}
+/* menu bar */
+.mbar{position:absolute;left:0;right:0;top:0;height:calc(26 * var(--px));display:flex;justify-content:space-between;align-items:stretch;z-index:5;color:var(--t-text);padding:0 calc(8 * var(--px))}
+.mbar>div{display:flex;align-items:stretch}
+.mi{border:0;background:transparent;color:inherit;font:inherit;padding:0 calc(10 * var(--px));display:flex;align-items:center;gap:calc(6 * var(--px));border-radius:calc(5 * var(--px));margin:calc(2 * var(--px)) 0;cursor:pointer}
+.mi:hover,.mi.open{background:color-mix(in oklab,var(--t-text) 16%,transparent)}
+.mi.app{font-weight:700}
+.mi .emb{width:calc(15 * var(--px));height:calc(15 * var(--px));background-size:contain;background-repeat:no-repeat}
+.mi svg{width:calc(15 * var(--px));height:calc(15 * var(--px))}
+.mi img{width:calc(15 * var(--px));height:calc(15 * var(--px))}
+/* windows */
+.tiles{position:absolute;left:calc(10 * var(--px));right:calc(10 * var(--px));top:calc(36 * var(--px));bottom:calc(92 * var(--px));
+  display:grid;grid-template-columns:1.35fr 1fr;grid-template-rows:1fr 1fr;gap:calc(10 * var(--px))}
+.win{background:var(--t-base);border:calc(1 * var(--px)) solid var(--t-unfocused);min-height:0;min-width:0;overflow:hidden;display:flex;flex-direction:column}
+.win.focus{grid-row:1/3;border-color:var(--t-focused)}
+.fx .win{border-radius:calc(12 * var(--px));box-shadow:0 calc(12 * var(--px)) calc(40 * var(--px)) rgba(0,0,0,var(--t-shadow-a))}
+.c-tabs{display:flex;align-items:end;gap:calc(4 * var(--px));padding:calc(8 * var(--px)) calc(12 * var(--px)) 0;background:var(--t-band);height:calc(40 * var(--px))}
+.c-tab{height:calc(32 * var(--px));padding:0 calc(14 * var(--px));display:flex;align-items:center;gap:calc(8 * var(--px));color:var(--t-bandon);font-size:calc(12.5 * var(--px));border-radius:calc(8 * var(--px)) calc(8 * var(--px)) 0 0;max-width:calc(220 * var(--px));white-space:nowrap;overflow:hidden}
+.c-tab.on{background:var(--t-raised);color:var(--t-text)}
+.c-tab img{width:calc(16 * var(--px));height:calc(16 * var(--px))}
+.c-bar{display:flex;align-items:center;gap:calc(10 * var(--px));padding:calc(6 * var(--px)) calc(12 * var(--px));border-bottom:calc(1 * var(--px)) solid var(--t-subtle);background:var(--t-raised)}
+.c-url{flex:1;height:calc(30 * var(--px));border-radius:calc(8 * var(--px));background:var(--t-sunken);display:flex;align-items:center;justify-content:center;color:var(--t-text2);font-size:calc(13 * var(--px))}
+.c-url b{color:var(--t-text);font-weight:500}
+.dots{display:flex;gap:calc(14 * var(--px));color:var(--t-muted)}
+.c-page{flex:1;padding:calc(34 * var(--px)) calc(44 * var(--px));display:grid;align-content:start;gap:calc(16 * var(--px));overflow:hidden}
+.c-kicker{font:600 calc(12 * var(--px))/1 var(--f-mono);letter-spacing:.1em;color:var(--t-acctext);text-transform:uppercase}
+.c-h{font:700 calc(38 * var(--px))/1.1 var(--f-desk);color:var(--t-text);letter-spacing:-.01em}
+.c-p{color:var(--t-text2);font-size:calc(15 * var(--px));max-width:36em;line-height:1.5}
+.c-btns{display:flex;gap:calc(10 * var(--px))}
+.b-acc{background:var(--t-accent);color:var(--t-on);padding:calc(8 * var(--px)) calc(18 * var(--px));border-radius:calc(8 * var(--px));font-weight:600;font-size:calc(13.5 * var(--px))}
+.b-sec{background:var(--t-overlay);border:calc(1 * var(--px)) solid var(--t-subtle);padding:calc(7 * var(--px)) calc(17 * var(--px));border-radius:calc(8 * var(--px));font-size:calc(13.5 * var(--px))}
+.c-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(12 * var(--px));margin-top:calc(10 * var(--px))}
+.c-card{background:var(--t-overlay);border:calc(1 * var(--px)) solid var(--t-subtle);border-radius:calc(10 * var(--px));padding:calc(14 * var(--px));display:grid;gap:calc(6 * var(--px));font-size:calc(13 * var(--px));border-top:calc(3 * var(--px)) solid var(--t-band)}
+.c-card b{font-weight:600}.c-card span{color:var(--t-muted);font-size:calc(12 * var(--px))}
+.term{flex:1;background:var(--t-tbg);color:var(--t-tfg);font:calc(13 * var(--px))/1.55 var(--f-mono);padding:calc(14 * var(--px)) calc(16 * var(--px));white-space:pre;overflow:hidden}
+.fi{flex:1;display:grid;grid-template-columns:calc(170 * var(--px)) 1fr;min-height:0}
+.fi-side{background:var(--t-sunken);padding:calc(12 * var(--px)) calc(8 * var(--px));display:grid;align-content:start;gap:calc(2 * var(--px));font-size:calc(13 * var(--px));color:var(--t-text2);border-right:calc(1 * var(--px)) solid var(--t-subtle)}
+.fi-side small{font-size:calc(11 * var(--px));font-weight:600;color:var(--t-muted);padding:calc(6 * var(--px)) calc(10 * var(--px)) calc(2 * var(--px))}
+.fi-side span{padding:calc(5 * var(--px)) calc(10 * var(--px));border-radius:calc(6 * var(--px))}
+.fi-side .sel{background:var(--t-band);color:var(--t-bandon)}
+.fi-main{display:flex;flex-direction:column;min-height:0}
+.fi-tool{display:flex;justify-content:space-between;padding:calc(8 * var(--px)) calc(14 * var(--px));font-size:calc(13 * var(--px));font-weight:600;background:var(--t-raised);border-bottom:calc(1 * var(--px)) solid var(--t-subtle)}
+.fi-tool span:last-child{color:var(--t-muted);font-weight:400}
+.fi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(90 * var(--px)),1fr));gap:calc(10 * var(--px));padding:calc(16 * var(--px));align-content:start}
+.fold{display:grid;justify-items:center;gap:calc(6 * var(--px));font-size:calc(12 * var(--px))}
+.fold i{width:calc(52 * var(--px));height:calc(40 * var(--px));border-radius:calc(6 * var(--px));background:var(--t-bandtext);position:relative}
+.fold i::before{content:"";position:absolute;left:0;top:calc(-5 * var(--px));width:45%;height:calc(9 * var(--px));border-radius:calc(4 * var(--px)) calc(4 * var(--px)) 0 0;background:inherit}
+/* the Dock */
+.dock{position:absolute;bottom:calc(10 * var(--px));left:50%;transform:translateX(-50%);height:calc(72 * var(--px));display:flex;align-items:center;gap:calc(8 * var(--px));padding:0 calc(10 * var(--px));z-index:4;
+  border:calc(1 * var(--px)) solid color-mix(in oklab,var(--t-text) 18%,transparent);background:color-mix(in oklab,var(--t-overlay) 62%,transparent)}
+.fx .dock{border-radius:calc(18 * var(--px));backdrop-filter:blur(calc(30 * var(--px))) saturate(1.6)}
+.plain .dock{background:var(--t-overlay);border-radius:calc(18 * var(--px))}
+.dock .d{position:relative;display:grid;place-items:center}
+.dock .d img{width:calc(52 * var(--px));height:calc(52 * var(--px));display:block}
+.dock .d.run::after{content:"";position:absolute;bottom:calc(-8 * var(--px));width:calc(5 * var(--px));height:calc(5 * var(--px));border-radius:50%;background:var(--t-text)}
+.dock .sep{width:calc(1 * var(--px));height:calc(50 * var(--px));background:color-mix(in oklab,var(--t-text) 25%,transparent);margin:0 calc(4 * var(--px))}
+/* panels */
+.panel{position:absolute;display:none;z-index:6;color:var(--t-text);border:calc(1 * var(--px)) solid color-mix(in oklab,var(--t-text) 14%,transparent);
+  box-shadow:0 calc(14 * var(--px)) calc(44 * var(--px)) rgba(0,0,0,var(--t-shadow-a));border-radius:calc(14 * var(--px))}
+.panel.show{display:grid}
+.plain .panel{box-shadow:none}
+.p-cc{top:calc(32 * var(--px));right:calc(10 * var(--px));width:calc(330 * var(--px));padding:calc(12 * var(--px));gap:calc(10 * var(--px));grid-template-columns:1fr 1fr}
+.mod{background:color-mix(in oklab,var(--t-overlay) 85%,transparent);border-radius:calc(12 * var(--px));padding:calc(10 * var(--px));display:grid;gap:calc(8 * var(--px));font-size:calc(12 * var(--px))}
+.plain .mod{background:var(--t-overlay)}
+.mod.wide{grid-column:1/3}
+.row{display:flex;align-items:center;gap:calc(10 * var(--px))}
+.row b{font-weight:600;display:block}.row small{display:block;color:var(--t-muted);font-size:calc(11 * var(--px))}
+.ci{width:calc(28 * var(--px));height:calc(28 * var(--px));border-radius:50%;display:grid;place-items:center;background:color-mix(in oklab,var(--t-text) 18%,transparent);flex:none}
+.ci.on{background:var(--t-pop);color:var(--t-popon)}
+.ci svg{width:calc(15 * var(--px));height:calc(15 * var(--px))}
+.slider{height:calc(22 * var(--px));border-radius:999px;background:color-mix(in oklab,var(--t-text) 16%,transparent);position:relative;overflow:hidden}
+.slider::before{content:"";position:absolute;inset:0 auto 0 0;width:var(--v);background:var(--t-text);opacity:.9;border-radius:999px}
+.np{display:grid;grid-template-columns:calc(40 * var(--px)) 1fr auto;align-items:center;gap:calc(10 * var(--px))}
+.np img{width:calc(40 * var(--px));height:calc(40 * var(--px))}
+.np span.ctl{display:flex;gap:calc(10 * var(--px));font-size:calc(14 * var(--px))}
+.p-spot{top:24%;left:50%;transform:translateX(-50%);width:calc(700 * var(--px));overflow:hidden;grid-template-rows:auto auto}
+.sp-q{display:flex;align-items:center;gap:calc(12 * var(--px));padding:calc(14 * var(--px)) calc(18 * var(--px));font-size:calc(22 * var(--px));border-bottom:calc(1 * var(--px)) solid color-mix(in oklab,var(--t-text) 12%,transparent)}
+.sp-q svg{width:calc(22 * var(--px));height:calc(22 * var(--px));color:var(--t-muted)}
+.sp-q b{font-weight:400}.sp-q i{font-style:normal;color:var(--t-muted)}
+.sp-r{padding:calc(8 * var(--px));display:grid;gap:calc(2 * var(--px));font-size:calc(14 * var(--px))}
+.sp-r small{color:var(--t-muted);font-size:calc(11 * var(--px));font-weight:600;padding:calc(6 * var(--px)) calc(10 * var(--px)) calc(2 * var(--px))}
+.sp-r span{display:flex;align-items:center;gap:calc(10 * var(--px));padding:calc(7 * var(--px)) calc(10 * var(--px));border-radius:calc(8 * var(--px))}
+.sp-r span.hl{background:var(--t-band);color:var(--t-bandon)}
+.sp-r span em{margin-left:auto;font-style:normal;font-size:calc(12 * var(--px));opacity:.75}
+.sp-r img{width:calc(24 * var(--px));height:calc(24 * var(--px))}
+.p-lp{inset:0;border-radius:0;border:0;z-index:7;align-content:start;justify-items:center;gap:calc(26 * var(--px));padding:calc(60 * var(--px)) calc(160 * var(--px));
+  background:color-mix(in oklab,var(--t-sunken) 55%,transparent);backdrop-filter:blur(calc(40 * var(--px)))}
+.plain .p-lp{background:color-mix(in oklab,var(--t-sunken) 92%,transparent);backdrop-filter:none}
+.lp-q{width:calc(260 * var(--px));height:calc(30 * var(--px));border-radius:calc(8 * var(--px));background:color-mix(in oklab,var(--t-text) 14%,transparent);display:flex;align-items:center;justify-content:center;color:var(--t-text2);font-size:calc(13 * var(--px))}
+.lp-tabs{display:flex;gap:calc(6 * var(--px));flex-wrap:wrap;justify-content:center}
+.lp-tabs span{padding:calc(5 * var(--px)) calc(14 * var(--px));border-radius:999px;font-size:calc(13 * var(--px));color:var(--t-text)}
+.lp-tabs span.on{background:var(--t-band);color:var(--t-bandon);font-weight:600}
+.lp-grid{display:grid;grid-template-columns:repeat(7,calc(120 * var(--px)));gap:calc(30 * var(--px)) calc(20 * var(--px))}
+.lp-grid span{display:grid;justify-items:center;gap:calc(8 * var(--px));font-size:calc(13 * var(--px));color:var(--t-text);text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.lp-grid img{width:calc(84 * var(--px));height:calc(84 * var(--px))}
+.p-nc{top:calc(32 * var(--px));right:calc(10 * var(--px));width:calc(360 * var(--px));background:transparent;border:0;box-shadow:none;gap:calc(10 * var(--px))}
+.card{border-radius:calc(14 * var(--px));border:calc(1 * var(--px)) solid color-mix(in oklab,var(--t-text) 14%,transparent);box-shadow:0 calc(10 * var(--px)) calc(30 * var(--px)) rgba(0,0,0,var(--t-shadow-a))}
+.plain .card{box-shadow:none}
+.n{padding:calc(12 * var(--px)) calc(14 * var(--px));display:grid;grid-template-columns:calc(30 * var(--px)) 1fr;gap:calc(3 * var(--px)) calc(12 * var(--px));font-size:calc(12.5 * var(--px))}
+.n img{width:calc(30 * var(--px));height:calc(30 * var(--px));grid-row:1/3}
+.n b{font-weight:600}.n span{color:var(--t-text2)}
+.cal{padding:calc(14 * var(--px)) calc(16 * var(--px));display:grid;gap:calc(8 * var(--px))}
+.cal h5{margin:0;font-size:calc(12 * var(--px));font-weight:700;color:var(--t-poptext);text-transform:uppercase;letter-spacing:.04em}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:calc(2 * var(--px));font-size:calc(11.5 * var(--px));text-align:center}
+.cal-g span{height:calc(26 * var(--px));display:grid;place-items:center;border-radius:50%}
+.cal-g .wd{color:var(--t-muted)}
+.cal-g .out{color:var(--t-muted);opacity:.6}
+.cal-g .today{background:var(--t-pop);color:var(--t-popon);font-weight:700}
+.p-ws{top:calc(32 * var(--px));left:50%;transform:translateX(-50%);width:calc(1300 * var(--px));padding:calc(14 * var(--px));grid-template-columns:repeat(6,1fr);gap:calc(12 * var(--px))}
+.ws{border-radius:calc(10 * var(--px));background:color-mix(in oklab,var(--t-overlay) 85%,transparent);padding:calc(10 * var(--px));display:grid;gap:calc(8 * var(--px));font-size:calc(12.5 * var(--px));border:calc(2 * var(--px)) solid transparent}
+.ws.on{border-color:var(--t-band);background:var(--t-bandsoft)}
+.ws b{font-weight:600;display:flex;justify-content:space-between}
+.ws b em{font-style:normal;color:var(--t-muted);font-weight:400}
+.ws div{display:flex;flex-wrap:wrap;gap:calc(6 * var(--px));min-height:calc(26 * var(--px))}
+.ws img{width:calc(26 * var(--px));height:calc(26 * var(--px))}
+.menu{position:absolute;top:calc(28 * var(--px));min-width:calc(240 * var(--px));padding:calc(5 * var(--px));display:none;z-index:6;border-radius:calc(10 * var(--px));color:var(--t-text);
+  border:calc(1 * var(--px)) solid color-mix(in oklab,var(--t-text) 14%,transparent);box-shadow:0 calc(10 * var(--px)) calc(30 * var(--px)) rgba(0,0,0,var(--t-shadow-a))}
+.menu.show{display:block}
+.menu .it{display:flex;align-items:center;gap:calc(8 * var(--px));padding:0 calc(10 * var(--px));height:calc(24 * var(--px));border-radius:calc(5 * var(--px));white-space:nowrap}
+.menu .it .k{margin-left:auto;padding-left:calc(24 * var(--px));color:var(--t-muted)}
+.menu .it .ar{margin-left:auto;padding-left:calc(24 * var(--px))}
+.menu .it.hl{background:var(--t-band);color:var(--t-bandon)}
+.menu .it.hl .k{color:var(--t-bandon)}
+.menu hr{border:0;border-top:calc(1 * var(--px)) solid color-mix(in oklab,var(--t-text) 14%,transparent);margin:calc(4 * var(--px)) calc(8 * var(--px))}
+.menu .it img{width:calc(16 * var(--px));height:calc(16 * var(--px))}
+/* three screens, tables, boxes, the file */
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.trio{grid-template-columns:minmax(0,1fr)}}
+.mini{display:grid;gap:6px;min-width:0}
+.mini .m{aspect-ratio:16/9;border-radius:5px;overflow:hidden;position:relative;container-type:inline-size;background:var(--m-bg)}
+.mini .m .mb{position:absolute;left:0;right:0;top:0;height:5.5%;background:var(--m-bar);display:flex;align-items:center;gap:3%;padding:0 2%;font:600 2cqi/1 var(--f-desk);color:var(--m-fg)}
+.mini .m .mb span:last-child{margin-left:auto}
+.mini .m .mt{position:absolute;inset:8% 1.5% var(--m-bot) 1.5%;display:grid;gap:1.5%;grid-template-columns:var(--m-cols)}
+.mini .m .mt i{background:var(--m-win);border:1px solid var(--m-line);border-radius:4px}
+.mini .m .dk{position:absolute;bottom:2%;left:50%;transform:translateX(-50%);height:8%;width:44%;border-radius:1.4cqi;background:var(--m-bar);display:flex;align-items:center;justify-content:center;gap:4%}
+.mini .m .dk i{width:5%;aspect-ratio:1;border-radius:1cqi;background:var(--m-acc)}
+.mini p{font-size:13px;color:var(--ink-2)}
+.mini p b{color:var(--ink)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+.st{font:600 11px/1 var(--f-mono);padding:4px 7px;border-radius:4px;white-space:nowrap;display:inline-block}
+.st.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 13%,transparent)}
+.st.build{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.st.fx{color:var(--accent);background:var(--accent-soft)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:8px;align-content:start;min-width:0}
+.box ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.box li::marker{color:var(--accent)}
+pre.file{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;font:12.5px/1.55 var(--f-mono);color:var(--ink)}
+footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">hypeForge · the look · review 4 of 7 · proposal 3 of 6</p>
+  <h1>macOS, tiled: a frosted menu bar, the Dock, Spotlight and Control Center</h1>
+  <p class="lead">Today's macOS look on our tiling desktop. The menu bar keeps what you approved for Mac OS 9 (the emblem menu, the bold app name, Workspaces, Favorites, Window), now frosted and soft. The Dock sits at the bottom with your favourites and what's running. Spotlight is today's launcher in a new coat, and Control Center, Launchpad and Notification Center open from the bar. Windows still tile above the Dock. Click the icons at the top right of the screen below.</p>
+  <div class="steps" aria-label="Where we are in the program">
+    <span class="done">1 · Foundation ✓</span><span class="done">2 · Windows 11 ✓</span><span class="done">3 · Mac OS 9 ✓</span><span class="on">4 · macOS</span><span>5 · Linux rice</span><span>6 · KDE</span><span>7 · COSMIC</span>
+  </div>
+</header>
+
+<section aria-labelledby="h-ask">
+  <div class="sec-head">
+    <p class="eyebrow">What I need from you</p>
+    <h2 id="h-ask">Five calls, and anything that feels off</h2>
+    <p>My pick is marked on each. Tell me in your own words what doesn't feel like macOS.</p>
+  </div>
+  <div class="asks">
+    <article class="ask"><span class="id">MA-1 · The Dock</span><h3>Always there, or hidden until you reach for it?</h3><p>Always there: a second Waybar, nothing to install, windows tile above it. Hidden until the mouse touches the bottom edge needs nwg-dock (5 MB, Arch's own repository), stopped and started by exact name.</p><p><span class="rec">my pick: always there</span></p></article>
+    <article class="ask"><span class="id">MA-2 · Finding apps</span><h3>Spotlight and Launchpad, both?</h3><p>Spotlight is today's launcher, restyled as a wide rounded bar in the middle (works today). Launchpad is a full-screen grid of every app with your groups as tabs, our panel (to build).</p><p><span class="rec">my pick: both</span></p></article>
+    <article class="ask"><span class="id">MA-3 · Control Center</span><h3>These blocks?</h3><p>Wi-Fi, Bluetooth and VPN in one block; Do Not Disturb; Night light (nightForge); Screens (displayForge); the sound slider; what's playing (Spotify and friends). The same tiles you approved for Windows 11, macOS-shaped.</p><p><span class="rec">my pick: these</span></p></article>
+    <article class="ask"><span class="id">MA-4 · The menu bar</span><h3>Mac OS 9's menus, kept?</h3><p>Emblem menu · bold app name · Workspaces · Favorites · Window · Help, so the two Mac styles feel like one family. Special moves into the emblem menu, the way modern macOS has it.</p><p><span class="rec">my pick: kept</span></p></article>
+    <article class="ask"><span class="id">MA-5 · Frosted glass</span><h3>See-through bar, Dock and panels on SwayFX?</h3><p>macOS's "vibrancy": the wallpaper shows softly through the menu bar, the Dock and every panel. Plain Sway: the same shapes, solid. Flip "Look" to compare.</p><p><span class="rec">my pick: frosted on SwayFX</span></p></article>
+  </div>
+  <div class="reply"><span>Answer in our chat, like this:</span><code id="reply-text">MA-1 always · MA-2 both · MA-3 ok · MA-4 kept · MA-5 frosted · and: …</code><button class="copy" id="copy" type="button">Copy</button></div>
+</section>
+
+<section aria-labelledby="h-screen">
+  <div class="sec-head">
+    <p class="eyebrow">The main screen</p>
+    <h2 id="h-screen">Click the icons at the top right, and the emblem</h2>
+    <p>The same three apps as the other proposals, drawn at 140 % so the bar is readable. The background is a soft colour wash from the theme; the generated wallpapers drop in the same way.</p>
+  </div>
+  <div class="controls">
+    <div class="seg"><span>Look</span><div role="group" aria-label="Look"><button type="button" data-fx="fx" aria-pressed="true">SwayFX login</button><button type="button" data-fx="plain" aria-pressed="false">Plain Sway</button></div></div>
+    <div class="seg"><span>Open</span><div role="group" aria-label="Open a panel" id="panels">
+      <button type="button" data-p="" aria-pressed="false">Nothing</button><button type="button" data-p="cc" aria-pressed="true">Control Center</button><button type="button" data-p="spot" aria-pressed="false">Spotlight</button><button type="button" data-p="lp" aria-pressed="false">Launchpad</button><button type="button" data-p="nc" aria-pressed="false">Notification Center</button><button type="button" data-p="ws" aria-pressed="false">Workspaces</button><button type="button" data-p="emblem" aria-pressed="false">Emblem menu</button></div></div>
+  </div>
+  <div class="explore">
+    <div class="stage">
+      <div class="desk" id="desk"><div class="scr fx" id="scr">
+        <div class="wall"></div>
+        <div class="mbar glass">
+          <div>
+            <button class="mi" data-open="emblem" title="The emblem menu"><span class="emb" id="emb"></span></button>
+            <span class="mi app">Chrome</span>
+            <button class="mi" data-open="ws"><span><u>W</u>orkspaces</span></button>
+            <button class="mi" data-open="fav"><span><u>F</u>avorites</span></button>
+            <button class="mi" data-open="window">Window</button>
+            <button class="mi" data-open="help">Help</button>
+          </div>
+          <div>
+            <span class="mi"><img data-icon="steam" alt=""></span><span class="mi"><img data-icon="discord" alt=""></span>
+            <button class="mi" data-open="cc" title="Control Center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="6" rx="3"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><rect x="3" y="13" width="18" height="6" rx="3"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/></svg></button>
+            <button class="mi" data-open="spot" title="Spotlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+            <button class="mi" data-open="nc" title="Notification Center">Sat Oct 10&nbsp;&nbsp;12:30 PM</button>
+          </div>
+        </div>
+        <div class="menu glass" id="m-emblem" style="left:calc(8 * var(--px))"></div>
+        <div class="menu glass" id="m-window"></div>
+        <div class="menu glass" id="m-ws"></div>
+        <div class="menu glass" id="m-fav"></div>
+        <div class="menu glass" id="m-help"></div>
+        <div class="tiles">
+          <div class="win focus">
+            <div class="c-tabs"><span class="c-tab on"><img data-icon="chrome" alt="">KognogOS · the tier-aware distro</span><span class="c-tab"><img data-icon="whatsapp" alt="">WhatsApp</span><span class="c-tab"><img data-icon="claude" alt="">Claude</span></div>
+            <div class="c-bar"><span class="dots">‹ › ⟳</span><span class="c-url"><b>kognogos.org</b></span><span class="dots">⇪ ⋯</span></div>
+            <div class="c-page">
+              <span class="c-kicker">KognogOS · 0.9.0 beta</span>
+              <span class="c-h">An Arch desktop that waits<br>for packages to prove themselves.</span>
+              <span class="c-p">Tier-aware updates through nog, the Forge Suite for every setting, and hypeForge, the Sway desktop that keeps your apps in their workspaces.</span>
+              <span class="c-btns"><span class="b-acc">Download the beta</span><span class="b-sec">Read the guide</span></span>
+              <div class="c-cards"><div class="c-card"><b>nog 1.8.0</b><span>pacman, with patience</span></div><div class="c-card"><b>Forge Suite</b><span>10 apps on the AUR</span></div><div class="c-card"><b>hypeForge</b><span>Sway, our way</span></div></div>
+            </div>
+          </div>
+          <div class="win"><div class="term" id="term"></div></div>
+          <div class="win"><div class="fi"><div class="fi-side"><small>Favourites</small><span>Home</span><span>Desktop</span><span>Documents</span><span>Downloads</span><span class="sel">Programs</span><small>Locations</small><span>media1</span><span>Trash</span></div>
+            <div class="fi-main"><div class="fi-tool"><span>Programs</span><span>8 items</span></div><div class="fi-grid"><span class="fold"><i></i>forge-suite</span><span class="fold"><i></i>nog</span><span class="fold"><i></i>homelab</span><span class="fold"><i></i>kognog</span><span class="fold"><i></i>mindforge</span><span class="fold"><i></i>DecadeDrop</span></div></div></div></div>
+        </div>
+        <div class="dock" id="dock"></div>
+
+        <div class="panel glass p-cc" id="p-cc" aria-label="Control Center"></div>
+        <div class="panel glass p-spot" id="p-spot" aria-label="Spotlight">
+          <div class="sp-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><b>fir</b><i>efox: open in Daily</i></div>
+          <div class="sp-r" id="sp-r"></div>
+        </div>
+        <div class="panel p-lp" id="p-lp" aria-label="Launchpad"><div class="lp-q">Search</div><div class="lp-tabs" id="lp-tabs"></div><div class="lp-grid" id="lp-grid"></div></div>
+        <div class="panel p-nc" id="p-nc" aria-label="Notification Center">
+          <div class="card glass cal"><h5>Saturday, October 10</h5><div class="cal-g" id="cal-g"></div></div>
+          <div class="card glass n"><img data-icon="settings" alt=""><b>nog · 12 updates ready</b><span>Tier 1 now; Tier 3 after its 7-day hold</span></div>
+          <div class="card glass n"><img data-icon="steam" alt=""><b>Steam</b><span>SuperTux finished downloading</span></div>
+        </div>
+        <div class="panel glass p-ws" id="p-ws" aria-label="Workspaces"></div>
+      </div></div>
+      <div class="cap" id="cap"></div>
+    </div>
+    <aside class="picker" aria-label="Pick a theme"><div id="fams"></div><p style="font-size:12px;color:var(--ink-2)">The approved 25 themes (D-73). Neutral windows; the theme's colour on Chrome's tab strip, the selected folder, the highlighted result and the active workspace; the pop on buttons, toggles and today's date.</p></aside>
+  </div>
+</section>
+
+<section aria-labelledby="h-trio">
+  <div class="sec-head"><p class="eyebrow">All three screens</p><h2 id="h-trio">The menu bar everywhere, the Dock on the main screen</h2>
+  <p>Like macOS with several displays: each screen's bar names its own app; the Dock stays on the main screen so the side screens keep their full height.</p></div>
+  <div class="trio" id="trio"></div>
+</section>
+
+<section aria-labelledby="h-built">
+  <div class="sec-head"><p class="eyebrow">How it gets built</p><h2 id="h-built">Every piece, what makes it, and what's left to make</h2></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Piece</th><th>Made with</th><th>Status</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>The menu bar</td><td>Waybar, the Mac OS 9 menus restyled soft</td><td><span class="st ok">works today</span><span class="st build">menus: to build</span></td><td>The same emblem, Window and Help menus as Mac OS 9 (one build serves both).</td></tr>
+      <tr><td>The Dock</td><td>A second Waybar at the bottom, sized to its icons</td><td><span class="st build">to build</span></td><td>Favourites plus what's running in one row, a dot under open apps: our own small Waybar part (the same one Windows 11's taskbar needs).</td></tr>
+      <tr><td>Spotlight</td><td>Today's launcher (fuzzel), wide, rounded, centred</td><td><span class="st ok">works today</span></td><td>Only its look file changes.</td></tr>
+      <tr><td>Launchpad</td><td>Our panel (D-68): a full-screen grid, groups as tabs</td><td><span class="st build">to build</span></td><td>The same panel code as Windows 11's Start, laid out as a grid.</td></tr>
+      <tr><td>Control Center</td><td>Our panel; each block calls the app that owns it</td><td><span class="st build">to build</span></td><td>Shared with Windows 11's Quick Settings; what's playing comes from the standard media controls (MPRIS).</td></tr>
+      <tr><td>Notification Center</td><td>Our panel + mako's history</td><td><span class="st build">to build</span></td><td>Shared with Windows 11's calendar panel.</td></tr>
+      <tr><td>Frosted glass, rounded windows, deep shadows</td><td>SwayFX <code>blur</code>, <code>corner_radius 12</code>, <code>shadows</code></td><td><span class="st fx">SwayFX login</span></td><td>Plain Sway: the same layout, solid and square.</td></tr>
+      <tr><td>Tiling, snapping, workspaces</td><td>Our Placement and Workspaces applets</td><td><span class="st ok">unchanged</span></td><td>Windows stop above the Dock.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section aria-labelledby="h-cant">
+  <div class="sec-head"><p class="eyebrow">Honest limits</p><h2 id="h-cant">What this macOS won't have</h2></div>
+  <div class="two">
+    <div class="box"><h3>Not on Sway</h3><ul>
+      <li>Each app's own menus in the menu bar (same as Mac OS 9).</li>
+      <li>The Dock's magnifying wave when the mouse moves over it.</li>
+      <li>The red, yellow and green buttons on every window.</li>
+      <li>Mission Control's live picture of every window; the Workspaces panel shows which apps are where instead.</li>
+      <li>Minimize into the Dock (an app can be put away in the hidden drawer instead).</li>
+    </ul></div>
+    <div class="box"><h3>Different on purpose</h3><ul>
+      <li>Windows tile; the Dock never covers them.</li>
+      <li>Launchpad opens on your groups, and an app still opens in its own workspace.</li>
+      <li>No animations (SwayFX #565 and #569).</li>
+    </ul></div>
+  </div>
+</section>
+
+<section aria-labelledby="h-file">
+  <div class="sec-head"><p class="eyebrow">For the theme apps later</p><h2 id="h-file">The style file this page is drawn from</h2>
+  <p><code>hypeforge/docs/design/look/styles/macos/style.toml</code></p></div>
+  <pre class="file"><!--STYLE--></pre>
+</section>
+
+<footer>Built by Javier and Claude for KognogOS. After Apple's macOS design; app icons from candy-icons. Page: <code>hypeforge/docs/design/look/review-4-macos/</code>.</footer>
+</div>
+
+<script>
+const D = /*DATA*/null;
+const FAMS = [["kognog","KognogOS, the default"],["neutral","Grays"],["orange","Ember"],["blue","Blues"],["purple","Purples"],["green","Greens"],["pink","Pinks"],["red","Reds"],["multi","Multicolor"]];
+let cur = "kognogos-mocha", open = "cc";
+const $ = id => document.getElementById(id);
+const icon = id => (D.apps.find(a => a.id === id) || {}).icon;
+const theme = s => D.now[s];
+const MAP = {sunken:"surface.sunken",base:"surface.base",raised:"surface.raised",overlay:"surface.overlay",hover:"surface.hover",
+  text:"text.primary",text2:"text.secondary",muted:"text.muted",accent:"accent.base",on:"accent.on",acctext:"accent.text",
+  subtle:"border.subtle",strong:"border.strong",focused:"window.focused",unfocused:"window.unfocused",tbg:"term.bg",tfg:"term.fg",
+  band:"band.base",bandstrong:"band.strong",bandon:"band.on",bandsoft:"band.soft",bandtext:"band.text",pop:"pop.base",popon:"pop.on",poptext:"pop.text"};
+const sv = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${p}</svg>`;
+
+function menu(id, items){
+  $(id).innerHTML = items.map(i => i === "-" ? "<hr>" : `<div class="it ${i[2]||""}">${i[3]?`<img src="${icon(i[3])}" alt="">`:""}<span>${i[0]}</span>${(i[2]||"").includes("ar")?'<span class="ar">›</span>':i[1]?`<span class="k">${i[1]}</span>`:""}</div>`).join("");
+}
+
+function build(){
+  document.querySelectorAll("img[data-icon]").forEach(i => i.src = icon(i.dataset.icon));
+  $("emb").style.backgroundImage = `url(${D.emblem})`;
+  menu("m-emblem", [["About This Computer"],"-",["hypeForge Settings…","","","settings"],["Favorites","","ar"],["Recent Apps","","ar"],"-",["Lock Screen","Win + Escape"],["Log Out Javier…"],"-",["Sleep"],["Restart…"],["Shut Down…","","hl"]]);
+  menu("m-window", [["Float","Win + Shift + Space"],["Tabs","Win + T"],"-",["Send to Workspace","","ar"],["Send to Screen","","ar"],"-",["Put Away","Win + Shift + −"],["Close","Alt + F4"]]);
+  menu("m-ws", D.workspaces.map((w,i) => [`${i+1} · ${w}`, `Win + ${i+1}`, i===0?"hl":""]));
+  menu("m-fav", D.apps.slice(0,10).map(a => [a.name, "", "", a.id]));
+  menu("m-help", [["Keys","Win + F1"],["The hypeForge guide"],"-",["About hypeForge"]]);
+  const dock = [["thunar",1],["chrome",1],["alacritty",1],["claude",0],["onlyoffice",0],["obsidian",0],["discord",1],["spotify",1],["steam",1],["settings",0]];
+  $("dock").innerHTML = dock.map(([id,r]) => `<span class="d ${r?"run":""}" title="${D.apps.find(a=>a.id===id).name}"><img src="${icon(id)}" alt=""></span>`).join("")
+    + `<span class="sep"></span><span class="d"><img src="${icon("downloads")}" alt=""></span><span class="d"><img src="${icon("trash")}" alt=""></span>`;
+  $("p-cc").innerHTML = `
+    <div class="mod">
+      <div class="row"><span class="ci on">${sv('<path d="M2 9a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/>')}</span><span><b>Wi-Fi</b><small>tphome</small></span></div>
+      <div class="row"><span class="ci on">${sv('<path d="m7 7 10 10-5 4V3l5 4L7 17"/>')}</span><span><b>Bluetooth</b><small>G13</small></span></div>
+      <div class="row"><span class="ci">${sv('<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/>')}</span><span><b>VPN</b><small>Off</small></span></div>
+    </div>
+    <div style="display:grid;gap:calc(10 * var(--px))">
+      <div class="mod"><div class="row"><span class="ci">${sv('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>')}</span><span><b>Do Not Disturb</b><small>Off</small></span></div></div>
+      <div class="mod"><div class="row"><span class="ci on">${sv('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2"/>')}</span><span><b>Night light</b><small>Warm at 6:46 PM</small></span></div></div>
+      <div class="mod"><div class="row"><span class="ci">${sv('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>')}</span><span><b>Screens</b><small>3 screens</small></span></div></div>
+    </div>
+    <div class="mod wide"><b>Sound</b><div class="slider" style="--v:64%"></div></div>
+    <div class="mod wide np"><img src="${icon("spotify")}" alt=""><span class="row"><span><b>Ziggy Stardust</b><small>David Bowie · Spotify</small></span></span><span class="ctl">⏮ ⏸ ⏭</span></div>`;
+  $("sp-r").innerHTML = `<small>Top hit</small><span class="hl"><img src="${icon("chrome")}" alt="">Firefox<em>opens in Daily</em></span><small>Apps</small>`
+    + [["settings","Firmware Updater","System"],["alacritty","Fire Starter (terminal)","Utilities"]].map(([i,n,g]) => `<span><img src="${icon(i)}" alt="">${n}<em>${g}</em></span>`).join("");
+  $("lp-tabs").innerHTML = ["Favorites","All apps","Internet","Office","Games","Multimedia","Graphics","Development","System","Settings","Utilities"].map((g,i) => `<span class="${i===0?"on":""}">${g}</span>`).join("");
+  $("lp-grid").innerHTML = D.apps.filter(a => !["downloads","trash"].includes(a.id)).map(a => `<span><img src="${a.icon}" alt="">${a.name}</span>`).join("");
+  let g = ["S","M","T","W","T","F","S"].map(d => `<span class="wd">${d}</span>`).join("");
+  for (const d of [27,28,29,30]) g += `<span class="out">${d}</span>`;
+  for (let d = 1; d <= 31; d++) g += `<span class="${d===10?"today":""}">${d}</span>`;
+  g += `<span class="out">1</span>`;
+  $("cal-g").innerHTML = g;
+  const wsApps = {Daily:["chrome","thunar","alacritty","whatsapp"],Work:["onlyoffice","obsidian","claude"],Entertainment:["spotify","discord"],Gaming:["steam"],Monitoring:["btop"],Settings:["settings","keepassxc"]};
+  $("p-ws").innerHTML = D.workspaces.map((w,i) => `<div class="ws ${i===0?"on":""}"><b>${w}<em>${i+1}</em></b><div>${(wsApps[w]||[]).map(a=>`<img src="${icon(a)}" alt="">`).join("")}</div></div>`).join("");
+  document.querySelectorAll(".mbar [data-open]").forEach(b => b.addEventListener("click", () => show(open === b.dataset.open ? "" : b.dataset.open)));
+  document.querySelectorAll("#panels button").forEach(b => b.addEventListener("click", () => show(b.dataset.p)));
+  document.querySelectorAll("[data-fx]").forEach(b => b.addEventListener("click", () => {
+    $("scr").classList.toggle("fx", b.dataset.fx === "fx"); $("scr").classList.toggle("plain", b.dataset.fx === "plain");
+    document.querySelectorAll("[data-fx]").forEach(x => x.setAttribute("aria-pressed", x === b)); paint(); }));
+  $("copy")?.addEventListener("click", () => {
+    navigator.clipboard?.writeText($("reply-text").textContent).then(() => { $("copy").textContent = "Copied"; })
+      .catch(() => { const r = document.createRange(); r.selectNodeContents($("reply-text")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
+  });
+}
+
+function show(p){
+  open = p;
+  const btn = p ? document.querySelector(`.mbar [data-open="${p}"]`) : null;
+  ["cc","spot","lp","nc","ws"].forEach(k => $("p-"+k).classList.toggle("show", k === p));
+  ["emblem","window","ws","fav","help"].forEach(k => $("m-"+k).classList.toggle("show", k === p && k !== "ws"));
+  if (p === "ws" && btn) { $("m-ws").classList.add("show"); $("m-ws").style.left = btn.offsetLeft + "px"; $("p-ws").classList.remove("show"); }
+  if (p === "ws" && !btn) {}
+  document.querySelectorAll(".mbar .mi").forEach(b => b.classList.toggle("open", b === btn));
+  if (btn && ["window","fav","help"].includes(p)) $("m-"+p).style.left = btn.offsetLeft + "px";
+  document.querySelectorAll("#panels button").forEach(b => b.setAttribute("aria-pressed", b.dataset.p === p));
+}
+
+function paint(){
+  const t = theme(cur), desk = $("desk");
+  for (const [k,v] of Object.entries(MAP)) desk.style.setProperty("--t-"+k, t[v]);
+  desk.style.setProperty("--t-shadow-a", t.tone === "white" || t.tone === "light" ? .22 : .55);
+  const c = k => `<span style="color:${t["term."+k]}">`;
+  $("term").innerHTML = `${c("green")}javier@tphome</span> ${c("blue")}~/Programs/forge-suite</span> $ nog upgrade\n${c("cyan")}::</span> 12 packages · Tier 1 now, Tier 3 after 7 days\n${c("yellow")}hold</span>  firefox 141.0 (Tier 3, 4 days left)\n${c("magenta")}done</span>  ${c("bright_black")}11 upgraded in 41 s</span>\n\n${c("green")}javier@tphome</span> ${c("blue")}~/Programs/forge-suite</span> $ nightforge status\n☾ warm (4500 K) until 07:02, by the sun`;
+  document.querySelectorAll(".chip").forEach(b => b.setAttribute("aria-pressed", b.dataset.s === cur));
+  const fx = $("scr").classList.contains("fx");
+  $("cap").innerHTML = `<span><b>${t.name}</b></span><span>${fx ? "SwayFX login: frosted bar, Dock and panels; rounded windows" : "Plain Sway: the same layout, solid and square"}</span><span>band ${t["band.base"]} · pop ${t["pop.base"]}</span>`;
+  trio();
+}
+
+function chips(){
+  $("fams").innerHTML = FAMS.map(([f,label]) => {
+    const list = D.order.filter(s => D.now[s].family === f);
+    return list.length ? `<div class="fam"><h3>${label}</h3><div class="chips">${list.map(s=>{const t=theme(s);
+      return `<button type="button" class="chip" data-s="${s}" aria-pressed="false"><i style="background:linear-gradient(135deg,${t["surface.base"]} 33%,${t["band.base"]} 33% 66%,${t["pop.base"]} 66%)"></i>${t.name}</button>`}).join("")}</div></div>` : "";
+  }).join("");
+  document.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => { cur = b.dataset.s; paint(); }));
+}
+
+function trio(){
+  const t = theme(cur);
+  const S = [["Left screen","Discord · bar only","1fr 1fr",0],["Main screen","Chrome · bar and the Dock","1.35fr 1fr",1],["Right screen","btop · bar only","1fr",0]];
+  $("trio").innerHTML = S.map(([n,a,cols,dk],i) => `<div class="mini"><div class="m" style="--m-bg:${t["band.strong"]};--m-win:${t["surface.base"]};--m-line:${t["border.subtle"]};--m-bar:${t["surface.raised"]};--m-fg:${t["text.primary"]};--m-acc:${t["band.text"]};--m-cols:${cols};--m-bot:${dk?"13%":"2%"}">
+    <div class="mb"><span>◆</span><span>${a.split(" ·")[0]}</span><span>12:30 PM</span></div>
+    <div class="mt">${i===1?'<i style="grid-row:1/3"></i><i></i><i></i>':i===0?'<i></i><i></i>':'<i></i>'}</div>${dk?'<div class="dk"><i></i><i></i><i></i><i></i><i></i><i></i></div>':""}</div><p><b>${n}</b> · ${a}</p></div>`).join("");
+}
+
+build(); chips(); show("cc"); paint();
+</script>
