@@ -29,6 +29,7 @@ import os
 import re
 import shutil
 import subprocess
+import time
 import sys
 import tomllib
 from pathlib import Path
@@ -453,6 +454,9 @@ def with_corners(style: dict, choice: str) -> dict:
 
 
 BAR_LIVE = "sway/waybar"   # under the config folder: where Waybar reads config.jsonc and style.css
+# A new bar LAYOUT means a fresh start, not a reload: Waybar 0.15 reloaded in place into another
+# layout keeps running but shows nothing (F-58, 2026-10-10, reproduced by scripts/switch-bench.py)
+BAR_RESTART = True
 
 
 def ensure_imports(place: "Place"):
@@ -558,7 +562,8 @@ def apply(style_slug: str, theme_slug: str, place: Place, *, wallpaper: str | No
         new_state["terminal_wired"] = "yes"
     place.write_state(new_state)
     if reload:
-        reload_all(files_theme(theme_slug), say)
+        layout = [p for p in changed if p.parent == place.root / BAR_LIVE and p.name in ("config.jsonc", "style.css")]
+        reload_all(files_theme(theme_slug), say, restart_bar=place.root / BAR_LIVE if layout and BAR_RESTART else None)
     return {"changed": changed, "picture": pic, "backup": saved}
 
 
@@ -566,7 +571,7 @@ def files_theme(theme_slug: str) -> dict:
     return themes()[theme_slug]
 
 
-def reload_all(theme: dict, say=print):
+def reload_all(theme: dict, say=print, restart_bar: Path | None = None):
     """Tell what is running to read the new files. Each step is skipped quietly when its program
     isn't there; nothing is stopped or started here (processes are signalled by exact name only)."""
     def run(*cmd):
@@ -576,7 +581,17 @@ def reload_all(theme: dict, say=print):
             return False
     if os.environ.get("SWAYSOCK") and run("swaymsg", "reload"):
         say("  Sway reloaded (windows, gaps, pointer, wallpaper)")
-    if run("pkill", "-USR2", "-x", "waybar"):
+    if restart_bar is not None:
+        # a new layout: stop the bar by its exact name and start it the way login does (F-58)
+        run("pkill", "-x", "waybar")
+        for _ in range(30):
+            if not run("pgrep", "-x", "waybar"):
+                break
+            time.sleep(0.1)
+        cmd = f"waybar -c {restart_bar / 'config.jsonc'} -s {restart_bar / 'style.css'}"
+        if os.environ.get("SWAYSOCK") and run("swaymsg", "exec", cmd):
+            say("  the bar restarted with its new layout")
+    elif run("pkill", "-USR2", "-x", "waybar"):
         say("  the bar restyled")
     if run("makoctl", "reload"):
         say("  notifications restyled")
