@@ -13,4 +13,5 @@ From Javier's issue (#44, October 7) to release in one afternoon: designed (two 
 - **At login** hypeForge runs `nightforge start`: wlsunset as the settings say, and the tray icon. `nightforge status` says what it's doing.
 - **Inside hypeForge Settings** as the Night light page; a three-page manual.
 - **Found and fixed before release:** spaces lost after bold words, a word said twice, narrow time fields (the pictures); a status that said "off" while hypeForge's old night light ran; Schedule's place boxes spilling onto their note (Javier's run).
+- **Proven at sunset** on the test desktop: the screens warmed by themselves and the tray icon turned mustard (Javier, 10 Oct).
 - Tests: **23** (core 12, the tray on a private bus 4, pages 7); 10 behaviours broken on purpose, 10 caught. Warnings: 0. `scripts/bench-start.py`: the real wlsunset on a hidden Sway, 14 of 14, the desktop's night light untouched.
