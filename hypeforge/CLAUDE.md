@@ -16,6 +16,7 @@ The KognogOS desktop on **Sway** (D-45): tiling, terminal apps first. Each featu
 - **The key chart is checked on every commit** (`scripts/check-keys.py`, the pre-commit hook): a key added in `sway/config` must be in `applets/help/keys.toml`.
 - **Must be readable on a plain text screen** (`TERM=linux`).
 - **The hidden bench before going live** (F-51, 2026-10-09): any change to the Workspaces or Placement applets, or to `common/hfapps.py` / `hfplace.py`, passes `python3 scripts/headless-check.py` (a screen-less Sway with three fake screens; ~45 s) **before** it is switched on on the desktop. Unit tests with a fake Sway missed a loop that took the desktop down; the bench caught it on its first run.
+- **The look's benches before Javier switches** (F-57, F-58, 2026-10-10): a new or changed style passes `scripts/style-preview.py` (the whole style on a hidden screen), `scripts/switch-bench.py` (every style switched **under a running bar** — the bar must survive) and `scripts/theme-bench.py`; an applet a style starts passes its own bench (`scripts/taskbar-bench.py`). Fresh-start benches missed both bar losses of 10-10.
 - **We learn from every project we use, and we never compare** . No "better than" or "unlike X" framing anywhere. Credit anything adapted and keep its notice.
 
 ## Documentation, at every step
