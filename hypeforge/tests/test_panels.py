@@ -16,6 +16,7 @@ sys.path.insert(0, str(HERE / "applets/panels/views"))
 import panelkit  # noqa: E402
 import power  # noqa: E402
 import start  # noqa: E402
+import quick  # noqa: E402
 
 
 class Look(unittest.TestCase):
@@ -119,6 +120,74 @@ class StartPanel(unittest.TestCase):
         self.assertEqual(names, ["Favorites", "Games", "Internet", "All apps"])
         self.assertEqual(dict(sets)["Favorites"], ["steam"], "a favourite that isn't installed is left out")
         self.assertEqual(len(dict(sets)["All apps"]), 4)
+
+
+class FakeRun:
+    """Answers commands from a table; records what was run."""
+    def __init__(self, answers):
+        self.answers, self.ran = answers, []
+
+    def __call__(self, cmd, timeout=3.0):
+        self.ran.append(cmd)
+        return self.answers.get(" ".join(cmd), "")
+
+
+class QuickSettings(unittest.TestCase):
+    def test_wifi_off_on_a_cable_says_so(self):
+        be = quick.Backend(FakeRun({"nmcli -t -f WIFI radio": "disabled\n",
+                                    "nmcli -t -f DEVICE,TYPE,STATE dev": "enp5s0:ethernet:connected\nwlan0:wifi:unavailable\n"}))
+        self.assertEqual(be.wifi(), (False, "off · wired"))
+
+    def test_wifi_on_shows_the_network(self):
+        be = quick.Backend(FakeRun({"nmcli -t -f WIFI radio": "enabled\n", "nmcli -t -f ACTIVE,SSID dev wifi": "no:Other\nyes:tphome\n"}))
+        self.assertEqual(be.wifi(), (True, "tphome"))
+
+    def test_a_missing_program_is_a_dash_not_a_crash(self):
+        be = quick.Backend(FakeRun({}))
+        self.assertEqual(be.wifi(), (None, "—"))
+        self.assertEqual(be.bluetooth(), (None, "—"))
+        self.assertEqual(be.volume(), (None, False))
+
+    def test_bluetooth_names_the_connected_device(self):
+        be = quick.Backend(FakeRun({"bluetoothctl show": "\tName: x\n\tPowered: yes\n",
+                                    "bluetoothctl devices Connected": "Device AA:BB Logitech G13\n"}))
+        self.assertEqual(be.bluetooth(), (True, "Logitech G13"))
+
+    def test_the_switches_run_the_owning_programs(self):
+        run = FakeRun({})
+        be = quick.Backend(run)
+        be.wifi_toggle(False)
+        be.bluetooth_toggle(True)
+        be.dnd_toggle(False)
+        be.set_volume(37.6)
+        self.assertIn(["nmcli", "radio", "wifi", "on"], run.ran)
+        self.assertIn(["bluetoothctl", "power", "off"], run.ran)
+        self.assertTrue(run.ran[2][0].endswith("hypeforge-notifications") and run.ran[2][1] == "dnd",
+                        "Do Not Disturb through the bell, so the bell redraws")
+        self.assertEqual(run.ran[3][-1], "37%")
+
+    def test_the_night_lights_sentence_is_cut_to_fit_a_tile(self):
+        self.assertEqual(quick.short("warm again from 18:59"), "from 18:59")
+        self.assertEqual(quick.short("4500 K since 18:46 · daylight at 07:02"), "until 07:02")
+        self.assertEqual(quick.short("Warm Now, 4500 K, until you pick Automatic"), "warm now")
+        self.assertEqual(quick.short("switched off"), "off")
+
+    def test_volume_and_mute(self):
+        be = quick.Backend(FakeRun({"wpctl get-volume @DEFAULT_AUDIO_SINK@": "Volume: 0.52 [MUTED]\n"}))
+        self.assertEqual(be.volume(), (52, True))
+
+    def test_updates_from_the_snapshot_never_the_network(self):
+        with tempfile.TemporaryDirectory() as d:
+            old = quick.SNAPSHOT
+            quick.SNAPSHOT = Path(d) / "updates.json"
+            try:
+                self.assertEqual(quick.Backend(FakeRun({})).updates(), "Updates: not checked yet")
+                quick.SNAPSHOT.write_text('{"count": 212, "ready": []}')
+                self.assertEqual(quick.Backend(FakeRun({})).updates(), "212 waiting their turn · nog")
+                quick.SNAPSHOT.write_text('{"count": 212, "ready": [{"pkg": "a"}, {"pkg": "b"}]}')
+                self.assertEqual(quick.Backend(FakeRun({})).updates(), "2 updates ready · nog")
+            finally:
+                quick.SNAPSHOT = old
 
 
 if __name__ == "__main__":
