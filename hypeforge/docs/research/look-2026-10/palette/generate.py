@@ -205,11 +205,15 @@ ANSI = [("red", 25), ("green", 145), ("yellow", 90), ("blue", 255), ("magenta", 
 #   cursor: installed theme names (catppuccin-mocha-*-cursors, checked in /usr/share/icons)
 #   gnome: the nearest of GNOME/libadwaita's nine named accents (the portal's accent-color)
 THEMES = [
-    dict(slug="white",            name="White",            family="neutral", tone="white", surf=(262, 0.0),  accent=BRAND["emblem_blue"],  cursor="dark",  gnome="blue"),
+    # White and Black are the HIGH-CONTRAST themes (Javier, 2026-10-10: "they are high contrast
+    # themes and gray scale use for styling. Not pure."): grays only, the accent a near-black /
+    # near-white gray, stronger text and borders (hc=True). Colour stays only where it means
+    # something: status, urgent, the terminal's colours.
+    dict(slug="white",            name="White",            family="neutral", tone="white", surf=(262, 0.0),  accent=(.25, 0.0, 0),        cursor="dark",  gnome="slate", hc=True),
     dict(slug="light-gray",       name="Light Gray",       family="neutral", tone="light", surf=(262, 0.0),  accent=BRAND["emblem_blue"],  cursor="dark",  gnome="slate", l_shift=-.025),
     dict(slug="gray",             name="Gray",             family="neutral", tone="mid",   surf=(262, 0.0),  accent=(.80, .12, 258),       cursor="dark",  gnome="slate", l_shift=+.015),
     dict(slug="dark-gray",        name="Dark Gray",        family="neutral", tone="dark",  surf=(262, 0.0),  accent=(.78, .12, 258),       cursor="dark",  gnome="slate"),
-    dict(slug="black",            name="Black",            family="neutral", tone="black", surf=(262, 0.0),  accent=(.76, .13, 258),       cursor="light", gnome="slate"),
+    dict(slug="black",            name="Black",            family="neutral", tone="black", surf=(262, 0.0),  accent=(.92, 0.0, 0),        cursor="light", gnome="slate", hc=True),
     dict(slug="dark-blue",        name="Dark Blue",        family="blue",    tone="dark",  surf=(262, .035), accent=(.78, .13, 258),       cursor="blue",  gnome="blue"),
     dict(slug="blue",             name="Blue",             family="blue",    tone="mid",   surf=(262, .058), accent=(.86, .12, 225),       cursor="blue",  gnome="blue"),
     dict(slug="light-blue",       name="Light Blue",       family="blue",    tone="light", surf=(250, .025), accent=BRAND["emblem_blue"],  cursor="blue",  gnome="blue"),
@@ -327,7 +331,8 @@ class Theme:
 
     def on_colour(self, bg: str, h: float) -> tuple[float, float, float]:
         """Near-white or near-black text for a filled colour: whichever reads better."""
-        light, dark = (.985, .010, h), (.200, .030, h)
+        tint = self.lch[bg][1] >= 0.005   # a gray fill gets gray text, not a tinted one
+        light, dark = (.985, .010 if tint else 0.0, h), (.200, .030 if tint else 0.0, h)
         cl, cd = lch_to_hex(*light), lch_to_hex(*dark)
         return light if wcag(cl, self.t[bg]) >= wcag(cd, self.t[bg]) else dark
 
@@ -374,6 +379,12 @@ class Theme:
         self.nudge("text.secondary", [(s, 4.5, 60) for s in ("surface.base", "surface.raised",
                                                              "surface.overlay", "surface.sunken")])
         self.nudge("text.muted", [("surface.base", 3.0, 45), ("surface.raised", 3.0, 45)], move_bg=False)
+        hc = r.get("hc", False)
+        if hc:   # high contrast: every text level a step further
+            surfs = ("surface.base", "surface.raised", "surface.overlay", "surface.sunken", "surface.hover")
+            self.nudge("text.primary", [(s, 7.0, 90) for s in surfs], move_bg=False)
+            self.nudge("text.secondary", [(s, 7.0, 75) for s in surfs[:4]], move_bg=False)
+            self.nudge("text.muted", [(s, 4.5, 60) for s in surfs[:2]], move_bg=False)
 
         # 3. Accent — pinned brand colour or a recipe; must stand out from every surface.
         acc = r["accent"]
@@ -396,12 +407,18 @@ class Theme:
         # if contrast pushed "pressed" back onto the accent, take more colour out until it shows
         pL, pC, ph = self.lch["accent.pressed"]
         f = 0.75
-        while delta_e_ok(self.t["accent.pressed"], self.t["accent.base"]) < PRESSED_MIN and f > 0.2:
+        if aC < 0.005:   # a gray accent: the click shows by lightness alone
+            step = 1 if dark else -1
+            while delta_e_ok(self.t["accent.pressed"], self.t["accent.base"]) < PRESSED_MIN * 2 and 0.02 < pL < 0.98:
+                pL -= 0.02 * step if dark else -0.02 * step
+                self.put("accent.pressed", pL, 0.0, 0)
+            f = 0.0
+        while f > 0.2 and delta_e_ok(self.t["accent.pressed"], self.t["accent.base"]) < PRESSED_MIN and f > 0.2:
             f -= 0.05
             self.put("accent.pressed", pL, aC * f, ph)
             if not self._passes(self.t["accent.on"], self.t["accent.pressed"], 4.5, 60):
                 self.nudge_away("accent.pressed", "accent.on", 4.5, 60)
-        if f < 0.75:
+        if 0 < f < 0.75:
             self.nudges.append(f"accent.pressed: chroma × {f:.2f} (so a click shows)")
         # accent used as words (links, the letters you typed in a list)
         self.put("accent.text", *self.lch["accent.base"])
@@ -414,6 +431,9 @@ class Theme:
         self.put("border.subtle", bL + st["subtle"], sc, sh)
         self.put("border.strong", bL + st["strong"], sc, sh)
         self.nudge("border.strong", [("surface.base", 3.0, 30), ("surface.raised", 3.0, 30)], move_bg=False)
+        if hc:   # high contrast: a line you can always see, and a strong one that reads like text
+            self.nudge("border.subtle", [("surface.base", 3.0, 30), ("surface.raised", 3.0, 30)], move_bg=False)
+            self.nudge("border.strong", [("surface.base", 7.0, 75), ("surface.raised", 7.0, 75)], move_bg=False)
 
         # 5. Status colours — readable as words; kept apart from the accent.
         for s, hue in STATUS_HUES.items():

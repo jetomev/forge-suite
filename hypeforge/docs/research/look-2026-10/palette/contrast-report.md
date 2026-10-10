@@ -6,11 +6,11 @@
 
 | Theme | Tone | Required pairs | Pass | Lowest text ratio | Lowest UI ratio | Nudges | Notes |
 |---|---|---|---|---|---|---|---|
-| White | white | 78 | 78/78 | 4.57 | 3.05 | 0 | — |
+| White | white | 78 | 78/78 | 4.57 | 3.75 | 5 | — |
 | Light Gray | light | 78 | 78/78 | 4.52 | 3.02 | 9 | — |
 | Gray | mid | 78 | 78/78 | 4.53 | 3.03 | 17 | — |
 | Dark Gray | dark | 78 | 78/78 | 6.26 | 4.70 | 9 | — |
-| Black | black | 78 | 78/78 | 8.45 | 6.27 | 8 | — |
+| Black | black | 78 | 78/78 | 9.36 | 3.52 | 9 | — |
 | Dark Blue | dark | 78 | 78/78 | 6.32 | 4.73 | 10 | — |
 | Blue | mid | 78 | 78/78 | 4.57 | 3.32 | 13 | — |
 | Light Blue | light | 78 | 78/78 | 4.52 | 3.03 | 4 | — |
@@ -42,11 +42,11 @@
 
 | Theme | Ladder ΔL (sunken→base→raised→overlay) | Accent ÷ surface chroma | Closest status to accent (ΔE) | Urgent vs focused (ΔE) | Pressed vs accent (ΔE) | Flags |
 |---|---|---|---|---|---|---|
-| White | +0.033 · +0.021 · +0.021 | ∞ (neutral) | info 0.122 | 0.330 | 0.115 | — |
+| White | +0.033 · +0.021 · +0.021 | ∞ (neutral) | warning 0.293 | 0.308 | 0.102 | — |
 | Light Gray | +0.049 · +0.024 · +0.024 | ∞ (neutral) | info 0.137 | 0.331 | 0.115 | — |
 | Gray | +0.061 · +0.029 · +0.033 | ∞ (neutral) | info 0.094 | 0.168 | 0.043 | — |
 | Dark Gray | +0.061 · +0.033 · +0.048 | ∞ (neutral) | info 0.098 | 0.201 | 0.030 | — |
-| Black | +0.107 · +0.066 · +0.040 | ∞ (neutral) | info 0.105 | 0.214 | 0.032 | — |
+| Black | +0.107 · +0.066 · +0.040 | ∞ (neutral) | danger 0.164 | 0.164 | 0.080 | — |
 | Dark Blue | +0.061 · +0.033 · +0.047 | 3.2× | info 0.098 | 0.201 | 0.034 | — |
 | Blue | +0.060 · +0.029 · +0.032 | 1.6× | info 0.086 | 0.171 | 0.060 | — |
 | Light Blue | +0.049 · +0.024 · +0.027 | 8.9× | info 0.126 | 0.330 | 0.115 | — |
@@ -68,45 +68,47 @@
 
 ## White (`white`)
 
+Nudged: `text.primary: L 0.240 → 0.005`; `text.secondary: L 0.420 → 0.410`; `text.muted: L 0.560 → 0.535`; `border.subtle: L 0.828 → 0.638`; `border.strong: L 0.588 → 0.433`
+
 | Foreground | Background | Kind | WCAG | need | APCA Lc | need | Result |
 |---|---|---|---|---|---|---|---|
-| `text.primary` #1f1f1f | `surface.base` #f1f1f1 | text | 14.59 | 7.0 | 95.1 | 75 | pass |
-| `text.primary` #1f1f1f | `surface.raised` #f8f8f8 | text | 15.52 | 7.0 | 99.3 | 75 | pass |
-| `text.primary` #1f1f1f | `surface.overlay` #ffffff | text | 16.48 | 4.5 | 103.4 | 60 | pass |
-| `text.primary` #1f1f1f | `surface.sunken` #e6e6e6 | text | 13.21 | 4.5 | 88.7 | 60 | pass |
-| `text.primary` #1f1f1f | `surface.hover` #dcdcdc | text | 12.02 | 4.5 | 82.9 | 60 | pass |
-| `text.secondary` #4d4d4d | `surface.base` #f1f1f1 | text | 7.48 | 4.5 | 80.8 | 60 | pass |
-| `text.secondary` #4d4d4d | `surface.raised` #f8f8f8 | text | 7.96 | 4.5 | 85.0 | 60 | pass |
-| `text.secondary` #4d4d4d | `surface.overlay` #ffffff | text | 8.45 | 4.5 | 89.1 | 60 | pass |
-| `text.secondary` #4d4d4d | `surface.sunken` #e6e6e6 | text | 6.77 | 4.5 | 74.4 | 60 | pass |
-| `text.muted` #747474 | `surface.base` #f1f1f1 | hint | 4.14 | 3.0 | 64.2 | 45 | pass |
-| `text.muted` #747474 | `surface.raised` #f8f8f8 | hint | 4.40 | 3.0 | 68.3 | 45 | pass |
-| `accent.text` #0363ef | `surface.base` #f1f1f1 | text | 4.61 | 4.5 | 66.5 | 60 | pass |
-| `accent.text` #0363ef | `surface.raised` #f8f8f8 | text | 4.90 | 4.5 | 70.6 | 60 | pass |
-| `accent.text` #0363ef | `surface.overlay` #ffffff | text | 5.20 | 4.5 | 74.8 | 60 | pass |
-| `accent.base` #0363ef | `surface.base` #f1f1f1 | ui | 4.61 | 3.0 | 66.5 | 30 | pass |
-| `accent.base` #0363ef | `surface.raised` #f8f8f8 | ui | 4.90 | 3.0 | 70.6 | 30 | pass |
-| `accent.base` #0363ef | `surface.overlay` #ffffff | ui | 5.20 | 3.0 | 74.8 | 30 | pass |
-| `accent.base` #0363ef | `bar.bg` #ededed | ui | 4.45 | 3.0 | 64.1 | 30 | pass |
-| `accent.on` #f7faff | `accent.base` #0363ef | text | 4.97 | 4.5 | 76.7 | 60 | pass |
-| `accent.on` #f7faff | `accent.hover` #0056d3 | text | 6.14 | 4.5 | 82.5 | 60 | pass |
-| `accent.on` #f7faff | `accent.pressed` #0f4cae | text | 7.53 | 4.5 | 87.9 | 60 | pass |
-| `accent.ring` #0363ef | `surface.base` #f1f1f1 | ui | 4.61 | 3.0 | 66.5 | 30 | pass |
-| `accent.ring` #0363ef | `surface.raised` #f8f8f8 | ui | 4.90 | 3.0 | 70.6 | 30 | pass |
-| `border.strong` #7c7c7c | `surface.base` #f1f1f1 | ui | 3.70 | 3.0 | 60.5 | 30 | pass |
-| `border.strong` #7c7c7c | `surface.raised` #f8f8f8 | ui | 3.93 | 3.0 | 64.6 | 30 | pass |
-| `window.focused` #0363ef | `surface.base` #f1f1f1 | ui | 4.61 | 3.0 | 66.5 | 30 | pass |
-| `window.focused` #0363ef | `window.unfocused` #c6c6c6 | ui | 3.05 | 3.0 | 41.9 | 30 | pass |
+| `text.primary` #000000 | `surface.base` #f1f1f1 | text | 18.59 | 7.0 | 97.7 | 75 | pass |
+| `text.primary` #000000 | `surface.raised` #f8f8f8 | text | 19.77 | 7.0 | 101.9 | 75 | pass |
+| `text.primary` #000000 | `surface.overlay` #ffffff | text | 21.00 | 4.5 | 106.0 | 60 | pass |
+| `text.primary` #000000 | `surface.sunken` #e6e6e6 | text | 16.83 | 4.5 | 91.3 | 60 | pass |
+| `text.primary` #000000 | `surface.hover` #dcdcdc | text | 15.31 | 4.5 | 85.5 | 60 | pass |
+| `text.secondary` #4a4a4a | `surface.base` #f1f1f1 | text | 7.85 | 4.5 | 82.0 | 60 | pass |
+| `text.secondary` #4a4a4a | `surface.raised` #f8f8f8 | text | 8.34 | 4.5 | 86.1 | 60 | pass |
+| `text.secondary` #4a4a4a | `surface.overlay` #ffffff | text | 8.86 | 4.5 | 90.3 | 60 | pass |
+| `text.secondary` #4a4a4a | `surface.sunken` #e6e6e6 | text | 7.10 | 4.5 | 75.6 | 60 | pass |
+| `text.muted` #6d6d6d | `surface.base` #f1f1f1 | hint | 4.58 | 3.0 | 67.3 | 45 | pass |
+| `text.muted` #6d6d6d | `surface.raised` #f8f8f8 | hint | 4.87 | 3.0 | 71.5 | 45 | pass |
+| `accent.text` #222222 | `surface.base` #f1f1f1 | text | 14.09 | 4.5 | 94.5 | 60 | pass |
+| `accent.text` #222222 | `surface.raised` #f8f8f8 | text | 14.98 | 4.5 | 98.7 | 60 | pass |
+| `accent.text` #222222 | `surface.overlay` #ffffff | text | 15.91 | 4.5 | 102.9 | 60 | pass |
+| `accent.base` #222222 | `surface.base` #f1f1f1 | ui | 14.09 | 3.0 | 94.5 | 30 | pass |
+| `accent.base` #222222 | `surface.raised` #f8f8f8 | ui | 14.98 | 3.0 | 98.7 | 30 | pass |
+| `accent.base` #222222 | `surface.overlay` #ffffff | ui | 15.91 | 3.0 | 102.9 | 30 | pass |
+| `accent.base` #222222 | `bar.bg` #ededed | ui | 13.59 | 3.0 | 92.2 | 30 | pass |
+| `accent.on` #fafafa | `accent.base` #222222 | text | 15.24 | 4.5 | 102.1 | 60 | pass |
+| `accent.on` #fafafa | `accent.hover` #161616 | text | 17.34 | 4.5 | 103.7 | 60 | pass |
+| `accent.on` #fafafa | `accent.pressed` #0b0b0b | text | 18.86 | 4.5 | 104.4 | 60 | pass |
+| `accent.ring` #222222 | `surface.base` #f1f1f1 | ui | 14.09 | 3.0 | 94.5 | 30 | pass |
+| `accent.ring` #222222 | `surface.raised` #f8f8f8 | ui | 14.98 | 3.0 | 98.7 | 30 | pass |
+| `border.strong` #505050 | `surface.base` #f1f1f1 | ui | 7.14 | 3.0 | 79.6 | 30 | pass |
+| `border.strong` #505050 | `surface.raised` #f8f8f8 | ui | 7.59 | 3.0 | 83.8 | 30 | pass |
+| `window.focused` #222222 | `surface.base` #f1f1f1 | ui | 14.09 | 3.0 | 94.5 | 30 | pass |
+| `window.focused` #222222 | `window.unfocused` #8b8b8b | ui | 4.67 | 3.0 | 39.3 | 30 | pass |
 | `window.urgent` #af3c40 | `surface.base` #f1f1f1 | ui | 5.25 | 3.0 | 70.4 | 30 | pass |
-| `bar.fg` #1f1f1f | `bar.bg` #ededed | text | 14.08 | 7.0 | 92.8 | 75 | pass |
-| `bar.fg` #1f1f1f | `bar.shade` #f8f8f8 | text | 15.52 | 4.5 | 99.3 | 60 | pass |
-| `bar.fg` #1f1f1f | `bar.hover` #dcdcdc | text | 12.02 | 4.5 | 82.9 | 60 | pass |
-| `bar.fg_dim` #4d4d4d | `bar.bg` #ededed | text | 7.22 | 4.5 | 78.5 | 60 | pass |
-| `bar.fg_dim` #4d4d4d | `bar.shade` #f8f8f8 | text | 7.96 | 4.5 | 85.0 | 60 | pass |
-| `bar.active_fg` #f7faff | `bar.active_bg` #0363ef | text | 4.97 | 4.5 | 76.7 | 60 | pass |
-| `bar.active_bg` #0363ef | `bar.bg` #ededed | ui | 4.45 | 3.0 | 64.1 | 30 | pass |
-| `bar.active_bg` #0363ef | `bar.shade` #f8f8f8 | ui | 4.90 | 3.0 | 70.6 | 30 | pass |
-| `selection.fg` #1f1f1f | `selection.bg` #a6c5f8 | text | 9.39 | 4.5 | 69.2 | 60 | pass |
+| `bar.fg` #000000 | `bar.bg` #ededed | text | 17.94 | 7.0 | 95.4 | 75 | pass |
+| `bar.fg` #000000 | `bar.shade` #f8f8f8 | text | 19.77 | 4.5 | 101.9 | 60 | pass |
+| `bar.fg` #000000 | `bar.hover` #dcdcdc | text | 15.31 | 4.5 | 85.5 | 60 | pass |
+| `bar.fg_dim` #4a4a4a | `bar.bg` #ededed | text | 7.57 | 4.5 | 79.6 | 60 | pass |
+| `bar.fg_dim` #4a4a4a | `bar.shade` #f8f8f8 | text | 8.34 | 4.5 | 86.1 | 60 | pass |
+| `bar.active_fg` #fafafa | `bar.active_bg` #222222 | text | 15.24 | 4.5 | 102.1 | 60 | pass |
+| `bar.active_bg` #222222 | `bar.bg` #ededed | ui | 13.59 | 3.0 | 92.2 | 30 | pass |
+| `bar.active_bg` #222222 | `bar.shade` #f8f8f8 | ui | 14.98 | 3.0 | 98.7 | 30 | pass |
+| `selection.fg` #000000 | `selection.bg` #c3c3c3 | text | 11.91 | 4.5 | 71.5 | 60 | pass |
 | `status.success` #1b7e2a | `surface.base` #f1f1f1 | text | 4.57 | 4.5 | 66.8 | 60 | pass |
 | `status.success` #1b7e2a | `surface.raised` #f8f8f8 | text | 4.87 | 4.5 | 70.9 | 60 | pass |
 | `status.warning` #985600 | `surface.base` #f1f1f1 | text | 5.07 | 4.5 | 69.9 | 60 | pass |
@@ -119,7 +121,7 @@
 | `status.on_warning` #fff9f4 | `status.warning` #985600 | text | 5.48 | 4.5 | 80.1 | 60 | pass |
 | `status.on_danger` #fff8f8 | `status.danger` #af3c40 | text | 5.65 | 4.5 | 80.4 | 60 | pass |
 | `status.on_info` #f6fbff | `status.info` #0070a6 | text | 5.21 | 4.5 | 78.6 | 60 | pass |
-| `term.fg` #1f1f1f | `term.bg` #f1f1f1 | text | 14.59 | 7.0 | 95.1 | 75 | pass |
+| `term.fg` #000000 | `term.bg` #f1f1f1 | text | 18.59 | 7.0 | 97.7 | 75 | pass |
 | `term.red` #9d3533 | `term.bg` #f1f1f1 | text | 6.22 | 4.5 | 75.1 | 60 | pass |
 | `term.green` #157123 | `term.bg` #f1f1f1 | text | 5.44 | 4.5 | 71.8 | 60 | pass |
 | `term.yellow` #735a00 | `term.bg` #f1f1f1 | text | 5.83 | 4.5 | 74.0 | 60 | pass |
@@ -148,8 +150,8 @@
 | `cat.purple` #885cb5 | `bar.bg` #ededed | ui | 4.23 | 3.0 | 63.3 | 30 | pass |
 | `cat.pink` #af4d80 | `surface.base` #f1f1f1 | ui | 4.43 | 3.0 | 65.7 | 30 | pass |
 | `cat.pink` #af4d80 | `bar.bg` #ededed | ui | 4.27 | 3.0 | 63.4 | 30 | pass |
-| `border.subtle` #c6c6c6 | `surface.base` #f1f1f1 | decor | 1.51 | 1.2 | 22.3 | 0 | pass |
-| `window.unfocused` #c6c6c6 | `surface.base` #f1f1f1 | decor | 1.51 | 1.2 | 22.3 | 0 | pass |
+| `border.subtle` #8b8b8b | `surface.base` #f1f1f1 | decor | 3.02 | 1.2 | 53.3 | 0 | pass |
+| `window.unfocused` #8b8b8b | `surface.base` #f1f1f1 | decor | 3.02 | 1.2 | 53.3 | 0 | pass |
 
 ## Light Gray (`light-gray`)
 
@@ -414,60 +416,60 @@ Nudged: `text.secondary: L 0.760 → 0.795`; `text.muted: L 0.640 → 0.695`; `a
 
 ## Black (`black`)
 
-Nudged: `text.secondary: L 0.760 → 0.770`; `text.muted: L 0.640 → 0.675`; `accent.pressed: L 0.700 → 0.760 (for accent.on)`; `accent.pressed: chroma × 0.70 (so a click shows)`; `accent.text: L 0.760 → 0.770`; `status.info: hue 240 → 216 (kept apart from accent.base)`; `term.red: L 0.760 → 0.775`; `term.magenta: L 0.760 → 0.775`
+Nudged: `text.secondary: L 0.760 → 0.770`; `text.muted: L 0.640 → 0.675`; `text.primary: L 0.880 → 0.940`; `text.secondary: L 0.770 → 0.850`; `text.muted: L 0.675 → 0.765`; `border.subtle: L 0.255 → 0.570`; `border.strong: L 0.665 → 0.845`; `term.red: L 0.760 → 0.775`; `term.magenta: L 0.760 → 0.775`
 
 | Foreground | Background | Kind | WCAG | need | APCA Lc | need | Result |
 |---|---|---|---|---|---|---|---|
-| `text.primary` #d7d7d7 | `surface.base` #040404 | text | 14.24 | 7.0 | 82.3 | 75 | pass |
-| `text.primary` #d7d7d7 | `surface.raised` #101010 | text | 13.22 | 7.0 | 81.9 | 75 | pass |
-| `text.primary` #d7d7d7 | `surface.overlay` #191919 | text | 12.22 | 4.5 | 81.1 | 60 | pass |
-| `text.primary` #d7d7d7 | `surface.sunken` #000000 | text | 14.59 | 4.5 | 82.3 | 60 | pass |
-| `text.primary` #d7d7d7 | `surface.hover` #2e2e2e | text | 9.44 | 4.5 | 77.7 | 60 | pass |
-| `text.secondary` #b4b4b4 | `surface.base` #040404 | text | 9.89 | 4.5 | 61.8 | 60 | pass |
-| `text.secondary` #b4b4b4 | `surface.raised` #101010 | text | 9.18 | 4.5 | 61.3 | 60 | pass |
-| `text.secondary` #b4b4b4 | `surface.overlay` #191919 | text | 8.48 | 4.5 | 60.6 | 60 | pass |
-| `text.secondary` #b4b4b4 | `surface.sunken` #000000 | text | 10.13 | 4.5 | 61.8 | 60 | pass |
-| `text.muted` #979797 | `surface.base` #040404 | hint | 7.02 | 3.0 | 46.1 | 45 | pass |
-| `text.muted` #979797 | `surface.raised` #101010 | hint | 6.51 | 3.0 | 45.7 | 45 | pass |
-| `accent.text` #84b6ff | `surface.base` #040404 | text | 9.88 | 4.5 | 61.8 | 60 | pass |
-| `accent.text` #84b6ff | `surface.raised` #101010 | text | 9.17 | 4.5 | 61.4 | 60 | pass |
-| `accent.text` #84b6ff | `surface.overlay` #191919 | text | 8.47 | 4.5 | 60.6 | 60 | pass |
-| `accent.base` #7fb3ff | `surface.base` #040404 | ui | 9.56 | 3.0 | 60.2 | 30 | pass |
-| `accent.base` #7fb3ff | `surface.raised` #101010 | ui | 8.87 | 3.0 | 59.8 | 30 | pass |
-| `accent.base` #7fb3ff | `surface.overlay` #191919 | ui | 8.20 | 3.0 | 59.0 | 30 | pass |
-| `accent.base` #7fb3ff | `bar.bg` #000000 | ui | 9.79 | 3.0 | 60.3 | 30 | pass |
-| `accent.on` #0d1624 | `accent.base` #7fb3ff | text | 8.46 | 4.5 | 60.8 | 60 | pass |
-| `accent.on` #0d1624 | `accent.hover` #9ac3ff | text | 10.04 | 4.5 | 69.1 | 60 | pass |
-| `accent.on` #0d1624 | `accent.pressed` #8db3eb | text | 8.45 | 4.5 | 60.6 | 60 | pass |
-| `accent.ring` #7fb3ff | `surface.base` #040404 | ui | 9.56 | 3.0 | 60.2 | 30 | pass |
-| `accent.ring` #7fb3ff | `surface.raised` #101010 | ui | 8.87 | 3.0 | 59.8 | 30 | pass |
-| `border.strong` #949494 | `surface.base` #040404 | ui | 6.76 | 3.0 | 44.6 | 30 | pass |
-| `border.strong` #949494 | `surface.raised` #101010 | ui | 6.27 | 3.0 | 44.2 | 30 | pass |
-| `window.focused` #7fb3ff | `surface.base` #040404 | ui | 9.56 | 3.0 | 60.2 | 30 | pass |
-| `window.focused` #7fb3ff | `window.unfocused` #232323 | ui | 7.33 | 3.0 | 57.7 | 30 | pass |
+| `text.primary` #ebebeb | `surface.base` #040404 | text | 17.20 | 7.0 | 94.8 | 75 | pass |
+| `text.primary` #ebebeb | `surface.raised` #101010 | text | 15.96 | 7.0 | 94.4 | 75 | pass |
+| `text.primary` #ebebeb | `surface.overlay` #191919 | text | 14.75 | 4.5 | 93.6 | 60 | pass |
+| `text.primary` #ebebeb | `surface.sunken` #000000 | text | 17.62 | 4.5 | 94.8 | 60 | pass |
+| `text.primary` #ebebeb | `surface.hover` #2e2e2e | text | 11.39 | 4.5 | 90.2 | 60 | pass |
+| `text.secondary` #cecece | `surface.base` #040404 | text | 13.03 | 4.5 | 76.9 | 60 | pass |
+| `text.secondary` #cecece | `surface.raised` #101010 | text | 12.09 | 4.5 | 76.4 | 60 | pass |
+| `text.secondary` #cecece | `surface.overlay` #191919 | text | 11.17 | 4.5 | 75.6 | 60 | pass |
+| `text.secondary` #cecece | `surface.sunken` #000000 | text | 13.34 | 4.5 | 76.9 | 60 | pass |
+| `text.muted` #b2b2b2 | `surface.base` #040404 | hint | 9.67 | 3.0 | 60.6 | 45 | pass |
+| `text.muted` #b2b2b2 | `surface.raised` #101010 | hint | 8.97 | 3.0 | 60.2 | 45 | pass |
+| `accent.text` #e4e4e4 | `surface.base` #040404 | text | 16.12 | 4.5 | 90.4 | 60 | pass |
+| `accent.text` #e4e4e4 | `surface.raised` #101010 | text | 14.97 | 4.5 | 90.0 | 60 | pass |
+| `accent.text` #e4e4e4 | `surface.overlay` #191919 | text | 13.83 | 4.5 | 89.2 | 60 | pass |
+| `accent.base` #e4e4e4 | `surface.base` #040404 | ui | 16.12 | 3.0 | 90.4 | 30 | pass |
+| `accent.base` #e4e4e4 | `surface.raised` #101010 | ui | 14.97 | 3.0 | 90.0 | 30 | pass |
+| `accent.base` #e4e4e4 | `surface.overlay` #191919 | ui | 13.83 | 3.0 | 89.2 | 30 | pass |
+| `accent.base` #e4e4e4 | `bar.bg` #000000 | ui | 16.52 | 3.0 | 90.4 | 30 | pass |
+| `accent.on` #161616 | `accent.base` #e4e4e4 | text | 14.23 | 4.5 | 88.9 | 60 | pass |
+| `accent.on` #161616 | `accent.hover` #f5f5f5 | text | 16.60 | 4.5 | 98.9 | 60 | pass |
+| `accent.on` #161616 | `accent.pressed` #cacaca | text | 11.04 | 4.5 | 74.2 | 60 | pass |
+| `accent.ring` #e4e4e4 | `surface.base` #040404 | ui | 16.12 | 3.0 | 90.4 | 30 | pass |
+| `accent.ring` #e4e4e4 | `surface.raised` #101010 | ui | 14.97 | 3.0 | 90.0 | 30 | pass |
+| `border.strong` #cccccc | `surface.base` #040404 | ui | 12.77 | 3.0 | 75.7 | 30 | pass |
+| `border.strong` #cccccc | `surface.raised` #101010 | ui | 11.85 | 3.0 | 75.2 | 30 | pass |
+| `window.focused` #e4e4e4 | `surface.base` #040404 | ui | 16.12 | 3.0 | 90.4 | 30 | pass |
+| `window.focused` #e4e4e4 | `window.unfocused` #777777 | ui | 3.52 | 3.0 | 59.1 | 30 | pass |
 | `window.urgent` #ffa09c | `surface.base` #040404 | ui | 10.51 | 3.0 | 65.1 | 30 | pass |
-| `bar.fg` #d7d7d7 | `bar.bg` #000000 | text | 14.59 | 7.0 | 82.3 | 75 | pass |
-| `bar.fg` #d7d7d7 | `bar.shade` #101010 | text | 13.22 | 4.5 | 81.9 | 60 | pass |
-| `bar.fg` #d7d7d7 | `bar.hover` #2e2e2e | text | 9.44 | 4.5 | 77.7 | 60 | pass |
-| `bar.fg_dim` #b4b4b4 | `bar.bg` #000000 | text | 10.13 | 4.5 | 61.8 | 60 | pass |
-| `bar.fg_dim` #b4b4b4 | `bar.shade` #101010 | text | 9.18 | 4.5 | 61.3 | 60 | pass |
-| `bar.active_fg` #0d1624 | `bar.active_bg` #7fb3ff | text | 8.46 | 4.5 | 60.8 | 60 | pass |
-| `bar.active_bg` #7fb3ff | `bar.bg` #000000 | ui | 9.79 | 3.0 | 60.3 | 30 | pass |
-| `bar.active_bg` #7fb3ff | `bar.shade` #101010 | ui | 8.87 | 3.0 | 59.8 | 30 | pass |
-| `selection.fg` #d7d7d7 | `selection.bg` #0b203f | text | 11.29 | 4.5 | 80.0 | 60 | pass |
+| `bar.fg` #ebebeb | `bar.bg` #000000 | text | 17.62 | 7.0 | 94.8 | 75 | pass |
+| `bar.fg` #ebebeb | `bar.shade` #101010 | text | 15.96 | 4.5 | 94.4 | 60 | pass |
+| `bar.fg` #ebebeb | `bar.hover` #2e2e2e | text | 11.39 | 4.5 | 90.2 | 60 | pass |
+| `bar.fg_dim` #cecece | `bar.bg` #000000 | text | 13.34 | 4.5 | 76.9 | 60 | pass |
+| `bar.fg_dim` #cecece | `bar.shade` #101010 | text | 12.09 | 4.5 | 76.4 | 60 | pass |
+| `bar.active_fg` #161616 | `bar.active_bg` #e4e4e4 | text | 14.23 | 4.5 | 88.9 | 60 | pass |
+| `bar.active_bg` #e4e4e4 | `bar.bg` #000000 | ui | 16.52 | 3.0 | 90.4 | 30 | pass |
+| `bar.active_bg` #e4e4e4 | `bar.shade` #101010 | ui | 14.97 | 3.0 | 90.0 | 30 | pass |
+| `selection.fg` #ebebeb | `selection.bg` #202020 | text | 13.67 | 4.5 | 92.7 | 60 | pass |
 | `status.success` #7bd77f | `surface.base` #040404 | text | 11.59 | 4.5 | 70.4 | 60 | pass |
 | `status.success` #7bd77f | `surface.raised` #101010 | text | 10.75 | 4.5 | 69.9 | 60 | pass |
 | `status.warning` #eab532 | `surface.base` #040404 | text | 10.89 | 4.5 | 67.0 | 60 | pass |
 | `status.warning` #eab532 | `surface.raised` #101010 | text | 10.11 | 4.5 | 66.6 | 60 | pass |
 | `status.danger` #ffa09c | `surface.base` #040404 | text | 10.51 | 4.5 | 65.1 | 60 | pass |
 | `status.danger` #ffa09c | `surface.raised` #101010 | text | 9.75 | 4.5 | 64.7 | 60 | pass |
-| `status.info` #00d4f8 | `surface.base` #040404 | text | 11.49 | 4.5 | 70.5 | 60 | pass |
-| `status.info` #00d4f8 | `surface.raised` #101010 | text | 10.67 | 4.5 | 70.0 | 60 | pass |
+| `status.info` #76c7ff | `surface.base` #040404 | text | 11.11 | 4.5 | 68.0 | 60 | pass |
+| `status.info` #76c7ff | `surface.raised` #101010 | text | 10.31 | 4.5 | 67.6 | 60 | pass |
 | `status.on_success` #0d1a0d | `status.success` #7bd77f | text | 10.14 | 4.5 | 70.2 | 60 | pass |
 | `status.on_warning` #1c1505 | `status.warning` #eab532 | text | 9.63 | 4.5 | 67.1 | 60 | pass |
 | `status.on_danger` #221010 | `status.danger` #ffa09c | text | 9.36 | 4.5 | 65.4 | 60 | pass |
-| `status.on_info` #04191f | `status.info` #00d4f8 | text | 10.11 | 4.5 | 70.3 | 60 | pass |
-| `term.fg` #d7d7d7 | `term.bg` #040404 | text | 14.24 | 7.0 | 82.3 | 75 | pass |
+| `status.on_info` #081822 | `status.info` #76c7ff | text | 9.78 | 4.5 | 68.0 | 60 | pass |
+| `term.fg` #ebebeb | `term.bg` #040404 | text | 17.20 | 7.0 | 94.8 | 75 | pass |
 | `term.red` #ff938b | `term.bg` #040404 | text | 9.57 | 4.5 | 60.5 | 60 | pass |
 | `term.green` #74c878 | `term.bg` #040404 | text | 10.03 | 4.5 | 62.7 | 60 | pass |
 | `term.yellow` #d4ac32 | `term.bg` #040404 | text | 9.52 | 4.5 | 60.0 | 60 | pass |
@@ -496,8 +498,8 @@ Nudged: `text.secondary: L 0.760 → 0.770`; `text.muted: L 0.640 → 0.675`; `a
 | `cat.purple` #cc9fff | `bar.bg` #000000 | ui | 9.97 | 3.0 | 61.1 | 30 | pass |
 | `cat.pink` #f990c4 | `surface.base` #040404 | ui | 9.58 | 3.0 | 60.5 | 30 | pass |
 | `cat.pink` #f990c4 | `bar.bg` #000000 | ui | 9.81 | 3.0 | 60.5 | 30 | pass |
-| `border.subtle` #232323 | `surface.base` #040404 | decor | 1.30 | 1.2 | 0.0 | 0 | pass |
-| `window.unfocused` #232323 | `surface.base` #040404 | decor | 1.30 | 1.2 | 0.0 | 0 | pass |
+| `border.subtle` #777777 | `surface.base` #040404 | decor | 4.58 | 1.2 | 30.5 | 0 | pass |
+| `window.unfocused` #777777 | `surface.base` #040404 | decor | 4.58 | 1.2 | 30.5 | 0 | pass |
 
 ## Dark Blue (`dark-blue`)
 

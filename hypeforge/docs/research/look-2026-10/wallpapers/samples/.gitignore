@@ -1,0 +1,3 @@
+# full-size samples are 3-4 MB each; `python3 generate.py --samples` re-creates them exactly
+*.png
+!*.preview.png

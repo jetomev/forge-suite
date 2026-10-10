@@ -21,39 +21,39 @@ overlay = "#ffffff"
 hover = "#dcdcdc"
 
 [text]
-primary = "#1f1f1f"
-secondary = "#4d4d4d"
-muted = "#747474"
+primary = "#000000"
+secondary = "#4a4a4a"
+muted = "#6d6d6d"
 
 [accent]
-base = "#0363ef"
-on = "#f7faff"
-hover = "#0056d3"
-pressed = "#0f4cae"
-text = "#0363ef"
-ring = "#0363ef"
+base = "#222222"
+on = "#fafafa"
+hover = "#161616"
+pressed = "#0b0b0b"
+text = "#222222"
+ring = "#222222"
 
 [border]
-subtle = "#c6c6c6"
-strong = "#7c7c7c"
+subtle = "#8b8b8b"
+strong = "#505050"
 
 [window]
-focused = "#0363ef"
-unfocused = "#c6c6c6"
+focused = "#222222"
+unfocused = "#8b8b8b"
 urgent = "#af3c40"
 
 [bar]
 bg = "#ededed"
 shade = "#f8f8f8"
 hover = "#dcdcdc"
-fg = "#1f1f1f"
-fg_dim = "#4d4d4d"
-active_bg = "#0363ef"
-active_fg = "#f7faff"
+fg = "#000000"
+fg_dim = "#4a4a4a"
+active_bg = "#222222"
+active_fg = "#fafafa"
 
 [selection]
-bg = "#a6c5f8"
-fg = "#1f1f1f"
+bg = "#c3c3c3"
+fg = "#000000"
 
 [status]
 success = "#1b7e2a"
@@ -83,11 +83,11 @@ pink = "#af4d80"
 
 [term]
 bg = "#f1f1f1"
-fg = "#1f1f1f"
-cursor = "#0363ef"
-cursor_text = "#f7faff"
-selection_bg = "#a6c5f8"
-selection_fg = "#1f1f1f"
+fg = "#000000"
+cursor = "#222222"
+cursor_text = "#fafafa"
+selection_bg = "#c3c3c3"
+selection_fg = "#000000"
 black = "#373737"
 bright_black = "#656565"
 white = "#cacaca"
@@ -116,7 +116,7 @@ kognog_mauve = "#cba6f7"
 [names]
 gtk_theme = "adw-gtk3"
 color_scheme = "prefer-light"
-gnome_accent = "blue"
+gnome_accent = "slate"
 cursor = "catppuccin-mocha-dark-cursors"
 cursor_size = 24
 icons = "candy-icons"

@@ -21,39 +21,39 @@ overlay = "#191919"
 hover = "#2e2e2e"
 
 [text]
-primary = "#d7d7d7"
-secondary = "#b4b4b4"
-muted = "#979797"
+primary = "#ebebeb"
+secondary = "#cecece"
+muted = "#b2b2b2"
 
 [accent]
-base = "#7fb3ff"
-on = "#0d1624"
-hover = "#9ac3ff"
-pressed = "#8db3eb"
-text = "#84b6ff"
-ring = "#7fb3ff"
+base = "#e4e4e4"
+on = "#161616"
+hover = "#f5f5f5"
+pressed = "#cacaca"
+text = "#e4e4e4"
+ring = "#e4e4e4"
 
 [border]
-subtle = "#232323"
-strong = "#949494"
+subtle = "#777777"
+strong = "#cccccc"
 
 [window]
-focused = "#7fb3ff"
-unfocused = "#232323"
+focused = "#e4e4e4"
+unfocused = "#777777"
 urgent = "#ffa09c"
 
 [bar]
 bg = "#000000"
 shade = "#101010"
 hover = "#2e2e2e"
-fg = "#d7d7d7"
-fg_dim = "#b4b4b4"
-active_bg = "#7fb3ff"
-active_fg = "#0d1624"
+fg = "#ebebeb"
+fg_dim = "#cecece"
+active_bg = "#e4e4e4"
+active_fg = "#161616"
 
 [selection]
-bg = "#0b203f"
-fg = "#d7d7d7"
+bg = "#202020"
+fg = "#ebebeb"
 
 [status]
 success = "#7bd77f"
@@ -62,8 +62,8 @@ warning = "#eab532"
 on_warning = "#1c1505"
 danger = "#ffa09c"
 on_danger = "#221010"
-info = "#00d4f8"
-on_info = "#04191f"
+info = "#76c7ff"
+on_info = "#081822"
 
 [effects]
 shadow = "#000000"
@@ -83,11 +83,11 @@ pink = "#f990c4"
 
 [term]
 bg = "#040404"
-fg = "#d7d7d7"
-cursor = "#7fb3ff"
-cursor_text = "#0d1624"
-selection_bg = "#0b203f"
-selection_fg = "#d7d7d7"
+fg = "#ebebeb"
+cursor = "#e4e4e4"
+cursor_text = "#161616"
+selection_bg = "#202020"
+selection_fg = "#ebebeb"
 black = "#252525"
 bright_black = "#494949"
 white = "#c4c4c4"

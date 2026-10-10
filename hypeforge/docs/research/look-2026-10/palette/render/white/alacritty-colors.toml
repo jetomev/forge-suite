@@ -2,15 +2,15 @@
 # Alacritty: [general] import = ["~/.config/hypeforge/theme/alacritty-colors.toml"]
 [colors.primary]
 background = "#f1f1f1"
-foreground = "#1f1f1f"
+foreground = "#000000"
 
 [colors.cursor]
-text = "#f7faff"
-cursor = "#0363ef"
+text = "#fafafa"
+cursor = "#222222"
 
 [colors.selection]
-text = "#1f1f1f"
-background = "#a6c5f8"
+text = "#000000"
+background = "#c3c3c3"
 
 [colors.normal]
 black = "#373737"
