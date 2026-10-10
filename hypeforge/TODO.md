@@ -97,6 +97,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] **Remove KDE — the very last step** (Javier, 10-05: "leave removing KDE to the very end"): Plasma, its apps, network-manager-applet / nm-connection-editor, breeze… only once everything else is done and proven
 
 ## Phase 12 · Our own look
+- [ ] **The look program (D-67, 2026-10-10)** — `docs/look-program.md`: research (5 helpers) → foundation (theme format, 23 palettes, wallpapers, SwayFX decision) → six proposals one by one (Windows 11 · Mac OS 9 · modern macOS · Linux rice · KDE · COSMIC) → build the chosen → document for the theme apps. GitHub Project "hypeForge · the look" (waits for the project permission)
 - [ ] **Applet 3 · Folder tabs** (D-47): small left-aligned tabs like folders in a holder, rounded tops, our colours; replaces Sway's even tab row
 - [ ] **Our own bar** (Javier, 10-04): Waybar for now; once the setup is done, our own bar as a hypeForge applet — a Waybar fork or a small one of our own, decided then
 - [ ] **hypeForge Settings** (D-47): every applet switched on/off, its behaviour and look changed in one place

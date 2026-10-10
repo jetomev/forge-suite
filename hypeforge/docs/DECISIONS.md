@@ -5,6 +5,13 @@
 
 ---
 
+## 2026-10-10
+
+### D-67 · The look program: six styles × 23 colour themes, still tiling (Javier)
+*"Where a beautifully stylised Windows 11 desktop exists, what classic Mac OS 9 functionality offered, and KognogOS identity meets."* Six styles proposed and reviewed one by one (Windows 11, Mac OS 9.x, modern macOS, a Linux rice, KDE, COSMIC), each with 23 colour themes and five wallpapers per colour; rounding, shades, shadows, borders; contrast that makes things pop; all inside Sway's (and SwayFX's) capabilities, still tiling with our workspaces and placement. Forge Suite terminal apps keep their look for now. Everything documented for a later theme app. Claude runs it with up to five research helpers; a GitHub Project holds the plan and timeline. The plan: `docs/look-program.md`.
+
+---
+
 ## 2026-10-09
 
 ### D-66 · "Workspaces & Windows" is two Forge apps: workspaceForge now, windows later
