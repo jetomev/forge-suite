@@ -250,6 +250,9 @@ class WinSpaceFollowsTheStyle(unittest.TestCase):
     def test_mac_os_9_opens_the_emblem_menu(self):
         self.assertIn("hypeforge-menubar open emblem", self.run_key("mac-os-9")[1])
 
+    def test_kde_opens_kickoff(self):
+        self.assertIn("hypeforge-panel kickoff", self.run_key("kde")[1])
+
     def test_the_rice_keeps_its_list(self):
         self.assertEqual(self.run_key("rice"), (False, ""))
 

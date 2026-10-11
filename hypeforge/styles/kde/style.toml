@@ -37,7 +37,8 @@ pager            = "rectangles"             # one small rectangle per workspace,
 tray_popup       = "one-popup"              # every tray applet in one popup with pages (K-5)
 krunner          = "fuzzel-top"             # Alt + Space: a search bar that drops from the top
 wallpaper        = "theme"                  # D-75
-clock_format     = ["%-I:%M %p", "%a %-m/%-d"]
+clock_format     = ["%I:%M %p", "%a %m/%d"]   # Waybar's clock has no %-I (no-padding) code
+applets          = ["taskbar"]            # the task manager: pinned + running (look step 5)
 
 [roles]
 panel_background   = "surface.raised"       # frosted on SwayFX

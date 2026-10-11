@@ -196,7 +196,7 @@ def do_power(key, where=UNDER_EMBLEM):
 
 def style_launcher() -> bool:
     """Win + Space opens the launcher of the style in use (Javier, 2026-10-10: on Mac OS 9 it opened
-    the Rice's list): `[layout] launcher` in the style — "start-panel" (Windows 11's Start),
+    the Rice's list): `[layout] launcher` in the style — "start-panel" (Windows 11's Start), "panel-kickoff-list" (KDE's Kickoff),
     "emblem-menu" (Mac OS 9's emblem menu as a list). True when it handled the key; any other
     launcher (the Rice's, or one not built yet) is this list."""
     conf = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
@@ -211,6 +211,9 @@ def style_launcher() -> bool:
     if kind == "start-panel":
         os.execv(sys.executable, [sys.executable, str(applets / "panels/hypeforge-panel"), "start",
                                   "--edges", "bottom,left", "--margin", "bottom=56,left=8"])
+    if kind == "panel-kickoff-list":   # KDE's Kickoff, above the floating panel
+        os.execv(sys.executable, [sys.executable, str(applets / "panels/hypeforge-panel"), "kickoff",
+                                  "--edges", "bottom,left", "--margin", "bottom=60,left=8"])
     if kind == "emblem-menu":
         os.execv(sys.executable, [sys.executable, str(applets / "menubar/hypeforge-menubar"), "open", "emblem"])
     return False

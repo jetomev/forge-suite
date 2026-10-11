@@ -42,7 +42,7 @@ def application_dirs():
 
 
 def apps():
-    """{desktop id: {name, icon, exec, terminal, categories, wmclass}} — what a start menu shows."""
+    """{desktop id: {name, icon, exec, terminal, categories, wmclass, comment}} — what a start menu shows."""
     found = {}
     for folder in application_dirs():  # the first folder wins (your own entries over the system's)
         if not folder.is_dir():
@@ -72,6 +72,8 @@ def apps():
                 "terminal": entry.get("Terminal") == "true",
                 "categories": set(entry.get("Categories", "").split(";")) - {""},
                 "wmclass": entry.get("StartupWMClass", ""),
+                # one line about it, for lists with descriptions (KDE's Kickoff, D-76 K-3)
+                "comment": entry.get("Comment") or entry.get("GenericName") or "",
             }
     return {k: v for k, v in found.items() if v}
 

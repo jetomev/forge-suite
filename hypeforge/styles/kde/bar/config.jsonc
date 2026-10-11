@@ -1,0 +1,94 @@
+// hypeForge style · KDE Plasma, tiled (D-76) — the floating panel, 44 px, 8 px from the bottom and
+// the sides (K-1). Left: the emblem (→ Kickoff, K-3), the pager (a little screen per workspace, its
+// windows as dots, K-2), the pinned + running apps (icons only). Right: the tray and status icons
+// — sound, network and Bluetooth open Quick Settings (K-5's one pop-up) — the bell, and the clock
+// with the date (→ the calendar). Pieces from modules.jsonc and the applets' fragments.
+{
+  "include": [
+    "${XDG_CONFIG_HOME:-$HOME/.config}/sway/waybar/modules.jsonc",
+    "${XDG_CONFIG_HOME:-$HOME/.config}/hypeforge/applets/workspaces.waybar.json",
+    "${XDG_CONFIG_HOME:-$HOME/.config}/hypeforge/applets/taskbar.waybar.json"
+  ],
+  "layer": "top",
+  "position": "bottom",
+  "height": 44,
+  "spacing": 0,
+  "margin-bottom": 8,
+  "margin-left": 8,
+  "margin-right": 8,
+  "modules-left": [
+    "custom/emblem",
+    "group/pager",
+    "custom/sep",
+    "group/taskbar"
+  ],
+  "modules-center": [],
+  "modules-right": [
+    "tray",
+    "custom/clipboard",
+    "custom/drives",
+    "custom/printers",
+    "group/quick",
+    "custom/notifications",
+    "clock"
+  ],
+  "custom/emblem": {
+    "format": " ",
+    "tooltip-format": "Kickoff (Win + Space)",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel kickoff --edges bottom,left --margin bottom=60,left=8"
+  },
+  "custom/sep": {
+    "format": "│",
+    "tooltip": false
+  },
+  "group/quick": {
+    "orientation": "inherit",
+    "modules": [
+      "wireplumber",
+      "network",
+      "bluetooth"
+    ]
+  },
+  "network": {
+    "format-ethernet": "󰈀",
+    "format-wifi": "{icon}",
+    "format-icons": [
+      "󰤯",
+      "󰤟",
+      "󰤢",
+      "󰤥",
+      "󰤨"
+    ],
+    "format-disconnected": "󰤭",
+    "format-disabled": "󰤮",
+    "tooltip-format": "Sound, network, Bluetooth…",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --edges bottom,right --margin bottom=60,right=8"
+  },
+  "wireplumber": {
+    "format": "{icon}",
+    "format-muted": "󰝟",
+    "format-icons": [
+      "󰕿",
+      "󰖀",
+      "󰕾"
+    ],
+    "scroll-step": 5,
+    "max-volume": 100,
+    "tooltip-format": "Volume {volume} % · scroll to change",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --edges bottom,right --margin bottom=60,right=8"
+  },
+  "bluetooth": {
+    "format": "󰂯",
+    "format-off": "󰂲",
+    "format-disabled": "󰂲",
+    "format-connected": "󰂱",
+    "tooltip-format": "Sound, network, Bluetooth…",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --edges bottom,right --margin bottom=60,right=8"
+  },
+  "clock": {
+    "format": "{:%I:%M %p\n%a %m/%d}",
+    "justify": "center",
+    "tooltip": false,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel calendar --edges bottom,right --margin bottom=60,right=8"
+  }
+}

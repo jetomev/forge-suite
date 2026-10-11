@@ -7,7 +7,7 @@ System, Utilities (and Education, Science or Other once something belongs there)
 and **Help & Keys** — apps only. Lock, log out,
 reboot and shut down are on the bar's **⏻** button.
 
-**Every style keeps its own launcher on Win + Space:** Windows 11 opens **Start**, Mac OS 9 the **emblem menu** as a list (its groups open their own list); the other styles open this one.
+**Every style keeps its own launcher on Win + Space:** Windows 11 opens **Start**, KDE opens **Kickoff** (the apps as a list with a line about each), Mac OS 9 the **emblem menu** as a list (its groups open their own list); the other styles open this one.
 
 ## How to use it
 

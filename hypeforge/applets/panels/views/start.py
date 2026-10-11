@@ -81,7 +81,17 @@ def matches(entries: dict, words: str) -> list[str]:
                                        entries[a]["name"].lower()))
 
 
-def build(look: panelkit.Look, args) -> panelkit.Panel:
+LIST_ICON = 32
+LIST_CSS = """
+.hf-start .hf-row {{ padding: 6px 10px; min-width: 420px; }}
+.hf-start .hf-row .hf-name {{ font-weight: bold; }}
+.hf-start .hf-row .hf-about {{ color: {dim}; font-size: {small}pt; }}
+"""
+
+
+def build(look: panelkit.Look, args, as_list: bool = False, view: str = "start") -> panelkit.Panel:
+    """Windows 11's Start (an icon grid), or KDE's Kickoff with `as_list` (D-76 K-3): the same groups
+    on the left, the apps as a list with their descriptions on the right."""
     entries, icons = apps(), Icons()
     sets = groups(entries)
     c = look.colour
@@ -90,6 +100,11 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
                                        on_accent=c["panel_tile_on_text"], dim=c["panel_text_dim"], pill=look.pill).encode())
     Gtk.StyleContext.add_provider_for_screen(panelkit.Gdk.Screen.get_default(), provider,
                                              Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1)
+    if as_list:
+        extra = Gtk.CssProvider()
+        extra.load_from_data(LIST_CSS.format(dim=c["panel_text_dim"], small=look.size * 0.85).encode())
+        Gtk.StyleContext.add_provider_for_screen(panelkit.Gdk.Screen.get_default(), extra,
+                                                 Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 2)
 
     root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     root.get_style_context().add_class("hf-start")
@@ -112,7 +127,9 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
     scroll.set_min_content_height(420)
     scroll.set_propagate_natural_width(True)
-    scroll.add(grid)
+    listing = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1, valign=Gtk.Align.START)
+    holder = listing if as_list else grid
+    scroll.add(holder)
     main.pack_start(heading, False, False, 0)
     main.pack_start(scroll, True, True, 0)
     body.pack_start(side, False, False, 0)
@@ -128,11 +145,14 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
 
     def fill(title, ids):
         heading.set_text(title)
-        for child in grid.get_children():
-            grid.remove(child)
+        for child in holder.get_children():
+            holder.remove(child)
         shown[:] = ids
         for app_id in ids:
             app = entries[app_id]
+            if as_list:
+                listing.pack_start(list_row(app_id, app), False, False, 0)
+                continue
             button = Gtk.Button()
             button.get_style_context().add_class("flat")
             button.get_style_context().add_class("hf-app")
@@ -157,7 +177,37 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
             button.set_size_request(CELL_W, CELL_H)            # one size for every icon, however many
             button.set_valign(Gtk.Align.START)
             grid.add(button)
-        grid.show_all()
+        holder.show_all()
+
+    def picture(app, size):
+        image = Gtk.Image()
+        path = icons.find(app["icon"])
+        try:
+            image.set_from_pixbuf(GdkPixbuf.Pixbuf.new_from_file_at_size(path, size, size))
+        except Exception:  # no picture, or an unreadable one: the theme's own icon by name
+            image.set_from_icon_name(app["icon"] if path else "application-x-executable", Gtk.IconSize.DND)
+        return image
+
+    def list_row(app_id, app):
+        """Kickoff's row: the icon, the name in bold, one line about it under it."""
+        button = Gtk.Button()
+        button.get_style_context().add_class("flat")
+        button.get_style_context().add_class("hf-row")
+        row = Gtk.Box(spacing=12)
+        row.pack_start(picture(app, LIST_ICON), False, False, 0)
+        words = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1, valign=Gtk.Align.CENTER)
+        name = Gtk.Label(label=app["name"], xalign=0, ellipsize=Pango.EllipsizeMode.END)
+        name.get_style_context().add_class("hf-name")
+        words.pack_start(name, False, False, 0)
+        if app.get("comment"):
+            about = Gtk.Label(label=app["comment"], xalign=0, ellipsize=Pango.EllipsizeMode.END, max_width_chars=52)
+            about.get_style_context().add_class("hf-about")
+            words.pack_start(about, False, False, 0)
+        row.pack_start(words, True, True, 0)
+        button.add(row)
+        button.set_tooltip_text(app.get("comment") or app["name"])
+        button.connect("clicked", open_app, app_id)
+        return button
 
     side_buttons = []
 
@@ -213,6 +263,6 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     pick(None, first if 0 <= first < len(sets) else 0)
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["bottom"]
     margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"bottom": 60}
-    panel = panelkit.Panel("start", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()})
+    panel = panelkit.Panel(view, root, look, edges=edges, margins={k: int(v) for k, v in margins.items()})
     search.grab_focus()
     return panel

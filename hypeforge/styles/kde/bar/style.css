@@ -1,0 +1,82 @@
+/* hypeForge style · KDE Plasma, tiled (D-76) — the floating panel's look. Shapes from
+   styles/kde/style.toml (bar_height 44, bar_margin 8, radius_panel 10, radius_control 4); every
+   colour is a name from colors.css (hypeforge-theme writes it from the theme in use). */
+@import url("../../hypeforge/applets/taskbar.css");
+@import url("../../hypeforge/theme/colors.css");
+
+* {
+  font-family: "Noto Sans", "Symbols Nerd Font", sans-serif;
+  font-size: 13px;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+
+/* Plasma 6's floating panel (K-1): a rounded slab with a hairline frame */
+window#waybar {
+  background: @hf_bar;
+  color: @hf_text;
+  border: 1px solid @hf_island_border;
+  border-radius: 10px;
+}
+
+tooltip { background: @hf_island; border: 1px solid @hf_island_border; border-radius: 8px; }
+tooltip label { color: @hf_text; }
+
+/* every button: Breeze's soft square under the mouse — colour only, so the emblem picture stays */
+#custom-emblem, #tray, #custom-clipboard, #custom-drives, #custom-printers,
+#network, #wireplumber, #bluetooth, #clock, #custom-notifications {
+  margin: 4px 1px;
+  padding: 0 8px;
+  border-radius: 4px;
+  color: @hf_text;
+}
+#custom-emblem:hover, #custom-clipboard:hover, #custom-drives:hover, #custom-printers:hover,
+#clock:hover, #custom-notifications:hover, #quick:hover { background-color: @hf_pill_hover; }
+
+#custom-emblem {
+  background-image: url("../../hypeforge/bar/launcher.png");
+  background-size: 24px 24px;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-width: 38px;
+  margin-left: 6px;
+}
+#custom-sep { color: @hf_island_border; padding: 0 4px; }
+
+/* the pager (K-2): a little screen per workspace, its windows as dots */
+.pager {
+  border: 1px solid @hf_pager_border;
+  border-radius: 3px;
+  min-width: 40px;
+  margin: 8px 2px;
+  padding: 0 4px;
+  color: @hf_pager_window;
+  font-size: 7px;
+}
+.pager.active { background-color: @hf_pager_active; }
+.pager:hover { border-color: @hf_pager_window; }
+
+/* sound, network, Bluetooth: one soft square that opens Quick Settings (K-5) */
+#quick { margin: 4px 1px; border-radius: 4px; }
+#quick > * { margin: 0; padding: 0 6px; }
+#network, #wireplumber, #bluetooth { margin: 0; }
+
+#clock { font-size: 11px; padding: 0 10px; margin-right: 6px; }
+#custom-notifications.unseen { color: @hf_bell; }
+#custom-notifications.dnd { color: @hf_alert; }
+#wireplumber.muted, #network.disconnected { color: @hf_alert; }
+#custom-clipboard.new, #custom-drives.has { color: @hf_new; }
+
+/* the task manager (the Taskbar applet): icons only; a line under running apps, a stronger one
+   under the app in use — Plasma's look */
+.app { min-width: 40px; margin: 4px 1px; border-radius: 4px; }
+.app.running { box-shadow: inset 0 -2px @hf_task_running; }
+.app.focused { box-shadow: inset 0 -3px @hf_task_focused; background-color: @hf_pill_hover; }
+.app.urgent { box-shadow: inset 0 -3px @hf_alert; }
+.app.tucked { opacity: 0.55; box-shadow: inset 0 -2px @hf_task_running; }
+.app:hover { background-color: @hf_pill_hover; }
+
+#tray > widget { border-radius: 4px; padding: 0 4px; }
+#tray > widget:hover { background-color: @hf_pill_hover; }
+#tray > .needs-attention { background-color: @hf_alert; }
