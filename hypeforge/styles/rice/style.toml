@@ -13,6 +13,21 @@ needs = []                       # plain Sway: square windows, solid islands
 better_with = ["swayfx"]         # rounded windows, see-through terminals and frosted islands
 credit = "After the r/unixporn community's work, with thanks. Learned from, never copied."
 
+
+[elements]                       # what this theme's version of each piece is (themeForge shows it; the look file picks)
+bar          = "one floating bar in three areas, top"
+launcher     = "the launcher list (Win + Space)"
+workspaces   = "numbered pills, the one on screen named"
+taskbar      = "none"
+datetime     = "the date, time and bell in the middle; a click: alerts + calendar"
+tray         = "programs' icons on the right"
+status_icons = "each opens its own pop-up"
+popups       = "cards under the bar"
+dock         = "none"
+windows      = "a bright frame on the window in use"
+icons        = "the colour theme's icon set"
+fonts        = "JetBrainsMono Nerd Font"
+
 [shape]                          # pixels, at 100 % scale
 radius_window    = 12
 radius_island    = 12            # the floating bar
@@ -42,6 +57,9 @@ wallpaper        = "theme"       # the theme's own generated picture (D-75: ever
 
 [roles]
 island_background  = "surface.base"           # frosted on SwayFX
+bar_bg             = "surface.base"           # the areas' colour (the bar itself is see-through)
+bar_fg             = "text.primary"           # the text ON the areas (surface.base), not on a colour band: in
+bar_fg_dim         = "text.secondary"         # light themes bar.fg is near-white (F-68, 2026-10-11)
 island_border      = "band.base"
 pill_active        = "band.base"
 pill_active_text   = "band.on"

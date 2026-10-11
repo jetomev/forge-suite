@@ -15,6 +15,21 @@ needs = []
 better_with = ["swayfx"]
 credit = "After Microsoft's Windows 11 design (Fluent). Learned from, never copied."
 
+
+[elements]                       # what this theme's version of each piece is (themeForge shows it; the look file picks)
+bar          = "a taskbar at the bottom"
+launcher     = "Start: groups and an icon grid"
+workspaces   = "the workspace's name; a click: the workspaces strip"
+taskbar      = "pinned and open apps, left"
+datetime     = "time and date on two lines; a click: alerts + calendar"
+tray         = "hidden icons behind a chevron"
+status_icons = "one pill that opens Quick Settings"
+popups       = "panels over the taskbar"
+dock         = "none"
+windows      = "soft square windows"
+icons        = "the colour theme's icon set"
+fonts        = "Noto Sans"
+
 [shape]                          # pixels, at 100 % scale
 radius_window    = 8             # SwayFX corner_radius; plain Sway: square
 radius_control   = 4             # buttons, inputs, list rows, taskbar buttons

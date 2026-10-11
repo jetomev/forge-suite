@@ -13,6 +13,21 @@ needs = []                       # plain Sway: "Square" roundness, solid panel a
 better_with = ["swayfx"]         # "Round" and "Slightly round" windows, shadows, frost
 credit = "After System76's COSMIC desktop (Pop!_OS), with thanks. Learned from, never copied."
 
+
+[elements]                       # what this theme's version of each piece is (themeForge shows it; the look file picks)
+bar          = "a top panel on every screen"
+launcher     = "a search near the top"
+workspaces   = "a Workspaces button: the workspaces strip"
+taskbar      = "in the dock"
+datetime     = "the date and time in the middle; a click: alerts + calendar"
+tray         = "programs' icons on the right"
+status_icons = "each opens its own pop-up"
+popups       = "small pop-ups under the panel"
+dock         = "on the main screen: the App Library and your apps"
+windows      = "the active hint, 3 px"
+icons        = "the colour theme's icon set"
+fonts        = "Noto Sans"
+
 [shape]                          # pixels, at 100 % scale; COSMIC's three roundness choices (C-2)
 roundness        = "slightly-round"          # "round" · "slightly-round" · "square"
 radius_window    = { round = 16, slightly-round = 8, square = 0 }

@@ -13,6 +13,21 @@ needs = []                       # plain Sway draws all of it: square windows, r
 better_with = []                 # SwayFX adds only the optional crisp shadow ([fx])
 credit = "After Apple's Mac OS 9 (Platinum, 1999). Learned from, never copied."
 
+
+[elements]                       # what this theme's version of each piece is (themeForge shows it; the look file picks)
+bar          = "a menu bar on top, 26 px"
+launcher     = "the emblem menu, groups as submenus"
+workspaces   = "a Workspaces menu"
+taskbar      = "none"
+datetime     = "the time"
+tray         = "programs' icons on the right"
+status_icons = "icons on the menu bar"
+popups       = "drop-down menus"
+dock         = "none"
+windows      = "title bars, centred"
+icons        = "the colour theme's icon set"
+fonts        = "Noto Sans Bold"
+
 [shape]                          # pixels, at 100 % scale
 radius_window    = 0             # Mac OS 9 windows are square
 radius_control   = 4             # buttons

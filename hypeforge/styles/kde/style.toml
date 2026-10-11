@@ -13,6 +13,21 @@ needs = []                       # plain Sway: square windows, a solid panel
 better_with = ["swayfx"]         # Breeze's soft shadows, rounded windows, the frosted panel
 credit = "After KDE's Plasma 6 and its Breeze design, with thanks to the KDE community. Learned from, never copied."
 
+
+[elements]                       # what this theme's version of each piece is (themeForge shows it; the look file picks)
+bar          = "a floating panel at the bottom"
+launcher     = "Kickoff: a list with a line about each app"
+workspaces   = "the pager: a little screen per workspace"
+taskbar      = "pinned and open apps, icons only"
+datetime     = "time and date on two lines; a click: alerts + calendar"
+tray         = "programs' icons on the right"
+status_icons = "one soft square that opens Quick Settings"
+popups       = "panels over the panel"
+dock         = "none"
+windows      = "title bars on the left"
+icons        = "the colour theme's icon set"
+fonts        = "Noto Sans"
+
 [shape]                          # pixels, at 100 % scale
 radius_window    = 8
 radius_control   = 4

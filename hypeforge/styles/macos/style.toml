@@ -13,6 +13,21 @@ needs = []                       # plain Sway: square windows, solid menu bar an
 better_with = ["swayfx"]         # the frosted glass, rounded windows and deep shadows are SwayFX's
 credit = "After Apple's macOS (Sonoma and Sequoia). Learned from, never copied."
 
+
+[elements]                       # what this theme's version of each piece is (themeForge shows it; the look file picks)
+bar          = "a menu bar on top"
+launcher     = "Spotlight, a wide search"
+workspaces   = "a Workspaces menu"
+taskbar      = "in the Dock"
+datetime     = "the date and time; a click: alerts + calendar"
+tray         = "programs' icons on the right"
+status_icons = "one pill that opens Control Center"
+popups       = "rounded drop-down menus"
+dock         = "always there on the main screen, dots under open apps"
+windows      = "soft windows"
+icons        = "the colour theme's icon set"
+fonts        = "Noto Sans"
+
 [shape]                          # pixels, at 100 % scale
 radius_window    = 12            # SwayFX corner_radius
 radius_control   = 6

@@ -62,12 +62,12 @@ window#waybar {
   min-width: 16px;
   margin: 6px 2px 6px 0;      /* Javier, 2026-10-07: the Workspaces title sits right beside it */
   padding: 0 5px;
-  background: @hf_active;
+  background: @hf_text;         /* the band's text colour (F-68): the window frame colour went dark in light themes */
   color: @hf_bar;
   font-weight: bold;
 }
 #custom-wsnum:hover {
-  background: @hf_text;
+  background: @hf_subtext;
 }
 
 #custom-ws {
@@ -83,7 +83,7 @@ window#waybar {
 
 /* The workspace on screen now */
 #custom-ws.active {
-  background: @hf_active;
+  background: @hf_text;
   color: @hf_bar;
 }
 

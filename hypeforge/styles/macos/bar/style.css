@@ -80,7 +80,7 @@ menuitem:hover { background-color: @hf_menu_hl; color: @hf_menu_hl_text; }
 /* the Dock (MA-1): a rounded slab at its contents' width */
 window#waybar.dock {
   background: @hf_island;
-  color: @hf_text;
+  color: @hf_menubar_text;          /* the text made for the dock's surface (F-68: @hf_text is the band's) */
   border: 1px solid @hf_island_border;
   border-radius: 18px;
 }
@@ -89,7 +89,7 @@ window#waybar.dock {
   margin: 6px 2px;
   border-radius: 12px;
   font-size: 30px;
-  color: @hf_text;
+  color: @hf_menubar_text;
 }
 #custom-launchpad { margin-left: 8px; }
 #custom-trash { margin-right: 8px; }

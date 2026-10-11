@@ -8,6 +8,7 @@ layout) and a THEME (colours), sets the theme's wallpaper, and can go back (D-78
     hypeforge-theme wallpaper theme|<file>    follow the theme's picture, or keep one of yours
     hypeforge-theme corners straight|rounded|style   square corners everywhere, rounded, or the style's own
     hypeforge-theme undo                      put back the files from before the last apply
+    hypeforge-theme look                      apply what the look file says (themeForge writes it)
 
 Options for apply: --dry-run (print what would change, write nothing), --no-reload,
 --root DIR (write under DIR instead of ~/.config: the hidden bench uses this).
@@ -19,7 +20,9 @@ What it writes (the configs include or import these, so a switch rewrites only t
   ~/.config/mako/config                          notifications (whole file, from its template)
   ~/.config/gtk-3.0|gtk-4.0/gtk.css, settings.ini  GTK apps (also undoes what a KDE login wrote, F-52)
   ~/.config/gtklock/background.jpg               the lock screen's blurred copy of the wallpaper
-Every apply keeps a backup of what it replaces (the last 20).
+  ~/.config/hypeforge/look.toml                  THE LOOK FILE: the theme, its colours and each element's pick
+Every apply keeps a backup of what it replaces (the last 20). An apply and an undo end the same way:
+the bar restarted whole when its layout changed, the old style's helpers stopped, Sway reloaded.
 """
 from __future__ import annotations
 
@@ -426,6 +429,40 @@ def backup(place: Place, targets: list[Path]) -> Path | None:
     return dest
 
 
+# ── the look file (Javier, 2026-10-11) ──────────────────────────────────────────────────────
+# "have already a config file for theme, and with the config file themeForge call to change it based
+# on the selections … for the different elements: bar, launcher, workspaces, icons, date/time
+# variant, tray, tray icons, popups, colors". One file holds the picks; themeForge writes it and runs
+# `hypeforge-theme look`; every apply writes it too, so it always says what is on screen. Each
+# element is "theme" (the theme's own, described in its style.toml [elements]) until the pages that
+# pick them one by one exist.
+LOOK = "hypeforge/look.toml"
+ELEMENTS = ["bar", "launcher", "workspaces", "taskbar", "datetime", "tray", "status_icons", "popups",
+            "dock", "windows", "icons", "fonts"]
+
+
+def read_look(place: "Place") -> dict:
+    try:
+        d = tomllib.loads((place.root / LOOK).read_text())
+    except (OSError, tomllib.TOMLDecodeError):
+        return {}
+    el = d.get("elements", {})
+    return {"theme": d.get("theme"), "colors": d.get("colors"),
+            "elements": {k: str(el.get(k, "theme")) for k in ELEMENTS}}
+
+
+def look_text(style: str, theme: str, elements: dict | None = None) -> str:
+    q = lambda v: '"' + str(v).replace("\\", "\\\\").replace('"', '\\"') + '"'
+    el = {k: (elements or {}).get(k, "theme") for k in ELEMENTS}
+    return ("# hypeForge's look: what themeForge picked. themeForge writes it and runs `hypeforge-theme look`;\n"
+            "# every apply writes it too, so it always says what is on screen.\n"
+            "# theme = a style (styles/<slug>/style.toml) · colors = a colour theme (themes/colours/palettes.toml)\n"
+            f"theme = {q(style)}\ncolors = {q(theme)}\n\n"
+            "# Each element of the look: \"theme\" = the theme's own (its style.toml [elements] says what that is).\n"
+            "# Picking one element from another theme comes with themeForge's next pages.\n"
+            "[elements]\n" + "".join(f"{k} = {q(v)}\n" for k, v in el.items()))
+
+
 # ── apply ───────────────────────────────────────────────────────────────────────────────────
 def render(style_slug: str, theme_slug: str, place: Place, wallpaper: str | None = None,
            check_names: bool = True, make_wallpaper: bool = True, corners: str | None = None) -> tuple[dict, str]:
@@ -454,6 +491,7 @@ def render(style_slug: str, theme_slug: str, place: Place, wallpaper: str | None
     files.update(term)
     for rel, body in bar_files(style).items():
         files[place.root / rel] = body
+    files[place.root / LOOK] = look_text(style_slug, theme_slug, read_look(place).get("elements"))
     return files, str(pic)
 
 
@@ -671,10 +709,19 @@ def undo(place: Place, reload: bool = True, say=print) -> Path:
     elif place.state.exists():
         place.state.unlink()
     shutil.rmtree(b)
+    # the look file says what is on screen again (themeForge wrote the undone pick into it before the
+    # apply's backup was made, so the backup's copy can be the new pick, not the old one)
+    cur = place.read_state()
+    if cur.get("style") and cur.get("theme"):
+        (place.root / LOOK).parent.mkdir(parents=True, exist_ok=True)
+        (place.root / LOOK).write_text(look_text(cur["style"], cur["theme"], read_look(place).get("elements")))
     if reload:
         cur = place.read_state()
         if cur.get("theme") in themes():
-            reload_all(themes()[cur["theme"]], say, style=styles().get(cur.get("style")))
+            # the same ending as an apply (F-67, 2026-10-11): undo used to only tell the running bar to
+            # reload — it kept the old per-screen layout with the new stylesheet (Javier: "a disaster")
+            reload_all(themes()[cur["theme"]], say, restart_bar=place.root / BAR_LIVE,
+                       style=styles().get(cur.get("style")))
     return b
 
 
@@ -693,7 +740,8 @@ def main(argv=None) -> int:
     c = sub.add_parser("corners"); c.add_argument("choice", choices=CORNERS,
                                                   help="straight (every corner square), rounded, or style (each style's own)")
     u = sub.add_parser("undo"); u.add_argument("--no-reload", action="store_true")
-    for p in (a, w, u, c):
+    lk = sub.add_parser("look"); lk.add_argument("--no-reload", action="store_true")
+    for p in (a, w, u, c, lk):
         p.add_argument("--root", type=Path, help="write under this folder instead of ~/.config (the bench)")
     args = ap.parse_args(argv)
     place = Place(getattr(args, "root", None))
@@ -725,6 +773,13 @@ def main(argv=None) -> int:
                 raise LookError("apply a style and theme first")
             apply(st["style"], st["theme"], place, corners=args.choice, reload=True)
             print("  corners:", args.choice)
+        elif args.cmd == "look":
+            want = read_look(place)
+            if not (want.get("theme") and want.get("colors")):
+                raise LookError(f"the look file (~/.config/{LOOK}) has no theme and colors to apply")
+            print(f"\n  The look file: {want['theme']} · {want['colors']}\n")
+            r = apply(want["theme"], want["colors"], place, reload=not args.no_reload)
+            print(f"  {len(r['changed'])} file(s) changed; the old ones are kept (hypeforge-theme undo)\n")
         elif args.cmd == "undo":
             undo(place, reload=not args.no_reload)
             print("  the look from before the last apply is back")
