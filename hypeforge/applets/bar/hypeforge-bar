@@ -1,19 +1,27 @@
 #!/usr/bin/env python3
-"""hypeForge applet · the bar, one copy per screen, each told which screen it's on.
+"""hypeForge applet · the bar on every screen — each screen's bar tells its clicks which screen it is.
 
 Javier, 2026-10-10: "the launcher and all the bar popups don't open in the screen you are in,
 clicking from, they open in the left screen only." Waybar hands the screen's name only to the
 commands that DRAW a module, never to the command a click runs (Waybar 0.15, AModule.cpp:
-forkExec(format) without the output). With focus on a click only (D-82), the focused screen is
-not the clicked one. So each screen gets its own Waybar, started with HYPEFORGE_OUTPUT=<screen>;
-everything its clicks start inherits it, and the pop-ups and lists open there.
+forkExec(format) without the output); with focus on a click only (D-82) the focused screen is not
+the clicked one.
 
-    hypeforge-bar start      a bar on every screen (stops this tool's earlier ones first)
-    hypeforge-bar stop       stop them (by their saved process numbers only)
+So the bar's config is written out once per screen, in ONE Waybar: a bar per screen ("output"
+set), and in each bar every click command starts with `HYPEFORGE_OUTPUT=<screen>; export …` — the
+panels and lists read it and open there. Only the click keys are overridden; everything else still
+comes from the included files, so the applets' own rewrites keep working (Waybar merges includes
+key by key, a bar's own keys win: config.cpp mergeConfig).
+
+First built as one Waybar PROCESS per screen: Waybar registers as one app per session
+(fr.arouillard.waybar, APPLICATION_HANDLES_COMMAND_LINE), and on an in-place reload the extra
+copies crashed (GLib: g_application_impl_command_line assertion) — two of three on the bench.
+
+    hypeforge-bar start      the bar on every screen (stops this tool's earlier one first)
+    hypeforge-bar stop       stop it (by its saved process number only)
     hypeforge-bar restart    the same as start
 
-Each copy reads ~/.config/sway/waybar/config.jsonc with "output" set to its screen
-($XDG_RUNTIME_DIR/hypeforge-bar/config-<screen>.json) and the same style.css.
+Writes $XDG_RUNTIME_DIR/hypeforge-bar/config.json from ~/.config/sway/waybar/config.jsonc.
 """
 
 from __future__ import annotations
@@ -60,23 +68,82 @@ def strip_comments(text: str) -> str:
     return "".join(out)
 
 
-def config_for(text: str, output: str) -> str:
-    """The bar's config, kept to one screen."""
+CLICKS = ("on-click", "on-click-right", "on-click-middle")
+
+
+def expand(path: str) -> Path:
+    """An include path the way Waybar reads it: ${XDG_CONFIG_HOME:-$HOME/.config}, $HOME, ~."""
+    conf = os.environ.get("XDG_CONFIG_HOME") or str(Path.home() / ".config")
+    path = path.replace("${XDG_CONFIG_HOME:-$HOME/.config}", conf).replace("$HOME", str(Path.home()))
+    return Path(os.path.expanduser(path))
+
+
+def load_jsonc(path: Path) -> dict:
+    try:
+        return json.loads(strip_comments(path.read_text()))
+    except (OSError, ValueError):
+        return {}
+
+
+def merged(bar: dict) -> dict:
+    """The bar with its includes merged in, Waybar's way (its own keys win, objects key by key)."""
+    def merge(a, b):
+        for k, v in b.items():
+            if isinstance(a.get(k), dict) and isinstance(v, dict):
+                merge(a[k], v)
+            elif k not in a:
+                a[k] = v
+    out = json.loads(json.dumps(bar))
+    for inc in bar.get("include", []):
+        merge(out, load_jsonc(expand(inc)))
+    return out
+
+
+def placed(bar: dict) -> list[str]:
+    """Every module the bar shows, groups opened up."""
+    seen, todo = [], [m for k in ("modules-left", "modules-center", "modules-right") for m in bar.get(k, [])]
+    while todo:
+        m = todo.pop(0)
+        if m in seen:
+            continue
+        seen.append(m)
+        if m.startswith("group/"):
+            todo += bar.get(m, {}).get("modules", [])
+    return seen
+
+
+def tagged(command: str, output: str) -> str:
+    """The click command, told its screen (a plain assignment: works for any shell command)."""
+    return f"HYPEFORGE_OUTPUT={output}; export HYPEFORGE_OUTPUT; {command}"
+
+
+def bars_for(text: str, outputs: list[str]) -> list[dict]:
+    """One bar per screen, in one Waybar: "output" set, and each module's click commands tagged."""
     cfg = json.loads(strip_comments(text))
+    out = []
     for bar in cfg if isinstance(cfg, list) else [cfg]:
-        bar["output"] = output
-    return json.dumps(cfg, indent=2, ensure_ascii=False)
+        full = merged(bar)
+        for name in outputs:
+            mine = json.loads(json.dumps(bar))
+            mine["output"] = name
+            for module in placed(full):
+                for key in CLICKS:
+                    cmd = full.get(module, {}).get(key) if isinstance(full.get(module), dict) else None
+                    if isinstance(cmd, str) and cmd:
+                        mine.setdefault(module, {})[key] = tagged(cmd, name)
+            out.append(mine)
+    return out
 
 
 def screens() -> list[str]:
     return [o["name"] for o in Sway().ask(GET_OUTPUTS) if o.get("active")]
 
 
-def saved() -> dict:
+def saved() -> int | None:
     try:
-        return json.loads(PIDS.read_text())
-    except (OSError, ValueError):
-        return {}
+        return int(json.loads(PIDS.read_text())["pid"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
 
 
 def is_waybar(pid: int) -> bool:
@@ -87,34 +154,30 @@ def is_waybar(pid: int) -> bool:
 
 
 def stop():
-    pids = [p for p in saved().values() if is_waybar(p)]
-    for p in pids:
+    pid = saved()
+    if pid and is_waybar(pid):
         try:
-            os.kill(p, signal.SIGTERM)
+            os.kill(pid, signal.SIGTERM)
         except OSError:
             pass
-    for _ in range(40):
-        if not any(is_waybar(p) for p in pids):
-            break
-        time.sleep(0.05)
+        for _ in range(40):
+            if not is_waybar(pid):
+                break
+            time.sleep(0.05)
     PIDS.unlink(missing_ok=True)
 
 
 def start():
     stop()
     RUN.mkdir(parents=True, exist_ok=True)
-    text = (CONF / "config.jsonc").read_text()
-    pids = {}
-    for out in screens():
-        path = RUN / f"config-{out}.json"
-        path.write_text(config_for(text, out))
-        log = open(RUN / f"waybar-{out}.log", "w")
-        p = subprocess.Popen(["waybar", "-c", str(path), "-s", str(CONF / "style.css")],
-                             env=dict(os.environ, HYPEFORGE_OUTPUT=out), stdout=log, stderr=log,
-                             start_new_session=True)
-        pids[out] = p.pid
-    PIDS.write_text(json.dumps(pids))
-    print(f"hypeforge-bar: a bar on {len(pids)} screen(s): {', '.join(pids)}")
+    outs = screens()
+    path = RUN / "config.json"
+    path.write_text(json.dumps(bars_for((CONF / "config.jsonc").read_text(), outs), indent=2, ensure_ascii=False))
+    log = open(RUN / "waybar.log", "w")
+    p = subprocess.Popen(["waybar", "-c", str(path), "-s", str(CONF / "style.css")],
+                         stdout=log, stderr=log, start_new_session=True)
+    PIDS.write_text(json.dumps({"pid": p.pid, "screens": outs}))
+    print(f"hypeforge-bar: the bar on {len(outs)} screen(s): {', '.join(outs)}")
 
 
 def main():

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """The hidden bench for one bar per screen (hypeforge-bar, 2026-10-10; bench before live).
 
-Three screen-less screens, the KDE style applied. Checks: a bar on EVERY screen, each told its own
-screen (HYPEFORGE_OUTPUT in its environment — what its clicks inherit) and visible there; a
-restart replaces them all; a pop-up opened from screen 3's bar draws on screen 3 only; stop leaves
-none; and the REAL desktop's bar is never touched (its process numbers are the same at the end).
+Three screen-less screens, the KDE style applied. Checks: ONE bar program with a bar on every
+screen, each bar's click commands carrying its screen (HYPEFORGE_OUTPUT) and visible there; a
+restart replaces it; five in-place restyles leave it running (the per-process version crashed);
+screen 3's real emblem click, run the way Waybar runs it, opens Kickoff on screen 3 only; stop
+leaves none; and the REAL desktop's bar is never touched (same process numbers at the end).
 
     bar-bench.py            exit 0 when every check passes
 """
@@ -90,36 +91,55 @@ def main() -> int:
             except OSError:
                 return {}
 
+        def bar_pid():
+            try:
+                return int(json.loads((run / "hypeforge-bar/pids.json").read_text())["pid"])
+            except (OSError, ValueError, KeyError):
+                return None
+
+        def alive(pid):
+            try:
+                return Path(f"/proc/{pid}/cmdline").read_bytes().split(b"\0")[0].endswith(b"waybar")
+            except OSError:
+                return False
+
         subprocess.run([sys.executable, str(BAR), "start"], env=env, stdout=log, stderr=log)
         time.sleep(4)
-        pids = json.loads((run / "hypeforge-bar/pids.json").read_text())
-        check(sorted(pids) == [o["name"] for o in sorted(outs, key=lambda o: o["name"])], f"a bar for every screen: {', '.join(sorted(pids))}")
-        check(all(env_of(p).get("HYPEFORGE_OUTPUT") == n for n, p in pids.items()), "each bar is told its own screen")
+        first = bar_pid()
+        bars = json.loads((run / "hypeforge-bar/config.json").read_text())
+        names = sorted(o["name"] for o in outs)
+        check(alive(first) and sorted(b["output"] for b in bars) == names,
+              f"one bar program, a bar for every screen: {', '.join(sorted(b['output'] for b in bars))}")
+        check(all(f"HYPEFORGE_OUTPUT={b['output']};" in b.get("custom/emblem", {}).get("on-click", "") for b in bars),
+              "each screen's emblem click carries its own screen")
         check(all(bar_seen(o) for o in outs), "each screen shows its bar")
         subprocess.run([sys.executable, str(BAR), "restart"], env=env, stdout=log, stderr=log)
         time.sleep(4)
-        again = json.loads((run / "hypeforge-bar/pids.json").read_text())
-        gone = not any(Path(f"/proc/{p}").exists() and env_of(p) for p in pids.values())
-        check(len(again) == 3 and gone and all(bar_seen(o) for o in outs), "a restart replaces all three, and they show")
+        again = bar_pid()
+        check(again != first and not alive(first) and alive(again) and all(bar_seen(o) for o in outs),
+              "a restart replaces it, and every screen shows its bar")
+        # a restyle (the engine's in-place reload, SIGUSR2) — 10-10 the one-program-per-screen
+        # version lost two of three bars to it
+        for _ in range(5):
+            os.kill(again, signal.SIGUSR2)
+            time.sleep(1.5)
+        check(alive(again) and all(bar_seen(o) for o in outs), "five restyles in place: still running, on every screen")
 
         before = [shot(o) for o in outs]
         third = outs[2]["name"]
-        panel = subprocess.Popen([sys.executable, str(HERE / "applets/panels/hypeforge-panel"), "workspaces",   # needs no outside service (the calendar waits for one)
-                                  "--edges", "bottom,right", "--margin", "bottom=60,right=8"],
-                                 env=dict(env, HYPEFORGE_OUTPUT=third), stdout=log, stderr=log)
+        click = next(b for b in bars if b["output"] == third)["custom/emblem"]["on-click"]
+        panel = subprocess.Popen(["sh", "-c", click], env=env, stdout=log, stderr=log)   # what Waybar runs
         procs.append(panel)
         time.sleep(3)
-        subprocess.run(["grim", str(base / "with-popup.png")], env=env)
-        if panel.poll() is not None:
-            print(f"        (the pop-up ended by itself, exit {panel.returncode})")
         changed = [sum(a != b for a, b in zip(x, shot(o))) for x, o in zip(before, outs)]
         check(changed[2] > 10000 and changed[0] < 1000 and changed[1] < 1000,
-              f"a pop-up from screen 3's bar draws on screen 3 only (changed bytes: {changed})")
-        panel.terminate()
+              f"screen 3's emblem click opens Kickoff on screen 3 only (changed bytes: {changed})")
+        subprocess.run([sys.executable, str(HERE / "applets/panels/hypeforge-panel"), "kickoff"], env=env,
+                       stdout=log, stderr=log)          # the same button again closes it
 
         subprocess.run([sys.executable, str(BAR), "stop"], env=env, stdout=log, stderr=log)
         time.sleep(1)
-        check(not any(Path(f"/proc/{p}").exists() and env_of(p) for p in again.values()), "stop leaves no bar")
+        check(not alive(again), "stop leaves no bar")
     finally:
         for p in procs:
             if p.poll() is None:
