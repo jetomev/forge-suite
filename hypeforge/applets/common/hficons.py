@@ -42,16 +42,20 @@ class Icons:
     def __init__(self, themes=THEMES, dirs=None):
         self.roots: list[tuple[Path, list[str]]] = []
         for theme in themes:
-            for base in (dirs or icon_dirs()):
-                root = base / theme
-                index = root / "index.theme"
-                if not index.is_file():
-                    continue
-                folders = []
-                for line in index.read_text(errors="replace").splitlines():
-                    if line.startswith(("Directories=", "ScaledDirectories=")):
-                        folders += [f for f in line.split("=", 1)[1].split(",") if f]
-                self.roots.append((root, list(dict.fromkeys(folders))))
+            # The freedesktop rule: a theme's folder list comes from the first index.theme found,
+            # and EVERY copy of the theme is searched with it. ~/.local/share/icons/hicolor (where
+            # Steam and Lutris put game icons) has no index.theme of its own; skipping it left
+            # Battle.net and Sim Companies without a picture (Javier, 2026-10-10).
+            bases = [base / theme for base in (dirs or icon_dirs())]
+            index = next((b / "index.theme" for b in bases if (b / "index.theme").is_file()), None)
+            if index is None:
+                continue
+            folders = []
+            for line in index.read_text(errors="replace").splitlines():
+                if line.startswith(("Directories=", "ScaledDirectories=")):
+                    folders += [f for f in line.split("=", 1)[1].split(",") if f]
+            folders = list(dict.fromkeys(folders))
+            self.roots += [(root, folders) for root in bases if root.is_dir()]
         self.pixmaps = Path("/usr/share/pixmaps")
         self.cache: dict[str, str | None] = {}
 
