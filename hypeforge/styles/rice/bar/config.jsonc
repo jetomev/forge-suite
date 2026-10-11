@@ -25,8 +25,8 @@
   "modules-right": [
     "cpu",
     "memory",
-    "network",
     "bluetooth",
+    "network",
     "wireplumber",
     "custom/clipboard",
     "custom/drives",

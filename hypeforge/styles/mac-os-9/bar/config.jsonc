@@ -31,9 +31,9 @@
     "custom/clipboard",
     "custom/drives",
     "custom/printers",
-    "wireplumber",
-    "network",
     "bluetooth",
+    "network",
+    "wireplumber",
     "custom/notifications",
     "clock",
     "custom/menu-appicon"

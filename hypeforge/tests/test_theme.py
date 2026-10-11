@@ -178,12 +178,28 @@ class TheBarFollowsTheStyle(Base):
                 if ":hover" in sel:
                     self.assertNotRegex(body, r"(?<![-\w])background:", f"{css.parent.parent.name}: {sel.strip()}")
 
+    def test_every_style_reads_volume_network_bluetooth_from_the_right(self):
+        """Javier, 2026-10-10: "Volume, Network, and Bluetooth. From right to left"."""
+        import json
+        root = Path(__file__).resolve().parent.parent
+        loader = importlib.machinery.SourceFileLoader("hfbar_order", str(root / "applets/bar/hypeforge-bar"))
+        bar = importlib.util.module_from_spec(importlib.util.spec_from_loader("hfbar_order", loader))
+        loader.exec_module(bar)
+        for path in sorted(root.glob("styles/*/bar/config.jsonc")):
+            cfg = json.loads(bar.strip_comments(path.read_text()))
+            seq = [m for k in ("modules-left", "modules-center", "modules-right") for m in cfg.get(k, [])]
+            seq += cfg.get("group/quick", {}).get("modules", [])
+            with self.subTest(path.parent.parent.name):
+                self.assertIn([m for m in seq if m in ("wireplumber", "network", "bluetooth")],
+                              ([], ["bluetooth", "network", "wireplumber"]))
+
     def test_windows_11_has_no_search_pill_and_javiers_quick_order(self):
         import json
         bar = Path(ht.REPO) / "styles/windows-11/bar/config.jsonc"
         cfg = json.loads("\n".join(l for l in bar.read_text().splitlines() if not l.strip().startswith("//")))
         self.assertNotIn("custom/search", cfg["modules-left"])
-        self.assertEqual(cfg["group/quick"]["modules"], ["wireplumber", "network", "bluetooth"])
+        # Javier 10-10: "Volume, Network, and Bluetooth. From right to left"
+        self.assertEqual(cfg["group/quick"]["modules"], ["bluetooth", "network", "wireplumber"])
 
     def test_a_style_without_a_bar_leaves_the_bar_alone(self):
         st = dict(ht.styles()["rice"], meta=dict(ht.styles()["rice"]["meta"], slug="no-bar-here"))

@@ -63,9 +63,9 @@
   "group/quick": {
     "orientation": "inherit",
     "modules": [
-      "wireplumber",
+      "bluetooth",
       "network",
-      "bluetooth"
+      "wireplumber"
     ]
   },
   "network": {
