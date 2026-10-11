@@ -3,12 +3,17 @@
 Read only from hypeForge's own files (D-59: apps read each other's files, never each other's
 code): the styles (`styles/<slug>/style.toml`), the 25 colour themes
 (`themes/colours/palettes.toml`) and what is applied now (`~/.config/hypeforge/theme/state.toml`).
-The switch itself is hypeForge's own command, `hypeforge-theme apply <style> <theme>` (and `undo`):
-it writes every look file, keeps a backup, and reloads what is running.
+The switch (Javier, 2026-10-11: "have already a config file for theme, and with the config file
+themeForge call to change it"): themeForge writes the picks into THE LOOK FILE,
+`~/.config/hypeforge/look.toml` (the theme, its colours, each element), then runs hypeForge's own
+`hypeforge-theme look`, which applies that file: every look file written, a backup kept, the bar
+restarted whole when its layout changes. `undo` goes back one apply the same way. Every run is
+written to themeForge's log (~/.local/state/themeforge/themeforge.log).
 """
 
 from __future__ import annotations
 
+import datetime as dt
 import os
 import subprocess
 import tomllib
@@ -20,6 +25,9 @@ HYPEFORGE_PLACES = [Path.home() / "Programs/forge-suite/hypeforge", Path("/usr/s
 # The order Javier sees: the KognogOS default first, then the build order of the look program (D-78)
 STYLE_ORDER = ["rice", "windows-11", "mac-os-9", "kde", "cosmic", "macos", "classic"]
 # A swatch strip: the theme's 60-30-10 at a glance (D-70) — neutrals, its colour, its pop, its text
+ELEMENTS = ["bar", "launcher", "workspaces", "taskbar", "datetime", "tray", "status_icons", "popups",
+            "dock", "windows", "icons", "fonts"]
+LOG = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "themeforge/themeforge.log"
 SWATCH = ["surface.sunken", "surface.base", "surface.raised", "band.base", "band.strong", "pop.base", "text.primary"]
 
 
@@ -36,6 +44,7 @@ class Style:
     slug: str
     name: str
     summary: str = ""
+    elements: dict = field(default_factory=dict)      # its version of each piece, in plain words
 
 
 @dataclass
@@ -59,10 +68,50 @@ def _colour(theme: dict, path: str) -> str:
 class Look:
     """hypeForge's look, as themeForge sees it. `run` is swapped out in the tests."""
 
-    def __init__(self, home: Path | None = None, config: Path | None = None, run=subprocess.run):
+    def __init__(self, home: Path | None = None, config: Path | None = None, run=subprocess.run,
+                 log: Path | None = None):
         self.home = home if home is not None else hypeforge_home()
         self.config = config or Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
         self.run = run
+        self.log = log or LOG
+
+    @property
+    def look_file(self) -> Path:
+        return self.config / "hypeforge/look.toml"
+
+    def picks(self) -> dict:
+        """The look file: {"theme", "colors", "elements"}; empty when there is none yet."""
+        try:
+            d = tomllib.loads(self.look_file.read_text())
+        except (OSError, tomllib.TOMLDecodeError):
+            return {}
+        el = d.get("elements", {})
+        return {"theme": d.get("theme"), "colors": d.get("colors"),
+                "elements": {k: str(el.get(k, "theme")) for k in ELEMENTS}}
+
+    def write_picks(self, theme: str, colors: str) -> None:
+        """The look file with the new theme and colours; each element's pick is kept."""
+        el = self.picks().get("elements", {})
+        q = lambda v: '"' + str(v).replace("\\", "\\\\").replace('"', '\\"') + '"'
+        body = ("# hypeForge's look: what themeForge picked. themeForge writes it and runs `hypeforge-theme look`;\n"
+                "# every apply writes it too, so it always says what is on screen.\n"
+                "# theme = a style (styles/<slug>/style.toml) · colors = a colour theme (themes/colours/palettes.toml)\n"
+                f"theme = {q(theme)}\ncolors = {q(colors)}\n\n"
+                "# Each element of the look: \"theme\" = the theme's own (its style.toml [elements] says what that is).\n"
+                "# Picking one element from another theme comes with themeForge's next pages.\n"
+                "[elements]\n" + "".join(f"{k} = {q(el.get(k, 'theme'))}\n" for k in ELEMENTS))
+        self.look_file.parent.mkdir(parents=True, exist_ok=True)
+        tmp = self.look_file.with_name("look.toml.tftmp")
+        tmp.write_text(body)
+        tmp.replace(self.look_file)
+
+    def _log(self, what: str, ok: bool, out: str) -> None:
+        try:
+            self.log.parent.mkdir(parents=True, exist_ok=True)
+            with open(self.log, "a") as f:
+                f.write(f"\n== {dt.datetime.now():%Y-%m-%d %H:%M:%S} · {what} · {'OK' if ok else 'NOT DONE'}\n{out.strip()}\n")
+        except OSError:
+            pass
 
     @property
     def ok(self) -> bool:
@@ -79,7 +128,9 @@ class Look:
                 meta = tomllib.loads(f.read_text())["meta"]
             except (OSError, tomllib.TOMLDecodeError, KeyError):
                 continue
-            found[meta["slug"]] = Style(meta["slug"], meta.get("name", meta["slug"]), meta.get("summary", ""))
+            d = tomllib.loads(f.read_text())
+            found[meta["slug"]] = Style(meta["slug"], meta.get("name", meta["slug"]), meta.get("summary", ""),
+                                        dict(d.get("elements", {})))
         rank = {s: i for i, s in enumerate(STYLE_ORDER)}
         return sorted(found.values(), key=lambda s: (rank.get(s.slug, len(rank)), s.name.lower()))
 
@@ -112,13 +163,19 @@ class Look:
         except (OSError, subprocess.SubprocessError) as e:
             return False, str(e)
         words = [l.strip() for l in (r.stdout + "\n" + r.stderr).splitlines() if l.strip()]
+        self._log(" ".join(args), not r.returncode, r.stdout + "\n" + r.stderr)
         if r.returncode:
             reason = next((l.removeprefix("Not done:").strip() for l in words if l.startswith("Not done")), "")
             return False, reason or (words[-1] if words else f"it stopped (code {r.returncode})")
         return True, "; ".join(words[-3:]) if words else "done"
 
     def apply(self, style: str, theme: str) -> tuple[bool, str]:
-        return self._do("apply", style, theme)
+        """Write the picks into the look file, then hypeForge applies the file."""
+        try:
+            self.write_picks(style, theme)
+        except OSError as e:
+            return False, f"the look file could not be written ({e})"
+        return self._do("look")
 
     def undo(self) -> tuple[bool, str]:
         return self._do("undo")

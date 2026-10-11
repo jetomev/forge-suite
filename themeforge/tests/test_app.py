@@ -20,7 +20,7 @@ def run(c):
 
 class FakeLook(Look):
     def __init__(self, home, conf):
-        super().__init__(home, conf)
+        super().__init__(home, conf, log=conf / "tf.log")
         self.done = []
 
     def apply(self, style, theme):
@@ -116,6 +116,22 @@ class Page(unittest.TestCase):
                 await pilot.pause()
                 self.assertEqual(app.query_one("#tf-style", Select).value, "rice")
                 self.assertFalse(app.changes_bar.display)
+        run(go())
+
+    def test_the_options_are_a_two_column_matrix_with_small_buttons(self):
+        """Javier, 2026-10-11: "a matrix of 2 x number of options going down … Button sizes, please, not
+        the big ones"."""
+        app = ThemeForgeApp(self.look)
+
+        async def go():
+            async with app.run_test(size=(110, 32)) as pilot:
+                await pilot.pause()
+                theme, colours = app.query_one("#tf-style").region, app.query_one("#tf-colour").region
+                self.assertEqual(theme.y, colours.y, "Theme and Colors side by side")
+                self.assertGreater(colours.x, theme.x + theme.width)
+                for b in app.query("Button.tf-small"):
+                    self.assertEqual(b.region.height, 1, f"{b.id} is one line tall")
+                self.assertEqual(str(app.query_one("#tf-el-bar").render()), "—", "the fake theme brings no elements")
         run(go())
 
     def test_the_swatch_is_coloured_blocks(self):

@@ -52,7 +52,7 @@ class Reading(unittest.TestCase):
         root = Path(self.tmp.name)
         self.home, self.conf = fake_home(root), root / "config"
         self.calls = []
-        self.look = Look(self.home, self.conf, run=self.fake_run)
+        self.look = Look(self.home, self.conf, run=self.fake_run, log=root / "tf.log")
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -80,13 +80,35 @@ class Reading(unittest.TestCase):
         (self.conf / "hypeforge/theme/state.toml").write_text('style = "rice"\ntheme = "mocha"\n')
         self.assertEqual(self.look.current(), ("rice", "mocha"))
 
-    def test_apply_and_undo_run_hypeforges_own_command(self):
+    def test_apply_writes_the_look_file_then_hypeforge_applies_it(self):
+        """Javier, 2026-10-11: "have already a config file for theme, and with the config file themeForge
+        call to change it" — the picks go into the look file, then `hypeforge-theme look`."""
         ok, words = self.look.apply("rice", "white")
         self.assertTrue(ok)
-        self.assertEqual(self.calls[-1], [str(self.home / "applets/theme/hypeforge-theme"), "apply", "rice", "white"])
+        self.assertEqual(self.calls[-1], [str(self.home / "applets/theme/hypeforge-theme"), "look"])
+        self.assertEqual(self.look.picks()["theme"], "rice")
+        self.assertEqual(self.look.picks()["colors"], "white")
+        self.assertEqual(self.look.picks()["elements"]["bar"], "theme", "each element follows the theme")
         self.assertIn("1 file(s) changed", words)
         self.look.undo()
         self.assertEqual(self.calls[-1][1:], ["undo"])
+
+    def test_an_elements_pick_is_kept_when_the_theme_changes(self):
+        (self.conf / "hypeforge").mkdir(parents=True, exist_ok=True)
+        self.look.write_picks("rice", "mocha")
+        text = self.look.look_file.read_text().replace('bar = "theme"', 'bar = "kde"')
+        self.look.look_file.write_text(text)
+        self.look.apply("classic", "white")
+        self.assertEqual(self.look.picks()["elements"]["bar"], "kde")
+        self.assertEqual(self.look.picks()["theme"], "classic")
+
+    def test_every_run_goes_in_the_log(self):
+        self.look.apply("rice", "white")
+        self.code, self.err = 2, "Not done: nope\n"
+        self.look.undo()
+        log = self.look.log.read_text()
+        self.assertIn("· look · OK", log)
+        self.assertIn("· undo · NOT DONE", log)
 
     def test_a_refusal_says_why(self):
         self.code, self.out, self.err = 2, "", "\n  Not done: no style called nope (hypeforge-theme list shows them)\n"

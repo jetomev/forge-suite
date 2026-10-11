@@ -14,7 +14,7 @@ from pathlib import Path
 from textual import work
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.containers import Horizontal, VerticalScroll
+from textual.containers import Grid, Horizontal, Vertical, VerticalScroll
 from textual.widgets import Button, Select, Static
 
 from forgekit import FORGE_CSS, GPL3_NOTICE, MENU_HINT, ForgeApp, a_file, load_pages, start_check
@@ -25,24 +25,34 @@ from .look import Look
 MANUAL_DIR = os.path.join(os.path.dirname(__file__), "manual")
 
 TF_CSS = FORGE_CSS + """
-.tf-row { height: 1; margin: 1 0 0 0; }
-.tf-name { width: 16; padding: 0 0 0 3; }
-.tf-row Select { width: 46; height: 1; }
+/* the options: a matrix of two columns going down (Javier, 2026-10-11), compact with air between */
+#tf-options { grid-size: 2; grid-gutter: 0 4; height: auto; margin: 1 2 0 2; }
+.tf-cell { height: auto; }
+.tf-row { height: 1; }
+.tf-name { width: 9; color: $forge-accent; text-style: bold; }
+.tf-row Select { width: 1fr; height: 1; }
 .tf-row SelectCurrent { border: none; height: 1; padding: 0 1; background: $forge-surface; }
 .tf-row Select:focus > SelectCurrent { border: none; background: $forge-focus-bg; }
-.tf-row Select > SelectOverlay { width: 46; }
-.tf-about { height: auto; padding: 0 0 0 17; color: $forge-muted; }
-#tf-swatch { height: 2; padding: 0 0 0 16; }
-#tf-now { height: auto; margin: 2 0 0 3; }
-.tf-buttons { height: auto; margin: 1 0 0 3; }
-.tf-buttons Button { margin: 0 1 0 0; }
+.tf-under { height: auto; padding: 0 0 0 10; margin: 1 0 0 0; color: $forge-muted; }
+#tf-brings-title { margin: 1 2 0 2; color: $forge-accent; text-style: bold; height: 1; }
+#tf-brings { grid-size: 4; grid-columns: 14 1fr 14 1fr; grid-gutter: 0 3; height: auto; margin: 0 2 0 2; }
+#tf-brings Static { height: auto; }
+.tf-el { color: $forge-muted; }
+#tf-foot { height: 1; margin: 1 2 0 2; }
+#tf-now { width: 1fr; height: 1; }
+/* small buttons: one line, no frame (Javier: "not the big ones, they look awful") */
+Button.tf-small { height: 1; min-width: 0; width: auto; border: none; padding: 0 2; margin: 0 0 0 2; }
 """
+
+# the pieces of a look, in the order shown (hypeForge's look file, D-90) and their plain names
+ELEMENT_NAMES = {"bar": "Bar", "launcher": "Launcher", "workspaces": "Workspaces", "taskbar": "Taskbar",
+                 "datetime": "Date & time", "tray": "Tray", "status_icons": "Status icons", "popups": "Pop-ups",
+                 "dock": "Dock", "windows": "Windows", "icons": "Icons", "fonts": "Fonts"}
 
 
 def swatch_markup(colours: list[str]) -> str:
-    """Two rows of colour blocks: the theme at a glance (neutrals, its colour, its pop, its text)."""
-    row = "".join(f"[on {c}]      [/]" for c in colours)
-    return row + "\n" + row
+    """One row of colour blocks: the theme at a glance (neutrals, its colour, its pop, its text)."""
+    return "".join(f"[on {c}]     [/]" for c in colours)
 
 
 class PickerView(VerticalScroll):
@@ -56,23 +66,32 @@ class PickerView(VerticalScroll):
 
     def compose(self) -> ComposeResult:
         style_now, theme_now = self.look.current()
-        style_opts = [(s.name + ("  (in use)" if s.slug == style_now else ""), s.slug) for s in self.themes_by_slug.values()]
-        colour_opts = [(c.label + ("  (in use)" if c.slug == theme_now else ""), c.slug) for c in self.colours_by_slug.values()]
-        with Horizontal(classes="tf-row"):
-            yield Static("• Theme", classes="tf-name")
-            yield Select(style_opts, value=style_now if style_now in self.themes_by_slug else Select.NULL,
-                         allow_blank=style_now not in self.themes_by_slug, prompt="— pick a theme —", id="tf-style")
-        yield Static("", id="tf-style-about", classes="tf-about")
-        with Horizontal(classes="tf-row"):
-            yield Static("• Color", classes="tf-name")
-            yield Select(colour_opts, value=theme_now if theme_now in self.colours_by_slug else Select.NULL,
-                         allow_blank=theme_now not in self.colours_by_slug, prompt="— pick the colours —", id="tf-colour")
-        yield Static("", id="tf-swatch")
-        yield Static("", id="tf-now")
-        # Apply lives in the bar at the bottom once something new is picked (one button, one place:
-        # Javier, D-85 "no need to have same buttons in several places"); F10 works any time
-        with Horizontal(classes="tf-buttons"):
-            yield Button("Undo Last Apply (u)", id="tf-undo")
+        style_opts = [(s.name + ("  · in use" if s.slug == style_now else ""), s.slug) for s in self.themes_by_slug.values()]
+        colour_opts = [(c.label + ("  · in use" if c.slug == theme_now else ""), c.slug)
+                       for c in self.colours_by_slug.values()]
+        with Grid(id="tf-options"):
+            with Vertical(classes="tf-cell"):
+                with Horizontal(classes="tf-row"):
+                    yield Static("Theme", classes="tf-name")
+                    yield Select(style_opts, value=style_now if style_now in self.themes_by_slug else Select.NULL,
+                                 allow_blank=style_now not in self.themes_by_slug, prompt="— pick a theme —",
+                                 id="tf-style")
+                yield Static("", id="tf-style-about", classes="tf-under")
+            with Vertical(classes="tf-cell"):
+                with Horizontal(classes="tf-row"):
+                    yield Static("Colors", classes="tf-name")
+                    yield Select(colour_opts, value=theme_now if theme_now in self.colours_by_slug else Select.NULL,
+                                 allow_blank=theme_now not in self.colours_by_slug, prompt="— pick the colors —",
+                                 id="tf-colour")
+                yield Static("", id="tf-swatch", classes="tf-under")
+        yield Static("What this theme brings", id="tf-brings-title")
+        with Grid(id="tf-brings"):
+            for key, name in ELEMENT_NAMES.items():
+                yield Static(name)
+                yield Static("", id=f"tf-el-{key}", classes="tf-el")
+        with Horizontal(id="tf-foot"):
+            yield Static("", id="tf-now")
+            yield Button("Undo Last Apply (u)", id="tf-undo", classes="tf-small")
 
     def on_mount(self) -> None:
         self.refresh_words()
@@ -86,6 +105,8 @@ class PickerView(VerticalScroll):
         style, colour = self.chosen()
         st = self.themes_by_slug.get(style)
         self.query_one("#tf-style-about", Static).update(st.summary if st else "")
+        for key in ELEMENT_NAMES:
+            self.query_one(f"#tf-el-{key}", Static).update((st.elements.get(key) if st else "") or "—")
         co = self.colours_by_slug.get(colour)
         self.query_one("#tf-swatch", Static).update(swatch_markup(co.swatch) if co else "")
         s_now, t_now = self.look.current()
@@ -108,7 +129,7 @@ class PickerView(VerticalScroll):
             self.app.action_undo()
 
     def rebuild(self) -> None:
-        """After an apply or undo: the "(in use)" marks and the choices follow the desktop."""
+        """After an apply or undo: the "in use" marks and the choices follow the desktop."""
         self.refresh(recompose=True)
         self.call_after_refresh(self.refresh_words)
 

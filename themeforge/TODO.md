@@ -7,7 +7,8 @@
 - [x] One page: Theme and Color drop-downs, what's in use now, the changes bar (Apply (F10) · Put Back), Undo Last Apply (u); the manual (1 page); `--hypeforge`
 - [x] hypeForge: the **Look** page + Home card in Settings, a launcher entry (Settings group), the Forge float rule — repo + live
 - [x] Tests: 14 (look 7, page 7); two deliberate breaks caught (F10 doing nothing; a style without its summary); a real apply on the desktop through the same code (Rice · Ember, the bar stayed up) and put back to Rice · KognogOS Mocha
-- [ ] **NEXT — Javier's run** (2026-10-11: he comes back to it open on his screen)
+- [x] **Javier's first run (10-11):** "only rice and macos works … colors, only mocha and 'red'. Classic, it's a disaster" → hypeForge F-67 (undo left another layout under the new stylesheet) and F-68 (light themes unreadable) fixed; **the look file** (D-4, hypeForge D-90) and `[elements]`; **the page as a two-column matrix, small buttons** (D-5); a log of every run; `scripts/look-bench.py` 113/113 (27/29 with the old undo); the real app driven by its keys on the desktop (KDE·Blue, F10, then u: back to Rice·Mocha); tests 17
+- [ ] **NEXT — Javier's second run**
 
 ## Phase 2 · More layers (Javier: "popups, icons, fonts, and other")
 - [ ] Corners: straight · rounded · the style's own (`hypeforge-theme corners`, D-81), and the bar's separately from the windows' (idea, 10-10)
