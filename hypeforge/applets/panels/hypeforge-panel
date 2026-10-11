@@ -32,7 +32,7 @@ def main() -> int:
     ap.add_argument("--theme")
     ap.add_argument("--edges", help="where it sits: bottom, top, left, right, comma separated (the style's bar decides)")
     ap.add_argument("--margin", help="pixels from those edges, e.g. bottom=60,left=10")
-    ap.add_argument("--only", choices=["network", "sound", "bluetooth"],
+    ap.add_argument("--only", choices=["network", "sound", "bluetooth", "night"],
                     help="quick: just that part, its own small pop-up (COSMIC, C-5)")
     a = ap.parse_args()
     import panelkit

@@ -5,6 +5,11 @@
 
 ---
 
+## 2026-10-11
+
+### D-89 · The Rice: the date, time and bell are one piece; the right side in Javier's order (Javier)
+*"Icon alert should go here, and the alert icon should not open the alert popup. Clicking on the Date/Time/Alert will open, like it does right now, all three."* The bell moves into the centre beside the time (`group/datetime`); a click on the date, the time or the bell opens Windows 11's pop-up (the alerts as cards over the month); the bell's own list is not used on the Rice (its right click still switches Do Not Disturb). **The right side, right to left:** power · volume · network · Bluetooth · USB drives · printers · clipboard · processor · memory · **the night light** · the programs' tray icons. The night light is a new bar piece (`applets/nightlight/hypeforge-nightlight`, nightForge's own status, a moon; a click opens `quick --only night`). nightForge's own tray icon stays in the tray until a nightForge update can hide it where a bar shows the moon (it waits for the release batch with themeForge). Other styles keep their layouts (the order was asked for the Rice).
+
 ## 2026-10-10
 
 ### D-88 · macOS built: the status icons open Control Center, no Spotlight button, the frost later (Claude, from D-74 — Javier may reopen)

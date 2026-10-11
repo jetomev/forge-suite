@@ -1,11 +1,15 @@
 // hypeForge style · Linux rice (D-75) — the bar. One full-width bar, three solid areas, the
 // wallpaper showing between them (Javier, 2026-10-10). Left: the emblem and the workspace pills;
-// centre: the clock (what's playing comes back as our own piece: Waybar's mpris module crashed
-// the bar on 2026-10-10 when a player started or stopped); right: the system, the tray, the bell, the power buttons.
+// centre: the date, time and bell (what's playing comes back as our own piece: Waybar's mpris module
+// crashed the bar on 2026-10-10 when a player started or stopped); right: the tray, the system, power.
 // Bluetooth · network · sound: a click opens each one's own small pop-up under the bar, as on COSMIC
 // (Javier, 2026-10-10: "I want them for the Rice theme too"); right-click keeps the full app.
-// The clock opens Windows 11's pop-up: your alerts as cards and the month (Javier, same evening:
-// "also the date/time, plus alerts from windows to rice").
+// The date, time and bell are one piece in the centre: a click on any of them opens Windows 11's
+// pop-up, your alerts as cards and the month (Javier, same evening: "also the date/time, plus
+// alerts from windows to rice"; then: "Icon alert should go here, and the alert icon should not
+// open the alert popup"). Right-click on the bell still switches Do Not Disturb.
+// The right side, right to left (Javier): power, volume, network, Bluetooth, USB drives, printers,
+// clipboard, processor, memory, the night light, then the programs' tray icons.
 // The pieces are defined in modules.jsonc (shared by every style); colours come from colors.css.
 {
   "include": [
@@ -24,21 +28,34 @@
     "group/workspace-pills"
   ],
   "modules-center": [
-    "clock"
+    "group/datetime"
   ],
   "modules-right": [
-    "cpu",
+    "tray",
+    "custom/nightlight",
     "memory",
+    "cpu",
+    "custom/clipboard",
+    "custom/printers",
+    "custom/drives",
     "bluetooth",
     "network",
     "wireplumber",
-    "custom/clipboard",
-    "custom/drives",
-    "custom/printers",
-    "tray",
-    "custom/notifications",
     "custom/power-panel"
   ],
+  "group/datetime": {
+    "orientation": "inherit",
+    "modules": [
+      "clock",
+      "custom/notifications"
+    ]
+  },
+  "custom/notifications": {
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel calendar --edges top --margin top=56"
+  },
+  "custom/nightlight": {
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --only night --edges top,right --margin top=56,right=10"
+  },
   "clock": {
     "format": "{:%a %d %b  %I:%M %p}",
     "tooltip": false,

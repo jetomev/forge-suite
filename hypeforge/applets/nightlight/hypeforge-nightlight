@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+"""hypeForge applet · the night light on the bar: a moon that shows whether nightForge is warm now.
+
+Javier, 2026-10-10, the Rice's icon order: "… Memory, Night Light, Other icons". nightForge's own
+icon lives in the tray with the other programs, where no bar can place it; this moon is a bar
+piece a style can place where it likes. A click opens its small pop-up (the switch, the warmth,
+nightForge itself: `hypeforge-panel quick --only night`).
+
+    hypeforge-nightlight bar     one line of JSON for Waybar (redrawn every 30 s and on SIGRTMIN+13)
+
+It asks nightForge's own code (control.status), never runs nightForge; nothing when nightForge isn't
+installed.
+"""
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+LIBS = [Path("/usr/lib/nightforge"), Path.home() / "Programs/forge-suite/nightforge"]
+SIGNAL = 13          # Waybar redraws it on SIGRTMIN+13 (8-12 are taken)
+MOON = "󰖔"
+
+
+def state() -> dict | None:
+    for lib in LIBS:
+        if (lib / "nightforge/control.py").exists():
+            sys.path.insert(0, str(lib))
+            break
+    try:
+        from nightforge import control, settings
+    except ImportError:
+        return None
+    return control.status(settings.Settings.load())
+
+
+def bar_line(st: dict | None) -> dict:
+    if st is None:
+        return {"text": "", "class": "none"}
+    words = {"warm": "warm", "day": "daylight", "off": "off"}.get(st["state"], st["state"])
+    return {"text": MOON, "class": st["state"], "tooltip": f"Night light: {words} — {st['why']}"}
+
+
+def main() -> int:
+    if sys.argv[1:] != ["bar"]:
+        sys.exit(__doc__)
+    try:
+        print(json.dumps(bar_line(state()), ensure_ascii=False))
+    except Exception as e:   # a broken nightForge must never break the bar
+        print(json.dumps({"text": MOON, "class": "off", "tooltip": f"Night light: unknown ({e})"}))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

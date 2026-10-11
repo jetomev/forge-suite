@@ -43,14 +43,16 @@ tooltip label { color: @hf_text; }
 
 /* every piece: room, the theme's icon colour, a soft hover */
 #clock, #mpris, #cpu, #memory, #network, #bluetooth, #wireplumber, #tray,
-#custom-clipboard, #custom-drives, #custom-printers, #custom-notifications, #custom-power-panel {
+#custom-clipboard, #custom-drives, #custom-printers, #custom-notifications, #custom-power-panel,
+#custom-nightlight {
   padding: 0 9px;
   color: @hf_icon;
 }
 #clock { color: @hf_text; font-weight: bold; }
 #mpris { color: @hf_subtext; }
 #cpu:hover, #memory:hover, #network:hover, #bluetooth:hover, #wireplumber:hover, #custom-clipboard:hover,
-#custom-drives:hover, #custom-printers:hover, #custom-notifications:hover, #custom-power-panel:hover {
+#custom-drives:hover, #custom-printers:hover, #custom-notifications:hover, #custom-power-panel:hover,
+#custom-nightlight:hover, #clock:hover {
   background-color: @hf_pill_hover; border-radius: 8px;
 }
 #wireplumber.muted, #network.disconnected { color: @hf_alert; }
@@ -58,6 +60,12 @@ tooltip label { color: @hf_text; }
 #custom-notifications.dnd { color: @hf_alert; }
 #custom-clipboard.new, #custom-drives.has { color: @hf_new; }
 #custom-power-panel { color: @hf_alert; padding-right: 12px; }
+/* the night light's moon: warm when it's on, quiet in daylight, red when switched off */
+#custom-nightlight.warm { color: @hf_bell; }
+#custom-nightlight.day { color: @hf_subtext; }
+#custom-nightlight.off { color: @hf_alert; }
+/* the date, time and bell are one piece: the bell sits right after the time */
+#custom-notifications { padding-left: 4px; }
 
 /* the tray's own icons (Insync, Dropbox, Steam, the night light…) light up too (Javier, 10-10) */
 #tray > widget { border-radius: 8px; padding: 0 4px; }

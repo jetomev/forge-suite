@@ -19,6 +19,11 @@ The night light has its own app, **nightForge**: Settings → **Night light**, t
   nothing is looked up online) or **fixed times** with a fade.
 - **F10** saves, with a review first; the night light restarts with it at once.
 
+**On the Rice**, a **moon** of its own sits on the bar, just right of the tray (Javier, 10-11):
+mustard while the screens are warm, quiet by day, red when switched off. A click opens its small
+pop-up — the switch, the evening warmth, and **Night light settings…** (nightForge). nightForge's
+tray icon is still there too, for now; a nightForge update will hide it where the bar has the moon.
+
 ## How it works
 
 At login hypeForge runs `nightforge start`: it starts **wlsunset** the way nightForge's

@@ -275,6 +275,36 @@ class CosmicPopups(unittest.TestCase):
         # "also the date/time, plus alerts from windows to rice": the clock opens the calendar + alerts
         self.assertIn("hypeforge-panel calendar ", rice["clock"]["on-click"])
 
+    def test_the_rice_right_side_is_in_javiers_order(self):
+        """Javier, 2026-10-11, right to left: power, volume, network, Bluetooth, disks/USB, printers,
+        clipboard, CPU, memory, night light, the programs' icons."""
+        rice = self.rice()
+        right_to_left = ["custom/power-panel", "wireplumber", "network", "bluetooth", "custom/drives",
+                         "custom/printers", "custom/clipboard", "cpu", "memory", "custom/nightlight", "tray"]
+        self.assertEqual(rice["modules-right"], right_to_left[::-1])
+
+    def test_the_rice_bell_sits_with_the_time_and_opens_the_same_pop_up(self):
+        """Javier, 2026-10-11: 'Icon alert should go here, and the alert icon should not open the alert
+        popup. Clicking on the Date/Time/Alert will open … all three.'"""
+        rice = self.rice()
+        self.assertEqual(rice["modules-center"], ["group/datetime"])
+        self.assertEqual(rice["group/datetime"]["modules"], ["clock", "custom/notifications"])
+        for module in ("clock", "custom/notifications"):
+            self.assertIn("hypeforge-panel calendar ", rice[module]["on-click"], module)
+        self.assertNotIn("custom/notifications", rice["modules-right"])
+
+    def test_the_moon_opens_the_night_light_part(self):
+        rice = self.rice()
+        self.assertIn("hypeforge-panel quick --only night ", rice["custom/nightlight"]["on-click"])
+        self.assertIn("night", quick.ONLY)
+
+    def rice(self):
+        import json
+        loader = __import__("importlib.machinery").machinery.SourceFileLoader("hfbar_r2", str(HERE / "applets/bar/hypeforge-bar"))
+        bar = __import__("importlib.util").util.module_from_spec(__import__("importlib.util").util.spec_from_loader("hfbar_r2", loader))
+        loader.exec_module(bar)
+        return json.loads(bar.strip_comments((HERE / "styles/rice/bar/config.jsonc").read_text()))
+
     def test_the_parts_name_real_tiles_and_a_settings_app(self):
         src = (HERE / "applets/panels/views/quick.py").read_text()
         for part, (title, tiles, more) in quick.ONLY.items():
@@ -285,7 +315,7 @@ class CosmicPopups(unittest.TestCase):
     def test_the_panel_offers_only_those_parts(self):
         out = subprocess.run([sys.executable, str(HERE / "applets/panels/hypeforge-panel"), "--help"],
                              capture_output=True, text=True).stdout
-        self.assertIn("{network,sound,bluetooth}", out)
+        self.assertIn("{network,sound,bluetooth,night}", out)
         self.assertIn("library", out)
 
     def test_the_app_library_opens_on_every_app_then_the_groups(self):

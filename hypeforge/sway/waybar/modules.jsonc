@@ -90,6 +90,14 @@
     "tooltip-format": "Apps (Win + Space)",
     "on-click": "~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections"
   },
+  // the night light's moon (nightForge's state; Javier 10-10 placed it on the Rice): a click opens its pop-up
+  "custom/nightlight": {
+    "exec": "~/Programs/forge-suite/hypeforge/applets/nightlight/hypeforge-nightlight bar",
+    "return-type": "json",
+    "interval": 30,
+    "signal": 13,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --only night"
+  },
   "custom/power-panel": {
     "format": "󰐥",
     "tooltip-format": "Lock · Log Out · Restart · Shut Down",

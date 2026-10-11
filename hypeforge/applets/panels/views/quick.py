@@ -13,8 +13,9 @@ Sliders: the volume (WirePlumber, `wpctl`), the night warmth (nightForge's own s
 footer: updates from KognogOS's snapshot (~/.cache/kognog/updates.json; a click opens nogForge),
 hypeForge Settings, the power buttons.
 
-`--only network|sound|bluetooth` (COSMIC's C-5, D-77): one small pop-up per status icon — just
-that part, with a button to its full settings app (nmtui, wiremix, bluetui).
+`--only network|sound|bluetooth|night` (COSMIC's C-5, D-77; night: the Rice's moon, 10-10): one
+small pop-up per status icon — just that part, with a button to its full settings app (nmtui,
+wiremix, bluetui, nightForge).
 """
 
 from __future__ import annotations
@@ -53,6 +54,7 @@ CSS = """
 ONLY = {
     "network": ("Network", ("Wi-Fi", "VPN"), "hypeforge-nmtui"),
     "sound": ("Sound", (), "alacritty --class hf-mixer -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e wiremix"),
+    "night": ("Night light", ("Night light",), "alacritty --class nightforge -e nightforge"),
     "bluetooth": ("Bluetooth", ("Bluetooth",),
                   "alacritty --class hf-bluetooth -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e bluetui"),
 }
@@ -207,6 +209,17 @@ class Night:
 
 # ---- The panel -----------------------------------------------------------------------------
 
+def redraw_moon():
+    """The bar's night-light moon follows a switch made here at once (SIGRTMIN+13)."""
+    sys.path.insert(0, str(panelkit.APPLETS / "common"))
+    try:
+        import signal as _signal
+        from hfbar import signal_bar
+        signal_bar(_signal.SIGRTMIN + 13, wait=0.5)
+    except Exception:
+        pass
+
+
 def tile(name, icon, on, sub, clicked):
     b = Gtk.Button()
     b.get_style_context().add_class("hf-tile")
@@ -248,7 +261,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     root.pack_start(grid, False, False, 0)
 
     def refresh_later():
-        GLib.timeout_add(700, lambda: (fill_tiles(), False)[1])
+        GLib.timeout_add(700, lambda: (fill_tiles(), redraw_moon(), False)[2])
 
     def toggler(fn, on):
         def clicked(_b):
@@ -302,7 +315,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         root.pack_start(row, False, False, 0)
     elif only == "sound":
         root.pack_start(Gtk.Label(label="No sound device found", xalign=0), False, False, 0)
-    if night.ok and not only:
+    if night.ok and only in (None, "night"):
         _w, _why, kelvin, mode = night.state()
         row = Gtk.Box(spacing=10)
         row.pack_start(Gtk.Image.new_from_icon_name("weather-clear-night", Gtk.IconSize.BUTTON), False, False, 0)
