@@ -103,8 +103,9 @@
   },
   // The tray (Javier, 2026-10-05): apps that keep running in the background — Steam, Discord,
   // Dropbox, Insync… Left click opens the app, right click its menu.
+  // the tray's icons: 16 → 20 px on every style (Javier, 2026-10-10: "a few pixels bigger")
   "tray": {
-    "icon-size": 16,
+    "icon-size": 20,
     "spacing": 10
   },
   // The clipboard: applet 9 (applets/clipboard/), with the count of new copies. Left click: the

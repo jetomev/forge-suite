@@ -178,6 +178,15 @@ class TheBarFollowsTheStyle(Base):
                 if ":hover" in sel:
                     self.assertNotRegex(body, r"(?<![-\w])background:", f"{css.parent.parent.name}: {sel.strip()}")
 
+    def test_tray_icons_are_20_pixels_everywhere(self):
+        """Javier, 2026-10-10: "the tray icons, in general, all themes … a few pixels bigger"."""
+        root = Path(__file__).resolve().parent.parent
+        for path in (root / "sway/waybar/modules.jsonc", root / "sway/waybar/config.jsonc"):
+            with self.subTest(path.name):
+                self.assertRegex(path.read_text(), r'"tray": \{\s*"icon-size": 20,')
+        for path in root.glob("styles/*/bar/config.jsonc"):
+            self.assertNotIn('"icon-size"', path.read_text(), f"{path}: one size for all, in modules.jsonc")
+
     def test_every_style_reads_volume_network_bluetooth_from_the_right(self):
         """Javier, 2026-10-10: "Volume, Network, and Bluetooth. From right to left"."""
         import json

@@ -60,8 +60,9 @@
     "on-click": "~/Programs/forge-suite/hypeforge/applets/printers/hypeforge-printers menu",
     "on-click-right": "~/Programs/forge-suite/hypeforge/applets/printers/hypeforge-printers settings"
   },
+  // the tray's icons: 16 → 20 px on every style (Javier, 2026-10-10: "a few pixels bigger")
   "tray": {
-    "icon-size": 16,
+    "icon-size": 20,
     "spacing": 10
   },
   "custom/clipboard": {
