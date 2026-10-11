@@ -16,6 +16,8 @@ the groups or workspaces edited). The app's name and icon follow every focus cha
 
     hypeforge-menubar           keep the menus and the app's name current (one copy)
     hypeforge-menubar apps      the Application menu's list (the bar calls it)
+    hypeforge-menubar open <menu>   a menu as a list, for the keyboard: emblem (Win + Space on
+                                Mac OS 9), window (Win + I), special (Win + P), help (Win + H)
 
 Files: ~/.config/hypeforge/applets/menubar.waybar.json (Waybar "include"), menubar/*.xml (the
 menus), menubar.css (icons, @import-ed by a style's bar stylesheet); the name and icon in
@@ -86,6 +88,7 @@ class Menu:
 
     def __init__(self):
         self.lines, self.subs, self.actions, self.n = [], [], {}, 0
+        self.tree = []   # the same menu as data, for the keyboard lists: (label, command | [entries]) or None
 
     def _item(self, label, command):
         self.n += 1
@@ -96,12 +99,15 @@ class Menu:
 
     def item(self, label, command):
         self.lines.append("  " + self._item(label, command))
+        self.tree.append((label, command))
 
     def separator(self):
         self.lines.append('  <child><object class="GtkSeparatorMenuItem"/></child>')
+        self.tree.append(None)
 
     def submenu(self, label, entries):
         """entries: [(label, command)]."""
+        self.tree.append((label, list(entries)))
         sub = f"s{len(self.subs) + 1}"
         self.subs.append(f'<object class="GtkMenu" id="{sub}">\n'
                          + "\n".join("  " + self._item(lab, cmd) for lab, cmd in entries) + "\n</object>")
@@ -131,7 +137,8 @@ def build_menus(entries: dict) -> dict[str, Menu]:
         emblem.submenu(section["name"], [(entries[a]["name"], launch(a)) for a in members])
     emblem.item("All Apps…", q(LAUNCHER))
     emblem.separator()
-    emblem.item("hypeForge Settings", "hypeforge-settings")
+    # Settings is a terminal app: started through its launcher entry, which opens its window (10-10)
+    emblem.item("hypeForge Settings", launch("hypeforge-settings"))
     menus["emblem"] = emblem
 
     window = Menu()
@@ -173,7 +180,8 @@ def write_bar(entries: dict, icons: Icons) -> bool:
     fragment = {"group/menubar": {"orientation": "inherit", "modules": [
         "custom/menu-emblem", "custom/menu-app", "custom/menu-window", "custom/menu-special", "custom/menu-help"]}}
     # the emblem's button shows the emblem picture (a style's CSS); an empty label would hide it
-    titles = {"emblem": "\u2003", "window": "Window", "special": "Special", "help": "Help"}
+    # the underlined letter is the key that opens the menu as a list (Win + I, P, H; Javier 10-10)
+    titles = {"emblem": "\u2003", "window": "W<u>i</u>ndow", "special": "S<u>p</u>ecial", "help": "<u>H</u>elp"}
     for name, menu in menus.items():
         path = MENUS / f"{name}.xml"
         files[path] = menu.xml()
@@ -280,10 +288,40 @@ def apps_menu():
         sway.run(f"[con_id={targets[int(picked)]}] focus")
 
 
+MENU_TITLES = {"emblem": "KognogOS", "window": "Window", "special": "Special", "help": "Help"}
+
+
+def open_menu(name: str, entries: list | None = None, title: str | None = None):
+    """A menu of the bar as a list under it, for the keyboard (Javier, 2026-10-10: the menus need
+    their underlined letter and key). A group opens its own list; picking runs the command."""
+    if entries is None and hfmenu.close_open("barmenu"):
+        return
+    items = entries if entries is not None else [e for e in build_menus(apps())[name].tree if e is not None]
+    rows = [f"{label}  ▸" if isinstance(target, list) else label for label, target in items]
+    look = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+    cmd = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", f"{title or MENU_TITLES[name]}  ",
+           "--anchor", "top-left", "--x-margin", "4", "--y-margin", "4", "--width", "34",
+           "--lines", str(min(len(rows), 16))]
+    if os.path.isfile(look):
+        cmd[1:1] = ["--config", look]
+    picked = hfmenu.run("barmenu", cmd, "\n".join(rows))
+    if picked is None or not picked.strip().isdigit():
+        return
+    label, target = items[int(picked)]
+    if isinstance(target, list):
+        open_menu(name, target, label)
+    else:   # its own session: the command outlives this list (commas stay the shell's, not Sway's)
+        subprocess.Popen(target, shell=True, start_new_session=True,
+                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
 def main():
     args = sys.argv[1:]
     if args == ["apps"]:
         apps_menu()
+        return
+    if len(args) == 2 and args[0] == "open" and args[1] in MENU_TITLES:
+        open_menu(args[1])
         return
     if args:
         sys.exit(__doc__)

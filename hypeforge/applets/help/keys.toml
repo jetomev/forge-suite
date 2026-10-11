@@ -10,7 +10,7 @@
 [[group]]
 name = "Apps and windows"
 keys = [
-  { keys = "Win + Space", does = "Open the launcher: favorites, sections, search every app (press again to close)", sway = ["$mod+space"] },
+  { keys = "Win + Space", does = "Open the launcher of your style: Start on Windows 11, the emblem menu on Mac OS 9, elsewhere favorites, sections and search (press again to close)", sway = ["$mod+space"] },
   { keys = "Win + Escape", does = "Lock the screen (it also locks by itself after 30 minutes)", sway = ["$mod+Escape"] },
   { keys = "Win + N", does = "Close every notification on screen", sway = ["$mod+n"] },
   { keys = "Win + Shift + N", does = "Bring back the last notification closed", sway = ["$mod+Shift+n"] },
@@ -29,6 +29,9 @@ keys = [
   { keys = "Win + Shift + 1 … 6", does = "Send the window to that workspace, on the same screen", sway = ["$mod+Shift+1", "$mod+Shift+2", "$mod+Shift+3", "$mod+Shift+4", "$mod+Shift+5", "$mod+Shift+6"] },
   { keys = "Win + W, or click Workspaces", does = "The list of workspaces (the one on screen marked ●): pick one to switch every screen; press again or Esc to close", sway = ["$mod+w"] },
   { keys = "Win + F, or click Favorites", does = "Your favorite apps, with their icons: pick one to open it", sway = ["$mod+f"] },
+  { keys = "Win + I, or click Window", does = "The Window menu as a list: close, float or tile, full screen, tabs, tuck away, move to a workspace", sway = ["$mod+i"] },
+  { keys = "Win + P, or click Special", does = "The Special menu as a list: lock, log out, restart, shut down (each asks first)", sway = ["$mod+p"] },
+  { keys = "Win + H, or click Help", does = "The Help menu as a list: the key chart, the guide", sway = ["$mod+h"] },
 ]
 
 [[group]]

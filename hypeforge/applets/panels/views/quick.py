@@ -44,6 +44,8 @@ CSS = """
                           border: 3px solid {card}; box-shadow: none; }}
 .hf-quick .hf-foot {{ border-top: 1px solid {line}; padding-top: 8px; }}
 """
+# Settings is a terminal app: its launcher entry opens it in its window (a bare start showed nothing, 10-10)
+SETTINGS = f"{panelkit.APPLETS / 'sections/hypeforge-sections'} launch hypeforge-settings"
 
 
 def run(cmd: list[str], timeout: float = 3.0) -> str:
@@ -313,7 +315,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     settings = Gtk.Button.new_from_icon_name("preferences-system", Gtk.IconSize.BUTTON)
     settings.get_style_context().add_class("flat")
     settings.set_tooltip_text("hypeForge Settings")
-    settings.connect("clicked", lambda _b: (panel.close(), panelkit.run_command("hypeforge-settings")))
+    settings.connect("clicked", lambda _b: (panel.close(), panelkit.run_command(SETTINGS)))
     foot.pack_end(power, False, False, 0)
     foot.pack_end(settings, False, False, 0)
     root.pack_start(foot, False, False, 0)

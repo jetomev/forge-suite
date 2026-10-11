@@ -190,5 +190,64 @@ class AppName(unittest.TestCase):
         self.assertEqual(self.mb.focused_app({"nodes": []}, ENTRIES, self.matcher)[1], "Desktop")
 
 
+class TheMenusByKeyboard(unittest.TestCase):
+    """Javier, 2026-10-10 on Mac OS 9: Win + Space opened the Rice's list, Window / Special / Help
+    had no letter and key, and hypeForge Settings did nothing from the emblem menu."""
+
+    def setUp(self):
+        self.m = load()
+        self.menus = self.m.build_menus({})
+
+    def test_every_menu_is_also_data_for_its_keyboard_list(self):
+        labels = [e[0] for e in self.menus["window"].tree if e]
+        self.assertIn("Tuck Away", labels)
+        self.assertEqual(len([e for e in self.menus["special"].tree if e]), 4)
+
+    def test_settings_opens_through_its_launcher_entry(self):
+        cmd = dict(e for e in self.menus["emblem"].tree if e)["hypeForge Settings"]
+        self.assertIn("launch hypeforge-settings", cmd, "a bare start shows nothing: it's a terminal app")
+
+    def test_the_titles_underline_their_key(self):
+        src = (HERE / "applets/menubar/hypeforge-menubar").read_text()
+        for title in ("W<u>i</u>ndow", "S<u>p</u>ecial", "<u>H</u>elp"):
+            self.assertIn(title, src)
+        conf = (HERE / "sway/config").read_text()
+        for key, menu in (("i", "window"), ("p", "special"), ("h", "help")):
+            self.assertRegex(conf, rf"bindsym \$mod\+{key} exec \S+hypeforge-menubar open {menu}")
+
+
+class WinSpaceFollowsTheStyle(unittest.TestCase):
+    def run_key(self, style):
+        spec = importlib.util.spec_from_loader("hfsections", importlib.machinery.SourceFileLoader(
+            "hfsections", str(HERE / "applets/sections/hypeforge-sections")))
+        s = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(s)
+        conf = Path(tempfile.mkdtemp(prefix="hfkey."))
+        (conf / "hypeforge/theme").mkdir(parents=True)
+        (conf / "hypeforge/theme/state.toml").write_text(f'style = "{style}"\n')
+        calls = []
+        old_env, old_execv = os.environ.get("XDG_CONFIG_HOME"), os.execv
+        os.environ["XDG_CONFIG_HOME"] = str(conf)
+        os.execv = lambda prog, argv: calls.append(argv)
+        try:
+            handled = s.style_launcher()
+        finally:
+            os.execv = old_execv
+            if old_env is None:
+                os.environ.pop("XDG_CONFIG_HOME")
+            else:
+                os.environ["XDG_CONFIG_HOME"] = old_env
+        return handled, " ".join(calls[0]) if calls else ""
+
+    def test_windows_11_opens_start(self):
+        self.assertIn("hypeforge-panel start", self.run_key("windows-11")[1])
+
+    def test_mac_os_9_opens_the_emblem_menu(self):
+        self.assertIn("hypeforge-menubar open emblem", self.run_key("mac-os-9")[1])
+
+    def test_the_rice_keeps_its_list(self):
+        self.assertEqual(self.run_key("rice"), (False, ""))
+
+
 if __name__ == "__main__":
     unittest.main()

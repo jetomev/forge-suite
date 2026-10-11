@@ -8,10 +8,11 @@ It runs on **Sway** and adds small pieces of its own, called **applets**.
 
 | Keys | What it does |
 |---|---|
-| **Win + Space** | The launcher: open apps (or click the KognogOS emblem) |
+| **Win + Space** | The launcher of your style: open apps (or click the KognogOS emblem) — Start on Windows 11, the emblem menu on Mac OS 9 |
 | **Win + 1 … 6** | Switch workspace — every screen together |
 | **Win + W** | The list of workspaces (or click **Workspaces** on the bar) |
 | **Win + F** | Your favorite apps (or click **Favorites** on the bar) |
+| **Win + I · P · H** | The menu bar's **Window**, **Special** and **Help** menus as lists (the underlined letter) |
 | **Alt + F4** | Close a window |
 | **Win + Escape** | Lock the screen |
 | **Print Screen** | Screenshot: drag a box |

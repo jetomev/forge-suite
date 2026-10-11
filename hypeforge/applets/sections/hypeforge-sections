@@ -194,7 +194,32 @@ def do_power(key, where=UNDER_EMBLEM):
     subprocess.run(["swaymsg", "exec", command], capture_output=True)
 
 
+def style_launcher() -> bool:
+    """Win + Space opens the launcher of the style in use (Javier, 2026-10-10: on Mac OS 9 it opened
+    the Rice's list): `[layout] launcher` in the style — "start-panel" (Windows 11's Start),
+    "emblem-menu" (Mac OS 9's emblem menu as a list). True when it handled the key; any other
+    launcher (the Rice's, or one not built yet) is this list."""
+    conf = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+    applets = Path(os.path.realpath(__file__)).parent.parent
+    try:
+        with open(conf / "hypeforge/theme/state.toml", "rb") as f:
+            style = tomllib.load(f).get("style", "")
+        with open(applets.parent / "styles" / style / "style.toml", "rb") as f:
+            kind = tomllib.load(f).get("layout", {}).get("launcher", "")
+    except (OSError, tomllib.TOMLDecodeError):
+        return False
+    if kind == "start-panel":
+        os.execv(sys.executable, [sys.executable, str(applets / "panels/hypeforge-panel"), "start",
+                                  "--edges", "bottom,left", "--margin", "bottom=56,left=8"])
+    if kind == "emblem-menu":
+        os.execv(sys.executable, [sys.executable, str(applets / "menubar/hypeforge-menubar"), "open", "emblem"])
+    return False
+
+
 def main():
+    if sys.argv[1:] == ["key"]:       # Win + Space
+        style_launcher()
+        sys.argv[1:] = []
     if sys.argv[1:] == ["bar"]:
         print(f"hypeforge-sections: {write_bar()} favourites on the bar")
         return

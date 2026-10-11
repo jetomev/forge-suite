@@ -33,12 +33,15 @@ tooltip label { color: @hf_menubar_text; font-weight: normal; }
 
 /* every menu title: a little room, and Platinum's highlight under the mouse */
 #custom-menu-emblem, #custom-menu-app, #custom-ws, #custom-favorites, #custom-menu-window,
-#custom-menu-special, #custom-menu-help, #clock, #tray {
+#custom-menu-special, #custom-menu-help, #clock, #tray,
+#custom-clipboard, #custom-drives, #custom-printers, #wireplumber, #network, #bluetooth, #custom-notifications {
   padding: 0 10px;
   color: @hf_menubar_text;
 }
 #custom-menu-emblem:hover, #custom-ws:hover, #custom-favorites:hover, #custom-menu-window:hover,
-#custom-menu-special:hover, #custom-menu-help:hover, #custom-menu-appicon:hover {
+#custom-menu-special:hover, #custom-menu-help:hover, #custom-menu-appicon:hover,
+#custom-clipboard:hover, #custom-drives:hover, #custom-printers:hover, #wireplumber:hover, #network:hover,
+#bluetooth:hover, #custom-notifications:hover {
   background-color: @hf_menu_hl;
   color: @hf_menu_hl_text;
 }
@@ -46,6 +49,17 @@ tooltip label { color: @hf_menubar_text; font-weight: normal; }
 #custom-ws.menu { background-color: transparent; }
 #custom-ws.menu:hover { background-color: @hf_menu_hl; color: @hf_menu_hl_text; }
 #custom-menu-app { font-weight: 800; }
+
+/* the status icons (Javier, 2026-10-10): a little tighter than the menu titles; states in the theme's colours */
+#custom-clipboard, #custom-drives, #custom-printers, #wireplumber, #network, #bluetooth, #custom-notifications {
+  padding: 0 6px;
+  font-family: "Symbols Nerd Font", "Noto Sans", sans-serif;
+  font-weight: normal;
+}
+#wireplumber.muted, #network.disconnected { color: @hf_alert; }
+#custom-notifications.unseen { color: @hf_bell; }
+#custom-notifications.dnd { color: @hf_alert; }
+#custom-clipboard.new, #custom-drives.has { color: @hf_new; }
 
 /* the Application menu: the app's icon at the far right */
 #custom-menu-appicon { min-width: 30px; margin-right: 4px; }
