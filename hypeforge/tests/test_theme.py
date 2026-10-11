@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import importlib.machinery
 import importlib.util
+import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -310,6 +312,50 @@ class Terminal(Base):
         self.apply(theme="ember")
         ht.undo(self.place, reload=False)
         self.assertTrue(any("hypeForge-desktop" in i for i in self.imports()))
+
+
+class ASwitchStopsTheOldStylesApplets(unittest.TestCase):
+    """Mac OS 9's Control Strip must not stay on the Rice (2026-10-10): a switch stops the old
+    style's applets by their saved process number — and only when that process is still the applet."""
+
+    def setUp(self):
+        import subprocess, tempfile
+        self.sp = subprocess
+        self.run = Path(tempfile.mkdtemp(prefix="hfstop."))
+        self.procs = []
+
+    def tearDown(self):
+        for p in self.procs:
+            p.kill()
+            p.wait()
+
+    def fake(self, words: str):
+        p = self.sp.Popen([sys.executable, "-c", "import time; time.sleep(30)", words])
+        self.procs.append(p)
+        time.sleep(0.2)
+        return p
+
+    def test_the_strip_stops_when_the_new_style_has_none(self):
+        p = self.fake("hypeforge-panel strip --keep")
+        (self.run / "hypeforge-panel-strip.pid").write_text(str(p.pid))
+        self.assertEqual(ht.stop_other_applets([], say=lambda *_: None, runtime=self.run), ["strip"])
+        p.wait(timeout=5)
+
+    def test_it_stays_when_the_new_style_uses_it(self):
+        p = self.fake("hypeforge-panel strip --keep")
+        (self.run / "hypeforge-panel-strip.pid").write_text(str(p.pid))
+        self.assertEqual(ht.stop_other_applets(["menubar", "strip"], say=lambda *_: None, runtime=self.run), [])
+        self.assertIsNone(p.poll())
+
+    def test_a_reused_process_number_is_never_stopped(self):
+        p = self.fake("somebody-elses-program")
+        (self.run / "hypeforge-taskbar.pid").write_text(str(p.pid))
+        self.assertEqual(ht.stop_other_applets([], say=lambda *_: None, runtime=self.run), [])
+        self.assertIsNone(p.poll())
+
+    def test_a_style_names_its_applets_as_a_list(self):
+        self.assertEqual(ht.style_applets(ht.styles()["mac-os-9"]), ["menubar", "strip"])
+        self.assertEqual(ht.style_applets(ht.styles()["cosmic"]), [], "COSMIC's word about pop-ups isn't applets")
 
 
 if __name__ == "__main__":

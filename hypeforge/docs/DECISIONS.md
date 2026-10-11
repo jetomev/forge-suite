@@ -7,6 +7,9 @@
 
 ## 2026-10-10
 
+### D-83 · A style takes its helpers with it when you switch away (2026-10-10)
+Mac OS 9 starts two helpers (the Menu bar applet and the Control Strip); Windows 11 starts the Taskbar applet. Sway's `exec_always` starts them, but nothing stopped them on a switch — the Control Strip would have stayed on the Rice. Now `hypeforge-theme apply` (and `undo`) stops the applets other styles name and the new one doesn't, **by their saved process number only, and only when that process is still the applet** (a number can be reused; never by searching command lines). Tested both ways (a reused number is left alone); `scripts/switch-bench.py` now checks the strip appears on Mac OS 9 and is gone on every other style — 16/16, and 11/16 with the stop switched off.
+
 ### D-82 · Floating windows are tucked away when you click what they cover (Javier, 2026-10-10)
 A floating terminal over a tiled, full-screen Chrome; clicking Chrome left the terminal on top — Sway always draws floating windows above tiled ones. Javier: *"It is not about Chrome … I am using this like a user. What I am doing, someone will do it. We cannot ask someone to don't do something just because."* Option 1, like minimised: the **Tuck applet** (`applets/tuck/`) watches focus; when a tiled window is focused, the floating windows on its workspace that **cover it** go to Sway's scratchpad — not one beside it, not one of the same app (a dialog), not a sticky one. The taskbar shows a tucked app dimmed and a click brings it back on top; **Win + −** too; Alt + Tab later. Benched: `scripts/tuck-bench.py` 7/7. **Same day: focus on a click only** — Sway's focus-follows-mouse made just moving the pointer off a floating window tuck it away (Javier: *"lose focus is only when I click (and in the future using ALT+Tab) on another app. Not when the mouse is not over it"*); `focus_follows_mouse no` in sway/config.
 

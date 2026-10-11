@@ -20,7 +20,8 @@ sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "views"))
 
 # view name → its module (a module may not take a standard library's name: "calendar" is one)
-VIEWS = {"power": "power", "start": "start", "quick": "quick", "calendar": "calendar_view", "workspaces": "workspaces"}
+VIEWS = {"power": "power", "start": "start", "quick": "quick", "calendar": "calendar_view", "workspaces": "workspaces",
+         "strip": "strip"}
 
 
 def main() -> int:
@@ -30,9 +31,17 @@ def main() -> int:
     ap.add_argument("--theme")
     ap.add_argument("--edges", help="where it sits: bottom, top, left, right, comma separated (the style's bar decides)")
     ap.add_argument("--margin", help="pixels from those edges, e.g. bottom=60,left=10")
+    ap.add_argument("--keep", action="store_true",
+                    help="make sure it's open: never close an open one (the Control Strip's starter; a bar button toggles)")
     a = ap.parse_args()
     import panelkit
-    if panelkit.close_open(a.view):
+    if a.keep:
+        try:
+            os.kill(int(panelkit.pidfile(a.view).read_text()), 0)
+            return 0                      # already open: leave it
+        except (OSError, ValueError):
+            pass
+    elif panelkit.close_open(a.view):
         return 0
     view = importlib.import_module(VIEWS[a.view])
     panel = view.build(panelkit.Look(a.style, a.theme), a)

@@ -28,6 +28,7 @@ import datetime as dt
 import os
 import re
 import shutil
+import signal
 import subprocess
 import time
 import sys
@@ -230,11 +231,42 @@ def fx_value(style: dict, theme: dict, name: str) -> str:
     raise LookError(f"unknown SwayFX setting {name}")
 
 
+def style_applets(style: dict) -> list[str]:
+    """The applets a style starts (`[layout] applets`, a list; COSMIC's is a word about pop-ups)."""
+    names = style.get("layout", {}).get("applets", [])
+    return [n for n in names if isinstance(n, str)] if isinstance(names, list) else []
+
+
+def stop_other_applets(keep: list[str], say=print, runtime: Path | None = None) -> list[str]:
+    """A switch stops what the OLD style started and the new one doesn't use (Mac OS 9's Control
+    Strip must not stay on the Rice). By the saved process number only, and only when that process
+    is still the applet (a number can be reused) — never by searching command lines."""
+    runtime = runtime or Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
+    stopped = []
+    for name in sorted({n for s in styles().values() for n in style_applets(s)} - set(keep)):
+        for pidfile in (runtime / f"hypeforge-{name}.pid", runtime / f"hypeforge-panel-{name}.pid"):
+            try:
+                pid = int(pidfile.read_text())
+                cmdline = Path(f"/proc/{pid}/cmdline").read_bytes().replace(b"\0", b" ").decode(errors="replace")
+            except (OSError, ValueError):
+                continue
+            if f"hypeforge-{name}" not in cmdline and f"hypeforge-panel {name}" not in cmdline:
+                continue
+            try:
+                os.kill(pid, signal.SIGTERM)
+                stopped.append(name)
+            except OSError:
+                pass
+    if stopped:
+        say(f"  stopped what the old style used: {', '.join(stopped)}")
+    return stopped
+
+
 def sway_applets(style: dict) -> str:
     """The applets a style's bar needs, started with Sway (look step 5): `[layout] applets` names
     them (e.g. "taskbar"). exec_always runs at login and at every reload; each applet keeps one
     copy, so a reload never doubles it. A style that needs none says so."""
-    names = style.get("layout", {}).get("applets", [])
+    names = style_applets(style)
     lines = [f"exec_always {REPO / 'applets' / n / ('hypeforge-' + n)}" for n in names
              if (REPO / "applets" / n / f"hypeforge-{n}").is_file()]
     return "\n".join(["# the applets this style's bar needs"] + lines) if lines else "# this style's bar needs no extra applets"
@@ -563,7 +595,8 @@ def apply(style_slug: str, theme_slug: str, place: Place, *, wallpaper: str | No
     place.write_state(new_state)
     if reload:
         layout = [p for p in changed if p.parent == place.root / BAR_LIVE and p.name in ("config.jsonc", "style.css")]
-        reload_all(files_theme(theme_slug), say, restart_bar=place.root / BAR_LIVE if layout and BAR_RESTART else None)
+        reload_all(files_theme(theme_slug), say, restart_bar=place.root / BAR_LIVE if layout and BAR_RESTART else None,
+                   style=styles()[style_slug])
     return {"changed": changed, "picture": pic, "backup": saved}
 
 
@@ -571,7 +604,7 @@ def files_theme(theme_slug: str) -> dict:
     return themes()[theme_slug]
 
 
-def reload_all(theme: dict, say=print, restart_bar: Path | None = None):
+def reload_all(theme: dict, say=print, restart_bar: Path | None = None, style: dict | None = None):
     """Tell what is running to read the new files. Each step is skipped quietly when its program
     isn't there; nothing is stopped or started here (processes are signalled by exact name only)."""
     def run(*cmd):
@@ -579,6 +612,8 @@ def reload_all(theme: dict, say=print, restart_bar: Path | None = None):
             return subprocess.run(cmd, capture_output=True, text=True, timeout=15).returncode == 0
         except (OSError, subprocess.TimeoutExpired):
             return False
+    if style is not None:
+        stop_other_applets(style_applets(style), say)
     if os.environ.get("SWAYSOCK") and run("swaymsg", "reload"):
         say("  Sway reloaded (windows, gaps, pointer, wallpaper)")
     if restart_bar is not None:
@@ -631,7 +666,7 @@ def undo(place: Place, reload: bool = True, say=print) -> Path:
     if reload:
         cur = place.read_state()
         if cur.get("theme") in themes():
-            reload_all(themes()[cur["theme"]], say)
+            reload_all(themes()[cur["theme"]], say, style=styles().get(cur.get("style")))
     return b
 
 

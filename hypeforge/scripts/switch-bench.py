@@ -73,6 +73,15 @@ def main() -> int:
             return subprocess.Popen(["waybar", "-c", str(conf / "sway/waybar/config.jsonc"),
                                      "-s", str(conf / "sway/waybar/style.css")], env=env, stdout=log, stderr=log)
         mode = "reload" if "--reload-only" in sys.argv else "engine"
+        helpers = []
+
+        def strip_up():
+            try:
+                os.kill(int((run / "hypeforge-panel-strip.pid").read_text()), 0)
+                return True
+            except (OSError, ValueError):
+                return False
+
         for style in ORDER[1:]:
             r = ht.apply(style, "kognogos-mocha", place, reload=False, check_names=False, make_wallpaper=False, say=lambda *_: None)
             layout = any(p.name in ("config.jsonc", "style.css") and "waybar" in str(p) for p in r["changed"])
@@ -84,6 +93,18 @@ def main() -> int:
             if bar.poll() is None:
                 os.kill(bar.pid, signal.SIGUSR2)                    # an applet's own reload right after (F-58)
             time.sleep(3)
+            # what the engine does with the style's applets: stop the old style's, start the new one's
+            # (Sway's exec_always lines) — Mac OS 9's Control Strip must come and go with its style
+            wanted = ht.style_applets(ht.styles()[style])
+            ht.stop_other_applets(wanted, say=lambda *_: None, runtime=run)
+            for name in wanted:
+                helpers.append(subprocess.Popen([sys.executable, str(HERE / f"applets/{name}/hypeforge-{name}")],
+                                                env=wsenv, stdout=log, stderr=log))
+            time.sleep(2.5 if wanted else 0.5)
+            strip_ok = strip_up() == ("strip" in wanted)
+            results.append(strip_ok)
+            print(("  ok    " if strip_ok else "  FAIL  ") + f"→ {style}: the Control Strip is "
+                  + ("there" if strip_up() else "not there") + (" (as it should be)" if strip_ok else ""))
             alive = bar.poll() is None
             seen = alive and visible()
             results.append(seen)
@@ -93,11 +114,11 @@ def main() -> int:
                 print(f"        picture: {base / f'fail-{style}.png'}")
                 break
     finally:
-        for p in (locals().get("bar"), locals().get("ws"), sway):
+        for p in [*locals().get("helpers", []), locals().get("bar"), locals().get("ws"), sway]:
             if p and p.poll() is None:
                 p.terminate()
         os.kill(int(bus[1]), signal.SIGTERM)
-    print(f"\nRESULT: {sum(results)}/{len(ORDER) - 1} passed" + ("" if all(results) else f"; see {base / 'bench.log'}"))
+    print(f"\nRESULT: {sum(results)}/{2 * (len(ORDER) - 1)} passed" + ("" if all(results) else f"; see {base / 'bench.log'}"))
     return 0 if len(results) == len(ORDER) - 1 and all(results) else 1
 
 

@@ -55,7 +55,8 @@ def main() -> int:
     (conf / "hypeforge/applets/workspaces.toml").write_text(
         'enabled = true\nscreens = ["HEADLESS-1"]\n' + "".join(f'[[workspace]]\nname = "{n}"\n' for n in NAMES))
     real = Path.home() / ".config"
-    for rel in ("hypeforge/applets/sections.toml", "hypeforge/bar/launcher.png"):   # read-only copies
+    for rel in ("hypeforge/applets/sections.toml", "hypeforge/applets/favourites.waybar.json",
+                "hypeforge/bar/launcher.png"):   # read-only copies
         if (real / rel).exists():
             (conf / rel).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(real / rel, conf / rel)
@@ -90,8 +91,9 @@ def main() -> int:
         env["SWAYSOCK"] = sock
         env["WAYLAND_DISPLAY"] = next((p.name for p in run.glob("wayland-*") if not p.name.endswith(".lock")), "wayland-1")
         procs.append(subprocess.Popen([sys.executable, str(APPLETS / "workspaces/hypeforge-workspaces")], env=env, stdout=log, stderr=log))
-        for name in ht.styles()[a.style].get("layout", {}).get("applets", []):   # the style's own (taskbar…)
-            procs.append(subprocess.Popen([sys.executable, str(APPLETS / name / f"hypeforge-{name}")], env=env, stdout=log, stderr=log))
+        # the style's own applets (taskbar, menubar, strip…) are started by Sway itself: the theme's
+        # sway.conf has their exec_always lines — starting them again here raced them (10-10)
+        started = {}
         time.sleep(1.5)
         window = ("import gi, sys; gi.require_version('Gtk','3.0'); from gi.repository import Gtk, GLib; "
                   "GLib.set_prgname(sys.argv[1]); w=Gtk.Window(); w.add(Gtk.Label(label=sys.argv[1])); w.show_all(); "
@@ -104,6 +106,9 @@ def main() -> int:
         procs.append(subprocess.Popen(["waybar", "-c", str(conf / "sway/waybar/config.jsonc"),
                                        "-s", str(conf / "sway/waybar/style.css")], env=env, stdout=log, stderr=log))
         time.sleep(4)
+        for name in ht.styles()[a.style].get("layout", {}).get("applets", []):
+            pid = next((f for f in run.glob(f"hypeforge-*{name}.pid")), None)
+            print(f"applet {name}: " + ("running" if pid else "NOT running"), file=sys.stderr)
         shot = base / "shot.png"
         subprocess.run(["grim", "-s", str(a.scale), str(shot)], env=env, check=True)
         out.write_bytes(shot.read_bytes())

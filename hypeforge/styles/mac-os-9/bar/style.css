@@ -1,0 +1,62 @@
+/* hypeForge style · Mac OS 9 (D-72) — the menu bar's look: Platinum. Shapes from
+   styles/mac-os-9/style.toml (bar_height 22, square menus, a hard line under the bar); every colour is
+   a name from colors.css (hypeforge-theme writes it from the theme in use). */
+@import url("../../hypeforge/applets/menubar.css");
+@import url("../../hypeforge/theme/colors.css");
+
+* {
+  font-family: "Noto Sans", "Symbols Nerd Font", sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+
+window#waybar {
+  background: @hf_menubar_bg;
+  color: @hf_menubar_text;
+  border-bottom: 1px solid @hf_menubar_line;
+}
+
+tooltip { background: @hf_menu_bg; border: 1px solid @hf_menubar_line; }
+tooltip label { color: @hf_menubar_text; font-weight: normal; }
+
+/* the emblem: the Apple menu's place */
+#custom-menu-emblem {
+  background-image: url("../../hypeforge/bar/launcher.png");
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-width: 34px;
+}
+
+/* every menu title: a little room, and Platinum's highlight under the mouse */
+#custom-menu-emblem, #custom-menu-app, #custom-ws, #custom-favorites, #custom-menu-window,
+#custom-menu-special, #custom-menu-help, #clock, #tray {
+  padding: 0 10px;
+  color: @hf_menubar_text;
+}
+#custom-menu-emblem:hover, #custom-ws:hover, #custom-favorites:hover, #custom-menu-window:hover,
+#custom-menu-special:hover, #custom-menu-help:hover, #custom-menu-appicon:hover {
+  background-color: @hf_menu_hl;
+  color: @hf_menu_hl_text;
+}
+/* the Workspaces title carries the class "menu", which GTK's own theme paints white */
+#custom-ws.menu { background-color: transparent; }
+#custom-ws.menu:hover { background-color: @hf_menu_hl; color: @hf_menu_hl_text; }
+#custom-menu-app { font-weight: 800; }
+
+/* the Application menu: the app's icon at the far right */
+#custom-menu-appicon { min-width: 30px; margin-right: 4px; }
+.app { background-size: 16px 16px; }
+
+/* the tray's own icons light up too */
+#tray > widget { padding: 0 3px; }
+#tray > widget:hover { background-color: @hf_menu_hl; }
+#tray > .needs-attention { background-color: @hf_alert; }
+
+/* the drop-down menus themselves (Window, Special, Help, the emblem's): square, a hard frame */
+menu { background: @hf_menu_bg; color: @hf_menubar_text; border: 1px solid @hf_menubar_line; padding: 2px 0; }
+menuitem { padding: 3px 18px; font-weight: normal; }
+menuitem:hover { background-color: @hf_menu_hl; color: @hf_menu_hl_text; }

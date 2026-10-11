@@ -23,7 +23,7 @@ titlebar_height  = 20
 titlebar_align   = "center"      # title_align center
 gap_inner        = 6
 gap_outer        = 6
-bar_height       = 22            # the menu bar
+bar_height       = 26            # the menu bar (Waybar needs 25+ for its pieces at 12 px)
 menu_item_height = 20
 
 [layout]
@@ -36,6 +36,7 @@ control_strip    = "bottom-left"              # a drawer of tiles: tray, clipboa
 launcher         = "emblem-menu"              # the Apple-menu place: groups as submenus (sections.toml)
 power            = "special-menu"             # Restart · Shut Down · Log Out, where Mac OS 9 kept them
 clock_format     = ["%I:%M %p"]
+applets          = ["menubar", "strip"]   # the menus + the app's name, and the Control Strip (look step 5)
 
 [roles]
 menubar_background   = "surface.overlay"

@@ -1,0 +1,37 @@
+// hypeForge style · Mac OS 9 (D-72) — the menu bar. Left: the emblem menu (the Apple menu's place:
+// About, your groups as submenus, All Apps, Settings) · the app in use in bold · Workspaces ·
+// Favorites · Window · Special (lock, log out, restart, shut down) · Help. Right: the tray (Mac OS 9
+// had none; the apps that run in the background need a home), the clock, the Application menu (the
+// app's icon; a click lists the open apps). The Control Strip is a panel in the bottom-left corner
+// (applets/strip). Pieces from modules.jsonc and the applets' fragments; colours from colors.css.
+{
+  "include": [
+    "${XDG_CONFIG_HOME:-$HOME/.config}/sway/waybar/modules.jsonc",
+    "${XDG_CONFIG_HOME:-$HOME/.config}/hypeforge/applets/workspaces.waybar.json",
+    "${XDG_CONFIG_HOME:-$HOME/.config}/hypeforge/applets/favourites.waybar.json",
+    "${XDG_CONFIG_HOME:-$HOME/.config}/hypeforge/applets/menubar.waybar.json"
+  ],
+  "layer": "top",
+  "position": "top",
+  "height": 26,
+  "spacing": 0,
+  "modules-left": [
+    "custom/menu-emblem",
+    "custom/menu-app",
+    "custom/ws",
+    "custom/favorites",
+    "custom/menu-window",
+    "custom/menu-special",
+    "custom/menu-help"
+  ],
+  "modules-center": [],
+  "modules-right": [
+    "tray",
+    "clock",
+    "custom/menu-appicon"
+  ],
+  "clock": {
+    "format": "{:%I:%M %p}",
+    "tooltip": false
+  }
+}
