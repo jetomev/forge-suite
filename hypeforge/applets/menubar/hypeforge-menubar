@@ -56,6 +56,7 @@ APPLETS = Path(__file__).resolve().parent.parent
 LAUNCHER = APPLETS / "sections/hypeforge-sections"
 WORKSPACES_APPLET = APPLETS / "workspaces/hypeforge-workspaces"
 HELP = APPLETS / "help/hypeforge-help"
+GREETING = Path.home() / ".config/fish/sysinfo.py"   # KognogOS's greeting (kognog config/sysinfo.py)
 BAR_SIGNAL = 13           # Waybar redraws the app's name and icon on SIGRTMIN+13 (8-12 are taken)
 
 
@@ -126,7 +127,10 @@ def build_menus(entries: dict) -> dict[str, Menu]:
     menus = {}
 
     emblem = Menu()
-    emblem.item("About This Computer", "alacritty --class about-this-computer --hold -e fastfetch")
+    # our own KognogOS greeting, never an outside tool (Javier, 2026-10-10: "Ours is the solution, and
+    # for now, good enough"); greeterForge will grow it into its own Forge app
+    emblem.item("About This Computer", f"alacritty --class about-this-computer --hold -o window.dimensions.columns=110 "
+                                       f"-o window.dimensions.lines=26 -e python3 {q(GREETING)}")
     emblem.separator()
     sections = load_launcher()
     cfg = sections.load()

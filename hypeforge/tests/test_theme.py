@@ -347,6 +347,14 @@ class ASwitchStopsTheOldStylesApplets(unittest.TestCase):
         self.assertEqual(ht.stop_other_applets(["menubar", "strip"], say=lambda *_: None, runtime=self.run), [])
         self.assertIsNone(p.poll())
 
+    def test_the_strip_restarts_for_new_colours(self):
+        """Javier, 2026-10-10: Mac OS 9 switched to Mocha, the strip stayed Light Gray's white."""
+        p = self.fake("hypeforge-panel strip --keep")
+        (self.run / "hypeforge-panel-strip.pid").write_text(str(p.pid))
+        self.assertEqual(ht.stop_other_applets(["menubar", "strip"], say=lambda *_: None, runtime=self.run,
+                                               restyle=ht.RESTYLE), ["strip"])
+        p.wait(timeout=5)
+
     def test_a_reused_process_number_is_never_stopped(self):
         p = self.fake("somebody-elses-program")
         (self.run / "hypeforge-taskbar.pid").write_text(str(p.pid))

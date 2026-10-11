@@ -237,13 +237,17 @@ def style_applets(style: dict) -> list[str]:
     return [n for n in names if isinstance(n, str)] if isinstance(names, list) else []
 
 
-def stop_other_applets(keep: list[str], say=print, runtime: Path | None = None) -> list[str]:
+RESTYLE = ("strip",)   # applets that read the colours once, at start: restarted on every apply (10-10)
+
+
+def stop_other_applets(keep: list[str], say=print, runtime: Path | None = None,
+                       restyle: tuple = ()) -> list[str]:
     """A switch stops what the OLD style started and the new one doesn't use (Mac OS 9's Control
     Strip must not stay on the Rice). By the saved process number only, and only when that process
     is still the applet (a number can be reused) — never by searching command lines."""
     runtime = runtime or Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
-    stopped = []
-    for name in sorted({n for s in styles().values() for n in style_applets(s)} - set(keep)):
+    stopped, pids = [], []
+    for name in sorted(({n for s in styles().values() for n in style_applets(s)} - set(keep)) | set(restyle)):
         for pidfile in (runtime / f"hypeforge-{name}.pid", runtime / f"hypeforge-panel-{name}.pid"):
             try:
                 pid = int(pidfile.read_text())
@@ -255,10 +259,15 @@ def stop_other_applets(keep: list[str], say=print, runtime: Path | None = None) 
             try:
                 os.kill(pid, signal.SIGTERM)
                 stopped.append(name)
+                pids.append(pid)
             except OSError:
                 pass
+    for _ in range(20):               # gone before Sway's reload starts the new style's copies
+        if not any(Path(f"/proc/{p}").exists() for p in pids):
+            break
+        time.sleep(0.05)
     if stopped:
-        say(f"  stopped what the old style used: {', '.join(stopped)}")
+        say(f"  restarted or stopped: {', '.join(stopped)}")
     return stopped
 
 
@@ -613,7 +622,7 @@ def reload_all(theme: dict, say=print, restart_bar: Path | None = None, style: d
         except (OSError, subprocess.TimeoutExpired):
             return False
     if style is not None:
-        stop_other_applets(style_applets(style), say)
+        stop_other_applets(style_applets(style), say, restyle=RESTYLE)
     if os.environ.get("SWAYSOCK") and run("swaymsg", "reload"):
         say("  Sway reloaded (windows, gaps, pointer, wallpaper)")
     if restart_bar is not None:

@@ -207,6 +207,11 @@ class TheMenusByKeyboard(unittest.TestCase):
         cmd = dict(e for e in self.menus["emblem"].tree if e)["hypeForge Settings"]
         self.assertIn("launch hypeforge-settings", cmd, "a bare start shows nothing: it's a terminal app")
 
+    def test_about_this_computer_is_our_greeting(self):
+        cmd = dict(e for e in self.menus["emblem"].tree if e)["About This Computer"]
+        self.assertIn("sysinfo.py", cmd)
+        self.assertNotIn("fastfetch", cmd, "ours is the solution (Javier, 2026-10-10)")
+
     def test_the_titles_underline_their_key(self):
         src = (HERE / "applets/menubar/hypeforge-menubar").read_text()
         for title in ("Wind<u>o</u>w", "Spec<u>i</u>al", "Hel<u>p</u>"):

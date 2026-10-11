@@ -99,6 +99,13 @@ border = 3
 focus = true
 
 [[float]]
+name = "About This Computer"          # the emblem menu's first item: our KognogOS greeting, centred (10-10)
+app_id = '^about-this-computer$'
+size = "1000 px 560 px"
+border = 3
+focus = true
+
+[[float]]
 name = "hypeForge Settings"          # Javier, 2026-10-07: floating and resizable, most of the screen
 app_id = '^hypeforge-settings$'
 size = "85 ppt 85 ppt"
