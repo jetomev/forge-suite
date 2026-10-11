@@ -57,6 +57,10 @@ include ~/.config/hypeforge/theme/sway.conf
 # The mouse stays where it is when the focus moves to another screen (Javier, 2026-10-04:
 # clicking a workspace on the bar dragged the pointer to the middle of screen 1)
 mouse_warping none
+# Focus moves on a click (and keys, Alt + Tab later), not by moving the mouse over a window (Javier,
+# 2026-10-10: "lose focus is only when I click"): so hovering never tucks a floating window
+# away (D-82) and never pulls focus from what you're typing in.
+focus_follows_mouse no
 
 ### Idle configuration
 # hypeForge (Javier, 2026-10-05, D-57): lock after 30 minutes untouched, screens off after
