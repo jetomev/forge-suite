@@ -32,11 +32,11 @@ bar_position     = "top"
 bar_on           = "every-screen"             # the menu bar on all screens; the Application menu on each
 bar_left         = ["emblem-menu", "app-name", "workspaces", "favorites", "window-menu", "special-menu", "help-menu"]
 bar_right        = ["clock", "application-menu"]
-control_strip    = "bottom-left"              # a drawer of tiles: tray, clipboard, drives, network, sound, night light, screens, bell
+control_strip    = "none"                     # dropped (Javier, 2026-10-10, D-85): its buttons live on the menu bar — one place for each thing
 launcher         = "emblem-menu"              # the Apple-menu place: groups as submenus (sections.toml)
 power            = "special-menu"             # Restart · Shut Down · Log Out, where Mac OS 9 kept them
 clock_format     = ["%I:%M %p"]
-applets          = ["menubar", "strip"]   # the menus + the app's name, and the Control Strip (look step 5)
+applets          = ["menubar"]            # the menus + the app's name (look step 5)
 
 [roles]
 menubar_background   = "surface.overlay"
@@ -52,7 +52,6 @@ title_unfocused      = "surface.base"
 title_unfocused_text = "text.muted"
 window_frame         = "border.strong"
 window_frame_dim     = "border.subtle"
-strip_background     = "surface.raised"
 
 [fx]                             # SwayFX login only — optional
 corner_radius      = 0

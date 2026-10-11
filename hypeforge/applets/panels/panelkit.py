@@ -156,29 +156,25 @@ class Panel:
     `dim` darkens the screen around it (the Rice's power buttons)."""
 
     def __init__(self, view: str, content: Gtk.Widget, look: Look, edges=(), margins=None,
-                 dim: bool = False, card: bool = True, stays: bool = False):
+                 dim: bool = False, card: bool = True):
         self.view, self.look = view, look
         provider = Gtk.CssProvider()
         provider.load_from_data(look.css().encode())
         Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), provider,
                                                  Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
         monitor = screen_in_use()
-        self.stays = stays    # a strip that stays (Mac OS 9's Control Strip): no backdrops, no keyboard
 
         # the backdrops: a see-through layer on EVERY screen under the panel — a click anywhere
         # else closes it (Javier, 2026-10-10); `dim` darkens the panel's own screen
         sys.path.insert(0, str(APPLETS / "common"))
         import hfbackdrop
-        self.backdrops = [] if stays else hfbackdrop.backdrops(
-            self.close, dim_monitor=monitor if dim else None,
-            dim_rgba=look.rgba("panel_backdrop", 0.78) if dim else None)
+        self.backdrops = hfbackdrop.backdrops(self.close, dim_monitor=monitor if dim else None,
+                                              dim_rgba=look.rgba("panel_backdrop", 0.78) if dim else None)
 
         self.window = Gtk.Window()
         self.window.get_style_context().add_class("hf-panel")
-        self._layer(self.window, GtkLayerShell.Layer.TOP if stays else GtkLayerShell.Layer.OVERLAY,
-                    monitor, list(edges), margins or {})
-        GtkLayerShell.set_keyboard_mode(self.window, GtkLayerShell.KeyboardMode.NONE if stays
-                                        else GtkLayerShell.KeyboardMode.EXCLUSIVE)
+        self._layer(self.window, GtkLayerShell.Layer.OVERLAY, monitor, list(edges), margins or {})
+        GtkLayerShell.set_keyboard_mode(self.window, GtkLayerShell.KeyboardMode.EXCLUSIVE)
         self._transparent(self.window)
         if card:
             box = Gtk.Box()

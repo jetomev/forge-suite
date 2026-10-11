@@ -7,6 +7,9 @@
 
 ## 2026-10-10
 
+### D-85 · No Control Strip — one place for each thing (Javier, 2026-10-10)
+Once the status icons were back on Mac OS 9's menu bar, the Control Strip (bottom-left, D-72 / M-3) only repeated them — and it surprised Javier on his desktop ("a bar on the bottom of the screen with tons of icons!!!!"). His call: *"no need to have same buttons in several places. let's keep the tray as is, forget about the strip. Let's simplify here."* The strip is removed with everything only it used (its applet, its panel view, the panel's stay-open and `--keep` modes, the restart-on-apply list). The tray and status icons stay on the menu bar. The switch bench now proves the style helpers come and go with Windows 11's Taskbar applet.
+
 ### D-84 · Win + Space opens the style's own launcher; the menus have keys (Javier, 2026-10-10)
 His first look at Mac OS 9: Win + Space opened the Rice's list, and Window · Special · Help had no underlined letter and key (Workspaces and Favorites did). Now Win + Space runs `hypeforge-sections key`, which reads the style's `[layout] launcher`: **"start-panel"** opens Windows 11's Start, **"emblem-menu"** Mac OS 9's emblem menu as a list (`hypeforge-menubar open emblem`); any other — the Rice's, or KDE's and COSMIC's not built yet — is the usual list. The menu bar's menus open as lists by his letter rule: **Win + O** Window, **Win + I** Special, **Win + P** Help, on every style (first shipped as I · P · H: Win + H was already `$mod+$left` and Sway raised its error bar — `scripts/check-keys.py` now resolves `set $x` names and refuses one key bound twice). Tests prove each style's launcher, and that hypeForge Settings opens through its launcher entry.
 

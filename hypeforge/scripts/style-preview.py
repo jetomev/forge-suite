@@ -91,7 +91,7 @@ def main() -> int:
         env["SWAYSOCK"] = sock
         env["WAYLAND_DISPLAY"] = next((p.name for p in run.glob("wayland-*") if not p.name.endswith(".lock")), "wayland-1")
         procs.append(subprocess.Popen([sys.executable, str(APPLETS / "workspaces/hypeforge-workspaces")], env=env, stdout=log, stderr=log))
-        # the style's own applets (taskbar, menubar, strip…) are started by Sway itself: the theme's
+        # the style's own applets (taskbar, menubar…) are started by Sway itself: the theme's
         # sway.conf has their exec_always lines — starting them again here raced them (10-10)
         started = {}
         time.sleep(1.5)

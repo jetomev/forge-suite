@@ -75,9 +75,11 @@ def main() -> int:
         mode = "reload" if "--reload-only" in sys.argv else "engine"
         helpers = []
 
-        def strip_up():
+        def taskbar_up():
+            for h in helpers:      # collect the ones that ended: an uncollected dead process still "answers"
+                h.poll()
             try:
-                os.kill(int((run / "hypeforge-panel-strip.pid").read_text()), 0)
+                os.kill(int((run / "hypeforge-taskbar.pid").read_text()), 0)
                 return True
             except (OSError, ValueError):
                 return False
@@ -94,17 +96,17 @@ def main() -> int:
                 os.kill(bar.pid, signal.SIGUSR2)                    # an applet's own reload right after (F-58)
             time.sleep(3)
             # what the engine does with the style's applets: stop the old style's, start the new one's
-            # (Sway's exec_always lines) — Mac OS 9's Control Strip must come and go with its style
+            # (Sway's exec_always lines) — Windows 11's Taskbar applet must come and go with its style
             wanted = ht.style_applets(ht.styles()[style])
             ht.stop_other_applets(wanted, say=lambda *_: None, runtime=run)
             for name in wanted:
                 helpers.append(subprocess.Popen([sys.executable, str(HERE / f"applets/{name}/hypeforge-{name}")],
                                                 env=wsenv, stdout=log, stderr=log))
             time.sleep(2.5 if wanted else 0.5)
-            strip_ok = strip_up() == ("strip" in wanted)
-            results.append(strip_ok)
-            print(("  ok    " if strip_ok else "  FAIL  ") + f"→ {style}: the Control Strip is "
-                  + ("there" if strip_up() else "not there") + (" (as it should be)" if strip_ok else ""))
+            ok = taskbar_up() == ("taskbar" in wanted)
+            results.append(ok)
+            print(("  ok    " if ok else "  FAIL  ") + f"→ {style}: the Taskbar applet is "
+                  + ("running" if taskbar_up() else "not running") + (" (as it should be)" if ok else ""))
             alive = bar.poll() is None
             seen = alive and visible()
             results.append(seen)

@@ -3,8 +3,8 @@
 // Favorites · Window · Special (lock, log out, restart, shut down) · Help. Right: the tray (Mac OS 9
 // had none; the apps that run in the background need a home), clipboard, USB drives, printers,
 // sound, network, Bluetooth and the bell (Javier, 2026-10-10: "needed icons"), the clock, the Application menu (the
-// app's icon; a click lists the open apps). The Control Strip is a panel in the bottom-left corner
-// (applets/strip). Pieces from modules.jsonc and the applets' fragments; colours from colors.css.
+// app's icon; a click lists the open apps). No Control Strip (D-85): its buttons are on this bar.
+// Pieces from modules.jsonc and the applets' fragments; colours from colors.css.
 {
   "include": [
     "${XDG_CONFIG_HOME:-$HOME/.config}/sway/waybar/modules.jsonc",
