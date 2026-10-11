@@ -38,7 +38,7 @@ titlebar         = true          # Breeze-style title bars (K-4): Sway's own, ti
 titlebar_height  = 28
 titlebar_align   = "left"
 gap_inner        = 8
-gap_outer        = 8
+gap_outer        = 0             # the edges get the inner gap; Sway adds the two (Javier, 10-11: same as between windows)
 bar_height       = 44            # the panel
 bar_margin       = 8             # it floats this far from the bottom edge
 

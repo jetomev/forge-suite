@@ -36,7 +36,7 @@ radius_popup     = { round = 16, slightly-round = 8, square = 0 }
 border_window    = 3             # the active hint (C-3): Sway's frame, 3 px, in the theme's bright
 active_hint      = 3             # colour on the window in use (Sway's border width is one for all)
 gap_inner        = 8
-gap_outer        = 8
+gap_outer        = 0             # the edges get the inner gap; Sway adds the two (Javier, 10-11: same as between windows)
 bar_height       = 36            # the top panel
 dock_height      = 60
 dock_icon        = 42

@@ -37,7 +37,7 @@ radius_popup     = 14
 border_window    = 2             # a bright frame on the window in use
 border_island    = 2
 gap_inner        = 14
-gap_outer        = 14
+gap_outer        = 0             # the edges get the inner gap; Sway adds the two (Javier, 10-11: same as between windows)
 bar_height       = 38
 bar_margin       = 10            # the islands float this far from the screen edge
 

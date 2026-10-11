@@ -29,6 +29,7 @@ from __future__ import annotations
 import importlib.machinery
 import importlib.util
 import json
+import re
 import os
 import shutil
 import signal
@@ -223,6 +224,13 @@ def main() -> int:
                 except (OSError, ValueError):
                     pass
             check(running == wanted, f"helpers: {sorted(running) or 'none'} (the theme's: {sorted(wanted) or 'none'})")
+            sc = (conf / "hypeforge/theme/sway.conf").read_text()
+            edge = sum(int(re.search(rf"^gaps {k} (\d+)$", sc, re.M).group(1)) for k in ("inner", "outer"))
+            spaces = json.loads(subprocess.run(["swaymsg", "-t", "get_workspaces", "-r"], env=env,
+                                               capture_output=True, text=True).stdout)
+            out_x = {o["name"]: o["rect"]["x"] for o in outputs}
+            edges = sorted({w["rect"]["x"] - out_x[w["output"]] for w in spaces})
+            check(edges == [edge], f"open workspaces got the theme's gaps: edge {edges} (want {edge})")
             picks = look.picks()
             mem = tomllib.loads((conf / "hypeforge/theme/state.toml").read_text())
             check((picks.get("theme"), picks.get("colors")) == (st, co) == (mem.get("style"), mem.get("theme")),

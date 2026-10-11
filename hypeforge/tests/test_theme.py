@@ -236,6 +236,29 @@ class TheBarFollowsTheStyle(Base):
         self.assertEqual(self.read("sway/waybar/config.jsonc"), before)
 
 
+class Gaps(Base):
+    """Javier, 2026-10-11: the space at the screen edges is the same as between windows, in every style.
+    Sway adds the outer gap to the inner one at the edges, so the outer one must be 0."""
+
+    def test_every_style_has_the_same_space_at_the_edges(self):
+        for slug in ht.styles():
+            with self.subTest(style=slug):
+                self.apply(slug, "kognogos-mocha", say=lambda *_: None)
+                conf = self.read("hypeforge/theme/sway.conf")
+                self.assertIn("gaps outer 0", conf, f"{slug}: the edges would get double the gap")
+
+    def test_open_workspaces_get_the_new_gaps_in_the_order_sway_reads_them(self):
+        self.apply("rice", "kognogos-mocha", say=lambda *_: None)
+        fx = self.place.root / "hypeforge/theme/fx.conf"
+        fx.write_text("gaps outer 3\n")
+        plain = "include ~/.config/hypeforge/theme/sway.conf\ninclude /etc/sway/config.d/*\n"
+        self.assertEqual(ht.live_gaps(self.place.root, plain), ["gaps inner all set 14", "gaps outer all set 0"])
+        login_fx = plain + "include ~/.config/hypeforge/theme/fx.conf\n"
+        self.assertEqual(ht.live_gaps(self.place.root, login_fx), ["gaps inner all set 14", "gaps outer all set 3"],
+                         "the SwayFX login reads fx.conf last, so it wins")
+        self.assertEqual(ht.live_gaps(self.place.root, "include /etc/sway/config.d/*\n"), [], "no look file, nothing set")
+
+
 class Corners(Base):
     """Javier, 2026-10-10: rounded or straight corners, for every style with every theme."""
 

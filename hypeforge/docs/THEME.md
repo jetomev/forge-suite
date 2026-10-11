@@ -47,7 +47,7 @@ Which package brings each font: [FONTS.md](FONTS.md).
 |---|---|---|
 | Border | 2 px, no title bars (`default_border pixel 2`) | D-46: "border only + tabs works wonders" |
 | Focused / unfocused border | `#cdd6f4` / `#45475a` | named once (`$hf_active`, `$hf_inactive`…) so a palette swaps in one place |
-| Gaps | 10 px between windows, 0 at the edges | D-46 |
+| Gaps | 10 px between windows, and the same 10 px at the screen edges (`gap_outer = 0`; Sway adds the two). **Every style** works this way since D-91: the edges get exactly the space between windows | D-46, D-91 |
 | Several windows in one space | tabs (Win + T) | D-46 |
 | Wallpaper | KognogOS Semi — Catppuccin Mocha, `fill`, every screen (swaybg) | Javier, 2026-10-04 |
 

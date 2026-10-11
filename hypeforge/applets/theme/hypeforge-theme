@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import json
 import os
 import re
 import shutil
@@ -647,6 +648,32 @@ def files_theme(theme_slug: str) -> dict:
     return themes()[theme_slug]
 
 
+def live_gaps(config: Path, sway_config: str | None = None) -> list[str]:
+    """The gaps the running Sway reads, as commands for every open workspace: the look's own files
+    in the order Sway includes them (the SwayFX login adds fx.conf after sway.conf; the last wins)."""
+    if sway_config is None:
+        try:
+            out = subprocess.run(["swaymsg", "-t", "get_config", "-r"], capture_output=True, text=True, timeout=5)
+            sway_config = json.loads(out.stdout)["config"]
+        except (OSError, ValueError, KeyError, subprocess.TimeoutExpired):
+            return []
+    vals: dict[str, int] = {}
+    for line in sway_config.splitlines():
+        words = line.split(None, 1)
+        if len(words) != 2 or words[0] != "include" or "hypeforge/theme/" not in words[1]:
+            continue
+        f = config / "hypeforge/theme" / words[1].rsplit("hypeforge/theme/", 1)[1].strip()
+        try:
+            text = f.read_text()
+        except OSError:
+            continue
+        for g in text.splitlines():
+            parts = g.split()
+            if len(parts) == 3 and parts[0] == "gaps" and parts[1] in ("inner", "outer") and parts[2].isdigit():
+                vals[parts[1]] = int(parts[2])
+    return [f"gaps {k} all set {v}" for k, v in sorted(vals.items())]
+
+
 def reload_all(theme: dict, say=print, restart_bar: Path | None = None, style: dict | None = None):
     """Tell what is running to read the new files. Each step is skipped quietly when its program
     isn't there; nothing is stopped or started here (processes are signalled by exact name only)."""
@@ -659,6 +686,10 @@ def reload_all(theme: dict, say=print, restart_bar: Path | None = None, style: d
         stop_other_applets(style_applets(style), say)
     if os.environ.get("SWAYSOCK") and run("swaymsg", "reload"):
         say("  Sway reloaded (windows, gaps, pointer, wallpaper)")
+        # Sway's gaps lines only reach workspaces made after a reload; open ones keep theirs (10-11)
+        gaps = live_gaps(Place().root)
+        if gaps and run("swaymsg", ", ".join(gaps)):
+            say("  the gaps set on every open workspace")
     if restart_bar is not None:
         # a new layout: stop the bar by its exact name and start it the way login does (F-58)
         run("pkill", "-x", "waybar")

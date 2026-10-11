@@ -38,7 +38,7 @@ titlebar         = true          # Sway's own title bars: default_border normal 
 titlebar_height  = 20
 titlebar_align   = "center"      # title_align center
 gap_inner        = 6
-gap_outer        = 6
+gap_outer        = 0             # the edges get the inner gap; Sway adds the two (Javier, 10-11: same as between windows)
 bar_height       = 26            # the menu bar (Waybar needs 25+ for its pieces at 12 px)
 menu_item_height = 20
 
