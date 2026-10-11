@@ -55,10 +55,13 @@ window#waybar.menubar {
 #custom-menu-app { font-weight: bold; }
 #custom-notifications { margin-right: 6px; }
 
-/* the status icons in one pill (→ Control Center) */
-#quick > * { margin: 0; padding: 0 5px; }
+/* the status icons in one pill (→ Control Center): each icon its own room. A padding on "#quick > *"
+   never reaches them (the group's children are wrappers), so they ran into one another (Javier,
+   2026-10-10: "They are all one over the other") — padded by name, like KDE's pill */
+#quick { padding: 0 3px; }
+#bluetooth, #network, #wireplumber { margin: 0; padding: 0 6px; }
 #bluetooth, #network, #wireplumber, #custom-clipboard, #custom-drives, #custom-printers,
-#custom-notifications { font-family: "Symbols Nerd Font", "Noto Sans", sans-serif; font-size: 14px; }
+#custom-notifications { font-size: 14px; }
 #wireplumber.muted, #network.disconnected { color: @hf_alert; }
 #custom-notifications.unseen { color: @hf_bell; }
 #custom-notifications.dnd { color: @hf_alert; }

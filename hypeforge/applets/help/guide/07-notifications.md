@@ -13,6 +13,8 @@ counts the ones you have not looked at yet.
   **Click it** to see your recent notifications, under the bar's right end (the number goes away); click again to close
   the list. **Right click** turns **Do Not Disturb** on or off: the bell turns red, pop-ups
   stay hidden, and they are still kept in the list.
+- **The clock** (Windows 11, macOS, KDE, COSMIC and the Rice): a click opens your recent
+  notifications as cards, with **Clear all**, and the month's calendar under them.
 
 ## Settings
 

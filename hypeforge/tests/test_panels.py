@@ -262,6 +262,19 @@ class CosmicPopups(unittest.TestCase):
         for module, part in (("bluetooth", "bluetooth"), ("network", "network"), ("wireplumber", "sound")):
             self.assertIn(f"hypeforge-panel quick --only {part} ", panel[module]["on-click"], module)
 
+    def test_the_rice_opens_the_same_pop_ups(self):
+        """Javier, 2026-10-10: "the popups you added here for the tray icons … I want them for the Rice theme too"."""
+        import json
+        loader = __import__("importlib.machinery").machinery.SourceFileLoader("hfbar_r", str(HERE / "applets/bar/hypeforge-bar"))
+        bar = __import__("importlib.util").util.module_from_spec(__import__("importlib.util").util.spec_from_loader("hfbar_r", loader))
+        loader.exec_module(bar)
+        rice = json.loads(bar.strip_comments((HERE / "styles/rice/bar/config.jsonc").read_text()))
+        for module, part in (("bluetooth", "bluetooth"), ("network", "network"), ("wireplumber", "sound")):
+            self.assertIn(f"hypeforge-panel quick --only {part} ", rice[module]["on-click"], module)
+            self.assertIn(module, rice["modules-right"], f"{module} is on the Rice's bar")
+        # "also the date/time, plus alerts from windows to rice": the clock opens the calendar + alerts
+        self.assertIn("hypeforge-panel calendar ", rice["clock"]["on-click"])
+
     def test_the_parts_name_real_tiles_and_a_settings_app(self):
         src = (HERE / "applets/panels/views/quick.py").read_text()
         for part, (title, tiles, more) in quick.ONLY.items():

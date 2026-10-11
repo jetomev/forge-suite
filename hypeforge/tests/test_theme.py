@@ -204,6 +204,17 @@ class TheBarFollowsTheStyle(Base):
                     self.assertIn([m for m in seq if m in ("wireplumber", "network", "bluetooth")],
                                   ([], ["bluetooth", "network", "wireplumber"]))
 
+    def test_every_style_gives_the_status_icons_their_own_room(self):
+        """Javier, 2026-10-10, on macOS: "They are all one over the other" — its stylesheet padded only
+        "#quick > *", which never reaches the icons; each must be padded by its own name."""
+        import re
+        for css in sorted(Path(ht.REPO).glob("styles/*/bar/style.css")):
+            rules = re.findall(r"([^{}]+)\{([^}]*)\}", re.sub(r"/\*.*?\*/", "", css.read_text(), flags=re.S))
+            for icon in ("#bluetooth", "#network", "#wireplumber"):
+                with self.subTest(f"{css.parent.parent.name} {icon}"):
+                    padded = any(re.search(rf"{icon}(?![\w:-])", sel) and "padding" in body for sel, body in rules)
+                    self.assertTrue(padded, f"{css}: no padding names {icon}")
+
     def test_windows_11_has_no_search_pill_and_javiers_quick_order(self):
         import json
         bar = Path(ht.REPO) / "styles/windows-11/bar/config.jsonc"
