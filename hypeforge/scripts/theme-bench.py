@@ -62,7 +62,7 @@ def home_for(base: Path) -> tuple[Path, dict]:
     (conf / "hypeforge/applets").mkdir(parents=True, exist_ok=True)
     (conf / "hypeforge/applets/favourites.css").write_text("/* bench */\n")
     env = {k: v for k, v in os.environ.items() if k not in ("SWAYSOCK", "WAYLAND_DISPLAY", "DISPLAY", "I3SOCK", "DBUS_SESSION_BUS_ADDRESS")}
-    env.update(HOME=str(home), XDG_CONFIG_HOME=str(conf), XDG_CACHE_HOME=str(home / ".cache"),
+    env.update(HOME=str(home), XDG_CONFIG_HOME=str(conf), XDG_DATA_HOME=str(conf / ".local-data"), XDG_CACHE_HOME=str(home / ".cache"),
                WLR_BACKENDS="headless", WLR_RENDERER="pixman")   # sway -C without asking for the real screens
     return conf, env
 
@@ -167,8 +167,12 @@ def runtime_checks(base: Path, conf: Path, env: dict):
             mk.send_signal(signal.SIGTERM)
             err = mk.communicate(timeout=5)[1]
             check(ok, f"{style}/{theme}: notifications load their look" + (f" — {err.strip()[-160:]}" if not ok else ""))
-            for ver, files in (("3.0", [conf / "gtk-3.0/gtk.css", conf / "hypeforge/theme/colors.css", conf / "gtklock/style.css"]),
-                               ("4.0", [conf / "gtk-4.0/gtk.css"])):
+            # the look's own GTK theme (F-70): its stylesheets, built on the palette's GTK theme
+            own = ht.Place(conf).gtk_themes / ht.live_gtk_theme(conf)
+            check((own / "gtk-3.0/gtk.css").is_file(), f"{style}/{theme}: its GTK theme {own.name} is written")
+            for ver, files in (("3.0", [own / "gtk-3.0/gtk.css", conf / "gtk-3.0/gtk.css", conf / "hypeforge/theme/colors.css",
+                                        conf / "gtklock/style.css"]),
+                               ("4.0", [own / "gtk-4.0/gtk.css", conf / "gtk-4.0/gtk.css"])):
                 r = subprocess.run([sys.executable, "-c", GTK_PARSE, ver, *map(str, files)], env=e, capture_output=True, text=True, timeout=30)
                 line = next((l for l in r.stdout.splitlines() if l.startswith("ERRORS:")), r.stderr.strip()[-200:])
                 check(line == "ERRORS: none", f"{style}/{theme}: GTK {ver[0]} reads its files" + ("" if line == "ERRORS: none" else f" — {line}"))

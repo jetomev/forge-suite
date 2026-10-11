@@ -259,6 +259,48 @@ class Gaps(Base):
         self.assertEqual(ht.live_gaps(self.place.root, "include /etc/sway/config.d/*\n"), [], "no look file, nothing set")
 
 
+class OpenAppsRepaint(Base):
+    """F-70, Javier 2026-10-11: an open Chrome kept the colours it opened with. Open GTK apps only
+    reload on a new GTK theme NAME, and ~/.config/gtk-3.0/gtk.css outranks the theme and is never
+    re-read: the colours live in a named theme of the look's own."""
+
+    def name(self):
+        ini = self.read("gtk-3.0/settings.ini")
+        return next(l.split("=", 1)[1] for l in ini.splitlines() if l.startswith("gtk-theme-name="))
+
+    def test_new_colours_are_a_new_theme_name(self):
+        self.apply("rice", "kognogos-mocha", say=lambda *_: None)
+        first = self.name()
+        self.apply("rice", "dark-red", say=lambda *_: None)
+        self.assertNotEqual(self.name(), first, "same name: open apps would never repaint")
+        self.assertTrue(self.name().startswith("hypeForge-rice-dark-red-"))
+        self.assertIn(f"gtk-theme-name={self.name()}", self.read("gtk-4.0/settings.ini"))
+
+    def test_the_colours_live_in_the_theme_not_the_user_file(self):
+        self.apply("rice", "dark-red", say=lambda *_: None)
+        self.assertNotIn("@define-color", self.read("gtk-3.0/gtk.css"), "it would outrank the theme")
+        own = self.place.gtk_themes / self.name()
+        css = (own / "gtk-3.0/gtk.css").read_text()
+        self.assertIn("@define-color headerbar_bg_color", css)
+        self.assertTrue((own / "gtk-4.0/gtk.css").is_file() and (own / "index.theme").is_file())
+        if ht.gtk_base_dir("adw-gtk3-dark"):
+            self.assertTrue(css.startswith('@import url("file://'), "built on the palette's GTK theme")
+
+    def test_undo_names_a_theme_that_still_exists(self):
+        self.apply("rice", "kognogos-mocha", say=lambda *_: None)
+        first = self.name()
+        self.apply("rice", "light-blue", say=lambda *_: None)
+        ht.undo(self.place, reload=False, say=lambda *_: None)
+        self.assertEqual(self.name(), first)
+        self.assertTrue((self.place.gtk_themes / first / "gtk-3.0/gtk.css").is_file())
+
+    def test_old_themes_are_pruned(self):
+        for t in list(ht.themes())[:ht.GTK_KEEP + 4]:
+            self.apply("rice", t, say=lambda *_: None, make_wallpaper=False)
+        # the new one, the one on screen until now, and GTK_KEEP older ones
+        self.assertLessEqual(len(list(self.place.gtk_themes.glob("hypeForge-*"))), ht.GTK_KEEP + 2)
+
+
 class Corners(Base):
     """Javier, 2026-10-10: rounded or straight corners, for every style with every theme."""
 

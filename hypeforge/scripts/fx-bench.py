@@ -59,7 +59,7 @@ def main():
         shutil.copy2(REPO / src, conf / dest)
     (conf / "sway/outputs").write_text("# bench\n")
     env = {k: v for k, v in os.environ.items() if k not in ("SWAYSOCK", "WAYLAND_DISPLAY", "DISPLAY", "I3SOCK", "DBUS_SESSION_BUS_ADDRESS")}
-    env.update(HOME=str(home), XDG_CONFIG_HOME=str(conf), XDG_CACHE_HOME=str(home / ".cache"),
+    env.update(HOME=str(home), XDG_CONFIG_HOME=str(conf), XDG_DATA_HOME=str(conf / ".local-data"), XDG_CACHE_HOME=str(home / ".cache"),
                WLR_BACKENDS="headless", WLR_LIBINPUT_NO_DEVICES="1")
     place = ht.Place(conf)
     try:

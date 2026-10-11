@@ -91,7 +91,7 @@ OUTPUTS = [  # template → where it goes, under the config folder
     ("colors.css.tmpl", "hypeforge/theme/colors.css"),
     ("fuzzel-colors.ini.tmpl", "hypeforge/theme/fuzzel-colors.ini"),
     ("mako.conf.tmpl", "mako/config"),
-    ("gtk.css.tmpl", "gtk-3.0/gtk.css"),
+    ("gtk3-user.css.tmpl", "gtk-3.0/gtk.css"),   # the colours live in the look's named GTK theme (F-70)
     ("gtk.css.tmpl", "gtk-4.0/gtk.css"),
     ("gtk-settings.ini.tmpl", "gtk-3.0/settings.ini"),
     ("gtk-settings.ini.tmpl", "gtk-4.0/settings.ini"),
@@ -398,6 +398,8 @@ class Place:
         self.backups = self.dir / "backups"
         cache = Path(os.environ.get("XDG_CACHE_HOME", "~/.cache")).expanduser()
         self.cache = (self.root / ".cache-wallpapers") if root else cache / "hypeforge/wallpapers"
+        data = Path(os.environ.get("XDG_DATA_HOME", "~/.local/share")).expanduser()
+        self.gtk_themes = (self.root / ".gtk-themes") if root else data / "themes"
 
     def read_state(self) -> dict:
         try:
@@ -465,6 +467,68 @@ def look_text(style: str, theme: str, elements: dict | None = None) -> str:
 
 
 # ── apply ───────────────────────────────────────────────────────────────────────────────────
+# ── the look's GTK theme (F-70, Javier 2026-10-11: "Google Chrome that is already opened, when I
+# switch theme colors, the window stays with the same color when I opened it") ──────────────────
+# Open GTK apps (Chrome with its GTK look among them) reload their colours only when the GTK theme's
+# NAME changes, and never re-read ~/.config/gtk-3.0/gtk.css, which also outranks any theme. So the
+# colours go into a small theme of their own, built on the palette's GTK theme (adw-gtk3), named
+# after the style, the colours and a fingerprint of the content: a new look is a new name, and every
+# open GTK app repaints. Named themes are kept (an undo names an older one); the oldest are pruned.
+GTK_KEEP = 20
+
+
+def gtk_theme_name(style_slug: str, theme_slug: str, css: str) -> str:
+    import hashlib
+    return f"hypeForge-{style_slug}-{theme_slug}-{hashlib.sha1(css.encode()).hexdigest()[:6]}"
+
+
+def gtk_base_dir(name: str) -> Path | None:
+    for d in ("~/.local/share/themes", "~/.themes", "/usr/share/themes"):
+        p = Path(d).expanduser() / name
+        if p.is_dir():
+            return p
+    return None
+
+
+def gtk_theme_files(place: "Place", name: str, base: str, css: str) -> dict:
+    """The named theme's files: the base theme's own stylesheet first, then the look's colours."""
+    out = {place.gtk_themes / name / "index.theme":
+           f"[Desktop Entry]\nType=X-GNOME-Metatheme\nName={name}\n"
+           f"Comment=Written by hypeforge-theme: {base} with the look's colours\n\n[X-GNOME-Metatheme]\nGtkTheme={name}\n"}
+    root = gtk_base_dir(base)
+    for ver in ("gtk-3.0", "gtk-4.0"):
+        head = ""
+        if root is not None and (root / ver / "gtk.css").is_file():
+            head = f'@import url("file://{root / ver / "gtk.css"}");\n\n'
+        out[place.gtk_themes / name / ver / "gtk.css"] = head + css
+    return out
+
+
+def write_gtk_theme(place: "Place", name: str, files: dict):
+    for p, body in files.items():
+        if not p.exists() or p.read_text() != body:
+            p.parent.mkdir(parents=True, exist_ok=True)
+            tmp = p.with_name(p.name + ".hftmp")
+            tmp.write_text(body)
+            tmp.replace(p)
+    keep = {name, live_gtk_theme(place.root)}          # never the one on screen now
+    ours = sorted((d for d in place.gtk_themes.glob("hypeForge-*") if d.is_dir() and d.name not in keep),
+                  key=lambda d: d.stat().st_mtime)
+    for d in ours[:-GTK_KEEP] if len(ours) > GTK_KEEP else []:
+        shutil.rmtree(d, ignore_errors=True)
+
+
+def live_gtk_theme(config: Path) -> str | None:
+    """The GTK theme the look's settings file names (an undo puts back an older one)."""
+    try:
+        for line in (config / "gtk-3.0/settings.ini").read_text().splitlines():
+            if line.startswith("gtk-theme-name="):
+                return line.split("=", 1)[1].strip()
+    except OSError:
+        pass
+    return None
+
+
 def render(style_slug: str, theme_slug: str, place: Place, wallpaper: str | None = None,
            check_names: bool = True, make_wallpaper: bool = True, corners: str | None = None) -> tuple[dict, str]:
     sts, ths = styles(), themes()
@@ -485,6 +549,9 @@ def render(style_slug: str, theme_slug: str, place: Place, wallpaper: str | None
     ctx = {"style": style, "theme": theme, "names": names_for(theme, check_names), "wallpaper": str(pic),
            "meta": {"style": style["meta"]["name"], "theme": theme["meta"]["name"],
                     "when": dt.datetime.now().strftime("%Y-%m-%d %H:%M")}}
+    css = fill((TEMPLATES / "gtk.css.tmpl").read_text(), ctx)
+    ctx["names"]["gtk_theme_base"] = ctx["names"]["gtk_theme"]
+    ctx["names"]["gtk_theme"] = gtk_theme_name(style_slug, theme_slug, css)
     files = {}
     for tmpl, rel in OUTPUTS:
         files[place.root / rel] = fill((TEMPLATES / tmpl).read_text(), ctx)
@@ -493,7 +560,13 @@ def render(style_slug: str, theme_slug: str, place: Place, wallpaper: str | None
     for rel, body in bar_files(style).items():
         files[place.root / rel] = body
     files[place.root / LOOK] = look_text(style_slug, theme_slug, read_look(place).get("elements"))
+    RENDERED_GTK.clear()
+    RENDERED_GTK.update(name=ctx["names"]["gtk_theme"],
+                        files=gtk_theme_files(place, ctx["names"]["gtk_theme"], ctx["names"]["gtk_theme_base"], css))
     return files, str(pic)
+
+
+RENDERED_GTK: dict = {}   # the named GTK theme of the last render (its files sit outside the config folder)
 
 
 CORNERS = ("style", "straight", "rounded")   # Javier, 2026-10-10: "for all themes, we need an option
@@ -620,7 +693,10 @@ def apply(style_slug: str, theme_slug: str, place: Place, *, wallpaper: str | No
             say(f"  would set the wallpaper {pic} and the lock screen's copy")
         return {"changed": changed, "picture": pic, "backup": None}
     targets = list(files) + ([lock] if new_pic else [])
+    gtk = dict(RENDERED_GTK)
     saved = backup(place, targets)
+    if gtk:
+        write_gtk_theme(place, gtk["name"], gtk["files"])   # before settings.ini names it
     for p, body in files.items():                       # every file first, then reload: never half
         p.parent.mkdir(parents=True, exist_ok=True)
         tmp = p.with_name(p.name + ".hftmp")
@@ -708,11 +784,11 @@ def reload_all(theme: dict, say=print, restart_bar: Path | None = None, style: d
     if run("makoctl", "reload"):
         say("  notifications restyled")
     n = names_for(theme, check=False)
-    gs = [("gtk-theme", n["gtk_theme"]), ("icon-theme", n["icons"]), ("cursor-theme", n["cursor"]),
+    gs = [("gtk-theme", live_gtk_theme(Place().root) or n["gtk_theme"]), ("icon-theme", n["icons"]), ("cursor-theme", n["cursor"]),
           ("cursor-size", str(n["cursor_size"])), ("color-scheme", n["color_scheme"]), ("accent-color", n["gnome_accent"])]
     if shutil.which("gsettings"):
         ok = all(run("gsettings", "set", "org.gnome.desktop.interface", k, v) for k, v in gs)
-        say("  GTK apps told (they pick it up when they next open)" if ok else "  GTK settings: some keys refused (older GTK?)")
+        say("  GTK apps told (open ones repaint; one opened before 2026-10-11 needs a restart once)" if ok else "  GTK settings: some keys refused (older GTK?)")
 
 
 def undo(place: Place, reload: bool = True, say=print) -> Path:
