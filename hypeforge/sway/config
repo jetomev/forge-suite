@@ -303,7 +303,8 @@ bindsym $mod+r mode "resize"
 # hypeForge: the top bar is Waybar : every workspace always shown and clickable,
 # the active one coloured (Javier, 2026-10-04). Its settings: ~/.config/sway/waybar/.
 # Started directly (no bar { } block, so Sway's own bar stays off).
-exec waybar -c ~/.config/sway/waybar/config.jsonc -s ~/.config/sway/waybar/style.css
+# One bar per screen, each told which screen it's on, so its pop-ups open there (10-10).
+exec ~/Programs/forge-suite/hypeforge/applets/bar/hypeforge-bar start
 
 include /etc/sway/config.d/*
 

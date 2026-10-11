@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+"""hypeForge applet · the bar, one copy per screen, each told which screen it's on.
+
+Javier, 2026-10-10: "the launcher and all the bar popups don't open in the screen you are in,
+clicking from, they open in the left screen only." Waybar hands the screen's name only to the
+commands that DRAW a module, never to the command a click runs (Waybar 0.15, AModule.cpp:
+forkExec(format) without the output). With focus on a click only (D-82), the focused screen is
+not the clicked one. So each screen gets its own Waybar, started with HYPEFORGE_OUTPUT=<screen>;
+everything its clicks start inherits it, and the pop-ups and lists open there.
+
+    hypeforge-bar start      a bar on every screen (stops this tool's earlier ones first)
+    hypeforge-bar stop       stop them (by their saved process numbers only)
+    hypeforge-bar restart    the same as start
+
+Each copy reads ~/.config/sway/waybar/config.jsonc with "output" set to its screen
+($XDG_RUNTIME_DIR/hypeforge-bar/config-<screen>.json) and the same style.css.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import signal
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "common"))
+from hfsway import Sway  # noqa: E402
+
+GET_OUTPUTS = 3
+CONF = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "sway/waybar"
+RUN = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-bar"
+PIDS = RUN / "pids.json"
+
+
+def strip_comments(text: str) -> str:
+    """JSON with // comments (Waybar's .jsonc) → plain JSON; "//" inside strings is kept."""
+    out, i, quoted = [], 0, False
+    while i < len(text):
+        ch = text[i]
+        if quoted:
+            out.append(ch)
+            if ch == "\\":
+                out.append(text[i + 1])
+                i += 1
+            elif ch == '"':
+                quoted = False
+        elif ch == '"':
+            quoted = True
+            out.append(ch)
+        elif text.startswith("//", i):
+            while i < len(text) and text[i] != "\n":
+                i += 1
+            continue
+        else:
+            out.append(ch)
+        i += 1
+    return "".join(out)
+
+
+def config_for(text: str, output: str) -> str:
+    """The bar's config, kept to one screen."""
+    cfg = json.loads(strip_comments(text))
+    for bar in cfg if isinstance(cfg, list) else [cfg]:
+        bar["output"] = output
+    return json.dumps(cfg, indent=2, ensure_ascii=False)
+
+
+def screens() -> list[str]:
+    return [o["name"] for o in Sway().ask(GET_OUTPUTS) if o.get("active")]
+
+
+def saved() -> dict:
+    try:
+        return json.loads(PIDS.read_text())
+    except (OSError, ValueError):
+        return {}
+
+
+def is_waybar(pid: int) -> bool:
+    try:
+        return Path(f"/proc/{pid}/cmdline").read_bytes().split(b"\0")[0].endswith(b"waybar")
+    except OSError:
+        return False
+
+
+def stop():
+    pids = [p for p in saved().values() if is_waybar(p)]
+    for p in pids:
+        try:
+            os.kill(p, signal.SIGTERM)
+        except OSError:
+            pass
+    for _ in range(40):
+        if not any(is_waybar(p) for p in pids):
+            break
+        time.sleep(0.05)
+    PIDS.unlink(missing_ok=True)
+
+
+def start():
+    stop()
+    RUN.mkdir(parents=True, exist_ok=True)
+    text = (CONF / "config.jsonc").read_text()
+    pids = {}
+    for out in screens():
+        path = RUN / f"config-{out}.json"
+        path.write_text(config_for(text, out))
+        log = open(RUN / f"waybar-{out}.log", "w")
+        p = subprocess.Popen(["waybar", "-c", str(path), "-s", str(CONF / "style.css")],
+                             env=dict(os.environ, HYPEFORGE_OUTPUT=out), stdout=log, stderr=log,
+                             start_new_session=True)
+        pids[out] = p.pid
+    PIDS.write_text(json.dumps(pids))
+    print(f"hypeforge-bar: a bar on {len(pids)} screen(s): {', '.join(pids)}")
+
+
+def main():
+    args = sys.argv[1:]
+    if args in (["start"], ["restart"]):
+        start()
+    elif args == ["stop"]:
+        stop()
+    else:
+        sys.exit(__doc__)
+
+
+if __name__ == "__main__":
+    main()

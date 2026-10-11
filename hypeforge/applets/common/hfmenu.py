@@ -30,7 +30,11 @@ def close_open(name):
 
 
 def run(name, command, text):
-    """Run fuzzel `command` with `text` on its input; its output, or None (Esc / closed)."""
+    """Run fuzzel `command` with `text` on its input; its output, or None (Esc / closed).
+    Opened from a bar, it shows on that bar's screen (HYPEFORGE_OUTPUT, set by hypeforge-bar)."""
+    screen = os.environ.get("HYPEFORGE_OUTPUT")
+    if screen and command and command[0] == "fuzzel" and not any(a.startswith(("--output", "-o")) for a in command):
+        command = [command[0], f"--output={screen}", *command[1:]]
     menu = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                             stderr=subprocess.DEVNULL)
     OPEN.write_text(f"{menu.pid} {name}")

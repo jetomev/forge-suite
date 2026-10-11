@@ -113,10 +113,19 @@ def sway_ask(kind: int, payload: str = ""):
         return json.loads(s.recv(size, socket.MSG_WAITALL))
 
 
+def output_in_use(outputs: list[dict], env=os.environ) -> dict | None:
+    """The screen a panel opens on: the one whose bar was clicked (HYPEFORGE_OUTPUT, set by
+    hypeforge-bar on each screen's bar — Javier, 2026-10-10: they all opened on the left screen),
+    else the one Sway has focus on (a key, Win + Space)."""
+    active = [o for o in outputs if o.get("active")]
+    named = env.get("HYPEFORGE_OUTPUT")
+    return (next((o for o in active if o.get("name") == named), None) if named else None) \
+        or next((o for o in active if o.get("focused")), None)
+
+
 def screen_in_use():
-    """The Gdk monitor of the screen Sway has focus on (matched by position), or None."""
-    outputs = [o for o in sway_ask(3) if o.get("active")]          # GET_OUTPUTS
-    focused = next((o for o in outputs if o.get("focused")), None)
+    """The Gdk monitor of that screen (matched by position), or None."""
+    focused = output_in_use(sway_ask(3))                             # GET_OUTPUTS
     if not focused:
         return None
     display = Gdk.Display.get_default()

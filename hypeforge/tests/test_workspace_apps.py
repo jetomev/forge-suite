@@ -344,11 +344,12 @@ class Pills(unittest.TestCase):
         self.ws.write_pills(self.grid, 2, busy={1: 2, 3: 6})
         import json
         pager = lambda i: json.loads((self.ws.PILLS / f"pager-{i}.json").read_text())
-        self.assertEqual(pager(1)["text"], "● ●")
+        # the number on every one, the name on the one on screen (Javier, 10-10), then the dots
+        self.assertEqual(pager(1)["text"], "1  ● ●")
         self.assertEqual(pager(1)["class"], ["pager", "busy"])
-        self.assertEqual(pager(3)["text"], "● ● ● ● +", "more than four: a +")
+        self.assertEqual(pager(3)["text"], "3  ● ● ● ● +", "more than four: a +")
         self.assertEqual(pager(2)["class"], ["pager", "active"])
-        self.assertEqual(pager(2)["text"], " ", "an empty workspace keeps its box")
+        self.assertEqual(pager(2)["text"], f"2 {self.grid.names[1]}", "the one on screen is named")
         self.assertIn("6 windows", pager(3)["tooltip"])
 
     def test_window_counts_add_up_every_screen(self):

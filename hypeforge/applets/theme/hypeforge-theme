@@ -628,7 +628,10 @@ def reload_all(theme: dict, say=print, restart_bar: Path | None = None, style: d
             if not run("pgrep", "-x", "waybar"):
                 break
             time.sleep(0.1)
-        cmd = f"waybar -c {restart_bar / 'config.jsonc'} -s {restart_bar / 'style.css'}"
+        # a bar per screen, each told its screen (hypeforge-bar, 10-10), the way login starts it
+        tool = REPO / "applets/bar/hypeforge-bar"
+        cmd = (f"{tool} start" if tool.is_file()
+               else f"waybar -c {restart_bar / 'config.jsonc'} -s {restart_bar / 'style.css'}")
         if os.environ.get("SWAYSOCK") and run("swaymsg", "exec", cmd):
             say("  the bar restarted with its new layout")
     elif run("pkill", "-USR2", "-x", "waybar"):

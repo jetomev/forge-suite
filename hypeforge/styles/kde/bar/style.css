@@ -49,12 +49,12 @@ tooltip label { color: @hf_text; }
   border: 1px solid @hf_pager_border;
   border-radius: 3px;
   min-width: 40px;
-  margin: 8px 2px;
-  padding: 0 4px;
-  color: @hf_pager_window;
-  font-size: 7px;
+  margin: 7px 2px;
+  padding: 0 8px;
+  color: @hf_text;
+  font-size: 11px;
 }
-.pager.active { background-color: @hf_pager_active; }
+.pager.active { background-color: @hf_pager_active; font-weight: bold; }
 .pager:hover { border-color: @hf_pager_window; }
 
 /* sound, network, Bluetooth: one soft square that opens Quick Settings (K-5) */

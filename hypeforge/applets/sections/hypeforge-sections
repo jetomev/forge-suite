@@ -245,7 +245,9 @@ def main():
     cfg = load()
     if not cfg.get("enabled", False):
         look = os.path.expanduser(cfg.get("fuzzel_config", ""))
-        os.execvp("fuzzel", ["fuzzel"] + (["--config", look] if os.path.isfile(look) else []))
+        screen = os.environ.get("HYPEFORGE_OUTPUT")   # opened from a bar: that bar's screen
+        os.execvp("fuzzel", ["fuzzel"] + (["--config", look] if os.path.isfile(look) else [])
+                  + ([f"--output={screen}"] if screen else []))
 
     everything = apps()
     by_name = sorted(everything, key=lambda a: everything[a]["name"].lower())
