@@ -234,8 +234,12 @@ class WinSpaceFollowsTheStyle(unittest.TestCase):
         old_env, old_execv = os.environ.get("XDG_CONFIG_HOME"), os.execv
         os.environ["XDG_CONFIG_HOME"] = str(conf)
         os.execv = lambda prog, argv: calls.append(argv)
+        s.search_top = lambda: calls.append(["search_top"])     # COSMIC's: fuzzel near the top
         try:
-            handled = s.style_launcher()
+            try:
+                handled = s.style_launcher()
+            except SystemExit:
+                handled = True
         finally:
             os.execv = old_execv
             if old_env is None:
@@ -252,6 +256,13 @@ class WinSpaceFollowsTheStyle(unittest.TestCase):
 
     def test_kde_opens_kickoff(self):
         self.assertIn("hypeforge-panel kickoff", self.run_key("kde")[1])
+
+    def test_cosmic_opens_the_search_near_the_top(self):
+        self.assertEqual(self.run_key("cosmic"), (True, "search_top"))
+
+    def test_cosmics_search_sits_near_the_top(self):
+        src = (HERE / "applets/sections/hypeforge-sections").read_text()
+        self.assertIn('NEAR_THE_TOP = ("--anchor", "top"', src)
 
     def test_the_rice_keeps_its_list(self):
         self.assertEqual(self.run_key("rice"), (False, ""))

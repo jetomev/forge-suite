@@ -12,6 +12,9 @@ this panel never disagree:
 Sliders: the volume (WirePlumber, `wpctl`), the night warmth (nightForge's own settings). The
 footer: updates from KognogOS's snapshot (~/.cache/kognog/updates.json; a click opens nogForge),
 hypeForge Settings, the power buttons.
+
+`--only network|sound|bluetooth` (COSMIC's C-5, D-77): one small pop-up per status icon — just
+that part, with a button to its full settings app (nmtui, wiremix, bluetui).
 """
 
 from __future__ import annotations
@@ -43,7 +46,16 @@ CSS = """
 .hf-quick scale slider {{ min-width: 16px; min-height: 16px; border-radius: {pill}px; background: {accent};
                           border: 3px solid {card}; box-shadow: none; }}
 .hf-quick .hf-foot {{ border-top: 1px solid {line}; padding-top: 8px; }}
+.hf-quick.hf-one {{ min-width: 320px; }}
+.hf-quick .hf-one-title {{ font-weight: bold; }}
 """
+# the one-part pop-ups (C-5): which tiles and sliders each shows, and its full settings app
+ONLY = {
+    "network": ("Network", ("Wi-Fi", "VPN"), "hypeforge-nmtui"),
+    "sound": ("Sound", (), "alacritty --class hf-mixer -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e wiremix"),
+    "bluetooth": ("Bluetooth", ("Bluetooth",),
+                  "alacritty --class hf-bluetooth -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e bluetui"),
+}
 # Settings is a terminal app: its launcher entry opens it in its window (a bare start showed nothing, 10-10)
 SETTINGS = f"{panelkit.APPLETS / 'sections/hypeforge-sections'} launch hypeforge-settings"
 
@@ -224,8 +236,14 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     Gtk.StyleContext.add_provider_for_screen(panelkit.Gdk.Screen.get_default(), provider,
                                              Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1)
     be, night = Backend(), Night()
+    only = getattr(args, "only", None)
     root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
     root.get_style_context().add_class("hf-quick")
+    if only:
+        root.get_style_context().add_class("hf-one")
+        title = Gtk.Label(label=ONLY[only][0], xalign=0)
+        title.get_style_context().add_class("hf-one-title")
+        root.pack_start(title, False, False, 0)
     grid = Gtk.Grid(column_spacing=8, row_spacing=8, column_homogeneous=True)
     root.pack_start(grid, False, False, 0)
 
@@ -257,6 +275,8 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         if be.vpn_available():
             on, sub = be.vpn()
             tiles.append(("VPN", "network-vpn", on, sub, toggler(be.vpn_toggle, on)))
+        if only:
+            tiles = [t for t in tiles if t[0] in ONLY[only][1]]
         for i, (name, icon, on, sub, fn) in enumerate(tiles):
             grid.attach(tile(name, icon, on, sub, fn), i % 3, i // 3, 1, 1)
         grid.show_all()
@@ -264,7 +284,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     fill_tiles()
 
     # the sliders
-    level, muted = be.volume()
+    level, muted = be.volume() if only in (None, "sound") else (None, False)
     if level is not None:
         row = Gtk.Box(spacing=10)
         mute = Gtk.Button.new_from_icon_name("audio-volume-muted" if muted else "audio-volume-high", Gtk.IconSize.BUTTON)
@@ -280,7 +300,9 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         row.pack_start(scale, True, True, 0)
         row.pack_start(value, False, False, 0)
         root.pack_start(row, False, False, 0)
-    if night.ok:
+    elif only == "sound":
+        root.pack_start(Gtk.Label(label="No sound device found", xalign=0), False, False, 0)
+    if night.ok and not only:
         _w, _why, kelvin, mode = night.state()
         row = Gtk.Box(spacing=10)
         row.pack_start(Gtk.Image.new_from_icon_name("weather-clear-night", Gtk.IconSize.BUTTON), False, False, 0)
@@ -299,6 +321,13 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
             back.connect("clicked", lambda _b: (night.automatic(), refresh_later()))
             row.pack_start(back, False, False, 0)
         root.pack_start(row, False, False, 0)
+
+    if only:                     # a one-part pop-up ends with its full settings app
+        more = Gtk.Button(label=f"{ONLY[only][0]} settings…")
+        more.get_style_context().add_class("flat")
+        more.connect("clicked", lambda _b: (panel.close(), panelkit.run_command(ONLY[only][2])))
+        root.pack_start(more, False, False, 0)
+        return finish(root, look, args)
 
     # the footer
     foot = Gtk.Box(spacing=8)
@@ -319,7 +348,11 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     foot.pack_end(power, False, False, 0)
     foot.pack_end(settings, False, False, 0)
     root.pack_start(foot, False, False, 0)
+    return finish(root, look, args)
 
+
+def finish(root, look, args) -> panelkit.Panel:
+    global panel
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["bottom", "right"]
     margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"bottom": 60, "right": 10}
     panel = panelkit.Panel("quick", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()})

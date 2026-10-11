@@ -56,11 +56,34 @@ class TheBarTellsItsScreen(unittest.TestCase):
         self.assertEqual(bars[0]["custom/w"], {"on-click": "HYPEFORGE_OUTPUT=DP-3; export HYPEFORGE_OUTPUT; list"},
                          "only the click is overridden: the fragment's own keys stay live")
 
+    def test_the_main_screen_is_the_middle_of_the_row(self):
+        row = [{"name": "DP-3", "rect": {"x": 2560, "y": 0}}, {"name": "DP-2", "rect": {"x": 0, "y": 0}},
+               {"name": "DP-1", "rect": {"x": 5120, "y": 0}}]
+        self.assertEqual(self.bar.main_screen(row), "DP-3", "Javier's desk: left DP-2, main DP-3, right DP-1")
+        self.assertEqual(self.bar.main_screen(row[:2]), "DP-2", "two screens: the left one")
+        self.assertEqual(self.bar.main_screen(row[:1]), "DP-3")
+        self.assertIsNone(self.bar.main_screen([]))
+
+    def test_a_main_screen_bar_goes_on_the_main_screen_only(self):
+        text = json.dumps([{"name": "panel", "modules-left": []},
+                           {"name": "dock", "hypeforge-screens": "main", "modules-center": ["custom/d"],
+                            "custom/d": {"on-click": "lib"}}])
+        bars = self.bar.bars_for(text, ["DP-2", "DP-3", "DP-1"], "DP-3")
+        self.assertEqual([(b["name"], b["output"]) for b in bars],
+                         [("panel", "DP-2"), ("panel", "DP-3"), ("panel", "DP-1"), ("dock", "DP-3")])
+        self.assertNotIn("hypeforge-screens", bars[-1], "our own key never reaches Waybar")
+        self.assertTrue(bars[-1]["custom/d"]["on-click"].startswith("HYPEFORGE_OUTPUT=DP-3;"))
+
     def test_every_style_bar_tags_its_clicks(self):
         for path in [HERE / "sway/waybar/config.jsonc", *sorted(HERE.glob("styles/*/bar/config.jsonc"))]:
             with self.subTest(path.parent.parent.name):
                 bars = self.bar.bars_for(path.read_text(), ["DP-1", "DP-2"])
-                self.assertEqual([b["output"] for b in bars], ["DP-1", "DP-2"])
+                per = {}
+                for one in bars:
+                    per.setdefault(one.get("name", ""), []).append(one["output"])
+                for name, outs in per.items():   # a bar on every screen, or a main-screen bar on one
+                    self.assertIn(outs, (["DP-1", "DP-2"], ["DP-1"]), name)
+                self.assertTrue(any(o == ["DP-1", "DP-2"] for o in per.values()), "some bar is on every screen")
 
     def test_login_and_the_engine_start_it(self):
         self.assertIn("applets/bar/hypeforge-bar start", (HERE / "sway/config").read_text())

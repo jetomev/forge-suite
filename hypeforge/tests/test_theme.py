@@ -149,8 +149,9 @@ class TheBarFollowsTheStyle(Base):
         import json, re
         for bar in [Path(ht.REPO) / "sway/waybar/config.jsonc"] + sorted((Path(ht.REPO) / "styles").glob("*/bar/config.jsonc")):
             cfg = json.loads("\n".join(l for l in bar.read_text().splitlines() if not l.strip().startswith("//")))
-            placed = [m for k in ("modules-left", "modules-center", "modules-right") for m in cfg.get(k, [])]
-            self.assertNotIn("mpris", placed, f"{bar}: mpris is placed again")
+            for one in cfg if isinstance(cfg, list) else [cfg]:
+                placed = [m for k in ("modules-left", "modules-center", "modules-right") for m in one.get(k, [])]
+                self.assertNotIn("mpris", placed, f"{bar}: mpris is placed again")
 
     def test_windows_11_starts_its_taskbar_applet_and_the_rice_none(self):
         self.apply("windows-11", "kognogos-mocha", say=lambda *_: None)
@@ -196,11 +197,12 @@ class TheBarFollowsTheStyle(Base):
         loader.exec_module(bar)
         for path in sorted(root.glob("styles/*/bar/config.jsonc")):
             cfg = json.loads(bar.strip_comments(path.read_text()))
-            seq = [m for k in ("modules-left", "modules-center", "modules-right") for m in cfg.get(k, [])]
-            seq += cfg.get("group/quick", {}).get("modules", [])
-            with self.subTest(path.parent.parent.name):
-                self.assertIn([m for m in seq if m in ("wireplumber", "network", "bluetooth")],
-                              ([], ["bluetooth", "network", "wireplumber"]))
+            for one in cfg if isinstance(cfg, list) else [cfg]:      # COSMIC: the panel and the dock
+                seq = [m for k in ("modules-left", "modules-center", "modules-right") for m in one.get(k, [])]
+                seq += one.get("group/quick", {}).get("modules", [])
+                with self.subTest(f"{path.parent.parent.name} {one.get('name', '')}"):
+                    self.assertIn([m for m in seq if m in ("wireplumber", "network", "bluetooth")],
+                                  ([], ["bluetooth", "network", "wireplumber"]))
 
     def test_windows_11_has_no_search_pill_and_javiers_quick_order(self):
         import json
@@ -380,7 +382,8 @@ class ASwitchStopsTheOldStylesApplets(unittest.TestCase):
 
     def test_a_style_names_its_applets_as_a_list(self):
         self.assertEqual(ht.style_applets(ht.styles()["mac-os-9"]), ["menubar"])
-        self.assertEqual(ht.style_applets(ht.styles()["cosmic"]), [], "COSMIC's word about pop-ups isn't applets")
+        self.assertEqual(ht.style_applets(ht.styles()["cosmic"]), ["taskbar"], "the dock's apps")
+        self.assertEqual(ht.style_applets({"layout": {"applets": "separate-popups"}}), [], "a word isn't a list")
 
     def test_no_control_strip_anywhere(self):
         """Javier, 2026-10-10: "no need to have same buttons in several places … forget about the strip"."""

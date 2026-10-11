@@ -117,14 +117,29 @@ def tagged(command: str, output: str) -> str:
     return f"HYPEFORGE_OUTPUT={output}; export HYPEFORGE_OUTPUT; {command}"
 
 
-def bars_for(text: str, outputs: list[str]) -> list[dict]:
-    """One bar per screen, in one Waybar: "output" set, and each module's click commands tagged."""
+ONLY = "hypeforge-screens"     # a bar's own key: "main" puts it on the main screen only (COSMIC's dock)
+
+
+def main_screen(outputs: list[dict]) -> str | None:
+    """The main screen: the middle one of the row, left to right (the left of the two middle ones
+    when the count is even). On this desk DP-2 · DP-3 · DP-1, so DP-3, the one Javier calls Main."""
+    row = sorted(outputs, key=lambda o: (o.get("rect", {}).get("x", 0), o.get("rect", {}).get("y", 0)))
+    return row[(len(row) - 1) // 2]["name"] if row else None
+
+
+def bars_for(text: str, outputs: list[str], main: str | None = None) -> list[dict]:
+    """One bar per screen, in one Waybar: "output" set, and each module's click commands tagged.
+    A bar that says "hypeforge-screens": "main" goes on the main screen only."""
     cfg = json.loads(strip_comments(text))
     out = []
     for bar in cfg if isinstance(cfg, list) else [cfg]:
         full = merged(bar)
-        for name in outputs:
+        names = outputs
+        if bar.get(ONLY) == "main" and outputs:
+            names = [main if main in outputs else outputs[(len(outputs) - 1) // 2]]
+        for name in names:
             mine = json.loads(json.dumps(bar))
+            mine.pop(ONLY, None)
             mine["output"] = name
             for module in placed(full):
                 for key in CLICKS:
@@ -135,8 +150,8 @@ def bars_for(text: str, outputs: list[str]) -> list[dict]:
     return out
 
 
-def screens() -> list[str]:
-    return [o["name"] for o in Sway().ask(GET_OUTPUTS) if o.get("active")]
+def screens() -> list[dict]:
+    return [o for o in Sway().ask(GET_OUTPUTS) if o.get("active")]
 
 
 def saved() -> int | None:
@@ -170,9 +185,11 @@ def stop():
 def start():
     stop()
     RUN.mkdir(parents=True, exist_ok=True)
-    outs = screens()
+    found = screens()
+    outs = [o["name"] for o in found]
     path = RUN / "config.json"
-    path.write_text(json.dumps(bars_for((CONF / "config.jsonc").read_text(), outs), indent=2, ensure_ascii=False))
+    path.write_text(json.dumps(bars_for((CONF / "config.jsonc").read_text(), outs, main_screen(found)),
+                               indent=2, ensure_ascii=False))
     log = open(RUN / "waybar.log", "w")
     p = subprocess.Popen(["waybar", "-c", str(path), "-s", str(CONF / "style.css")],
                          stdout=log, stderr=log, start_new_session=True)

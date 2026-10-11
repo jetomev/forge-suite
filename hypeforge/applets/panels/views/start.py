@@ -89,11 +89,27 @@ LIST_CSS = """
 """
 
 
-def build(look: panelkit.Look, args, as_list: bool = False, view: str = "start") -> panelkit.Panel:
+LIBRARY_COLUMNS = 7
+LIBRARY_CSS = """
+.hf-start.hf-library {{ min-width: 880px; }}
+.hf-start .hf-folders {{ border-top: 1px solid {line}; padding-top: 10px; }}
+.hf-start .hf-folders button {{ padding: 6px 8px; min-width: 64px; }}
+.hf-start .hf-folders button label {{ font-size: {small}pt; }}
+.hf-start .hf-folders button.hf-selected {{ background: {selected}; color: {selected_text}; }}
+.hf-start .hf-folders button.hf-selected label {{ color: {selected_text}; font-weight: bold; }}
+"""
+
+
+def build(look: panelkit.Look, args, as_list: bool = False, view: str = "start",
+          library: bool = False) -> panelkit.Panel:
     """Windows 11's Start (an icon grid), or KDE's Kickoff with `as_list` (D-76 K-3): the same groups
-    on the left, the apps as a list with their descriptions on the right."""
+    on the left, the apps as a list with their descriptions on the right. With `library`, COSMIC's
+    App Library (D-77 C-4): every app first in a wide grid, the groups as a row of folders below,
+    no you-and-power footer (the panel has its own power button)."""
     entries, icons = apps(), Icons()
     sets = groups(entries)
+    if library:                                   # COSMIC opens on every app; the groups follow
+        sets = sets[-1:] + sets[:-1]
     c = look.colour
     provider = Gtk.CssProvider()
     provider.load_from_data(CSS.format(small=look.size * 0.92, line=c["panel_border"], accent=c["panel_tile_on"],
@@ -106,36 +122,53 @@ def build(look: panelkit.Look, args, as_list: bool = False, view: str = "start")
         Gtk.StyleContext.add_provider_for_screen(panelkit.Gdk.Screen.get_default(), extra,
                                                  Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 2)
 
+    if library:
+        lib = Gtk.CssProvider()
+        lib.load_from_data(LIBRARY_CSS.format(line=c["panel_border"], selected=c["panel_selected"], small=look.size * 0.85,
+                                              selected_text=c["panel_selected_text"]).encode())
+        Gtk.StyleContext.add_provider_for_screen(panelkit.Gdk.Screen.get_default(), lib,
+                                                 Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 2)
+    columns = LIBRARY_COLUMNS if library else COLUMNS
+
     root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     root.get_style_context().add_class("hf-start")
+    if library:
+        root.get_style_context().add_class("hf-library")
     search = Gtk.SearchEntry()
     search.set_placeholder_text("Search apps")
     root.pack_start(search, False, False, 0)
 
     body = Gtk.Box(spacing=14)
-    side = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-    side.get_style_context().add_class("hf-side")
+    side = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL if library else Gtk.Orientation.VERTICAL, spacing=4)
+    side.get_style_context().add_class("hf-folders" if library else "hf-side")
     main = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
     heading = Gtk.Label(xalign=0)
     heading.get_style_context().add_class("hf-title")
     # Packed from the top-left, every icon the same size, empty space left BELOW (Javier, 10-10:
     # "icons should be always arranged top to bottom, left to right, and its area of occupancy
     # always the same"): no stretching to fill the page
-    grid = Gtk.FlowBox(max_children_per_line=COLUMNS, min_children_per_line=COLUMNS, homogeneous=True,
+    grid = Gtk.FlowBox(max_children_per_line=columns, min_children_per_line=columns, homogeneous=True,
                        selection_mode=Gtk.SelectionMode.NONE, column_spacing=4, row_spacing=4,
                        valign=Gtk.Align.START, halign=Gtk.Align.START, vexpand=False)
     scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
-    scroll.set_min_content_height(420)
+    scroll.set_min_content_height(540 if library else 420)
     scroll.set_propagate_natural_width(True)
     listing = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1, valign=Gtk.Align.START)
     holder = listing if as_list else grid
     scroll.add(holder)
     main.pack_start(heading, False, False, 0)
     main.pack_start(scroll, True, True, 0)
-    body.pack_start(side, False, False, 0)
-    body.pack_start(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL), False, False, 0)
-    body.pack_start(main, True, True, 0)
-    root.pack_start(body, True, True, 0)
+    if library:                                   # the folders under the grid, centred
+        side.set_halign(Gtk.Align.CENTER)
+        grid.set_halign(Gtk.Align.CENTER)
+        body.pack_start(main, True, True, 0)
+        root.pack_start(body, True, True, 0)
+        root.pack_start(side, False, False, 0)
+    else:
+        body.pack_start(side, False, False, 0)
+        body.pack_start(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL), False, False, 0)
+        body.pack_start(main, True, True, 0)
+        root.pack_start(body, True, True, 0)
 
     shown: list[str] = []
 
@@ -221,11 +254,18 @@ def build(look: panelkit.Look, args, as_list: bool = False, view: str = "start")
     for i, (name, ids) in enumerate(sets):
         b = Gtk.Button()
         b.get_style_context().add_class("flat")
-        row = Gtk.Box(spacing=16)
-        row.pack_start(Gtk.Label(label=name, xalign=0), True, True, 0)
-        count = Gtk.Label(label=str(len(ids)))
-        count.get_style_context().add_class("hf-count")
-        row.pack_end(count, False, False, 0)
+        if library:                               # a folder: its icon over its name
+            row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+            row.pack_start(Gtk.Image.new_from_icon_name("view-app-grid" if i == 0 else "folder",
+                                                        Gtk.IconSize.LARGE_TOOLBAR), False, False, 0)
+            row.pack_start(Gtk.Label(label=name), False, False, 0)
+            b.set_tooltip_text(f"{name} · {len(ids)} apps")
+        else:
+            row = Gtk.Box(spacing=16)
+            row.pack_start(Gtk.Label(label=name, xalign=0), True, True, 0)
+            count = Gtk.Label(label=str(len(ids)))
+            count.get_style_context().add_class("hf-count")
+            row.pack_end(count, False, False, 0)
         b.add(row)
         b.connect("clicked", pick, i)
         side.pack_start(b, False, False, 0)
@@ -243,6 +283,7 @@ def build(look: panelkit.Look, args, as_list: bool = False, view: str = "start")
 
     foot = Gtk.Box(spacing=8)
     foot.get_style_context().add_class("hf-foot")
+    foot.set_no_show_all(library)                 # COSMIC's panel has its own power button
     me = display_name()
     avatar = Gtk.Label(label=me[:1].upper())
     avatar.get_style_context().add_class("hf-avatar")

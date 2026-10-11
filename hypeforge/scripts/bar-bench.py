@@ -5,7 +5,7 @@ Three screen-less screens, the KDE style applied. Checks: ONE bar program with a
 screen, each bar's click commands carrying its screen (HYPEFORGE_OUTPUT) and visible there; a
 restart replaces it; five in-place restyles leave it running (the per-process version crashed);
 screen 3's real emblem click, run the way Waybar runs it, opens Kickoff on screen 3 only; stop
-leaves none; and the REAL desktop's bar is never touched (same process numbers at the end).
+leaves none; COSMIC's panel on every screen and its dock on the middle one only; and the REAL desktop's bar is never touched (same process numbers at the end).
 
     bar-bench.py            exit 0 when every check passes
 """
@@ -136,6 +136,29 @@ def main() -> int:
               f"screen 3's emblem click opens Kickoff on screen 3 only (changed bytes: {changed})")
         subprocess.run([sys.executable, str(HERE / "applets/panels/hypeforge-panel"), "kickoff"], env=env,
                        stdout=log, stderr=log)          # the same button again closes it
+
+        # COSMIC (D-77): two bars in one program — the panel on every screen, the dock on the main
+        # (middle) screen only, from the bar's own "hypeforge-screens": "main"
+        ht.apply("cosmic", "kognogos-mocha", place, reload=False, check_names=False, make_wallpaper=False,
+                 say=lambda *_: None)
+        subprocess.run([sys.executable, str(BAR), "restart"], env=env, stdout=log, stderr=log)
+        time.sleep(4)
+        again = bar_pid()
+        cbars = json.loads((run / "hypeforge-bar/config.json").read_text())
+        panels = sorted(b["output"] for b in cbars if b.get("name") == "panel")
+        docks = [b["output"] for b in cbars if b.get("name") == "dock"]
+        check(panels == names and docks == [outs[1]["name"]],
+              f"COSMIC: the panel on every screen ({', '.join(panels)}), the dock on the middle one ({', '.join(docks)})")
+
+        def centre_seen(o, y):
+            row = shot(o, y, 1)
+            px = [row[i:i + 3] for i in range(0, len(row), 3)]
+            mid = px[len(px) // 2 - 100: len(px) // 2 + 100]
+            return sum(p != MAGENTA for p in mid) > len(mid) * 0.9
+        tops = [centre_seen(o, o["rect"]["y"] + 18) for o in outs]
+        dock_rows = [centre_seen(o, o["rect"]["y"] + o["rect"]["height"] - 38) for o in outs]
+        check(alive(again) and all(tops) and dock_rows == [False, True, False],
+              f"COSMIC on screen: the panel on all three {tops}, the dock on the middle only {dock_rows}")
 
         subprocess.run([sys.executable, str(BAR), "stop"], env=env, stdout=log, stderr=log)
         time.sleep(1)

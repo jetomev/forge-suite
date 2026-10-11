@@ -19,6 +19,7 @@ import json
 import os
 import socket
 import struct
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -46,6 +47,8 @@ def main() -> int:
     ap.add_argument("--theme", default="kognogos-mocha")
     ap.add_argument("--out")
     ap.add_argument("--scale", type=float, default=0.5, help="the picture's size against the screen")
+    ap.add_argument("--panel-args", default="", help="more options for the panel, as a bar gives them "
+                    "(e.g. \"--only sound --edges top,right --margin top=44,right=8\")")
     ap.add_argument("--notes", action="store_true", help="send three sample notifications first")
     a = ap.parse_args()
     out = Path(a.out or HERE / f"logs/panel-preview-{a.view}-{a.style}-{a.theme}.png")
@@ -121,8 +124,9 @@ def main() -> int:
                 subprocess.run(["notify-send", "-a", app, summary, body], env=env)
             subprocess.run(["makoctl", "dismiss", "--all"], env=env)   # into the history, as after a while
         procs.append(subprocess.Popen([sys.executable, str(APPLETS / "panels/hypeforge-panel"), a.view,
-                                       "--style", a.style, "--theme", a.theme], env=env, stdout=log, stderr=log))
-        time.sleep(3 if a.view != "start" else 5)
+                                       "--style", a.style, "--theme", a.theme, *shlex.split(a.panel_args)],
+                                      env=env, stdout=log, stderr=log))
+        time.sleep(8 if a.view == "quick" else 5 if a.view in ("start", "kickoff", "library") else 3)   # quick asks nmcli, bluetoothctl…
         shot = base / "shot.png"
         subprocess.run(["grim", "-s", str(a.scale), str(shot)], env=env, check=True)
         out.write_bytes(shot.read_bytes())

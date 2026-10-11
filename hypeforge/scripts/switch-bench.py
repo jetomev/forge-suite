@@ -57,6 +57,8 @@ def main() -> int:
             magenta background — a bar can vanish from some screens only."""
             cfg = json.loads("\n".join(l for l in (conf / "sway/waybar/config.jsonc").read_text().splitlines()
                                        if not l.strip().startswith("//")))
+            if isinstance(cfg, list):    # COSMIC: the panel and the dock — the one on every screen counts
+                cfg = next(c for c in cfg if "hypeforge-screens" not in c)
             outs = json.loads(subprocess.run(["swaymsg", "-t", "get_outputs", "-r"], env=env,
                                              capture_output=True, text=True).stdout)
             for o in outs:

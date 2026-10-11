@@ -5,7 +5,8 @@
 
 Opens one of the graphical pop-ups the styles place on their bar; the same command again closes
 it (a bar button pressed twice). Views: power (the big-button power menu), start (the KDE-style
-Start). More come one by one: Quick Settings, the calendar, the workspaces strip.
+Start), kickoff (KDE's list), library (COSMIC's App Library), quick (Quick Settings, or one part of
+it with --only), calendar, workspaces (the strip).
 --style / --theme draw it in a look other than the active one (the preview bench uses this).
 """
 
@@ -21,7 +22,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "vi
 
 # view name → its module (a module may not take a standard library's name: "calendar" is one)
 VIEWS = {"power": "power", "start": "start", "quick": "quick", "calendar": "calendar_view", "workspaces": "workspaces",
-         "kickoff": "kickoff"}
+         "kickoff": "kickoff", "library": "library"}
 
 
 def main() -> int:
@@ -31,6 +32,8 @@ def main() -> int:
     ap.add_argument("--theme")
     ap.add_argument("--edges", help="where it sits: bottom, top, left, right, comma separated (the style's bar decides)")
     ap.add_argument("--margin", help="pixels from those edges, e.g. bottom=60,left=10")
+    ap.add_argument("--only", choices=["network", "sound", "bluetooth"],
+                    help="quick: just that part, its own small pop-up (COSMIC, C-5)")
     a = ap.parse_args()
     import panelkit
     if panelkit.close_open(a.view):

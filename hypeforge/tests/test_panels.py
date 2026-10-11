@@ -246,5 +246,39 @@ class WorkspacesStrip(unittest.TestCase):
         self.assertEqual(per[1], [])
 
 
+class CosmicPopups(unittest.TestCase):
+    """COSMIC (D-77): each status icon its own small pop-up (C-5), the App Library (C-4)."""
+
+    def cosmic_panel(self):
+        import json
+        loader = __import__("importlib.machinery").machinery.SourceFileLoader("hfbar_c", str(HERE / "applets/bar/hypeforge-bar"))
+        bar = __import__("importlib.util").util.module_from_spec(__import__("importlib.util").util.spec_from_loader("hfbar_c", loader))
+        loader.exec_module(bar)
+        cfg = json.loads(bar.strip_comments((HERE / "styles/cosmic/bar/config.jsonc").read_text()))
+        return next(c for c in cfg if c["name"] == "panel")
+
+    def test_each_status_icon_opens_its_own_part(self):
+        panel = self.cosmic_panel()
+        for module, part in (("bluetooth", "bluetooth"), ("network", "network"), ("wireplumber", "sound")):
+            self.assertIn(f"hypeforge-panel quick --only {part} ", panel[module]["on-click"], module)
+
+    def test_the_parts_name_real_tiles_and_a_settings_app(self):
+        src = (HERE / "applets/panels/views/quick.py").read_text()
+        for part, (title, tiles, more) in quick.ONLY.items():
+            for name in tiles:
+                self.assertIn(f'tiles.append(("{name}"', src, f"{part}: {name}")
+            self.assertTrue(more.split()[0] in ("alacritty", "hypeforge-nmtui"), part)
+
+    def test_the_panel_offers_only_those_parts(self):
+        out = subprocess.run([sys.executable, str(HERE / "applets/panels/hypeforge-panel"), "--help"],
+                             capture_output=True, text=True).stdout
+        self.assertIn("{network,sound,bluetooth}", out)
+        self.assertIn("library", out)
+
+    def test_the_app_library_opens_on_every_app_then_the_groups(self):
+        self.assertTrue((HERE / "applets/panels/views/library.py").is_file())
+        self.assertIn("sets = sets[-1:] + sets[:-1]", (HERE / "applets/panels/views/start.py").read_text())
+
+
 if __name__ == "__main__":
     unittest.main()

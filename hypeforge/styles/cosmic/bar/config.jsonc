@@ -1,0 +1,116 @@
+// hypeForge style · COSMIC, tiled (D-77) — two bars in the one Waybar (D-86):
+//  1. the top panel (C-1), 36 px, on every screen. Left: Workspaces (→ the workspaces strip) and
+//     Applications (→ the App Library, C-4) as text buttons. Centre: the date and time (→ the
+//     calendar). Right: the tray, then Bluetooth · network · sound (Javier's order), each opening
+//     its OWN small pop-up (C-5), the bell, power.
+//  2. the dock (C-1), on the main screen only ("hypeforge-screens": "main", read by hypeforge-bar:
+//     the middle screen of the row), floating and centred at its contents' width ("width": 2,
+//     Waybar un-anchors it from the sides): the App Library button, then the Taskbar applet's
+//     favorites + running apps, a short line under the open ones.
+// Pieces from modules.jsonc and the applets' fragments; colours from colors.css.
+[
+  {
+    "name": "panel",
+    "include": [
+      "${XDG_CONFIG_HOME:-$HOME/.config}/sway/waybar/modules.jsonc"
+    ],
+    "layer": "top",
+    "position": "top",
+    "height": 36,
+    "spacing": 0,
+    "modules-left": [
+      "custom/workspaces-button",
+      "custom/apps-button"
+    ],
+    "modules-center": [
+      "clock"
+    ],
+    "modules-right": [
+      "tray",
+      "custom/clipboard",
+      "custom/drives",
+      "custom/printers",
+      "bluetooth",
+      "network",
+      "wireplumber",
+      "custom/notifications",
+      "custom/power-panel"
+    ],
+    "custom/workspaces-button": {
+      "format": "Workspaces",
+      "tooltip-format": "Every workspace and what is open on it",
+      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel workspaces --edges top,left --margin top=44,left=8"
+    },
+    "custom/apps-button": {
+      "format": "Applications",
+      "tooltip-format": "The App Library: every app, your groups as folders",
+      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel library --edges top --margin top=44"
+    },
+    "clock": {
+      "format": "{:%a %b %d   %I:%M %p}",
+      "tooltip": false,
+      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel calendar --edges top --margin top=44"
+    },
+    "network": {
+      "format-ethernet": "󰈀",
+      "format-wifi": "{icon}",
+      "format-icons": [
+        "󰤯",
+        "󰤟",
+        "󰤢",
+        "󰤥",
+        "󰤨"
+      ],
+      "format-disconnected": "󰤭",
+      "format-disabled": "󰤮",
+      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --only network --edges top,right --margin top=44,right=8"
+    },
+    "wireplumber": {
+      "format": "{icon}",
+      "format-muted": "󰝟",
+      "format-icons": [
+        "󰕿",
+        "󰖀",
+        "󰕾"
+      ],
+      "scroll-step": 5,
+      "max-volume": 100,
+      "tooltip-format": "Volume {volume} % · scroll to change",
+      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --only sound --edges top,right --margin top=44,right=8"
+    },
+    "bluetooth": {
+      "format": "󰂯",
+      "format-off": "󰂲",
+      "format-disabled": "󰂲",
+      "format-connected": "󰂱",
+      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --only bluetooth --edges top,right --margin top=44,right=8"
+    }
+  },
+  {
+    "name": "dock",
+    "hypeforge-screens": "main",
+    "include": [
+      "${XDG_CONFIG_HOME:-$HOME/.config}/hypeforge/applets/taskbar.waybar.json"
+    ],
+    "layer": "top",
+    "position": "bottom",
+    "height": 60,
+    "width": 2,
+    "margin-bottom": 8,
+    "spacing": 0,
+    "modules-center": [
+      "custom/library",
+      "custom/dock-sep",
+      "group/taskbar"
+    ],
+    "custom/library": {
+      "format": "󰀻",
+      "tooltip-format": "App Library",
+      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel library --edges top --margin top=44"
+    },
+    "custom/dock-sep": {
+      "format": "│",
+      "tooltip": false
+    }
+  }
+]

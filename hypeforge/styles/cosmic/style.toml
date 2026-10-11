@@ -17,8 +17,8 @@ roundness        = "slightly-round"          # "round" · "slightly-round" · "s
 radius_window    = { round = 16, slightly-round = 8, square = 0 }
 radius_control   = { round = 999, slightly-round = 6, square = 0 }
 radius_popup     = { round = 16, slightly-round = 8, square = 0 }
-border_window    = 1
-active_hint      = 3             # COSMIC's frame around the window in use (C-3)
+border_window    = 3             # the active hint (C-3): Sway's frame, 3 px, in the theme's bright
+active_hint      = 3             # colour on the window in use (Sway's border width is one for all)
 gap_inner        = 8
 gap_outer        = 8
 bar_height       = 36            # the top panel
@@ -30,29 +30,31 @@ bar_position     = "top"
 bar_on           = "every-screen"
 bar_left         = ["workspaces-button", "applications-button"]
 bar_center       = ["clock-date"]
-bar_right        = ["tiling-toggle", "tray", "network", "sound", "bluetooth", "notifications", "power"]
+bar_right        = ["tray", "bluetooth", "network", "sound", "notifications", "power"]   # Javier's icon order
 dock             = "bottom-center"           # panel + dock, COSMIC's default (C-1)
+dock_on          = "main-screen"             # the middle screen of the row; the side screens keep their height
 dock_items       = ["app-library", "favorites", "running"]
 launcher         = "fuzzel-top"              # Super: the search pop-up, centred near the top (C-4)
 app_library      = "panel-grid-folders"      # every app as a grid, your groups as folders (C-4)
-applets          = "separate-popups"         # each status icon its own small pop-up (C-5)
+popups           = "separate"                # each status icon its own small pop-up (C-5)
+applets          = ["taskbar"]               # the dock's favorites + running apps
 workspaces       = "panel-strip"             # the Workspaces button: a strip of workspace cards
 wallpaper        = "theme"                   # D-75
-clock_format     = ["%a %b %-d  %-I:%M %p"]
+clock_format     = ["%a %b %d  %I:%M %p"]   # Waybar's clock has no %-d / %-I (no-padding) codes
 
-[roles]
-panel_background   = "surface.raised"
-panel_text         = "text.primary"
-button_active      = "band.soft"
-dock_background    = "surface.raised"
-dock_running       = "band.text"              # a short line under open apps
-active_hint        = "band.text"
-popup_background   = "surface.raised"
-popup_header       = "band.base"
-toggle_on          = "pop.base"
-slider             = "pop.base"
-library_folder     = "surface.overlay"
-library_selected   = "band.base"
+[roles]                          # the names the engine reads (DEFAULT_ROLES in hypeforge-theme)
+bar_bg             = "surface.raised"         # the panel: neutral, COSMIC's solid strip
+bar_fg             = "text.primary"
+island_background  = "surface.raised"         # the dock
+island_border      = "border.subtle"
+pill_hover         = "band.soft"              # a button under the mouse
+task_running       = "band.text"              # the dock's short line under open apps
+task_focused       = "band.text"
+window_focused     = "band.text"              # the active hint (C-3)
+window_unfocused   = "surface.overlay"
+panel_tile_on      = "pop.base"               # switches and sliders in the pop-ups
+panel_tile_on_text = "pop.on"
+panel_selected     = "band.base"              # the App Library's selected folder
 
 [fx]                             # SwayFX login only
 corner_radius      = "shape.radius_window"   # follows the roundness choice
