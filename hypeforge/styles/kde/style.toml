@@ -7,6 +7,7 @@
 [meta]
 name = "KDE Plasma"
 slug = "kde"
+summary = "A floating panel at the bottom: Kickoff, the pager, your apps, a two-line clock"   # themeForge shows it
 schema = 1
 needs = []                       # plain Sway: square windows, a solid panel
 better_with = ["swayfx"]         # Breeze's soft shadows, rounded windows, the frosted panel

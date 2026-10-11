@@ -29,6 +29,12 @@ command = "python3 ~/Programs/forge-suite/defaultappsforge/main.py"   # defaulta
 forge = true
 
 [[page]]
+name = "Look"
+summary = "themeForge: the theme and its colours"
+command = "python3 ~/Programs/forge-suite/themeforge/main.py"   # themeForge 0.1.0, from the repo (not packaged yet)
+forge = true
+
+[[page]]
 name = "Passwords"
 summary = "sudoForge: is the password box set up?"
 command = "sudoforge status; echo; echo 'Press Enter to go back'; read _"

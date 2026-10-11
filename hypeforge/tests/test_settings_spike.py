@@ -256,7 +256,7 @@ class HomePage(unittest.IsolatedAsyncioTestCase):
             plain = lambda t: t[2:] if t and ord(t[0]) >= 0xE000 else t     # the name, after its icon
             self.assertEqual([plain(c.border_title) for c in cards],
                              ["Screens", "Workspaces", "Network", "Sound", "Printer", "Night light",
-                              "Default apps", "Passwords", "Packages", "Boot Menu", "Terminal"])
+                              "Default apps", "Look", "Passwords", "Packages", "Boot Menu", "Terminal"])
             self.assertTrue(all(str(c.render()) not in ("", "…") for c in cards), "every card has its summary")
             xs = {c.region.x for c in cards}
             self.assertEqual(len(xs), 2, "two columns")

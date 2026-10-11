@@ -7,6 +7,7 @@
 [meta]
 name = "COSMIC"
 slug = "cosmic"
+summary = "A top panel on every screen and a dock on the main one; the App Library"   # themeForge shows it
 schema = 1
 needs = []                       # plain Sway: "Square" roundness, solid panel and dock
 better_with = ["swayfx"]         # "Round" and "Slightly round" windows, shadows, frost

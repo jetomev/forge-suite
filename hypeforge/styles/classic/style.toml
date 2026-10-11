@@ -10,6 +10,7 @@
 [meta]
 name = "hypeForge Classic"
 slug = "classic"
+summary = "hypeForge's first look: the menu bar on top, Catppuccin Mocha"   # themeForge shows it
 schema = 1
 needs = []
 better_with = ["swayfx"]   # soft corners and a shadow in the FX login

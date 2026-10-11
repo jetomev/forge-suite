@@ -3,13 +3,16 @@
 **What it does:** one window for every setting of the desktop. A list on the left, with an icon per
 page; the chosen page on the right. It opens on **Home**: a card for each part of the system, with
 three lines of how it's set up right now (screens, workspaces, network, sound, printer, night light,
-passwords, packages, boot menu, terminal).
+default apps, the look, passwords, packages, boot menu, terminal).
 
 ## How to use it
 
 - Open it from the launcher: **Settings** group → **hypeForge Settings** (the first entry).
-- **Home** shows the cards. **Click a card** to open its page: Screens, Passwords, Packages,
-  Boot Menu and Terminal have one; the others show what they know until their app exists.
+- **Home** shows the cards. **Click a card** to open its page: Screens, Workspaces, Night light,
+  Default apps, Look, Passwords, Packages, Boot Menu and Terminal have one; the others show what
+  they know until their app exists.
+- **Look** is **themeForge**: pick the theme (how the desktop is laid out) and its colours, then
+  **Apply (F10)**; **u** goes back one step.
 - **Pick a page on the left**: its app opens on the right, with its own menu bar, keys and mouse.
   Click the list to change page; the app you leave keeps running and comes back as you left it.
 - The apps here have **no Quit of their own**. **Quit** (last in the list) closes Settings and

@@ -7,6 +7,7 @@
 [meta]
 name = "macOS"
 slug = "macos"
+summary = "A menu bar on top and the Dock on the main screen; Spotlight and Launchpad"   # themeForge shows it
 schema = 1
 needs = []                       # plain Sway: square windows, solid menu bar and Dock
 better_with = ["swayfx"]         # the frosted glass, rounded windows and deep shadows are SwayFX's

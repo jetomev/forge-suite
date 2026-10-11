@@ -7,6 +7,7 @@
 [meta]
 name = "Mac OS 9"
 slug = "mac-os-9"
+summary = "A classic menu bar on top with the emblem menu, Window, Special and Help; title bars on windows"   # themeForge shows it
 schema = 1
 needs = []                       # plain Sway draws all of it: square windows, real title bars
 better_with = []                 # SwayFX adds only the optional crisp shadow ([fx])

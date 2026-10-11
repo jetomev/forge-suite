@@ -4,7 +4,7 @@
 
 ## 2026-10-10 / 11 — hypeForge's look program: all six styles built
 - [x] **hypeForge** (details in [hypeforge/TODO.md](hypeforge/TODO.md)): Mac OS 9, KDE, COSMIC and macOS built and live-tested (the Rice and Windows 11 the day before) — six styles × 25 colour themes; one bar program with a bar per screen, pop-ups on the clicked screen (D-86); the dock on the main screen (D-87); macOS (D-88); the Rice in Javier's order (D-89); issues #67–#83; Vault (68)–(70); kognogos.org card and hypeForge's README current
-- [ ] **themeForge** — the app that switches styles and themes (+ a Settings page and a tray icon); next
+- [x] **themeForge 0.1.0** (new section, #84, 2026-10-11): the Theme Picker — theme and colours, two drop-downs, Apply / Undo through hypeForge; the Look page + Home card in Settings, launcher entry, float rule; 14 tests — **waits for Javier's run**; more pages later (pop-ups, icons, fonts…), then the tray icon
 - [ ] **nightForge 1.1** (#82): hide its tray icon where a hypeForge bar shows the night-light moon — released with the themeForge batch, AUR after Javier's local test
 - [ ] **The frost** (#83): see-through, blurred bars on the SwayFX login, every style
 

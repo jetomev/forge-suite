@@ -30,6 +30,7 @@ CARDS = [
     ("Printer", "printer", None),
     ("Night light", "night_light", "Night light"),
     ("Default apps", "default_apps", "Default apps"),
+    ("Look", "look", "Look"),
     ("Passwords", "passwords", "Passwords"),
     ("Packages", "packages", "Packages"),
     ("Boot Menu", "boot_menu", "Boot Menu"),
@@ -41,7 +42,7 @@ CARDS = [
 # console can't draw them, so Settings leaves them out there (forgekit's console mode).
 ICONS = {
     "Home": "\U000F02DC", "Screens": "\U000F0379", "Workspaces": "\U000F0570", "Network": "\U000F0318",
-    "Sound": "\U000F057E", "Printer": "\U000F042A", "Night light": "\U000F0594", "Default apps": "\U000F003B", "Passwords": "\U000F0306",
+    "Sound": "\U000F057E", "Printer": "\U000F042A", "Night light": "\U000F0594", "Default apps": "\U000F003B", "Look": "\U000F03D8", "Passwords": "\U000F0306",
     "Packages": "\U000F03D7", "Boot Menu": "\U000F0425", "Terminal": "\U000F018D", "Help & Keys": "\U000F030C",
     "Manual": "\U000F05DA", "License": "\U000F05D1", "About": "\U000F02FC", "Quit": "\U000F0206",
 }
@@ -193,6 +194,25 @@ def default_apps() -> list[str]:
         return did.removesuffix(".desktop")
     return [f"links: {name('x-scheme-handler/https')}", f"folders: {name('inode/directory')}",
             f"text: {name('text/plain')}"]
+
+
+def look() -> list[str]:
+    """The theme and colours in use (themeForge's page), from hypeforge-theme's own memory."""
+    try:
+        st = tomllib.loads((CONFIG / "hypeforge/theme/state.toml").read_text())
+    except (OSError, tomllib.TOMLDecodeError):
+        return ["no look applied yet"]
+    repo = Path(__file__).resolve().parents[2]
+    try:
+        style = tomllib.loads((repo / f"styles/{st.get('style')}/style.toml").read_text())["meta"]["name"]
+    except (OSError, tomllib.TOMLDecodeError, KeyError):
+        style = st.get("style", UNKNOWN)
+    try:
+        theme = tomllib.loads((repo / "themes/colours/palettes.toml").read_text())["themes"][st["theme"]]["meta"]["name"]
+    except (OSError, tomllib.TOMLDecodeError, KeyError):
+        theme = st.get("theme", UNKNOWN)
+    wall = "the theme's own" if st.get("wallpaper", "theme") == "theme" else "your own"
+    return [f"theme: {style}", f"colours: {theme}", f"wallpaper: {wall}"]
 
 
 def passwords() -> list[str]:

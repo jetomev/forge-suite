@@ -7,6 +7,7 @@
 [meta]
 name = "Linux rice"
 slug = "rice"
+summary = "A floating bar in three areas: workspace pills, the date and alerts, the system icons (the KognogOS default)"   # themeForge shows it
 schema = 1
 needs = []                       # plain Sway: square windows, solid islands
 better_with = ["swayfx"]         # rounded windows, see-through terminals and frosted islands
