@@ -59,7 +59,7 @@ A full desktop like KDE Plasma does everything for you, and it carries a lot of 
 | **Screenshots** | **Print** drags a box; Shift / Ctrl / Alt + Print take this screen, every screen, this window. Saved, copied, and one click away from drawing on them. |
 | **Terminal apps** | Alacritty for the terminal, Midnight Commander for files (in our KognogOS Mocha look, editing in Fresh), Fresh for text, cliamp for music (from the media server); galculator for sums until our own calculator. |
 
-The look is **Catppuccin Mocha** with the KognogOS wallpaper: thin borders, no title bars, windows that share a space become tabs, 10 px between windows. Every colour and file is written down in [THEME.md](docs/THEME.md).
+**The look is yours to pick** (the look program, [D-67](docs/DECISIONS.md)): **six styles** — a floating-island bar (the KognogOS default), a taskbar with Start, a classic menu bar, a modern menu bar with a dock, a floating panel with a pager, a top panel with a dock — each in **25 colour themes** with its own generated wallpaper, still tiling, on every screen. Each status icon, the clock and the bell open small pop-ups on the screen you click from. One command switches the whole look and can be undone (`hypeforge-theme apply <style> <theme>`); **themeForge**, the app for it, comes next. Every colour and file is written down in [THEME.md](docs/THEME.md).
 
 ---
 
@@ -120,9 +120,9 @@ We don't compare ourselves with anyone. Our picks are simply our picks.
 | Step | What happens | Status |
 |---|---|---|
 | **Choose the base** | Research, then **Sway** chosen ([D-45](docs/DECISIONS.md)); runs on the test desktop | ✅ |
-| **The jobs, one by one** | Workspaces, placement, launcher, rules, help, lock screen, notifications, screenshots, clipboard history, the menu bar, sound, network, Bluetooth, USB drives, the password pop-up (sudoForge) ✅ · next: printing, night light | 🔄 in progress |
-| **Our own look** | Folder-style tabs, our own top bar, a palette from the KognogOS brand | ⬜ |
-| **The Forge apps** | One Forge Suite app per setting, and **hypeForge Settings** to hold them all. **displayForge 1.0 (screens) ✅** · **sudoForge 1.0 (passwords) ✅** · next: workspaces and window placement, flexible for any number of screens | 🔄 in progress |
+| **The jobs, one by one** | Workspaces, placement, launcher, rules, help, lock screen, notifications, screenshots, clipboard history, the menu bar, sound, network, Bluetooth, USB drives, the password pop-up (sudoForge), printing, the night light ✅ | 🔄 in progress |
+| **Our own look** | Six styles × 25 colour themes, each theme with its wallpaper; the bar on every screen, pop-ups where you click ✅ · next: **themeForge** (the switcher), the frosted bars on the SwayFX login | 🔄 in progress |
+| **The Forge apps** | One Forge Suite app per setting, and **hypeForge Settings** to hold them all. **displayForge (screens) ✅** · **sudoForge (passwords) ✅** · **workspaceForge (workspaces) ✅** · **nightForge (night light) ✅** · next: themeForge, defaultappsForge | 🔄 in progress |
 | **The first KognogOS release** | KognogOS ships with hypeForge as its only desktop | ⬜ |
 
 Full detail: [docs/ROADMAP.md](docs/ROADMAP.md) · History: [docs/CHANGELOG.md](docs/CHANGELOG.md)
