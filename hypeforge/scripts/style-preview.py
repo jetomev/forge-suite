@@ -6,7 +6,7 @@ Sway's look, the bar's layout and stylesheet, colours, notifications…), starts
 with that look (one fake 2560×1440 screen), runs the Workspaces applet and the bar, opens a few
 stand-in windows named like real apps, and photographs the screen. Nothing touches the real desktop.
 
-    style-preview.py [--style rice] [--theme kognogos-mocha] [--out picture.png] [--scale 0.5]
+    style-preview.py [--style rice] [--theme kognogos-mocha] [--out picture.png] [--scale 0.5] [--click X,Y]
 """
 
 from __future__ import annotations
@@ -45,6 +45,7 @@ def main() -> int:
     ap.add_argument("--out")
     ap.add_argument("--scale", type=float, default=0.5)
     ap.add_argument("--corners", default="style", help="straight, rounded or style (hypeforge-theme corners)")
+    ap.add_argument("--click", help="X,Y: a left click there before the picture (e.g. a bar's menu title)")
     a = ap.parse_args()
     out = Path(a.out or HERE / f"logs/style-preview-{a.style}-{a.theme}{'' if a.corners == 'style' else '-' + a.corners}.png")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -109,6 +110,11 @@ def main() -> int:
         for name in ht.styles()[a.style].get("layout", {}).get("applets", []):
             pid = next((f for f in run.glob(f"hypeforge-*{name}.pid")), None)
             print(f"applet {name}: " + ("running" if pid else "NOT running"), file=sys.stderr)
+        if a.click:                   # a real click: the hidden Sway has no mouse, fake-pointer.py is one
+            x, y = a.click.split(",")
+            procs.append(subprocess.Popen([sys.executable, str(HERE / "scripts/fake-pointer.py"), x, y, "--click",
+                                           "--hold", "10"], env=env, stdout=log, stderr=log))
+            time.sleep(3)
         shot = base / "shot.png"
         subprocess.run(["grim", "-s", str(a.scale), str(shot)], env=env, check=True)
         out.write_bytes(shot.read_bytes())

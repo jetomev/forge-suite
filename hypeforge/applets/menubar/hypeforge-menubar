@@ -81,6 +81,13 @@ def workspace_names():
 
 # ---- The menus, as GtkBuilder files ----------------------------------------------------------
 
+# Waybar opens a bar menu AT the mouse (gtk_menu_popup_at_pointer), so its top covered the lower half
+# of the 26 px menu bar (Javier, 2026-10-10: "the top bar menu options … open on top of the bar").
+# GTK's rect-anchor-dy moves it down: half the bar, so a click on a title drops the menu at the
+# bar's edge (both Mac styles' bars are 26 px).
+DROP = 13
+
+
 class Menu:
     """A GTK menu description and its actions (id → command), written for Waybar.
 
@@ -118,7 +125,9 @@ class Menu:
     def xml(self):
         return ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- Written by hypeforge-menubar. Do not edit by hand. -->\n"
                 "<interface>\n" + "".join(s + "\n" for s in self.subs)
-                + '<object class="GtkMenu" id="menu">\n' + "\n".join(self.lines) + "\n</object>\n</interface>\n")
+                + '<object class="GtkMenu" id="menu">\n'
+                + f'  <property name="rect-anchor-dy">{DROP}</property>\n'
+                + "\n".join(self.lines) + "\n</object>\n</interface>\n")
 
 
 def build_menus(entries: dict) -> dict[str, Menu]:

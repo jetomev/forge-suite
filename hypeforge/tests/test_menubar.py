@@ -265,6 +265,19 @@ class WinSpaceFollowsTheStyle(unittest.TestCase):
         src = (HERE / "applets/sections/hypeforge-sections").read_text()
         self.assertIn('NEAR_THE_TOP = ("--anchor", "top"', src)
 
+    def test_the_menus_drop_below_the_bar(self):
+        """Javier, 2026-10-10: "the top bar menu options … open on top of the bar" — Waybar opens a
+        menu at the mouse; each top menu is moved down half the 26 px bar (GTK's rect-anchor-dy)."""
+        loader = importlib.machinery.SourceFileLoader("hfmb_drop", str(HERE / "applets/menubar/hypeforge-menubar"))
+        mb = importlib.util.module_from_spec(importlib.util.spec_from_loader("hfmb_drop", loader))
+        loader.exec_module(mb)
+        for name, menu in mb.build_menus(ENTRIES).items():
+            top = ET.fromstring(menu.xml()).find("./object[@id='menu']")
+            dy = top.find("./property[@name='rect-anchor-dy']")
+            with self.subTest(name):
+                self.assertIsNotNone(dy)
+                self.assertEqual(int(dy.text), 13)
+
     def test_macos_opens_spotlight(self):
         self.assertEqual(self.run_key("macos"), (True, "search_top spotlight"))
 
