@@ -2,6 +2,12 @@
 
 **Target: the first KognogOS release (v1.0, April 2027).** Each section keeps its own detailed list; this one tracks the suite. Updated after every step.
 
+## 2026-10-10 / 11 — hypeForge's look program: all six styles built
+- [x] **hypeForge** (details in [hypeforge/TODO.md](hypeforge/TODO.md)): Mac OS 9, KDE, COSMIC and macOS built and live-tested (the Rice and Windows 11 the day before) — six styles × 25 colour themes; one bar program with a bar per screen, pop-ups on the clicked screen (D-86); the dock on the main screen (D-87); macOS (D-88); the Rice in Javier's order (D-89); issues #67–#83; Vault (68)–(70); kognogos.org card and hypeForge's README current
+- [ ] **themeForge** — the app that switches styles and themes (+ a Settings page and a tray icon); next
+- [ ] **nightForge 1.1** (#82): hide its tray icon where a hypeForge bar shows the night-light moon — released with the themeForge batch, AUR after Javier's local test
+- [ ] **The frost** (#83): see-through, blurred bars on the SwayFX login, every style
+
 ## 2026-10-09 — three new apps in a day, and every app says where it runs
 - [x] **workspaceForge 1.0.0** (new section): designed, approved, built, released — GitHub Latest, AUR after Javier's local test, kognogos.org card; the F-50 engine in hypeForge's Workspaces applet (F-51 loop found and fixed on the new hidden bench)
 - [x] **Where it runs, everywhere** (Javier's rule): a line on every README + GitHub About + kognogos.org card; AUR descriptions at each app's next release
