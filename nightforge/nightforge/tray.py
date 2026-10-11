@@ -14,9 +14,18 @@ import os
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 
 from . import control
 from .settings import Settings
+
+# hypeForge's bar in use (written by hypeforge-theme for each style). The Rice's bar has a night-light
+# moon of its own (D-89) that opens the pop-up with the slider; there the tray icon would be the same
+# button twice (Javier, 2026-10-11: "in rice, now I have 2 night-light icons. Take the old one please,
+# leave the one with the window and the slider"). So the icon says it's "Passive", which a bar's tray
+# hides (Waybar's does unless told otherwise), and comes back by itself on a style without the moon.
+BAR_CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "sway/waybar/config.jsonc"
+MOON = '"custom/nightlight"'
 
 WATCHER = "org.kde.StatusNotifierWatcher"
 ITEM_PATH = "/StatusNotifierItem"
@@ -93,6 +102,19 @@ def picture(kind: str, size: int) -> bytes:
 
 # ---- the tray item ------------------------------------------------------------------------------
 
+def bar_has_moon(path: Path | None = None) -> bool:
+    """True when the bar in use places the night-light moon (comments don't count)."""
+    try:
+        text = (path or BAR_CONFIG).read_text()
+    except OSError:
+        return False
+    return any(MOON in line.split("//", 1)[0] for line in text.splitlines())
+
+
+def tray_status(path: Path | None = None) -> str:
+    return "Passive" if bar_has_moon(path) else "Active"
+
+
 class Tray:
     def __init__(self) -> None:
         import gi
@@ -101,6 +123,7 @@ class Tray:
         self.Gio, self.GLib = Gio, GLib
         self.revision = 1
         self.state = None
+        self.status = tray_status()
         self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
         self.name = f"org.kde.StatusNotifierItem-{os.getpid()}-1"
         self.bus.register_object(ITEM_PATH, Gio.DBusNodeInfo.new_for_xml(SNI_XML).interfaces[0],
@@ -112,12 +135,19 @@ class Tray:
                                          self._watcher_up, None)
         self.refresh()
         GLib.timeout_add_seconds(20, self._tick)
+        # a style switch rewrites the bar: hide or show the icon at once
+        self.monitor = Gio.File.new_for_path(str(BAR_CONFIG.parent)).monitor_directory(Gio.FileMonitorFlags.NONE, None)
+        self.monitor.connect("changed", lambda *_: self.refresh())
 
     # -- what it shows ---------------------------------------------------------------------------
     def settings(self) -> Settings:
         return Settings.load()
 
     def refresh(self) -> None:
+        status = tray_status()
+        if status != self.status:
+            self.status = status
+            self._emit(ITEM_PATH, "org.kde.StatusNotifierItem", "NewStatus", self.GLib.Variant("(s)", (status,)))
         st = control.status(self.settings())
         if st != self.state:
             self.state = st
@@ -149,7 +179,7 @@ class Tray:
         icons = [(s, s, picture(kind, s)) for s in (22, 32, 44)]
         return {
             "Category": V("s", "Hardware"), "Id": V("s", "nightforge"), "Title": V("s", words),
-            "Status": V("s", "Active"), "WindowId": V("i", 0), "IconName": V("s", ""),
+            "Status": V("s", self.status), "WindowId": V("i", 0), "IconName": V("s", ""),
             "IconPixmap": V("a(iiay)", icons), "OverlayIconName": V("s", ""), "AttentionIconName": V("s", ""),
             "ToolTip": V("(sa(iiay)ss)", ("", [], words, self.state["why"] if self.state else "")),
             "ItemIsMenu": V("b", True), "Menu": V("o", MENU_PATH),   # a click shows the menu (Javier, D-6)

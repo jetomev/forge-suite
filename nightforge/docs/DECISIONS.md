@@ -2,6 +2,11 @@
 
 *Newest first. Each one says what was decided, by whom, and why.*
 
+## 2026-10-11
+
+### D-7 · The tray icon steps aside where the bar has its own moon (Javier)
+*"in rice, now I have 2 night-light icons. Take the old one please, leave the one with the window and the slider."* hypeForge's Rice has a night-light moon on its bar (hypeForge D-89) that opens the pop-up with the slider; the tray icon was the same button twice. A bar can't hide one app's tray icon, so nightForge does it: when hypeForge's bar in use (`~/.config/sway/waybar/config.jsonc`) places `custom/nightlight`, the icon's status is **Passive**, which Waybar's tray hides; on a style without the moon it's **Active** again. It watches the bar's folder, so a style switch shows or hides it at once (`NewStatus`). Tested on the private bus with the Rice's and Windows 11's real bar files (fails on 1.0's code), and live: the yellow tray moon gone, the bar's moon kept. Issue forge-suite #82.
+
 ## 2026-10-09
 
 ### D-6 · A click on the tray icon shows the menu; nothing opens the app by itself (Javier)

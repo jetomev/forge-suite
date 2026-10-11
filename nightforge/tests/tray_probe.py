@@ -86,6 +86,23 @@ if items:
     out["settings_after_off"] = (tmp / "config/nightforge/settings.toml").read_text() if \
         (tmp / "config/nightforge/settings.toml").exists() else ""
     out["title_after_off"] = prop("/StatusNotifierItem", "org.kde.StatusNotifierItem", "Title")
+    # the bar in use (Javier, 2026-10-11): the Rice's bar has the moon, so the icon steps out of the tray
+    statuses = []
+    bus.signal_subscribe(owner, "org.kde.StatusNotifierItem", "NewStatus", "/StatusNotifierItem", None,
+                         Gio.DBusSignalFlags.NONE, lambda *a: statuses.append(a[5].unpack()[0]))
+    out["status_no_bar"] = prop("/StatusNotifierItem", "org.kde.StatusNotifierItem", "Status")
+    bar = tmp / "config/sway/waybar/config.jsonc"
+    bar.parent.mkdir(parents=True, exist_ok=True)
+    hype = HERE.parent.parent / "hypeforge/styles"
+    for style in ("rice", "windows-11"):
+        bar.write_text((hype / f"{style}/bar/config.jsonc").read_text())
+        deadline = time.monotonic() + 5
+        want = len(statuses) + 1
+        while len(statuses) < want and time.monotonic() < deadline:
+            ctx.iteration(False)
+            time.sleep(0.05)
+        out[f"status_{style}"] = prop("/StatusNotifierItem", "org.kde.StatusNotifierItem", "Status")
+    out["status_signals"] = statuses
 if tray_pid:
     os.kill(tray_pid, 15)
 print(json.dumps(out))
