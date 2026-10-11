@@ -153,6 +153,18 @@ def close_open(view: str) -> bool:
         return False
 
 
+def nudge_open(view: str, back: bool = False) -> bool:
+    """If this view is open, tell it to move on (Alt + Tab pressed again) instead of closing it."""
+    try:
+        pid = int(pidfile(view).read_text())
+        if b"hypeforge-panel" not in Path(f"/proc/{pid}/cmdline").read_bytes():
+            return False                                   # a reused process number: not ours
+        os.kill(pid, signal.SIGUSR2 if back else signal.SIGUSR1)
+        return True
+    except (OSError, ValueError):
+        return False
+
+
 # ---- The panel ------------------------------------------------------------------------------
 
 EDGES = {"top": GtkLayerShell.Edge.TOP, "bottom": GtkLayerShell.Edge.BOTTOM,

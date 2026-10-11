@@ -63,6 +63,8 @@ keys = [
   { keys = "Win + right mouse button", does = "Resize a window", sway = [] },
   { keys = "Win + Shift + −", does = "Put the window away in the scratchpad (a hidden drawer)", sway = ["$mod+Shift+minus"] },
   { keys = "Win + −", does = "Bring the scratchpad window back (press again to cycle or hide)", sway = ["$mod+minus"] },
+  { keys = "Alt + Tab", does = "Switch windows: hold Alt, tap Tab to move on, let go to pick (tucked-away ones too)", sway = ["Mod1+Tab"] },
+  { keys = "Alt + Shift + Tab", does = "Switch windows, going backwards", sway = ["Mod1+Shift+Tab"] },
 ]
 
 [[group]]

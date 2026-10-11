@@ -44,6 +44,7 @@ A full desktop like KDE Plasma does everything for you, and it carries a lot of 
 |---|---|
 | **The top bar** | A menu bar on every screen. Left: the **KognogOS emblem** (the launcher), **Workspaces** and **Favorites** menus. Middle: your open apps (click to jump to one). Right: tray · clipboard (with a count of new copies) · USB drives · Bluetooth · network · volume, then the clock, the notification bell (with a count; right click: Do Not Disturb) and **⏻** for lock, log out, reboot and shut down. |
 | **Workspaces** | Six workspaces (Daily, Work, Entertainment, Gaming, Monitoring, Settings). **Win + 1…6** or the **Workspaces** menu (Win + W) switches every screen together. A screen can keep one space for several workspaces, so its apps stay put. |
+| **Switching windows** (Alt + Tab) | Every open window as a card, the one you used before picked first; hold Alt and tap Tab to move on, let go to pick. A floating window you clicked past is tucked away (like minimised); Alt + Tab, the taskbar or, on the Rice, an icon after the workspace pills brings it back. |
 | **Window placement** | Every new window goes to the next spot of a fixed order across your screens, then becomes a tab. |
 | **Launcher** (Win + Space, or the emblem) | Apps only: your favourites first, then the **standard groups** every desktop uses (Internet, Office, Games, Settings, Utilities…), each app where its own entry says it belongs; picked from a group, it opens on its workspace (Internet on Daily, Games on Gaming…). **Settings** starts with hypeForge Settings. Press again to close. |
 | **Favorites** (Win + F) | Your favourite apps with their icons, one click away. |
@@ -76,6 +77,7 @@ A full desktop like KDE Plasma does everything for you, and it carries a lot of 
 | **Win + T / S / E** | Tabs · stacked · side by side |
 | **Win + Shift + F** | Full screen |
 | **Win + Shift + Space** | Float the window, or put it back in its spot |
+| **Alt + Tab** | Switch windows: hold Alt, tap Tab, let go to pick (tucked-away windows too) |
 | **Win + C** · **Win + N** | Clipboard history · close the notifications |
 | **Print** | Screenshot (Shift, Ctrl, Alt + Print: screen, all screens, window) |
 | **Alt + F4** | Close the window |

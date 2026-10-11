@@ -10,6 +10,8 @@
 // open the alert popup"). Right-click on the bell still switches Do Not Disturb.
 // The right side, right to left (Javier): power, volume, network, Bluetooth, USB drives, printers,
 // clipboard, processor, memory, the night light, then the programs' tray icons.
+// After the pills, the windows tucked away (D-82): an icon and how many, hidden when none; a click
+// brings them back (Javier, 2026-10-11: on the Rice a tucked window had no way back you could see).
 // The pieces are defined in modules.jsonc (shared by every style); colours come from colors.css.
 {
   "include": [
@@ -25,7 +27,8 @@
   "margin-right": 10,
   "modules-left": [
     "custom/emblem",
-    "group/workspace-pills"
+    "group/workspace-pills",
+    "custom/tucked"
   ],
   "modules-center": [
     "group/datetime"

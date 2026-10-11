@@ -44,7 +44,7 @@ tooltip label { color: @hf_text; }
 /* every piece: room, the theme's icon colour, a soft hover */
 #clock, #mpris, #cpu, #memory, #network, #bluetooth, #wireplumber, #tray,
 #custom-clipboard, #custom-drives, #custom-printers, #custom-notifications, #custom-power-panel,
-#custom-nightlight {
+#custom-nightlight, #custom-tucked {
   padding: 0 9px;
   color: @hf_icon;
 }
@@ -52,13 +52,15 @@ tooltip label { color: @hf_text; }
 #mpris { color: @hf_subtext; }
 #cpu:hover, #memory:hover, #network:hover, #bluetooth:hover, #wireplumber:hover, #custom-clipboard:hover,
 #custom-drives:hover, #custom-printers:hover, #custom-notifications:hover, #custom-power-panel:hover,
-#custom-nightlight:hover, #clock:hover {
+#custom-nightlight:hover, #custom-tucked:hover, #clock:hover {
   background-color: @hf_pill_hover; border-radius: 8px;
 }
 #wireplumber.muted, #network.disconnected { color: @hf_alert; }
 #custom-notifications.unseen { color: @hf_bell; }
 #custom-notifications.dnd { color: @hf_alert; }
 #custom-clipboard.new, #custom-drives.has { color: @hf_new; }
+/* the windows tucked away: the theme's colour, so a hidden window is noticed */
+#custom-tucked.some { color: @hf_new; }
 #custom-power-panel { color: @hf_alert; padding-right: 12px; }
 /* the night light's moon: warm when it's on, quiet in daylight, red when switched off */
 #custom-nightlight.warm { color: @hf_bell; }

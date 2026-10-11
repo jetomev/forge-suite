@@ -147,8 +147,9 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] 23b. sudoForge pinentry (goes with walletForge)
 - [ ] 24. displayForge 1.0.x tests
 - [ ] 25. Look & polish: Chrome and friends' own title bars off · pop-up list positions · SwayFX trial · folder tabs · our own bar · Alt+Tab with previews · drag and drop
-  - **Found 10-11 (Javier, on the Rice):** a tucked-away window (D-82) has no way back you can see — the Rice has no taskbar, so only Win + − brings it back, and nothing says so. themeForge sat in the scratchpad. Alt + Tab moves up; his pick of how pending.
+  - **Found 10-11 (Javier, on the Rice):** a tucked-away window (D-82) has no way back you can see — the Rice has no taskbar, so only Win + − brings it back, and nothing says so. themeForge sat in the scratchpad. Alt + Tab moves up; his pick: **both** → ✅ **D-92** Alt + Tab (every style) + the Rice's tucked icon; switcher-bench 15/15 (fake keyboard), 12 tests. ⬜ previews in the cards (later).
   - ✅ **D-91 (Javier, 10-11): the screen edges = the space between windows, in every style** (`gap_outer = 0`; Sway added the two). Found with it: an apply or undo never changed the gaps of workspaces already open → `hypeforge-theme` sets them on every open workspace; look bench checks it.
+  - ✅ **F-70 (Javier, 10-11): an open Chrome kept its first colours** → each look its own named GTK theme (`~/.local/share/themes/hypeForge-…`), so open GTK apps repaint; gtk-live-bench 5/5 (2/5 before); benches get their own data folder.
 - [ ] 26. After 1.0: game controllers + the G13 app · accessibility · online accounts · remote desktop · touchscreen · permissions · spell check · animations
 - [ ] 27. **Remove KDE — the very last step**
 

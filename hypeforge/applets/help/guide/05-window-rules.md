@@ -8,7 +8,8 @@ Settings, password windows, picture-in-picture video, Steam's side windows and m
 ## How to use it
 
 - **A click picks the window you work in.** Moving the mouse over a window doesn't select it; a click does (Win + arrow keys too).
-- **Floating windows step aside.** In Sway a floating window is always drawn above the others, so when you click a window it covers, it is **tucked away** — like minimised. Its icon on the taskbar (dimmed while tucked) or **Win + −** brings it back on top. One beside the window you clicked stays; a dialog of the same app ("Save as…") never goes away.
+- **Floating windows step aside.** In Sway a floating window is always drawn above the others, so when you click a window it covers, it is **tucked away** — like minimised. Its icon on the taskbar (dimmed while tucked), **Alt + Tab** or **Win + −** brings it back on top. On the Rice, which has no taskbar, an icon after the workspace pills shows how many windows are tucked away (it hides when none are); a click brings one back, or shows the cards when there are several. One beside the window you clicked stays; a dialog of the same app ("Save as…") never goes away.
+- **Alt + Tab** switches windows, in every style: hold **Alt** and the open windows show as cards, the one you used before this first; tap **Tab** to move on (**Shift** goes back), let go of **Alt** to pick. A quick Alt + Tab flips between your last two windows. Tucked-away windows are there too, marked; picking one brings it back on top. The arrows, Enter and a click work as well; Escape closes it.
 - **Win + Shift + Space** floats a window, or puts it back in its spot. A floating window keeps its frame; to resize it, hold **Win** and drag with the **right** mouse button (Win + left button moves it).
 - **Win + left mouse button** drags it, **Win + right mouse button** resizes it.
 - **Win + Shift + Tab** switches the focus between floating and tiled windows.

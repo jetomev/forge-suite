@@ -6,7 +6,8 @@
 Opens one of the graphical pop-ups the styles place on their bar; the same command again closes
 it (a bar button pressed twice). Views: power (the big-button power menu), start (the KDE-style
 Start), kickoff (KDE's list), library (COSMIC's App Library), quick (Quick Settings, or one part of
-it with --only), calendar, workspaces (the strip).
+it with --only), calendar, workspaces (the strip), switcher (Alt + Tab: --hold while Alt is held,
+--back starts from the end, --tucked only the windows tucked away; Alt + Tab again moves it on).
 --style / --theme draw it in a look other than the active one (the preview bench uses this).
 """
 
@@ -22,7 +23,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "vi
 
 # view name → its module (a module may not take a standard library's name: "calendar" is one)
 VIEWS = {"power": "power", "start": "start", "quick": "quick", "calendar": "calendar_view", "workspaces": "workspaces",
-         "kickoff": "kickoff", "library": "library"}
+         "kickoff": "kickoff", "library": "library", "switcher": "switcher"}
 
 
 def main() -> int:
@@ -34,10 +35,22 @@ def main() -> int:
     ap.add_argument("--margin", help="pixels from those edges, e.g. bottom=60,left=10")
     ap.add_argument("--only", choices=["network", "sound", "bluetooth", "night"],
                     help="quick: just that part, its own small pop-up (COSMIC, C-5)")
+    ap.add_argument("--hold", action="store_true", help="switcher: Alt is held; letting go picks")
+    ap.add_argument("--back", action="store_true", help="switcher: go backwards (Alt + Shift + Tab)")
+    ap.add_argument("--tucked", action="store_true", help="switcher: only the windows tucked away")
     a = ap.parse_args()
     import panelkit
+    if a.view == "switcher" and a.hold and panelkit.nudge_open("switcher", back=a.back):
+        return 0                                   # Alt + Tab again: the open one moves on
     if panelkit.close_open(a.view):
         return 0
+    a.pending = []
+    if a.view == "switcher":
+        import signal
+        # a fast second Tab may come while it starts: count it (its default would end the program)
+        signal.signal(signal.SIGUSR1, lambda *_: a.pending.append(1))
+        signal.signal(signal.SIGUSR2, lambda *_: a.pending.append(-1))
+        panelkit.pidfile(a.view).write_text(str(os.getpid()))   # at once: a fast second Tab finds it
     view = importlib.import_module(VIEWS[a.view])
     panel = view.build(panelkit.Look(a.style, a.theme), a)
     panel.run()

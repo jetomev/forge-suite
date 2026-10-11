@@ -12,22 +12,38 @@ The rule, on every focus change to a TILED window:
   - one of the same app (a "Save as…" dialog of the window clicked) stays — dialogs never vanish;
   - a sticky window (shown on every workspace) stays.
 
+It also keeps two small records for the rest of the desktop (Javier, 2026-10-11: on the Rice a tucked
+window had no way back you could see):
+  - which windows were used last ($XDG_RUNTIME_DIR/hypeforge-focus.json), the order Alt + Tab shows;
+  - how many windows are tucked away ($XDG_RUNTIME_DIR/hypeforge-tucked.json), the bar's icon for
+    them: hidden when none, a click brings them back.
+
     hypeforge-tuck              keep watching (started at login; one copy)
+    hypeforge-tuck back         the bar icon's click: one tucked window comes back on top; several,
+                                Alt + Tab's cards with just those
 """
 
 from __future__ import annotations
 
 import json
 import os
+import signal
 import sys
 from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "common"))
 from hfsway import GET_TREE, SUBSCRIBE, EVENT_WINDOW, Sway  # noqa: E402
+from hfbar import signal_bar  # noqa: E402
 
 RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
 PIDFILE = RUNTIME / "hypeforge-tuck.pid"
+RECENT = RUNTIME / "hypeforge-focus.json"       # window ids, last used first (Alt + Tab's order)
+TUCKED = RUNTIME / "hypeforge-tucked.json"      # the bar's icon for the tucked windows
 SCRATCH = "__i3_scratch"
+BAR_SIGNAL = 14                                 # Waybar redraws the tucked icon on SIGRTMIN+14 (8-13 are taken)
+KEEP_RECENT = 64
+ICON = "\U000F05B2"                             # nerd font: window-restore (two windows, one coming forward)
+PANEL = Path(os.path.realpath(__file__)).parent.parent / "panels/hypeforge-panel"
 
 
 def overlap(a: dict, b: dict) -> bool:
@@ -80,21 +96,79 @@ def to_tuck(tree: dict) -> list[int]:
     return []
 
 
+def tucked(tree: dict) -> list[dict]:
+    for ws in workspaces(tree):       # the hidden workspace that holds them is one too
+        if ws.get("name") == SCRATCH:
+            return [w for n in ws.get("nodes", []) + ws.get("floating_nodes", []) for w in windows_in(n)]
+    return []
+
+
+def tucked_text(wins: list[dict]) -> str:
+    """The bar's piece: nothing when no window is tucked away (Waybar hides it), else the icon and
+    how many, the names in the tooltip."""
+    if not wins:
+        return json.dumps({"text": "", "tooltip": "", "class": "none"})
+    names = [w.get("name") or w.get("app_id") or "a window" for w in wins]
+    tip = "Tucked away: " + ", ".join(names) + ("\nClick to bring it back" if len(wins) == 1
+                                                else "\nClick to pick one · Alt + Tab")
+    return json.dumps({"text": f"{ICON} {len(wins)}", "tooltip": tip, "class": "some"}, ensure_ascii=False)
+
+
+def write(path: Path, text: str) -> bool:
+    """Write when it changed; True if it did."""
+    try:
+        if path.read_text() == text:
+            return False
+    except OSError:
+        pass
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(text)
+    tmp.replace(path)
+    return True
+
+
+def remember(order: list[int], wid: int) -> list[int]:
+    return ([wid] + [i for i in order if i != wid])[:KEEP_RECENT]
+
+
 def watch():
     control, events = Sway(), Sway()
     events.ask(SUBSCRIBE, json.dumps(["window"]))
+    order: list[int] = []
+    tree = control.ask(GET_TREE)
+    if write(TUCKED, tucked_text(tucked(tree))):
+        signal_bar(signal.SIGRTMIN + BAR_SIGNAL, wait=0.5)
     while True:
         kind, event = events.receive()
-        if kind != EVENT_WINDOW or event.get("change") != "focus":
+        if kind != EVENT_WINDOW:
             continue
-        if (event.get("container") or {}).get("type") == "floating_con":
-            continue                       # a floating window came forward: nothing to tuck
-        ids = to_tuck(control.ask(GET_TREE))
-        if ids:
-            control.run(*[f"[con_id={i}] move scratchpad" for i in ids])
+        change, con = event.get("change"), event.get("container") or {}
+        if change == "focus" and con.get("id"):
+            order = remember(order, con["id"])
+            write(RECENT, json.dumps(order))
+        if change == "focus" and con.get("type") != "floating_con":
+            ids = to_tuck(control.ask(GET_TREE))
+            if ids:
+                control.run(*[f"[con_id={i}] move scratchpad" for i in ids])
+        if change in ("focus", "move", "close", "new", "floating"):
+            if write(TUCKED, tucked_text(tucked(control.ask(GET_TREE)))):
+                signal_bar(signal.SIGRTMIN + BAR_SIGNAL, wait=0.5)
+
+
+def back():
+    """The bar icon's click."""
+    control = Sway()
+    wins = tucked(control.ask(GET_TREE))
+    if len(wins) == 1:
+        control.run(f"[con_id={wins[0]['id']}] scratchpad show")
+    elif wins:
+        control.run(f"exec {PANEL} switcher --tucked")
 
 
 def main():
+    if sys.argv[1:] == ["back"]:
+        back()
+        return
     if sys.argv[1:]:
         sys.exit(__doc__)
     try:
