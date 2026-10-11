@@ -209,10 +209,10 @@ class TheMenusByKeyboard(unittest.TestCase):
 
     def test_the_titles_underline_their_key(self):
         src = (HERE / "applets/menubar/hypeforge-menubar").read_text()
-        for title in ("W<u>i</u>ndow", "S<u>p</u>ecial", "<u>H</u>elp"):
+        for title in ("Wind<u>o</u>w", "Spec<u>i</u>al", "Hel<u>p</u>"):
             self.assertIn(title, src)
         conf = (HERE / "sway/config").read_text()
-        for key, menu in (("i", "window"), ("p", "special"), ("h", "help")):
+        for key, menu in (("o", "window"), ("i", "special"), ("p", "help")):
             self.assertRegex(conf, rf"bindsym \$mod\+{key} exec \S+hypeforge-menubar open {menu}")
 
 

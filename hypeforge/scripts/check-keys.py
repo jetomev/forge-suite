@@ -67,7 +67,43 @@ def empty_bindings():
     return bad
 
 
+def clashes():
+    """Two bindings on one key (2026-10-10: Win + H was bound to the Help menu while `$mod+$left`
+    already was Win + H — `set $left h` — and the chart check passed; Sway raised its red error
+    bar on the desktop). Names made with `set $x …` are resolved first; $mod stays $mod."""
+    names, seen, bad, mode = {}, {}, [], None
+    for n, line in enumerate(CONFIG.read_text().splitlines(), 1):
+        line = line.split("#", 1)[0].strip()
+        m = re.match(r"set\s+(\$\w+)\s+(\S+)", line)
+        if m and m.group(1) != "$mod":
+            names[m.group(1)] = m.group(2)
+            continue
+        m = re.match(r'mode\s+"([^"]+)"\s*\{', line)
+        if m:
+            mode = m.group(1)
+            continue
+        if line == "}" and mode:
+            mode = None
+            continue
+        m = re.match(r"bindsym\s+((?:--\S+\s+)*)(\S+)", line)
+        if not m:
+            continue
+        parts = [names.get(x, x).lower() for x in m.group(2).split("+")]
+        key = (mode, "+".join(sorted(parts[:-1]) + parts[-1:]))
+        if key in seen:
+            bad.append(f"line {n} and line {seen[key]}: {m.group(2)} (" + "+".join(key[1:]) + ")")
+        else:
+            seen[key] = n
+    return bad
+
+
 def main():
+    twice = clashes()
+    if twice:
+        print("check-keys: one key bound twice in sway/config (Sway shows its error bar):")
+        for b in twice:
+            print(f"  {b}")
+        return 1
     broken = empty_bindings()
     if broken:
         print("check-keys: key lines in sway/config that do nothing:")

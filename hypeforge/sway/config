@@ -136,10 +136,11 @@ input type:keyboard {
     # hypeForge: Win + Space = the launcher with sections, applet 4 (D-52); Win + D = plain search
     # the style's own launcher: Start on Windows 11, the emblem menu on Mac OS 9, this list elsewhere (10-10)
     bindsym $mod+space exec ~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections key
-    # the menu bar's menus as lists, by the letter underlined in their titles (Javier, 2026-10-10)
-    bindsym $mod+i exec ~/Programs/forge-suite/hypeforge/applets/menubar/hypeforge-menubar open window
-    bindsym $mod+p exec ~/Programs/forge-suite/hypeforge/applets/menubar/hypeforge-menubar open special
-    bindsym $mod+h exec ~/Programs/forge-suite/hypeforge/applets/menubar/hypeforge-menubar open help
+    # the menu bar's menus as lists, by the letter underlined in their titles (Javier, 2026-10-10;
+    # H, E, L are taken — Win + H is $left — so Help is P, Special I, Window O)
+    bindsym $mod+o exec ~/Programs/forge-suite/hypeforge/applets/menubar/hypeforge-menubar open window
+    bindsym $mod+i exec ~/Programs/forge-suite/hypeforge/applets/menubar/hypeforge-menubar open special
+    bindsym $mod+p exec ~/Programs/forge-suite/hypeforge/applets/menubar/hypeforge-menubar open help
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.

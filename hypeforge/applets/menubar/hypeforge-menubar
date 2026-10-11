@@ -17,7 +17,7 @@ the groups or workspaces edited). The app's name and icon follow every focus cha
     hypeforge-menubar           keep the menus and the app's name current (one copy)
     hypeforge-menubar apps      the Application menu's list (the bar calls it)
     hypeforge-menubar open <menu>   a menu as a list, for the keyboard: emblem (Win + Space on
-                                Mac OS 9), window (Win + I), special (Win + P), help (Win + H)
+                                Mac OS 9), window (Win + O), special (Win + I), help (Win + P)
 
 Files: ~/.config/hypeforge/applets/menubar.waybar.json (Waybar "include"), menubar/*.xml (the
 menus), menubar.css (icons, @import-ed by a style's bar stylesheet); the name and icon in
@@ -180,8 +180,8 @@ def write_bar(entries: dict, icons: Icons) -> bool:
     fragment = {"group/menubar": {"orientation": "inherit", "modules": [
         "custom/menu-emblem", "custom/menu-app", "custom/menu-window", "custom/menu-special", "custom/menu-help"]}}
     # the emblem's button shows the emblem picture (a style's CSS); an empty label would hide it
-    # the underlined letter is the key that opens the menu as a list (Win + I, P, H; Javier 10-10)
-    titles = {"emblem": "\u2003", "window": "W<u>i</u>ndow", "special": "S<u>p</u>ecial", "help": "<u>H</u>elp"}
+    # the underlined letter is the key that opens the menu as a list (Win + O, I, P; Javier 10-10 — H, E, L were taken)
+    titles = {"emblem": "\u2003", "window": "Wind<u>o</u>w", "special": "Spec<u>i</u>al", "help": "Hel<u>p</u>"}
     for name, menu in menus.items():
         path = MENUS / f"{name}.xml"
         files[path] = menu.xml()

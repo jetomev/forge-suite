@@ -12,7 +12,7 @@ It runs on **Sway** and adds small pieces of its own, called **applets**.
 | **Win + 1 … 6** | Switch workspace — every screen together |
 | **Win + W** | The list of workspaces (or click **Workspaces** on the bar) |
 | **Win + F** | Your favorite apps (or click **Favorites** on the bar) |
-| **Win + I · P · H** | The menu bar's **Window**, **Special** and **Help** menus as lists (the underlined letter) |
+| **Win + O · I · P** | The menu bar's **Window**, **Special** and **Help** menus as lists (the underlined letter) |
 | **Alt + F4** | Close a window |
 | **Win + Escape** | Lock the screen |
 | **Print Screen** | Screenshot: drag a box |
