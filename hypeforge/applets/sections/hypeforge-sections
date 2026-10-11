@@ -198,7 +198,7 @@ def style_launcher() -> bool:
     """Win + Space opens the launcher of the style in use (Javier, 2026-10-10: on Mac OS 9 it opened
     the Rice's list): `[layout] launcher` in the style — "start-panel" (Windows 11's Start), "panel-kickoff-list" (KDE's Kickoff),
     "emblem-menu" (Mac OS 9's emblem menu as a list), "fuzzel-top" (COSMIC's search near the top of
-    the screen). True when it handled the key; any other
+    the screen), "spotlight" (macOS's: the same search, wider and lower). True when it handled the key; any other
     launcher (the Rice's, or one not built yet) is this list."""
     conf = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
     applets = Path(os.path.realpath(__file__)).parent.parent
@@ -220,21 +220,26 @@ def style_launcher() -> bool:
     if kind == "fuzzel-top":
         search_top()
         sys.exit(0)
+    if kind == "spotlight":          # macOS (D-74 MA-2): a wide search bar, a third of the way down
+        search_top(SPOTLIGHT)
+        sys.exit(0)
     return False
 
 
 NEAR_THE_TOP = ("--anchor", "top", "--y-margin", "120")
+SPOTLIGHT = ("--anchor", "top", "--y-margin", "300", "--width", "64")
 
 
-def search_top():
+def search_top(where=NEAR_THE_TOP):
     """COSMIC's launcher (D-77 C-4): one search box centred near the top of the screen, every app
-    in it, typing narrows it; the app opens on its own workspace like everywhere else."""
+    in it, typing narrows it; the app opens on its own workspace like everywhere else. macOS's
+    Spotlight is the same search, wider and lower (`where`)."""
     if hfmenu.close_open("launcher"):             # Win + Space again closes it
         return
     cfg, everything = load(), apps()
     by_name = sorted(everything, key=lambda a: everything[a]["name"].lower())
     choice = pick(cfg, [(everything[a]["name"], everything[a]["icon"]) for a in by_name], "  ",
-                  lines_shown=8, extra=NEAR_THE_TOP)
+                  lines_shown=8, extra=where)
     if choice is not None:
         launch(by_name[choice], everything[by_name[choice]])
 

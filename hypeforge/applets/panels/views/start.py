@@ -302,8 +302,10 @@ def build(look: panelkit.Look, args, as_list: bool = False, view: str = "start",
 
     first = int(os.environ.get("HYPEFORGE_START_GROUP", "0"))   # the bench opens a given group
     pick(None, first if 0 <= first < len(sets) else 0)
-    edges = args.edges.split(",") if getattr(args, "edges", None) else ["bottom"]
-    margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"bottom": 60}
+    # with no place given: Start and Kickoff above the taskbar; the App Library (macOS's Launchpad) in the middle
+    edges = args.edges.split(",") if getattr(args, "edges", None) else ([] if library else ["bottom"])
+    margins = (dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None)
+               else {} if library else {"bottom": 60})
     panel = panelkit.Panel(view, root, look, edges=edges, margins={k: int(v) for k, v in margins.items()})
     search.grab_focus()
     return panel

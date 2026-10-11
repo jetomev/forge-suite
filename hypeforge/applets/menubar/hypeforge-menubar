@@ -168,6 +168,19 @@ def build_menus(entries: dict) -> dict[str, Menu]:
     special.item("Shut Down…", f"{q(LAUNCHER)} power shutdown")
     menus["special"] = special
 
+    # macOS (D-74 MA-4): no Special menu — its items live at the bottom of the emblem menu, like the
+    # Apple menu's Lock Screen · Log Out · Restart · Shut Down. A style places one emblem or the other.
+    system = Menu()
+    system.lines, system.subs, system.actions = list(emblem.lines), list(emblem.subs), dict(emblem.actions)
+    system.tree, system.n = list(emblem.tree), emblem.n          # n too: item ids must not repeat
+    system.separator()
+    for entry in special.tree:
+        if entry is None:
+            system.separator()
+        else:
+            system.item(*entry)
+    menus["system"] = system
+
     help_ = Menu()
     help_.item("Keys and Shortcuts", q(HELP))
     help_.item("hypeForge Guide", f"{q(HELP)} start")
@@ -183,9 +196,11 @@ def write_bar(entries: dict, icons: Icons) -> bool:
     files = {}
     fragment = {"group/menubar": {"orientation": "inherit", "modules": [
         "custom/menu-emblem", "custom/menu-app", "custom/menu-window", "custom/menu-special", "custom/menu-help"]}}
+    # (custom/menu-system is macOS's emblem: the emblem menu with Special's items at its foot)
     # the emblem's button shows the emblem picture (a style's CSS); an empty label would hide it
     # the underlined letter is the key that opens the menu as a list (Win + O, I, P; Javier 10-10 — H, E, L were taken)
-    titles = {"emblem": "\u2003", "window": "Wind<u>o</u>w", "special": "Spec<u>i</u>al", "help": "Hel<u>p</u>"}
+    titles = {"emblem": "\u2003", "system": "\u2003", "window": "Wind<u>o</u>w", "special": "Spec<u>i</u>al",
+              "help": "Hel<u>p</u>"}
     for name, menu in menus.items():
         path = MENUS / f"{name}.xml"
         files[path] = menu.xml()
@@ -292,7 +307,7 @@ def apps_menu():
         sway.run(f"[con_id={targets[int(picked)]}] focus")
 
 
-MENU_TITLES = {"emblem": "KognogOS", "window": "Window", "special": "Special", "help": "Help"}
+MENU_TITLES = {"emblem": "KognogOS", "system": "KognogOS", "window": "Window", "special": "Special", "help": "Help"}
 
 
 def open_menu(name: str, entries: list | None = None, title: str | None = None):

@@ -8,7 +8,7 @@
 | **Network** | a cable when wired, Wi-Fi bars when wireless, red when not connected | the **network menu** (below) | **nmtui**, to edit connections |
 | **Volume** | the level, red when muted | mute / unmute | **wiremix**, the mixer |
 
-**Other styles:** on Windows 11 and KDE a click on any of the three opens **Quick Settings**; on
+**Other styles:** on Windows 11 and KDE a click on any of the three opens **Quick Settings** (on macOS it's called **Control Center**); on
 **COSMIC** each icon opens **its own small pop-up** — Bluetooth's switch, the network's Wi-Fi and
 VPN switches, or the volume slider — with a button at the bottom to its full app (bluetui, nmtui,
 wiremix). A click anywhere else closes it.

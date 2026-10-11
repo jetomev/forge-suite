@@ -10,6 +10,7 @@ from __future__ import annotations
 import importlib.machinery
 import importlib.util
 import json
+import re
 import os
 import subprocess
 import sys
@@ -234,7 +235,7 @@ class WinSpaceFollowsTheStyle(unittest.TestCase):
         old_env, old_execv = os.environ.get("XDG_CONFIG_HOME"), os.execv
         os.environ["XDG_CONFIG_HOME"] = str(conf)
         os.execv = lambda prog, argv: calls.append(argv)
-        s.search_top = lambda: calls.append(["search_top"])     # COSMIC's: fuzzel near the top
+        s.search_top = lambda where=s.NEAR_THE_TOP: calls.append(["search_top"] + (["spotlight"] if where == s.SPOTLIGHT else []))
         try:
             try:
                 handled = s.style_launcher()
@@ -263,6 +264,22 @@ class WinSpaceFollowsTheStyle(unittest.TestCase):
     def test_cosmics_search_sits_near_the_top(self):
         src = (HERE / "applets/sections/hypeforge-sections").read_text()
         self.assertIn('NEAR_THE_TOP = ("--anchor", "top"', src)
+
+    def test_macos_opens_spotlight(self):
+        self.assertEqual(self.run_key("macos"), (True, "search_top spotlight"))
+
+    def test_macos_has_no_special_menu_its_items_sit_under_the_emblem(self):
+        loader = importlib.machinery.SourceFileLoader("hfmb_mac", str(HERE / "applets/menubar/hypeforge-menubar"))
+        mb = importlib.util.module_from_spec(importlib.util.spec_from_loader("hfmb_mac", loader))
+        loader.exec_module(mb)
+        menus = mb.build_menus(ENTRIES)
+        tail = [e[0] for e in menus["system"].tree[-5:] if e]
+        self.assertEqual(tail, ["Lock Screen", "Log Out…", "Restart…", "Shut Down…"])
+        ids = re.findall(r'id="(i\d+)"', menus["system"].xml())
+        self.assertEqual(len(ids), len(set(ids)), "no item id twice")
+        bar = (HERE / "styles/macos/bar/config.jsonc").read_text()
+        self.assertIn('"custom/menu-system"', bar)
+        self.assertNotIn('"custom/menu-special"', bar)
 
     def test_the_rice_keeps_its_list(self):
         self.assertEqual(self.run_key("rice"), (False, ""))

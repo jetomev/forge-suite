@@ -88,7 +88,9 @@ def safe(app_id: str) -> str:
 def icon_rules(entries: dict, icons: "Icons") -> list[str]:
     """A stylesheet rule per installed app, `.app-<id> { background-image: … }`, so a bar module
     can show any app's icon by its class without the bar reloading; `.noicon` for the rest."""
-    css = [".app { background-repeat: no-repeat; background-position: center; background-size: 24px 24px; }"]
+    # the text is see-through: the taskbar's icons carry a dot only macOS's Dock shows (D-74)
+    css = [".app { background-repeat: no-repeat; background-position: center; background-size: 24px 24px; "
+           "color: transparent; }"]
     for app_id, app in sorted(entries.items()):
         path = icons.find(app["icon"])
         if path:

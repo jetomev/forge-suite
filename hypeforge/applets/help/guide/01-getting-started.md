@@ -8,7 +8,7 @@ It runs on **Sway** and adds small pieces of its own, called **applets**.
 
 | Keys | What it does |
 |---|---|
-| **Win + Space** | The launcher of your style: open apps (or click the KognogOS emblem) — Start on Windows 11, Kickoff on KDE, the emblem menu on Mac OS 9, a search near the top on COSMIC |
+| **Win + Space** | The launcher of your style: open apps (or click the KognogOS emblem) — Start on Windows 11, Kickoff on KDE, the emblem menu on Mac OS 9, a search near the top on COSMIC, Spotlight on macOS |
 | **Win + 1 … 6** | Switch workspace — every screen together |
 | **Win + W** | The list of workspaces (or click **Workspaces** on the bar) |
 | **Win + F** | Your favorite apps (or click **Favorites** on the bar) |

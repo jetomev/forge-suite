@@ -127,7 +127,9 @@ def write_state(items: list[dict], pins: list[str]) -> bool:
             if item.get("noicon"):
                 classes.append("noicon")
             count = len(item["windows"])
-            body = {"text": " ", "class": classes,
+            # a dot as the text: hidden by every style (.app is see-through text) except macOS's
+            # Dock, which shows it under apps that are open (D-74, dock_running = "dot")
+            body = {"text": "•", "class": classes,
                     "tooltip": item["name"] + (f"  ({count} windows)" if count > 1 else "")}
         text = json.dumps(body) + "\n"
         f = STATE / f"{slot}.json"
