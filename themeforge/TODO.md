@@ -12,7 +12,7 @@
 
 ## Phase 2 · More layers (Javier: "popups, icons, fonts, and other")
 - [ ] Corners: straight · rounded · the style's own (`hypeforge-theme corners`, D-81), and the bar's separately from the windows' (idea, 10-10)
-- [ ] Wallpaper: the theme's own or a picture of yours (`hypeforge-theme wallpaper`)
+- [x] **Wallpaper page (D-6, 10-11):** source (theme's own · KognogOS Tier Aware / Arch Distro · my pictures · solid), fit (fill · fit · stretch · center · tile), folder + Make Folder (n), picture, half-block preview; hypeForge D-93 makes the pictures. ⬜ Javier's run
 - [ ] Pop-ups, icons, fonts — each its own page
 - [ ] The quick-switch tray icon (D-78)
 

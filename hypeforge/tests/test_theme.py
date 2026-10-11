@@ -301,6 +301,80 @@ class OpenAppsRepaint(Base):
         self.assertLessEqual(len(list(self.place.gtk_themes.glob("hypeForge-*"))), ht.GTK_KEEP + 2)
 
 
+class Wallpaper(Base):
+    """themeForge's Wallpaper page (Javier, 2026-10-11): the Rice's KognogOS backgrounds in every colour
+    theme, one topic per other style, the person's own pictures, five ways to lay them, every screen the same."""
+
+    def sway(self):
+        return self.read("hypeforge/theme/sway.conf")
+
+    def test_every_style_names_a_topic_the_generator_or_kognogos_draws(self):
+        gen = ht.WALLGEN.read_text()
+        for slug, st in ht.styles().items():
+            with self.subTest(style=slug):
+                topic = st.get("wallpaper", {}).get("topic")
+                self.assertTrue(topic, "each style has its topic")
+                self.assertTrue(topic == "kognogos" or f'"{topic}": m_' in gen, f"{topic} is drawn somewhere")
+        self.assertEqual(ht.styles()["rice"]["wallpaper"]["topic"], "kognogos", "the Rice: KognogOS only (Javier)")
+
+    def test_kognogos_mocha_is_the_original_exactly(self):
+        import numpy as np
+        from PIL import Image
+        orig = Path("/usr/share/wallpapers/kognog/Kognog OS Semi - Logo Catpuccin Mocha.png")
+        if not orig.exists():
+            self.skipTest("the KognogOS wallpapers aren't installed")
+        made = ht.kognogos_wallpaper("tier-aware", "kognogos-mocha", ht.themes()["kognogos-mocha"], self.place.cache)
+        d = np.abs(np.asarray(Image.open(orig).convert("RGB")).astype(int)
+                   - np.asarray(Image.open(made).convert("RGB")).astype(int)).max()
+        self.assertLessEqual(d, 4, "the lifted art laid on Mocha is the shipped picture")
+
+    def test_the_colour_variants_differ_and_their_words_read(self):
+        a = ht.wallpaper_colours("red", ht.themes()["red"])
+        b = ht.wallpaper_colours("green", ht.themes()["green"])
+        self.assertNotEqual(a[0], b[0], "Red is not Green: the theme's own colour band, not a neutral gray")
+        for slug, t in ht.themes().items():
+            bg, words = ht.wallpaper_colours(slug, t)
+            self.assertGreaterEqual(ht._contrast(bg, words), 4.5, f"{slug}: the words read")
+
+    def test_the_rice_shows_kognogos_and_every_screen_gets_the_same_line(self):
+        self.apply("rice", "dark-red", wallpaper="theme", say=lambda *_: None)
+        line = next(l for l in self.sway().splitlines() if l.startswith("output"))
+        self.assertTrue(line.startswith('output * bg "') and "kognogos-tier-aware-dark-red-" in line, line)
+        self.assertTrue(line.endswith(" fill " + ht.wallpaper_colours("dark-red", ht.themes()["dark-red"])[0]))
+
+    def test_fits_and_solid(self):
+        for fit in ht.FITS:
+            self.apply("rice", "blue", wallpaper="kognogos:arch-distro", fit=fit, say=lambda *_: None)
+            self.assertIn(f'" {fit} #', self.sway())
+        self.apply("rice", "blue", wallpaper="solid", say=lambda *_: None)
+        self.assertIn("output * bg #", self.sway())
+        self.assertIn("solid_color", self.sway())
+        with self.assertRaises(ht.LookError):
+            self.apply("rice", "blue", fit="sideways", say=lambda *_: None)
+
+    def test_a_picture_of_yours_stays_when_the_colours_change(self):
+        self.apply("rice", "kognogos-mocha", wallpaper=str(self.wall), fit="center", say=lambda *_: None)
+        self.apply("rice", "light-pink", wallpaper=None, say=lambda *_: None)     # no wallpaper said: keep it
+        self.assertIn(f'output * bg "{self.wall}" center', self.sway())
+        look = ht.read_look(self.place)["wallpaper"]
+        self.assertEqual((look["picture"], look["fit"]), (str(self.wall), "center"), "the look file says so")
+
+    def test_an_old_look_file_keeps_the_wallpaper_on_screen(self):
+        self.apply("rice", "kognogos-mocha", wallpaper=str(self.wall), say=lambda *_: None)
+        f = self.place.root / ht.LOOK
+        f.write_text('theme = "rice"\ncolors = "blue"\n')        # written before the Wallpaper page
+        want = ht.read_look(self.place)
+        self.assertIsNone(want["wallpaper"]["picture"])
+        self.apply(want["theme"], want["colors"], wallpaper=want["wallpaper"]["picture"], say=lambda *_: None)
+        self.assertIn(f'"{self.wall}"', self.sway())
+
+    def test_undo_brings_the_wallpaper_back_too(self):
+        self.apply("rice", "kognogos-mocha", wallpaper=str(self.wall), say=lambda *_: None)
+        self.apply("rice", "kognogos-mocha", wallpaper="solid", say=lambda *_: None)
+        ht.undo(self.place, reload=False, say=lambda *_: None)
+        self.assertIn(f'"{self.wall}"', self.sway())
+
+
 class Corners(Base):
     """Javier, 2026-10-10: rounded or straight corners, for every style with every theme."""
 

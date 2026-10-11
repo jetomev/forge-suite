@@ -28,6 +28,11 @@ STYLE_ORDER = ["rice", "windows-11", "mac-os-9", "kde", "cosmic", "macos", "clas
 ELEMENTS = ["bar", "launcher", "workspaces", "taskbar", "datetime", "tray", "status_icons", "popups",
             "dock", "windows", "icons", "fonts"]
 LOG = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "themeforge/themeforge.log"
+# the wallpaper (Javier, 2026-10-11: themeForge's Wallpaper page): where it comes from and how it lies
+WALL_FOLDER = "~/Pictures/Wallpapers"
+FITS = {"fill": "Fill · edges cropped", "fit": "Fit · whole, colour around", "stretch": "Stretch · whole, pulled",
+        "center": "Center · real size", "tile": "Tile · repeated"}
+PICTURE_TYPES = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff"}     # what Sway's wallpaper program reads
 SWATCH = ["surface.sunken", "surface.base", "surface.raised", "band.base", "band.strong", "pop.base", "text.primary"]
 
 
@@ -80,18 +85,24 @@ class Look:
         return self.config / "hypeforge/look.toml"
 
     def picks(self) -> dict:
-        """The look file: {"theme", "colors", "elements"}; empty when there is none yet."""
+        """The look file: {"theme", "colors", "elements", "wallpaper"}; empty when there is none yet."""
         try:
             d = tomllib.loads(self.look_file.read_text())
         except (OSError, tomllib.TOMLDecodeError):
             return {}
         el = d.get("elements", {})
+        wp = d.get("wallpaper", {})
         return {"theme": d.get("theme"), "colors": d.get("colors"),
-                "elements": {k: str(el.get(k, "theme")) for k in ELEMENTS}}
+                "elements": {k: str(el.get(k, "theme")) for k in ELEMENTS},
+                "wallpaper": {"picture": wp.get("picture"), "fit": wp.get("fit"),
+                              "folder": str(wp.get("folder", WALL_FOLDER))}}
 
-    def write_picks(self, theme: str, colors: str) -> None:
-        """The look file with the new theme and colours; each element's pick is kept."""
+    def write_picks(self, theme: str, colors: str, wallpaper: dict | None = None) -> None:
+        """The look file with the new theme and colours (and wallpaper, when given); the rest is kept."""
         el = self.picks().get("elements", {})
+        now = self.wallpaper_now()
+        wp = {"picture": now[0], "fit": now[1], "folder": self.picks().get("wallpaper", {}).get("folder", WALL_FOLDER)}
+        wp.update({k: v for k, v in (wallpaper or {}).items() if v is not None})
         q = lambda v: '"' + str(v).replace("\\", "\\\\").replace('"', '\\"') + '"'
         body = ("# hypeForge's look: what themeForge picked. themeForge writes it and runs `hypeforge-theme look`;\n"
                 "# every apply writes it too, so it always says what is on screen.\n"
@@ -99,7 +110,11 @@ class Look:
                 f"theme = {q(theme)}\ncolors = {q(colors)}\n\n"
                 "# Each element of the look: \"theme\" = the theme's own (its style.toml [elements] says what that is).\n"
                 "# Picking one element from another theme comes with themeForge's next pages.\n"
-                "[elements]\n" + "".join(f"{k} = {q(el.get(k, 'theme'))}\n" for k in ELEMENTS))
+                "[elements]\n" + "".join(f"{k} = {q(el.get(k, 'theme'))}\n" for k in ELEMENTS) +
+                "\n# The wallpaper, the same on every screen: picture = \"theme\" (the theme's own), \"kognogos:tier-aware\"\n"
+                "# or \"kognogos:arch-distro\" (KognogOS, in the theme's colours), \"solid\" (the theme's colour), or a\n"
+                "# file; fit = fill · fit · stretch · center · tile; folder = where your pictures are.\n"
+                "[wallpaper]\n" + "".join(f"{k} = {q(wp[k])}\n" for k in ("picture", "fit", "folder")))
         self.look_file.parent.mkdir(parents=True, exist_ok=True)
         tmp = self.look_file.with_name("look.toml.tftmp")
         tmp.write_text(body)
@@ -157,6 +172,65 @@ class Look:
             return None, None
         return st.get("style"), st.get("theme")
 
+    # ---- the wallpaper ----
+
+    def wallpaper_now(self) -> tuple[str, str]:
+        """(choice, fit) on screen now, from hypeforge-theme's own memory."""
+        try:
+            st = tomllib.loads((self.config / "hypeforge/theme/state.toml").read_text())
+        except (OSError, tomllib.TOMLDecodeError):
+            return "theme", "fill"
+        return str(st.get("wallpaper", "theme")), str(st.get("fit", "fill"))
+
+    def folder(self) -> Path:
+        return Path(self.picks().get("wallpaper", {}).get("folder", WALL_FOLDER)).expanduser()
+
+    @staticmethod
+    def pictures(folder: Path) -> list[Path]:
+        """The pictures in a folder (not its sub-folders), by name."""
+        try:
+            return sorted((p for p in folder.iterdir() if p.is_file() and p.suffix.lower() in PICTURE_TYPES),
+                          key=lambda p: p.name.lower())
+        except OSError:
+            return []
+
+    def kognogos_designs(self) -> list[tuple[str, str]]:
+        """[(slug, name)] of the KognogOS backgrounds hypeForge can draw in any colours."""
+        out = []
+        for f in sorted((self.home or Path("/nonexistent")).glob("assets/wallpaper/kognogos-*.json")):
+            slug = f.stem.removeprefix("kognogos-")
+            out.append((slug, " ".join(w.capitalize() for w in slug.split("-"))))
+        order = {"tier-aware": 0}
+        return sorted(out, key=lambda d: (order.get(d[0], 1), d[1]))
+
+    def topic(self, style: str) -> str:
+        """The style's own wallpaper, in plain words (its style.toml [wallpaper] about)."""
+        try:
+            d = tomllib.loads(((self.home or Path("/nonexistent")) / f"styles/{style}/style.toml").read_text())
+        except (OSError, tomllib.TOMLDecodeError):
+            return ""
+        return str(d.get("wallpaper", {}).get("about", ""))
+
+    def picture_path(self, style: str, theme: str, choice: str) -> Path | None:
+        """The picture a choice gives in a look (hypeForge makes it if needed; a few seconds the first time)."""
+        try:
+            r = self.run([str(self.tool), "picture", style, theme, choice], capture_output=True, text=True, timeout=120)
+        except (OSError, subprocess.SubprocessError):
+            return None
+        out = r.stdout.strip().splitlines()
+        return Path(out[-1]) if not r.returncode and out else None
+
+    def apply_wallpaper(self, picture: str, fit: str, folder: str | None = None) -> tuple[bool, str]:
+        """The wallpaper into the look file (the theme and colours in use kept), then hypeForge applies it."""
+        style, theme = self.current()
+        if not (style and theme):
+            return False, "apply a theme first"
+        try:
+            self.write_picks(style, theme, {"picture": picture, "fit": fit, "folder": folder})
+        except OSError as e:
+            return False, f"the look file could not be written ({e})"
+        return self._do("look")
+
     def _do(self, *args: str) -> tuple[bool, str]:
         try:
             r = self.run([str(self.tool), *args], capture_output=True, text=True, timeout=180)
@@ -169,10 +243,10 @@ class Look:
             return False, reason or (words[-1] if words else f"it stopped (code {r.returncode})")
         return True, "; ".join(words[-3:]) if words else "done"
 
-    def apply(self, style: str, theme: str) -> tuple[bool, str]:
+    def apply(self, style: str, theme: str, wallpaper: dict | None = None) -> tuple[bool, str]:
         """Write the picks into the look file, then hypeForge applies the file."""
         try:
-            self.write_picks(style, theme)
+            self.write_picks(style, theme, wallpaper)
         except OSError as e:
             return False, f"the look file could not be written ({e})"
         return self._do("look")

@@ -4,6 +4,9 @@
 
 ## 2026-10-11
 
+### D-6 · The Wallpaper page: desktop background 1.0 (Javier, 2026-10-11)
+*"Rice uses our KognogOS backgrounds only, the other themes, assign one background topic to each, and uses the color variants when they change, by default."* And for 1.0: *"All screens get the same background · Picker allows to switch a background with the user choice (from a specific folder) · Can we show in terminal a small preview of the images? … Images: centered, stretched, crop, others?"* Javier picked **Tier Aware** for the Rice. The page, the same two-column matrix: **Source** (the theme's own · KognogOS · Tier Aware · KognogOS · Arch Distro · My pictures · Solid colour) and **Fit** (Fill · Fit · Stretch · Center · Tile, Sway's own five), **Folder** (`~/Pictures/Wallpapers` by default; **Make Folder (n)** when it's missing, never made unasked) and **Picture**. Under them a **preview in half blocks** (two pixels a character), laid on a screen-shaped canvas the way Sway lays it; no extra program. The theme's own follows the Theme Picker's picks, so a combination is previewed before it's applied. The choice is written in the look file's `[wallpaper]` (picture, fit, folder) and applied by `hypeforge-theme look` (hypeForge D-93). A picture of yours stays through theme and colour changes.
+
 ### D-5 · The page: a matrix of two columns going down, compact, small buttons (Javier)
 *"Page should be a matrix of 2xnumber of options going down, all drop down options to choose from. Watch spacing (real state) to make it compact with enough air between things to don't choke. Button sizes, please, not the big ones, they look awful."* The options sit two to a row (**Theme · Colors** for now), each a label and a drop-down, with the theme's line and the colour strip under them; **What this theme brings** lists the theme's elements in the same two-column way (read only until their pages come); buttons are one line, no frame.
 

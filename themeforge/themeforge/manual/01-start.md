@@ -21,6 +21,6 @@ Until you apply, nothing changes: the bar at the bottom says what is picked but 
 
 ## Coming later
 
-More pages: the pop-ups, icons, fonts, corners, and more.
+The **Wallpaper** page is next to this one. More pages later: the pop-ups, icons, fonts, corners, and more.
 
-**1 – 2** or **Ctrl** + the underlined letter move between pages; **?** shows every key; **Q** quits.
+**1 – 3** or **Ctrl** + the underlined letter move between pages; **?** shows every key; **Q** quits.

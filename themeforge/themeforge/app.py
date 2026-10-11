@@ -15,12 +15,13 @@ from textual import work
 from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.containers import Grid, Horizontal, Vertical, VerticalScroll
-from textual.widgets import Button, Select, Static
+from textual.widgets import Button, Input, Select, Static
 
 from forgekit import FORGE_CSS, GPL3_NOTICE, MENU_HINT, ForgeApp, a_file, load_pages, start_check
 
 from . import __version__
-from .look import Look
+from .look import FITS, Look
+from .preview import preview
 
 MANUAL_DIR = os.path.join(os.path.dirname(__file__), "manual")
 
@@ -40,6 +41,14 @@ TF_CSS = FORGE_CSS + """
 .tf-el { color: $forge-muted; }
 #tf-foot { height: 1; margin: 1 2 0 2; }
 #tf-now { width: 1fr; height: 1; }
+/* the Wallpaper page: the same two-column matrix, the preview under it */
+#tf-wp-options { grid-size: 2; grid-gutter: 0 4; height: auto; margin: 1 2 0 2; }
+.tf-row Input { width: 1fr; height: 1; border: none; padding: 0 1; background: $forge-surface; }
+.tf-row Input:focus { border: none; background: $forge-focus-bg; }
+#tf-wp-preview { width: auto; height: auto; margin: 1 2 0 4; border: round $forge-muted; }
+#tf-wp-caption { height: 1; margin: 0 2 0 4; color: $forge-muted; }
+#tf-wp-foot { height: 1; margin: 1 2 0 2; }
+#tf-wp-now { width: 1fr; height: 1; }
 /* small buttons: one line, no frame (Javier: "not the big ones, they look awful") */
 Button.tf-small { height: 1; min-width: 0; width: auto; border: none; padding: 0 2; margin: 0 0 0 2; }
 """
@@ -121,6 +130,8 @@ class PickerView(VerticalScroll):
         if e.select.id in ("tf-style", "tf-colour"):
             e.stop()
             self.refresh_words()
+            for view in self.app.query(WallpaperView):      # its "theme's own" and preview follow these picks
+                view.look_changed()
             self.app.refresh_state()
 
     def on_button_pressed(self, e: Button.Pressed) -> None:
@@ -134,6 +145,210 @@ class PickerView(VerticalScroll):
         self.call_after_refresh(self.refresh_words)
 
 
+def plain(choice: str) -> str:
+    """A wallpaper choice in plain words."""
+    if choice == "theme":
+        return "the theme's own"
+    if choice == "solid":
+        return "a solid colour"
+    if choice.startswith("kognogos:"):
+        return "KognogOS · " + choice.split(":", 1)[1].replace("-", " ").title()
+    return Path(choice).name
+
+
+class WallpaperView(VerticalScroll):
+    """Desktop background 1.0 (Javier, 2026-10-11): every screen the same picture; the theme's own
+    (the Rice: our KognogOS background; each other theme its topic, in the colours picked), a KognogOS
+    background, a solid colour, or one of your pictures from a folder; five ways to lay it; a small
+    preview drawn in the terminal."""
+
+    FORGE_HINTS = [("Tab", "next"), ("Enter", "open the list"), ("F10", "apply"), ("u", "undo"), MENU_HINT]
+
+    def __init__(self, look: Look, **kw) -> None:
+        super().__init__(**kw)
+        self.look = look
+
+    # ---- what can be picked ----
+
+    def sources(self, style: str | None) -> list[tuple[str, str]]:
+        topic = self.look.topic(style) if style else ""
+        out = [("The theme's own" + (f" — {topic}" if topic else ""), "theme")]
+        out += [(f"KognogOS · {name}", f"kognogos:{slug}") for slug, name in self.look.kognogos_designs()]
+        out += [("My pictures", "mine"), ("Solid colour — the theme's own", "solid")]
+        return out
+
+    def folder_pictures(self, folder: Path, also: str | None = None) -> list[tuple[str, str]]:
+        pics = [(p.name, str(p)) for p in self.look.pictures(folder)]
+        if also and Path(also).is_file() and also not in {v for _, v in pics}:
+            pics.insert(0, (Path(also).name + "  · in use", also))
+        return pics
+
+    def compose(self) -> ComposeResult:
+        choice, fit = self.look.wallpaper_now()
+        source = choice if choice in ("theme", "solid") or choice.startswith("kognogos:") else "mine"
+        style, _ = self.look.current()
+        srcs = self.sources(style)
+        folder = str(self.look.picks().get("wallpaper", {}).get("folder") or "~/Pictures/Wallpapers")
+        pics = self.folder_pictures(Path(folder).expanduser(), choice if source == "mine" else None)
+        with Grid(id="tf-wp-options"):
+            with Vertical(classes="tf-cell"):
+                with Horizontal(classes="tf-row"):
+                    yield Static("Source", classes="tf-name")
+                    yield Select(srcs, value=source if source in {v for _, v in srcs} else "theme",
+                                 allow_blank=False, id="tf-wp-source")
+                yield Static("", id="tf-wp-source-about", classes="tf-under")
+            with Vertical(classes="tf-cell"):
+                with Horizontal(classes="tf-row"):
+                    yield Static("Fit", classes="tf-name")
+                    yield Select([(words, key) for key, words in FITS.items()],
+                                 value=fit if fit in FITS else "fill", allow_blank=False, id="tf-wp-fit")
+                yield Static("Every screen shows the same picture.", classes="tf-under")
+            with Vertical(classes="tf-cell"):
+                with Horizontal(classes="tf-row"):
+                    yield Static("Folder", classes="tf-name")
+                    yield Input(folder, id="tf-wp-folder")
+                yield Static("", id="tf-wp-folder-about", classes="tf-under")
+            with Vertical(classes="tf-cell"):
+                with Horizontal(classes="tf-row"):
+                    yield Static("Picture", classes="tf-name")
+                    yield Select(pics, value=choice if source == "mine" and choice in {v for _, v in pics} else Select.NULL,
+                                 allow_blank=True, prompt="— pick a picture —", id="tf-wp-picture")
+                yield Static("", id="tf-wp-picture-about", classes="tf-under")
+        yield Static("", id="tf-wp-preview")
+        yield Static("", id="tf-wp-caption")
+        with Horizontal(id="tf-wp-foot"):
+            yield Static("", id="tf-wp-now")
+            yield Button("Make Folder (n)", id="tf-wp-mkdir", classes="tf-small")
+            yield Button("Undo Last Apply (u)", id="tf-wp-undo", classes="tf-small")
+
+    def on_mount(self) -> None:
+        self.refresh_words()
+
+    # ---- what is picked ----
+
+    def folder(self) -> Path:
+        return Path(self.query_one("#tf-wp-folder", Input).value.strip() or "~/Pictures/Wallpapers").expanduser()
+
+    def chosen(self) -> tuple[str | None, str]:
+        """(the wallpaper choice, the fit): a picture's path for My pictures (None until one is picked)."""
+        source = str(self.query_one("#tf-wp-source", Select).value)
+        fit = str(self.query_one("#tf-wp-fit", Select).value)
+        if source == "mine":
+            pic = self.query_one("#tf-wp-picture", Select).value
+            return (None if pic is Select.NULL else str(pic)), fit
+        return source, fit
+
+    def refresh_words(self) -> None:
+        source = str(self.query_one("#tf-wp-source", Select).value)
+        mine = source == "mine"
+        folder = self.folder()
+        exists = folder.is_dir()
+        n = len(self.look.pictures(folder)) if exists else 0
+        self.query_one("#tf-wp-picture", Select).disabled = not mine
+        self.query_one("#tf-wp-folder", Input).disabled = not mine
+        self.query_one("#tf-wp-mkdir", Button).display = mine and not exists
+        about = {"theme": "Changes with the theme and its colours.",
+                 "solid": "No picture: the theme's own colour.",
+                 "mine": "Stays when the theme or colours change."}
+        self.query_one("#tf-wp-source-about", Static).update(
+            about.get(source, "KognogOS, in the colours picked."))
+        self.query_one("#tf-wp-folder-about", Static).update(
+            ("" if not mine else f"{n} picture{'s' if n != 1 else ''} here (PNG, JPEG, WebP…)" if exists
+             else "This folder doesn't exist yet: Make Folder (n), then put pictures in it."))
+        self.query_one("#tf-wp-picture-about", Static).update("" if mine else "For My pictures.")
+        choice, fit = self.look.wallpaper_now()
+        self.query_one("#tf-wp-now", Static).update(f"[$forge-accent b]In use now: [/]{plain(choice)}  ·  {fit}")
+        self.draw()
+
+    @work(thread=True, exclusive=True, group="tf-wp-preview")
+    def draw(self) -> None:
+        choice, fit = self.chosen()
+        style, theme = self.app.picked() if hasattr(self.app, "picked") else self.look.current()
+        style, theme = style or self.look.current()[0], theme or self.look.current()[1]
+        self.app.call_from_thread(self.query_one("#tf-wp-caption", Static).update, "drawing the preview…")
+        if not (choice and style and theme):
+            self.app.call_from_thread(self._show, "", "Pick a picture to see it here.")
+            return
+        solid = self.look.picture_path(style, theme, "solid")
+        try:
+            from PIL import Image
+            with Image.open(solid) as im:
+                bg = im.convert("RGB").getpixel((0, 0))
+        except Exception:
+            bg = (30, 30, 46)
+        path = Path(choice) if choice not in ("theme", "solid") and not choice.startswith("kognogos:") \
+            else self.look.picture_path(style, theme, choice)
+        if path is None or not Path(path).is_file():
+            self.app.call_from_thread(self._show, "", "The picture couldn't be made or read.")
+            return
+        try:
+            text = preview(path, "fill" if choice == "solid" else fit, bg)
+        except Exception as e:
+            self.app.call_from_thread(self._show, "", f"The picture couldn't be read ({e.__class__.__name__}).")
+            return
+        colours = self.look.colours()
+        theme_name = next((c.name for c in colours if c.slug == theme), theme)
+        self.app.call_from_thread(self._show, text, plain(choice) + ("" if choice not in ("theme", "solid") and
+                                                                    not choice.startswith("kognogos:") else f", in {theme_name}"))
+
+    def _show(self, text, caption: str) -> None:
+        self.query_one("#tf-wp-preview", Static).update(text)
+        self.query_one("#tf-wp-caption", Static).update(caption)
+
+    # ---- the person's moves ----
+
+    def on_select_changed(self, e: Select.Changed) -> None:
+        if e.select.id and e.select.id.startswith("tf-wp-"):
+            e.stop()
+            self.refresh_words()
+            self.app.refresh_state()
+
+    def on_input_submitted(self, e: Input.Submitted) -> None:
+        if e.input.id == "tf-wp-folder":
+            e.stop()
+            self.new_folder()
+
+    def new_folder(self) -> None:
+        pics = self.folder_pictures(self.folder())
+        sel = self.query_one("#tf-wp-picture", Select)
+        sel.set_options(pics)
+        self.refresh_words()
+        self.app.refresh_state()
+
+    def make_folder(self) -> None:
+        folder = self.folder()
+        if str(self.query_one("#tf-wp-source", Select).value) != "mine" or folder.is_dir():
+            return
+        try:
+            folder.mkdir(parents=True)
+        except OSError as e:
+            self.app.notify(f"The folder couldn't be made ({e.strerror}).", severity="error")
+            return
+        self.app.notify(f"Made {folder}. Put your pictures in it; they show up here.", timeout=6)
+        self.new_folder()
+
+    def on_button_pressed(self, e: Button.Pressed) -> None:
+        if e.button.id == "tf-wp-undo":
+            e.stop()
+            self.app.action_undo()
+        elif e.button.id == "tf-wp-mkdir":
+            e.stop()
+            self.make_folder()
+
+    def look_changed(self) -> None:
+        """The Theme page picked another theme or colours: the theme's own wallpaper is another one."""
+        style, _ = self.app.picked() if hasattr(self.app, "picked") else self.look.current()
+        sel = self.query_one("#tf-wp-source", Select)
+        keep = sel.value
+        sel.set_options(self.sources(style or self.look.current()[0]))
+        sel.value = keep
+        self.refresh_words()
+
+    def rebuild(self) -> None:
+        self.refresh(recompose=True)
+        self.call_after_refresh(self.refresh_words)
+
+
 class ThemeForgeApp(ForgeApp):
     APP_NAME = f"themeForge {__version__} · the look of your desktop"
     SHOW_HINT_BAR = True
@@ -142,16 +357,18 @@ class ThemeForgeApp(ForgeApp):
     LICENSE_NOTICE = GPL3_NOTICE
     MENU = [
         {"id": "picker", "title": "Theme Picker", "kind": "section"},
+        {"id": "wallpaper", "title": "Wallpaper", "kind": "section"},
         {"id": "help", "title": "Help", "kind": "menu", "items": [
             ("Manual", "m", "manual"), ("Keys", "k", "shortcuts"), ("License", "l", "license"),
             ("About", "a", "about")]},
         {"id": "quit", "title": "Quit", "kind": "action", "action": "quit"},
     ]
     SHORTCUTS = [
-        ("1-2, Ctrl+letter", "go to a menu entry: 1 Theme Picker · 2 Help"),
+        ("1-3, Ctrl+letter", "go to a menu entry: 1 Theme Picker · 2 Wallpaper · 3 Help"),
         ("Tab / Shift+Tab", "next / previous drop-down or button"),
         ("Enter", "open a drop-down · pick in it"),
-        ("F10", "apply the theme and colours picked"),
+        ("F10", "apply what is picked (theme, colours, wallpaper)"),
+        ("n", "Wallpaper: make the pictures folder when it doesn't exist yet"),
         ("u", "undo the last apply (the look from before it comes back)"),
         ("Esc", "close a list or a window"),
         ("M", "the manual"),
@@ -162,6 +379,7 @@ class ThemeForgeApp(ForgeApp):
     BINDINGS = [
         Binding("f10", "apply", show=False, priority=True),
         Binding("u", "undo", show=False),
+        Binding("n", "make_folder", show=False),
         Binding("question_mark", "act('shortcuts')", show=False),
         Binding("m", "act('manual')", show=False),
         Binding("q", "act('quit')", show=False),
@@ -184,6 +402,7 @@ class ThemeForgeApp(ForgeApp):
 
     def compose_sections(self) -> ComposeResult:
         yield PickerView(self.look, id="sec-picker")
+        yield WallpaperView(self.look, id="sec-wallpaper")
 
     def on_mount(self) -> None:
         super().on_mount()
@@ -192,6 +411,11 @@ class ThemeForgeApp(ForgeApp):
     def on_section_shown(self, section_id: str) -> None:
         if section_id == "picker":
             self.call_after_refresh(self.query_one("#tf-style").focus)
+        elif section_id == "wallpaper":
+            self.call_after_refresh(self.query_one("#tf-wp-source").focus)
+
+    def action_make_folder(self) -> None:
+        self.query_one(WallpaperView).make_folder()
 
     def on_action(self, action_id: str) -> None:
         if action_id == "manual":
@@ -206,9 +430,19 @@ class ThemeForgeApp(ForgeApp):
     def picked(self) -> tuple[str | None, str | None]:
         return self.query_one(PickerView).chosen()
 
-    def pending(self) -> bool:
+    def wallpaper_picked(self) -> tuple[str | None, str]:
+        return self.query_one(WallpaperView).chosen()
+
+    def theme_pending(self) -> bool:
         style, colour = self.picked()
         return bool(style and colour) and (style, colour) != self.look.current()
+
+    def wallpaper_pending(self) -> bool:
+        choice, fit = self.wallpaper_picked()
+        return bool(choice) and (choice, fit) != self.look.wallpaper_now()
+
+    def pending(self) -> bool:
+        return self.theme_pending() or self.wallpaper_pending()
 
     def refresh_state(self) -> None:
         view = self.query_one(PickerView)
@@ -217,9 +451,13 @@ class ThemeForgeApp(ForgeApp):
         self.set_title_status(f"{os.environ.get('USER', '')} · " + ("applying…" if self.busy else
                               "a new look picked" if self.pending() else "the look in use"))
         if self.pending() and not self.busy:
-            names = (view.themes_by_slug[style].name if style in view.themes_by_slug else style,
-                     view.colours_by_slug[colour].name if colour in view.colours_by_slug else colour)
-            self.changes_bar.show(f"Picked, not applied yet: {names[0]} · {names[1]}", "changed",
+            parts = []
+            if self.theme_pending():
+                parts.append(f"{view.themes_by_slug[style].name if style in view.themes_by_slug else style} · "
+                             f"{view.colours_by_slug[colour].name if colour in view.colours_by_slug else colour}")
+            if self.wallpaper_pending():
+                parts.append("a new wallpaper")
+            self.changes_bar.show(f"Picked, not applied yet: {', '.join(parts)}", "changed",
                                   [("Apply (F10)", "tf-bar-apply", True), ("Put Back", "tf-bar-back", False)])
         else:
             self.changes_bar.hide()
@@ -229,6 +467,7 @@ class ThemeForgeApp(ForgeApp):
             self.action_apply()
         elif e.button.id == "tf-bar-back":
             self.query_one(PickerView).rebuild()
+            self.query_one(WallpaperView).rebuild()
             self.call_after_refresh(self.refresh_state)
 
     # ---- apply and undo: hypeForge's own command, in the background ----
@@ -240,12 +479,18 @@ class ThemeForgeApp(ForgeApp):
         if not (style and colour):
             self.notify("Pick a theme and its colours first.", severity="warning")
             return
-        if (style, colour) == self.look.current():
-            self.notify("That's the look in use already.")
+        if not self.pending():
+            choice, _ = self.wallpaper_picked()
+            self.notify("Pick a picture first." if not choice else "That's the look in use already.")
             return
         view = self.query_one(PickerView)
-        self._run(("apply", style, colour),
-                  f"{view.themes_by_slug[style].name} · {view.colours_by_slug[colour].name}")
+        wp = None
+        if self.wallpaper_pending():
+            choice, fit = self.wallpaper_picked()
+            wp = {"picture": choice, "fit": fit, "folder": self.query_one("#tf-wp-folder", Input).value.strip() or None}
+        words = f"{view.themes_by_slug[style].name} · {view.colours_by_slug[colour].name}" if self.theme_pending() \
+            else "the new wallpaper"
+        self._run(("apply", style, colour, wp), words)
 
     def action_undo(self) -> None:
         if not self.busy:
@@ -266,6 +511,7 @@ class ThemeForgeApp(ForgeApp):
         else:
             self.notify(f"{message}. Nothing changed.", title="Not applied", severity="error", timeout=10)
         self.query_one(PickerView).rebuild()
+        self.query_one(WallpaperView).rebuild()
         self.call_after_refresh(self.refresh_state)
 
 

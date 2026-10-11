@@ -83,3 +83,10 @@ ui      = "Noto Sans"            # bold in the menu bar and title bars; a free C
 ui_size = 10
 ui_bold = true
 mono    = "JetBrainsMono Nerd Font"
+
+# The theme's own wallpaper (Javier, 2026-10-11: "Rice uses our KognogOS backgrounds only, the other
+# themes, assign one background topic to each, and uses the color variants"): drawn in the colour
+# theme's colours, so it changes with them. hypeforge-theme makes it; themeForge's Wallpaper page shows it.
+[wallpaper]
+topic = "skyclouds"
+about = "sky and clouds"

@@ -990,12 +990,120 @@ def m_skyclouds(p: Pal, rng):
     return vignette(img, 0.30) if p.dark else vignette(img, 0.06, p.c2)
 
 
+
+# ── motif: ribbons (Windows 11's style, Javier 2026-10-11: one topic per style) ──────────────
+def m_ribbons(p: Pal, rng):
+    """Soft ribbons of colour flowing across the screen, lit across their width."""
+    if p.dark:
+        img = vgrad([(0, p.c0), (0.6, mix(p.c0, p.c1, 0.6)), (1, p.c1)])
+    else:
+        img = vgrad([(0, p.c0), (0.55, mix(p.c0, p.c1, 0.5)), (1, p.c1)])
+    xs = XX[0] / W
+    glow = np.zeros((H, W), np.float32)
+    n = 5
+    for k in range(n):
+        t = k / (n - 1)
+        phase = rng.uniform(0, 2 * math.pi)
+        centre = H * (0.42 + 0.30 * t) + H * 0.16 * np.sin(2 * math.pi * (xs * rng.uniform(0.6, 1.1)) + phase) \
+            + H * 0.08 * (fbm1(W, W * 0.5, 3, rng) - 0.5)
+        thick = H * (0.05 + 0.07 * rng.random()) * (0.65 + 0.35 * np.sin(2 * math.pi * xs * 0.8 + phase * 1.7))
+        v = (YY - centre[None, :]) / thick[None, :]
+        a = smoothstep(1.0, 0.75, np.abs(v)) * (0.80 - 0.10 * t)
+        across = np.clip(0.5 - 0.5 * v, 0, 1)                    # lit from above
+        if p.dark:
+            lo, hi = mix(p.c1, p.accent, 0.55 + 0.25 * t), mix(p.accent, p.hot, 0.55)
+        else:
+            lo, hi = mix(p.c2, p.accent, 0.45 + 0.25 * t), mix(p.accent, p.c0, 0.55)
+        col = lo[None, None, :] + (hi - lo)[None, None, :] * (across ** 1.6)[..., None]
+        img = over(img, a, col)
+        glow += a * (0.35 if p.dark else 0.2)
+    img = screen(img, blur(glow, 60)[..., None] * (p.accent * (0.55 if p.dark else 0.35)))
+    return vignette(img, 0.35) if p.dark else vignette(img, 0.06, p.c2)
+
+
+# ── motif: shards (KDE Plasma's style) ──────────────────────────────────────
+def m_shards(p: Pal, rng):
+    """Low-poly facets, a band of the theme's colour running through them diagonally."""
+    S2 = 2
+    cols, rows = 18, 10
+    cw, ch = W / cols, H / rows
+    pts = np.zeros((rows + 1, cols + 1, 2), np.float32)
+    for r in range(rows + 1):
+        for c in range(cols + 1):
+            jx = 0 if c in (0, cols) else rng.uniform(-0.38, 0.38) * cw
+            jy = 0 if r in (0, rows) else rng.uniform(-0.38, 0.38) * ch
+            pts[r, c] = (c * cw + jx, r * ch + jy)
+    im = Image.new("RGB", (W * S2, H * S2))
+    dr = ImageDraw.Draw(im)
+    ang = math.radians(-24)
+    nx, ny = math.sin(ang), math.cos(ang)
+    for r in range(rows):
+        for c in range(cols):
+            a, b, cc, d = pts[r, c], pts[r, c + 1], pts[r + 1, c + 1], pts[r + 1, c]
+            tris = [(a, b, cc), (a, cc, d)] if rng.random() < 0.5 else [(a, b, d), (b, cc, d)]
+            for tri in tris:
+                mx, my = sum(q[0] for q in tri) / 3, sum(q[1] for q in tri) / 3
+                dist = ((mx - W * 0.5) * nx + (my - H * 0.55) * ny) / H
+                band = math.exp(-(dist / 0.22) ** 2)
+                g = my / H
+                base = mix(p.c0, p.c1, g * 0.9) if p.dark else mix(p.c0, p.c1, g * 0.8)
+                col = mix(base, p.accent if p.dark else mix(p.accent, p.c1, 0.35), band * 0.85)
+                col = col * (0.90 + 0.20 * rng.random()) if p.dark else mix(col, p.c0, 0.12 * rng.random())
+                col = np.clip(col, 0, 1)
+                dr.polygon([(q[0] * S2, q[1] * S2) for q in tri], fill=tuple(int(v * 255) for v in col))
+    img = np.asarray(im.resize((W, H), Image.BOX), np.float32) / 255.0
+    return vignette(img, 0.30) if p.dark else vignette(img, 0.05, p.c2)
+
+
+# ── motif: space (COSMIC's style) ───────────────────────────────────────────
+def m_space(p: Pal, rng):
+    """A planet over a nebula and stars; daylight version for light themes."""
+    if p.dark:
+        img = vgrad([(0, p.c0 * 0.7), (1, mix(p.c0, p.c1, 0.7))])
+        neb = fbm2(H, W, 520, 5, rng)
+        neb = smoothstep(0.45, 0.85, neb)
+        img = screen(img, (neb * 0.55)[..., None] * mix(p.accent, p.c2, 0.4))
+        img = screen(img, stars(rng, 2200, H)[..., None] * mix(p.c4, p.hot, 0.5))
+    else:
+        img = vgrad([(0, p.c0), (1, mix(p.c0, p.c1, 0.8))])
+        neb = smoothstep(0.5, 0.9, fbm2(H, W, 520, 5, rng))
+        img = over(img, neb * 0.25, p.c2)
+        dots = stars(rng, 900, H)
+        img = over(img, np.clip(dots, 0, 1) * 0.5, p.c2)
+    # the planet, lit from the upper left, with a thin ring
+    px, py, pr = W * 0.70, H * 0.62, H * 0.30
+    d = np.sqrt((XX - px) ** 2 + (YY - py) ** 2)
+    disc = np.clip(pr - d + 0.5, 0, 1)
+    lx, ly = (XX - px) / pr, (YY - py) / pr
+    lightness = np.clip(0.55 - 0.65 * lx - 0.65 * ly, 0, 1)
+    bands = 0.08 * np.sin(ly * 9 + 2 * (fbm2(H, W, 200, 3, rng) - 0.5))
+    surf_dark, surf_lit = (mix(p.c1, p.accent, 0.35), mix(p.accent, p.hot, 0.45)) if p.dark else \
+        (mix(p.accent, p.c2, 0.5), mix(p.accent, p.c0, 0.55))
+    surf = surf_dark[None, None, :] + (surf_lit - surf_dark)[None, None, :] * np.clip(lightness + bands, 0, 1)[..., None]
+    halo = blur(disc, 40) * (0.45 if p.dark else 0.25)
+    img = screen(img, halo[..., None] * p.accent)
+    img = over(img, disc, surf)
+    ring_v = ((XX - px) / (pr * 1.75)) ** 2 + ((YY - py) / (pr * 0.32)) ** 2
+    ring = smoothstep(0.86, 0.92, ring_v) * smoothstep(1.02, 0.96, ring_v)
+    in_front = (YY > py - pr * 0.05) | (d > pr)
+    img = over(img, ring * in_front * 0.75, mix(p.c4, p.accent, 0.4) if p.dark else mix(p.accent, p.c2, 0.3))
+    # a small moon
+    mx, my, mr = W * 0.22, H * 0.28, H * 0.045
+    md = np.sqrt((XX - mx) ** 2 + (YY - my) ** 2)
+    moon = np.clip(mr - md + 0.5, 0, 1)
+    img = over(img, moon, mix(p.c2, p.c4, 0.6) if p.dark else mix(p.accent, p.c2, 0.6))
+    return vignette(img, 0.40) if p.dark else vignette(img, 0.06, p.c2)
+
+
 MOTIFS = {
     "synthwave": m_synthwave,
     "skyline": m_skyline,
     "mountains": m_mountains,
     "circuit": m_circuit,
     "skyclouds": m_skyclouds,
+    "ribbons": m_ribbons,
+    "shards": m_shards,
+    "space": m_space,
 }
 
 

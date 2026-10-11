@@ -40,7 +40,8 @@ def fake_home(root: Path) -> Path:
     for slug, name in (("classic", "hypeForge Classic"), ("rice", "Linux rice"), ("zz-new", "A New One")):
         (home / f"styles/{slug}").mkdir(parents=True)
         (home / f"styles/{slug}/style.toml").write_text(
-            f'[meta]\nname = "{name}"\nslug = "{slug}"\nsummary = "about {slug}"\n')
+            f'[meta]\nname = "{name}"\nslug = "{slug}"\nsummary = "about {slug}"\n'
+            f'[wallpaper]\ntopic = "t-{slug}"\nabout = "{slug} picture"\n')
     (home / "themes/colours").mkdir(parents=True)
     (home / "themes/colours/palettes.toml").write_text(PALETTES)
     return home

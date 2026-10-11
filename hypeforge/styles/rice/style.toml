@@ -87,3 +87,10 @@ animations         = false       # SwayFX #565/#569
 ui      = "JetBrainsMono Nerd Font"  # rices lean on one mono font everywhere, icons included
 ui_size = 10.5
 mono    = "JetBrainsMono Nerd Font"
+
+# The theme's own wallpaper (Javier, 2026-10-11: "Rice uses our KognogOS backgrounds only, the other
+# themes, assign one background topic to each, and uses the color variants"): drawn in the colour
+# theme's colours, so it changes with them. hypeforge-theme makes it; themeForge's Wallpaper page shows it.
+[wallpaper]
+topic = "kognogos"
+about = "KognogOS · Tier Aware"

@@ -198,7 +198,19 @@ def wallpaper_and_undo(conf: Path):
     r = ht.apply("rice", "dark-green", place, wallpaper="theme", reload=False)
     took = time.time() - t0
     pic = Path(r["picture"])
-    check(pic.is_file() and pic.stat().st_size > 100_000, f"Dark Green's wallpaper made ({took:.0f} s)")
+    from PIL import Image
+    def size_of(p):
+        try:
+            with Image.open(p) as im:
+                return im.size
+        except OSError:
+            return (0, 0)
+    # the Rice's own is the KognogOS background (D-93): flat colour, so a small file; measure the picture
+    check(pic.is_file() and size_of(pic)[0] >= 2560 and "kognogos-tier-aware-dark-green" in pic.name,
+          f"Dark Green's wallpaper made: the KognogOS background, {size_of(pic)[0]}×{size_of(pic)[1]} ({took:.0f} s)")
+    drawn = Path(ht.picture_for("theme", "windows-11", "dark-green", place.cache))
+    check(drawn.is_file() and size_of(drawn)[0] >= 2560 and drawn.stat().st_size > 100_000 and "ribbons" in drawn.name,
+          "Windows 11's own in Dark Green: the ribbons, drawn")
     lock = conf / "gtklock/background.jpg"
     check(lock.is_file(), "the lock screen got its blurred copy")
     check(f'output * bg "{pic}" fill' in (conf / "hypeforge/theme/sway.conf").read_text(), "Sway is told to show it")
