@@ -17,4 +17,5 @@
 - [ ] The quick-switch tray icon (D-78)
 
 ## Phase 3 · Release
-- [ ] Release notes, GitHub Release `themeforge-v1.0.0`; the AUR only when the full themeForge is done and after Javier's local test (Javier, 2026-10-11)
+- [x] **What the package needs** written down: `docs/PACKAGING.md`, kept honest by `tests/test_needs.py` (seen failing with Pillow left out)
+- [ ] Release notes, GitHub Release `themeforge-v1.0.0` (`depends=()` from docs/PACKAGING.md); the AUR only when the full themeForge is done and after Javier's local test (Javier, 2026-10-11)

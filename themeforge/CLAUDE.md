@@ -11,3 +11,4 @@
 - **Where it runs, said everywhere:** any Linux distribution · **hypeForge on Sway** (it switches hypeForge's look) · any terminal, a plain text console too.
 - **Tests on throwaway folders and a stand-in look;** a real apply is tried on the desktop only through the same `Look` code, and put back.
 - Packages through nog; decisions in `docs/DECISIONS.md`; TODO.md after every step; plain words. Versioning: tags `themeforge-vX.Y.Z`, AUR `themeforge` after Javier's local test — the AUR waits until the full themeForge is done (Javier, 2026-10-11).
+- **Every package themeForge needs is in `docs/PACKAGING.md`** (Javier, 2026-10-11: "did you take notes of all of those dependencies … for the package?"). `tests/test_needs.py` fails when the code imports something not listed; the AUR's `depends=()` is copied from that table at release.
