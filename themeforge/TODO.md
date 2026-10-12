@@ -2,6 +2,9 @@
 
 **Target: the Look page of hypeForge Settings, KognogOS v1.0 (April 2027); started 2026-10-11 (D-1).** Section of the Forge Suite (D-60). Issue #84. Updated after every step.
 
+## 2026-10-11 · What it needs, measured
+- [x] **What it needs** checked again by the suite audit (2026-10-11, #91): the list from this morning holds
+
 ## Phase 1 · Theme Picker (0.1.0)
 - [x] Reading hypeForge's look: the seven styles (with a `summary` each, in hypeForge's `style.toml`), the 25 colour themes with a colour strip, the look in use (`state.toml`); apply and undo through `hypeforge-theme`
 - [x] One page: Theme and Color drop-downs, what's in use now, the changes bar (Apply (F10) · Put Back), Undo Last Apply (u); the manual (1 page); `--hypeforge`

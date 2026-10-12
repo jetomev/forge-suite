@@ -2,6 +2,10 @@
 
 **Target: the Night light page of hypeForge Settings, KognogOS v1.0 (April 2027); started 2026-10-09 (D-1).** Section of the Forge Suite (D-60). Issue #44. Updated after every step.
 
+## 2026-10-11 · What it needs, measured
+- [x] **What it needs, measured** (2026-10-11, #91): `docs/PACKAGING.md` + `tests/test_needs.py`. The AUR 1.0.0 build **failed off Miami time** (F-1 #93, a test) → fixed; 1.1.0's new tray test read hypeForge's files → its own fixtures (`06ab889`); recipe + python-rich, glib2
+- [ ] **1.1.0** (D-7 #82, F-1 #93) prepared — rebuild in the clean system, then Javier signs, tests locally, AUR
+
 ## Phase 0 · Design
 - [x] Research: wlsunset 0.4.0 — options only at start (-t/-T warmth, -l/-L place, -S/-s fixed times, -d fade), SIGUSR1 cycles forced day → forced warm → automatic; no status, no settings file
 - [x] The sun worked out on the computer (`nightforge/sun.py`, NOAA formulas): Miami today 07:15 / 19:00, checked against June, London, Svalbard

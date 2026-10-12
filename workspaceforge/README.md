@@ -39,6 +39,8 @@ It does **one** job on purpose: where windows sit on a screen and which ones flo
 
 ## Install and run
 
+**Everything it needs** to build, run and test, with why, is in [docs/PACKAGING.md](docs/PACKAGING.md), measured from the code (the Forge Suite's [dependency audit](https://github.com/jetomev/forge-suite/issues/91), 2026-10-11).
+
 ```
 yay -S workspaceforge
 ```

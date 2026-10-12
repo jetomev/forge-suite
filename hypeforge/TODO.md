@@ -9,6 +9,10 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ---
 
+## Phase 0 · What it needs (dependency audit, 2026-10-11)
+- [x] **What the desktop needs, measured** (2026-10-11, #91): `docs/PACKAGING.md` (Python applets + every program Sway's config, the bar and the desktop entries start) + `tests/test_needs.py`. Found: F-71 #94 brightnessctl bound but not installed · F-72 #95 pam_kwallet_init started but missing · the wallpaper generator lives in docs/ (move under applets/theme/) · KognogOS's profiles list none of these (KognogOS TODO)
+- [ ] Move `docs/research/look-2026-10/wallpapers/generate.py` under `applets/theme/` (the look command runs it)
+
 ## Phase 10 · The restart: choose the base — **in progress**
 *D-44 (Javier, 4 Oct 2026): "I want to start again" — barebones tiling, terminal apps first, our own look, one step at a time. The first attempt was removed on 2026-10-05 (it lives in git history before `864885d`).*
 - [x] D-44 recorded (the restart)
