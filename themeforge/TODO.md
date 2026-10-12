@@ -16,6 +16,7 @@
 ## Phase 2 · More layers (Javier: "popups, icons, fonts, and other")
 - [ ] Corners: straight · rounded · the style's own (`hypeforge-theme corners`, D-81), and the bar's separately from the windows' (idea, 10-10)
 - [x] **Wallpaper page (D-6, 10-11):** source (theme's own · KognogOS Tier Aware / Arch Distro · my pictures · solid), fit (fill · fit · stretch · center · tile), folder + Make Folder (n), picture, half-block preview; hypeForge D-93 makes the pictures. **D-7: the preview at full quality** over the terminal (overlay.py, our own, Javier's pick; overlay-bench 13/13). ⬜ Javier's run
+- [ ] **NEXT (Javier, 2026-10-11 night) — the Wallpaper page redesigned (D-8):** Source = the folder in use + **Browse** (a pop-up to walk folders and pick one) · **Images** = every picture in that folder as a list; pick one → preview below + **Apply Background** · **Fit Style** with simple names. Settle: where the theme's own / KognogOS / solid go; Apply Background vs F10
 - [ ] Pop-ups, icons, fonts — each its own page
 - [ ] The quick-switch tray icon (D-78)
 

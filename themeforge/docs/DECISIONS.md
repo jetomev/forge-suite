@@ -4,6 +4,13 @@
 
 ## 2026-10-11
 
+### D-8 · The Wallpaper page, redesigned: a browsable folder, every picture in it, Apply Background (Javier, 2026-10-11 night) — to build next
+After the first Wallpaper page (D-6): *"themeForge backgrounds will need more work … 1. Source folders for background picker should be browsable 2. Available backgrounds in said folder should be all visible."* His layout, "the fixed, new version":
+- **Source:** the folder in use, with a **Browse** button next to it that opens a pop-up to walk the folders and pick one.
+- **Images:** a list of every picture in that folder; pick one and it shows **below** (the preview), with an **Apply Background** button.
+- **Fit Style:** simple names, nothing confusing.
+To settle when building: where the theme's own picture, the KognogOS backgrounds and the solid colour go in this layout (e.g. as folders or entries in the list); whether Apply Background replaces F10 on this page.
+
 ### D-7 · The preview at full quality, drawn over the terminal (Javier, 2026-10-11)
 *"I've seen apps like superfile show image previews with great quality"*; then *"there are other apps that does it, like w3 or so … this is only possible using a x11 or wayland"*. Asked first: Alacritty speaks neither the kitty graphics protocol nor Sixel (it answered neither; Konsole answered both), so superfile in Alacritty falls back to blocks too. The w3m way works anywhere: put the picture over the terminal. Offered our own overlay or Überzug++; Javier: **our own**. `themeforge/overlay.py`, a small GTK program on gtk-layer-shell (like hypeForge's panels), not a window: Sway's placement and tuck helpers never touch it, it never takes the keyboard, clicks pass through. Before the app starts, themeForge asks the terminal its text area in pixels and its grid (`CSI 14 t`, `CSI 18 t`) → the cell size; Alacritty's padding from its settings. The overlay finds themeForge's window through Sway by the process numbers above themeForge, follows it, and hides when it isn't the window in use, isn't on screen, or themeForge says so (another page, a list open, the manual). It ends with themeForge (its input closes). The half-block preview stays underneath, shaped like the screen so both cover the same spot, and is all there is on a text console or outside Sway. Bench: `scripts/overlay-bench.py`, a real Alacritty on a hidden Sway on the graphics card, keys from hypeForge's fake keyboard: 13/13 (on the blocks within half a cell, hides and comes back, one overlay, gone at quit); with the overlay off it fails, and with list-hiding removed it fails.
 
