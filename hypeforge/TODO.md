@@ -9,6 +9,9 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ---
 
+## Phase 0 · Next session (Javier, 2026-10-11 night)
+- [ ] **Every app opened from hypeForge Settings opens on the workspace it's called from** (#97) — fix it **using workspaceForge** (Javier: "Remind me to do the fix, using Workspaces tomorrow")
+
 ## Phase 0 · What it needs (dependency audit, 2026-10-11)
 - [x] **What the desktop needs, measured** (2026-10-11, #91): `docs/PACKAGING.md` (Python applets + every program Sway's config, the bar and the desktop entries start) + `tests/test_needs.py`. Found: F-71 #94 brightnessctl bound but not installed · F-72 #95 pam_kwallet_init started but missing · the wallpaper generator lives in docs/ (move under applets/theme/) · KognogOS's profiles list none of these (KognogOS TODO)
 - [ ] Move `docs/research/look-2026-10/wallpapers/generate.py` under `applets/theme/` (the look command runs it)
