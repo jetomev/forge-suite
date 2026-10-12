@@ -69,7 +69,10 @@ Changing it has traditionally meant editing a configuration file as root, hoping
 
 ## Requirements
 
-- Linux with GRUB (any major distribution; see the table below)
+**Everything it needs** to build, run and test, with why, is in [docs/PACKAGING.md](docs/PACKAGING.md), measured from the code (the Forge Suite's [dependency audit](https://github.com/jetomev/forge-suite/issues/91), 2026-10-11).
+
+- Linux with GRUB (any major distribution; see the table below): **GRUB itself** (`grub-mkconfig`, `grub-script-check`) — the AUR package depends on `grub`
+- `os-prober` — optional, for other systems on the boot menu
 - Python 3.10 or newer
 - `python-textual`, `python-rich` and [`python-forgekit`](https://github.com/jetomev/forge-suite/tree/main/forgekit) 0.10.0 or newer (which also needs `python-pyte`)
 - **`polkit`** and **`python-gobject`**: how grubForge asks for permission without running as root, with the password asked in its own box. Almost every desktop install already has both.
