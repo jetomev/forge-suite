@@ -28,4 +28,4 @@ AUR 1.1.0-1 lacks **python-rich** (imported directly; only arrived through Textu
 
 ## Found by the audit
 
-- **The AUR build of 1.1.0 fails on any machine without ddcutil** (found 2026-10-11 in a clean build): a start-up test expected the one-need message, but with the optional ddcutil missing the app names two. Fixed in the test (ddcutil pinned for that test; a second test covers both missing). Ships as 1.1.1.
+- **The AUR build of 1.1.0 fails on any machine without ddcutil** (found 2026-10-11 in a clean build): a start-up test expected the one-need message, but with the optional ddcutil missing the app names two. Fixed in the test (ddcutil pinned for that test; a second test covers both missing). Ships as 1.1.1 (F-7, #92), with the one-screen crash fix (F-6, #58).

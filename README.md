@@ -46,6 +46,14 @@
 
 ---
 
+## What each app needs
+
+Every app's needs to build, run and test are **measured from its code**, not remembered: each import, each program it starts, each library it links, mapped to the Arch package that provides it. Each section keeps the list, with why, in its `docs/PACKAGING.md`, and a test fails when the code uses something the list doesn't name. Every AUR recipe is also built in a clean Arch system, tests included, before it ships ([the audit, 2026-10-11](https://github.com/jetomev/forge-suite/issues/91); the tool: [`scripts/needs-audit.py`](scripts/needs-audit.py)).
+
+[hypeForge](hypeforge/docs/PACKAGING.md) · [displayForge](displayforge/docs/PACKAGING.md) · [sudoForge](sudoforge/docs/PACKAGING.md) · [workspaceForge](workspaceforge/docs/PACKAGING.md) · [nightForge](nightforge/docs/PACKAGING.md) · [forgekit](forgekit/docs/PACKAGING.md) · outside: [nog](https://github.com/jetomev/nog/blob/main/docs/PACKAGING.md) · [grubForge](https://github.com/jetomev/grubforge/blob/main/docs/PACKAGING.md) · [alacrittyForge](https://github.com/jetomev/alacrittyforge/blob/main/docs/PACKAGING.md) · [bitlaForge](https://github.com/jetomev/bitlaforge/blob/main/docs/PACKAGING.md) · [nogForge](https://github.com/jetomev/nogforge/blob/main/docs/PACKAGING.md) · [mindForge](https://github.com/jetomev/mindforge/blob/main/docs/PACKAGING.md)
+
+---
+
 ## How this is built
 
 A human and an AI, working in the open. Decisions are written down the day they are made, each section keeps its own to-do list and decision log, and every commit is GPG-signed. The method: [Building grubForge with AI](https://github.com/jetomev/grubforge/blob/main/docs/AI-COLLABORATION.md).

@@ -2,9 +2,10 @@
 
 *Newest first.*
 
-## 1.1.1 — 2026-10-11 · the AUR package builds on any machine
+## 1.1.1 — 2026-10-11 · one-screen computers start again, and the AUR package builds on any machine
 
-Found by the Forge Suite's dependency audit ([#91](https://github.com/jetomev/forge-suite/issues/91)), which built every AUR recipe in a clean Arch system: **1.1.0 failed to build where ddcutil isn't installed** ([F-6 #92](https://github.com/jetomev/forge-suite/issues/92)). A start-up test expected the message for one missing need; without the optional ddcutil the app correctly names two. The test now pins ddcutil (it's about Sway), and a new test covers both missing.
+- **Computers with one screen crashed at start** ([F-6 #58](https://github.com/jetomev/forge-suite/issues/58)): Textual 8 changed what an empty choice is (`Select.BLANK` is False now), and the one-screen path used the old one. Fixed with `Select.NULL` (`9648068`).
+- **The AUR package builds on any machine** ([F-7 #92](https://github.com/jetomev/forge-suite/issues/92)). Found by the Forge Suite's dependency audit ([#91](https://github.com/jetomev/forge-suite/issues/91)), which built every AUR recipe in a clean Arch system: **1.1.0 failed to build where ddcutil isn't installed**. A start-up test expected the message for one missing need; without the optional ddcutil the app correctly names two. The test now pins ddcutil (it's about Sway), and a new test covers both missing.
 - The package now depends on **python-rich**, which the code imports directly (it only came through Textual).
 - What the package needs, with why: [docs/PACKAGING.md](PACKAGING.md), kept honest by a test that fails on any import not listed there.
 - Nothing changes in the app itself.

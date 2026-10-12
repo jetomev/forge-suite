@@ -2,6 +2,12 @@
 
 **Target: the first KognogOS release (v1.0, April 2027).** Each section keeps its own detailed list; this one tracks the suite. Updated after every step.
 
+## 2026-10-11 — what every app needs, measured (#91)
+- [x] **The dependency audit** (Javier: "check all Forge Suite apps for all dependencies needed to build and run them. Very important to have done now"): `scripts/needs-audit.py` (imports, programs, linked libraries → Arch packages, beside each AUR recipe); `docs/PACKAGING.md` + `tests/test_needs.py` in every section and every outside app (nog and mindForge: the list); **every AUR recipe built in a clean Arch system** (devtools, the kognog-hypeforge VM, snapshot `before-needs-audit`)
+- [x] Found: **three published packages don't build on a clean system** — displayForge 1.1.0 (F-7 #92, a test assumed ddcutil), nightForge 1.0.0 (F-1 #93, a test assumed Miami time), grubForge 2.2.0 (grubforge#41, F-8: reload() read the system's GRUB file); **recipes missing needs** — nog sudo + zstd (nog#50), python-rich (displayForge, workspaceForge, nightForge), glib2 (nightForge), grub (grubForge), optional flatpak/snapd (nog, nogForge); hypeForge F-71 #94 (brightnessctl), F-72 #95 (pam_kwallet_init); the wallpaper generator lives in docs/; KognogOS's profiles list none of hypeForge's 34 needs (KognogOS TODO)
+- [x] Fixed and proven in the clean system: nog 1.8.0-2, workspaceForge 1.0.0-2, displayForge 1.1.1 · nightForge 1.1.0's own new tray test read hypeForge's files (fixed with fixtures, `06ab889`)
+- [ ] **Javier, at the end:** sign and tag displayForge 1.1.1, nightForge 1.1.0, grubForge 2.2.1 (GitHub Releases with signed assets); local tests of the built packages; then the AUR pushes (nog 1.8.0-2, workspaceForge 1.0.0-2, nogForge 1.4.0-2, displayForge 1.1.1, nightForge 1.1.0, grubForge 2.2.1)
+
 ## 2026-10-10 / 11 — hypeForge's look program: all six styles built
 - [x] **hypeForge** (details in [hypeforge/TODO.md](hypeforge/TODO.md)): Mac OS 9, KDE, COSMIC and macOS built and live-tested (the Rice and Windows 11 the day before) — six styles × 25 colour themes; one bar program with a bar per screen, pop-ups on the clicked screen (D-86); the dock on the main screen (D-87); macOS (D-88); the Rice in Javier's order (D-89); issues #67–#83; Vault (68)–(70); kognogos.org card and hypeForge's README current
 - [x] **themeForge 0.1.0** (new section, #84, 2026-10-11): the Theme Picker — theme and colours, two drop-downs, Apply / Undo through hypeForge; the Look page + Home card in Settings, launcher entry, float rule; 14 tests — **waits for Javier's run**; more pages later (pop-ups, icons, fonts…), then the tray icon
@@ -14,7 +20,7 @@
 - [x] **displayForge 1.1.0 + mindForge 0.1.7 on the AUR** (signed files added to their releases; Javier's local tests) — 10 on the AUR
 - [x] **nightForge** (new section, #44): the night light's app + its own tray icon, live at login; **1.0.0 prepared, the tag waits for Javier's sunset check**
 - [x] **defaultappsForge** (new section, #19): designed ("WOW APP!!!!"), 0.1.0 built and in hypeForge Settings — **waits for Javier's run**
-- [ ] **displayForge 1.1.1** (#58, F-6: one-screen computers crashed at start; fixed `9648068`) — release when the AUR pushes are spaced out
+- [ ] **displayForge 1.1.1** (#58, F-6: one-screen computers crashed at start; fixed `9648068`) — **prepared 2026-10-11 with F-7 #92** (the AUR build failed without ddcutil); its tag and release wait for Javier, with the dependency-audit batch (#91)
 - [ ] Section rows in the suite README for nightForge and defaultappsForge — at their releases
 
 ## 2026-10-08 — six releases from Javier's runs inside hypeForge Settings
