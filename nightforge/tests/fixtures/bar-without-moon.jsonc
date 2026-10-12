@@ -1,0 +1,7 @@
+// A hypeForge bar with no night-light moon (like Windows 11's taskbar): nightForge's tray icon shows.
+// The moon is only mentioned here in a comment: "custom/nightlight".
+{
+  "position": "bottom",
+  "modules-left": ["custom/start", "group/taskbar"],
+  "modules-right": ["tray", "group/quick", "clock", "custom/notifications"]
+}

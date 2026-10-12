@@ -93,9 +93,9 @@ if items:
     out["status_no_bar"] = prop("/StatusNotifierItem", "org.kde.StatusNotifierItem", "Status")
     bar = tmp / "config/sway/waybar/config.jsonc"
     bar.parent.mkdir(parents=True, exist_ok=True)
-    hype = HERE.parent.parent / "hypeforge/styles"
-    for style in ("rice", "windows-11"):
-        bar.write_text((hype / f"{style}/bar/config.jsonc").read_text())
+    # the test's own bar files (a release archive holds nightForge only, not hypeForge's styles)
+    for style, fixture in (("rice", "bar-with-moon.jsonc"), ("windows-11", "bar-without-moon.jsonc")):
+        bar.write_text((HERE / "fixtures" / fixture).read_text())
         deadline = time.monotonic() + 5
         want = len(statuses) + 1
         while len(statuses) < want and time.monotonic() < deadline:

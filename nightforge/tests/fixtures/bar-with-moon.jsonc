@@ -1,0 +1,7 @@
+// A hypeForge bar that places the night-light moon (like the Rice's, D-89): nightForge's tray icon steps aside.
+// The word in a comment doesn't count: "custom/nightlight".
+{
+  "modules-left": ["custom/emblem", "group/workspace-pills"],
+  "modules-center": ["group/datetime"],
+  "modules-right": ["tray", "custom/nightlight", "memory", "cpu", "custom/power-panel"]
+}
