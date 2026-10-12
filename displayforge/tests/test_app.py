@@ -493,8 +493,13 @@ class StartUp(unittest.TestCase):
         from contextlib import redirect_stdout
         from unittest import mock
         import displayforge.app as A
+        import sys
         started = []
+        real_needs = A.needs
+        # ddcutil pinned to "present": the test is about Sway, not about what the builder has installed
+        # (2026-10-11: on a clean build machine without ddcutil the words changed and the AUR build failed)
         with mock.patch.object(A.DisplayForgeApp, "run", lambda self: started.append(1)), \
+             mock.patch.object(A, "needs", lambda: real_needs(ddcutil=sys.executable)), \
              mock.patch.dict("os.environ", {"SWAYSOCK": ""}, clear=False):
             out = io.StringIO()
             with redirect_stdout(out):
@@ -503,3 +508,19 @@ class StartUp(unittest.TestCase):
         self.assertEqual(started, [], "the app must not start")
         self.assertIn("displayForge can't run here: it needs a Sway session", out.getvalue())
         self.assertIn("Nothing was changed.", out.getvalue())
+
+    def test_main_names_both_when_ddcutil_is_missing_too(self):
+        import io
+        from contextlib import redirect_stdout
+        from unittest import mock
+        import displayforge.app as A
+        real_needs = A.needs
+        with mock.patch.object(A.DisplayForgeApp, "run", lambda self: None), \
+             mock.patch.object(A, "needs", lambda: real_needs(ddcutil="/nonexistent/ddcutil")), \
+             mock.patch.dict("os.environ", {"SWAYSOCK": ""}, clear=False):
+            out = io.StringIO()
+            with redirect_stdout(out):
+                rc = A.main(ask=lambda name, miss: "close")
+        self.assertEqual(rc, 2)
+        self.assertIn("2 things it needs are missing", out.getvalue())
+        self.assertIn("ddcutil (optional)", out.getvalue())

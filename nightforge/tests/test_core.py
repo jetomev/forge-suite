@@ -138,8 +138,12 @@ class NightLight(unittest.TestCase):
     def test_status_in_words(self):
         s = Settings()
         C.start(s, "auto")
-        evening = datetime(2026, 10, 9, 20, 30).astimezone()
-        noon = datetime(2026, 10, 9, 12, 0).astimezone()
+        # the default place is Miami: its own clock, whatever zone the machine runs in (a clean build
+        # machine is on UTC, where 20:30 is 16:30 in Miami — before sunset; found 2026-10-11)
+        from zoneinfo import ZoneInfo
+        miami = ZoneInfo("America/New_York")
+        evening = datetime(2026, 10, 9, 20, 30, tzinfo=miami)
+        noon = datetime(2026, 10, 9, 12, 0, tzinfo=miami)
         self.assertEqual(C.status(s, evening)["state"], "warm")
         self.assertEqual(C.status(s, noon)["state"], "day")
         C.start(s, "warm")
