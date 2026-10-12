@@ -16,6 +16,7 @@ saved; "saved but not rebuilt" is always visible and is said again on quit.
 from __future__ import annotations
 
 import datetime as dt
+from pathlib import Path
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
@@ -54,12 +55,17 @@ class Session:
     boot: BootDraft | None = None          # None until the menu could be read
     boot_unreadable: bool = False          # grub.cfg is root-only: ask first
     overrides: dict = field(default_factory=dict)   # KEY → (file, value) from /etc/default/grub.d
+    # the file this session was opened on: a reload and "last saved" read it, never another (2026-10-11:
+    # reload() read the system's own /etc/default/grub, so a session over any other file — the tests' —
+    # swapped in the system's values; found building the AUR recipe in a clean system)
+    config_file: Path = field(default_factory=lambda: grubenv.GRUB_DEFAULT_FILE)
 
     # ── loading ──────────────────────────────────────────────────────────────
     @classmethod
     def load(cls) -> "Session":
         env = grubenv.detect()
-        s = cls(env=env, capability=privilege.detect(), config=config_manager.parse_grub_config(grubenv.GRUB_DEFAULT_FILE))
+        s = cls(env=env, capability=privilege.detect(), config=config_manager.parse_grub_config(grubenv.GRUB_DEFAULT_FILE),
+                config_file=grubenv.GRUB_DEFAULT_FILE)
         s._read_originals()
         if env.uses_grub:
             # on Fedora-style systems too: GRUB's own entries (firmware settings,
@@ -69,7 +75,7 @@ class Session:
 
     def reload(self) -> None:
         """Re-read the file; your unsaved changes stay (they are yours)."""
-        self.config = config_manager.parse_grub_config(grubenv.GRUB_DEFAULT_FILE)
+        self.config = config_manager.parse_grub_config(self.config_file)
         self._read_originals()
         self.pending = {k: v for k, v in self.pending.items() if not same_value(v, self.original.get(k))}
 
@@ -154,7 +160,7 @@ class Session:
         if saves:
             return saves[-1]
         try:
-            return dt.datetime.fromtimestamp(grubenv.GRUB_DEFAULT_FILE.stat().st_mtime)
+            return dt.datetime.fromtimestamp(self.config_file.stat().st_mtime)
         except OSError:
             return None
 

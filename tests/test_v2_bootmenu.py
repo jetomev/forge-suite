@@ -8,6 +8,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import shutil
 import unittest
 from pathlib import Path
 
@@ -196,8 +197,12 @@ class AddEntry(unittest.TestCase):
 
     def test_broken_entries_are_refused_with_a_reason(self):
         self.assertIn("{ and }", probe.check_entry("menuentry 'x' {\n"))
-        self.assertTrue(probe.check_entry("menuentry 'x' {\n if then\n}"))
         self.assertEqual(probe.check_entry("echo hi"), "an entry must start with menuentry")
+
+    @unittest.skipUnless(shutil.which("grub-script-check") or shutil.which("grub2-script-check"),
+                         "GRUB's own check isn't installed (the package depends on grub, so its build has it)")
+    def test_grubs_own_check_refuses_a_broken_script(self):
+        self.assertTrue(probe.check_entry("menuentry 'x' {\n if then\n}"))
 
     def test_install_hint_per_family(self):
         self.assertIn("nog install os-prober", probe.os_prober_install_hint("Arch"))

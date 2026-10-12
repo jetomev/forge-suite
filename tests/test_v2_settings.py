@@ -183,7 +183,8 @@ def fake_session(text: str):
                       "etc/default/grub": text})
     env = grubenv.detect(root, which=lambda n: None)
     cap = privilege.Capability(privilege.Privilege.NONE, "test: no writes")
-    s = Session(env=env, capability=cap, config=config_manager.parse_grub_config(root / "etc/default/grub"))
+    s = Session(env=env, capability=cap, config=config_manager.parse_grub_config(root / "etc/default/grub"),
+                config_file=root / "etc/default/grub")
     s._read_originals()
     weakref.finalize(s, shutil.rmtree, tmp, True)
     return s
@@ -385,6 +386,15 @@ class Screens(unittest.IsolatedAsyncioTestCase):
             await pilot.press("2")
             await pilot.pause(0.3)
             self.assertIn("Read-only", app.query_one("#gf-readonly").render_text())
+
+class ItsOwnFile(unittest.TestCase):
+    """2026-10-11: reload() read the system's /etc/default/grub, so a session over any other file swapped in the
+    system's values (the AUR build failed on machines whose GRUB_TIMEOUT wasn't 10, like a clean one)."""
+
+    def test_a_reload_reads_the_file_the_session_was_opened_on(self):
+        s = fake_session(SAMPLE.replace("GRUB_TIMEOUT=10", "GRUB_TIMEOUT=7"))
+        s.reload()
+        self.assertEqual(s.original["GRUB_TIMEOUT"], "7", "the session's own file, never the system's")
 
 
 if __name__ == "__main__":
