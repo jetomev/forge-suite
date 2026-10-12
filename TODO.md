@@ -5,6 +5,10 @@
 **Updated after every step.** The full story behind each item is in its GitHub issue.
 
 
+## 2026-10-11 · What it needs, measured
+- [x] **What it needs, measured** (2026-10-11, forge-suite#91): `docs/PACKAGING.md` + `tests/test_needs.py`. The AUR 2.2.0 build **failed in a clean system** — F-8 #41: reload() read the system's own /etc/default/grub (fixed `2f52058`); the recipe now depends on grub (+ os-prober optional)
+- [ ] **2.2.1** prepared (`97dab79`) — Javier signs the tag and the release, tests the package locally, then the AUR
+
 ## At the next release
 - [ ] **The AUR description, at the next release** (Javier, 2026-10-09): the AUR `pkgdesc` (and `.SRCINFO`) gets the same "where it runs" words as the README, GitHub About and kognogos.org — distribution · desktop · plain text console. Not pushed on its own: AUR pushes stay one per proven version.
 
