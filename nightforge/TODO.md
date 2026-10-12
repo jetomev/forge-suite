@@ -4,7 +4,7 @@
 
 ## 2026-10-11 · What it needs, measured
 - [x] **What it needs, measured** (2026-10-11, #91): `docs/PACKAGING.md` + `tests/test_needs.py`. The AUR 1.0.0 build **failed off Miami time** (F-1 #93, a test) → fixed; 1.1.0's new tray test read hypeForge's files → its own fixtures (`06ab889`); recipe + python-rich, glib2
-- [ ] **1.1.0** (D-7 #82, F-1 #93) prepared — rebuild in the clean system, then Javier signs, tests locally, AUR
+- [x] **1.1.0** (D-7 #82, F-1 #93) — rebuilt clean, GitHub Release 2026-10-11 (signed, Latest); ⬜ AUR after Javier's local test
 
 ## Phase 0 · Design
 - [x] Research: wlsunset 0.4.0 — options only at start (-t/-T warmth, -l/-L place, -S/-s fixed times, -d fade), SIGUSR1 cycles forced day → forced warm → automatic; no status, no settings file
@@ -17,7 +17,7 @@
 - [x] Settings (`settings.py`, backup + read-back) + `nightforge start` (login) + restart on save; the preview that goes back by itself; the night light started detached (posix_spawn), stopped by its saved number or (hypeForge's old line) its exact name
 - [x] The two pages (Night Light, Schedule), Preview and Save both pop-ups (D-2), quit asks; `--hypeforge`; the manual (3 pages); `nightforge status`
 - [x] The tray icon (`nightforge tray`, D-4/D-5): muted ☀ by day, mustard ☾ while warm, dim ○ off; its menu; started by `nightforge start`
-- [x] **D-7 (10-11, #82):** the tray icon hides itself (Passive) where hypeForge's bar has the moon (the Rice), shows again elsewhere; live from the repo. ⬜ **release 1.1.0** with the themeForge batch (Javier's local test, then the AUR); the PKGBUILD adds **python-rich** to `depends` (imported directly in the code, only came through Textual — found 10-11)
+- [x] **D-7 (10-11, #82):** the tray icon hides itself (Passive) where hypeForge's bar has the moon (the Rice), shows again elsewhere; live from the repo. ✅ **1.1.0 released on GitHub 2026-10-11** (recipe: python-rich, glib2); ⬜ AUR after Javier's local test
 - [x] hypeForge: the login line (`nightforge start`, fallbacks), the Settings page + Home card, a launcher entry + float rule (and workspaceForge's, which were missing), Help page 17 — repo + live, backups
 - [x] Tests: 23 (core 12, tray 4 on a private bus, pages 7); 10 behaviours broken on purpose, 10 caught; pictures checked by eye (lost spaces, a repeated word, narrow time fields — fixed); `scripts/bench-start.py` (real wlsunset on a hidden Sway, private bus): 14/14, the real night light untouched
 - [x] Live 2026-10-09 ~17:40: `nightforge start` on the desktop took over the night light (one wlsunset, the old one stopped) and the tray icon registered

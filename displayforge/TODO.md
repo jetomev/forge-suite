@@ -4,7 +4,7 @@
 
 ## 2026-10-11 · What it needs, measured
 - [x] **What it needs, measured** (2026-10-11, #91): `docs/PACKAGING.md` + `tests/test_needs.py`. The AUR 1.1.0 build **failed without ddcutil** (F-7 #92, a test) → fixed; recipe + python-rich
-- [ ] **1.1.1** (F-6 #58 + F-7 #92) prepared and proven in a clean build — Javier signs the tag and the release, tests the package locally, then the AUR
+- [x] **1.1.1** (F-6 #58 + F-7 #92) — GitHub Release 2026-10-11 (signed); ⬜ AUR after Javier's local test
 
 ## Done 2026-10-09
 - [x] **On the AUR, 2026-10-09** (Javier: "all ready to use apps on AUR, even if they are private"): signed files added to the 1.1.0 release, `displayforge` 1.1.0-1 built locally (63/63 tests in check()), Javier installed and tested it ("displayForge good"), pushed `27bed27`; its AUR description already carries the "where it runs" words
