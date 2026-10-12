@@ -30,7 +30,7 @@ Then `nightforge`, the **Night light** page of hypeForge Settings, or the tray i
 
 ## Status
 
-**1.0.0, October 9, 2026.** What changed: [docs/CHANGELOG.md](docs/CHANGELOG.md) · next: [docs/ROADMAP.md](docs/ROADMAP.md) · decisions: [docs/DECISIONS.md](docs/DECISIONS.md) · the design: [docs/design/](docs/design/) · tests: [testing/](testing/) · the list: [TODO.md](TODO.md).
+**1.1.0, October 11, 2026.** What changed: [docs/CHANGELOG.md](docs/CHANGELOG.md) · next: [docs/ROADMAP.md](docs/ROADMAP.md) · decisions: [docs/DECISIONS.md](docs/DECISIONS.md) · the design: [docs/design/](docs/design/) · tests: [testing/](testing/) · the list: [TODO.md](TODO.md).
 
 ## License & credits
 

@@ -2,6 +2,15 @@
 
 *Newest first.*
 
+## 1.1.1 — 2026-10-11 · the AUR package builds on any machine
+
+Found by the Forge Suite's dependency audit ([#91](https://github.com/jetomev/forge-suite/issues/91)), which built every AUR recipe in a clean Arch system: **1.1.0 failed to build where ddcutil isn't installed** ([F-6 #92](https://github.com/jetomev/forge-suite/issues/92)). A start-up test expected the message for one missing need; without the optional ddcutil the app correctly names two. The test now pins ddcutil (it's about Sway), and a new test covers both missing.
+- The package now depends on **python-rich**, which the code imports directly (it only came through Textual).
+- What the package needs, with why: [docs/PACKAGING.md](PACKAGING.md), kept honest by a test that fails on any import not listed there.
+- Nothing changes in the app itself.
+
+Tests: 63 → **66** (the both-missing start-up test, the needs list; the old start-up test fails without ddcutil). Warnings: 0 → 0.
+
 ## 1.1.0 — 2026-10-08 · keys, Try and Save where they belong, and a real question before quitting
 
 From Javier's run of displayForge inside hypeForge Settings ([F-4 #50](https://github.com/jetomev/forge-suite/issues/50), [F-5 #51](https://github.com/jetomev/forge-suite/issues/51)).

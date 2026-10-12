@@ -2,6 +2,14 @@
 
 *Newest first.*
 
+### 1.1.0 — October 11, 2026 · the tray icon steps aside where the bar has its own moon
+
+- **The tray icon steps aside** (D-7, [#82](https://github.com/jetomev/forge-suite/issues/82)). Javier, on hypeForge's Rice: *"now I have 2 night-light icons. Take the old one please, leave the one with the window and the slider."* When hypeForge's bar in use has its own night-light moon, the tray icon marks itself passive, which the bar's tray hides; on a style without the moon it's back. It watches the bar's file, so a style switch shows or hides it at once.
+- **The AUR package builds on any machine** ([F-1 #93](https://github.com/jetomev/forge-suite/issues/93)): 1.0.0 failed to build on a machine whose clock isn't on Miami time (clean build machines run on UTC), because a test built "the evening" in the machine's own zone. Found by the dependency audit ([#91](https://github.com/jetomev/forge-suite/issues/91)), fixed in the test.
+- The package now depends on **python-rich** and **glib2**, both used directly. What it needs, with why: [docs/PACKAGING.md](PACKAGING.md), kept honest by a test.
+
+Tests: 23 → **26** (the tray steps aside on the Rice's real bar file and comes back on Windows 11's; comments don't count; the needs list — each seen failing on 1.0.0's code). Warnings: 0 → 0.
+
 ### 1.0.0 — October 9, 2026 · warmer screens in the evening, your way ([#44](https://github.com/jetomev/forge-suite/issues/44))
 
 From Javier's issue (#44, October 7) to release in one afternoon: designed (two drafts, D-2), approved (D-3), with a tray icon of its own (D-4).

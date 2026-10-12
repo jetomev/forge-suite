@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version 1.1.0" src="https://img.shields.io/badge/version-1.1.0-a6e3a1?style=flat-square&labelColor=313244">
+  <img alt="Version 1.1.1" src="https://img.shields.io/badge/version-1.1.1-a6e3a1?style=flat-square&labelColor=313244">
   <img alt="Sway" src="https://img.shields.io/badge/for-Sway-89b4fa?style=flat-square&labelColor=313244">
   <img alt="Terminal app" src="https://img.shields.io/badge/app-terminal-b4befe?style=flat-square&labelColor=313244">
   <img alt="Tests: 54" src="https://img.shields.io/badge/tests-54-94e2d5?style=flat-square&labelColor=313244">
@@ -93,7 +93,7 @@ On a plain text console, **Ctrl+I** arrives as Tab (an old terminal can't tell t
 
 ---
 
-## Known limits in 1.1.0
+## Known limits in 1.1.1
 
 Said plainly, so nobody finds out the hard way:
 - **Tested on one setup:** three identical 1440p screens on NVIDIA. One- and two-screen setups, the 80 / 90 % sizes on real apps and a plain text console are **not tested yet**; they come next, and anything they find becomes a 1.0.x fix.
