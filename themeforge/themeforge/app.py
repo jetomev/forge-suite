@@ -21,7 +21,8 @@ from forgekit import FORGE_CSS, GPL3_NOTICE, MENU_HINT, ForgeApp, a_file, load_p
 
 from . import __version__
 from .look import FITS, Look
-from .preview import preview
+from .preview import overlay_picture, preview
+from .termcell import Cells, measure
 
 MANUAL_DIR = os.path.join(os.path.dirname(__file__), "manual")
 
@@ -143,6 +144,85 @@ class PickerView(VerticalScroll):
         """After an apply or undo: the "in use" marks and the choices follow the desktop."""
         self.refresh(recompose=True)
         self.call_after_refresh(self.refresh_words)
+
+
+import threading
+
+PREVIEW_LOCK = threading.Lock()
+PREVIEW_COLS = 56
+
+
+class PictureOverlay:
+    """The full-quality preview over the terminal (overlay.py): started when there is something to show,
+    told to show or hide, ended with themeForge (its input closes). Only on Sway, in a terminal that
+    told its cell size; otherwise the half-block preview is all there is."""
+
+    def __init__(self, cells: Cells | None):
+        self.cells = cells
+        self.proc = None
+        self.sent: str | None = None
+
+    @property
+    def possible(self) -> bool:
+        return bool(self.cells and os.environ.get("SWAYSOCK") and os.environ.get("WAYLAND_DISPLAY")
+                    and os.environ.get("THEMEFORGE_NO_OVERLAY") != "1")
+
+    @staticmethod
+    def ancestors() -> list[int]:
+        """themeForge's process and every one above it: one of them is the terminal's window."""
+        out, pid = [], os.getpid()
+        while pid > 1 and len(out) < 20:
+            out.append(pid)
+            try:
+                with open(f"/proc/{pid}/stat") as f:
+                    pid = int(f.read().rsplit(")", 1)[1].split()[1])
+            except (OSError, ValueError, IndexError):
+                break
+        return out
+
+    def _send(self, msg: dict) -> None:
+        import json
+        import subprocess
+        import sys
+        line = json.dumps(msg)
+        if line == self.sent:
+            return
+        if self.proc is None or self.proc.poll() is not None:
+            if "hide" in msg:
+                return
+            c = self.cells
+            cmd = [sys.executable, os.path.join(os.path.dirname(__file__), "overlay.py"),
+                   "--pids", ",".join(map(str, self.ancestors())), "--cell", str(c.width), str(c.height),
+                   "--pad", str(c.pad_x), str(c.pad_y)] + (["--centred"] if c.centred else [])
+            try:
+                err = os.environ.get("THEMEFORGE_OVERLAY_LOG")       # the bench reads its errors too
+                self.proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.DEVNULL,
+                                             stderr=open(err + ".err", "a") if err else subprocess.DEVNULL, text=True)
+            except OSError:
+                self.cells = None
+                return
+        try:
+            self.proc.stdin.write(line + "\n")
+            self.proc.stdin.flush()
+            self.sent = line
+        except (OSError, ValueError):
+            self.proc = None
+
+    def show(self, png: str, cells: tuple[int, int, int, int], grid: tuple[int, int]) -> None:
+        if self.possible:
+            self._send({"show": {"png": png, "cells": list(cells), "grid": list(grid)}})
+
+    def hide(self) -> None:
+        self._send({"hide": True})
+
+    def close(self) -> None:
+        if self.proc is not None:
+            try:
+                self.proc.stdin.close()
+                self.proc.wait(3)
+            except Exception:
+                self.proc.kill()
+            self.proc = None
 
 
 def plain(choice: str) -> str:
@@ -282,7 +362,24 @@ class WallpaperView(VerticalScroll):
             self.app.call_from_thread(self._show, "", "The picture couldn't be made or read.")
             return
         try:
-            text = preview(path, "fill" if choice == "solid" else fit, bg)
+            text = preview(path, "fill" if choice == "solid" else fit, bg, cols=PREVIEW_COLS,
+                           rows=self.app.preview_rows() if hasattr(self.app, "preview_rows") else 14)
+            if self.app.overlay.possible:
+                runtime = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "themeforge"
+                runtime.mkdir(parents=True, exist_ok=True)
+                import time
+                png = overlay_picture(path, "fill" if choice == "solid" else fit, bg,
+                                      runtime / f"preview-{time.monotonic_ns()}.png")
+                with PREVIEW_LOCK:                              # a slow, older preview never replaces a newer one
+                    if not self.overlay_png or png.name > Path(self.overlay_png).name:
+                        self.overlay_png = str(png)
+                    now = time.time()
+                    for old in runtime.glob("preview-*.png"):    # the old ones go once nothing can still want them
+                        try:
+                            if str(old) != self.overlay_png and now - old.stat().st_mtime > 30:
+                                old.unlink(missing_ok=True)
+                        except OSError:
+                            pass
         except Exception as e:
             self.app.call_from_thread(self._show, "", f"The picture couldn't be read ({e.__class__.__name__}).")
             return
@@ -292,8 +389,26 @@ class WallpaperView(VerticalScroll):
                                                                     not choice.startswith("kognogos:") else f", in {theme_name}"))
 
     def _show(self, text, caption: str) -> None:
+        if not text:
+            self.overlay_png = None
         self.query_one("#tf-wp-preview", Static).update(text)
         self.query_one("#tf-wp-caption", Static).update(caption)
+
+    overlay_png: str | None = None
+
+    def overlay_spot(self) -> tuple[int, int, int, int] | None:
+        """The preview's character cells on the screen, when the full picture may cover them: this page
+        shown, no list open over it, no other screen (the manual, a question) on top, all of it in view."""
+        if not (self.overlay_png and self.display and self.app.screen is self.screen):
+            return None
+        if any(s.expanded for s in self.query(Select)):
+            return None
+        box = self.query_one("#tf-wp-preview", Static).content_region
+        size = self.app.size
+        if box.width < 4 or box.height < 2 or box.x < 0 or box.y < 0 or \
+                box.right > size.width or box.bottom > size.height:
+            return None
+        return box.x, box.y, box.width, box.height
 
     # ---- the person's moves ----
 
@@ -385,9 +500,10 @@ class ThemeForgeApp(ForgeApp):
         Binding("q", "act('quit')", show=False),
     ]
 
-    def __init__(self, look: Look | None = None, **kw) -> None:
+    def __init__(self, look: Look | None = None, cells: Cells | None = None, **kw) -> None:
         self.look = look or Look()
         self.busy = False
+        self.overlay = PictureOverlay(cells)
         self.ABOUT = {
             "name": "themeForge", "version": __version__,
             "tagline": "The look of your desktop: pick a theme and its colours.",
@@ -407,6 +523,26 @@ class ThemeForgeApp(ForgeApp):
     def on_mount(self) -> None:
         super().on_mount()
         self.refresh_state()
+        if self.overlay.possible:
+            self.set_interval(0.2, self.follow_overlay)
+
+    def preview_rows(self) -> int:
+        """Rows for a screen-shaped preview 56 characters wide: from the real cell size when the terminal
+        said it (so the blocks and the full picture cover the same spot), else a usual cell (about 1:2.2)."""
+        c = self.overlay.cells
+        ratio = (c.height / c.width) if c and c.width else 2.2
+        return max(6, round(PREVIEW_COLS * 9 / 16 / ratio))
+
+    def follow_overlay(self) -> None:
+        views = list(self.query(WallpaperView))
+        spot = views[0].overlay_spot() if views else None
+        if spot:
+            self.overlay.show(views[0].overlay_png, spot, (self.size.width, self.size.height))
+        else:
+            self.overlay.hide()
+
+    def on_unmount(self) -> None:
+        self.overlay.close()
 
     def on_section_shown(self, section_id: str) -> None:
         if section_id == "picker":
@@ -526,5 +662,10 @@ def needs(look: Look | None = None) -> list:
 def main(*, ask=None) -> int:
     if not start_check("themeForge", needs(), ask=ask):
         return 2
-    ThemeForgeApp().run()
+    cells = measure()               # asked of the terminal before the app takes the keyboard
+    app = ThemeForgeApp(cells=cells)
+    try:
+        app.run()
+    finally:
+        app.overlay.close()
     return 0

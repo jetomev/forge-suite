@@ -19,11 +19,11 @@ from rich.text import Text
 SCREEN = (2560, 1440)
 
 
-def on_screen(picture, fit: str, bg: tuple[int, int, int], screen=SCREEN):
-    """The picture as one screen shows it, as a Pillow image the size of the screen (scaled down)."""
+def on_screen(picture, fit: str, bg: tuple[int, int, int], screen=SCREEN, width: int = 320):
+    """The picture as one screen shows it, as a Pillow image the size of the screen (scaled down to `width`)."""
     from PIL import Image, ImageOps
     sw, sh = screen
-    scale = 320 / sw                                   # work small: a preview needs few pixels
+    scale = width / sw                                 # work small: a preview needs few pixels
     w, h = max(1, round(sw * scale)), max(1, round(sh * scale))
     im = picture.convert("RGB")
     canvas = Image.new("RGB", (w, h), bg)
@@ -67,3 +67,11 @@ def preview(path: Path | str, fit: str, bg: tuple[int, int, int], cols: int = 56
     from PIL import Image
     with Image.open(path) as im:
         return blocks(on_screen(im, fit, bg, screen), cols, rows)
+
+
+def overlay_picture(path: Path | str, fit: str, bg: tuple[int, int, int], out: Path, screen=SCREEN) -> Path:
+    """The same screen-shaped picture at full quality, for the overlay to draw over the terminal."""
+    from PIL import Image
+    with Image.open(path) as im:
+        on_screen(im, fit, bg, screen, width=1280).save(out)
+    return out

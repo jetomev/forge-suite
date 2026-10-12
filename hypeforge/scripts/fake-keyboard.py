@@ -7,7 +7,7 @@ Python standard library, plus `xkbcli` (libxkbcommon's tool, already on the syst
     fake-keyboard.py STEP...     steps: down:KEY  up:KEY  tap:KEY  wait:SECONDS
     e.g. fake-keyboard.py down:alt tap:tab wait:0.6 tap:tab up:alt
 
-Keys: alt, shift, ctrl, super, tab, esc, enter, left, right, up, down, space.
+Keys: alt, shift, ctrl, super, tab, esc, enter, left, right, up, down, space, f10, 0-9, a-z.
 Needs WAYLAND_DISPLAY (and XDG_RUNTIME_DIR) of the Sway to type in.
 """
 from __future__ import annotations
@@ -24,7 +24,11 @@ import time
 # keys): the standard masks, Shift 1, Control 4, Alt (Mod1) 8, Super (Mod4) 64
 MODS = {"shift": 1, "ctrl": 4, "alt": 8, "super": 64}
 KEYS = {"alt": 56, "shift": 42, "ctrl": 29, "super": 125, "tab": 15, "esc": 1, "enter": 28,
-        "left": 105, "right": 106, "up": 103, "down": 108, "space": 57}
+        "left": 105, "right": 106, "up": 103, "down": 108, "space": 57, "f10": 68,
+        **{str(d): 2 + (d - 1) % 10 for d in range(1, 11)},            # 1…9 and 0 (the "10")
+        **dict(zip("qwertyuiop", range(16, 26))), **dict(zip("asdfghjkl", range(30, 39))),
+        **dict(zip("zxcvbnm", range(44, 51)))}
+KEYS["0"] = KEYS.pop("10")
 
 
 class Wire:

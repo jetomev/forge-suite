@@ -19,6 +19,6 @@ The picture behind your windows. **Every screen shows the same one.**
 
 ## The preview
 
-Under the choices, a small picture of how your screens will look, drawn with the terminal's own characters: rough, but enough to tell one picture from another. The first preview of a theme's picture can take a few seconds while it's drawn.
+Under the choices, a picture of how your screens will look. On hypeForge it's the real picture, at full quality, laid over the window; it steps away while a list is open or another window is in use. In a plain text console it's drawn with the terminal's own characters instead: rough, but enough to tell one picture from another. The first preview of a theme's picture can take a few seconds while it's drawn.
 
 **Apply (F10)** in the bar at the bottom sets it (with a theme and colours you picked on the Theme Picker, if any). **Undo Last Apply (u)** brings back what you had. The lock screen follows the wallpaper by itself.
