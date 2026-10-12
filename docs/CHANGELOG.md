@@ -2,6 +2,12 @@
 
 *The README carries the two most recent entries; the complete history lives here, newest-first.*
 
+### v2.2.1 — October 11, 2026
+
+**The AUR package builds on any machine, and a reload always reads the file it opened** ([#41](https://github.com/jetomev/grubforge/issues/41), F-8). The Forge Suite's dependency audit built the 2.2.0 recipe in a clean Arch system and five tests failed there. Four came from a real slip: a reload of the settings read the system's own `/etc/default/grub` instead of the file the session was opened on. In everyday use they're the same file, so nothing looked wrong; the tests passed here only because this desktop's timeout matched theirs. The fifth needs GRUB's own checker, so the package now **depends on grub** (and suggests **os-prober** for other systems on the menu). What the package needs, with why: [docs/PACKAGING.md](PACKAGING.md).
+
+Tests: 108 → **111** (3 new: the package's needs list, a session reading its own file, GRUB's own check on its own; the session test fails on the old code). Warnings: 3 → 3 (no change).
+
 ### v2.2.0 — October 8, 2026
 
 **A key for every menu entry, "Boot Menu", a page of hypeForge Settings, and buttons that show their key.** Javier found these on October 8 while running grubForge inside hypeForge Settings, in two rounds.

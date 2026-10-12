@@ -8,7 +8,7 @@
 ![Platform: Linux](https://img.shields.io/badge/Platform-Linux-lightgrey.svg)
 ![Python: 3.10+](https://img.shields.io/badge/Python-3.10+-green.svg)
 ![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen.svg)
-![Version: 2.2.0](https://img.shields.io/badge/Version-2.2.0-purple.svg)
+![Version: 2.2.1](https://img.shields.io/badge/Version-2.2.1-purple.svg)
 [![AUR](https://img.shields.io/aur/version/grubforge?v=2.1.0-1)](https://aur.archlinux.org/packages/grubforge)
 
 > 🛡 **Security** — every release is GPG-signed and every commit is GitHub-Verified. **[Where We Stand](https://github.com/jetomev/KognogOS/blob/main/docs/where-we-stand.md)** covers our response to the 2026 AUR supply-chain attacks and how to check us yourself.
@@ -215,6 +215,7 @@ grubForge is a human and AI collaboration, and we've written down how that works
 
 ### Done
 
+- [x] **v2.2.1**: the AUR package builds on any machine; a reload reads the file it opened ([#41](https://github.com/jetomev/grubforge/issues/41))
 - [x] **v2.2.0**: a key for every menu entry (Help is 6), "Boot Menu", a page of hypeForge Settings, buttons that show their key ([#38](https://github.com/jetomev/grubforge/issues/38), [#39](https://github.com/jetomev/grubforge/issues/39), [#40](https://github.com/jetomev/grubforge/issues/40))
 - [x] **v2.1.0**: the password in grubForge's own box, and saving on a text console ([#36](https://github.com/jetomev/grubforge/issues/36))
 - [x] Earlier releases: [docs/ROADMAP.md](docs/ROADMAP.md)
@@ -222,6 +223,12 @@ grubForge is a human and AI collaboration, and we've written down how that works
 ---
 
 ## Changelog
+
+### v2.2.1 — October 11, 2026
+
+**The AUR package builds on any machine, and a reload always reads the file it opened** ([#41](https://github.com/jetomev/grubforge/issues/41), F-8). The Forge Suite's dependency audit built the 2.2.0 recipe in a clean Arch system and five tests failed there. Four came from a real slip: a reload of the settings read the system's own `/etc/default/grub` instead of the file the session was opened on. In everyday use they're the same file, so nothing looked wrong; the tests passed here only because this desktop's timeout matched theirs. The fifth needs GRUB's own checker, so the package now **depends on grub** (and suggests **os-prober** for other systems on the menu). What the package needs, with why: [docs/PACKAGING.md](docs/PACKAGING.md).
+
+Tests: 108 → **111** (3 new: the package's needs list, a session reading its own file, GRUB's own check on its own; the session test fails on the old code). Warnings: 3 → 3 (no change).
 
 ### v2.2.0 — October 8, 2026
 
@@ -236,20 +243,6 @@ grubForge is a human and AI collaboration, and we've written down how that works
 - Also: the install steps for other distributions now fetch forgekit from the [Forge Suite](https://github.com/jetomev/forge-suite) (its old repository is archived) together with `pyte`, and the Usage section describes 2.1's password box instead of the desktop's password window.
 
 Tests: 78 → **108** (30 new; each one was seen to fail with its fix taken out). Warnings: 3 → 3 (no change), all deprecation notices from the PyGObject library and forgekit's use of it, none from grubForge's own code. New requirement: `python-forgekit` ≥ 0.10.0.
-
-### v2.1.0 — October 4, 2026
-
-**The password in grubForge's own box, and saving on a text console** ([#36](https://github.com/jetomev/grubforge/issues/36)). Javier: a desktop password window *"doesn't make sense"* for a terminal app, and *"how does it work on the tty version?"* Until now it didn't: with no desktop to draw the password window, `pkexec` gave up and grubForge said to start it with `sudo`.
-
-- 🔐 grubForge becomes polkit's password asker **for its own process only** ([forgekit 0.6.0](https://github.com/jetomev/forgekit/releases/tag/v0.6.0)'s `InAppPolkitAgent`). polkit's own helper checks the password; grubForge still never runs as root, and its helper still does one fixed job at a time. A wrong password is asked again (three tries); Cancel cancels.
-- 🖥 **A text console can save now.** The manual's console pages no longer say `sudo grubforge`.
-- Over SSH nothing changes: grubForge's rule still refuses permission there.
-
-Tested in the KognogOS VM on a real text console (a wrong password asked again, the right one made a backup as root), then by Javier on his desktop (a theme change and a backup, both asked in grubForge's box: *"perfect!"*) and on tty3 (*"works wonders"*). Tests: 53. New dependency: `python-gobject`; `python-forgekit` ≥ 0.6.0.
-
-*The complete history lives in [docs/CHANGELOG.md](docs/CHANGELOG.md).*
-
----
 
 ## Related Projects
 
