@@ -33,61 +33,16 @@
     "modules-center": [],
     "modules-right": [
       "tray",
+      "custom/nightlight",
       "custom/clipboard",
       "custom/drives",
       "custom/printers",
       "group/quick",
-      "clock",
-      "custom/notifications"
+      "group/datetime"
     ],
-    "group/quick": {
-      "orientation": "inherit",
-      "modules": [
-        "bluetooth",
-        "network",
-        "wireplumber"
-      ]
-    },
-    "network": {
-      "format-ethernet": "󰈀",
-      "format-wifi": "{icon}",
-      "format-icons": [
-        "󰤯",
-        "󰤟",
-        "󰤢",
-        "󰤥",
-        "󰤨"
-      ],
-      "format-disconnected": "󰤭",
-      "format-disabled": "󰤮",
-      "tooltip-format": "Control Center",
-      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --edges top,right --margin top=34,right=8"
-    },
-    "wireplumber": {
-      "format": "{icon}",
-      "format-muted": "󰝟",
-      "format-icons": [
-        "󰕿",
-        "󰖀",
-        "󰕾"
-      ],
-      "scroll-step": 5,
-      "max-volume": 100,
-      "tooltip-format": "Volume {volume} % · scroll to change",
-      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --edges top,right --margin top=34,right=8"
-    },
-    "bluetooth": {
-      "format": "󰂯",
-      "format-off": "󰂲",
-      "format-disabled": "󰂲",
-      "format-connected": "󰂱",
-      "tooltip-format": "Control Center",
-      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --edges top,right --margin top=34,right=8"
-    },
     "clock": {
       "format": "{:%a %b %d   %I:%M %p}",
-      "tooltip": false,
-      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel calendar --edges top,right --margin top=34,right=8"
+      "tooltip": false
     }
   },
   {

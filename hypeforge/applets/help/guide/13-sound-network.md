@@ -1,17 +1,20 @@
 # Sound, network and Bluetooth
 
-**What it does:** three icons on the right of the top bar, between the clipboard and the date.
+**What it does:** three icons in one pill on the bar's right, on every style the same way (since 2026-10-13).
 
 | Icon | Shows | Left click | Right click |
 |---|---|---|---|
-| **Bluetooth** | on, off (red), or how many devices are connected | **bluetui** (below) | Bluetooth **on / off** |
-| **Network** | a cable when wired, Wi-Fi bars when wireless, red when not connected | the **network menu** (below) | **nmtui**, to edit connections |
-| **Volume** | the level, red when muted | mute / unmute | **wiremix**, the mixer |
+| **Bluetooth** | on, off (red), or connected | **Quick Settings** | **bluetui** (below) |
+| **Network** | a cable when wired, Wi-Fi bars when wireless, red when not connected | **Quick Settings** | **nmtui**, to edit connections |
+| **Volume** | the level, red when muted | **Quick Settings** | **wiremix**, the mixer |
 
-**Other styles:** on Windows 11 and KDE a click on any of the three opens **Quick Settings** (on macOS it's called **Control Center**); on
-**COSMIC** and **the Rice** each icon opens **its own small pop-up** — Bluetooth's switch, the network's Wi-Fi and
-VPN switches, or the volume slider — with a button at the bottom to its full app (bluetui, nmtui,
-wiremix). A click anywhere else closes it.
+**Quick Settings** (on macOS it's called Control Center): tiles for Wi-Fi, Bluetooth, the night light,
+Do Not Disturb, Screens and VPN, the volume and night-warmth sliders, the update count, a button into
+**hypeForge Settings**, and the power buttons; the big buttons open the Forge apps (Screens →
+displayForge, updates → nogForge). A click anywhere else closes it. The **moon** next to the tray is
+the night light: its own small pop-up (Warm Now · Daylight Now · Automatic, the warmth slider, a button
+into nightForge). The **date, time and bell** are one piece too: a click opens the calendar with your
+alerts as cards; a right click on the bell switches Do Not Disturb.
 
 **Scroll** over the volume icon for louder / quieter; the volume keys on the keyboard work too.
 Hover over any of them for details. The terminal apps open in a small floating window. Close

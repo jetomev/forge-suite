@@ -23,17 +23,15 @@
       "custom/apps-button"
     ],
     "modules-center": [
-      "clock"
+      "group/datetime"
     ],
     "modules-right": [
       "tray",
+      "custom/nightlight",
       "custom/clipboard",
       "custom/drives",
       "custom/printers",
-      "bluetooth",
-      "network",
-      "wireplumber",
-      "custom/notifications",
+      "group/quick",
       "custom/power-panel"
     ],
     "custom/workspaces-button": {
@@ -48,42 +46,7 @@
     },
     "clock": {
       "format": "{:%a %b %d   %I:%M %p}",
-      "tooltip": false,
-      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel calendar --edges top --margin top=44"
-    },
-    "network": {
-      "format-ethernet": "󰈀",
-      "format-wifi": "{icon}",
-      "format-icons": [
-        "󰤯",
-        "󰤟",
-        "󰤢",
-        "󰤥",
-        "󰤨"
-      ],
-      "format-disconnected": "󰤭",
-      "format-disabled": "󰤮",
-      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --only network --edges top,right --margin top=44,right=8"
-    },
-    "wireplumber": {
-      "format": "{icon}",
-      "format-muted": "󰝟",
-      "format-icons": [
-        "󰕿",
-        "󰖀",
-        "󰕾"
-      ],
-      "scroll-step": 5,
-      "max-volume": 100,
-      "tooltip-format": "Volume {volume} % · scroll to change",
-      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --only sound --edges top,right --margin top=44,right=8"
-    },
-    "bluetooth": {
-      "format": "󰂯",
-      "format-off": "󰂲",
-      "format-disabled": "󰂲",
-      "format-connected": "󰂱",
-      "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --only bluetooth --edges top,right --margin top=44,right=8"
+      "tooltip": false
     }
   },
   {

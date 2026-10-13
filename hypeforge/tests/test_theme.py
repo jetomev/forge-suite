@@ -188,21 +188,52 @@ class TheBarFollowsTheStyle(Base):
         for path in root.glob("styles/*/bar/config.jsonc"):
             self.assertNotIn('"icon-size"', path.read_text(), f"{path}: one size for all, in modules.jsonc")
 
-    def test_every_style_reads_volume_network_bluetooth_from_the_right(self):
-        """Javier, 2026-10-10: "Volume, Network, and Bluetooth. From right to left"."""
-        import json
+    @staticmethod
+    def bar_tool():
         root = Path(__file__).resolve().parent.parent
         loader = importlib.machinery.SourceFileLoader("hfbar_order", str(root / "applets/bar/hypeforge-bar"))
         bar = importlib.util.module_from_spec(importlib.util.spec_from_loader("hfbar_order", loader))
         loader.exec_module(bar)
-        for path in sorted(root.glob("styles/*/bar/config.jsonc")):
+        return bar
+
+    @staticmethod
+    def every_bar():
+        """(name, the bar's own config) for Classic and each style; COSMIC's and macOS's first bar only (the dock has none of this)."""
+        import json
+        root = Path(__file__).resolve().parent.parent
+        bar = TheBarFollowsTheStyle.bar_tool()
+        out = []
+        for path in [root / "sway/waybar/config.jsonc"] + sorted(root.glob("styles/*/bar/config.jsonc")):
             cfg = json.loads(bar.strip_comments(path.read_text()))
-            for one in cfg if isinstance(cfg, list) else [cfg]:      # COSMIC: the panel and the dock
-                seq = [m for k in ("modules-left", "modules-center", "modules-right") for m in one.get(k, [])]
-                seq += one.get("group/quick", {}).get("modules", [])
-                with self.subTest(f"{path.parent.parent.name} {one.get('name', '')}"):
-                    self.assertIn([m for m in seq if m in ("wireplumber", "network", "bluetooth")],
-                                  ([], ["bluetooth", "network", "wireplumber"]))
+            out.append((path.parent.parent.name if path.parent.name == "bar" else "classic", cfg[0] if isinstance(cfg, list) else cfg))
+        return out
+
+    def test_every_style_reads_volume_network_bluetooth_from_the_right(self):
+        """Javier, 2026-10-10: "Volume, Network, and Bluetooth. From right to left" — the pill is one for
+        every style now (D-96), so the order lives in modules.jsonc alone."""
+        import json
+        bar = self.bar_tool()
+        shared = json.loads(bar.strip_comments((Path(ht.REPO) / "sway/waybar/modules.jsonc").read_text()))
+        self.assertEqual(shared["group/quick"]["modules"], ["bluetooth", "network", "wireplumber"])
+        self.assertEqual(shared["group/datetime"]["modules"], ["clock", "custom/notifications"])
+
+    def test_every_style_places_the_three_shared_pieces_and_none_redefines_their_clicks(self):
+        """D-96 (Javier, 2026-10-13): the date-time-bell piece, the Quick Settings pill and the night light's
+        moon on every style, defined ONCE in modules.jsonc: "when we improve on them, they work already for
+        all the themes". A style may give the clock its own format; the clicks stay the shared ones."""
+        bar = self.bar_tool()
+        for name, cfg in self.every_bar():
+            with self.subTest(name):
+                shown = bar.placed(bar.merged(cfg) if "include" in cfg else cfg)
+                for piece in ("group/datetime", "group/quick", "custom/nightlight"):
+                    self.assertIn(piece, shown, f"{name}: {piece} not placed")
+                self.assertNotIn("mpris", shown)
+                for piece in ("clock", "custom/notifications", "network", "bluetooth", "wireplumber", "custom/nightlight",
+                              "group/quick", "group/datetime"):
+                    own = cfg.get(piece, {})
+                    self.assertFalse({k for k in own if k.startswith("on-click")} or piece.startswith("group/") and own,
+                                     f"{name}: {piece} redefines what the shared piece does ({sorted(own)})")
+                self.assertIn("modules.jsonc", " ".join(cfg.get("include", [])), f"{name}: the shared pieces aren't included")
 
     def test_every_style_gives_the_status_icons_their_own_room(self):
         """Javier, 2026-10-10, on macOS: "They are all one over the other" — its stylesheet padded only
@@ -220,8 +251,7 @@ class TheBarFollowsTheStyle(Base):
         bar = Path(ht.REPO) / "styles/windows-11/bar/config.jsonc"
         cfg = json.loads("\n".join(l for l in bar.read_text().splitlines() if not l.strip().startswith("//")))
         self.assertNotIn("custom/search", cfg["modules-left"])
-        # Javier 10-10: "Volume, Network, and Bluetooth. From right to left"
-        self.assertEqual(cfg["group/quick"]["modules"], ["bluetooth", "network", "wireplumber"])
+        self.assertIn("group/quick", cfg["modules-right"], "Javier's Quick Settings pill, now every style's (D-96)")
 
     def test_a_style_without_a_bar_leaves_the_bar_alone(self):
         st = dict(ht.styles()["rice"], meta=dict(ht.styles()["rice"]["meta"], slug="no-bar-here"))

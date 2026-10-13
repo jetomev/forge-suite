@@ -85,6 +85,27 @@ class TheBarTellsItsScreen(unittest.TestCase):
                     self.assertIn(outs, (["DP-1", "DP-2"], ["DP-1"]), name)
                 self.assertTrue(any(o == ["DP-1", "DP-2"] for o in per.values()), "some bar is on every screen")
 
+    def test_popups_open_beside_the_bar_they_are_clicked_from(self):
+        """D-96: the shared pieces say `{popup}` / `{popup-calendar}`; each bar fills in its own numbers —
+        its edge, its height plus margin plus a gap, the screen's side; the calendar centred when the
+        date sits in the bar's centre."""
+        rice = {"position": "top", "height": 38, "margin-top": 10, "margin-right": 10, "modules-center": ["group/datetime"],
+                "modules-right": ["group/quick"], "group/quick": {"modules": ["network"]}, "group/datetime": {"modules": ["clock"]},
+                "network": {"on-click": "panel quick {popup}"}, "clock": {"on-click": "panel calendar {popup-calendar}"}}
+        loader = importlib.machinery.SourceFileLoader("hfbar_popups", str(Path(__file__).resolve().parent.parent / "applets/bar/hypeforge-bar"))
+        hfbar = importlib.util.module_from_spec(importlib.util.spec_from_loader("hfbar_popups", loader))
+        loader.exec_module(hfbar)
+        bars = hfbar.bars_for(json.dumps(rice), ["DP-1"])
+        self.assertEqual(bars[0]["network"]["on-click"],
+                         "HYPEFORGE_OUTPUT=DP-1; export HYPEFORGE_OUTPUT; panel quick --edges top,right --margin top=56,right=10")
+        self.assertEqual(bars[0]["clock"]["on-click"],
+                         "HYPEFORGE_OUTPUT=DP-1; export HYPEFORGE_OUTPUT; panel calendar --edges top --margin top=56")
+        w11 = dict(rice, position="bottom", height=48, **{"margin-top": 0, "margin-right": 0}, **{"modules-center": [], "modules-right": ["group/quick", "group/datetime"]})
+        bars = hfbar.bars_for(json.dumps(w11), ["DP-2"])
+        self.assertTrue(bars[0]["network"]["on-click"].endswith("panel quick --edges bottom,right --margin bottom=56,right=8"))
+        self.assertTrue(bars[0]["clock"]["on-click"].endswith("panel calendar --edges bottom,right --margin bottom=56,right=8"),
+                        "the date on the right: the calendar in the corner")
+
     def test_login_and_the_engine_start_it(self):
         self.assertIn("applets/bar/hypeforge-bar start", (HERE / "sway/config").read_text())
         self.assertNotRegex((HERE / "sway/config").read_text(), r"(?m)^exec waybar ")

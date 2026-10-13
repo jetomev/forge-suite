@@ -26,7 +26,8 @@ window#waybar.panel {
 
 /* every panel button: COSMIC's soft rounded square under the mouse (colour only) */
 #custom-workspaces-button, #custom-apps-button, #clock, #tray, #custom-clipboard, #custom-drives,
-#custom-printers, #bluetooth, #network, #wireplumber, #custom-notifications, #custom-power-panel {
+#custom-printers, #custom-nightlight, #bluetooth, #network, #wireplumber, #custom-notifications, #custom-power-panel,
+#quick, #datetime {
   margin: 4px 1px;
   padding: 0 10px;
   border-radius: 6px;
@@ -35,11 +36,14 @@ window#waybar.panel {
 #custom-workspaces-button { margin-left: 6px; }
 #custom-power-panel { margin-right: 6px; }
 #custom-workspaces-button:hover, #custom-apps-button:hover, #clock:hover, #custom-clipboard:hover,
-#custom-drives:hover, #custom-printers:hover, #bluetooth:hover, #network:hover, #wireplumber:hover,
-#custom-notifications:hover, #custom-power-panel:hover { background-color: @hf_pill_hover; }
+#custom-drives:hover, #custom-printers:hover, #custom-nightlight:hover, #quick:hover, #datetime:hover,
+#custom-power-panel:hover { background-color: @hf_pill_hover; }
 #custom-workspaces-button, #custom-apps-button { font-weight: bold; }
 #clock { font-weight: bold; }
-#bluetooth, #network, #wireplumber, #custom-notifications, #custom-power-panel { padding: 0 9px; font-size: 16px; }
+#bluetooth, #network, #wireplumber, #custom-notifications, #custom-nightlight, #custom-power-panel { padding: 0 9px; font-size: 16px; }
+/* the status pill and the date piece (D-96): one rounded square each, their pieces inside without margins */
+#quick > *, #datetime > * { margin: 0; }
+#bluetooth, #network, #wireplumber, #clock, #custom-notifications { margin: 0; }
 
 #custom-notifications.unseen { color: @hf_bell; }
 #custom-notifications.dnd { color: @hf_alert; }
@@ -81,3 +85,8 @@ window#waybar.dock {
 .app.tucked { opacity: 0.55; box-shadow: inset 0 -3px @hf_task_running; }
 .app:hover { background-color: @hf_pill_hover; }
 #taskbar { margin-right: 6px; }
+
+/* the night light's moon (D-96, every style): warm when it's on, quiet in daylight, red when switched off */
+#custom-nightlight.warm { color: @hf_bell; }
+#custom-nightlight.day { color: @hf_subtext; }
+#custom-nightlight.off { color: @hf_alert; }

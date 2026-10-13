@@ -247,55 +247,47 @@ class WorkspacesStrip(unittest.TestCase):
 
 
 class CosmicPopups(unittest.TestCase):
-    """COSMIC (D-77): each status icon its own small pop-up (C-5), the App Library (C-4)."""
+    """The small pop-ups (COSMIC's C-5, D-77) and, since D-96 (Javier, 2026-10-13), the three pieces every
+    style shares the same way: the status pill → Quick Settings, the date-time-bell piece → the calendar
+    with the alerts, the moon → the night light's part. Defined once, in modules.jsonc."""
 
-    def cosmic_panel(self):
+    def shared(self):
         import json
         loader = __import__("importlib.machinery").machinery.SourceFileLoader("hfbar_c", str(HERE / "applets/bar/hypeforge-bar"))
         bar = __import__("importlib.util").util.module_from_spec(__import__("importlib.util").util.spec_from_loader("hfbar_c", loader))
         loader.exec_module(bar)
-        cfg = json.loads(bar.strip_comments((HERE / "styles/cosmic/bar/config.jsonc").read_text()))
-        return next(c for c in cfg if c["name"] == "panel")
+        return json.loads(bar.strip_comments((HERE / "sway/waybar/modules.jsonc").read_text()))
 
-    def test_each_status_icon_opens_its_own_part(self):
-        panel = self.cosmic_panel()
-        for module, part in (("bluetooth", "bluetooth"), ("network", "network"), ("wireplumber", "sound")):
-            self.assertIn(f"hypeforge-panel quick --only {part} ", panel[module]["on-click"], module)
-
-    def test_the_rice_opens_the_same_pop_ups(self):
-        """Javier, 2026-10-10: "the popups you added here for the tray icons … I want them for the Rice theme too"."""
-        import json
-        loader = __import__("importlib.machinery").machinery.SourceFileLoader("hfbar_r", str(HERE / "applets/bar/hypeforge-bar"))
-        bar = __import__("importlib.util").util.module_from_spec(__import__("importlib.util").util.spec_from_loader("hfbar_r", loader))
-        loader.exec_module(bar)
-        rice = json.loads(bar.strip_comments((HERE / "styles/rice/bar/config.jsonc").read_text()))
-        for module, part in (("bluetooth", "bluetooth"), ("network", "network"), ("wireplumber", "sound")):
-            self.assertIn(f"hypeforge-panel quick --only {part} ", rice[module]["on-click"], module)
-            self.assertIn(module, rice["modules-right"], f"{module} is on the Rice's bar")
-        # "also the date/time, plus alerts from windows to rice": the clock opens the calendar + alerts
-        self.assertIn("hypeforge-panel calendar ", rice["clock"]["on-click"])
+    def test_the_status_pill_opens_quick_settings_from_any_of_its_icons(self):
+        """Javier, 2026-10-13: Windows 11's bundle "for all themes": audio, network and Bluetooth in one
+        control, with the big buttons into the Forge apps and hypeForge Settings."""
+        shared = self.shared()
+        self.assertEqual(shared["group/quick"]["modules"], ["bluetooth", "network", "wireplumber"])
+        for module in ("bluetooth", "network", "wireplumber"):
+            self.assertIn("hypeforge-panel quick {popup}", shared[module]["on-click"], module)
+            self.assertIn("on-click-right", shared[module], f"{module}: right click keeps the full app")
 
     def test_the_rice_right_side_is_in_javiers_order(self):
-        """Javier, 2026-10-11, right to left: power, volume, network, Bluetooth, disks/USB, printers,
-        clipboard, CPU, memory, night light, the programs' icons."""
+        """Javier, 2026-10-11, right to left: power, the status pill (volume · network · Bluetooth), disks/USB,
+        printers, clipboard, CPU, memory, night light, the programs' icons."""
         rice = self.rice()
-        right_to_left = ["custom/power-panel", "wireplumber", "network", "bluetooth", "custom/drives",
+        right_to_left = ["custom/power-panel", "group/quick", "custom/drives",
                          "custom/printers", "custom/clipboard", "cpu", "memory", "custom/nightlight", "tray"]
         self.assertEqual(rice["modules-right"], right_to_left[::-1])
 
-    def test_the_rice_bell_sits_with_the_time_and_opens_the_same_pop_up(self):
+    def test_the_bell_sits_with_the_time_and_opens_the_same_pop_up(self):
         """Javier, 2026-10-11: 'Icon alert should go here, and the alert icon should not open the alert
-        popup. Clicking on the Date/Time/Alert will open … all three.'"""
-        rice = self.rice()
+        popup. Clicking on the Date/Time/Alert will open … all three.' 2026-10-13: on every style."""
+        rice, shared = self.rice(), self.shared()
         self.assertEqual(rice["modules-center"], ["group/datetime"])
-        self.assertEqual(rice["group/datetime"]["modules"], ["clock", "custom/notifications"])
+        self.assertEqual(shared["group/datetime"]["modules"], ["clock", "custom/notifications"])
         for module in ("clock", "custom/notifications"):
-            self.assertIn("hypeforge-panel calendar ", rice[module]["on-click"], module)
+            self.assertIn("hypeforge-panel calendar {popup-calendar}", shared[module]["on-click"], module)
+        self.assertIn("dnd", shared["custom/notifications"]["on-click-right"])
         self.assertNotIn("custom/notifications", rice["modules-right"])
 
     def test_the_moon_opens_the_night_light_part(self):
-        rice = self.rice()
-        self.assertIn("hypeforge-panel quick --only night ", rice["custom/nightlight"]["on-click"])
+        self.assertIn("hypeforge-panel quick --only night {popup}", self.shared()["custom/nightlight"]["on-click"])
         self.assertIn("night", quick.ONLY)
 
     def rice(self):

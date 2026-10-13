@@ -50,9 +50,9 @@ tooltip label { color: @hf_text; }
 }
 #clock { color: @hf_text; font-weight: bold; }
 #mpris { color: @hf_subtext; }
-#cpu:hover, #memory:hover, #network:hover, #bluetooth:hover, #wireplumber:hover, #custom-clipboard:hover,
-#custom-drives:hover, #custom-printers:hover, #custom-notifications:hover, #custom-power-panel:hover,
-#custom-nightlight:hover, #custom-tucked:hover, #clock:hover {
+#cpu:hover, #memory:hover, #quick:hover, #custom-clipboard:hover,
+#custom-drives:hover, #custom-printers:hover, #custom-power-panel:hover,
+#custom-nightlight:hover, #custom-tucked:hover, #datetime:hover {
   background-color: @hf_pill_hover; border-radius: 8px;
 }
 #wireplumber.muted, #network.disconnected { color: @hf_alert; }
@@ -73,3 +73,6 @@ tooltip label { color: @hf_text; }
 #tray > widget { border-radius: 8px; padding: 0 4px; }
 #tray > widget:hover { background-color: @hf_pill_hover; }
 #tray > .needs-attention { background-color: @hf_alert; }
+
+/* D-96: the status pill and the date piece light up as one */
+#quick, #datetime { border-radius: 8px; }

@@ -3,6 +3,20 @@
 // style. Written to ~/.config/sway/waybar/modules.jsonc by hypeforge-theme. Classic's own
 // config.jsonc still defines its pieces itself (unchanged since it was approved).
 {
+  // ── the three pieces every style shares the same way (D-96, Javier 2026-10-13: "standardizing the
+  // controls across themes, and when we improve on them, they work already for all the themes") ──
+  // Bluetooth · network · sound in ONE pill (Windows 11's): a click on any of them opens Quick
+  // Settings — the tiles, the sliders, hypeForge Settings and the big buttons into the Forge apps.
+  // Right-click keeps each one's full app. `{popup}` = where the pop-up opens: hypeforge-bar fills
+  // it in from the bar (its edge, its height, its margins), so the pieces need no numbers of their own.
+  "group/quick": {
+    "orientation": "inherit",
+    "modules": [
+      "bluetooth",
+      "network",
+      "wireplumber"
+    ]
+  },
   "network": {
     "format-ethernet": "󰈀",
     "format-wifi": "{icon}",
@@ -15,25 +29,25 @@
     ],
     "format-disconnected": "󰤭",
     "format-disabled": "󰤮",
-    "tooltip-format-ethernet": "Wired: {ifname}\n{ipaddr}",
-    "tooltip-format-wifi": "Wi-Fi: {essid} ({signalStrength} %)\n{ipaddr}",
-    "tooltip-format-disconnected": "Not connected",
-    "on-click": "networkmanager_dmenu",
+    "tooltip-format-ethernet": "Wired: {ifname} · {ipaddr}\nQuick Settings · right click: the network tool",
+    "tooltip-format-wifi": "Wi-Fi: {essid} ({signalStrength} %) · {ipaddr}\nQuick Settings · right click: the network tool",
+    "tooltip-format-disconnected": "Not connected\nQuick Settings · right click: the network tool",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick {popup}",
     "on-click-right": "hypeforge-nmtui"
   },
   "bluetooth": {
     "format": "󰂯",
     "format-off": "󰂲",
     "format-disabled": "󰂲",
-    "format-connected": "󰂱 {num_connections}",
-    "tooltip-format": "Bluetooth {status}",
-    "tooltip-format-connected": "Bluetooth: {device_enumerate}",
+    "format-connected": "󰂱",
+    "tooltip-format": "Bluetooth {status}\nQuick Settings · right click: the Bluetooth tool",
+    "tooltip-format-connected": "Bluetooth: {device_enumerate}\nQuick Settings · right click: the Bluetooth tool",
     "tooltip-format-enumerate-connected": "{device_alias}",
-    "on-click": "alacritty --class hf-bluetooth -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e bluetui",
-    "on-click-right": "sh -c 'bluetoothctl show | grep -q \"Powered: yes\" && bluetoothctl power off || bluetoothctl power on'"
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick {popup}",
+    "on-click-right": "alacritty --class hf-bluetooth -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e bluetui"
   },
   "wireplumber": {
-    "format": "{icon} {volume}",
+    "format": "{icon}",
     "format-muted": "󰝟",
     "format-icons": [
       "󰕿",
@@ -42,9 +56,40 @@
     ],
     "scroll-step": 5,
     "max-volume": 100,
-    "tooltip-format": "{node_name}: {volume} %\nScroll: louder / quieter · click: mute · right click: the mixer",
-    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "tooltip-format": "{node_name}: {volume} %\nScroll: louder / quieter · click: Quick Settings · right click: the mixer",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick {popup}",
     "on-click-right": "alacritty --class hf-mixer -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e wiremix"
+  },
+  // The date, time and bell in ONE piece (the Rice's): a click on any of them opens the calendar
+  // with your alerts as cards; right-click on the bell switches Do Not Disturb. Each style may
+  // give the clock its own format (two lines, time only…); the click stays this one.
+  "group/datetime": {
+    "orientation": "inherit",
+    "modules": [
+      "clock",
+      "custom/notifications"
+    ]
+  },
+  "clock": {
+    "format": "{:%a %d %b   %I:%M %p}",
+    "tooltip": false,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel calendar {popup-calendar}"
+  },
+  "custom/notifications": {
+    "exec": "~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications bar",
+    "return-type": "json",
+    "interval": 30,
+    "signal": 9,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel calendar {popup-calendar}",
+    "on-click-right": "~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications dnd"
+  },
+  // The night light's moon (the Rice's, nightForge's state): a click opens its small pop-up
+  "custom/nightlight": {
+    "exec": "~/Programs/forge-suite/hypeforge/applets/nightlight/hypeforge-nightlight bar",
+    "return-type": "json",
+    "interval": 30,
+    "signal": 13,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --only night {popup}"
   },
   "custom/drives": {
     "exec": "~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives bar",
@@ -80,30 +125,10 @@
     "on-click": "~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard list",
     "on-click-right": "~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard clear"
   },
-  "custom/notifications": {
-    "exec": "~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications bar",
-    "return-type": "json",
-    "interval": 30,
-    "signal": 9,
-    "on-click": "~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications list",
-    "on-click-right": "~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications dnd"
-  },
-  "clock": {
-    "format": "{:%a %d %b   %I:%M %p}",
-    "tooltip": false
-  },
   "custom/emblem": {
     "format": " ",
     "tooltip-format": "Apps (Win + Space)",
     "on-click": "~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections"
-  },
-  // the night light's moon (nightForge's state; Javier 10-10 placed it on the Rice): a click opens its pop-up
-  "custom/nightlight": {
-    "exec": "~/Programs/forge-suite/hypeforge/applets/nightlight/hypeforge-nightlight bar",
-    "return-type": "json",
-    "interval": 30,
-    "signal": 13,
-    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --only night"
   },
   "custom/power-panel": {
     "format": "󰐥",

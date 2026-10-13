@@ -38,7 +38,7 @@ window#waybar.menubar {
 /* every menu title and icon: a soft rounded highlight under the mouse */
 #custom-menu-system, #custom-menu-app, #custom-ws, #custom-favorites, #custom-menu-window,
 #custom-menu-help, #clock, #tray, #custom-clipboard, #custom-drives, #custom-printers,
-#quick, #custom-notifications {
+#quick, #custom-notifications, #custom-nightlight, #datetime {
   margin: 2px 1px;
   padding: 0 9px;
   border-radius: 6px;
@@ -46,14 +46,16 @@ window#waybar.menubar {
 }
 #custom-menu-system:hover, #custom-menu-app:hover, #custom-ws:hover, #custom-favorites:hover,
 #custom-menu-window:hover, #custom-menu-help:hover, #clock:hover, #custom-clipboard:hover,
-#custom-drives:hover, #custom-printers:hover, #quick:hover, #custom-notifications:hover {
+#custom-drives:hover, #custom-printers:hover, #quick:hover, #datetime:hover, #custom-nightlight:hover {
   background-color: @hf_pill_hover;
 }
 /* the Workspaces title carries the class "menu", which GTK's own theme paints white */
 #custom-ws.menu { background-color: transparent; }
 #custom-ws.menu:hover { background-color: @hf_pill_hover; }
 #custom-menu-app { font-weight: bold; }
-#custom-notifications { margin-right: 6px; }
+/* the date, time and bell: one pill too (D-96), like the status icons' */
+#datetime { margin-right: 6px; padding: 0 3px; }
+#clock, #custom-notifications { margin: 0; padding: 0 6px; }
 
 /* the status icons in one pill (→ Control Center): each icon its own room. A padding on "#quick > *"
    never reaches them (the group's children are wrappers), so they ran into one another (Javier,
@@ -61,7 +63,7 @@ window#waybar.menubar {
 #quick { padding: 0 3px; }
 #bluetooth, #network, #wireplumber { margin: 0; padding: 0 6px; }
 #bluetooth, #network, #wireplumber, #custom-clipboard, #custom-drives, #custom-printers,
-#custom-notifications { font-size: 14px; }
+#custom-notifications, #custom-nightlight { font-size: 14px; }
 #wireplumber.muted, #network.disconnected { color: @hf_alert; }
 #custom-notifications.unseen { color: @hf_bell; }
 #custom-notifications.dnd { color: @hf_alert; }
@@ -115,3 +117,8 @@ window#waybar.dock .app:hover { background-color: @hf_pill_hover; }
 
 /* the menu bar's Application icon isn't placed; its 16 px size stays for menubar.css's rules */
 window#waybar.menubar .app { background-size: 16px 16px; }
+
+/* the night light's moon (D-96, every style): warm when it's on, quiet in daylight, red when switched off */
+#custom-nightlight.warm { color: @hf_bell; }
+#custom-nightlight.day { color: @hf_subtext; }
+#custom-nightlight.off { color: @hf_alert; }

@@ -89,12 +89,14 @@ window#waybar {
 
 /* The date and time, after a thin line that separates them from the icons */
 /* The date and time, between two thin lines: the icons on its left, the bell and power on its right */
-#clock {
-  padding: 0 14px;
+#datetime {
   margin: 0 6px;
-  color: @hf_text;
   border-left: 1px solid @hf_inactive;
   border-right: 1px solid @hf_inactive;
+}
+#clock {
+  padding: 0 4px 0 14px;
+  color: @hf_text;
 }
 
 /* The power menu (⏻) at the bar's right end */
@@ -152,14 +154,14 @@ window#waybar {
 }
 
 /* Network, Bluetooth, volume: icons like the clipboard's; the volume shows its number */
-#custom-drives, #custom-printers, #network, #bluetooth, #wireplumber {
+#custom-drives, #custom-printers, #custom-nightlight, #network, #bluetooth, #wireplumber {
   padding: 0 5px;
   font-family: "Symbols Nerd Font", sans-serif;
   font-size: 16px;
   color: @hf_subtext;
 }
 
-#custom-drives:hover, #custom-printers:hover, #network:hover, #bluetooth:hover, #wireplumber:hover {
+#custom-drives:hover, #custom-printers:hover, #custom-nightlight:hover, #network:hover, #bluetooth:hover, #wireplumber:hover {
   background: @hf_inactive;
   color: @hf_text;
 }
@@ -218,3 +220,8 @@ window#waybar {
 #custom-notifications.dnd {
   color: @hf_alert;
 }
+
+/* the night light's moon (D-96, every style): warm when it's on, quiet in daylight, red when switched off */
+#custom-nightlight.warm { color: @hf_bell; }
+#custom-nightlight.day { color: @hf_subtext; }
+#custom-nightlight.off { color: @hf_alert; }

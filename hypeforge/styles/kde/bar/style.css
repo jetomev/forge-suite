@@ -25,14 +25,14 @@ tooltip label { color: @hf_text; }
 
 /* every button: Breeze's soft square under the mouse — colour only, so the emblem picture stays */
 #custom-emblem, #tray, #custom-clipboard, #custom-drives, #custom-printers,
-#network, #wireplumber, #bluetooth, #clock, #custom-notifications {
+#custom-nightlight, #network, #wireplumber, #bluetooth, #clock, #custom-notifications, #datetime {
   margin: 4px 1px;
   padding: 0 8px;
   border-radius: 4px;
   color: @hf_text;
 }
 #custom-emblem:hover, #custom-clipboard:hover, #custom-drives:hover, #custom-printers:hover,
-#clock:hover, #custom-notifications:hover, #quick:hover { background-color: @hf_pill_hover; }
+#custom-nightlight:hover, #datetime:hover, #quick:hover { background-color: @hf_pill_hover; }
 
 #custom-emblem {
   background-image: url("../../hypeforge/bar/launcher.png");
@@ -61,8 +61,12 @@ tooltip label { color: @hf_text; }
 #quick { margin: 4px 1px; border-radius: 4px; }
 #quick > * { margin: 0; padding: 0 6px; }
 #network, #wireplumber, #bluetooth { margin: 0; }
+/* the date, time and bell: one soft square too (D-96) */
+#datetime { margin: 4px 6px 4px 1px; border-radius: 4px; }
+#datetime > * { margin: 0; }
+#clock, #custom-notifications { margin: 0; }
 
-#clock { font-size: 11px; padding: 0 10px; margin-right: 6px; }
+#clock { font-size: 11px; padding: 0 10px; }
 #custom-notifications.unseen { color: @hf_bell; }
 #custom-notifications.dnd { color: @hf_alert; }
 #wireplumber.muted, #network.disconnected { color: @hf_alert; }
@@ -80,3 +84,8 @@ tooltip label { color: @hf_text; }
 #tray > widget { border-radius: 4px; padding: 0 4px; }
 #tray > widget:hover { background-color: @hf_pill_hover; }
 #tray > .needs-attention { background-color: @hf_alert; }
+
+/* the night light's moon (D-96, every style): warm when it's on, quiet in daylight, red when switched off */
+#custom-nightlight.warm { color: @hf_bell; }
+#custom-nightlight.day { color: @hf_subtext; }
+#custom-nightlight.off { color: @hf_alert; }

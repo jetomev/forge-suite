@@ -117,6 +117,29 @@ def tagged(command: str, output: str) -> str:
     return f"HYPEFORGE_OUTPUT={output}; export HYPEFORGE_OUTPUT; {command}"
 
 
+GAP = 8                        # a pop-up sits this far from the bar, and from the screen's side
+
+
+def popup_places(bar: dict) -> dict[str, str]:
+    """Where a pop-up opens, worked out from the bar it opens from (D-96: one pop-up per job on every
+    style; the shared pieces say `{popup}` or `{popup-calendar}` and each bar fills in its own numbers):
+    the bar's edge (top or bottom), the bar's height plus its margin plus a gap away from it, and
+    either the screen's right-hand side ({popup}) or, for the calendar, the centre when the date sits
+    in the bar's centre ({popup-calendar})."""
+    edge = "bottom" if bar.get("position") == "bottom" else "top"
+    away = int(bar.get("height", 32)) + int(bar.get(f"margin-{edge}", 0)) + GAP
+    side = max(int(bar.get("margin-right", 0)), GAP)
+    corner = f"--edges {edge},right --margin {edge}={away},right={side}"
+    centred = "group/datetime" in bar.get("modules-center", []) or "clock" in bar.get("modules-center", [])
+    return {"{popup}": corner, "{popup-calendar}": f"--edges {edge} --margin {edge}={away}" if centred else corner}
+
+
+def placed_command(command: str, places: dict[str, str]) -> str:
+    for token, words in places.items():
+        command = command.replace(token, words)
+    return command
+
+
 ONLY = "hypeforge-screens"     # a bar's own key: "main" puts it on the main screen only (COSMIC's dock)
 
 
@@ -141,11 +164,12 @@ def bars_for(text: str, outputs: list[str], main: str | None = None) -> list[dic
             mine = json.loads(json.dumps(bar))
             mine.pop(ONLY, None)
             mine["output"] = name
+            places = popup_places(full)
             for module in placed(full):
                 for key in CLICKS:
                     cmd = full.get(module, {}).get(key) if isinstance(full.get(module), dict) else None
                     if isinstance(cmd, str) and cmd:
-                        mine.setdefault(module, {})[key] = tagged(cmd, name)
+                        mine.setdefault(module, {})[key] = tagged(placed_command(cmd, places), name)
             out.append(mine)
     return out
 

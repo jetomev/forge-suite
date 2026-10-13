@@ -24,14 +24,14 @@ tooltip label { color: @hf_text; }
 /* every button: Windows 11's soft square that lights up under the mouse — the hover changes
    the background COLOUR only, so the emblem picture stays (Javier, 10-10) */
 #custom-emblem, #custom-ws-title, #custom-chevron, #tray, #custom-clipboard,
-#custom-drives, #custom-printers, #network, #wireplumber, #bluetooth, #clock, #custom-notifications {
+#custom-drives, #custom-printers, #custom-nightlight, #network, #wireplumber, #bluetooth, #clock, #custom-notifications, #datetime {
   margin: 4px 2px;
   padding: 0 10px;
   border-radius: 4px;
   color: @hf_text;
 }
 #custom-emblem:hover, #custom-ws-title:hover, #custom-chevron:hover,
-#custom-clipboard:hover, #custom-drives:hover, #custom-printers:hover, #clock:hover, #custom-notifications:hover,
+#custom-clipboard:hover, #custom-drives:hover, #custom-printers:hover, #custom-nightlight:hover, #datetime:hover,
 #quick:hover { background-color: @hf_pill_hover; }
 
 #custom-emblem {
@@ -46,6 +46,10 @@ tooltip label { color: @hf_text; }
 #quick { margin: 4px 2px; border-radius: 4px; }
 #quick > * { margin: 0; padding: 0 7px; }
 #network, #wireplumber, #bluetooth { margin: 0; }
+/* the date, time and bell: one soft square too (D-96) */
+#datetime { margin: 4px 2px; border-radius: 4px; }
+#datetime > * { margin: 0; }
+#clock, #custom-notifications { margin: 0; }
 
 #clock { font-size: 12px; padding: 0 12px; }
 #custom-notifications.unseen { color: @hf_bell; }
@@ -65,3 +69,8 @@ tooltip label { color: @hf_text; }
 #tray > widget { border-radius: 4px; padding: 0 4px; }
 #tray > widget:hover { background-color: @hf_pill_hover; }
 #tray > .needs-attention { background-color: @hf_alert; }
+
+/* the night light's moon (D-96, every style): warm when it's on, quiet in daylight, red when switched off */
+#custom-nightlight.warm { color: @hf_bell; }
+#custom-nightlight.day { color: @hf_subtext; }
+#custom-nightlight.off { color: @hf_alert; }
