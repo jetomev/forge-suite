@@ -1,6 +1,6 @@
 # grubForge — how this project works (L2)
 
-GRUB bootloader manager for the terminal (Python 3.10+, Textual). Part of the Forge Suite; ships on the AUR as `grubforge`. Names: **grubForge** (lowercase g). People: Javier and Claude — never the Rullynastre persona names here.
+GRUB bootloader manager for the terminal (Python 3.10+, Textual). Part of the Forge Suite; ships on the AUR as `grubforge`. Names: **grubForge** (lowercase g).
 
 ## Run and test
 - Run from the tree: `python main.py` (or `python -m grubforge`). Without `/etc/default/grub` it mounts in mock mode.
