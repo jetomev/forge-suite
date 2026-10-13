@@ -5,6 +5,11 @@
 
 ---
 
+## 2026-10-13
+
+### D-95 · The Rice's gaps 14 → 10 px (Javier)
+*"why is the distance between windows, screen borders, and in between windows so high? didn't we reduced them?"* Measured live: 14 px at every edge and between windows, as D-91 set it (the Rice is the one style at 14; the others sit at 6–10). *"let's do 10, yes, please"* → `gap_inner = 10` in `styles/rice/style.toml`, applied live with `hypeforge-theme look`; windows now 10 px from the edges and from each other. The other styles keep theirs.
+
 ## 2026-10-12
 
 ### D-94 · Settings apps open where they are called from; the Settings workspace is gone (Javier)

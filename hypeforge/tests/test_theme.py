@@ -252,9 +252,9 @@ class Gaps(Base):
         fx = self.place.root / "hypeforge/theme/fx.conf"
         fx.write_text("gaps outer 3\n")
         plain = "include ~/.config/hypeforge/theme/sway.conf\ninclude /etc/sway/config.d/*\n"
-        self.assertEqual(ht.live_gaps(self.place.root, plain), ["gaps inner all set 14", "gaps outer all set 0"])
+        self.assertEqual(ht.live_gaps(self.place.root, plain), ["gaps inner all set 10", "gaps outer all set 0"])
         login_fx = plain + "include ~/.config/hypeforge/theme/fx.conf\n"
-        self.assertEqual(ht.live_gaps(self.place.root, login_fx), ["gaps inner all set 14", "gaps outer all set 3"],
+        self.assertEqual(ht.live_gaps(self.place.root, login_fx), ["gaps inner all set 10", "gaps outer all set 3"],
                          "the SwayFX login reads fx.conf last, so it wins")
         self.assertEqual(ht.live_gaps(self.place.root, "include /etc/sway/config.d/*\n"), [], "no look file, nothing set")
 
