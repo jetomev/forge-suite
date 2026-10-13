@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from textual.widgets import Select
+from textual.widgets import OptionList, Select
 
 from themeforge.app import ThemeForgeApp, swatch_markup
 from themeforge.look import Look
@@ -148,8 +148,9 @@ class Page(unittest.TestCase):
 
 
 class WallpaperPage(unittest.TestCase):
-    """Desktop background 1.0 (Javier, 2026-10-11): the theme's own, KognogOS, solid or your pictures from a
-    folder; Fill, Fit, Stretch, Center, Tile; a small preview in the terminal; every screen the same."""
+    """Desktop background (Javier, 2026-10-11, D-6 then D-8): Source = a folder + Browse, or the theme's
+    pictures; Images = every picture in it; pick one → preview below + Apply Background; Fit Style in simple
+    names; every screen the same."""
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -161,6 +162,12 @@ class WallpaperPage(unittest.TestCase):
         (conf / "hypeforge/theme").mkdir(parents=True)
         (conf / "hypeforge/theme/state.toml").write_text('style = "rice"\ntheme = "mocha"\nwallpaper = "theme"\nfit = "fill"\n')
         self.pics = root / "walls"
+        (self.pics / "more").mkdir(parents=True)
+        (self.pics / ".hidden").mkdir()
+        from PIL import Image
+        for name in ("b.png", "a.jpg", "more/c.png"):
+            Image.new("RGB", (8, 8)).save(self.pics / name)
+        (self.pics / "notes.txt").write_text("x")
         self.look = FakeLook(home, conf)
 
     def tearDown(self):
@@ -170,74 +177,154 @@ class WallpaperPage(unittest.TestCase):
         await pilot.pause()
         app.query_one("#sec-wallpaper").display = True
         app.query_one("#sec-picker").display = False
+        app.on_section_shown("wallpaper")
+        await pilot.pause()
         await pilot.pause()
 
-    def test_four_drop_downs_in_two_columns_and_the_look_in_use(self):
+    @staticmethod
+    def images(app) -> list[str]:
+        ol = app.query_one("#tf-wp-images", OptionList)
+        return [ol.get_option_at_index(i).id for i in range(ol.option_count)]
+
+    @staticmethod
+    def pick(app, value: str) -> None:
+        ol = app.query_one("#tf-wp-images", OptionList)
+        ol.highlighted = WallpaperPage.images(app).index(value)
+        ol.action_select()
+
+    def test_source_images_and_fit_style_with_the_look_in_use(self):
         app = ThemeForgeApp(self.look)
 
         async def go():
             async with app.run_test(size=(120, 40)) as pilot:
                 await self.open_page(pilot, app)
                 src, fit = app.query_one("#tf-wp-source").region, app.query_one("#tf-wp-fit").region
-                self.assertEqual(src.y, fit.y, "Source and Fit side by side")
-                self.assertEqual(app.query_one("#tf-wp-source", Select).value, "theme")
-                self.assertEqual(app.query_one("#tf-wp-fit", Select).value, "fill")
-                values = [v for _, v in app.query_one("#tf-wp-source", Select)._options if v is not Select.NULL]
-                self.assertEqual(values, ["theme", "kognogos:tier-aware", "kognogos:arch-distro", "mine", "solid"],
+                self.assertEqual(src.y, fit.y, "Source and Fit Style side by side")
+                self.assertEqual(str(app.query_one("#tf-wp-source").render()), "The theme's pictures",
+                                 "the theme's own is on screen: the Source is the theme's pictures")
+                self.assertEqual(self.images(app), ["theme", "kognogos:tier-aware", "kognogos:arch-distro", "solid"],
                                  "Tier Aware first (Javier's pick)")
-                self.assertFalse(app.changes_bar.display, "nothing picked yet")
+                ol = app.query_one("#tf-wp-images", OptionList)
+                self.assertIn("in use", str(ol.get_option_at_index(0).prompt))
+                self.assertTrue(ol.has_focus, "the page opens on the Images list")
+                self.assertEqual(app.query_one("#tf-wp-fit", Select).value, "fill")
+                self.assertIn("cropped", str(app.query_one("#tf-wp-fit-about").render()), "each Fit Style explained under it")
+                self.assertEqual([n for n, _ in app.query_one("#tf-wp-fit", Select)._options],
+                                 ["Fill the Screen", "Whole Picture", "Stretched", "Real Size", "Repeated"], "simple names")
+                self.assertTrue(app.query_one("#tf-wp-apply").disabled, "nothing picked: Apply Background is off")
+                self.assertFalse(app.changes_bar.display)
+                self.assertIn("the theme's own", str(app.query_one("#tf-wp-now").render()))
                 for b in app.query("#sec-wallpaper Button.tf-small"):
                     if b.display:
                         self.assertEqual(b.region.height, 1, f"{b.id} is one line tall")
         run(go())
 
-    def test_a_pick_shows_the_bar_and_f10_applies_the_wallpaper(self):
+    def test_a_pick_lights_apply_background_and_f10_applies_it(self):
+        """D-9: the wallpaper has its own button; the changes bar is the theme's."""
         app = ThemeForgeApp(self.look)
 
         async def go():
             async with app.run_test(size=(120, 40)) as pilot:
                 await self.open_page(pilot, app)
-                app.query_one("#tf-wp-source", Select).value = "solid"
+                self.pick(app, "solid")
                 app.query_one("#tf-wp-fit", Select).value = "center"
                 await pilot.pause()
-                self.assertTrue(app.changes_bar.display)
+                self.assertFalse(app.query_one("#tf-wp-apply").disabled, "picked: Apply Background is on")
+                self.assertFalse(app.changes_bar.display, "the bar is for the theme; the page has its button")
+                ol = app.query_one("#tf-wp-images", OptionList)
+                self.assertIn("●", str(ol.get_option_at_index(3).prompt), "the pick is marked")
                 await pilot.press("f10")
                 await app.workers.wait_for_complete()
                 await pilot.pause()
                 self.assertEqual(len(self.look.done), 1)
                 what = self.look.done[0]
                 self.assertEqual(what[:3], ("apply", "rice", "mocha"), "the theme in use is kept")
-                self.assertEqual((what[3]["picture"], what[3]["fit"]), ("solid", "center"))
+                self.assertEqual((what[3]["picture"], what[3]["fit"], what[3]["folder"]), ("solid", "center", None))
+                await pilot.pause()
+                self.assertTrue(app.query_one("#tf-wp-apply").disabled, "applied: nothing pending")
+                self.assertIn("in use", str(app.query_one("#tf-wp-images", OptionList).get_option_at_index(3).prompt))
         run(go())
 
-    def test_my_pictures_from_a_folder_and_making_the_folder(self):
+    def test_browse_walks_to_a_folder_and_every_picture_in_it_is_listed(self):
+        from themeforge.browse import FolderPicker
         app = ThemeForgeApp(self.look)
 
         async def go():
             async with app.run_test(size=(120, 40)) as pilot:
                 await self.open_page(pilot, app)
-                app.query_one("#tf-wp-source", Select).value = "mine"
-                app.query_one("#tf-wp-folder").value = str(self.pics)
-                app.query_one("#sec-wallpaper").new_folder()
+                await pilot.press("b")
+                await pilot.pause()
+                self.assertIsInstance(app.screen, FolderPicker, "b opens the Browse pop-up")
+                app.screen.query_one("#tf-br-path").value = str(self.pics)
+                app.screen.query_one("#tf-br-path").focus()
+                await pilot.press("enter")
+                await pilot.pause()
+                self.assertIn("2 pictures here", str(app.screen.query_one("#tf-br-count").render()))
+                ol = app.screen.query_one("#tf-br-list", OptionList)
+                ids = [ol.get_option_at_index(i).id for i in range(ol.option_count)]
+                self.assertIn(f"dir:{self.pics / 'more'}", ids, "the folders inside are listed")
+                self.assertNotIn(f"dir:{self.pics / '.hidden'}", ids, "hidden ones aren't")
+                self.assertIn("1 picture", str(ol.get_option_at_index(ids.index(f"dir:{self.pics / 'more'}")).prompt))
+                await pilot.press("u")
+                await pilot.pause()
+                self.assertNotIsInstance(app.screen, FolderPicker, "Use This Folder closes it")
+                self.assertEqual(str(app.query_one("#tf-wp-source").render()), str(self.pics))
+                self.assertEqual([Path(v).name for v in self.images(app)], ["a.jpg", "b.png"], "pictures only, by name")
+                self.assertTrue(app.query_one("#tf-wp-apply").disabled, "no picture picked yet")
+                self.pick(app, str(self.pics / "b.png"))
+                await pilot.pause()
+                self.assertFalse(app.query_one("#tf-wp-apply").disabled)
+                app.query_one("#tf-wp-apply").press()
+                await app.workers.wait_for_complete()
+                await pilot.pause()
+                self.assertEqual(self.look.done[0][3], {"picture": str(self.pics / "b.png"), "fit": "fill",
+                                                        "folder": str(self.pics)}, "the folder is remembered")
+        run(go())
+
+    def test_browse_goes_up_into_folders_and_back_to_the_theme_s_pictures(self):
+        from themeforge.browse import THEME_MADE, FolderPicker
+        app = ThemeForgeApp(self.look)
+
+        async def go():
+            async with app.run_test(size=(120, 40)) as pilot:
+                await self.open_page(pilot, app)
+                app.query_one("#sec-wallpaper").use_source(str(self.pics / "more"))
+                await pilot.pause()
+                await pilot.press("b")
+                await pilot.pause()
+                await pilot.press("backspace")
+                await pilot.pause()
+                self.assertEqual(app.screen.folder, self.pics, "Backspace goes up")
+                ol = app.screen.query_one("#tf-br-list", OptionList)
+                self.assertEqual(ol.get_option_at_index(ol.highlighted).id, f"dir:{self.pics / 'more'}",
+                                 "the folder we came from is under the cursor")
+                await pilot.press("enter")
+                await pilot.pause()
+                self.assertEqual(app.screen.folder, self.pics / "more", "Enter goes in")
+                ol.highlighted = 0
+                ol.action_select()
+                await pilot.pause()
+                self.assertNotIsInstance(app.screen, FolderPicker)
+                self.assertEqual(app.query_one("#sec-wallpaper").source, THEME_MADE, "the first place is the theme's pictures")
+                self.assertEqual(self.images(app)[0], "theme")
+        run(go())
+
+    def test_a_folder_that_is_not_there_yet_can_be_made(self):
+        app = ThemeForgeApp(self.look)
+
+        async def go():
+            async with app.run_test(size=(120, 40)) as pilot:
+                await self.open_page(pilot, app)
+                new = self.pics / "new"
+                app.query_one("#sec-wallpaper").use_source(str(new))
                 await pilot.pause()
                 self.assertTrue(app.query_one("#tf-wp-mkdir").display, "offer to make the missing folder")
-                self.assertIn("doesn't exist", str(app.query_one("#tf-wp-folder-about").render()))
-                app.query_one("#tf-wp-source").focus()
+                self.assertIn("doesn't exist", str(app.query_one("#tf-wp-source-about").render()))
                 await pilot.press("n")
                 await pilot.pause()
-                self.assertTrue(self.pics.is_dir(), "n made it")
-                from PIL import Image
-                for name in ("b.png", "a.jpg", "notes.txt"):
-                    (Image.new("RGB", (8, 8)).save(self.pics / name) if name != "notes.txt"
-                     else (self.pics / name).write_text("x"))
-                app.query_one("#sec-wallpaper").new_folder()
-                await pilot.pause()
-                names = [n for n, v in app.query_one("#tf-wp-picture", Select)._options if v is not Select.NULL]
-                self.assertEqual(names, ["a.jpg", "b.png"], "pictures only, by name")
-                self.assertFalse(app.changes_bar.display, "no picture picked yet: nothing to apply")
-                app.query_one("#tf-wp-picture", Select).value = str(self.pics / "b.png")
-                await pilot.pause()
-                self.assertTrue(app.changes_bar.display)
+                self.assertTrue(new.is_dir(), "n made it")
+                self.assertFalse(app.query_one("#tf-wp-mkdir").display)
+                self.assertIn("0 pictures here", str(app.query_one("#tf-wp-source-about").render()))
         run(go())
 
     def test_the_theme_s_own_follows_the_theme_picked(self):
@@ -246,12 +333,31 @@ class WallpaperPage(unittest.TestCase):
         async def go():
             async with app.run_test(size=(120, 40)) as pilot:
                 await pilot.pause()
-                label = lambda: dict((v, n) for n, v in app.query_one("#tf-wp-source", Select)._options)["theme"]
+                label = lambda: str(app.query_one("#tf-wp-images", OptionList).get_option_at_index(0).prompt)
                 self.assertIn("rice picture", label())
                 app.query_one("#tf-style", Select).value = "classic"
                 await pilot.pause()
                 self.assertIn("classic picture", label(), "the Theme page's pick, not the one in use")
-                self.assertEqual(app.query_one("#tf-wp-source", Select).value, "theme", "the choice is kept")
+                self.assertEqual(app.query_one("#sec-wallpaper").pick, "theme", "the pick is kept")
+        run(go())
+
+    def test_the_changes_bar_names_the_theme_and_the_wallpaper_together(self):
+        app = ThemeForgeApp(self.look)
+
+        async def go():
+            async with app.run_test(size=(120, 40)) as pilot:
+                await self.open_page(pilot, app)
+                self.pick(app, "solid")
+                await pilot.pause()
+                self.assertFalse(app.changes_bar.display)
+                app.query_one("#tf-colour", Select).value = "white"
+                await pilot.pause()
+                self.assertTrue(app.changes_bar.display)
+                self.assertIn("and the wallpaper", app.changes_bar.query_one("#forge-changes-msg").render().plain)
+                await pilot.press("f10")
+                await app.workers.wait_for_complete()
+                self.assertEqual(self.look.done[0][:3], ("apply", "rice", "white"))
+                self.assertEqual(self.look.done[0][3]["picture"], "solid")
         run(go())
 
     def test_the_preview_is_drawn_in_the_terminal(self):
@@ -264,6 +370,7 @@ class WallpaperPage(unittest.TestCase):
                 await pilot.pause()
                 text = str(app.query_one("#tf-wp-preview").render())
                 self.assertGreater(text.count("▀"), 500, "rows of half blocks")
+                self.assertIn("Fill the Screen", str(app.query_one("#tf-wp-caption").render()))
         run(go())
 
 

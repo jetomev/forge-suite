@@ -30,8 +30,13 @@ ELEMENTS = ["bar", "launcher", "workspaces", "taskbar", "datetime", "tray", "sta
 LOG = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "themeforge/themeforge.log"
 # the wallpaper (Javier, 2026-10-11: themeForge's Wallpaper page): where it comes from and how it lies
 WALL_FOLDER = "~/Pictures/Wallpapers"
-FITS = {"fill": "Fill · edges cropped", "fit": "Fit · whole, colour around", "stretch": "Stretch · whole, pulled",
-        "center": "Center · real size", "tile": "Tile · repeated"}
+# Fit Style, in simple names (Javier, D-8: "simple names, nothing confusing"); the keys are Sway's own
+FITS = {"fill": "Fill the Screen", "fit": "Whole Picture", "stretch": "Stretched", "center": "Real Size", "tile": "Repeated"}
+FIT_ABOUT = {"fill": "Covers the whole screen; the edges of the picture are cropped. The usual choice.",
+             "fit": "All of the picture shows, with the theme's colour around it.",
+             "stretch": "The whole picture, pulled to the screen's shape.",
+             "center": "The picture at its real size, in the middle of the screen.",
+             "tile": "The picture repeated across the screen."}
 PICTURE_TYPES = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff"}     # what Sway's wallpaper program reads
 SWATCH = ["surface.sunken", "surface.base", "surface.raised", "band.base", "band.strong", "pop.base", "text.primary"]
 

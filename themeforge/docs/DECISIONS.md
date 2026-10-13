@@ -2,9 +2,18 @@
 
 *Newest first. Each one says what was decided, by whom, and why.*
 
+## 2026-10-13
+
+### D-9 · The theme's pictures are a place in Browse; Apply Background is the page's own button (Claude, from D-8)
+D-8 built as Javier drew it: **Source** = the folder in use + **Browse (b)**; **Images** = every picture in it, Enter picks one and it shows below; **Fit Style** in plain names (Fill the Screen · Whole Picture · Stretched · Real Size · Repeated, each explained under the drop-down); **Apply Background (F10)**. The two points D-8 left open:
+- **The theme's own picture, the KognogOS backgrounds and the solid colour are not files** — hypeForge draws them in the colours picked. They are the first place in the Browse pop-up, **"The theme's pictures"**; picked, the Images list shows those four the way it shows a folder. The page opens on it when the theme's own is on screen, otherwise on the folder of the picture in use.
+- **Apply Background (F10) belongs to the Wallpaper page**: lit when a picture or fit is picked, off otherwise. The changes bar at the bottom is the Theme Picker's (it names the theme, "and the wallpaper" when both wait). F10 anywhere applies everything picked, as before. One visible Apply per page keeps D-3 and hypeForge D-85 ("no need to have same buttons in several places").
+
+Also: the Images list marks the picture on screen (✓) and the one picked (●); a Source that isn't there yet offers **Make Folder (n)**; Browse walks with Enter and Backspace, jumps to Home · Pictures · the KognogOS wallpapers, takes a typed path, and **Use This Folder (u)** picks the one you are in. Tests 42 (two deliberate breaks caught: a dead Apply Background, a dead Use This Folder); `scripts/overlay-bench.py` 15/15 (two new checks: the sharp preview hides under the Browse pop-up and under the Fit Style list).
+
 ## 2026-10-11
 
-### D-8 · The Wallpaper page, redesigned: a browsable folder, every picture in it, Apply Background (Javier, 2026-10-11 night) — to build next
+### D-8 · The Wallpaper page, redesigned: a browsable folder, every picture in it, Apply Background (Javier, 2026-10-11 night) — built 2026-10-13, D-9 settles the open points
 After the first Wallpaper page (D-6): *"themeForge backgrounds will need more work … 1. Source folders for background picker should be browsable 2. Available backgrounds in said folder should be all visible."* His layout, "the fixed, new version":
 - **Source:** the folder in use, with a **Browse** button next to it that opens a pop-up to walk the folders and pick one.
 - **Images:** a list of every picture in that folder; pick one and it shows **below** (the preview), with an **Apply Background** button.

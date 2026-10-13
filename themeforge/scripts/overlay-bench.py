@@ -118,7 +118,7 @@ def main() -> int:
                                        "-o", "window.dimensions.lines=40", "-e", sys.executable, str(HERE / "main.py")],
                                       env=env, stdout=log, stderr=log))
         time.sleep(5)
-        keys("tap:2")                             # the Wallpaper page (it opens on My pictures: the gradient)
+        keys("tap:2")                             # the Wallpaper page (its Source is the gradient's folder)
         time.sleep(2.5)
         print("1 · the page with the picture")
         box = last_box()
@@ -174,9 +174,17 @@ def main() -> int:
         check(wait_for(True), "back on top when themeForge is in use again")
         # the keyboard stays plugged in while we look (unplugging it tells the terminal it lost focus,
         # and a list closes when the app loses focus: a bench thing, a real keyboard stays)
-        held = subprocess.Popen([sys.executable, str(KEYS), "tap:enter", "wait:4", "tap:esc", "wait:1"],
+        held = subprocess.Popen([sys.executable, str(KEYS), "tap:b", "wait:4", "tap:esc", "wait:1"],
                                 env=env, stdout=log, stderr=log)
         time.sleep(1.0)
+        check(wait_for(False, 2.5), "hidden while the Browse pop-up is open (D-8)")
+        subprocess.run(["grim", str(base / "browse.png")], env=env)        # for a person to look at
+        held.wait(15)
+        check(wait_for(True), "back when the pop-up closes")
+        # the Fit Style list: Shift+Tab from the Images list reaches its drop-down, Enter opens it
+        held = subprocess.Popen([sys.executable, str(KEYS), "down:shift", "tap:tab", "up:shift", "wait:0.5",
+                                 "tap:enter", "wait:4", "tap:esc", "wait:1"], env=env, stdout=log, stderr=log)
+        time.sleep(1.5)
         check(wait_for(False, 2.5), "hidden while a list is open")
         held.wait(15)
         check(wait_for(True), "back when the list closes")

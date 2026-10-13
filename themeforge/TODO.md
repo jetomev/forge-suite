@@ -15,8 +15,9 @@
 
 ## Phase 2 · More layers (Javier: "popups, icons, fonts, and other")
 - [ ] Corners: straight · rounded · the style's own (`hypeforge-theme corners`, D-81), and the bar's separately from the windows' (idea, 10-10)
-- [x] **Wallpaper page (D-6, 10-11):** source (theme's own · KognogOS Tier Aware / Arch Distro · my pictures · solid), fit (fill · fit · stretch · center · tile), folder + Make Folder (n), picture, half-block preview; hypeForge D-93 makes the pictures. **D-7: the preview at full quality** over the terminal (overlay.py, our own, Javier's pick; overlay-bench 13/13). ⬜ Javier's run
-- [ ] **NEXT (Javier, 2026-10-11 night) — the Wallpaper page redesigned (D-8):** Source = the folder in use + **Browse** (a pop-up to walk folders and pick one) · **Images** = every picture in that folder as a list; pick one → preview below + **Apply Background** · **Fit Style** with simple names. Settle: where the theme's own / KognogOS / solid go; Apply Background vs F10
+- [x] **Wallpaper page (D-6, 10-11):** source (theme's own · KognogOS Tier Aware / Arch Distro · my pictures · solid), fit (fill · fit · stretch · center · tile), folder + Make Folder (n), picture, half-block preview; hypeForge D-93 makes the pictures. **D-7: the preview at full quality** over the terminal (overlay.py, our own, Javier's pick; overlay-bench 13/13). Javier's run (10-11 night): folders should be browsable, every picture visible → D-8
+- [x] **The Wallpaper page redesigned (D-8, Javier 2026-10-11 night; built 2026-10-13):** Source = the folder in use + **Browse (b)** (a pop-up: Enter into a folder, Backspace up, a typed path, jumps to Home · Pictures · the KognogOS wallpapers, **Use This Folder (u)**) · **Images** = every picture in it, Enter picks → the preview below (✓ on screen, ● picked) · **Fit Style** in plain names, each explained · **Apply Background (F10)** on the page. **D-9** settles the open points: the theme's own, the KognogOS backgrounds and the solid colour are the first place in Browse, "The theme's pictures"; the changes bar is the Theme Picker's. Tests 42 (two deliberate breaks caught), overlay bench 15/15 (the Browse pop-up and the Fit Style list both hide the sharp preview)
+- [ ] **NEXT — Javier's run of the Wallpaper page** (#96)
 - [ ] Pop-ups, icons, fonts — each its own page
 - [ ] The quick-switch tray icon (D-78)
 

@@ -16,7 +16,7 @@
 
 ## Status
 
-**Being built, 2026-10-11 — 0.1.0, the Theme Picker and the Wallpaper page** (the theme's own picture in your colours, our KognogOS backgrounds, a solid colour or your own pictures; five ways to lay them; a small preview in the terminal). More pages come later: the pop-ups, icons, fonts and the rest. Tracking issue: [#84](https://github.com/jetomev/forge-suite/issues/84) · decisions: [docs/DECISIONS.md](docs/DECISIONS.md) · the list: [TODO.md](TODO.md).
+**Being built, 2026-10-13 — 0.1.0, the Theme Picker and the Wallpaper page** (a folder you browse, every picture in it listed, the theme's own picture and our KognogOS backgrounds in your colours, a solid colour; five ways to lay it, in plain names; the preview at full quality on hypeForge, in the terminal's own characters anywhere else). More pages come later: the pop-ups, icons, fonts and the rest. Tracking issue: [#84](https://github.com/jetomev/forge-suite/issues/84) · decisions: [docs/DECISIONS.md](docs/DECISIONS.md) · the list: [TODO.md](TODO.md).
 
 ## License & credits
 
