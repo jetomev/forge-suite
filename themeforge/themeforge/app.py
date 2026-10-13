@@ -57,12 +57,16 @@ TF_CSS = FORGE_CSS + """
 #tf-wp-caption { height: 1; margin: 0 2 0 11; color: $forge-muted; }
 #tf-wp-foot { height: 1; margin: 1 2 0 2; }
 #tf-wp-now { width: 1fr; height: 1; }
-/* the Browse pop-up */
-.tf-browse { width: 78; }
-.tf-browse Input { height: 1; border: none; padding: 0 1; background: $forge-surface; }
-.tf-browse Input:focus { border: none; background: $forge-focus-bg; }
-#tf-br-count { height: 1; padding: 0 1; }
-#tf-br-list { height: 14; }
+/* the Browse window (D-10): the folders as a tree on the left, the pictures of the one under the cursor
+   on the right, like a small file manager */
+.tf-browse { width: 100; }
+#tf-br-where { height: 1; padding: 0 1; }
+#tf-br-panes { height: 18; }
+#tf-br-tree { width: 42; height: 100%; border: solid $forge-field-border; background: $forge-surface; padding: 0 1; overflow-x: hidden; }
+#tf-br-tree:focus { border: solid $forge-accent; }
+#tf-br-tree > .tree--cursor { background: $forge-selected-bg; color: $forge-selected; text-style: $forge-strong; }
+#tf-br-tree > .tree--guides { color: $forge-muted; }
+#tf-br-files { width: 1fr; height: 100%; margin: 0 0 0 1; }
 /* small buttons: one line, no frame (Javier: "not the big ones, they look awful") */
 Button.tf-small { height: 1; min-width: 0; width: auto; border: none; padding: 0 2; margin: 0 0 0 2; }
 """
@@ -282,15 +286,20 @@ class WallpaperView(VerticalScroll):
 
     # ---- what can be picked ----
 
+    def theme_entries(self) -> list[tuple[str, str]]:
+        """[(value, words)] of the theme's pictures: the theme's own (the theme picked on the Theme Picker),
+        the KognogOS backgrounds, the solid colour."""
+        style = (self.app.picked() if hasattr(self.app, "picked") else (None, None))[0] or self.look.current()[0]
+        topic = self.look.topic(style) if style else ""
+        out = [("theme", "The theme's own" + (f" — {topic}" if topic else ""))]
+        out += [(f"kognogos:{slug}", f"KognogOS · {name}") for slug, name in self.look.kognogos_designs()]
+        out += [("solid", "Solid colour — the theme's own")]
+        return out
+
     def entries(self) -> list[tuple[str, str]]:
         """[(value, words)]: what the Source holds."""
         if self.source == THEME_MADE:
-            style = (self.app.picked() if hasattr(self.app, "picked") else (None, None))[0] or self.look.current()[0]
-            topic = self.look.topic(style) if style else ""
-            out = [("theme", "The theme's own" + (f" — {topic}" if topic else ""))]
-            out += [(f"kognogos:{slug}", f"KognogOS · {name}") for slug, name in self.look.kognogos_designs()]
-            out += [("solid", "Solid colour — the theme's own")]
-            return out
+            return self.theme_entries()
         return [(str(p), p.name) for p in self.look.pictures(Path(self.source))]
 
     def folder_for_file(self) -> str | None:
@@ -474,20 +483,21 @@ class WallpaperView(VerticalScroll):
             self.app.refresh_state()
 
     def browse(self) -> None:
-        """Browse (b): the pop-up to walk the folders; the Source follows its answer."""
-        start = self.source if self.source != THEME_MADE else str(self.look.folder())
-        self.app.push_screen(FolderPicker(start), self.source_picked)
+        """Browse (b): the file-manager window (D-10); the Source follows its answer, and the pick too
+        when a picture was chosen there."""
+        self.app.push_screen(FolderPicker(self.source, theme_entries=self.theme_entries()), self.source_picked)
 
-    def source_picked(self, result: str | None) -> None:
-        if result is None:
+    def source_picked(self, result: dict | None) -> None:
+        if not result or not result.get("source"):
             return
-        self.use_source(result)
+        self.use_source(result["source"], result.get("pick"))
         self.query_one("#tf-wp-images", OptionList).focus()
 
-    def use_source(self, source: str) -> None:
+    def use_source(self, source: str, pick: str | None = None) -> None:
         self.source = source
         in_use, _ = self.look.wallpaper_now()
-        self.pick = in_use if in_use in {v for v, _ in self.entries()} else None
+        here = {v for v, _ in self.entries()}
+        self.pick = pick if pick in here else in_use if in_use in here else None
         self.fill_list()
         self.refresh_words()
         self.app.refresh_state()
@@ -527,11 +537,17 @@ class WallpaperView(VerticalScroll):
         self.refresh_words()
 
     def rebuild(self) -> None:
-        """After an apply or undo: the Source, the pick and the marks follow the desktop."""
+        """After an apply or undo: the Source, the pick, the fit and the marks follow the desktop. In place,
+        never a recompose (F-71: a rebuilt page came up with an empty Images list and nothing focused)."""
         self.sync_from_desktop()
-        self.refresh(recompose=True)
-        self.call_after_refresh(self.fill_list)
-        self.call_after_refresh(self.refresh_words)
+        _, fit = self.look.wallpaper_now()
+        sel = self.query_one("#tf-wp-fit", Select)
+        with sel.prevent(Select.Changed):
+            sel.value = fit if fit in FITS else "fill"
+        self.fill_list()
+        self.refresh_words()
+        if self.display and self.app.screen is self.screen:
+            self.query_one("#tf-wp-images", OptionList).focus()
 
 
 class ThemeForgeApp(ForgeApp):

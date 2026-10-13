@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from themeforge.browse import THEME_MADE, count_pictures, places, subfolders, tilde
+from themeforge.browse import THEME_MADE, count_pictures, pictures, roots, subfolders, tilde
 
 
 class Folders(unittest.TestCase):
@@ -30,13 +30,18 @@ class Folders(unittest.TestCase):
         self.assertEqual([p.name for p in subfolders(self.root)], ["A-folder", "b-folder", "Pictures"])
         self.assertEqual(subfolders(self.root / "nowhere"), [])
 
-    def test_places_start_with_the_theme_s_pictures_then_the_folders_that_exist(self):
-        got = places(self.root)
+    def test_the_tree_starts_with_the_theme_s_pictures_then_home(self):
+        got = roots(self.root)
         self.assertEqual(got[0][0], THEME_MADE)
-        self.assertEqual([name for _, name, _ in got][1:3], ["Home", "Pictures"])
-        self.assertNotIn("Downloads", [name for _, name, _ in got])
-        no_pictures = self.root / "b-folder"
-        self.assertNotIn("Pictures", [name for _, name, _ in places(no_pictures)], "a missing Pictures is left out")
+        self.assertEqual(got[1], (str(self.root), "Home"))
+        self.assertLessEqual(len(got), 3, "and the KognogOS wallpapers only when the system has them")
+        elsewhere = roots(self.root / "Pictures", str(self.root / "b-folder"))
+        self.assertEqual(elsewhere[-1], (str(self.root), str(self.root)), "a folder outside them all: its parent becomes a root")
+        self.assertEqual(len(roots(self.root, str(self.root / "b-folder"))), len(got), "under Home: nothing extra")
+
+    def test_pictures_by_name_whatever_the_case(self):
+        self.assertEqual([p.name for p in pictures(self.root)], ["one.PNG", "three.webp", "two.jpg"])
+        self.assertEqual(pictures(self.root / "nowhere"), [])
 
     def test_tilde_shortens_the_home_only(self):
         home = Path.home()

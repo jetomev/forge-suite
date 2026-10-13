@@ -4,9 +4,7 @@ The picture behind your windows. **Every screen shows the same one.**
 
 ## Source
 
-Where the pictures come from: a folder. The line shows the one in use. **Browse (b)** opens a small window to pick another: **Enter** goes into a folder, **Backspace** goes up, or type a folder and press Enter. Each folder says how many pictures it holds. **Use This Folder (u)** takes the one you're in; **Esc** leaves things as they were. Jumps at the top of the list: Home, Pictures, the KognogOS wallpapers.
-
-The first entry there, **The theme's pictures**, isn't a folder: it's the pictures hypeForge draws for you, in the colours you picked (see below).
+Where the pictures come from: a folder. The line shows the one in use. **Browse (b)** opens a small window like a file manager: **the folders as a tree on the left**, and **the pictures of the folder under the cursor on the right**. The tree starts with **The theme's pictures** (the ones hypeForge draws for you, see below), **Home** (open by default) and the **KognogOS wallpapers** the system ships. **↑ ↓** move, **→** or **Enter** opens a folder, **←** closes it or goes up a level, **Tab** jumps to the pictures and **Enter** on one picks it. **Use This Folder (u)** takes the folder under the cursor; **Esc** leaves things as they were. The window opens on the folder in use.
 
 If the folder isn't there yet, **Make Folder (n)** makes it; then put your pictures in it (PNG, JPEG, WebP…) and they show up.
 

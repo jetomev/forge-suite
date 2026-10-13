@@ -245,44 +245,40 @@ class WallpaperPage(unittest.TestCase):
                 self.assertIn("in use", str(app.query_one("#tf-wp-images", OptionList).get_option_at_index(3).prompt))
         run(go())
 
-    def test_browse_walks_to_a_folder_and_every_picture_in_it_is_listed(self):
-        from themeforge.browse import FolderPicker
+    def test_after_an_apply_the_images_list_is_still_there_filled_and_in_focus(self):
+        """F-71 (Javier, 2026-10-13): "After I applied it, the images list disappeared. Can't select images
+        from the Images box anymore." The page is updated in place; the list is the same widget, full, focused."""
         app = ThemeForgeApp(self.look)
 
         async def go():
             async with app.run_test(size=(120, 40)) as pilot:
                 await self.open_page(pilot, app)
-                await pilot.press("b")
+                app.query_one("#sec-wallpaper").use_source(str(self.pics))
                 await pilot.pause()
-                self.assertIsInstance(app.screen, FolderPicker, "b opens the Browse pop-up")
-                app.screen.query_one("#tf-br-path").value = str(self.pics)
-                app.screen.query_one("#tf-br-path").focus()
+                before = app.query_one("#tf-wp-images", OptionList)
+                self.pick(app, str(self.pics / "a.jpg"))
+                app.query_one("#tf-wp-fit", Select).value = "tile"
+                await pilot.pause()
+                await pilot.press("f10")
+                await app.workers.wait_for_complete()
+                await pilot.pause(0.5)
+                after = app.query_one("#tf-wp-images", OptionList)
+                self.assertIs(after, before, "the same list, not a new empty one")
+                self.assertEqual([Path(v).name for v in self.images(app)], ["a.jpg", "b.png"], "still full")
+                self.assertTrue(after.has_focus, "still the thing in focus")
+                self.assertIn("in use", str(after.get_option_at_index(0).prompt))
+                self.assertEqual(app.query_one("#tf-wp-fit", Select).value, "tile", "the fit shows what is in use")
+                self.assertTrue(app.query_one("#tf-wp-apply").disabled, "nothing pending after the apply")
+                await pilot.press("down")
                 await pilot.press("enter")
                 await pilot.pause()
-                self.assertIn("2 pictures here", str(app.screen.query_one("#tf-br-count").render()))
-                ol = app.screen.query_one("#tf-br-list", OptionList)
-                ids = [ol.get_option_at_index(i).id for i in range(ol.option_count)]
-                self.assertIn(f"dir:{self.pics / 'more'}", ids, "the folders inside are listed")
-                self.assertNotIn(f"dir:{self.pics / '.hidden'}", ids, "hidden ones aren't")
-                self.assertIn("1 picture", str(ol.get_option_at_index(ids.index(f"dir:{self.pics / 'more'}")).prompt))
-                await pilot.press("u")
-                await pilot.pause()
-                self.assertNotIsInstance(app.screen, FolderPicker, "Use This Folder closes it")
-                self.assertEqual(str(app.query_one("#tf-wp-source").render()), str(self.pics))
-                self.assertEqual([Path(v).name for v in self.images(app)], ["a.jpg", "b.png"], "pictures only, by name")
-                self.assertTrue(app.query_one("#tf-wp-apply").disabled, "no picture picked yet")
-                self.pick(app, str(self.pics / "b.png"))
-                await pilot.pause()
-                self.assertFalse(app.query_one("#tf-wp-apply").disabled)
-                app.query_one("#tf-wp-apply").press()
-                await app.workers.wait_for_complete()
-                await pilot.pause()
-                self.assertEqual(self.look.done[0][3], {"picture": str(self.pics / "b.png"), "fit": "fill",
-                                                        "folder": str(self.pics)}, "the folder is remembered")
+                self.assertFalse(app.query_one("#tf-wp-apply").disabled, "and the next pick works")
         run(go())
 
-    def test_browse_goes_up_into_folders_and_back_to_the_theme_s_pictures(self):
-        from themeforge.browse import THEME_MADE, FolderPicker
+    def test_browse_is_a_tree_of_folders_with_the_pictures_beside_it(self):
+        """D-10 (Javier, 2026-10-13): "something like a file manager window popup … folders … tree … a
+        very simplified midnight commander". Home open by default; the folder in use under the cursor."""
+        from themeforge.browse import THEME_MADE, FolderPicker, FolderTree
         app = ThemeForgeApp(self.look)
 
         async def go():
@@ -292,20 +288,69 @@ class WallpaperPage(unittest.TestCase):
                 await pilot.pause()
                 await pilot.press("b")
                 await pilot.pause()
-                await pilot.press("backspace")
+                self.assertIsInstance(app.screen, FolderPicker, "b opens the Browse window")
+                tree = app.screen.query_one("#tf-br-tree", FolderTree)
+                self.assertEqual([str(n.label) for n in tree.root.children][:2], ["The theme's pictures", "Home"])
+                self.assertEqual(tree.cursor_node.data, str(self.pics / "more"), "the folder in use is under the cursor")
+                self.assertIn("1 picture", str(app.screen.query_one("#tf-br-where").render()))
+                files = app.screen.query_one("#tf-br-files", OptionList)
+                self.assertEqual([files.get_option_at_index(i).id for i in range(files.option_count)],
+                                 [str(self.pics / "more/c.png")], "its pictures on the right")
+                long = self.pics / "more" / ("a-very-long-name-" * 5 + ".png")
+                long.write_bytes((self.pics / "more/c.png").read_bytes())
+                app.screen.show_files(tree.cursor_node)
+                shown = str(files.get_option_at_index(0).prompt).split("[/] ", 1)[-1]      # after the mark
+                self.assertLess(len(shown), 56, f"a long name stays one line: {shown!r}")
+                self.assertIn("…", shown)
+                self.assertEqual(files.get_option_at_index(0).id, str(long), "but it is still the whole file")
+                await pilot.press("left")
                 await pilot.pause()
-                self.assertEqual(app.screen.folder, self.pics, "Backspace goes up")
-                ol = app.screen.query_one("#tf-br-list", OptionList)
-                self.assertEqual(ol.get_option_at_index(ol.highlighted).id, f"dir:{self.pics / 'more'}",
-                                 "the folder we came from is under the cursor")
+                self.assertEqual(tree.cursor_node.data, str(self.pics), "← goes to the folder above")
+                self.assertEqual(files.option_count, 2, "a.jpg and b.png")
+                names = [str(c.label) for c in tree.cursor_node.children]
+                self.assertEqual(names, ["more", "new"] if (self.pics / "new").is_dir() else ["more"], "hidden folders aren't shown")
+                await pilot.press("u")
+                await pilot.pause()
+                self.assertNotIsInstance(app.screen, FolderPicker, "Use This Folder closes it")
+                self.assertEqual(app.query_one("#sec-wallpaper").source, str(self.pics))
+                self.assertEqual([Path(v).name for v in self.images(app)], ["a.jpg", "b.png"], "pictures only, by name")
+                self.assertTrue(app.query_one("#tf-wp-apply").disabled, "no picture picked yet")
+        run(go())
+
+    def test_a_picture_picked_in_browse_is_the_pick_and_the_theme_s_pictures_are_a_root(self):
+        from themeforge.browse import THEME_MADE, FolderPicker, FolderTree
+        app = ThemeForgeApp(self.look)
+
+        async def go():
+            async with app.run_test(size=(120, 40)) as pilot:
+                await self.open_page(pilot, app)
+                app.query_one("#sec-wallpaper").use_source(str(self.pics))
+                await pilot.pause()
+                await pilot.press("b")
+                await pilot.pause()
+                await pilot.press("tab")                     # to the pictures
+                await pilot.press("down")                    # b.png
                 await pilot.press("enter")
                 await pilot.pause()
-                self.assertEqual(app.screen.folder, self.pics / "more", "Enter goes in")
-                ol.highlighted = 0
-                ol.action_select()
-                await pilot.pause()
                 self.assertNotIsInstance(app.screen, FolderPicker)
-                self.assertEqual(app.query_one("#sec-wallpaper").source, THEME_MADE, "the first place is the theme's pictures")
+                self.assertEqual(app.query_one("#sec-wallpaper").pick, str(self.pics / "b.png"), "Enter on a picture picks it")
+                self.assertFalse(app.query_one("#tf-wp-apply").disabled)
+                app.query_one("#tf-wp-apply").press()
+                await app.workers.wait_for_complete()
+                await pilot.pause()
+                self.assertEqual(self.look.done[0][3], {"picture": str(self.pics / "b.png"), "fit": "fill",
+                                                        "folder": str(self.pics)}, "the folder is remembered")
+                await pilot.press("b")
+                await pilot.pause()
+                tree = app.screen.query_one("#tf-br-tree", FolderTree)
+                tree.move_cursor(tree.root.children[0])
+                await pilot.pause()
+                files = app.screen.query_one("#tf-br-files", OptionList)
+                self.assertEqual([files.get_option_at_index(i).id for i in range(files.option_count)],
+                                 ["theme", "kognogos:tier-aware", "kognogos:arch-distro", "solid"], "the theme's pictures")
+                await pilot.press("enter")                    # nothing to open there: Enter takes it
+                await pilot.pause()
+                self.assertEqual(app.query_one("#sec-wallpaper").source, THEME_MADE)
                 self.assertEqual(self.images(app)[0], "theme")
         run(go())
 
