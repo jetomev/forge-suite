@@ -5,6 +5,11 @@
 
 ---
 
+## 2026-10-12
+
+### D-94 · Settings apps open where they are called from; the Settings workspace is gone (Javier)
+*"All hypeForge Settings apps need to open at the workspace they are called from."* (10-11 night; done 10-12, #97.) Until now a workspace named **Settings** listed hypeForge Settings, alacrittyForge, displayForge, grubForge, nogForge and nine system tools, so opening any of them switched every screen to that workspace (the Workspaces applet's rule, F-50). Javier deleted the workspace **in workspaceForge** — a review, a backup, applied at once — and by the standing rule *an app on no list opens where you are*, every one of them now opens on the focused workspace, same screen. Proven live before and after. No code changed; workspaceForge lacked nothing for this. The nine system tools lost their home too; each is a gap on the ranked order waiting for its own Forge app.
+
 ## 2026-10-11
 
 ### D-93 · The wallpaper: the theme's own in its colours, KognogOS, solid or yours, laid five ways (Javier)
