@@ -6,4 +6,4 @@
 - **Decisions** live in `docs/DECISIONS.md` (D-1…); research in `docs/research/`. Read them before changing the design.
 - **Safety first:** secrets are encrypted at rest; the key never touches a log; a blank password is never an option; nothing of the user's is read or written before the design's unlock path is proven.
 - **Tests:** `python -m unittest discover -s tests -v` (stdlib runner). Report the test count at every release; the store is exercised through the real D-Bus interface with `secret-tool` in the failing direction too (locked, wrong key, no session).
-- **Versioning:** own version, tags `walletforge-vX.Y.Z`, AUR `walletforge` when it ships. Plain words everywhere; the readers are not engineers.
+- **Versioning:** own version, tags `walletforge-vX.Y.Z`, AUR `walletforge` when it ships.

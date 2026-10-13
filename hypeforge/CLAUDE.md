@@ -24,7 +24,6 @@ The KognogOS desktop on **Sway** (D-45): tiling, terminal apps first. Each featu
 - `TODO.md` is updated after every step, and `bash scripts/status.sh` must still parse it (`## Phase N · Name`, `- [ ]` / `- [x]`).
 - Research goes in `docs/research/YYYY-MM-DD-<topic>.md`, with the commands run and the sources read.
 - The README stays accurate top to bottom at every commit. Roadmap and changelog are newest first. The README keeps only upcoming work and the two most recent releases.
-- Plain words throughout. The readers are not engineers.
 
 ## Release discipline
 - Every phase ships as three steps: a `Phase N: <scope>` commit, then `docs: README + version bump for vX.Y.Z (Phase N complete)`, then an annotated, signed tag (`git tag -s -m`).

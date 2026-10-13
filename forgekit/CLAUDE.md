@@ -27,7 +27,6 @@ A small Python library on top of [Textual](https://textual.textualize.io): the s
 - The README stays accurate top to bottom at every commit. Roadmap and changelog are newest first; the README keeps only upcoming work and the two most recent releases, older ones live in `docs/CHANGELOG.md` / `docs/ROADMAP.md`.
 - Findings are numbered F-n and each gets an issue, opened with a full explanation and closed with one.
 - After every push: a Vault entry in `~/Google Drive/Rullynastre/ForgeKit/`.
-- Plain words throughout. The readers are not engineers.
 
 ## Release discipline
 - Version in **every** surface at once: `pyproject.toml`, `forgekit/__init__.py`, README, the AUR `python-forgekit` PKGBUILD (in lockstep on content, not only `pkgver`).

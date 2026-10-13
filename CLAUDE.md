@@ -6,5 +6,4 @@
 - **Every app keeps its own version, tags `<app>-vX.Y.Z` and AUR package.** Release rules are adapted when the first shipped app moves in.
 - **New Forge apps are born here**, as a new section — never a new repository.
 - **The commit hook** runs each section's checks: `git config core.hooksPath hypeforge/scripts/hooks`.
-- Commits name their section: `feat(hypeforge/…): …`. Co-author trailer on every commit; every commit signed.
-- Plain words throughout; the readers are not engineers.
+- Commits name their section: `feat(hypeforge/…): …`. Every commit signed.

@@ -8,4 +8,4 @@
 - **A design is approved by Javier, screen by screen, before code is written** (`docs/design/`, checked at 100 columns).
 - **Built on forgekit, the Forge look;** keys from the menu, buttons "Words (key)", drop-downs for the choice, a pop-up for Save, quitting with unsaved changes asks; `--hypeforge`.
 - **Where it runs, said everywhere:** any Linux distribution · any desktop or none · any terminal, a plain text console too.
-- Packages through nog; decisions in `docs/DECISIONS.md`; TODO.md after every step; plain words. Versioning: tags `defaultappsforge-vX.Y.Z`, AUR `defaultappsforge` after Javier's local test.
+- Decisions in `docs/DECISIONS.md` (D-n). Versioning: tags `defaultappsforge-vX.Y.Z`, AUR `defaultappsforge` after Javier's local test.
