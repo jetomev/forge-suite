@@ -5,6 +5,9 @@
 **Updated after every step.** The full story behind each item is in its GitHub issue.
 
 
+## 2026-10-12 · CLAUDE.md keeps only this project's own rules
+- [x] **One rule, one level** (Javier, 2026-10-12): the 'never the persona names here' line removed; the names come from the global agreement. Commit pushed the same night.
+
 ## 2026-10-11 · What it needs, measured
 - [x] **What it needs, measured** (2026-10-11, forge-suite#91): `docs/PACKAGING.md` + `tests/test_needs.py`. The AUR 2.2.0 build **failed in a clean system** — F-8 #41: reload() read the system's own /etc/default/grub (fixed `2f52058`); the recipe now depends on grub (+ os-prober optional)
 - [x] **2.2.1** — GitHub Release v2.2.1 (signed, 2026-10-11), 86 tests at the tag; AUR `2635ffd` after Javier's local test ✅
