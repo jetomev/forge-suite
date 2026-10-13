@@ -26,7 +26,7 @@ from . import __version__
 from .browse import THEME_MADE, FolderPicker, tilde
 from .look import FIT_ABOUT, FITS, Look
 from .preview import overlay_picture, preview
-from .termcell import Cells, measure
+from .termcell import Cells, measure, settings_shows_me
 
 MANUAL_DIR = os.path.join(os.path.dirname(__file__), "manual")
 
@@ -227,6 +227,10 @@ class PictureOverlay:
 
     def show(self, png: str, cells: tuple[int, int, int, int], grid: tuple[int, int]) -> None:
         if self.possible:
+            c = self.cells
+            if c.origin:                                   # inside Settings: our cells, in the terminal's grid
+                cells = (cells[0] + c.origin[0], cells[1] + c.origin[1], cells[2], cells[3])
+                grid = c.grid or grid
             self._send({"show": {"png": png, "cells": list(cells), "grid": list(grid)}})
 
     def hide(self) -> None:
@@ -459,6 +463,8 @@ class WallpaperView(VerticalScroll):
             return None
         if any(s.expanded for s in self.query(Select)):
             return None
+        if not settings_shows_me():                     # inside Settings: another page is on screen
+            return None
         box = self.query_one("#tf-wp-preview", Static).content_region
         size = self.app.size
         if box.width < 4 or box.height < 2 or box.x < 0 or box.y < 0 or \
@@ -494,10 +500,12 @@ class WallpaperView(VerticalScroll):
         self.query_one("#tf-wp-images", OptionList).focus()
 
     def use_source(self, source: str, pick: str | None = None) -> None:
+        """A Source picked in Browse: the picture chosen there, else the one on screen if it lives here,
+        else the first one (Javier, 2026-10-13: "the first image of the list should show automatically")."""
         self.source = source
         in_use, _ = self.look.wallpaper_now()
-        here = {v for v, _ in self.entries()}
-        self.pick = pick if pick in here else in_use if in_use in here else None
+        here = [v for v, _ in self.entries()]
+        self.pick = pick if pick in here else in_use if in_use in here else here[0] if here else None
         self.fill_list()
         self.refresh_words()
         self.app.refresh_state()

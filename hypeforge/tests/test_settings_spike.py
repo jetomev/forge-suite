@@ -25,8 +25,9 @@ def load_app_class():
     body = src[src.index("    sys.path.insert(0, str(HERE))"):src.index("    SettingsApp().run()")]
     import shlex
     import signal
+    from pathlib import Path as _P
     ns = {"os": os, "sys": sys, "shlex": shlex, "signal": signal, "pages": m.pages, "VERSION": m.VERSION,
-          "HERE": m.HERE}
+          "HERE": m.HERE, "Path": _P}
     exec("\n".join(line[4:] if line.startswith("    ") else line for line in body.splitlines()), ns)
     return ns["SettingsApp"], m
 
@@ -335,6 +336,34 @@ class HomeSummaries(unittest.TestCase):
             home.screens = old
         self.assertEqual(rows[0][:2], ("Screens", [home.UNKNOWN]))
         self.assertEqual(len(rows), len(home.CARDS))
+
+
+class CellsHandedToThePanes(unittest.TestCase):
+    """D-97 (Javier, 2026-10-13: themeForge's sharp preview was blurry inside Settings): the terminal's
+    cells and the pane's place go to every app Settings opens."""
+
+    def test_the_pane_env_says_where_the_pane_is_and_which_page(self):
+        SettingsApp, m = load_app_class()
+
+        class Region:
+            x, y = 31, 2
+
+        class Pane:
+            content_region = Region()
+
+        env = SettingsApp.pane_env(Pane(), 4, {"HYPEFORGE_TERM_CELLS": "9.5 20 4 4 0 130 40"})
+        self.assertEqual(env["HYPEFORGE_PANE_AT"], "31 2")
+        self.assertEqual(env["HYPEFORGE_SETTINGS_PAGE"], "4")
+        self.assertEqual(env["HYPEFORGE_TERM_CELLS"], "9.5 20 4 4 0 130 40", "the measurement passes through")
+
+    def test_the_cells_value_round_trips(self):
+        import importlib.util, importlib.machinery
+        common = Path(__file__).resolve().parent.parent / "applets/common/hfcells.py"
+        spec = importlib.util.spec_from_file_location("hfcells_t", common)
+        hc = importlib.util.module_from_spec(spec); spec.loader.exec_module(hc)
+        got = hc.parse("9.5000 20.0000 4 4 0 130 40")
+        self.assertEqual((got["width"], got["height"], got["pad_x"], got["centred"], got["cols"], got["lines"]), (9.5, 20.0, 4.0, False, 130, 40))
+        self.assertIsNone(hc.parse("rubbish"))
 
 
 if __name__ == "__main__":

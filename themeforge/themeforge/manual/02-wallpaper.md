@@ -4,7 +4,7 @@ The picture behind your windows. **Every screen shows the same one.**
 
 ## Source
 
-Where the pictures come from: a folder. The line shows the one in use. **Browse (b)** opens a small window like a file manager: **the folders as a tree on the left**, and **the pictures of the folder under the cursor on the right**. The tree starts with **The theme's pictures** (the ones hypeForge draws for you, see below), **Home** (open by default) and the **KognogOS wallpapers** the system ships. **↑ ↓** move, **→** or **Enter** opens a folder, **←** closes it or goes up a level, **Tab** jumps to the pictures and **Enter** on one picks it. **Use This Folder (u)** takes the folder under the cursor; **Esc** leaves things as they were. The window opens on the folder in use.
+Where the pictures come from: a folder. The line shows the one in use. **Browse (b)** opens a small window like a file manager: **the folders as a tree on the left**, and **the pictures of the folder under the cursor on the right**. The tree starts with **The theme's pictures** (the ones hypeForge draws for you, see below), **Home** (open by default) and the **KognogOS wallpapers** the system ships. **↑ ↓** move, **→** or **Enter** opens a folder, **←** closes it or goes up a level, **Tab** jumps to the pictures and **Enter** on one picks it. **Use This Folder (u)** takes the folder under the cursor; **Esc** leaves things as they were. The window opens on the folder in use. A folder you pick shows its first picture right away.
 
 If the folder isn't there yet, **Make Folder (n)** makes it; then put your pictures in it (PNG, JPEG, WebP…) and they show up.
 
@@ -30,7 +30,7 @@ A picture of your own stays when you change the theme or colours.
 
 ## The preview
 
-Under the list, a picture of how your screens will look. On hypeForge it's the real picture, at full quality, laid over the window; it steps away while a list or the Browse window is open, or another window is in use. In a plain text console it's drawn with the terminal's own characters instead: rough, but enough to tell one picture from another. The first preview of a theme's picture can take a few seconds while it's drawn.
+Under the list, a picture of how your screens will look. On hypeForge it's the real picture, at full quality, laid over the window — inside hypeForge Settings too; it steps away while a list or the Browse window is open, another window is in use, or Settings shows another page. In a plain text console it's drawn with the terminal's own characters instead: rough, but enough to tell one picture from another. The first preview of a theme's picture can take a few seconds while it's drawn.
 
 **Apply Background (F10)** sets it. **Undo Last Apply (u)** brings back what you had. The lock screen follows the wallpaper by itself.
 

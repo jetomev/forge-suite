@@ -25,6 +25,37 @@ class Cells:
     pad_x: float = 0.0        # where the text starts inside the window
     pad_y: float = 0.0
     centred: bool = False     # the padding is spread evenly (Alacritty's dynamic_padding)
+    origin: tuple[int, int] | None = None     # inside hypeForge Settings: where our pane's cell (0, 0) sits in its grid
+    grid: tuple[int, int] | None = None       # and that grid's size (the terminal's, not the pane's)
+
+
+# Inside hypeForge Settings (D-97, 2026-10-13): the pane is not a terminal window, so Settings measures
+# its own terminal and hands the answer down, with where the pane sits and which page we are.
+ENV_CELLS, ENV_PANE_AT, ENV_PAGE = "HYPEFORGE_TERM_CELLS", "HYPEFORGE_PANE_AT", "HYPEFORGE_SETTINGS_PAGE"
+
+
+def from_settings(environ=None) -> Cells | None:
+    """The cells hypeForge Settings handed down, or None when this isn't running in one of its panes."""
+    env = os.environ if environ is None else environ
+    try:
+        cw, ch, px, py, c, cols, lines = env[ENV_CELLS].split()
+        ox, oy = env[ENV_PANE_AT].split()
+        return Cells(float(cw), float(ch), float(px), float(py), c == "1", (int(ox), int(oy)), (int(cols), int(lines)))
+    except (KeyError, ValueError):
+        return None
+
+
+def settings_shows_me(environ=None, runtime: Path | None = None) -> bool:
+    """Inside Settings: whether our page is the one on screen (Settings writes it to a file); True outside."""
+    env = os.environ if environ is None else environ
+    page = env.get(ENV_PAGE)
+    if page is None:
+        return True
+    shown = (runtime or Path(env.get("XDG_RUNTIME_DIR", "/tmp"))) / "hypeforge-settings/shown"
+    try:
+        return shown.read_text().strip() == page
+    except OSError:
+        return True
 
 
 def ask_terminal(timeout: float = 0.6) -> tuple[int, int, int, int] | None:
@@ -80,7 +111,11 @@ def alacritty_padding(config: Path | None = None) -> tuple[float, float, bool]:
 
 
 def measure() -> Cells | None:
-    """The cells of the terminal this runs in, or None (a plain console, or a terminal that doesn't say)."""
+    """The cells of the terminal this runs in, or None (a plain console, or a terminal that doesn't say).
+    Inside hypeForge Settings the answer comes from Settings (the pane can't be asked)."""
+    handed = from_settings()
+    if handed is not None:
+        return handed
     answer = ask_terminal()
     if answer is None:
         return None

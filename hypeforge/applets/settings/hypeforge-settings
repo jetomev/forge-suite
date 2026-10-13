@@ -38,6 +38,11 @@ def pages():
 
 def main():
     sys.path.insert(0, str(HERE))
+    sys.path.insert(0, str(HERE.parent / "common"))
+    import hfcells                         # the terminal's cells, handed to the apps in the panes (D-97)
+    cells = hfcells.measure()              # asked of the terminal before Textual takes the keyboard
+    if cells:
+        os.environ[hfcells.CELLS] = cells
     import home as H                       # the Home page's summaries (0.5.0, #46)
     from textual.app import ComposeResult
     from textual.binding import Binding
@@ -170,6 +175,7 @@ def main():
 
         def show_home(self) -> None:
             """Home on the right, its cards asked afresh (a thread: a slow answer never freezes Settings)."""
+            self._tell_shown("none")
             self.show_right("#hf-home")
             self.query_one("#hf-empty").display = False
             self.run_worker(self._fill_cards, thread=True, exclusive=True, group="hf-home")
@@ -210,6 +216,7 @@ def main():
 
         def show_right(self, which: str) -> None:
             """Manual, About or License on the right, where the apps run; the apps keep running."""
+            self._tell_shown("none")
             for w in self.query(".hf-pane, .hf-page"):
                 w.display = False
             self.query_one("#hf-running").display = False
@@ -277,8 +284,32 @@ def main():
                     else [os.path.expanduser(w) for w in shlex.split(p["command"])]
                 if p.get("forge") and cmd[:2] != ["sh", "-c"]:
                     cmd.append("--hypeforge")     # no Quit of its own: Settings closes it (0.4.0)
-                self.call_after_refresh(pane.start, cmd, dict(os.environ))
+                self.call_after_refresh(self._start_in_pane, pane, cmd, i)
             self.call_after_refresh(pane.focus)
+            self._tell_shown(str(i))
+
+        @staticmethod
+        def pane_env(pane, i: int, base: dict | None = None) -> dict:
+            """The app's environment: where its pane sits in the terminal's grid and which page it is, so
+            an app that draws over the terminal (themeForge's sharp preview) lands on its own cells (D-97)."""
+            env = dict(os.environ if base is None else base)
+            r = pane.content_region
+            env[hfcells.PANE_AT] = f"{r.x} {r.y}"
+            env[hfcells.PAGE] = str(i)
+            return env
+
+        def _start_in_pane(self, pane, cmd, i: int) -> None:
+            pane.start(cmd, self.pane_env(pane, i))
+
+        @staticmethod
+        def _tell_shown(what: str) -> None:
+            """The page on screen, for the apps in the panes ("none" = Home, the manual, About…)."""
+            try:
+                d = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-settings"
+                d.mkdir(parents=True, exist_ok=True)
+                (d / "shown").write_text(what)
+            except OSError:
+                pass
 
         def on_terminal_pane_exited(self, e: TerminalPane.Exited) -> None:
             if getattr(self, "_quitting", False):

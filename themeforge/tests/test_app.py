@@ -314,7 +314,9 @@ class WallpaperPage(unittest.TestCase):
                 self.assertNotIsInstance(app.screen, FolderPicker, "Use This Folder closes it")
                 self.assertEqual(app.query_one("#sec-wallpaper").source, str(self.pics))
                 self.assertEqual([Path(v).name for v in self.images(app)], ["a.jpg", "b.png"], "pictures only, by name")
-                self.assertTrue(app.query_one("#tf-wp-apply").disabled, "no picture picked yet")
+                self.assertEqual(app.query_one("#sec-wallpaper").pick, str(self.pics / "a.jpg"),
+                                 "the first picture shows by itself (Javier, 10-13)")
+                self.assertFalse(app.query_one("#tf-wp-apply").disabled)
         run(go())
 
     def test_a_picture_picked_in_browse_is_the_pick_and_the_theme_s_pictures_are_a_root(self):

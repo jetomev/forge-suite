@@ -65,5 +65,47 @@ class Padding(unittest.TestCase):
             self.assertEqual(alacritty_padding(Path(d) / "missing.toml"), (0.0, 0.0, False))
 
 
+
+class InsideSettings(unittest.TestCase):
+    """D-97 (Javier, 2026-10-13: "the previews are showing blurry" inside hypeForge Settings): Settings
+    hands its terminal's cells down; the preview's cells are offset by the pane's place."""
+
+    def test_the_cells_come_from_settings_when_it_hands_them(self):
+        from themeforge.termcell import from_settings
+        c = from_settings({"HYPEFORGE_TERM_CELLS": "9.5 20 4 4 0 130 40", "HYPEFORGE_PANE_AT": "31 2"})
+        self.assertEqual((c.width, c.height, c.pad_x, c.pad_y, c.centred), (9.5, 20.0, 4.0, 4.0, False))
+        self.assertEqual((c.origin, c.grid), ((31, 2), (130, 40)))
+        self.assertIsNone(from_settings({}), "outside Settings: ask the terminal")
+        self.assertIsNone(from_settings({"HYPEFORGE_TERM_CELLS": "broken"}))
+
+    def test_the_overlay_is_told_the_terminal_cells_not_the_panes(self):
+        import os
+        from themeforge.app import PictureOverlay
+        from themeforge.termcell import Cells
+        sent = []
+        ov = PictureOverlay(Cells(9.5, 20, origin=(31, 2), grid=(130, 40)))
+        ov._send = lambda msg: sent.append(msg)
+        env = dict(os.environ); os.environ.update(SWAYSOCK="x", WAYLAND_DISPLAY="y"); os.environ.pop("THEMEFORGE_NO_OVERLAY", None)
+        try:
+            ov.show("/p.png", (10, 5, 56, 14), (100, 40))
+        finally:
+            os.environ.clear(); os.environ.update(env)
+        self.assertEqual(sent, [{"show": {"png": "/p.png", "cells": [41, 7, 56, 14], "grid": [130, 40]}}])
+
+    def test_hidden_while_settings_shows_another_page(self):
+        import tempfile
+        from pathlib import Path
+        from themeforge.termcell import settings_shows_me
+        with tempfile.TemporaryDirectory() as d:
+            run = Path(d); (run / "hypeforge-settings").mkdir()
+            (run / "hypeforge-settings/shown").write_text("3")
+            self.assertTrue(settings_shows_me({"HYPEFORGE_SETTINGS_PAGE": "3"}, run))
+            self.assertFalse(settings_shows_me({"HYPEFORGE_SETTINGS_PAGE": "4"}, run))
+            self.assertTrue(settings_shows_me({}, run), "outside Settings: nothing hides it")
+            (run / "hypeforge-settings/shown").write_text("none")
+            self.assertFalse(settings_shows_me({"HYPEFORGE_SETTINGS_PAGE": "3"}, run), "Home, the manual: not us")
+
+
+
 if __name__ == "__main__":
     unittest.main()
