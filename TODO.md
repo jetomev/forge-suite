@@ -2,6 +2,9 @@
 
 **Target: the first KognogOS release (v1.0, April 2027).** Each section keeps its own detailed list; this one tracks the suite. Updated after every step.
 
+## 2026-10-12 · CLAUDE.md keeps only this project's own rules
+- [x] **One rule, one level** (Javier, 2026-10-12): the suite file and nine section files keep only their own rules (decisions file, versioning, signing); plain words, nog first, TODO after every step and the co-author trailer come from the global agreement and the release rules. Commit pushed the same night.
+
 ## 2026-10-11 — what every app needs, measured (#91)
 - [x] **The dependency audit** (Javier: "check all Forge Suite apps for all dependencies needed to build and run them. Very important to have done now"): `scripts/needs-audit.py` (imports, programs, linked libraries → Arch packages, beside each AUR recipe); `docs/PACKAGING.md` + `tests/test_needs.py` in every section and every outside app (nog and mindForge: the list); **every AUR recipe built in a clean Arch system** (devtools, the kognog-hypeforge VM, snapshot `before-needs-audit`)
 - [x] Found: **three published packages don't build on a clean system** — displayForge 1.1.0 (F-7 #92, a test assumed ddcutil), nightForge 1.0.0 (F-1 #93, a test assumed Miami time), grubForge 2.2.0 (grubforge#41, F-8: reload() read the system's GRUB file); **recipes missing needs** — nog sudo + zstd (nog#50), python-rich (displayForge, workspaceForge, nightForge), glib2 (nightForge), grub (grubForge), optional flatpak/snapd (nog, nogForge); hypeForge F-71 #94 (brightnessctl), F-72 #95 (pam_kwallet_init); the wallpaper generator lives in docs/; KognogOS's profiles list none of hypeForge's 34 needs (KognogOS TODO)
