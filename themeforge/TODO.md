@@ -20,7 +20,8 @@
 - [x] **Javier's first run (10-13):** Browse "not intuitive" → **D-10, a small file manager**: folders as a tree (The theme's pictures · Home open by default · KognogOS wallpapers · the folder in use's parent when elsewhere), the pictures of the folder under the cursor on the right, Enter on one picks it; **F-73** (#98, closed) the Images list came up empty after an apply → the page updates in place (test seen failing on the old code). Fit Style "works perfect!". Tests 44, overlay bench 15/15
 - [x] **His second run (10-13, inside Settings, "98% ready"):** the first picture of an opened folder shows by itself; the preview was blurry inside Settings → **D-11**: Settings hands its terminal's cells down (hypeForge D-97), themeForge offsets the sharp preview by the pane's place and hides it on other pages. Tests 47
 - [x] His look at D-11: two previews, the sharp one top-left → hypeForge **F-74** (#99, open until his check: the pane's place came as 0 0 when Settings opened on Look) → read from Settings' `pane-<n>` file as it changes. Tests 48. **#96 closed 10-13 (Javier: "perfect!!!"), #90 closed with it**
-- [ ] **NEXT — Javier's third run** (#96): close every Settings window, start Settings afresh → Look → the sharp preview right over the box; Browse; the first picture
+- [x] **His third run (10-13, fresh Settings):** "it is working well" — the sharp preview sits on the box inside Settings; #99 (F-74) closed
+- [ ] **NEXT:** the next look pages (corners D-81, pop-ups, icons, fonts), the quick-switch tray icon; nightForge 1.1 (#82) in the themeForge batch
 - [ ] Pop-ups, icons, fonts — each its own page
 - [ ] The quick-switch tray icon (D-78)
 
