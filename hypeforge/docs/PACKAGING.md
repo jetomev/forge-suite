@@ -56,6 +56,9 @@ aren't listed.*
 |---|---|---|
 | glib2 | telling GTK apps the new look (gsettings) | (program gsettings) |
 | wlsunset | the night light without nightForge | (program) |
+| ddcutil | the brightness keys on desktop monitors (DDC/CI, displayForge's channel; #94) | (program) |
+| brightnessctl | the brightness keys on a laptop's screen (a backlight in /sys/class/backlight; #94) — optional on a desktop | (program) |
+| kwallet-pam | `/usr/lib/pam_kwallet_init`, run at login: KDE's saved-passwords store opens with the login password, no window (#39, #41) — until walletForge | (file, not on PATH) |
 
 ## The AUR recipe
 
@@ -63,6 +66,6 @@ No package yet: KognogOS installs these. When hypeForge gets its package, this i
 
 ## Found by the audit
 
-- **brightnessctl isn't installed**, but Sway's config binds the brightness keys to it: they do nothing (desktop monitors don't care; a laptop would).
-- **pam_kwallet_init isn't on this system**, but Sway's config starts it at login (unlocking saved passwords): the line fails quietly every login. walletForge's question.
+- ~~brightnessctl isn't installed, but Sway's config binds the brightness keys to it~~ — **done 2026-10-13 (#94, D-99):** the keys run `applets/brightness/hypeforge-brightness`, which uses the backlight when there is one (brightnessctl) and the monitors' own control when there isn't (ddcutil), both listed above.
+- ~~pam_kwallet_init isn't on this system~~ — **the audit was wrong (#95):** it is there, `/usr/lib/pam_kwallet_init` from kwallet-pam 6.7.5, and the login's PAM (`/etc/pam.d/sddm`) starts the store for it; the audit looked it up on PATH, where /usr/lib never is. The line works, and it is what keeps the KDE password window away (#41). Listed above as a need, until walletForge.
 - **The wallpaper generator lives in docs/** (`docs/research/look-2026-10/wallpapers/generate.py`) but the look command runs it: a runtime piece in a research folder. Move it under `applets/theme/`.

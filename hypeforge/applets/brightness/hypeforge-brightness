@@ -1,0 +1,132 @@
+#!/usr/bin/env python3
+"""hypeForge applet · the brightness keys (F-71, #94; D-99).
+
+A laptop's screen has a backlight (`/sys/class/backlight`): brightnessctl sets it. Desktop monitors
+have none — their brightness is their own, over DDC/CI through ddcutil, the channel displayForge
+uses (the same commands, never its code: D-59), in tens like displayForge's slider (its D-2), every
+screen together. Either way a small notice shows the new level. When nothing can be set (a laptop
+without brightnessctl, a desktop without ddcutil, no screen answering) the key says so once instead
+of doing nothing. Python's standard library only.
+
+    hypeforge-brightness up|down [STEP]      STEP in percent (10 by default)
+"""
+
+from __future__ import annotations
+
+import re
+import shutil
+import subprocess
+import sys
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+
+BACKLIGHT = Path("/sys/class/backlight")
+LOWEST, HIGHEST = 10, 100          # displayForge's range (D-2): never fully dark by a key
+
+
+def backlights(where: Path = BACKLIGHT) -> list[str]:
+    try:
+        return sorted(p.name for p in where.iterdir())
+    except OSError:
+        return []
+
+
+def buses(run=subprocess.run) -> list[int]:
+    """The monitors' I2C buses, the way displayForge finds them (`ddcutil detect --brief`)."""
+    try:
+        out = run(["ddcutil", "detect", "--brief"], capture_output=True, text=True, timeout=20).stdout
+    except (OSError, subprocess.SubprocessError):
+        return []
+    return [int(b) for b in re.findall(r"/dev/i2c-(\d+)", out)]
+
+
+def level(bus: int, run=subprocess.run) -> int | None:
+    """A monitor's brightness now: "VCP 10 C <current> <max>"."""
+    try:
+        out = run(["ddcutil", "--bus", str(bus), "getvcp", "10", "--brief"], capture_output=True, text=True, timeout=20).stdout
+    except (OSError, subprocess.SubprocessError):
+        return None
+    m = re.search(r"VCP 10 C (\d+) (\d+)", out)
+    if not m or not int(m.group(2)):
+        return None
+    return round(100 * int(m.group(1)) / int(m.group(2)))
+
+
+def next_level(now: int, direction: str, step: int = 10) -> int:
+    """The next stop in tens (displayForge's steps) above or below wherever the monitor is now:
+    65 goes up to 70 and down to 60, 70 goes up to 80 and down to 60; never a stop skipped."""
+    want = (now // step + 1) * step if direction == "up" else ((now - 1) // step) * step
+    return max(LOWEST, min(HIGHEST, want))
+
+
+def set_monitor(bus: int, percent: int, run=subprocess.run) -> bool:
+    try:
+        return run(["ddcutil", "--bus", str(bus), "setvcp", "10", str(percent)],
+                   capture_output=True, text=True, timeout=20).returncode == 0
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def notify(title: str, body: str = "", value: int | None = None, run=subprocess.run, which=shutil.which) -> None:
+    if not which("notify-send"):
+        return
+    cmd = ["notify-send", "-a", "hypeForge", "-h", "string:x-canonical-private-synchronous:hypeforge-brightness"]
+    if value is not None:
+        cmd += ["-h", f"int:value:{value}"]
+    try:
+        run(cmd + [title, body], capture_output=True, timeout=5)
+    except (OSError, subprocess.SubprocessError):
+        pass
+
+
+def change(direction: str, step: int = 10, *, run=subprocess.run, which=shutil.which, backlight: Path = BACKLIGHT) -> tuple[bool, str]:
+    """(done, words): the brightness one step up or down, on the backlight or every monitor."""
+    if backlights(backlight):
+        if not which("brightnessctl"):
+            return False, "Brightness keys need brightnessctl on a laptop (not installed)"
+        sign = "+" if direction == "up" else "-"
+        try:
+            r = run(["brightnessctl", "-m", "set", f"{step}%{sign}"], capture_output=True, text=True, timeout=10)
+        except (OSError, subprocess.SubprocessError) as e:
+            return False, f"brightnessctl failed ({e.__class__.__name__})"
+        if r.returncode:
+            return False, "brightnessctl could not set the backlight"
+        pct = next((f.strip("%") for f in r.stdout.strip().split(",") if f.endswith("%")), "")
+        return True, pct
+    if not which("ddcutil"):
+        return False, "Brightness keys need ddcutil for the monitors (not installed; displayForge needs it too)"
+    found = buses(run)
+    if not found:
+        return False, "No monitor answers over DDC/CI (ddcutil found none)"
+
+    def one(bus: int) -> int | None:
+        now = level(bus, run)
+        if now is None:
+            return None
+        want = next_level(now, direction, step)
+        return want if set_monitor(bus, want, run) else None
+
+    with ThreadPoolExecutor(max_workers=max(1, len(found))) as pool:     # the monitors together: ~1 s, not 3
+        results = [r for r in pool.map(one, found) if r is not None]
+    if not results:
+        return False, "The monitors did not take the new brightness"
+    return True, str(max(results))
+
+
+def main(argv: list[str]) -> int:
+    if not argv or argv[0] not in ("up", "down"):
+        print(__doc__.strip(), file=sys.stderr)
+        return 2
+    step = int(argv[1]) if len(argv) > 1 and argv[1].isdigit() else 10
+    done, words = change(argv[0], step)
+    if done:
+        pct = int(words) if words.isdigit() else None
+        notify("Brightness", f"{words} %" if words else "", pct)
+        return 0
+    notify("Brightness", words)
+    print(words, file=sys.stderr)
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

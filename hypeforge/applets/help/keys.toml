@@ -79,7 +79,7 @@ name = "Keyboard media keys"
 keys = [
   { keys = "Volume keys", does = "Volume down / up / mute; microphone mute", sway = ["XF86AudioMute", "XF86AudioLowerVolume", "XF86AudioRaiseVolume", "XF86AudioMicMute"] },
   { keys = "Play / pause / next / previous / stop", does = "Control the music or video that is playing", sway = ["XF86AudioPlay", "XF86AudioPause", "XF86AudioPrev", "XF86AudioNext", "XF86AudioStop"] },
-  { keys = "Brightness keys", does = "Screen brightness down / up (laptop screens)", sway = ["XF86MonBrightnessDown", "XF86MonBrightnessUp"] },
+  { keys = "Brightness keys", does = "Screen brightness down / up, in tens: a laptop's screen, or every monitor through its own control (a notice shows the level)", sway = ["XF86MonBrightnessDown", "XF86MonBrightnessUp"] },
   { keys = "Print Screen", does = "Screenshot: drag a box around what you want (Esc cancels). Saved in Pictures/Screenshots and copied, ready to paste; click the notification to draw on it", sway = ["Print"] },
   { keys = "Shift + Print Screen", does = "Screenshot of the screen you are on", sway = ["Shift+Print"] },
   { keys = "Ctrl + Print Screen", does = "Screenshot of every screen", sway = ["Ctrl+Print"] },
