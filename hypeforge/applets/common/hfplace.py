@@ -70,38 +70,48 @@ def spot_container(workspace, spot, skip):
 
 # ---- Placing ---------------------------------------------------------------------------------
 
-def place(sway, screens, order, new_id, handed_over=False):
+def place(sway, screens, order, new_id, handed_over=False, row=None, focus=True):
     """Put window `new_id` in the next free spot. `handed_over`: the Workspaces applet calls this
-    for a window it has taken to its workspace; Placement's own watcher leaves those alone."""
+    for a window it has taken to its workspace; Placement's own watcher leaves those alone.
+    `row`: {screen: workspace name} — place it inside THAT workspace (one cell per screen), on
+    screen or not, instead of what is on screen now; D-98: a window sent with Win + Shift + N
+    lands in the next free spot there, like a window that opens there. `focus=False` keeps the
+    keyboard where it is (a focus would drag a screen to the unseen workspace)."""
     tree = sway.ask(GET_TREE)
     new = find(tree, lambda n: n.get("id") == new_id)
     if not new or new.get("type") != "con":  # floating windows are "floating_con"
         return
     if taken_over(new) and not handed_over:  # the Workspaces applet is placing it (F-50)
         return
-    shown = {ws["output"]: ws["name"] for ws in sway.ask(GET_WORKSPACES) if ws["visible"]}
-    workspaces = [find(tree, lambda n, name=shown.get(s): n.get("type") == "workspace" and n.get("name") == name)
-                  for s in screens]
-    home = find(tree, lambda n: n.get("type") == "workspace" and find(n, lambda m: m.get("id") == new_id))
-    if not home or home["name"] not in [w["name"] for w in workspaces if w]:
-        return  # it opened somewhere not on screen (sent there on purpose): leave it
+    if row is None:
+        shown = {ws["output"]: ws["name"] for ws in sway.ask(GET_WORKSPACES) if ws["visible"]}
+        home = find(tree, lambda n: n.get("type") == "workspace" and find(n, lambda m: m.get("id") == new_id))
+        if not home or home["name"] not in shown.values():
+            return  # it opened somewhere not on screen (sent there on purpose): leave it
+        names = [shown.get(s) for s in screens]
+    else:
+        names = [row.get(s) for s in screens]
+    workspaces = [find(tree, lambda n, name=name: n.get("type") == "workspace" and n.get("name") == name)
+                  or ({"name": name, "nodes": [], "floating_nodes": []} if name and row is not None else None)
+                  for name in names]                    # a cell nothing ever opened on: Sway makes it on the move
 
     counts = [len(leaves(w, new_id)) if w else 0 for w in workspaces]
     # The next free spot: the first in the order whose screen has exactly the spots before it.
     for screen, spot in order:
         if screen < len(workspaces) and workspaces[screen] and counts[screen] == SPOTS.index(spot):
-            return put(sway, workspaces[screen], screen, spot, new_id, tab=False)
+            return put(sway, workspaces[screen], screen, spot, new_id, tab=False, focus=focus)
     # Every spot taken: round the order again, as tabs.
     total = sum(counts)
     screen, spot = order[(total - len(order)) % len(order)] if total >= len(order) else order[0]
     if screen < len(workspaces) and workspaces[screen]:
-        put(sway, workspaces[screen], screen, spot, new_id, tab=True)
+        put(sway, workspaces[screen], screen, spot, new_id, tab=True, focus=focus)
 
 
-def put(sway, workspace, screen, spot, new_id, tab):
+def put(sway, workspace, screen, spot, new_id, tab, focus=True):
     me = f"[con_id={new_id}]"
+    after = [f"{me} focus"] if focus else []
     if not tab and spot == "fill":
-        sway.run(f"{me} move container to workspace {quoted(workspace['name'])}", f"{me} focus")
+        sway.run(f"{me} move container to workspace {quoted(workspace['name'])}", *after)
         return
     if tab:
         target = spot_container(workspace, spot, new_id)
@@ -123,4 +133,4 @@ def put(sway, workspace, screen, spot, new_id, tab):
              f"[con_id={anchor}] mark --add {MARK}",
              f"{me} move container to mark {MARK}",
              f"[con_id={anchor}] unmark {MARK}",
-             f"{me} focus")
+             *after)

@@ -212,6 +212,85 @@ class Arrive(unittest.TestCase):
         self.assertEqual(self.placed, [])
 
 
+def row_tree(focused_id, focused_on, filled):
+    """A tree with Daily on screen and the Work row: `filled` = {workspace name: [window ids]}; a Work cell
+    not in `filled` doesn't exist yet (nothing ever opened there)."""
+    def win(i, focused=False):
+        return {"id": i, "type": "con", "app_id": "thunar", "nodes": [], "floating_nodes": [], "marks": [], "focused": focused}
+    names = ["1:Daily", "11:Daily", "21:Daily"] + [n for n in ("2:Work", "12:Work", "22:Work") if n in filled]
+    wss = []
+    for k, n in enumerate(names):
+        kids = [win(focused_id, True)] if n == focused_on else []
+        kids += [win(i) for i in filled.get(n, [])]
+        wss.append({"id": 100 + k, "type": "workspace", "name": n, "layout": "splith", "nodes": kids, "floating_nodes": []})
+    return {"id": 1, "type": "root", "nodes": wss, "floating_nodes": []}
+
+
+class Send(unittest.TestCase):
+    """D-98 (Javier, 2026-10-13): "the window sent should check the status of the screens/window tiling
+    as any window getting opened, and land in the respective space". Win + Shift + N places the window by
+    the fill order INSIDE the target workspace, counted across its screens; the screens stay put."""
+
+    ORDER = [(0, "fill"), (1, "fill"), (2, "fill"), (1, "right"), (2, "right"), (1, "under-right"),
+             (2, "under-right"), (0, "right"), (0, "under-right")]
+
+    def setUp(self):
+        self.dir = tempfile.TemporaryDirectory()
+        cfg = Path(self.dir.name) / "workspaces.toml"
+        cfg.write_text(LISTS)
+        self.ws = load(HERE / "applets/workspaces/hypeforge-workspaces", "hfworkspaces_send")
+        self.ws.CONFIG = cfg
+        self.ws.CURRENT = Path(self.dir.name) / "current"
+        self.ws.placement = lambda: (True, ["DP-3", "DP-2", "DP-1"], self.ORDER)
+        self.grid = self.ws.Grid()
+        self.shown = [{"output": o, "name": n, "visible": True, "focused": o == "DP-3"}
+                      for o, n in (("DP-3", "1:Daily"), ("DP-2", "11:Daily"), ("DP-1", "21:Daily"))]
+
+    def tearDown(self):
+        self.dir.cleanup()
+
+    def test_sent_from_the_main_screen_it_takes_the_next_free_spot_not_the_main_screen(self):
+        # Work already has a window on screen 1 (the main one): the next spot is screen 2's whole
+        sway = FakeSway(row_tree(42, "1:Daily", {"2:Work": [50]}), self.shown)
+        self.ws.move(sway, self.grid, 2)
+        self.assertIn('[con_id=42] move container to workspace "12:Work"', sway.commands)
+        self.assertFalse([c for c in sway.commands if c.endswith(" focus") or c.startswith("workspace ")],
+                         f"the screens and the keyboard stay where they are: {sway.commands}")
+
+    def test_a_cell_nothing_ever_opened_on_is_still_a_free_spot(self):
+        sway = FakeSway(row_tree(42, "1:Daily", {}), self.shown)      # no Work cell exists yet
+        self.ws.move(sway, self.grid, 2)
+        self.assertIn('[con_id=42] move container to workspace "2:Work"', sway.commands, "screen 1's whole, first in the order")
+
+    def test_with_the_three_screens_full_it_splits_screen_2(self):
+        sway = FakeSway(row_tree(42, "1:Daily", {"2:Work": [50], "12:Work": [51], "22:Work": [52]}), self.shown)
+        self.ws.move(sway, self.grid, 2)
+        self.assertIn("[con_id=51] split h", sway.commands, "beside the window on screen 2")
+        self.assertIn(f"[con_id=42] move container to mark {hfplace.MARK}", sway.commands)
+        self.assertNotIn("[con_id=42] focus", sway.commands)
+
+    def test_a_floating_window_goes_to_the_same_screens_cell_as_before(self):
+        tree = row_tree(42, "1:Daily", {"2:Work": [50]})
+        tree["nodes"][0]["nodes"][0]["type"] = "floating_con"
+        sway = FakeSway(tree, self.shown)
+        self.ws.move(sway, self.grid, 2)
+        self.assertEqual(sway.commands, ['move container to workspace "2:Work"'])
+
+    def test_placement_switched_off_the_old_move(self):
+        self.ws.placement = lambda: (False, [], [])
+        sway = FakeSway(row_tree(42, "1:Daily", {"2:Work": [50]}), self.shown)
+        self.ws.move(sway, self.grid, 2)
+        self.assertEqual(sway.commands, ['move container to workspace "2:Work"'])
+
+    def test_a_new_window_on_screen_is_placed_as_before(self):
+        """The change leaves Placement's own path alone: a window that opens on screen, not handed over."""
+        tree = row_tree(42, "1:Daily", {})
+        sway = FakeSway(tree, self.shown)
+        hfplace.place(sway, ["DP-3", "DP-2", "DP-1"], self.ORDER, 42)
+        self.assertEqual(sway.commands, ['[con_id=42] move container to workspace "1:Daily"', "[con_id=42] focus"],
+                         "screen 1's whole — and it still takes the focus")
+
+
 class PlacementLeavesTakenWindows(unittest.TestCase):
     def test_a_window_the_workspaces_applet_took_is_not_placed_twice(self):
         tree, win = tree_with(46, "1:Daily")

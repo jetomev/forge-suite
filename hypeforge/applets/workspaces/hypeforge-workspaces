@@ -21,7 +21,7 @@ screens stay put, so apps that start by themselves don't move you.
     hypeforge-workspaces            run: set up Sway, then keep the screens in step
     hypeforge-workspaces go N       switch every screen to workspace N   (Win + N, a bar click)
     hypeforge-workspaces number     the bar's square: the number of the workspace on screen (#42)
-    hypeforge-workspaces move N     send the focused window to workspace N, same screen
+    hypeforge-workspaces move N     send the focused window to workspace N, into the fill order's next free spot there
     hypeforge-workspaces reload     re-read the settings file
 
 Settings: ~/.config/hypeforge/applets/workspaces.toml (enabled, screens, names, sharing, apps).
@@ -185,7 +185,19 @@ def go(sway, grid, index):
 
 
 def move(sway, grid, index):
+    """Win + Shift + N: the window you are in goes to workspace `index` and lands in the next free
+    spot of the fill order THERE, counted across that workspace's screens — like a window that opens
+    there (D-98; Javier, 2026-10-13: "the window sent should check the status of the screens/window
+    tiling as any window getting opened, and land in the respective space"). The screens stay where
+    they are. A floating window, or Placement switched off: the same screen's cell, as before."""
     if not 1 <= index <= len(grid.names):
+        return
+    enabled, screens, order = placement()
+    tree = sway.ask(GET_TREE)
+    me = find(tree, lambda n: n.get("focused") and n.get("type") in ("con", "floating_con"))
+    if enabled and screens and order and me and me.get("type") == "con":
+        row = {screen: grid.cells[index, p] for p, screen in enumerate(grid.screens)}
+        hfplace.place(sway, screens, order, me["id"], handed_over=True, row=row, focus=False)
         return
     here = focused_screen(sway, grid)
     sway.run(f"move container to workspace {quoted(grid.cells[index, here])}")

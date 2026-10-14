@@ -10,8 +10,9 @@ switches every screen together, so each workspace is a whole desk of its own.
 - **Workspaces** on the bar (W underlined) — **click it, or press Win + W** — drops down the
   list, the one on screen marked **●**; hover over it to see its name. Pick one and every screen
   switches. Press again (or **Esc**) to close it.
-- **Win + Shift + 1 … 6**: send the window you are in to another workspace (it stays on the
-  same screen).
+- **Win + Shift + 1 … 6**: send the window you are in to another workspace. It lands there the way a
+  new window would: the next free spot of the fill order, counted across that workspace's screens.
+  Your screens stay where they are.
 - The mouse stays where it is when you switch.
 
 ## Apps open on their own workspace
