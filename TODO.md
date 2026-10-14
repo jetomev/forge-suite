@@ -2,6 +2,12 @@
 
 **Target: the first KognogOS release (v1.0, April 2027).** Each section keeps its own detailed list; this one tracks the suite. Updated after every step.
 
+## 2026-10-13 — themeForge's Wallpaper page three runs deep, the bars share their pop-ups, Settings talks to its panes
+- [x] **themeForge** (details in [themeforge/TODO.md](themeforge/TODO.md)): the Wallpaper page redesigned as Javier drew it (D-8, D-9), then from his runs: Browse as a small file manager (D-10), the first picture by itself and the sharp preview inside Settings (D-11); F-73 and F-74 fixed; #96 and #90 closed on his "perfect!!!"; tests 48, overlay bench 15/15
+- [x] **hypeForge** (details in [hypeforge/TODO.md](hypeforge/TODO.md)): the Rice's gaps 14 → 10 (D-95); **three pop-ups, one version each, on every style** (D-96: the date-time-bell piece, the Quick Settings pill, the night-light moon, defined once; `hypeforge-bar` places pop-ups itself); Settings hands its terminal's cells to the apps in its panes (D-97); a sent window lands by the fill order (D-98, "tested, works!"); the brightness keys on a desktop too (D-99, #94); #95 was a false finding — the audit looked up a /usr/lib program on PATH
+- [x] **Issue sweep** across all 17 repos (Javier: "close whatever has been already finished"): #84 themeForge born, #56 workspaceForge, #44 nightForge, #19 default apps, #61 F-54 closed here; nogforge #1 too. Issues #96 #98–#103 opened and closed with the day
+- [ ] **nightForge 1.1** (#82) with themeForge's next batch · **mindForge 0.1.9** carries the brief fix (#46) and #64
+
 ## 2026-10-12 · CLAUDE.md keeps only this project's own rules
 - [x] **One rule, one level** (Javier, 2026-10-12): the suite file and nine section files keep only their own rules (decisions file, versioning, signing); plain words, nog first, TODO after every step and the co-author trailer come from the global agreement and the release rules. Commit pushed the same night.
 
