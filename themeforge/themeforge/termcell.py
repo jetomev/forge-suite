@@ -45,6 +45,21 @@ def from_settings(environ=None) -> Cells | None:
         return None
 
 
+def pane_origin(environ=None, runtime: Path | None = None) -> tuple[int, int] | None:
+    """Inside Settings: where our pane sits NOW (Settings writes pane-<n> as it changes); None outside,
+    or before Settings has written it (then the first guess from the environment is used)."""
+    env = os.environ if environ is None else environ
+    page = env.get(ENV_PAGE)
+    if page is None:
+        return None
+    f = (runtime or Path(env.get("XDG_RUNTIME_DIR", "/tmp"))) / f"hypeforge-settings/pane-{page}"
+    try:
+        x, y = f.read_text().split()[:2]
+        return int(x), int(y)
+    except (OSError, ValueError):
+        return None
+
+
 def settings_shows_me(environ=None, runtime: Path | None = None) -> bool:
     """Inside Settings: whether our page is the one on screen (Settings writes it to a file); True outside."""
     env = os.environ if environ is None else environ

@@ -356,6 +356,39 @@ class CellsHandedToThePanes(unittest.TestCase):
         self.assertEqual(env["HYPEFORGE_SETTINGS_PAGE"], "4")
         self.assertEqual(env["HYPEFORGE_TERM_CELLS"], "9.5 20 4 4 0 130 40", "the measurement passes through")
 
+    def test_the_panes_place_is_written_as_it_is_and_follows_a_resize(self):
+        """Javier, 2026-10-13: the sharp preview landed top-left — Settings had been opened straight on the
+        Look page, and the pane's place was asked before anything was drawn (0 0)."""
+        SettingsApp, m = load_app_class()
+        app = SettingsApp()
+        seen = {}
+        import asyncio
+        run = tempfile.TemporaryDirectory()
+        old = os.environ.get("XDG_RUNTIME_DIR")
+        os.environ["XDG_RUNTIME_DIR"] = run.name
+        try:
+            async def drive():
+                async with app.run_test(size=(130, 40)) as pilot:
+                    app._start_in_pane = lambda pane, cmd, i: None       # this app only: no program needed
+                    app.open_page(0)
+                    await pilot.pause(0.7)
+                    seen["first"] = (Path(run.name) / "hypeforge-settings/pane-0").read_text()
+                    await pilot.resize_terminal(160, 50) if hasattr(pilot, "resize_terminal") else None
+                    await pilot.pause(0.7)
+                    seen["after"] = (Path(run.name) / "hypeforge-settings/pane-0").read_text()
+            asyncio.run(drive())
+        finally:
+            if old is None:
+                os.environ.pop("XDG_RUNTIME_DIR", None)
+            else:
+                os.environ["XDG_RUNTIME_DIR"] = old
+            run.cleanup()
+        x, y, w, h = map(int, seen["first"].split())
+        self.assertGreater(x, 0, "the pane sits right of the page list"); self.assertGreater(w, 10)
+        self.assertNotEqual(seen["first"].split()[:2], ["0", "0"])
+        if seen["after"] != seen["first"]:
+            self.assertGreater(int(seen["after"].split()[2]), w, "a bigger window: a wider pane")
+
     def test_the_cells_value_round_trips(self):
         import importlib.util, importlib.machinery
         common = Path(__file__).resolve().parent.parent / "applets/common/hfcells.py"

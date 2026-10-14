@@ -92,6 +92,32 @@ class InsideSettings(unittest.TestCase):
             os.environ.clear(); os.environ.update(env)
         self.assertEqual(sent, [{"show": {"png": "/p.png", "cells": [41, 7, 56, 14], "grid": [130, 40]}}])
 
+    def test_the_panes_place_now_beats_the_first_guess(self):
+        """Javier, 2026-10-13: the sharp preview landed top-left — Settings opened straight on the Look page
+        handed "0 0". The pane-<n> file Settings keeps current wins; without it, the first guess."""
+        import os
+        import tempfile
+        from pathlib import Path
+        from themeforge.app import PictureOverlay
+        from themeforge.termcell import Cells, pane_origin
+        with tempfile.TemporaryDirectory() as d:
+            run = Path(d); (run / "hypeforge-settings").mkdir()
+            self.assertIsNone(pane_origin({"HYPEFORGE_SETTINGS_PAGE": "4"}, run), "not written yet")
+            (run / "hypeforge-settings/pane-4").write_text("32 3 98 36")
+            self.assertEqual(pane_origin({"HYPEFORGE_SETTINGS_PAGE": "4"}, run), (32, 3))
+            self.assertIsNone(pane_origin({}, run), "outside Settings")
+            sent = []
+            ov = PictureOverlay(Cells(10, 22, origin=(0, 0), grid=(213, 51)))
+            ov._send = lambda msg: sent.append(msg)
+            env = dict(os.environ)
+            os.environ.update(SWAYSOCK="x", WAYLAND_DISPLAY="y", HYPEFORGE_SETTINGS_PAGE="4", XDG_RUNTIME_DIR=d)
+            os.environ.pop("THEMEFORGE_NO_OVERLAY", None)
+            try:
+                ov.show("/p.png", (10, 5, 56, 14), (100, 40))
+            finally:
+                os.environ.clear(); os.environ.update(env)
+            self.assertEqual(sent[0]["show"]["cells"], [42, 8, 56, 14], "the file's place, not the 0 0 guess")
+
     def test_hidden_while_settings_shows_another_page(self):
         import tempfile
         from pathlib import Path

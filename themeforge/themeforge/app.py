@@ -26,7 +26,7 @@ from . import __version__
 from .browse import THEME_MADE, FolderPicker, tilde
 from .look import FIT_ABOUT, FITS, Look
 from .preview import overlay_picture, preview
-from .termcell import Cells, measure, settings_shows_me
+from .termcell import Cells, measure, pane_origin, settings_shows_me
 
 MANUAL_DIR = os.path.join(os.path.dirname(__file__), "manual")
 
@@ -228,8 +228,9 @@ class PictureOverlay:
     def show(self, png: str, cells: tuple[int, int, int, int], grid: tuple[int, int]) -> None:
         if self.possible:
             c = self.cells
-            if c.origin:                                   # inside Settings: our cells, in the terminal's grid
-                cells = (cells[0] + c.origin[0], cells[1] + c.origin[1], cells[2], cells[3])
+            origin = pane_origin() or c.origin             # inside Settings: where the pane is now, else the first guess
+            if origin:                                     # our cells, in the terminal's grid
+                cells = (cells[0] + origin[0], cells[1] + origin[1], cells[2], cells[3])
                 grid = c.grid or grid
             self._send({"show": {"png": png, "cells": list(cells), "grid": list(grid)}})
 

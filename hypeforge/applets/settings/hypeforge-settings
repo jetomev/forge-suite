@@ -157,6 +157,7 @@ def main():
 
         def on_mount(self) -> None:
             super().on_mount()
+            self.set_interval(0.5, self.tell_panes)
             for pane in self.query(".hf-pane"):
                 pane.display = False
             self.query_one("#hf-running").display = False
@@ -302,14 +303,36 @@ def main():
             pane.start(cmd, self.pane_env(pane, i))
 
         @staticmethod
-        def _tell_shown(what: str) -> None:
+        def _runtime() -> Path:
+            return Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-settings"
+
+        def _tell_shown(self, what: str) -> None:
             """The page on screen, for the apps in the panes ("none" = Home, the manual, About…)."""
             try:
-                d = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-settings"
-                d.mkdir(parents=True, exist_ok=True)
-                (d / "shown").write_text(what)
+                self._runtime().mkdir(parents=True, exist_ok=True)
+                (self._runtime() / "shown").write_text(what)
             except OSError:
                 pass
+
+        _told: dict = {}
+
+        def tell_panes(self) -> None:
+            """Where each running pane sits in the terminal's grid, written to pane-<n> whenever it changes
+            (D-97): a page opened at start has no place yet when its app starts, and a resized window moves
+            it — the file is the truth, the environment only the first guess."""
+            for i, pane in enumerate(self.query(".hf-pane")):
+                r = pane.content_region
+                if not (pane.display and r.width > 0 and r.height > 0):
+                    continue
+                words = f"{r.x} {r.y} {r.width} {r.height}"
+                if self._told.get(i) == words:
+                    continue
+                try:
+                    self._runtime().mkdir(parents=True, exist_ok=True)
+                    (self._runtime() / f"pane-{i}").write_text(words)
+                    self._told[i] = words
+                except OSError:
+                    pass
 
         def on_terminal_pane_exited(self, e: TerminalPane.Exited) -> None:
             if getattr(self, "_quitting", False):
