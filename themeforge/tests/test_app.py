@@ -246,7 +246,7 @@ class WallpaperPage(unittest.TestCase):
         run(go())
 
     def test_after_an_apply_the_images_list_is_still_there_filled_and_in_focus(self):
-        """F-71 (Javier, 2026-10-13): "After I applied it, the images list disappeared. Can't select images
+        """F-73 (Javier, 2026-10-13): "After I applied it, the images list disappeared. Can't select images
         from the Images box anymore." The page is updated in place; the list is the same widget, full, focused."""
         app = ThemeForgeApp(self.look)
 

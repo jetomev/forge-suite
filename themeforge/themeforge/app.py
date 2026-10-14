@@ -547,7 +547,7 @@ class WallpaperView(VerticalScroll):
 
     def rebuild(self) -> None:
         """After an apply or undo: the Source, the pick, the fit and the marks follow the desktop. In place,
-        never a recompose (F-71: a rebuilt page came up with an empty Images list and nothing focused)."""
+        never a recompose (F-73: a rebuilt page came up with an empty Images list and nothing focused)."""
         self.sync_from_desktop()
         _, fit = self.look.wallpaper_now()
         sel = self.query_one("#tf-wp-fit", Select)
