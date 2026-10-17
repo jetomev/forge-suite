@@ -32,7 +32,10 @@ SHOWN = 6
 CSS = """
 .hf-calendar {{ min-width: 380px; }}
 .hf-note-app {{ font-weight: bold; }}
-.hf-card.hf-note {{ padding: 7px 12px; }}     /* Javier, 10-17: the notifications a little smaller, closer together */
+.hf-card.hf-note {{ padding: 6px 12px; }}     /* Javier, 10-17: the notifications a little smaller, closer together */
+.hf-card.hf-head {{ padding: 4px 6px 4px 12px; }}   /* 10-17, his second look: "gap spaces, still too much" */
+.hf-head button {{ padding: 3px 10px; }}
+.hf-card.hf-month {{ padding: 10px 12px; }}
 .hf-note-body {{ color: {dim}; font-size: {small}pt; }}
 .hf-calendar calendar {{ background: transparent; color: {text}; border: none; padding: 4px; }}
 .hf-calendar calendar:selected {{ background: {accent}; color: {on_accent}; border-radius: {pill}px; }}
@@ -103,7 +106,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         b.changed()
     shown = visible(notes)
 
-    root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+    root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
     root.get_style_context().add_class("hf-calendar")
 
     head = Gtk.Box()
@@ -112,9 +115,9 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         clear = Gtk.Button(label="Clear all")
         clear.get_style_context().add_class("flat")
         head.pack_end(clear, False, False, 0)
-    root.pack_start(card(head), False, False, 0)
+    root.pack_start(card(head, "hf-head"), False, False, 0)
 
-    cards = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+    cards = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=3)
     if not shown:
         cards.pack_start(card(Gtk.Label(label="No new notifications", xalign=0)), False, False, 0)
     entries, icons = apps(), Icons()
@@ -159,14 +162,14 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         clear.connect("clicked", clear_all)
 
     today = date.today()
-    month = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    month = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
     title = Gtk.Label(label=f"{today:%A, %B} {today.day}", xalign=0)
     title.get_style_context().add_class("hf-title")
     month.pack_start(title, False, False, 0)
     cal = Gtk.Calendar()
     cal.set_display_options(Gtk.CalendarDisplayOptions.SHOW_HEADING | Gtk.CalendarDisplayOptions.SHOW_DAY_NAMES)
     month.pack_start(cal, False, False, 0)
-    root.pack_start(card(month), False, False, 0)
+    root.pack_start(card(month, "hf-month"), False, False, 0)
 
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["bottom", "right"]
     margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"bottom": 60, "right": 10}

@@ -371,6 +371,8 @@ class NotificationCards(unittest.TestCase):
     def test_closer_and_smaller(self):
         """Javier, 2026-10-17: "a little big and space between them is too much"."""
         src = (HERE / "applets/panels/views/calendar_view.py").read_text()
-        self.assertIn(".hf-card.hf-note {{ padding: 7px 12px; }}", src)
-        self.assertIn("cards = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)", src)
+        self.assertIn(".hf-card.hf-note {{ padding: 6px 12px; }}", src)
+        self.assertIn("root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)", src, "the blocks 4 px apart (was 10)")
+        self.assertIn(".hf-card.hf-head {{ padding: 4px 6px 4px 12px; }}", src, "a slim head")
+        self.assertIn("cards = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=3)", src)
         self.assertIn("new_from_file_at_size(path, 24, 24)", src)
