@@ -15,7 +15,7 @@ from PIL import Image
 
 HERE = pathlib.Path(__file__).resolve().parent
 RES = HERE.parents[3] / "docs/research/look-2026-10"
-GEN = RES / "wallpapers/generate.py"
+GEN = HERE.parents[3] / "applets/theme/wallpaper-generate.py"   # moved from research/wallpapers/ 2026-10-17
 
 
 def job(slug, t):

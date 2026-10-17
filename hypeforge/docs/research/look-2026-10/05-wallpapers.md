@@ -40,7 +40,7 @@ What makes these look finished instead of flat (all in the prototype):
 
 ## 2 · The generator
 
-File: `look-2026-10/wallpapers/generate.py`. It needs Python 3, Pillow 12.3 and numpy 2.5. Both are installed here, and nothing new was installed.
+File: `look-2026-10/wallpapers/generate.py` (since 2026-10-17: `applets/theme/wallpaper-generate.py`, beside the look command that runs it). It needs Python 3, Pillow 12.3 and numpy 2.5. Both are installed here, and nothing new was installed.
 
 ```
 python3 generate.py --palette purple --motif synthwave

@@ -25,7 +25,7 @@ aren't listed.*
 | python-rich | the same | rich |
 | python-forgekit | the same | forgekit |
 | python-pillow | the look command: wallpapers, the lock picture | PIL |
-| python-numpy | the wallpaper drawings (generate.py) | numpy |
+| python-numpy | the wallpaper drawings (applets/theme/wallpaper-generate.py) | numpy |
 | adw-gtk-theme | the GTK theme every look builds on (F-70) | — |
 | wl-clipboard | the clipboard (wl-copy, wl-paste) | (programs) |
 | cliphist | clipboard history | (program) |
@@ -68,4 +68,4 @@ No package yet: KognogOS installs these. When hypeForge gets its package, this i
 
 - ~~brightnessctl isn't installed, but Sway's config binds the brightness keys to it~~ — **done 2026-10-13 (#94, D-99):** the keys run `applets/brightness/hypeforge-brightness`, which uses the backlight when there is one (brightnessctl) and the monitors' own control when there isn't (ddcutil), both listed above.
 - ~~pam_kwallet_init isn't on this system~~ — **the audit was wrong (#95):** it is there, `/usr/lib/pam_kwallet_init` from kwallet-pam 6.7.5, and the login's PAM (`/etc/pam.d/sddm`) starts the store for it; the audit looked it up on PATH, where /usr/lib never is. The line works, and it is what keeps the KDE password window away (#41). Listed above as a need, until walletForge.
-- **The wallpaper generator lives in docs/** (`docs/research/look-2026-10/wallpapers/generate.py`) but the look command runs it: a runtime piece in a research folder. Move it under `applets/theme/`.
+- ~~**The wallpaper generator lives in docs/**~~ — **done 2026-10-17:** it is `applets/theme/wallpaper-generate.py`, beside the look command that runs it; its research sample set still goes to `docs/research/look-2026-10/wallpapers/samples/`.

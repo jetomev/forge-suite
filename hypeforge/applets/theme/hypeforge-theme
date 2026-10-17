@@ -46,7 +46,7 @@ REPO = Path(__file__).resolve().parents[2]                      # hypeforge/
 COLOURS = REPO / "themes/colours/palettes.toml"
 STYLES = REPO / "styles"
 TEMPLATES = REPO / "themes/templates"
-WALLGEN = REPO / "docs/research/look-2026-10/wallpapers/generate.py"
+WALLGEN = REPO / "applets/theme/wallpaper-generate.py"          # moved from docs/research 2026-10-17: a runtime piece
 KEEP_BACKUPS = 20
 
 # Every role the templates use, and the theme token it wears unless the style says otherwise.

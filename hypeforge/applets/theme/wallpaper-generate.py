@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-"""hypeForge wallpaper generator (research prototype, 2026-10).
+"""hypeForge wallpaper generator (research prototype 2026-10; the look command's since 10-10).
+
+Lives next to the look command (applets/theme/) since 2026-10-17; it was born in
+docs/research/look-2026-10/wallpapers/, where --samples still writes its sample set.
 
 Draws a 2560x1440 wallpaper from a colour palette and a motif, with no
 outside images: every pixel is computed here, so the output is ours and has
 no licence strings attached.
 
-    python3 generate.py --palette purple --motif synthwave
-    python3 generate.py --colors 1e1e2e 2a2442 6c4fc7 cba6f7 b9a3ff --motif mountains
-    python3 generate.py --samples          # the research sample set
+    python3 wallpaper-generate.py --palette purple --motif synthwave
+    python3 wallpaper-generate.py --colors 1e1e2e 2a2442 6c4fc7 cba6f7 b9a3ff --motif mountains
+    python3 wallpaper-generate.py --samples          # the research sample set
 
 Motifs: synthwave (cyberpunk), skyline (buildings), mountains (nature),
 circuit (technology), skyclouds (anime-style stand-in).
@@ -1126,17 +1129,19 @@ def main(argv=None):
     a = ap.parse_args(argv)
 
     here = os.path.dirname(os.path.abspath(__file__))
+    # the research sample set stays with the research (docs/), not beside the look command
+    samples = os.path.join(here, "..", "..", "docs", "research", "look-2026-10", "wallpapers", "samples")
     jobs = []
     if a.samples:
         for pn in ("purple", "white", "darkblue"):
             for mo in MOTIFS:
-                jobs.append((Pal(PALETTES[pn]), mo, os.path.join(here, "samples", f"{pn}-{mo}.png")))
+                jobs.append((Pal(PALETTES[pn]), mo, os.path.join(samples, f"{pn}-{mo}.png")))
     else:
         if not a.motif or not (a.palette or a.colors):
             ap.error("give --motif and --palette or --colors (or --samples)")
         pal = Pal(PALETTES[a.palette]) if a.palette else Pal.from_colors(a.colors, a.mode)
         name = a.palette or "custom"
-        jobs.append((pal, a.motif, a.out or os.path.join(here, "samples", f"{name}-{a.motif}.png")))
+        jobs.append((pal, a.motif, a.out or os.path.join(samples, f"{name}-{a.motif}.png")))
     for pal, mo, out in jobs:
         os.makedirs(os.path.dirname(out), exist_ok=True)
         im = render(pal, mo, a.seed)
