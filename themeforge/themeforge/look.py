@@ -216,6 +216,21 @@ class Look:
             return ""
         return str(d.get("wallpaper", {}).get("about", ""))
 
+    def drawn_topics(self, but: str | None) -> list[tuple[str, str]]:
+        """[(topic, words)] the drawn wallpapers of every style but ``but`` (its own is "the theme's own"),
+        KognogOS left out (its own choices). Javier, 2026-10-17: the Rice lists them before the solid colour."""
+        seen: dict[str, str] = {}
+        for f in sorted((self.home or Path("/nonexistent")).glob("styles/*/style.toml")):
+            if f.parent.name == but:
+                continue
+            try:
+                w = tomllib.loads(f.read_text()).get("wallpaper", {})
+            except (OSError, tomllib.TOMLDecodeError):
+                continue
+            if w.get("topic") and w["topic"] != "kognogos":
+                seen.setdefault(str(w["topic"]), str(w.get("about") or w["topic"]).capitalize())
+        return sorted(seen.items(), key=lambda kv: kv[1])
+
     def picture_path(self, style: str, theme: str, choice: str) -> Path | None:
         """The picture a choice gives in a look (hypeForge makes it if needed; a few seconds the first time)."""
         try:

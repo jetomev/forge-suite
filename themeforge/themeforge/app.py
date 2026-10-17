@@ -249,7 +249,10 @@ class PictureOverlay:
 
 def made_by_theme(choice: str | None) -> bool:
     """A choice hypeForge draws (not a file of yours)."""
-    return bool(choice) and (choice in ("theme", "solid") or choice.startswith("kognogos:"))
+    return bool(choice) and (choice in ("theme", "solid") or choice.startswith(("kognogos:", "topic:")))
+
+
+TOPIC_WORDS: dict[str, str] = {}      # topic → its style's words ("space" → "Planet and stars"), filled from the styles
 
 
 def plain(choice: str) -> str:
@@ -260,6 +263,9 @@ def plain(choice: str) -> str:
         return "a solid colour"
     if choice.startswith("kognogos:"):
         return "KognogOS · " + choice.split(":", 1)[1].replace("-", " ").title()
+    if choice.startswith("topic:"):
+        topic = choice.split(":", 1)[1]
+        return TOPIC_WORDS.get(topic, topic).lower() + ", drawn in the theme's colours"
     return Path(choice).name
 
 
@@ -298,6 +304,11 @@ class WallpaperView(VerticalScroll):
         topic = self.look.topic(style) if style else ""
         out = [("theme", "The theme's own" + (f" — {topic}" if topic else ""))]
         out += [(f"kognogos:{slug}", f"KognogOS · {name}") for slug, name in self.look.kognogos_designs()]
+        TOPIC_WORDS.update(self.look.drawn_topics(None))
+        if style == "rice":
+            # Javier, 2026-10-17: the Rice also offers the other styles' drawn pictures, before the solid colour
+            out += [(f"topic:{topic}", f"{words} — drawn in the theme's colours")
+                    for topic, words in self.look.drawn_topics(style)]
         out += [("solid", "Solid colour — the theme's own")]
         return out
 

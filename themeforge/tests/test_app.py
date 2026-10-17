@@ -13,6 +13,10 @@ from themeforge.app import ThemeForgeApp, swatch_markup
 from themeforge.look import Look
 from tests.test_look import fake_home
 
+# Javier, 2026-10-17: the Rice lists the other styles' drawn topics before the solid colour (the fake home's
+# styles draw t-classic and t-zz-new; the Rice's own t-rice stays "the theme's own")
+TOPICS = ["topic:t-classic", "topic:t-zz-new"]
+
 
 def run(c):
     return asyncio.run(c)
@@ -202,8 +206,8 @@ class WallpaperPage(unittest.TestCase):
                 self.assertEqual(src.y, fit.y, "Source and Fit Style side by side")
                 self.assertEqual(str(app.query_one("#tf-wp-source").render()), "The theme's pictures",
                                  "the theme's own is on screen: the Source is the theme's pictures")
-                self.assertEqual(self.images(app), ["theme", "kognogos:tier-aware", "kognogos:arch-distro", "solid"],
-                                 "Tier Aware first (Javier's pick)")
+                self.assertEqual(self.images(app), ["theme", "kognogos:tier-aware", "kognogos:arch-distro", *TOPICS, "solid"],
+                                 "Tier Aware first (Javier's pick); on the Rice, the drawn topics before the solid colour")
                 ol = app.query_one("#tf-wp-images", OptionList)
                 self.assertIn("in use", str(ol.get_option_at_index(0).prompt))
                 self.assertTrue(ol.has_focus, "the page opens on the Images list")
@@ -232,7 +236,8 @@ class WallpaperPage(unittest.TestCase):
                 self.assertFalse(app.query_one("#tf-wp-apply").disabled, "picked: Apply Background is on")
                 self.assertFalse(app.changes_bar.display, "the bar is for the theme; the page has its button")
                 ol = app.query_one("#tf-wp-images", OptionList)
-                self.assertIn("●", str(ol.get_option_at_index(3).prompt), "the pick is marked")
+                solid = WallpaperPage.images(app).index("solid")          # by name: on the Rice the drawn topics come first
+                self.assertIn("●", str(ol.get_option_at_index(solid).prompt), "the pick is marked")
                 await pilot.press("f10")
                 await app.workers.wait_for_complete()
                 await pilot.pause()
@@ -242,7 +247,29 @@ class WallpaperPage(unittest.TestCase):
                 self.assertEqual((what[3]["picture"], what[3]["fit"], what[3]["folder"]), ("solid", "center", None))
                 await pilot.pause()
                 self.assertTrue(app.query_one("#tf-wp-apply").disabled, "applied: nothing pending")
-                self.assertIn("in use", str(app.query_one("#tf-wp-images", OptionList).get_option_at_index(3).prompt))
+                self.assertIn("in use", str(app.query_one("#tf-wp-images", OptionList).get_option_at_index(solid).prompt))
+        run(go())
+
+    def test_the_rice_applies_a_drawn_topic_and_keeps_its_style(self):
+        """Javier, 2026-10-17: another style's drawn picture on the Rice, in the colours in use."""
+        app = ThemeForgeApp(self.look)
+
+        async def go():
+            async with app.run_test(size=(120, 40)) as pilot:
+                await self.open_page(pilot, app)
+                ol = app.query_one("#tf-wp-images", OptionList)
+                at = WallpaperPage.images(app).index("topic:t-classic")
+                self.assertIn("Classic picture", str(ol.get_option_at_index(at).prompt))
+                self.pick(app, "topic:t-classic")
+                await pilot.press("f10")
+                await app.workers.wait_for_complete()
+                await pilot.pause()
+                what = self.look.done[0]
+                self.assertEqual(what[:3], ("apply", "rice", "mocha"), "the Rice stays the Rice")
+                self.assertEqual(what[3]["picture"], "topic:t-classic")
+                from themeforge.browse import THEME_MADE
+                self.assertEqual(str(app.query_one("#sec-wallpaper").source), str(THEME_MADE),
+                                 "a drawn topic is one of the theme's pictures, not a file")
         run(go())
 
     def test_after_an_apply_the_images_list_is_still_there_filled_and_in_focus(self):
@@ -349,7 +376,7 @@ class WallpaperPage(unittest.TestCase):
                 await pilot.pause()
                 files = app.screen.query_one("#tf-br-files", OptionList)
                 self.assertEqual([files.get_option_at_index(i).id for i in range(files.option_count)],
-                                 ["theme", "kognogos:tier-aware", "kognogos:arch-distro", "solid"], "the theme's pictures")
+                                 ["theme", "kognogos:tier-aware", "kognogos:arch-distro", *TOPICS, "solid"], "the theme's pictures")
                 await pilot.press("enter")                    # nothing to open there: Enter takes it
                 await pilot.pause()
                 self.assertEqual(app.query_one("#sec-wallpaper").source, THEME_MADE)

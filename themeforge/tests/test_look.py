@@ -47,6 +47,16 @@ def fake_home(root: Path) -> Path:
     return home
 
 
+class DrawnTopics(unittest.TestCase):
+    """Javier, 2026-10-17: the other styles' drawn topics, to pick on the Rice."""
+
+    def test_the_other_styles_topics_in_plain_words(self):
+        with tempfile.TemporaryDirectory() as d:
+            look = Look(home=fake_home(Path(d)))
+            self.assertEqual(look.drawn_topics("rice"), [("t-classic", "Classic picture"), ("t-zz-new", "Zz-new picture")])
+            self.assertEqual([t for t, _ in look.drawn_topics(None)], ["t-classic", "t-rice", "t-zz-new"])
+
+
 class Reading(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()

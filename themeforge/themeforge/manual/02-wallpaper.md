@@ -12,10 +12,11 @@ If the folder isn't there yet, **Make Folder (n)** makes it; then put your pictu
 
 Every picture in the Source, by name. Move with the arrows and press **Enter** to pick one: it shows below, and **Apply Background (F10)** lights up. **✓** marks the picture on screen now, **●** the one you picked.
 
-**The theme's pictures** are four:
+**The theme's pictures** are four, and on Linux rice ten:
 
 - **The theme's own** — each theme has its own picture, drawn in the colours you picked, so it changes when you change the colours. **Linux rice** shows the KognogOS background; the other themes each have a topic (Windows 11 ribbons, KDE shards, COSMIC a planet and stars, macOS mountains, Mac OS 9 sky and clouds, hypeForge Classic a circuit board).
 - **KognogOS · Tier Aware** and **KognogOS · Arch Distro** — our backgrounds, in the colours you picked, whatever the theme.
+- **On Linux rice only, the other themes' drawn pictures** — Circuit board, Mountains, Planet and stars, Ribbons, Shards, Sky and clouds, each drawn in the colours you picked. Picking one changes only the wallpaper: the theme stays Linux rice.
 - **Solid colour** — no picture, just the theme's own colour.
 
 A picture of your own stays when you change the theme or colours.

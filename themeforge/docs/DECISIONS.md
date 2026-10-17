@@ -2,6 +2,11 @@
 
 *Newest first. Each one says what was decided, by whom, and why.*
 
+## 2026-10-17
+
+### D-12 · The Rice offers the other styles' drawn pictures too, before the solid colour (Javier, 2026-10-17)
+After the wallpaper generator moved beside the look command, Javier asked whether its pictures could be picked: *"can we add in rice an additional option in the themes picture, with our theme options too, before solid colour?"* On 10-11 he had ruled the Rice "KognogOS backgrounds only", and each other style its one topic; this loosens that for the Rice alone, as he asked. On the Rice, **The theme's pictures** now lists, after the two KognogOS backgrounds and before the solid colour, the six drawn topics of the other styles — Circuit board, Mountains, Planet and stars, Ribbons, Shards, Sky and clouds — each drawn in the colours in use. Picking one changes only the wallpaper; the Rice stays the Rice. hypeForge's look command takes them as `topic:<name>` (like `kognogos:<design>`), refuses an unknown name in plain words, and the generator draws them as it does for their own styles. The other styles' lists are unchanged. Tests 50 (+2), hypeForge 219 (+1); the new ones seen failing first.
+
 ## 2026-10-13
 
 ### D-11 · The first picture shows by itself; the sharp preview inside hypeForge Settings (Javier, 2026-10-13)
