@@ -91,6 +91,8 @@ mono    = "JetBrainsMono Nerd Font"
 # The theme's own wallpaper (Javier, 2026-10-11: "Rice uses our KognogOS backgrounds only, the other
 # themes, assign one background topic to each, and uses the color variants"): drawn in the colour
 # theme's colours, so it changes with them. hypeforge-theme makes it; themeForge's Wallpaper page shows it.
+# 2026-10-17 (themeForge D-12, Javier): on the Rice the Wallpaper page also offers the other styles' drawn
+# topics (topic:<name>), still in the colour theme's colours; this one stays the Rice's own.
 [wallpaper]
 topic = "kognogos"
 about = "KognogOS · Tier Aware"

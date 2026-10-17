@@ -5,7 +5,7 @@ layout) and a THEME (colours), sets the theme's wallpaper, and can go back (D-78
     hypeforge-theme list                      the styles and the themes
     hypeforge-theme current                   what is applied now
     hypeforge-theme apply <style> <theme>     write every look file, then reload what's running
-    hypeforge-theme wallpaper theme|kognogos:<design>|solid|<file> [--fit fill|fit|stretch|center|tile]
+    hypeforge-theme wallpaper theme|kognogos:<design>|topic:<topic>|solid|<file> [--fit fill|fit|stretch|center|tile]
                                              the theme's own picture, a KognogOS background, the
                                              theme's colour, or one of yours; the same on every screen
     hypeforge-theme picture STYLE THEME [CHOICE]   the picture file a choice gives (made if needed)
@@ -372,6 +372,7 @@ def wall_job(slug: str, t: dict) -> tuple[str, str, list[str]]:
 # The wallpaper choice (Javier, 2026-10-11, themeForge's Wallpaper page):
 #   "theme"             the style's own topic ([wallpaper] topic in style.toml), in the colour theme's colours
 #   "kognogos:<design>" a KognogOS background in the colour theme's colours (tier-aware · arch-distro)
+#   "topic:<topic>"     another style's drawn wallpaper in the colour theme's colours (circuit, mountains…; 2026-10-17)
 #   "solid"             no picture: the colour theme's own colour
 #   a file              one of the person's pictures
 # and how it lies on each screen (the same picture on every screen): Sway's own ways.
@@ -482,12 +483,28 @@ def theme_wallpaper(slug: str, t: dict, cache: Path, make: bool = True, style: d
     return topic_wallpaper(topic or wall_job(slug, t)[0], slug, t, cache, make)
 
 
+def drawn_topics() -> list[tuple[str, str]]:
+    """[(topic, about)] every style's drawn wallpaper topic (the generator's), KognogOS left out: it has its
+    own choices. Javier, 2026-10-17: these can be picked on their own, on the Rice (topic:<name>)."""
+    seen = {}
+    for st in styles().values():
+        w = st.get("wallpaper", {})
+        if w.get("topic") and w["topic"] != "kognogos":
+            seen.setdefault(w["topic"], str(w.get("about", w["topic"])))
+    return sorted(seen.items(), key=lambda kv: kv[1])
+
+
 def picture_for(choice: str, style_slug: str, theme_slug: str, cache: Path, make: bool = True) -> Path:
     t = themes()[theme_slug]
     if choice == "theme":
         return theme_wallpaper(theme_slug, t, cache, make, styles()[style_slug])
     if choice.startswith("kognogos:"):
         return kognogos_wallpaper(choice.split(":", 1)[1], theme_slug, t, cache, make)
+    if choice.startswith("topic:"):
+        topic = choice.split(":", 1)[1]
+        if topic not in dict(drawn_topics()):
+            raise LookError(f"there is no drawn wallpaper called {topic!r} (known: {', '.join(t for t, _ in drawn_topics())})")
+        return topic_wallpaper(topic, theme_slug, t, cache, make)
     if choice == "solid":
         return solid_wallpaper(theme_slug, t, cache, make)
     pic = Path(choice).expanduser()
@@ -498,7 +515,7 @@ def picture_for(choice: str, style_slug: str, theme_slug: str, cache: Path, make
 
 def wallpaper_choice(choice: str | None) -> str | None:
     """A choice as the look keeps it: the named ones as they are, a file as its full path."""
-    if choice is None or choice in ("theme", "solid") or choice.startswith("kognogos:"):
+    if choice is None or choice in ("theme", "solid") or choice.startswith(("kognogos:", "topic:")):
         return choice
     return str(Path(choice).expanduser().resolve())
 
@@ -608,7 +625,7 @@ def look_text(style: str, theme: str, elements: dict | None = None, wallpaper: d
             "# Picking one element from another theme comes with themeForge's next pages.\n"
             "[elements]\n" + "".join(f"{k} = {q(v)}\n" for k, v in el.items()) +
             "\n# The wallpaper, the same on every screen: picture = \"theme\" (the theme's own), \"kognogos:tier-aware\"\n"
-            "# or \"kognogos:arch-distro\" (KognogOS, in the theme's colours), \"solid\" (the theme's colour), or a\n"
+            "# or \"kognogos:arch-distro\" (KognogOS, in the theme's colours), \"topic:mountains\" (a drawn one), \"solid\" (the theme's colour), or a\n"
             "# file; fit = fill · fit · stretch · center · tile; folder = where your pictures are.\n"
             "[wallpaper]\n" + "".join(f"{k} = {q(wp[k])}\n" for k in ("picture", "fit", "folder")))
 
@@ -990,10 +1007,10 @@ def main(argv=None) -> int:
     a = sub.add_parser("apply")
     a.add_argument("style"); a.add_argument("theme")
     a.add_argument("--dry-run", action="store_true"); a.add_argument("--no-reload", action="store_true")
-    a.add_argument("--wallpaper", help='"theme", "kognogos:tier-aware|arch-distro", "solid" or a picture file of yours')
+    a.add_argument("--wallpaper", help='"theme", "kognogos:tier-aware|arch-distro", "topic:<topic>", "solid" or a picture file of yours')
     a.add_argument("--fit", choices=FITS, help="how the picture lies on each screen (fill crops the edges)")
     a.add_argument("--corners", choices=CORNERS, help="straight, rounded, or the style's own (style)")
-    w = sub.add_parser("wallpaper"); w.add_argument("choice", help='"theme", "kognogos:<design>", "solid" or a picture file')
+    w = sub.add_parser("wallpaper"); w.add_argument("choice", help='"theme", "kognogos:<design>", "topic:<topic>", "solid" or a picture file')
     w.add_argument("--fit", choices=FITS)
     pc = sub.add_parser("picture"); pc.add_argument("style"); pc.add_argument("theme")
     pc.add_argument("choice", nargs="?", default="theme")

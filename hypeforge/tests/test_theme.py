@@ -366,6 +366,20 @@ class Wallpaper(Base):
             bg, words = ht.wallpaper_colours(slug, t)
             self.assertGreaterEqual(ht._contrast(bg, words), 4.5, f"{slug}: the words read")
 
+    def test_the_drawn_topics_can_be_picked_on_their_own(self):
+        """Javier, 2026-10-17: on the Rice, the other styles' drawn topics too, in the colours in use (topic:<name>)."""
+        topics = [t for t, _ in ht.drawn_topics()]
+        self.assertEqual(sorted(topics), sorted({st["wallpaper"]["topic"] for st in ht.styles().values()} - {"kognogos"}),
+                         "every style's drawn topic, KognogOS left out (it has its own choices)")
+        self.assertEqual(ht.wallpaper_choice("topic:mountains"), "topic:mountains", "kept as it is, like kognogos:")
+        pic = ht.picture_for("topic:mountains", "rice", "kognogos-mocha", self.place.cache)
+        self.assertTrue(pic.name.startswith("mountains-kognogos-mocha-") and pic.is_file(), pic)
+        with self.assertRaises(ht.LookError):
+            ht.picture_for("topic:nope", "rice", "kognogos-mocha", self.place.cache)
+        self.apply("rice", "dark-red", wallpaper="topic:circuit", say=lambda *_: None)
+        line = next(l for l in self.sway().splitlines() if l.startswith("output"))
+        self.assertIn("circuit-dark-red-", line, "the Rice keeps its style and wears the circuit board")
+
     def test_the_rice_shows_kognogos_and_every_screen_gets_the_same_line(self):
         self.apply("rice", "dark-red", wallpaper="theme", say=lambda *_: None)
         line = next(l for l in self.sway().splitlines() if l.startswith("output"))
