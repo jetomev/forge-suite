@@ -50,6 +50,7 @@ def main() -> int:
     ap.add_argument("--panel-args", default="", help="more options for the panel, as a bar gives them "
                     "(e.g. \"--only sound --edges top,right --margin top=44,right=8\")")
     ap.add_argument("--notes", action="store_true", help="send three sample notifications first")
+    ap.add_argument("--tray", action="store_true", help="traymenu: hypeForge's tray and a stand-in tray app (Dropbox's menu shape) first")
     a = ap.parse_args()
     out = Path(a.out or HERE / f"logs/panel-preview-{a.view}-{a.style}-{a.theme}.png")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -123,6 +124,11 @@ def main() -> int:
                                        ("nightForge", "Warm from 18:59", "4500 K until 07:02")):
                 subprocess.run(["notify-send", "-a", app, summary, body], env=env)
             subprocess.run(["makoctl", "dismiss", "--all"], env=env)   # into the history, as after a while
+        if a.tray:    # the tray (the watcher) on the bench's own bus, then a stand-in app that registers with it
+            procs.append(subprocess.Popen([sys.executable, str(APPLETS / "tray/hypeforge-tray"), "run"], env=env, stdout=log, stderr=log))
+            time.sleep(1)
+            procs.append(subprocess.Popen([sys.executable, str(HERE / "scripts/fake-tray-app.py")], env=env, stdout=log, stderr=log))
+            time.sleep(2.5)
         procs.append(subprocess.Popen([sys.executable, str(APPLETS / "panels/hypeforge-panel"), a.view,
                                        "--style", a.style, "--theme", a.theme, *shlex.split(a.panel_args)],
                                       env=env, stdout=log, stderr=log))

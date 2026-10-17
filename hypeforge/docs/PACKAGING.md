@@ -18,7 +18,7 @@ aren't listed.*
 | fuzzel | the launcher and the lists | (program) |
 | gtklock | the lock screen | (program) |
 | swayidle | locking when idle | (program) |
-| python-gobject | the pop-up panels | gi |
+| python-gobject | the pop-up panels; the tray (D-Bus through Gio: the watcher, the menus) | gi |
 | gtk3 | the pop-up panels | gi: Gtk 3.0, Gdk 3.0 |
 | gtk-layer-shell | the panels sit on the desktop's layers | gi: GtkLayerShell 0.1 |
 | python-textual | Help & Keys, hypeForge Settings | textual |

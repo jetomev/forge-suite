@@ -311,6 +311,9 @@ bindsym $mod+r mode "resize"
 # the active one coloured (Javier, 2026-10-04). Its settings: ~/.config/sway/waybar/.
 # Started directly (no bar { } block, so Sway's own bar stays off).
 # One bar per screen, each told which screen it's on, so its pop-ups open there (10-10).
+# hypeForge's tray (2026-10-17): the watcher tray apps register with, their icons on the bar, their menus
+# as hypeForge pop-ups. Started before the bar, so tray apps find it however early they start.
+exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch tray ~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray run
 exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch bar ~/Programs/forge-suite/hypeforge/applets/bar/hypeforge-bar start
 
 include /etc/sway/config.d/*

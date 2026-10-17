@@ -151,10 +151,26 @@ def main_screen(outputs: list[dict]) -> str | None:
     return row[(len(row) - 1) // 2]["name"] if row else None
 
 
+OWN_TRAY = "group/tray"          # hypeForge's tray in place of Waybar's (modules.jsonc, 2026-10-17)
+
+
+def own_tray(node):
+    """Every "tray" a style places becomes hypeForge's own tray group, in any module list, nested ones too
+    (Windows 11's hidden-icons drawer). Waybar's tray opened its menus at the pointer, over the bar."""
+    if isinstance(node, dict):
+        return {k: ([OWN_TRAY if m == "tray" else m for m in v] if k in ("modules-left", "modules-center",
+                    "modules-right", "modules") and isinstance(v, list) else own_tray(v)) for k, v in node.items()}
+    if isinstance(node, list):
+        return [own_tray(n) for n in node]
+    return node
+
+
 def bars_for(text: str, outputs: list[str], main: str | None = None) -> list[dict]:
     """One bar per screen, in one Waybar: "output" set, and each module's click commands tagged.
     A bar that says "hypeforge-screens": "main" goes on the main screen only."""
     cfg = json.loads(strip_comments(text))
+    if os.environ.get("HYPEFORGE_WAYBAR_TRAY") != "1":   # the way back to Waybar's own tray, if ours ever fails
+        cfg = own_tray(cfg)
     out = []
     for bar in cfg if isinstance(cfg, list) else [cfg]:
         full = merged(bar)

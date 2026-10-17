@@ -1,0 +1,231 @@
+[
+ [
+  197,
+  {
+   "label": "Open Dropbox Folder"
+  },
+  []
+ ],
+ [
+  198,
+  {
+   "label": "Launch Dropbox Website"
+  },
+  []
+ ],
+ [
+  199,
+  {
+   "enabled": true,
+   "type": "separator"
+  },
+  []
+ ],
+ [
+  200,
+  {
+   "label": "Your Team"
+  },
+  []
+ ],
+ [
+  201,
+  {
+   "enabled": false,
+   "label": "   you@example.com"
+  },
+  []
+ ],
+ [
+  202,
+  {
+   "enabled": false,
+   "label": "   6.2% of 5.1 TB used"
+  },
+  []
+ ],
+ [
+  203,
+  {
+   "children-display": "submenu",
+   "label": "   Recently Changed Files"
+  },
+  [
+   [
+    204,
+    {
+     "label": "Menu photos"
+    },
+    []
+   ],
+   [
+    205,
+    {
+     "label": "Q3 report.pdf"
+    },
+    []
+   ],
+   [
+    206,
+    {
+     "label": "Wallpapers"
+    },
+    []
+   ],
+   [
+    207,
+    {
+     "label": "notes.md"
+    },
+    []
+   ],
+   [
+    208,
+    {
+     "label": "Budget 2027.xlsx"
+    },
+    []
+   ],
+   [
+    209,
+    {
+     "label": "Recipes"
+    },
+    []
+   ],
+   [
+    210,
+    {
+     "label": "logo.svg"
+    },
+    []
+   ],
+   [
+    211,
+    {
+     "label": "Trip itinerary.docx"
+    },
+    []
+   ]
+  ]
+ ],
+ [
+  234,
+  {
+   "enabled": true,
+   "type": "separator"
+  },
+  []
+ ],
+ [
+  235,
+  {
+   "enabled": true,
+   "type": "separator"
+  },
+  []
+ ],
+ [
+  236,
+  {
+   "enabled": false,
+   "label": "Up to date"
+  },
+  []
+ ],
+ [
+  237,
+  {
+   "label": "Pause Syncing"
+  },
+  []
+ ],
+ [
+  238,
+  {
+   "children-display": "submenu",
+   "label": "Snooze Notifications"
+  },
+  [
+   [
+    239,
+    {
+     "label": "For the next 30 minutes"
+    },
+    []
+   ],
+   [
+    240,
+    {
+     "label": "For the next hour"
+    },
+    []
+   ],
+   [
+    241,
+    {
+     "label": "Until the end of day"
+    },
+    []
+   ],
+   [
+    242,
+    {
+     "label": "Until tomorrow"
+    },
+    []
+   ]
+  ]
+ ],
+ [
+  243,
+  {
+   "enabled": true,
+   "type": "separator"
+  },
+  []
+ ],
+ [
+  244,
+  {
+   "label": "Preferences..."
+  },
+  []
+ ],
+ [
+  245,
+  {
+   "label": "Admin Console"
+  },
+  []
+ ],
+ [
+  246,
+  {
+   "label": "Help Center"
+  },
+  []
+ ],
+ [
+  247,
+  {
+   "label": "Export Debug Logs"
+  },
+  []
+ ],
+ [
+  248,
+  {
+   "enabled": true,
+   "type": "separator"
+  },
+  []
+ ],
+ [
+  249,
+  {
+   "label": "Quit Dropbox"
+  },
+  []
+ ]
+]

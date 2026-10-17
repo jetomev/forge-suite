@@ -110,6 +110,25 @@
     "icon-size": 20,
     "spacing": 10
   },
+  // hypeForge's own tray (2026-10-17, Javier: Waybar's tray menus opened over the bar, in plain GTK):
+  // a style still says "tray"; hypeforge-bar puts this group in its place. Ten pieces, one per tray app
+  // (an empty one is hidden); hypeforge-tray keeps their pictures and redraws them on SIGRTMIN+15; a
+  // click opens the app's menu as a hypeForge pop-up, a middle click its own window. The interval is a must:
+  // Waybar 0.15's image piece with an exec and no interval hangs the whole bar before it draws (benched).
+  "group/tray": {
+    "orientation": "inherit",
+    "modules": ["image#tray-1", "image#tray-2", "image#tray-3", "image#tray-4", "image#tray-5", "image#tray-6", "image#tray-7", "image#tray-8", "image#tray-9", "image#tray-10"] 
+  },
+  "image#tray-1": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 1", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 1 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 1" },
+  "image#tray-2": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 2", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 2 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 2" },
+  "image#tray-3": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 3", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 3 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 3" },
+  "image#tray-4": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 4", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 4 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 4" },
+  "image#tray-5": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 5", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 5 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 5" },
+  "image#tray-6": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 6", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 6 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 6" },
+  "image#tray-7": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 7", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 7 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 7" },
+  "image#tray-8": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 8", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 8 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 8" },
+  "image#tray-9": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 9", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 9 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 9" },
+  "image#tray-10": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 10", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 10 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 10" },
   "custom/tucked": {
     "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-tucked.json\" 2>/dev/null",
     "return-type": "json",

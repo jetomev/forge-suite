@@ -53,6 +53,12 @@ Dropbox, Insync…), the **clipboard**, **USB drives**, **Bluetooth**, **network
 time** | the **bell** and the **⏻ power menu** (Lock · Log Out · Reboot · Shut Down — the last
 three ask first).
 
+**The tray's icons** (since 2026-10-17): **click** one for that app's menu, a hypeForge pop-up under
+the bar in your theme's look — its entries in small cards, quiet lines for what is only information
+(Dropbox's account, "Up to date"), a ▸ that opens a submenu in place; pick an entry and it closes.
+**Middle click** opens the app's own window, when it has one. Click the icon again, press Esc or click
+outside to close the menu.
+
 ## No title bars
 
 Windows have a thin border and no title bar, so there is no close button to look for:

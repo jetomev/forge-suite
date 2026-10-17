@@ -33,7 +33,7 @@ NAMES = {   # the applet as Javier knows it
     "bar": "the bar", "autostart": "Start-at-login apps", "sections": "App Sections (the launcher)",
     "workspaces": "Workspaces", "placement": "Window Placement", "tuck": "Tuck (hidden windows)",
     "rules": "Window Rules", "taskbar": "the Taskbar", "menubar": "the Menu bar", "panels": "the pop-up panels",
-    "notifications": "the bell", "clipboard": "the clipboard", "clipboard-images": "the clipboard (pictures)",
+    "notifications": "the bell", "clipboard": "the clipboard", "clipboard-images": "the clipboard (pictures)", "tray": "the tray",
 }
 ON_PURPOSE = {signal.SIGTERM, signal.SIGINT, signal.SIGHUP}
 KEEP_BYTES = 512 * 1024

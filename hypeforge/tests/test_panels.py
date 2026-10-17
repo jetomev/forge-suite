@@ -376,3 +376,54 @@ class NotificationCards(unittest.TestCase):
         self.assertIn(".hf-card.hf-head {{ padding: 4px 6px 4px 12px; }}", src, "a slim head")
         self.assertIn("cards = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=3)", src)
         self.assertIn("new_from_file_at_size(path, 24, 24)", src)
+
+
+class TrayMenu(unittest.TestCase):
+    """2026-10-17: a tray app's menu as a hypeForge pop-up (Waybar's opened at the pointer, over the bar)."""
+
+    @classmethod
+    def setUpClass(cls):
+        import traymenu
+        sys.path.insert(0, str(HERE / "applets/tray"))
+        import hfsni
+        import json as _json
+        cls.v, cls.sni = traymenu, hfsni
+        cls.layout = _json.loads((HERE / "tests/fixtures/tray-menu-dropbox.json").read_text())
+
+    def test_the_apps_spaces_become_an_indent_and_underscores_go(self):
+        self.assertEqual(self.v.clean("   you@example.com"), ("you@example.com", 1))
+        self.assertEqual(self.v.clean("_Preferences"), ("Preferences", 0))
+        self.assertEqual(self.v.clean("Save__As"), ("Save_As", 0))
+
+    def test_the_separators_cut_the_menu_into_cards(self):
+        g = self.v.groups(self.layout)
+        self.assertEqual([len(x) for x in g], [2, 4, 3, 4, 1], "Dropbox's menu: five cards, the double separator once")
+        self.assertEqual(g[-1][0][1]["label"], "Quit Dropbox")
+
+    def test_an_item_is_found_by_its_name_or_its_path(self):
+        self.assertEqual(self.sni.split(":1.48/org/ayatana/NotificationItem/dropbox"),
+                         (":1.48", "/org/ayatana/NotificationItem/dropbox"))
+        self.assertEqual(self.sni.split("org.kde.StatusNotifierItem-5001-1"),
+                         ("org.kde.StatusNotifierItem-5001-1", "/StatusNotifierItem"))
+        self.assertEqual(self.sni.split("/StatusNotifierItem", ":1.9"), (":1.9", "/StatusNotifierItem"))
+
+
+class OwnTray(unittest.TestCase):
+    def test_every_styles_tray_becomes_ours_nested_ones_too(self):
+        import importlib.machinery, importlib.util
+        ld = importlib.machinery.SourceFileLoader("hb_tray_test", str(HERE / "applets/bar/hypeforge-bar"))
+        sp = importlib.util.spec_from_loader("hb_tray_test", ld)
+        hb = importlib.util.module_from_spec(sp)
+        ld.exec_module(hb)
+        self.assertEqual(hb.own_tray({"modules-right": ["tray", "clock"], "group/hidden": {"modules": ["x", "tray"]}}),
+                         {"modules-right": ["group/tray", "clock"], "group/hidden": {"modules": ["x", "group/tray"]}})
+        mods = (HERE / "sway/waybar/modules.jsonc").read_text()
+        for n in range(1, 11):
+            self.assertIn(f'"image#tray-{n}"', mods)
+        self.assertIn("menu 1 {popup}", mods, "a click carries the bar's pop-up place")
+        self.assertEqual(mods.count('"interval": 3600, "signal": 15'), 10,
+                         "every piece has an interval: an exec without one hangs Waybar 0.15 before it draws")
+
+    def test_the_tray_starts_at_login_under_the_watcher(self):
+        self.assertIn("hypeforge-watch tray ~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray run",
+                      (HERE / "sway/config").read_text())

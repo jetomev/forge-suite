@@ -1,0 +1,176 @@
+#!/usr/bin/env python3
+"""hypeForge's tray (Javier, 2026-10-17: Dropbox's menu "is horrible, and opens on top of the bar/icon
+area"; "make it happen").
+
+    hypeforge-tray run              the tray itself, started at login: the watcher tray apps register
+                                    with, an icon file per app, the bar told when something changes
+    hypeforge-tray icon N           for the bar's image piece N: the picture's path and its tooltip
+    hypeforge-tray menu N [where]   a click on icon N: the app's menu as a hypeForge pop-up, where the
+                                    bar's pop-ups open (the bar's --edges/--margin words)
+    hypeforge-tray open N           a middle click: the app's own window (its "Activate")
+
+The bar shows up to ten tray apps, each in its own image piece (Waybar's tray drew its menus at the
+pointer, in plain GTK, over the bar). Icons: the app's named icon from the icon theme (its own folder
+first), else the pixels it sends (Electron apps), else a plain mark. Everything it writes lives in
+$XDG_RUNTIME_DIR/hypeforge-tray/.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import shutil
+import signal
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent / "common"))
+
+BAR_SIGNAL = 15                     # Waybar redraws the tray pieces on SIGRTMIN+15
+PANEL = HERE.parent / "panels/hypeforge-panel"
+PIDFILE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-tray.pid"
+FALLBACK = "application-x-executable"
+
+
+def slot_icon(conn, item: dict, n: int, icons) -> str | None:
+    """The picture for slot n: the theme icon (the app's own folder first), else its pixels."""
+    import hfsni
+    want = item["attention"] if item["status"] == "NeedsAttention" and item["attention"] else item["icon"]
+    if want:
+        if item["theme_path"]:
+            for ext in (".svg", ".png"):
+                for sub in ("", "hicolor/scalable/apps/", "hicolor/48x48/apps/", "hicolor/32x32/apps/", "hicolor/22x22/apps/"):
+                    f = Path(item["theme_path"]) / f"{sub}{want}{ext}"
+                    if f.is_file():
+                        return str(f)
+        found = icons.find(want)
+        if found:
+            return found
+    out = hfsni.RUNTIME / f"slot-{n}.png"
+    if hfsni.pixmap_png(conn, item["entry"], out, "AttentionIconPixmap" if item["status"] == "NeedsAttention" else "IconPixmap") \
+            or hfsni.pixmap_png(conn, item["entry"], out):
+        return str(out)
+    return icons.find(FALLBACK)
+
+
+def run() -> int:
+    import hfsni
+    from gi.repository import GLib
+    from hfbar import signal_bar
+    from hficons import Icons
+
+    try:
+        old = int(PIDFILE.read_text())
+        os.kill(old, 0)
+        if f"hypeforge-tray" in Path(f"/proc/{old}/cmdline").read_bytes().decode(errors="replace"):
+            print("hypeforge-tray: already running")
+            return 0
+    except (OSError, ValueError):
+        pass
+    PIDFILE.write_text(str(os.getpid()))
+    hfsni.RUNTIME.mkdir(parents=True, exist_ok=True)
+    icons = Icons()
+    pending = {"t": None}
+
+    def rebuild():
+        pending["t"] = None
+        conn = watcher.conn
+        slots = []
+        for entry in list(watcher.items):
+            item = hfsni.describe(conn, entry)
+            if item["status"] == "Passive":
+                continue                                   # the standard's "nothing to show now"
+            item["picture"] = slot_icon(conn, item, len(slots) + 1, icons)
+            slots.append(item)
+            if len(slots) == hfsni.MAX_SLOTS:
+                break
+        tmp = hfsni.SLOTS.with_suffix(".tmp")
+        tmp.write_text(json.dumps(slots, indent=1))
+        tmp.replace(hfsni.SLOTS)
+        signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
+        return False
+
+    def changed():
+        # apps often send several changes at once: one redraw for the lot, a moment later
+        if pending["t"] is None:
+            pending["t"] = GLib.timeout_add(250, rebuild)
+
+    watcher = hfsni.Watcher(changed)
+    loop = GLib.MainLoop()
+    for sig in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
+        GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, sig, lambda *_: (loop.quit(), False)[1])
+    GLib.timeout_add(1500, lambda: (rebuild(), False)[1])
+    print("hypeforge-tray: the tray is up (waiting for the watcher's name if another program holds it)")
+    try:
+        loop.run()
+    finally:
+        try:
+            if int(PIDFILE.read_text()) == os.getpid():
+                PIDFILE.unlink()
+        except (OSError, ValueError):
+            pass
+        hfsni.SLOTS.unlink(missing_ok=True)
+        signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
+    return 0
+
+
+# where hypeforge-tray run keeps the slots, worked out here WITHOUT loading D-Bus: the bar runs `icon N`
+# for each of its ten pieces at start and at every change, and it waits for them (loading Gio each time
+# held a hidden bar back for seconds, 2026-10-17)
+SLOTS = Path(os.environ.get("HYPEFORGE_TRAY_SLOTS")
+             or Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-tray/slots.json")
+
+
+def slot(n: str) -> dict | None:
+    try:
+        i = int(n) - 1
+        slots = json.loads(SLOTS.read_text())
+    except (ValueError, OSError):
+        return None
+    return slots[i] if 0 <= i < len(slots) else None
+
+
+def icon(n: str) -> int:
+    """Waybar's image piece: a path, then a tooltip; nothing at all hides the piece."""
+    s = slot(n)
+    if not s or not s.get("picture"):
+        return 0
+    name = s.get("title") or s.get("id") or "a tray app"
+    tip = s.get("tooltip") or name
+    print(s["picture"])
+    print(f"{tip} · click: its menu · middle click: open it")    # one line: Waybar takes the path, then one tooltip line
+    return 0
+
+
+def menu(n: str, where: list[str]) -> int:
+    s = slot(n)
+    if not s:
+        return 0
+    os.execv(str(PANEL), [str(PANEL), "traymenu", "--slot", n, *where])
+
+
+def open_app(n: str) -> int:
+    import hfsni
+    s = slot(n)
+    if s:
+        hfsni.activate(hfsni.bus(), s["name"], s["path"])
+    return 0
+
+
+def main() -> int:
+    a = sys.argv[1:]
+    if a == ["run"]:
+        return run()
+    if len(a) >= 2 and a[0] == "icon":
+        return icon(a[1])
+    if len(a) >= 2 and a[0] == "menu":
+        return menu(a[1], a[2:])
+    if len(a) >= 2 and a[0] == "open":
+        return open_app(a[1])
+    sys.exit(__doc__)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
