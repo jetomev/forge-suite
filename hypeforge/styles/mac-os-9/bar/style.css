@@ -82,5 +82,4 @@ menuitem:hover { background-color: @hf_menu_hl; color: @hf_menu_hl_text; }
 
 /* the night light's moon (D-96, every style): warm when it's on, quiet in daylight, red when switched off */
 #custom-nightlight.warm { color: @hf_bell; }
-#custom-nightlight.day { color: @hf_subtext; }
 #custom-nightlight.off { color: @hf_alert; }

@@ -120,5 +120,4 @@ window#waybar.menubar .app { background-size: 16px 16px; }
 
 /* the night light's moon (D-96, every style): warm when it's on, quiet in daylight, red when switched off */
 #custom-nightlight.warm { color: @hf_bell; }
-#custom-nightlight.day { color: @hf_subtext; }
 #custom-nightlight.off { color: @hf_alert; }

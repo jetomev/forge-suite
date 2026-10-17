@@ -55,6 +55,7 @@ clock_format     = ["%I:%M %p"]
 applets          = ["menubar"]            # the menus + the app's name (look step 5)
 
 [roles]
+tray_icon          = "role:menubar_text"   # the tray's one-colour icons: the same colour as its other icons (2026-10-17)
 menubar_background   = "surface.overlay"
 menubar_text         = "text.primary"
 menubar_line         = "border.strong"        # the line under the menu bar

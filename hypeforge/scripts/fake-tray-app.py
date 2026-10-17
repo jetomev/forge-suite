@@ -26,6 +26,9 @@ ap.add_argument("--icon", default="folder")
 ap.add_argument("--clicks")
 ap.add_argument("--pixmap", action="store_true", help="send the icon as pixels instead of a name (like Electron apps)")
 ap.add_argument("--never-register", action="store_true", help="never register (like Insync after the watcher changes hands)")
+ap.add_argument("--once", action="store_true", help="register once, by its object path, with no name of its own, and "
+                "never again (like Dropbox's Ayatana item): only a tray that takes the old one's list keeps it")
+ap.add_argument("--white", action="store_true", help="send a white picture (like most panel icons)")
 a = ap.parse_args()
 
 ITEM_XML = """<node><interface name="org.kde.StatusNotifierItem">
@@ -54,7 +57,7 @@ def node(n):
 
 def pixels():
     w = h = 16
-    data = bytes([255, 0x89, 0xb4, 0xfa] * (w * h))      # ARGB, one blue square
+    data = bytes(([255, 0xff, 0xff, 0xff] if a.white else [255, 0x89, 0xb4, 0xfa]) * (w * h))  # ARGB: white, or blue
     return [(w, h, data)]
 
 
@@ -66,8 +69,8 @@ def item_call(conn, _s, _p, _i, method, params, inv):
 
 def item_get(_c, _s, _p, _i, prop):
     return {"Id": GLib.Variant("s", a.id), "Title": GLib.Variant("s", a.title), "Status": GLib.Variant("s", "Active"),
-            "IconName": GLib.Variant("s", "" if a.pixmap else a.icon),
-            "IconPixmap": GLib.Variant("a(iiay)", pixels() if a.pixmap else []),
+            "IconName": GLib.Variant("s", "" if a.pixmap or a.white else a.icon),
+            "IconPixmap": GLib.Variant("a(iiay)", pixels() if a.pixmap or a.white else []),
             "Menu": GLib.Variant("o", "/MenuBar"), "ItemIsMenu": GLib.Variant("b", False),
             "Category": GLib.Variant("s", "ApplicationStatus")}[prop]
 
@@ -91,18 +94,26 @@ conn.register_object("/MenuBar", Gio.DBusNodeInfo.new_for_xml(MENU_XML).interfac
 name = f"org.kde.StatusNotifierItem-{os.getpid()}-1"
 
 
+registered = []
+
+
 def register():
-    if a.never_register:
+    if a.never_register or (a.once and registered):
         return False
     try:
         conn.call_sync("org.kde.StatusNotifierWatcher", "/StatusNotifierWatcher", "org.kde.StatusNotifierWatcher",
-                       "RegisterStatusNotifierItem", GLib.Variant("(s)", (name,)), None, Gio.DBusCallFlags.NONE, 2000, None)
+                       "RegisterStatusNotifierItem", GLib.Variant("(s)", ("/StatusNotifierItem" if a.once else name,)),
+                       None, Gio.DBusCallFlags.NONE, 2000, None)
+        registered.append(1)
         return False
     except GLib.Error:
         return True                                 # no watcher yet: try again
 
 
-Gio.bus_own_name_on_connection(conn, name, Gio.BusNameOwnerFlags.NONE, lambda *_: GLib.timeout_add(200, register), None)
+if a.once:
+    GLib.timeout_add(200, register)
+else:
+    Gio.bus_own_name_on_connection(conn, name, Gio.BusNameOwnerFlags.NONE, lambda *_: GLib.timeout_add(200, register), None)
 # a watcher that comes later (or comes back) is registered with again, as real tray apps do
 def watcher_changed(_conn, _sender, _path, _iface, _signal, params, *_rest):
     if params.unpack()[2]:

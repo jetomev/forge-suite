@@ -4,6 +4,8 @@ area"; "make it happen").
 
     hypeforge-tray run              the tray itself, started at login: the watcher tray apps register
                                     with, an icon file per app, the bar told when something changes
+    hypeforge-tray run --replace    a restart with no gap: takes over from the running tray in one step,
+                                    its apps included (the old one ends by itself)
     hypeforge-tray icon N           for the bar's image piece N: the picture's path and its tooltip
     hypeforge-tray menu N [where]   a click on icon N: the app's menu as a hypeForge pop-up, where the
                                     bar's pop-ups open (the bar's --edges/--margin words)
@@ -55,20 +57,34 @@ def slot_icon(conn, item: dict, n: int, icons) -> str | None:
     return icons.find(FALLBACK)
 
 
-def run() -> int:
+def run(replace: bool = False) -> int:
     import hfsni
-    from gi.repository import GLib
+    import hftint
+    from gi.repository import Gio, GLib
     from hfbar import signal_bar
     from hficons import Icons
 
     try:
         old = int(PIDFILE.read_text())
         os.kill(old, 0)
-        if f"hypeforge-tray" in Path(f"/proc/{old}/cmdline").read_bytes().decode(errors="replace"):
-            print("hypeforge-tray: already running")
+        if "hypeforge-tray" in Path(f"/proc/{old}/cmdline").read_bytes().decode(errors="replace") and not replace:
+            print("hypeforge-tray: already running (hypeforge-tray run --replace restarts it with no gap)")
             return 0
     except (OSError, ValueError):
         pass
+    known = []
+    if replace:          # the running tray's apps: asked of it directly (any version), and its last list
+        try:
+            r = hfsni.bus().call_sync(hfsni.WATCHER, hfsni.WATCHER_PATH, "org.freedesktop.DBus.Properties", "Get",
+                                      GLib.Variant("(ss)", (hfsni.WATCHER, "RegisteredStatusNotifierItems")),
+                                      GLib.VariantType("(v)"), Gio.DBusCallFlags.NONE, 2000, None)
+            known = list(r.unpack()[0])
+        except GLib.Error:
+            pass
+        try:
+            known += [e for e in json.loads(hfsni.ITEMS.read_text()) if e not in known]
+        except (OSError, ValueError):
+            pass
     PIDFILE.write_text(str(os.getpid()))
     hfsni.RUNTIME.mkdir(parents=True, exist_ok=True)
     icons = Icons()
@@ -77,18 +93,23 @@ def run() -> int:
     def rebuild():
         pending["t"] = None
         conn = watcher.conn
+        colour = hftint.theme_colour()                     # one-colour icons take the theme's (2026-10-17)
         slots = []
         for entry in list(watcher.items):
             item = hfsni.describe(conn, entry)
             if item["status"] == "Passive":
                 continue                                   # the standard's "nothing to show now"
-            item["picture"] = slot_icon(conn, item, len(slots) + 1, icons)
+            n = len(slots) + 1
+            item["own_picture"] = slot_icon(conn, item, n, icons)
+            item["picture"] = hftint.themed(item["own_picture"], colour, hfsni.RUNTIME, n)
             slots.append(item)
             if len(slots) == hfsni.MAX_SLOTS:
                 break
+        hftint.tidy(hfsni.RUNTIME, {s["picture"] for s in slots})
         tmp = hfsni.SLOTS.with_suffix(".tmp")
         tmp.write_text(json.dumps(slots, indent=1))
         tmp.replace(hfsni.SLOTS)
+        hfsni.ITEMS.write_text(json.dumps(list(watcher.items)))
         signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
         return False
 
@@ -97,8 +118,11 @@ def run() -> int:
         if pending["t"] is None:
             pending["t"] = GLib.timeout_add(250, rebuild)
 
-    watcher = hfsni.Watcher(changed)
     loop = GLib.MainLoop()
+    watcher = hfsni.Watcher(changed, replace=replace, known=known, on_replaced=loop.quit)
+    # a new theme rewrites colors.css: the icons are repainted in its colour
+    monitor = Gio.File.new_for_path(str(hftint.colors_css())).monitor_file(Gio.FileMonitorFlags.WATCH_MOVES, None)
+    monitor.connect("changed", lambda *_a: changed())
     try:                                  # GLib 2.80+: the Unix signals moved to GLibUnix
         from gi.repository import GLibUnix
         add_signal = GLibUnix.signal_add
@@ -112,12 +136,13 @@ def run() -> int:
         loop.run()
     finally:
         try:
-            if int(PIDFILE.read_text()) == os.getpid():
-                PIDFILE.unlink()
+            mine = int(PIDFILE.read_text()) == os.getpid()
         except (OSError, ValueError):
-            pass
-        hfsni.SLOTS.unlink(missing_ok=True)
-        signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
+            mine = False
+        if mine:                          # replaced by a new tray: its files are the new one's now
+            PIDFILE.unlink(missing_ok=True)
+            hfsni.SLOTS.unlink(missing_ok=True)
+            signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
     return 0
 
 
@@ -166,8 +191,8 @@ def open_app(n: str) -> int:
 
 def main() -> int:
     a = sys.argv[1:]
-    if a == ["run"]:
-        return run()
+    if a in (["run"], ["run", "--replace"]):
+        return run(replace=a[1:] == ["--replace"])
     if len(a) >= 2 and a[0] == "icon":
         return icon(a[1])
     if len(a) >= 2 and a[0] == "menu":

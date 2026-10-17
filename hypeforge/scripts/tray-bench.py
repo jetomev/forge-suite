@@ -9,6 +9,9 @@ Claude), the bar is started by hypeforge-bar, then:
   - a click on screen 3's tray icon opens the app's menu there and nowhere else; the same click closes it
   - an entry picked reaches the app as its own "clicked"
   - an app that quits leaves the bar
+  - one-colour icons are repainted in the style's tray colour; a coloured one keeps its own (2026-10-17)
+  - a restart (`run --replace`) never leaves the tray without an owner, the old tray ends by itself, and
+    an app that registers only once (like Dropbox) is still there after it
   - the real desktop's bar and tray are untouched
 
     tray-bench.py [--keep]     (--keep leaves the bench folder and its pictures)
@@ -35,6 +38,17 @@ BAR = HERE / "applets/bar/hypeforge-bar"
 TRAY = HERE / "applets/tray/hypeforge-tray"
 FAKE = HERE / "scripts/fake-tray-app.py"
 MAGENTA = b"\xff\x00\xff"
+
+
+def new_owners(log: str) -> list[str]:
+    """From dbus-monitor's log: the new owner of each change of the watcher's name ("" = no owner: a gap)."""
+    out = []
+    for block in log.split("signal ")[1:]:
+        if "member=NameOwnerChanged" in block:
+            strings = [l.split('"')[1] if '"' in l else "" for l in block.splitlines() if l.strip().startswith("string")]
+            if len(strings) == 3:
+                out.append(strings[2])
+    return out
 
 
 def main() -> int:
@@ -112,16 +126,22 @@ def main() -> int:
         pixels = subprocess.Popen([sys.executable, str(FAKE), "--id", "electron-fake", "--title", "Pixel App", "--pixmap"],
                                   env=env, stdout=log, stderr=log)
         procs.append(pixels)
+        white = subprocess.Popen([sys.executable, str(FAKE), "--id", "white-fake", "--title", "White App", "--white"],
+                                 env=env, stdout=log, stderr=log)
+        procs.append(white)
+        once = subprocess.Popen([sys.executable, str(FAKE), "--id", "once-fake", "--title", "Once App", "--once"],
+                                env=env, stdout=log, stderr=log)
+        procs.append(once)
         time.sleep(2.5)
 
         owner = call("busctl", "--user", "status", "org.kde.StatusNotifierWatcher").stdout
         items = call("busctl", "--user", "get-property", "org.kde.StatusNotifierWatcher", "/StatusNotifierWatcher",
                      "org.kde.StatusNotifierWatcher", "RegisteredStatusNotifierItems").stdout
-        check("hypeforge-tray" in owner and items.startswith("as 3"),
-              f"the watcher is hypeForge's tray and lists all three apps ({items.strip()[:60]})")
+        check("hypeforge-tray" in owner and items.startswith("as 5"),
+              f"the watcher is hypeForge's tray and lists all five apps ({items.strip()[:60]})")
         slots = json.loads((run / "hypeforge-tray/slots.json").read_text())
         check(any(s["id"] == "insync-fake" for s in slots), "the app that never registered was taken in anyway")
-        check(len(slots) == 3 and all(s.get("picture") and Path(s["picture"]).is_file() for s in slots),
+        check(len(slots) == 5 and all(s.get("picture") and Path(s["picture"]).is_file() for s in slots),
               f"a picture for each: {[Path(s.get('picture') or '-').name for s in slots]}")
         px = next((s for s in slots if s["id"] == "electron-fake"), {})
         check(Path(px.get("picture", "")).name.startswith("slot-") and Path(px["picture"]).is_file(),
@@ -129,7 +149,7 @@ def main() -> int:
         n_drop = str(next(i for i, s in enumerate(slots, 1) if s["id"].startswith("dropbox")))
         out = call(sys.executable, str(TRAY), "icon", n_drop).stdout.splitlines()
         check(len(out) == 2 and Path(out[0]).is_file() and "Dropbox" in out[1], f"the bar's piece {n_drop} gets a path and one tooltip line: {out}")
-        check(call(sys.executable, str(TRAY), "icon", "5").stdout == "", "an empty piece gets nothing (the bar hides it)")
+        check(call(sys.executable, str(TRAY), "icon", "9").stdout == "", "an empty piece gets nothing (the bar hides it)")
 
         for style in ("rice", "kde"):
             ht.apply(style, "kognogos-mocha", place, reload=False, check_names=False, make_wallpaper=False, say=lambda *_: None)
@@ -142,10 +162,12 @@ def main() -> int:
             third = outs[2]["name"]
             click = next(b for b in bars if b["output"] == third)[f"image#tray-{n_drop}"]["on-click"]
             check("--edges" in click and f"HYPEFORGE_OUTPUT={third};" in click, f"{style}: the click carries the bar's pop-up place and its screen")
-            before = [shot(o) for o in outs]
+            # the screen's middle only: the bar itself redraws (a theme applied repaints the tray's icons)
+            mid = lambda o: shot(o, o["rect"]["y"] + 70, o["rect"]["height"] - 140)
+            before = [mid(o) for o in outs]
             procs.append(subprocess.Popen(["sh", "-c", click], env=env, stdout=log, stderr=log))
             time.sleep(3)
-            changed = [sum(a != b for a, b in zip(x, shot(o))) for x, o in zip(before, outs)]
+            changed = [sum(a != b for a, b in zip(x, mid(o))) for x, o in zip(before, outs)]
             check(changed[2] > 10000 and changed[0] < 1000 and changed[1] < 1000,
                   f"{style}: screen 3's click opens the menu on screen 3 only (changed bytes: {changed})")
             pic = HERE / "logs" / f"tray-bench-{style}.png"
@@ -153,7 +175,7 @@ def main() -> int:
             shot(outs[2], path=pic)
             subprocess.run(["sh", "-c", click], env=env, stdout=log, stderr=log, timeout=10)   # the same click again
             time.sleep(1.5)
-            after = sum(a != b for a, b in zip(before[2], shot(outs[2])))
+            after = sum(a != b for a, b in zip(before[2], mid(outs[2])))
             check(after < 1000, f"{style}: the same click again closes it (changed bytes: {after})")
 
         # an entry picked reaches the app (Pause Syncing is 237 in Dropbox's menu shape)
@@ -171,7 +193,39 @@ def main() -> int:
         pixels.terminate()
         time.sleep(1.5)
         left = json.loads((run / "hypeforge-tray/slots.json").read_text())
-        check(len(left) == 2 and not any(s["id"] == "electron-fake" for s in left), f"an app that quits leaves the bar ({len(left)} left)")
+        check(len(left) == 4 and not any(s["id"] == "electron-fake" for s in left), f"an app that quits leaves the bar ({len(left)} left)")
+
+        # the icons in the style's tray colour (the last style applied: KDE)
+        sys.path.insert(0, str(HERE / "applets/tray"))
+        import hftint
+        from PIL import Image
+        want = hftint.theme_colour(conf / "hypeforge/theme/colors.css")
+        w = next(s for s in left if s["id"] == "white-fake")
+        px = [p for p in hftint.pixels(Image.open(w["picture"]).convert("RGBA")) if p[3] > 200]
+        got = "#%02x%02x%02x" % px[0][:3] if px else None
+        check(Path(w["picture"]).name.count("-") == 2 and got == want,
+              f"a white icon is repainted in the style's tray colour ({got} = {want})")
+        folder = next(s for s in left if s["id"].startswith("dropbox"))
+        check(folder["picture"] == folder["own_picture"], f"a coloured icon keeps its own ({Path(folder['picture']).name})")
+
+        # a restart with no gap: watch the watcher's owner while a new tray takes over
+        watch_log = base / "owner.txt"
+        mon = subprocess.Popen(["dbus-monitor", "--session", "type='signal',member='NameOwnerChanged',"
+                                "arg0='org.kde.StatusNotifierWatcher'"], env=env, stdout=open(watch_log, "w"), stderr=log)
+        procs.append(mon)
+        time.sleep(1)
+        old_tray = procs[1]
+        procs.append(subprocess.Popen([sys.executable, str(TRAY), "run", "--replace"], env=env, stdout=log, stderr=log))
+        time.sleep(3)
+        mon.terminate()
+        news = new_owners(watch_log.read_text())
+        check(len(news) >= 1 and all(news), f"the restart never left the tray without an owner (new owners: {news})")
+        check(old_tray.poll() is not None, "the old tray ended by itself")
+        items = call("busctl", "--user", "get-property", "org.kde.StatusNotifierWatcher", "/StatusNotifierWatcher",
+                     "org.kde.StatusNotifierWatcher", "RegisteredStatusNotifierItems").stdout
+        after = json.loads((run / "hypeforge-tray/slots.json").read_text())
+        check(any(s["id"] == "once-fake" for s in after) and items.startswith("as 4"),
+              f"an app that registers only once is still there ({[s['id'] for s in after]})")
     finally:
         for p in procs:
             if p.poll() is None:

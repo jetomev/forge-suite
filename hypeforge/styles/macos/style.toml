@@ -63,6 +63,7 @@ notification_center = "panel"
 clock_format     = ["%a %b %d  %I:%M %p"]   # Waybar's clock has no %-d / %-I
 
 [roles]                          # the names the engine reads (DEFAULT_ROLES in hypeforge-theme)
+tray_icon          = "role:menubar_text"   # the tray's one-colour icons: the same colour as its other icons (2026-10-17)
 menubar_background = "surface.raised"        # frosted on SwayFX: later, for every style (see THEME.md)
 menubar_text       = "text.primary"
 menubar_line       = "border.subtle"

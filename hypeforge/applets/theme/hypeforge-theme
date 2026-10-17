@@ -87,6 +87,9 @@ DEFAULT_ROLES = {
     "panel_backdrop": "surface.sunken",
     # a style's bar areas ("islands"), their outline and the bar's icons (the Rice names its own)
     "island_background": "bar.bg", "island_border": "border.subtle", "module_icon": "bar.fg",
+    # the tray's app icons, repainted when they are one colour (2026-10-17): the colour of the style's other
+    # icons — "role:<name>" takes another role's colour (the Rice's module_icon, the Macs' menu bar text)
+    "tray_icon": "role:bar_fg",
 }
 # Classic's lists, notes, lock screen and GTK roles follow its bar's shades (today's look).
 OUTPUTS = [  # template → where it goes, under the config folder
@@ -149,6 +152,10 @@ def resolve(role: str, style: dict, theme: dict) -> str:
     path = style.get("roles", {}).get(role) or DEFAULT_ROLES.get(role)
     if not path:
         raise LookError(f"no colour for the role {role}")
+    if path.startswith("role:"):
+        if path[5:] == role:
+            raise LookError(f"the role {role} names itself")
+        return resolve(path[5:], style, theme)
     return token(theme, path)
 
 

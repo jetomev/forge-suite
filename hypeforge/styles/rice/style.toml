@@ -56,6 +56,7 @@ power            = "panel-buttons"  # big round buttons over a dimmed screen (R-
 wallpaper        = "theme"       # the theme's own generated picture (D-75: every theme, every style)
 
 [roles]
+tray_icon          = "role:module_icon"   # the tray's one-colour icons: the same colour as its other icons (2026-10-17)
 island_background  = "surface.base"           # frosted on SwayFX
 bar_bg             = "surface.base"           # the areas' colour (the bar itself is see-through)
 bar_fg             = "text.primary"           # the text ON the areas (surface.base), not on a colour band: in

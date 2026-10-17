@@ -45,6 +45,7 @@ bar_position     = "top"
 wallpaper        = "theme"       # D-75; a picture the person picked wins
 
 [roles]                          # today's colours, role by role (docs/THEME.md)
+tray_icon          = "role:bar_fg_dim"   # the tray's one-colour icons: the same colour as its other icons (2026-10-17)
 bar_bg           = "bar.bg"
 bar_shade        = "bar.shade"
 bar_fg           = "bar.fg"          # the text made for the colour band (F-68: text.primary is dark in light themes)

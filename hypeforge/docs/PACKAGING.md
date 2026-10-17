@@ -22,10 +22,12 @@ aren't listed.*
 | gtk3 | the pop-up panels | gi: Gtk 3.0, Gdk 3.0 |
 | gtk-layer-shell | the panels sit on the desktop's layers | gi: GtkLayerShell 0.1 |
 | python-cairo | the system pop-ups' graphs and bars (views/system.py, 2026-10-17) | cairo |
+| gdk-pixbuf2 | the tray reads an app's icon to repaint it in the style's colour (applets/tray/hftint.py, 2026-10-17) | gi: GdkPixbuf 2.0 |
+| librsvg | the same, for icons drawn as SVG (most panel icons) | (GdkPixbuf's SVG loader) |
 | python-textual | Help & Keys, hypeForge Settings | textual |
 | python-rich | the same | rich |
 | python-forgekit | the same | forgekit |
-| python-pillow | the look command: wallpapers, the lock picture | PIL |
+| python-pillow | the look command: wallpapers, the lock picture; the tray's repainted icons | PIL |
 | python-numpy | the wallpaper drawings (applets/theme/wallpaper-generate.py) | numpy |
 | adw-gtk-theme | the GTK theme every look builds on (F-70) | — |
 | wl-clipboard | the clipboard (wl-copy, wl-paste) | (programs) |

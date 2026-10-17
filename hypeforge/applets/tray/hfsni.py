@@ -22,6 +22,7 @@ ITEM = "org.kde.StatusNotifierItem"
 MENU = "com.canonical.dbusmenu"
 RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-tray"
 SLOTS = Path(os.environ.get("HYPEFORGE_TRAY_SLOTS") or RUNTIME / "slots.json")   # a preview may point elsewhere
+ITEMS = RUNTIME / "items.json"      # every registered app, hidden ones too: handed to the next tray on a restart
 MAX_SLOTS = 10
 
 WATCHER_XML = """
@@ -58,28 +59,50 @@ def split(entry: str, sender: str | None = None) -> tuple[str, str]:
 
 class Watcher:
     """The registry tray apps talk to. Owns org.kde.StatusNotifierWatcher; when another program holds the
-    name (Waybar's own tray, during the switch), it waits in line and takes over when that one lets go."""
+    name (Waybar's own tray, during the switch), it waits in line and takes over when that one lets go.
 
-    def __init__(self, on_change):
-        self.on_change = on_change
+    `replace` (a restart, 2026-10-17): take the name straight from the running tray, so it never has no
+    owner — Electron apps (Claude Desktop) drop their icon for good when it has none even for a moment —
+    and take its apps over (`known`: the old tray's list), so none has to register again. The old tray,
+    replaced, calls `on_replaced` and ends."""
+
+    def __init__(self, on_change, replace: bool = False, known: list[str] | None = None, on_replaced=None):
+        self.on_change, self.on_replaced = on_change, on_replaced
         self.items: list[str] = []
         self.hosts: set[str] = set()
+        self.known = list(known or [])
         self.conn = bus()
         self.node = Gio.DBusNodeInfo.new_for_xml(WATCHER_XML)
         self.reg = None
-        self.owner_id = Gio.bus_own_name_on_connection(
-            self.conn, WATCHER, Gio.BusNameOwnerFlags.ALLOW_REPLACEMENT, self._got, self._lost)
+        self.owned = False
+        flags = Gio.BusNameOwnerFlags.ALLOW_REPLACEMENT | (Gio.BusNameOwnerFlags.REPLACE if replace else 0)
         self.conn.signal_subscribe("org.freedesktop.DBus", "org.freedesktop.DBus", "NameOwnerChanged",
                                    "/org/freedesktop/DBus", None, Gio.DBusSignalFlags.NONE, self._owner_changed)
-        self.owned = False
+        self.owner_id = Gio.bus_own_name_on_connection(self.conn, WATCHER, flags, self._got, self._lost)
 
     def _got(self, conn, _name):
         self.owned = True
         if self.reg is None:
             self.reg = conn.register_object(WATCHER_PATH, self.node.interfaces[0], self._call, self._get, None)
         conn.emit_signal(None, WATCHER_PATH, WATCHER, "StatusNotifierHostRegistered", None)
+        self.take_over()
         self.adopt()
         self.on_change()
+
+    def take_over(self):
+        """The apps the tray before this one had (a restart): each one still on the bus is kept."""
+        for entry in self.known:
+            name, _path = split(entry)
+            try:
+                alive = self.conn.call_sync("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+                                            "NameHasOwner", GLib.Variant("(s)", (name,)), GLib.VariantType("(b)"),
+                                            Gio.DBusCallFlags.NONE, 2000, None).unpack()[0]
+            except GLib.Error:
+                alive = False
+            if alive and entry not in self.items:
+                self.items.append(entry)
+                self._watch_item(entry)
+        self.known = []
 
     def adopt(self):
         """Tray apps already up when the watcher changes hands: most register again with the new one, some
@@ -101,7 +124,10 @@ class Watcher:
                     self._watch_item(entry)
 
     def _lost(self, _conn, _name):
+        had = self.owned
         self.owned = False
+        if had and self.on_replaced:          # a new tray took over (a restart): this one is done
+            self.on_replaced()
 
     def _call(self, conn, sender, _path, _iface, method, params, invocation):
         (service,) = params.unpack()

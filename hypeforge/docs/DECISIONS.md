@@ -7,6 +7,14 @@
 
 ## 2026-10-17
 
+### D-106 · Tray icons in the style's own icon colour; the moon by day too; a tray restart with no gap (Javier)
+*"The icon tray. Most icons are yellow, because of the theme, with the exception of night-light, dropbox, and inSync."* Every other bar piece is a glyph drawn in the style's icon colour; a tray app sends a picture of its own (Dropbox's and Insync's are white), and the moon was grey by day on purpose (10-10).
+- **The tray repaints one-colour icons** (`applets/tray/hftint.py`): a picture that is white, grey or black (shading allowed: under 12 % of its pixels coloured) is drawn again, at 40 px, in **`hf_tray_icon`**, its shape and shading kept; a picture in full colour (a logo in its own colours) is shown as the app sent it, so it can still be told apart. A new theme rewrites `colors.css`; the tray watches it and repaints at once (each copy's file name carries what it was made from, so the bar loads it fresh).
+- **`hf_tray_icon`**, a new colour in every look (`tray_icon` role; `role:<name>` lets a role take another role's colour): the colour of each style's other icons — the Rice `module_icon`, macOS and Mac OS 9 `menubar_text`, Classic `bar_fg_dim`, the others `bar_fg`. Checked for every style on every theme (`tests/test_tray_colour.py`).
+- **The moon by day** wears the other icons' colour on every style (the `.day` rule is gone); warm (`@hf_bell`) and off (`@hf_alert`) keep theirs.
+- **`hypeforge-tray run --replace`**: a restart with no gap. The new tray takes the watcher's name straight from the running one (D-Bus REPLACE), so it never has no owner — Claude Desktop dropped its icon for good after a one-second gap earlier today — and takes over its apps (asked of the old tray directly, plus its last list, `items.json`), so an app that registers only once (Dropbox's Ayatana item) stays. The old tray ends by itself and leaves the files to the new one.
+- Tray bench 23/23 (a white icon repainted in the style's colour, a coloured one kept, the restart watched with dbus-monitor: one change, straight from old to new — the check proven against a made-up log with a gap — and the register-once app still there); theme 30/30, switch 16/16, bar 10/10, system 9/9; tests 261.
+
 ### D-105 · The tray menu is one window, with soft lines between its groups (Javier) — **APPROVED 10-17**
 *"Can we make the dropbox popup, instead of separated pops, one window, and using pretty separator lines between the options?"* `views/traymenu.py` no longer puts each group in its own card: the panel's one card holds the head and every entry, and the app's own separators become **soft lines** — 1 px in `panel_border`, fading to nothing at both ends (a `linear-gradient`, 15 % → 85 %), 5 × 6 px around. The system pop-ups (D-104) are built the same way from the start. Everything else in D-103 stands. Tray bench 18/18.
 

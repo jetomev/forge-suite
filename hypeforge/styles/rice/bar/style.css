@@ -65,9 +65,8 @@ tooltip label { color: @hf_text; }
 /* the windows tucked away: the theme's colour, so a hidden window is noticed */
 #custom-tucked.some { color: @hf_new; }
 #custom-power-panel { color: @hf_alert; padding-right: 12px; }
-/* the night light's moon: warm when it's on, quiet in daylight, red when switched off */
+/* the night light's moon: warm when it's on, red when switched off; by day the other icons' colour (Javier, 10-17) */
 #custom-nightlight.warm { color: @hf_bell; }
-#custom-nightlight.day { color: @hf_subtext; }
 #custom-nightlight.off { color: @hf_alert; }
 /* the date, time and bell are one piece: the bell sits right after the time */
 #custom-notifications { padding-left: 4px; }
