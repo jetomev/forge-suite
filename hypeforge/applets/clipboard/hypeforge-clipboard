@@ -4,10 +4,13 @@
     hypeforge-clipboard bar     the clipboard icon, as Waybar JSON, with the count of new copies
     hypeforge-clipboard store   what Sway's watchers run on every copy: hand it to cliphist,
                                 then tell the bar (the copy arrives on stdin)
-    hypeforge-clipboard list    the history in a fuzzel list (Win + C, or a click on the icon):
-                                text is copied again; a picture opens in swappy to draw on it.
-                                Opening it marks every copy as seen, so the count goes away
-    hypeforge-clipboard clear   empty the history (right click on the icon; asks first)
+    hypeforge-clipboard list    the history as a pop-up panel (Win + C, or a click on the icon;
+                                since 2026-10-17 a panel, before a fuzzel list): Enter or a click puts
+                                a copy back, ✕ forgets one, ✎ draws on a picture (swappy). Opening it
+                                marks every copy as seen, so the count goes away. Extra words (the
+                                bar's --edges/--margin) say where it opens; without them it opens
+                                where the bar's pop-ups do
+    hypeforge-clipboard clear   the same panel, asking at once whether to empty it (right click)
 
 cliphist keeps the history (~/.cache/cliphist/db); Sway starts two watchers that store every
 copy (sway/config). What a password manager marks as secret is not stored by cliphist
@@ -91,7 +94,31 @@ def store():
     changed()
 
 
+PANEL = Path(__file__).resolve().parent.parent / "panels/hypeforge-panel"
+PLACES = RUNTIME / "hypeforge-bar/hypeforge-popup-places.json"   # the bar writes where its pop-ups open
+
+
+def panel_argv(given: list[str], extra: tuple = (), places: Path = PLACES) -> list[str]:
+    """The clipboard panel's command (Javier, 2026-10-17: the fuzzel list "is horrible and without
+    identity"), where the bar's pop-ups open: the bar's own words when it gave them (a click), else
+    the bar's note (Win + C), else the panel's own corner."""
+    where = list(given)
+    if not where:
+        try:
+            where = json.loads(places.read_text()).get("{popup}", "").split()
+        except (OSError, ValueError):
+            where = []
+    return [str(PANEL), "clipboard", *where, *extra]
+
+
+def panel(*extra):
+    argv = panel_argv(sys.argv[2:], extra)
+    os.execv(argv[0], argv)
+
+
 def show_list():
+    if PANEL.exists():
+        panel()
     if hfmenu.close_open("clipboard"):  # a second click (or Win + C) closes the list
         return
     lines = history()
@@ -116,6 +143,8 @@ def show_list():
 
 
 def clear():
+    if PANEL.exists():
+        panel("--ask-clear")
     if fuzzel(["No, keep it", "Yes, empty the clipboard history"], "Empty the history?  ").startswith("Yes"):
         subprocess.run(["cliphist", "wipe"])
         mark_seen([])

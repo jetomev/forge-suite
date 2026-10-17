@@ -5,11 +5,17 @@ included — even after a restart. The **clipboard icon** on the bar counts the 
 
 ## How to use it
 
-- **Win + C**, or **click the clipboard icon**: your history, newest first, under the bar's
-  right end. Pick a line of
-  text to copy it again (then **Ctrl + V**); pick a 🖼 picture to open it in swappy and draw on
-  it. Opening the list makes the number go away. Press again (or **Esc**) to close it.
-- **Right click the icon** to empty the whole history (it asks first).
+- **Win + C**, or **click the clipboard icon**: your history, newest first, in a pop-up under the
+  bar, in your theme's look. Each copy is a small card: a badge says what it is (text, a link, a
+  file or folder, code, a colour — shown as the colour itself), a picture shows its own little
+  picture, and the new ones have a **● new** mark. Opening it makes the bar's number go away.
+- **Type** to find a copy: the list narrows as you type. **↓** goes into the list.
+- **Enter**, or **a click**, puts that copy back on the clipboard — text or picture — and closes
+  the pop-up; then **Ctrl + V** where you want it.
+- **✕** (or **Delete**) forgets one copy. **✎** on a picture opens it in swappy to draw on it.
+- **Clear all** at the top empties the whole history; it asks first (**Yes** / **No**). A **right
+  click on the icon** opens the pop-up already asking.
+- **Esc**, a click outside, or Win + C again closes it.
 - **Passwords:** password managers mark what they copy as secret, and the history skips
   those.
 

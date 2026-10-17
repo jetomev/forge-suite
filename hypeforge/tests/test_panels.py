@@ -317,3 +317,60 @@ class CosmicPopups(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ClipboardPanel(unittest.TestCase):
+    """Javier, 2026-10-17: the clipboard list "is horrible and without identity" → a panel like the others."""
+
+    @classmethod
+    def setUpClass(cls):
+        import clipboard as clipview
+        cls.v = clipview
+        loader = __import__("importlib.machinery").machinery.SourceFileLoader(
+            "hf_clipboard_test", str(HERE / "applets/clipboard/hypeforge-clipboard"))
+        spec = __import__("importlib.util").util.spec_from_loader("hf_clipboard_test", loader)
+        cls.app = __import__("importlib.util").util.module_from_spec(spec)
+        loader.exec_module(cls.app)
+
+    def test_each_copy_says_what_it_is(self):
+        k = self.v.kind_of
+        pic = self.app.PICTURE.match("[[ binary data 12 KiB png 640x360 ]]")
+        self.assertEqual(k("https://github.com/jetomev/forge-suite/issues/54", None), "link")
+        self.assertEqual(k("#cba6f7", None), "colour")
+        self.assertEqual(k("~/Programs/forge-suite/hypeforge", None), "path")
+        self.assertEqual(k("def copy_back(entry) -> None:", None), "code")
+        self.assertEqual(k("Meeting moved to Thursday at 3 pm", None), "text")
+        self.assertEqual(k("[[ binary data 12 KiB png 640x360 ]]", pic), "picture")
+        self.assertEqual(self.v.what_line("picture", "[[ binary data 12 KiB png 640x360 ]]", pic), "Picture · PNG · 640 × 360")
+        self.assertEqual(self.v.what_line("link", "https://www.example.com/a/b", None), "Link · example.com")
+        self.assertEqual(self.v.what_line("text", "two words", None), "Text · 2 words")
+
+    def test_it_opens_where_the_bars_pop_ups_do(self):
+        with tempfile.TemporaryDirectory() as d:
+            places = Path(d) / "places.json"
+            places.write_text('{"{popup}": "--edges bottom,right --margin bottom=56,right=8"}')
+            argv = self.app.panel_argv([], (), places)
+            self.assertEqual(argv[1:], ["clipboard", "--edges", "bottom,right", "--margin", "bottom=56,right=8"],
+                             "Win + C: the bar's note (Windows 11's bar is at the bottom)")
+            argv = self.app.panel_argv(["--edges", "top,right", "--margin", "top=44,right=8"], ("--ask-clear",), places)
+            self.assertEqual(argv[1:], ["clipboard", "--edges", "top,right", "--margin", "top=44,right=8", "--ask-clear"],
+                             "a click: the bar's own words win; the right click asks to empty it")
+            self.assertEqual(self.app.panel_argv([], (), Path(d) / "none.json")[1:], ["clipboard"], "no note: its own corner")
+
+    def test_the_bar_passes_its_place_on_both_clicks(self):
+        for f in ("sway/waybar/modules.jsonc", "sway/waybar/config.jsonc"):
+            text = (HERE / f).read_text()
+            self.assertIn("hypeforge-clipboard list {popup}", text, f)
+            self.assertIn("hypeforge-clipboard clear {popup}", text, f)
+
+    def test_the_panel_knows_the_view(self):
+        self.assertIn('"clipboard": "clipboard"', (HERE / "applets/panels/hypeforge-panel").read_text())
+
+
+class NotificationCards(unittest.TestCase):
+    def test_closer_and_smaller(self):
+        """Javier, 2026-10-17: "a little big and space between them is too much"."""
+        src = (HERE / "applets/panels/views/calendar_view.py").read_text()
+        self.assertIn(".hf-card.hf-note {{ padding: 7px 12px; }}", src)
+        self.assertIn("cards = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)", src)
+        self.assertIn("new_from_file_at_size(path, 24, 24)", src)

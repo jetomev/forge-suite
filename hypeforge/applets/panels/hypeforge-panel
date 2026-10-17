@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "vi
 
 # view name → its module (a module may not take a standard library's name: "calendar" is one)
 VIEWS = {"power": "power", "start": "start", "quick": "quick", "calendar": "calendar_view", "workspaces": "workspaces",
-         "kickoff": "kickoff", "library": "library", "switcher": "switcher"}
+         "kickoff": "kickoff", "library": "library", "switcher": "switcher", "clipboard": "clipboard"}
 
 
 def main() -> int:
@@ -38,6 +38,7 @@ def main() -> int:
     ap.add_argument("--hold", action="store_true", help="switcher: Alt is held; letting go picks")
     ap.add_argument("--back", action="store_true", help="switcher: go backwards (Alt + Shift + Tab)")
     ap.add_argument("--tucked", action="store_true", help="switcher: only the windows tucked away")
+    ap.add_argument("--ask-clear", action="store_true", help="clipboard: open asking whether to empty it (right click)")
     a = ap.parse_args()
     import panelkit
     if a.view == "switcher" and a.hold and panelkit.nudge_open("switcher", back=a.back):

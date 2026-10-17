@@ -83,7 +83,7 @@
     "return-type": "json",
     "interval": 60,
     "signal": 10,
-    "on-click": "~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard list",
-    "on-click-right": "~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard clear"
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard list {popup}",
+    "on-click-right": "~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard clear {popup}"
   }
 }

@@ -32,6 +32,7 @@ SHOWN = 6
 CSS = """
 .hf-calendar {{ min-width: 380px; }}
 .hf-note-app {{ font-weight: bold; }}
+.hf-card.hf-note {{ padding: 7px 12px; }}     /* Javier, 10-17: the notifications a little smaller, closer together */
 .hf-note-body {{ color: {dim}; font-size: {small}pt; }}
 .hf-calendar calendar {{ background: transparent; color: {text}; border: none; padding: 4px; }}
 .hf-calendar calendar:selected {{ background: {accent}; color: {on_accent}; border-radius: {pill}px; }}
@@ -113,21 +114,21 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         head.pack_end(clear, False, False, 0)
     root.pack_start(card(head), False, False, 0)
 
-    cards = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+    cards = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
     if not shown:
         cards.pack_start(card(Gtk.Label(label="No new notifications", xalign=0)), False, False, 0)
     entries, icons = apps(), Icons()
     for n in shown[:SHOWN]:
-        box = Gtk.Box(spacing=12)
+        box = Gtk.Box(spacing=10)
         icon = icon_for(n, entries)
         path = icons.find(icon)
         image = Gtk.Image()
         try:
-            image.set_from_pixbuf(GdkPixbuf.Pixbuf.new_from_file_at_size(path, 28, 28))
+            image.set_from_pixbuf(GdkPixbuf.Pixbuf.new_from_file_at_size(path, 24, 24))
         except Exception:  # no file, or one GTK can't read: the theme's icon by name
             image.set_from_icon_name(icon, Gtk.IconSize.LARGE_TOOLBAR)
         box.pack_start(image, False, False, 0)
-        words = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        words = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         app = Gtk.Label(label=plain(n.get("app_name")) or "Notification", xalign=0)
         app.get_style_context().add_class("hf-note-app")
         words.pack_start(app, False, False, 0)
@@ -139,7 +140,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
             body.get_style_context().add_class("hf-note-body")
             words.pack_start(body, False, False, 0)
         box.pack_start(words, True, True, 0)
-        cards.pack_start(card(box), False, False, 0)
+        cards.pack_start(card(box, "hf-note"), False, False, 0)
     if len(shown) > SHOWN:
         more = Gtk.Label(label=f"and {len(shown) - SHOWN} more — the bell lists them all", xalign=0)
         more.get_style_context().add_class("hf-note-body")
@@ -173,9 +174,11 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
                           card=False)
 
 
-def card(widget: Gtk.Widget) -> Gtk.Box:
+def card(widget: Gtk.Widget, *extra: str) -> Gtk.Box:
     box = Gtk.Box()
     box.get_style_context().add_class("hf-card")
+    for cls in extra:
+        box.get_style_context().add_class(cls)
     widget.set_hexpand(True)      # the header's "Clear all" sits at the card's right edge
     box.add(widget)
     return box

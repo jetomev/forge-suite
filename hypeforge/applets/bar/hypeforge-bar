@@ -41,6 +41,7 @@ GET_OUTPUTS = 3
 CONF = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "sway/waybar"
 RUN = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-bar"
 PIDS = RUN / "pids.json"
+PLACES = PIDS.parent / "hypeforge-popup-places.json"   # read by hypeforge-clipboard list (Win + C)
 
 
 def strip_comments(text: str) -> str:
@@ -218,6 +219,13 @@ def start():
     p = subprocess.Popen(["waybar", "-c", str(path), "-s", str(CONF / "style.css")],
                          stdout=log, stderr=log, start_new_session=True)
     PIDS.write_text(json.dumps({"pid": p.pid, "screens": outs}))
+    # where the bar's pop-ups open, for the ones a key opens (Win + C: the clipboard, 2026-10-17)
+    try:
+        first = json.loads(strip_comments((CONF / "config.jsonc").read_text()))
+        first = first[0] if isinstance(first, list) else first
+        PLACES.write_text(json.dumps(popup_places(merged(first))))
+    except (OSError, ValueError, IndexError):
+        PLACES.unlink(missing_ok=True)
     print(f"hypeforge-bar: the bar on {len(outs)} screen(s): {', '.join(outs)}")
 
 
