@@ -7,7 +7,7 @@
 
 ## 2026-10-17
 
-### D-103 · hypeForge's own tray: the icons in Waybar's image pieces, the menus as our pop-ups (Javier: "make it happen")
+### D-103 · hypeForge's own tray: the icons in Waybar's image pieces, the menus as our pop-ups (Javier: "make it happen") — **APPROVED 10-17** (*"you've outdone again with the dropbox bar!!!! Amazing!"*)
 *"When I click on Dropbox, the popup is horrible, and opens on top of the bar/icon area. Is that ours or the apps?"* Neither: Waybar's tray drew the app's menu as a plain GTK list, opened at the mouse pointer, over the bar; its tray has no setting for either, and no click of its own to hook (`waybar-tray(5)`). So the tray is ours now:
 - **`applets/tray/hypeforge-tray run`** (started at login, before the bar, under the watcher, D-100) is the tray's *watcher*: the StatusNotifierWatcher every tray app registers with (`hfsni.Watcher`, plain Gio; it waits in line while another program holds the name and takes over when it lets go — that is how it replaces Waybar's on a running desktop). For each app it keeps a picture (the named icon, the app's own folder first; else the pixels it sends, as Electron apps do — Claude) and the bar is told to redraw (SIGRTMIN+15).
 - **The bar:** a style still says `tray`; `hypeforge-bar` puts `group/tray` in its place (`own_tray`, every module list, nested ones too), ten `image#tray-N` pieces from `modules.jsonc`. An empty piece hides itself. Its CSS name is still `#tray`, so every style's tray rules carry over. `hypeforge-tray icon N` (what each piece runs) reads a small file and never loads D-Bus: loading Gio ten times held the bar back for seconds on the bench.
