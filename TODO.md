@@ -2,6 +2,11 @@
 
 **Target: the first KognogOS release (v1.0, April 2027).** Each section keeps its own detailed list; this one tracks the suite. Updated after every step.
 
+## 2026-10-17 — hypeForge: the system on the bar, our own tray polished, title bars, our own Sway build
+- [x] **hypeForge** (details in [hypeforge/TODO.md](hypeforge/TODO.md)): our own tray (D-103) and its menu as one window (D-105); CPU · GPU · temperature · memory · disk on the bar with their pop-ups (D-104, "Beautiful!"); F-75 #104 (the night light pop-up waited on a Wi-Fi scan); tray icons in each style's colour and a tray restart with no gap (D-106); even 10 px spacing (D-107); numbers that never move the bar (D-108); the disk piece took the USB icon's job (D-109, his USB test passed) — all approved
+- [x] **Title bars on floating windows + the window menu** (D-110): left drag moves, middle click tucks away, right click = float / back into the grid, full screen, workspaces, close; `scripts/titlebar-bench.py` 16/16 — live, his test next
+- [ ] **Our own Sway build** (D-111): minimise / maximise / close buttons on the title bar (`hypeforge/sway-hypeforge/`: patch, `build.py`, update-safe login with fallback — his rule: a Sway update must never break the desktop); bench 22/22 — **next:** the test login entry (one sudo), his test, then the main login + a safe-mode entry
+
 ## 2026-10-13 — themeForge's Wallpaper page three runs deep, the bars share their pop-ups, Settings talks to its panes
 - [x] **themeForge** (details in [themeforge/TODO.md](themeforge/TODO.md)): the Wallpaper page redesigned as Javier drew it (D-8, D-9), then from his runs: Browse as a small file manager (D-10), the first picture by itself and the sharp preview inside Settings (D-11); F-73 and F-74 fixed; #96 and #90 closed on his "perfect!!!"; tests 48, overlay bench 15/15
 - [x] **hypeForge** (details in [hypeforge/TODO.md](hypeforge/TODO.md)): the Rice's gaps 14 → 10 (D-95); **three pop-ups, one version each, on every style** (D-96: the date-time-bell piece, the Quick Settings pill, the night-light moon, defined once; `hypeforge-bar` places pop-ups itself); Settings hands its terminal's cells to the apps in its panes (D-97); a sent window lands by the fill order (D-98, "tested, works!"); the brightness keys on a desktop too (D-99, #94); #95 was a false finding — the audit looked up a /usr/lib program on PATH
