@@ -6,7 +6,11 @@ program (10-10: a click on macOS's menu bar opened nothing on the hidden screen)
 Wayland protocol directly (the zwlr_virtual_pointer_v1 extension, which Sway offers), so the bar
 and the panels get a real pointer, exactly as from a mouse. Python standard library only.
 
-    fake-pointer.py X Y [--click] [--hold S] [--width W --height H]    (X, Y in the screens' layout, pixels)
+    fake-pointer.py X Y [--click] [--button left|middle|right] [--drag X2 Y2] [--hold S] [--width W --height H]
+                                                                       (X, Y in the screens' layout, pixels)
+
+--drag presses at X Y, moves to X2 Y2 in small steps and lets go there (a window dragged by its title
+bar, 2026-10-17).
 
 Needs WAYLAND_DISPLAY (and XDG_RUNTIME_DIR) of the Sway to click in.
 """
@@ -20,6 +24,7 @@ import sys
 import time
 
 BTN_LEFT = 0x110
+BUTTONS = {"left": 0x110, "right": 0x111, "middle": 0x112}
 
 
 class Wire:
@@ -70,6 +75,8 @@ def main() -> int:
     ap.add_argument("x", type=int)
     ap.add_argument("y", type=int)
     ap.add_argument("--click", action="store_true")
+    ap.add_argument("--button", choices=list(BUTTONS), default="left")
+    ap.add_argument("--drag", type=int, nargs=2, metavar=("X2", "Y2"))
     ap.add_argument("--width", type=int, default=2560, help="the screens' layout, all screens together")
     ap.add_argument("--height", type=int, default=1440)
     ap.add_argument("--hold", type=float, default=0.5, help="seconds the mouse stays plugged in afterwards")
@@ -94,16 +101,31 @@ def main() -> int:
     w.roundtrip(7)
     time.sleep(0.3)                                      # the seat gains its pointer
     ms = lambda: int(time.monotonic() * 1000) & 0xFFFFFFFF
-    w.send(6, 1, ms(), a.x, a.y, a.width, a.height)      # motion_absolute
-    w.send(6, 4)                                         # frame
-    w.roundtrip(8)
-    if a.click:
+    sync = iter(range(8, 10000))                         # a new callback id for every round trip
+
+    def move(x, y):
+        w.send(6, 1, ms(), x, y, a.width, a.height)      # motion_absolute
+        w.send(6, 4)                                     # frame
+        w.roundtrip(next(sync))
+
+    def button(state):
+        w.send(6, 2, ms(), BUTTONS[a.button], state)     # 1 press, 0 let go
+        w.send(6, 4)
+        w.roundtrip(next(sync))
+
+    move(a.x, a.y)
+    if a.click or a.drag:
         time.sleep(0.3)
-        for state in (1, 0):                             # press, let go
-            w.send(6, 2, ms(), BTN_LEFT, state)
-            w.send(6, 4)
-            w.roundtrip(9 + state)
+        button(1)
+        time.sleep(0.15)
+        if a.drag:
+            steps = 12
+            for i in range(1, steps + 1):
+                move(a.x + (a.drag[0] - a.x) * i // steps, a.y + (a.drag[1] - a.y) * i // steps)
+                time.sleep(0.03)
             time.sleep(0.15)
+        button(0)
+        time.sleep(0.15)
     time.sleep(a.hold)                                   # unplugged when this ends; a menu may close with it
     return 0
 

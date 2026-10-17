@@ -1,0 +1,183 @@
+#!/usr/bin/env python3
+"""hypeForge applet · title bars on floating windows, and the window menu (D-110, Javier, 2026-10-17).
+
+    hypeforge-window watch          started at login: every window that floats gets the style's title bar,
+                                    and loses it when it goes back into the grid — whatever made it float
+                                    (a key, the menu, a window rule); Sway itself only gives one to windows
+                                    that open floating
+    hypeforge-window menu           the title bar's right click: the window menu, by the window
+    hypeforge-window ACTION ID      what the menu's entries do, to window ID (Sway's con_id):
+                                      float · tile · fullscreen · sticky · tuck · close · to N (workspace N)
+
+On the title bar (sway/config): a left drag moves the window (Sway's own), a middle click tucks it away
+(our minimise, D-82), a right click opens the menu. Apps that draw their own bar (GNOME's, Claude
+Desktop) keep it: Sway marks them "csd" and draws nothing — this never gives them one.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+import sys
+import time
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent / "common"))
+from hfsway import GET_TREE, SUBSCRIBE, EVENT_WINDOW, Sway  # noqa: E402
+
+PANEL = HERE.parent / "panels/hypeforge-panel"
+PIDFILE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-window.pid"
+# programs that ask to draw their own bar and then draw none (Alacritty floated: no bar, no frame — F-55,
+# and the bench, 10-17): they get ours. Every Forge app runs in Alacritty, whatever its window's name.
+DRAWS_NONE = {"alacritty", "foot", "kitty", "wezterm-gui"}
+SCRATCH = "__i3_scratch"
+
+
+def borders() -> tuple[str, str]:
+    """(tiled, floating): the style's borders, as the look wrote them for Sway (e.g. "pixel 2", "normal 2")."""
+    base = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config")
+    tiled, floating = "pixel 2", "normal 2"
+    try:
+        text = (base / "hypeforge/theme/sway.conf").read_text()
+        m = re.search(r"^default_border\s+(.+)$", text, re.M)
+        tiled = m.group(1).strip() if m else tiled
+        m = re.search(r"^default_floating_border\s+(.+)$", text, re.M)
+        floating = m.group(1).strip() if m else floating
+    except OSError:
+        pass
+    return tiled, floating
+
+
+def program(pid: int | None) -> str:
+    try:
+        return Path(f"/proc/{int(pid)}/comm").read_text().strip()
+    except (OSError, TypeError, ValueError):
+        return ""
+
+
+def wanted(con: dict, tiled: str, floating: str, prog: str | None = None) -> str | None:
+    """The border a window should have now, or None to leave it: an app drawing its own bar (csd) or one
+    set to no border by hand is left alone — but a program that draws none (DRAWS_NONE) gets ours."""
+    border = con.get("border")
+    if not con.get("pid") or border == "none":
+        return None
+    if border == "csd" and (prog if prog is not None else program(con.get("pid"))) not in DRAWS_NONE:
+        return None
+    want = floating if con.get("type") == "floating_con" else tiled
+    return None if want.split()[0] == border else want
+
+
+def windows(node: dict):
+    if node.get("pid"):
+        yield node
+    for child in node.get("nodes", []) + node.get("floating_nodes", []):
+        yield from windows(child)
+
+
+def watch() -> int:
+    try:
+        old = int(PIDFILE.read_text())
+        os.kill(old, 0)
+        if "hypeforge-window" in Path(f"/proc/{old}/cmdline").read_bytes().decode(errors="replace"):
+            print("hypeforge-window: already running")
+            return 0
+    except (OSError, ValueError):
+        pass
+    PIDFILE.write_text(str(os.getpid()))
+    control, events = Sway(), Sway()
+    events.ask(SUBSCRIBE, json.dumps(["window"]))
+    tiled, floating = borders()
+    # the windows already open (a restart, or the first start after an update)
+    fixes = [f"[con_id={w['id']}] border {b}" for w in windows(control.ask(GET_TREE))
+             if (b := wanted(w, tiled, floating))]
+    if fixes:
+        control.run(*fixes)
+    print("hypeforge-window: floating windows get the title bar")
+    try:
+        while True:
+            kind, event = events.receive()
+            if kind != EVENT_WINDOW or event.get("change") not in ("new", "floating"):
+                continue
+            con = event.get("container") or {}
+            # Sway announces a window before it has its frame ("border": "none" in the message, even for a
+            # window a rule floats — bench 10-17): a moment later, the window as it is then
+            time.sleep(0.12)
+            con = next((w for w in windows(control.ask(GET_TREE)) if w.get("id") == con.get("id")), None)
+            if con is None:
+                continue
+            tiled, floating = borders()                  # a new look may have changed them
+            b = wanted(con, tiled, floating)
+            if b:
+                control.run(f"[con_id={con['id']}] border {b}")
+    finally:
+        try:
+            if int(PIDFILE.read_text()) == os.getpid():
+                PIDFILE.unlink()
+        except (OSError, ValueError):
+            pass
+
+
+def focused(tree: dict) -> dict | None:
+    if tree.get("focused") and tree.get("pid"):
+        return tree
+    for child in tree.get("nodes", []) + tree.get("floating_nodes", []):
+        found = focused(child)
+        if found:
+            return found
+    return None
+
+
+def menu() -> int:
+    """The right click: the click focused the window first (sway/config: `focus, exec …`)."""
+    con = focused(Sway().ask(GET_TREE))
+    if not con:
+        return 0
+    os.execv(str(PANEL), [str(PANEL), "windowmenu", "--con", str(con["id"])])
+
+
+COMMANDS = {
+    "float": "floating enable",
+    "tile": "floating disable",
+    "fullscreen": "fullscreen toggle",
+    "sticky": "sticky toggle",
+    "tuck": "move scratchpad",
+    "close": "kill",
+}
+
+
+WORKSPACES = HERE.parent / "workspaces/hypeforge-workspaces"
+
+
+def act(action: str, con_id: int, workspace: str | None = None) -> bool:
+    sway = Sway()
+    if action == "to":
+        # the way Win + Shift + N does it: through the Workspaces applet (workspaces that span every
+        # screen, the window into the fill order's next free spot, D-98) — Sway's own move without it
+        sway.run(f"[con_id={int(con_id)}] focus")
+        if WORKSPACES.is_file():
+            import subprocess
+            return subprocess.run([str(WORKSPACES), "move", str(int(workspace))]).returncode == 0
+        cmd = f"move container to workspace number {int(workspace)}"
+    else:
+        cmd = COMMANDS[action]
+    reply = sway.run(f"[con_id={int(con_id)}] {cmd}")
+    return all(r.get("success") for r in reply)
+
+
+def main() -> int:
+    a = sys.argv[1:]
+    if a == ["watch"]:
+        return watch()
+    if a == ["menu"]:
+        return menu()
+    if len(a) == 2 and a[0] in COMMANDS and a[1].isdigit():
+        return 0 if act(a[0], int(a[1])) else 1
+    if len(a) == 3 and a[0] == "to" and a[1].isdigit() and a[2].isdigit():
+        return 0 if act("to", int(a[2]), a[1]) else 1
+    sys.exit(__doc__)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

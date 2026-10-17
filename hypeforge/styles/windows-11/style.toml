@@ -31,6 +31,7 @@ icons        = "the colour theme's icon set"
 fonts        = "Noto Sans"
 
 [shape]                          # pixels, at 100 % scale
+titlebar_align   = "left"      # a floating window's title on the left, as on Windows (D-110)
 radius_window    = 8             # SwayFX corner_radius; plain Sway: square
 radius_control   = 4             # buttons, inputs, list rows, taskbar buttons
 radius_popup     = 8             # Start, Quick Settings, calendar, notifications, lists

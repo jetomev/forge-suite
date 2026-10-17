@@ -299,10 +299,16 @@ def sway_border(shape: dict) -> str:
     return f"normal {w}" if shape.get("titlebar") else f"pixel {w}"
 
 
+def sway_floating_border(shape: dict) -> str:
+    """Floating windows always get the title bar (D-110, Javier 10-17: "theme title bars"; floating windows
+    only — a style's tiled windows keep what it says). applets/window/ gives it to windows made to float
+    after they opened, which Sway itself doesn't."""
+    return f"normal {shape.get('border_window', SHAPE_DEFAULTS['border_window'])}"
+
+
 def sway_titlebar(style: dict) -> str:
+    """The title bars' look: every style has them now, on its floating windows at least (D-110)."""
     shape, fonts = style.get("shape", {}), style.get("fonts", {})
-    if not shape.get("titlebar"):
-        return "# no title bars in this style"
     lines = [f"title_align {shape.get('titlebar_align', 'center')}"]
     if fonts.get("ui"):
         bold = " Bold" if fonts.get("ui_bold") else ""
@@ -329,6 +335,8 @@ def fill(template: str, ctx: dict) -> str:
             return fx_value(style, theme, key[3:])
         if key == "sway:border":
             return sway_border(style.get("shape", {}))
+        if key == "sway:floating_border":
+            return sway_floating_border(style.get("shape", {}))
         if key == "sway:titlebar":
             return sway_titlebar(style)
         if key == "sway:applets":

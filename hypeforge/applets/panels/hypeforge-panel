@@ -8,7 +8,7 @@ it (a bar button pressed twice). Views: power (the big-button power menu), start
 Start), kickoff (KDE's list), library (COSMIC's App Library), quick (Quick Settings, or one part of
 it with --only), calendar, workspaces (the strip), switcher (Alt + Tab: --hold while Alt is held,
 --back starts from the end, --tucked only the windows tucked away; Alt + Tab again moves it on),
-clipboard, traymenu (a tray app's menu, --slot N), system (--part cpu, gpu, temp, memory or disk).
+clipboard, traymenu (a tray app's menu, --slot N), system (--part cpu, gpu, temp, memory or disk), windowmenu (a title bar's right click, --con ID).
 --style / --theme draw it in a look other than the active one (the preview bench uses this).
 """
 
@@ -25,7 +25,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "vi
 # view name → its module (a module may not take a standard library's name: "calendar" is one)
 VIEWS = {"power": "power", "start": "start", "quick": "quick", "calendar": "calendar_view", "workspaces": "workspaces",
          "kickoff": "kickoff", "library": "library", "switcher": "switcher", "clipboard": "clipboard", "traymenu": "traymenu",
-         "system": "system"}
+         "system": "system", "windowmenu": "windowmenu"}
 
 
 def main() -> int:
@@ -42,6 +42,7 @@ def main() -> int:
     ap.add_argument("--tucked", action="store_true", help="switcher: only the windows tucked away")
     ap.add_argument("--ask-clear", action="store_true", help="clipboard: open asking whether to empty it (right click)")
     ap.add_argument("--slot", help="traymenu: which tray icon (1 = the first)")
+    ap.add_argument("--con", help="windowmenu: the window (Sway's con_id)")
     ap.add_argument("--part", choices=["cpu", "gpu", "temp", "memory", "disk"], help="system: which one (the bar piece clicked)")
     a = ap.parse_args()
     import panelkit

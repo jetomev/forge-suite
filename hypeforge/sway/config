@@ -225,7 +225,9 @@ input type:keyboard {
     # Toggle the current focus between tiling and floating mode. "border pixel" keeps our frame:
     # floated, some apps (Alacritty…) ask to draw their own frame and draw none, which left the
     # window with no border and nothing to grab to resize (F-55, 2026-10-10)
-    bindsym $mod+Shift+space floating toggle, border pixel
+    bindsym $mod+Shift+space floating toggle
+    # (D-110, 2026-10-17: applets/window/ gives a floating window the style's title bar and takes it
+    # away in the grid — the "border pixel" that was here kept the frame since F-55)
 
     # Swap focus between the tiling area and the floating area
     # hypeForge: Win + Space opens the launcher now; this moved to Win + Shift + Tab
@@ -233,6 +235,15 @@ input type:keyboard {
 
     # Move focus to the parent container
     bindsym $mod+a focus parent
+#
+# Title bars (D-110, Javier 2026-10-17): a floating window's title bar, clicked —
+#   left drag: move it (Sway's own) · middle click: tuck it away (our minimise; the bar's tucked icon
+#   brings it back) · right click: the window menu (float / back into the grid, full screen, every
+#   workspace, move to a workspace, tuck away, close). Mouse bindings act on the title bar only.
+#
+    bindsym button2 move scratchpad
+    bindsym button3 focus, exec ~/Programs/forge-suite/hypeforge/applets/window/hypeforge-window menu
+
 #
 # Scratchpad:
 #
@@ -314,6 +325,8 @@ bindsym $mod+r mode "resize"
 # hypeForge's tray (2026-10-17): the watcher tray apps register with, their icons on the bar, their menus
 # as hypeForge pop-ups. Started before the bar, so tray apps find it however early they start.
 exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch tray ~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray run
+# floating windows get the style's title bar, whatever made them float (D-110)
+exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch window ~/Programs/forge-suite/hypeforge/applets/window/hypeforge-window watch
 # the system readings (2026-10-17): a reading every 2 seconds, so the bar's CPU · GPU · temperature · memory
 # pop-ups open with their last three minutes already drawn
 exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch system ~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system run
