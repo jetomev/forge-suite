@@ -3,7 +3,8 @@ top of the bar/icon area"). The app hands over its menu (com.canonical.dbusmenu)
 other panels, under the bar, in the style's and theme's own look:
 
   - a head: the app's icon and name, and **Open <app>** when the app has a window to open
-  - the entries in cards, a card between the app's own separators
+  - one window (Javier, 2026-10-17: "instead of separated pops, one window, and using pretty separator
+    lines between the options"): the app's own separators become soft lines that fade at both ends
   - a greyed entry is information, so it reads as a quiet line (Dropbox's account, "Up to date"); the
     spaces an app puts in front of a line to indent it become a real indent
   - a check or a choice the app marks shows as ✓ / ●
@@ -25,10 +26,11 @@ import hfsni  # noqa: E402
 
 LONG = 12             # a submenu longer than this scrolls
 CSS = """
-.hf-tm {{ min-width: 300px; }}
-.hf-card.hf-head {{ padding: 6px 8px 6px 12px; }}
+.hf-card.hf-tm {{ padding: 8px 6px; }}
+.hf-tm-head {{ padding: 2px 4px 2px 8px; }}
 .hf-tm-name {{ font-weight: bold; font-size: {big}pt; }}
-.hf-card.hf-tm-group {{ padding: 4px; }}
+.hf-tm-line {{ min-height: 1px; margin: 5px 6px; border: none; background-color: transparent;
+               background-image: linear-gradient(to right, transparent, {line} 15%, {line} 85%, transparent); }}
 .hf-tm-group button {{ background: transparent; border-color: transparent; padding: 4px 10px; border-radius: {inner}px;
                       color: {text}; }}
 .hf-tm-group button:hover, .hf-tm-group button:focus {{ background: {hover}; }}
@@ -73,7 +75,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     c = look.colour
     inner = 0 if look.straight else max(4, look.radius // 2)
     provider = Gtk.CssProvider()
-    provider.load_from_data(CSS.format(big=look.size * 1.1, small=look.size * 0.9, inner=inner, text=c["panel_text"],
+    provider.load_from_data(CSS.format(line=c["panel_border"], big=look.size * 1.1, small=look.size * 0.9, inner=inner, text=c["panel_text"],
                                        hover=c["panel_hover"], dim=c["panel_text_dim"], accent=c["panel_tile_on"],
                                        danger=c["panel_danger"], bg=c["panel_bg"]).encode())
     Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1)
@@ -84,8 +86,8 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     except (TypeError, ValueError, IndexError):
         item = None
     conn = hfsni.bus()
-    root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-    root.get_style_context().add_class("hf-tm")
+    root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+    root.set_size_request(300, -1)
     panel_ref = {}
 
     def close():
@@ -110,7 +112,8 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         opener.set_tooltip_text(f"Open {name}'s own window")
         opener.connect("clicked", lambda _b: (hfsni.activate(conn, item["name"], item["path"]), close()))
         head.pack_end(opener, False, False, 0)
-    root.pack_start(card(head, "hf-head"), False, False, 0)
+    head.get_style_context().add_class("hf-tm-head")
+    root.pack_start(head, False, False, 0)
 
     # ---- the menu
     entries = []
@@ -118,9 +121,11 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         try:
             entries = hfsni.menu_layout(conn, item["name"], item["menu"])
         except Exception as e:  # an app that doesn't answer: say so, never crash
-            root.pack_start(card(info_line(f"{name} didn't answer for its menu ({e.__class__.__name__}).")), False, False, 0)
+            root.pack_start(line(), False, False, 0)
+            root.pack_start(info_line(f"{name} didn't answer for its menu ({e.__class__.__name__})."), False, False, 0)
     elif item is None:
-        root.pack_start(card(info_line("That tray app has gone.")), False, False, 0)
+        root.pack_start(line(), False, False, 0)
+        root.pack_start(info_line("That tray app has gone."), False, False, 0)
 
     def clicked(entry_id: int):
         try:
@@ -133,13 +138,19 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         for e in group:
             box.pack_start(entry_widget(e, clicked, depth=0), False, False, 0)
-        root.pack_start(card(box, "hf-tm-group"), False, False, 0)
+        box.get_style_context().add_class("hf-tm-group")
+        root.pack_start(line(), False, False, 0)
+        root.pack_start(box, False, False, 0)
     if item and item.get("menu") and not entries:
-        root.pack_start(card(info_line(f"{name} has no menu to show.")), False, False, 0)
+        root.pack_start(line(), False, False, 0)
+        root.pack_start(info_line(f"{name} has no menu to show."), False, False, 0)
 
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["top", "right"]
     margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"top": 44, "right": 8}
-    panel = panelkit.Panel("traymenu", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()}, card=False)
+    panel = panelkit.Panel("traymenu", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()})
+    frame = panel.window.get_child()                      # the panel's one card: the content fills it
+    frame.get_style_context().add_class("hf-tm")
+    frame.set_child_packing(root, True, True, 0, Gtk.PackType.START)
     panel_ref["p"] = panel
     return panel
 
@@ -210,11 +221,8 @@ def entry_widget(e, clicked, depth: int) -> Gtk.Widget:
     return button
 
 
-def card(widget: Gtk.Widget, *extra: str) -> Gtk.Box:
-    box = Gtk.Box()
-    box.get_style_context().add_class("hf-card")
-    for cls in extra:
-        box.get_style_context().add_class(cls)
-    widget.set_hexpand(True)
-    box.add(widget)
-    return box
+def line() -> Gtk.Widget:
+    """A soft line between the app's groups, fading at both ends."""
+    sep = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+    sep.get_style_context().add_class("hf-tm-line")
+    return sep

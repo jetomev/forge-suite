@@ -34,6 +34,7 @@ NAMES = {   # the applet as Javier knows it
     "workspaces": "Workspaces", "placement": "Window Placement", "tuck": "Tuck (hidden windows)",
     "rules": "Window Rules", "taskbar": "the Taskbar", "menubar": "the Menu bar", "panels": "the pop-up panels",
     "notifications": "the bell", "clipboard": "the clipboard", "clipboard-images": "the clipboard (pictures)", "tray": "the tray",
+    "system": "the system readings",
 }
 ON_PURPOSE = {signal.SIGTERM, signal.SIGINT, signal.SIGHUP}
 KEEP_BYTES = 512 * 1024

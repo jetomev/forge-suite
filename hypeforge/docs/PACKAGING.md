@@ -21,6 +21,7 @@ aren't listed.*
 | python-gobject | the pop-up panels; the tray (D-Bus through Gio: the watcher, the menus) | gi |
 | gtk3 | the pop-up panels | gi: Gtk 3.0, Gdk 3.0 |
 | gtk-layer-shell | the panels sit on the desktop's layers | gi: GtkLayerShell 0.1 |
+| python-cairo | the system pop-ups' graphs and bars (views/system.py, 2026-10-17) | cairo |
 | python-textual | Help & Keys, hypeForge Settings | textual |
 | python-rich | the same | rich |
 | python-forgekit | the same | forgekit |
@@ -55,6 +56,8 @@ aren't listed.*
 | Package | What uses it | Module / program |
 |---|---|---|
 | glib2 | telling GTK apps the new look (gsettings) | (program gsettings) |
+| nvidia-utils | the bar's graphics-card piece and pop-up on an NVIDIA card (nvidia-smi; AMD cards are read from their own files, no program) | (program) |
+| btop | "Every program" in the processor and memory pop-ups, and their right click | (program) |
 | wlsunset | the night light without nightForge | (program) |
 | ddcutil | the brightness keys on desktop monitors (DDC/CI, displayForge's channel; #94) | (program) |
 | brightnessctl | the brightness keys on a laptop's screen (a backlight in /sys/class/backlight; #94) — optional on a desktop | (program) |

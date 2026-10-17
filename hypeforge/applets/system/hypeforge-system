@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+"""hypeForge's system readings on the bar (Javier, 2026-10-17: "icons and popups for CPU, GPU,
+Temperature, Memory, Disks Space. Let's make them pretty too!!!").
+
+    hypeforge-system run            the sampler, started at login: a reading every 2 seconds, the last
+                                    three minutes kept for the pop-ups' graphs
+    hypeforge-system bar gpu|temp   the bar's graphics card and temperature pieces (Waybar's own
+                                    readers draw the processor, memory and disk pieces)
+    hypeforge-system panel PART [where]
+                                    a click: PART's pop-up (cpu, gpu, temp, memory, disk)
+
+Everything it writes lives in $XDG_RUNTIME_DIR/hypeforge-system/.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import signal
+import sys
+import time
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+PANEL = HERE.parent / "panels/hypeforge-panel"
+PIDFILE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-system.pid"
+PARTS = ("cpu", "gpu", "temp", "memory", "disk")
+GLYPH = {"cpu": "\U000f035b", "gpu": "\U000f08ae", "temp": "\U000f050f", "memory": "\U000f061a", "disk": "\U0000f0a0"}
+
+
+def run() -> int:
+    import hfsys
+    try:
+        old = int(PIDFILE.read_text())
+        os.kill(old, 0)
+        if "hypeforge-system" in Path(f"/proc/{old}/cmdline").read_bytes().decode(errors="replace"):
+            print("hypeforge-system: already running")
+            return 0
+    except (OSError, ValueError):
+        pass
+    PIDFILE.write_text(str(os.getpid()))
+    signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))      # a stop on purpose still tidies up
+    sampler = hfsys.Sampler(hfsys.read_state().get("history"))     # a restart keeps the graphs
+    print("hypeforge-system: reading every 2 seconds")
+    try:
+        while True:
+            time.sleep(hfsys.EVERY)
+            sampler.sample()
+            sampler.write()
+    except KeyboardInterrupt:
+        return 0
+    finally:
+        try:
+            if int(PIDFILE.read_text()) == os.getpid():
+                PIDFILE.unlink()
+        except (OSError, ValueError):
+            pass
+
+
+def say(piece: dict):
+    print(json.dumps(piece, ensure_ascii=False))
+
+
+def now() -> dict:
+    """The sampler's last reading; read here and now when the sampler isn't running."""
+    import hfsys
+    state = hfsys.read_state()
+    if hfsys.fresh(state):
+        return state
+    g = hfsys.gpu()
+    return {"gpu": g, "temps": hfsys.temperatures(gpu_now=g)}
+
+
+def bar(part: str) -> int:
+    import hfsys
+    state = now()
+    if part == "gpu":
+        g = state.get("gpu")
+        if not g:
+            say({"text": "", "tooltip": "", "class": "none"})    # no card to read: the piece hides
+            return 0
+        busy = g.get("busy") or 0
+        tip = [f"{g['name']}: {busy:.0f} % busy"]
+        if g.get("mem_total"):
+            tip.append(f"Its memory: {hfsys.gib(g['mem_used'])} of {hfsys.gib(g['mem_total'])}")
+        if g.get("temp") is not None:
+            tip.append(f"Temperature: {g['temp']:.0f} °C")
+        tip.append("Click: more")
+        say({"text": f"{GLYPH['gpu']} {busy:.0f}%", "tooltip": "\n".join(tip),
+                          "class": hfsys.level(busy, *hfsys.BUSY), "percentage": int(busy)})
+        return 0
+    if part == "temp":
+        temps = state.get("temps") or []
+        cpu = hfsys.cpu_temp(temps)
+        hot = hfsys.hottest(temps)
+        if cpu is None and not hot:
+            say({"text": "", "tooltip": "", "class": "none"})
+            return 0
+        shown = cpu if cpu is not None else hot["temp"]
+        tip = [f"{r['name']}: {r['temp']:.0f} °C" for r in temps if r["group"] in ("Processor", "Graphics")][:3]
+        drives = [r for r in temps if r["group"] == "Drives"]
+        if drives:
+            d = max(drives, key=lambda r: r["temp"])
+            tip.append(f"Warmest drive: {d['temp']:.0f} °C")
+        if hot and hot["state"] != "ok":
+            tip.insert(0, f"{hot['name']} is {'hot' if hot['state'] == 'critical' else 'warm'}: {hot['temp']:.0f} °C")
+        tip.append("Click: every sensor and fan")
+        say({"text": f"{GLYPH['temp']} {shown:.0f}°", "tooltip": "\n".join(tip),
+                          "class": hot["state"] if hot else "ok", "percentage": int(shown)})
+        return 0
+    sys.exit(__doc__)
+
+
+def panel(part: str, where: list[str]) -> int:
+    os.execv(str(PANEL), [str(PANEL), "system", "--part", part, *where])
+
+
+def main() -> int:
+    a = sys.argv[1:]
+    if a == ["run"]:
+        return run()
+    if len(a) == 2 and a[0] == "bar" and a[1] in ("gpu", "temp"):
+        return bar(a[1])
+    if len(a) >= 2 and a[0] == "panel" and a[1] in PARTS:
+        return panel(a[1], a[2:])
+    sys.exit(__doc__)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -269,10 +269,11 @@ class CosmicPopups(unittest.TestCase):
 
     def test_the_rice_right_side_is_in_javiers_order(self):
         """Javier, 2026-10-11, right to left: power, the status pill (volume · network · Bluetooth), disks/USB,
-        printers, clipboard, CPU, memory, night light, the programs' icons."""
+        printers, clipboard, CPU, memory, night light, the programs' icons. 2026-10-17: after the processor,
+        in his order, the graphics card, temperature, memory and disk."""
         rice = self.rice()
-        right_to_left = ["custom/power-panel", "group/quick", "custom/drives",
-                         "custom/printers", "custom/clipboard", "cpu", "memory", "custom/nightlight", "tray"]
+        right_to_left = ["custom/power-panel", "group/quick", "custom/drives", "custom/printers", "custom/clipboard",
+                         "cpu", "custom/gpu", "custom/temperature", "memory", "disk", "custom/nightlight", "tray"]
         self.assertEqual(rice["modules-right"], right_to_left[::-1])
 
     def test_the_bell_sits_with_the_time_and_opens_the_same_pop_up(self):

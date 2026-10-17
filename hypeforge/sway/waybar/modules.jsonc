@@ -154,15 +154,48 @@
     "tooltip-format": "Lock · Log Out · Restart · Shut Down",
     "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel power"
   },
+  // The system pieces (2026-10-17, Javier: "icons and popups for CPU, GPU, Temperature, Memory, Disks
+  // Space. Let's make them pretty too!!!"): each a number that turns warm, then red, when it matters; a
+  // click opens its own pop-up (applets/panels/views/system.py). Processor, memory and disk are Waybar's
+  // own readers; the graphics card and the temperature are hypeForge's (applets/system/), and hide on a
+  // computer with nothing to read.
   "cpu": {
     "format": "󰍛 {usage}%",
+    "interval": 3,
+    "states": { "warning": 70, "critical": 90 },
+    "tooltip-format": "Processor: {usage} % busy\nClick: more · right click: every program",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part cpu {popup}",
+    "on-click-right": "alacritty --class hf-btop -e btop"
+  },
+  "custom/gpu": {
+    "exec": "~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system bar gpu",
+    "return-type": "json",
+    "interval": 3,
+    "hide-empty-text": true,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part gpu {popup}"
+  },
+  "custom/temperature": {
+    "exec": "~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system bar temp",
+    "return-type": "json",
     "interval": 5,
-    "tooltip-format": "Processor: {usage} % busy"
+    "hide-empty-text": true,
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part temp {popup}"
   },
   "memory": {
     "format": "󰘚 {percentage}%",
-    "interval": 10,
-    "tooltip-format": "Memory: {used:0.1f} of {total:0.1f} GB"
+    "interval": 5,
+    "states": { "warning": 70, "critical": 90 },
+    "tooltip-format": "Memory: {used:0.1f} of {total:0.1f} GB in use\nClick: more · right click: every program",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part memory {popup}",
+    "on-click-right": "alacritty --class hf-btop -e btop"
+  },
+  "disk": {
+    "path": "/",
+    "format": " {percentage_used}%",
+    "interval": 60,
+    "states": { "warning": 80, "critical": 92 },
+    "tooltip-format": "The system disk: {free} free of {total}\nClick: every disk",
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part disk {popup}"
   },
   "mpris": {
     "format": "{player_icon} {dynamic}",

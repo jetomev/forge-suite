@@ -314,6 +314,9 @@ bindsym $mod+r mode "resize"
 # hypeForge's tray (2026-10-17): the watcher tray apps register with, their icons on the bar, their menus
 # as hypeForge pop-ups. Started before the bar, so tray apps find it however early they start.
 exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch tray ~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray run
+# the system readings (2026-10-17): a reading every 2 seconds, so the bar's CPU · GPU · temperature · memory
+# pop-ups open with their last three minutes already drawn
+exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch system ~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system run
 exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch bar ~/Programs/forge-suite/hypeforge/applets/bar/hypeforge-bar start
 
 include /etc/sway/config.d/*

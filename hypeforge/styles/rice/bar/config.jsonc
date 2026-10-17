@@ -6,7 +6,8 @@
 // right (a click: Quick Settings); the night light's moon by the tray — the three pieces every style
 // shares, defined once in modules.jsonc (D-96; they were born here and on Windows 11).
 // The right side, right to left (Javier): power, the status pill, USB drives, printers,
-// clipboard, processor, memory, the night light, then the programs' tray icons.
+// clipboard, processor, graphics card, temperature, memory, disk (2026-10-17), the night light, then
+// the programs' tray icons.
 // After the pills, the windows tucked away (D-82): an icon and how many, hidden when none; a click
 // brings them back (Javier, 2026-10-11: on the Rice a tucked window had no way back you could see).
 // The pieces are defined in modules.jsonc (shared by every style); colours come from colors.css.
@@ -33,7 +34,10 @@
   "modules-right": [
     "tray",
     "custom/nightlight",
+    "disk",
     "memory",
+    "custom/temperature",
+    "custom/gpu",
     "cpu",
     "custom/clipboard",
     "custom/printers",

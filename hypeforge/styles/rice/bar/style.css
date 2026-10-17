@@ -42,7 +42,7 @@ tooltip label { color: @hf_text; }
 .pill:hover { background-color: @hf_pill_hover; }
 
 /* every piece: room, the theme's icon colour, a soft hover */
-#clock, #mpris, #cpu, #memory, #network, #bluetooth, #wireplumber, #tray,
+#clock, #mpris, #cpu, #memory, #disk, #custom-gpu, #custom-temperature, #network, #bluetooth, #wireplumber, #tray,
 #custom-clipboard, #custom-drives, #custom-printers, #custom-notifications, #custom-power-panel,
 #custom-nightlight, #custom-tucked {
   padding: 0 9px;
@@ -50,7 +50,7 @@ tooltip label { color: @hf_text; }
 }
 #clock { color: @hf_text; font-weight: bold; }
 #mpris { color: @hf_subtext; }
-#cpu:hover, #memory:hover, #quick:hover, #custom-clipboard:hover,
+#cpu:hover, #memory:hover, #disk:hover, #custom-gpu:hover, #custom-temperature:hover, #quick:hover, #custom-clipboard:hover,
 #custom-drives:hover, #custom-printers:hover, #custom-power-panel:hover,
 #custom-nightlight:hover, #custom-tucked:hover, #datetime:hover {
   background-color: @hf_pill_hover; border-radius: 8px;
@@ -59,6 +59,9 @@ tooltip label { color: @hf_text; }
 #custom-notifications.unseen { color: @hf_bell; }
 #custom-notifications.dnd { color: @hf_alert; }
 #custom-clipboard.new, #custom-drives.has { color: @hf_new; }
+/* the system pieces: warm, then the alert colour, when busy, full or hot (2026-10-17) */
+#cpu.warning, #memory.warning, #disk.warning, #custom-gpu.warning, #custom-temperature.warning { color: @hf_bell; }
+#cpu.critical, #memory.critical, #disk.critical, #custom-gpu.critical, #custom-temperature.critical { color: @hf_alert; }
 /* the windows tucked away: the theme's colour, so a hidden window is noticed */
 #custom-tucked.some { color: @hf_new; }
 #custom-power-panel { color: @hf_alert; padding-right: 12px; }
