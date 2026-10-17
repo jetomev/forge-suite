@@ -84,8 +84,11 @@ class Backend:
         if not radio:
             return None, "—"
         on = radio == "enabled"
-        ssid = next((l.split(":", 1)[1] for l in self.run(["nmcli", "-t", "-f", "ACTIVE,SSID", "dev", "wifi"]).splitlines()
-                     if l.startswith("yes:")), "")
+        # the network's name from the active connection: asking for the Wi-Fi list makes NetworkManager scan
+        # first when its last scan is over ~30 s old (5 s here, 2026-10-17: the pop-ups "take time to appear")
+        ssid = next((l.split(":", 1)[1] for l in self.run(["nmcli", "-t", "-f", "TYPE,NAME", "connection", "show",
+                                                             "--active"]).splitlines()
+                     if l.startswith("802-11-wireless:")), "")
         wired = any(":ethernet:connected" in l for l in self.run(["nmcli", "-t", "-f", "DEVICE,TYPE,STATE", "dev"]).splitlines())
         return on, ssid if on and ssid else ("on" if on else "off · wired" if wired else "off")
 
@@ -272,25 +275,24 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     def fill_tiles():
         for child in grid.get_children():
             grid.remove(child)
-        tiles = []
-        on, sub = be.wifi()
-        tiles.append(("Wi-Fi", "network-wireless", on, sub, toggler(be.wifi_toggle, on)))
-        on, sub = be.bluetooth()
-        tiles.append(("Bluetooth", "bluetooth", on, sub, toggler(be.bluetooth_toggle, on)))
+        # each tile asks its own program only when it is shown: the moon's pop-up waited three seconds on
+        # Wi-Fi it never showed (2026-10-17)
+        makers = [("Wi-Fi", lambda: ("network-wireless", *be.wifi(), be.wifi_toggle)),
+                  ("Bluetooth", lambda: ("bluetooth", *be.bluetooth(), be.bluetooth_toggle))]
         if night.ok:
-            warm, why, _k, _m = night.state()
-            tiles.append(("Night light", "weather-clear-night", warm, why, toggler(night.toggle, warm)))
-        on, sub = be.dnd()
-        tiles.append(("Do Not Disturb", "notifications-disabled", on, sub, toggler(be.dnd_toggle, on)))
-        _n, sub = be.screens()
-        tiles.append(("Screens", "video-display", False, sub,
-                      lambda _b: (panel.close(), panelkit.run_command("alacritty --class displayforge -e displayforge"))))
+            makers.append(("Night light", lambda: ("weather-clear-night", *night.state()[:2], night.toggle)))
+        makers.append(("Do Not Disturb", lambda: ("notifications-disabled", *be.dnd(), be.dnd_toggle)))
+        makers.append(("Screens", lambda: ("video-display", False, be.screens()[1], None)))
         if be.vpn_available():
-            on, sub = be.vpn()
-            tiles.append(("VPN", "network-vpn", on, sub, toggler(be.vpn_toggle, on)))
+            makers.append(("VPN", lambda: ("network-vpn", *be.vpn(), be.vpn_toggle)))
         if only:
-            tiles = [t for t in tiles if t[0] in ONLY[only][1]]
-        for i, (name, icon, on, sub, fn) in enumerate(tiles):
+            makers = [m for m in makers if m[0] in ONLY[only][1]]
+        for i, (name, make) in enumerate(makers):
+            icon, on, sub, switch = make()
+            if switch is None:                     # Screens opens displayForge
+                fn = lambda _b: (panel.close(), panelkit.run_command("alacritty --class displayforge -e displayforge"))
+            else:
+                fn = toggler(switch, on)
             grid.attach(tile(name, icon, on, sub, fn), i % 3, i // 3, 1, 1)
         grid.show_all()
 

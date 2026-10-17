@@ -149,8 +149,10 @@ class QuickSettings(unittest.TestCase):
         self.assertEqual(be.wifi(), (False, "off · wired"))
 
     def test_wifi_on_shows_the_network(self):
-        be = quick.Backend(FakeRun({"nmcli -t -f WIFI radio": "enabled\n", "nmcli -t -f ACTIVE,SSID dev wifi": "no:Other\nyes:tphome\n"}))
+        be = quick.Backend(FakeRun({"nmcli -t -f WIFI radio": "enabled\n", "nmcli -t -f TYPE,NAME connection show --active": "802-3-ethernet:Wired 1\n802-11-wireless:tphome\n"}))
         self.assertEqual(be.wifi(), (True, "tphome"))
+        self.assertFalse(any("wifi" in c and "dev" in c for c in map(" ".join, getattr(be.run, "ran", []))),
+                         "never the Wi-Fi list: it scans first, seconds long (2026-10-17)")
 
     def test_a_missing_program_is_a_dash_not_a_crash(self):
         be = quick.Backend(FakeRun({}))
@@ -302,7 +304,7 @@ class CosmicPopups(unittest.TestCase):
         src = (HERE / "applets/panels/views/quick.py").read_text()
         for part, (title, tiles, more) in quick.ONLY.items():
             for name in tiles:
-                self.assertIn(f'tiles.append(("{name}"', src, f"{part}: {name}")
+                self.assertIn(f'("{name}", lambda', src, f"{part}: {name}")
             self.assertTrue(more.split()[0] in ("alacritty", "hypeforge-nmtui"), part)
 
     def test_the_panel_offers_only_those_parts(self):
