@@ -7,10 +7,10 @@
 
 ## 2026-10-17
 
-### D-105 · The tray menu is one window, with soft lines between its groups (Javier)
+### D-105 · The tray menu is one window, with soft lines between its groups (Javier) — **APPROVED 10-17**
 *"Can we make the dropbox popup, instead of separated pops, one window, and using pretty separator lines between the options?"* `views/traymenu.py` no longer puts each group in its own card: the panel's one card holds the head and every entry, and the app's own separators become **soft lines** — 1 px in `panel_border`, fading to nothing at both ends (a `linear-gradient`, 15 % → 85 %), 5 × 6 px around. The system pop-ups (D-104) are built the same way from the start. Everything else in D-103 stands. Tray bench 18/18.
 
-### D-104 · Five system pieces on the bar, each with its own pop-up (Javier: "Let's make them pretty too!!!")
+### D-104 · Five system pieces on the bar, each with its own pop-up (Javier: "Let's make them pretty too!!!") — **APPROVED 10-17** (*"tried all of them. Beautiful!"*)
 *"Next are icons and popups for: CPU, GPU, Temperaturea, Memory, Disks Space."*
 - **The bar** (`sway/waybar/modules.jsonc`, every style can place them; the Rice does, right to left after the clipboard in his order: processor · graphics card · temperature · memory · disk): an icon and a number that turns **warm** (`@hf_bell`) then **the alert colour** when it matters — busy 70 / 90 %, a disk 80 / 92 % full, a sensor at its own warm / hot mark. Processor, memory and disk are **Waybar's own readers** (they cost nothing); the graphics card and the temperature are hypeForge's (`applets/system/hypeforge-system bar gpu|temp`, every 3 / 5 s), and **hide on a computer with nothing to read**. The temperature piece shows the processor's number but turns red when *anything* is hot.
 - **The sampler** (`hypeforge-system run`, at login under the watcher, D-100): a reading every 2 s from the kernel's own files (`/proc`, `/sys/class/hwmon`; `nvidia-smi` for an NVIDIA card, an AMD card's own files), the last **three minutes** kept in `$XDG_RUNTIME_DIR/hypeforge-system/now.json`, so every pop-up opens with its graph already drawn. Measured: under 1 s of processor time in 20 s, 17 MB. No lm_sensors needed.
