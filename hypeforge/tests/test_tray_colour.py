@@ -57,9 +57,16 @@ class Repaint(unittest.TestCase):
         out = hftint.tinted(picture((0, 0, 0)), "#89b4fa")
         self.assertEqual(out.getpixel((20, 20)), (0x89, 0xb4, 0xfa, 255))
 
-    def test_a_coloured_picture_is_shown_as_the_app_sent_it(self):
+    def test_a_coloured_picture_keeps_its_colours(self):
         own = self.save(picture((0, 97, 254)), "logo.png")
-        self.assertEqual(hftint.themed(own, "#ffae33", self.dir, 1), own)
+        shown = Image.open(hftint.themed(own, "#ffae33", self.dir, 1)).convert("RGBA")
+        self.assertEqual(shown.getpixel((shown.width // 2, 20)), (0, 97, 254, 255))
+
+    def test_every_picture_loses_its_empty_sides_but_keeps_its_height(self):
+        """Javier, 10-17: "inSync and dropbox look very close" — each icon's see-through border made the gap."""
+        own = self.save(picture((255, 255, 255)), "white.png")       # a 24-wide shape in a 40-wide picture
+        shown = Image.open(hftint.themed(own, "#ffae33", self.dir, 1))
+        self.assertEqual(shown.size, (24, 40))
 
     def test_a_new_theme_gives_a_new_file_so_the_bar_loads_it(self):
         own = self.save(picture((255, 255, 255)), "white.png")
@@ -71,9 +78,22 @@ class Repaint(unittest.TestCase):
         self.assertFalse(Path(a).exists(), "the old theme's copy is cleared away")
         self.assertTrue(Path(b).exists())
 
-    def test_no_theme_colour_leaves_the_picture_alone(self):
+    def test_the_room_between_tray_icons_never_counts_on_empty_pieces(self):
+        """Javier, 10-17: 5 px "is too little", 10. A margin on Waybar's tray piece also counted on the
+        empty ones (46 px of nothing beside Dropbox): the rule is on the picture inside, pieces 2 to 10."""
+        css = (REPO / "styles/rice/bar/style.css").read_text()
+        rule = ", ".join(f"#tray .tray-{n} image" for n in range(2, 11)) + " { margin-left: 10px; }"
+        self.assertIn(rule, css)
+        self.assertNotIn(":first-child", css, "each picture is the only child of its piece: it matches them all")
+
+    def test_a_small_icon_is_drawn_at_the_same_size(self):
+        small = self.save(picture((255, 255, 255)).resize((16, 16)), "small.png")
+        self.assertEqual(max(Image.open(hftint.themed(small, "#ffae33", self.dir, 1)).size), 40)
+
+    def test_no_theme_colour_keeps_the_pictures_own_colour(self):
         own = self.save(picture((255, 255, 255)), "white.png")
-        self.assertEqual(hftint.themed(own, None, self.dir, 1), own)
+        shown = Image.open(hftint.themed(own, None, self.dir, 1)).convert("RGBA")
+        self.assertEqual(shown.getpixel((12, 20)), (255, 255, 255, 255))
 
     def test_the_colour_is_read_from_the_looks_file(self):
         css = self.dir / "colors.css"

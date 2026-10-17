@@ -206,7 +206,8 @@ def main() -> int:
         check(Path(w["picture"]).name.count("-") == 2 and got == want,
               f"a white icon is repainted in the style's tray colour ({got} = {want})")
         folder = next(s for s in left if s["id"].startswith("dropbox"))
-        check(folder["picture"] == folder["own_picture"], f"a coloured icon keeps its own ({Path(folder['picture']).name})")
+        fpx = [p[:3] for p in hftint.pixels(Image.open(folder["picture"]).convert("RGBA")) if p[3] > 200]
+        check(fpx and any("#%02x%02x%02x" % p != want for p in fpx), f"a coloured icon keeps its own colours ({Path(folder['own_picture']).name})")
 
         # a restart with no gap: watch the watcher's owner while a new tray takes over
         watch_log = base / "owner.txt"

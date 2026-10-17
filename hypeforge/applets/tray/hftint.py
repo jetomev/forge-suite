@@ -52,8 +52,13 @@ def load(path: str):
                               pb.get_rowstride())
     else:
         img = Image.open(path).convert("RGBA")
-    if img.size != (SIZE, SIZE):
-        img.thumbnail((SIZE, SIZE), Image.LANCZOS)
+    if max(img.size) != SIZE:              # up or down to SIZE: a small icon (Electron's 16 px) too, so
+        k = SIZE / max(img.size)           # every icon shows at the same size
+        img = img.resize((max(1, round(img.width * k)), max(1, round(img.height * k))), Image.LANCZOS)
+    if img.height < SIZE:                  # a wide icon: centred in the full height, so all scale alike
+        full = Image.new("RGBA", (img.width, SIZE))
+        full.paste(img, (0, (SIZE - img.height) // 2))
+        img = full
     return img
 
 
@@ -90,14 +95,25 @@ def tinted(img, colour: str):
     return out
 
 
+def trimmed(img):
+    """The picture without the empty columns at its sides (2026-10-17: Insync and Dropbox sat closer than
+    any other pieces, each icon's own see-through border deciding the gap). Its height is kept, so every
+    icon is scaled alike, and the bar's CSS alone sets the space between them."""
+    box = img.getchannel("A").point(lambda a: 255 if a > 24 else 0).getbbox()
+    if not box:
+        return img
+    return img.crop((box[0], 0, box[2], img.height))
+
+
 def themed(path: str, colour: str | None, folder: Path, n: int) -> str:
-    """The picture to show for tray slot n: the repainted copy, or the app's own when it is in colour (or
-    nothing could be read). The copy's name carries what it was made from, so a new theme or a new icon
-    gives a new file — the bar then loads it fresh."""
-    if not colour or not path:
+    """The picture to show for tray slot n: trimmed at its sides (the bar's CSS sets the room between
+    icons), and repainted in the style's colour when it is one colour (a logo in full colour keeps its own). The copy's name carries what it was made from,
+    so a new theme or a new icon gives a new file — the bar then loads it fresh. Nothing readable: the
+    app's own picture."""
+    if not path:
         return path
     try:
-        stamp = f"{path}:{os.path.getmtime(path)}:{colour}"
+        stamp = f"{path}:{os.path.getmtime(path)}:{colour}:trim"
     except OSError:
         return path
     out = folder / f"slot-{n}-{hashlib.sha1(stamp.encode()).hexdigest()[:10]}.png"
@@ -105,10 +121,10 @@ def themed(path: str, colour: str | None, folder: Path, n: int) -> str:
         return str(out)
     try:
         img = load(path)
-        if not one_colour(img):
-            return path
+        if colour and one_colour(img):
+            img = tinted(img, colour)
         folder.mkdir(parents=True, exist_ok=True)
-        tinted(img, colour).save(out)
+        trimmed(img).save(out)
     except Exception:          # an odd picture: the app's own, never a missing icon
         return path
     return str(out)

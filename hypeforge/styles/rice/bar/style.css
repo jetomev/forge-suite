@@ -78,3 +78,21 @@ tooltip label { color: @hf_text; }
 
 /* D-96: the status pill and the date piece light up as one */
 #quick, #datetime { border-radius: 8px; }
+
+/* bar-spacing:start — written by scripts/bar-spacing.py --gap 10 --tray-gap 10: the drawn parts 10 px apart, whatever room each icon leaves (2026-10-17) */
+#tray { padding-left: 12px; padding-right: 5px; }
+#tray .tray-2 image, #tray .tray-3 image, #tray .tray-4 image, #tray .tray-5 image, #tray .tray-6 image, #tray .tray-7 image, #tray .tray-8 image, #tray .tray-9 image, #tray .tray-10 image { margin-left: 10px; }
+#custom-nightlight { padding-left: 6px; padding-right: 9px; }
+#disk { padding-left: 5px; padding-right: 6px; }
+#memory { padding-left: 5px; padding-right: 6px; }
+#custom-temperature { padding-left: 4px; padding-right: 4px; }
+#custom-gpu { padding-left: 5px; padding-right: 6px; }
+#cpu { padding-left: 6px; padding-right: 6px; }
+#custom-clipboard { padding-left: 5px; padding-right: 8px; }
+#custom-printers { padding-left: 5px; padding-right: 9px; }
+#custom-drives { padding-left: 5px; padding-right: 6px; }
+#bluetooth { padding-left: 5px; padding-right: 5px; }
+#network { padding-left: 5px; padding-right: 9px; }
+#wireplumber { padding-left: 5px; padding-right: 8px; }
+#custom-power-panel { padding-left: 5px; padding-right: 12px; }
+/* bar-spacing:end */
