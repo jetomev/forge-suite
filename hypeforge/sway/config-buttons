@@ -1,0 +1,9 @@
+# hypeForge's own Sway only (D-111): the "Sway (hypeForge buttons)" login reads this file instead of
+# ~/.config/sway/config. Stock Sway never reads it — it doesn't know these lines, and would show an error.
+include ~/.config/sway/config
+
+# minimise · maximise · close at a floating window's title bar's right (Javier, 2026-10-17)
+titlebar_buttons floating
+titlebar_button minimize 󰖰 move scratchpad
+titlebar_button maximize 󰖯 exec ~/Programs/forge-suite/hypeforge/applets/window/hypeforge-window maximize
+titlebar_button close 󰖭 kill

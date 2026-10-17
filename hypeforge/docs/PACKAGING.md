@@ -65,6 +65,14 @@ aren't listed.*
 | brightnessctl | the brightness keys on a laptop's screen (a backlight in /sys/class/backlight; #94) — optional on a desktop | (program) |
 | kwallet-pam | `/usr/lib/pam_kwallet_init`, run at login: KDE's saved-passwords store opens with the login password, no window (#39, #41) — until walletForge | (file, not on PATH) |
 
+## To build hypeForge's own Sway (`sway-hypeforge/build.py`, D-111) — optional
+
+| Package | What uses it |
+|---|---|
+| meson, ninja, gcc, pkgconf | building Sway |
+| wlroots0.20 (the system Sway's), wayland-protocols, libinput, json-c, pango, cairo, gdk-pixbuf2, libxkbcommon, pcre2 | Sway's own build needs (the system's Sway already pulls them in, headers included) |
+| curl, gnupg, patch | the download, its signature check, our patch |
+
 ## The AUR recipe
 
 No package yet: KognogOS installs these. When hypeForge gets its package, this is its list.

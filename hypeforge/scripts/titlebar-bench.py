@@ -13,7 +13,11 @@ real watcher (applets/window/hypeforge-window watch), stand-in windows and a fak
   - the menu's actions: back into the grid, float, to workspace 2
   - the real desktop is untouched
 
-    titlebar-bench.py [--keep]
+    titlebar-bench.py [--keep] [--ours]
+
+--ours (D-111): hypeForge's own Sway build (~/.local/opt/sway-hypeforge/current) with the real button lines
+(sway/config-buttons): the three buttons drawn; close, minimise, maximise and back again by a click; a
+drag between them still moves the window.
 
 Writes logs/titlebar-bench.png (the window menu open) for a look.
 """
@@ -47,8 +51,21 @@ def title_bar_lines() -> str:
     return "set $mod Mod4\n" + "\n".join(keep) + "\n"
 
 
+OURS = Path.home() / ".local/opt/sway-hypeforge/current/bin/sway"
+
+
+def button_lines() -> str:
+    """sway/config-buttons without its include: the lines only our build reads."""
+    return "\n".join(l for l in (HERE / "sway/config-buttons").read_text().splitlines()
+                     if l.startswith("titlebar_button")) + "\n"
+
+
 def main() -> int:
     keep = "--keep" in sys.argv
+    ours = "--ours" in sys.argv
+    if ours and not OURS.exists():
+        print(f"no build at {OURS}: run sway-hypeforge/build.py first")
+        return 1
     ht = panelkit.theme_tool()
     real_sock = os.environ.get("SWAYSOCK")
     base = Path(tempfile.mkdtemp(prefix="hftitle.", dir="/tmp"))
@@ -62,7 +79,7 @@ def main() -> int:
     theme_conf = conf / "hypeforge/theme/sway.conf"
     (base / "sway.conf").write_text(
         "output * resolution 1280x720 bg #ff00ff solid_color\nxwayland disable\n"
-        f"include {theme_conf}\n" + title_bar_lines() +
+        f"include {theme_conf}\n" + title_bar_lines() + (button_lines() if ours else "") +
         'for_window [app_id="by-rule"] floating enable, move position 640 80\n'
         'for_window [app_id="own-bar"] floating enable, move position 60 420\n')
     env = {k: v for k, v in os.environ.items()
@@ -80,7 +97,7 @@ def main() -> int:
         results.append(bool(ok))
         print(("  ok    " if ok else "  FAIL  ") + what, flush=True)
 
-    sway = subprocess.Popen(["sway", "-c", str(base / "sway.conf")], env=env, stdout=log, stderr=log)
+    sway = subprocess.Popen([str(OURS) if ours else "sway", "-c", str(base / "sway.conf")], env=env, stdout=log, stderr=log)
     procs = []
     try:
         time.sleep(2)
@@ -161,7 +178,7 @@ def main() -> int:
         pid = run / "hypeforge-panel-windowmenu.pid"
         argv = Path(f"/proc/{pid.read_text()}/cmdline").read_bytes().split(b"\0") if pid.exists() else []
         check(pid.exists() and str(f["id"]).encode() in argv, f"a right click on the title bar opens the menu for that window")
-        pic = HERE / "logs/titlebar-bench.png"
+        pic = HERE / ("logs/titlebar-bench-ours.png" if ours else "logs/titlebar-bench.png")
         pic.parent.mkdir(exist_ok=True)
         subprocess.run(["grim", str(pic)], env=env)
         if pid.exists():
@@ -189,6 +206,35 @@ def main() -> int:
         subprocess.run([sys.executable, str(WINDOW), "to", "2", str(fid)], env=env, timeout=15)
         time.sleep(0.8)
         check(ws_of("by-rule") == 2, f"the menu's Move to workspace 2 (now on {ws_of('by-rule')})")
+        if ours:                         # the title bar's buttons (D-111): our own Sway build
+            msg("workspace number 2")
+            time.sleep(0.5)
+
+            def slot(app, i):            # 0 minimise, 1 maximise, 2 close: the middle of its square
+                n = wins()[app]
+                r, h = n["rect"], n["deco_rect"]["height"]
+                return int(r["x"] + r["width"] - (3 - i) * h + h / 2), int(r["y"] - h / 2)
+            before = wins()["by-rule"]["rect"]
+            mouse(*slot("by-rule", 1), "--click")
+            big = wins()["by-rule"]["rect"]
+            check(big["width"] > 1100 and big["height"] > 550, f"□ fills the screen's free room ({big['width']}×{big['height']})")
+            mouse(*slot("by-rule", 1), "--click")
+            back = wins()["by-rule"]["rect"]
+            check(abs(back["x"] - before["x"]) <= 2 and abs(back["y"] - before["y"]) <= 2 and abs(back["width"] - before["width"]) <= 4,
+                  f"□ again puts it back ({back['x']},{back['y']} {back['width']}×{back['height']} vs {before['x']},{before['y']} {before['width']}×{before['height']})")
+            n = wins()["by-rule"]
+            x, y = n["rect"]["x"] + 60, n["rect"]["y"] - n["deco_rect"]["height"] // 2
+            mouse(x, y, "--drag", x + 80, y + 40)
+            moved = wins()["by-rule"]["rect"]
+            check((moved["x"] - n["rect"]["x"], moved["y"] - n["rect"]["y"]) == (80, 40), "a drag beside the buttons still moves it")
+            mouse(*slot("by-rule", 0), "--click")
+            check(wins()["by-rule"]["scratch"], "─ tucks it away")
+            msg('[app_id="by-rule"] scratchpad show')
+            time.sleep(0.5)
+            mouse(*slot("by-rule", 2), "--click")
+            time.sleep(0.5)
+            check("by-rule" not in wins(), "✕ closes it")
+            check(sway.poll() is None, "our Sway is still running")
     finally:
         for p in procs:
             if p.poll() is None:

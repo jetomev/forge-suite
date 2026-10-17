@@ -8,6 +8,9 @@
     hypeforge-window menu           the title bar's right click: the window menu, by the window
     hypeforge-window ACTION ID      what the menu's entries do, to window ID (Sway's con_id):
                                       float · tile · fullscreen · sticky · tuck · close · to N (workspace N)
+    hypeforge-window maximize [ID]  the title bar's □ button (our own Sway build, D-111): a floating window
+                                    fills its screen's free room (under the bar, inside the gaps); again,
+                                    it goes back where it was. No ID: the window in use (the click focused it)
 
 On the title bar (sway/config): a left drag moves the window (Sway's own), a middle click tucks it away
 (our minimise, D-82), a right click opens the menu. Apps that draw their own bar (GNOME's, Claude
@@ -33,6 +36,7 @@ PIDFILE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-window.pi
 # and the bench, 10-17): they get ours. Every Forge app runs in Alacritty, whatever its window's name.
 DRAWS_NONE = {"alacritty", "foot", "kitty", "wezterm-gui"}
 SCRATCH = "__i3_scratch"
+MAXED = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-maximized.json"   # id → where it was
 
 
 def borders() -> tuple[str, str]:
@@ -95,6 +99,7 @@ def watch() -> int:
     if fixes:
         control.run(*fixes)
     print("hypeforge-window: floating windows get the title bar")
+    fallback_notice()
     try:
         while True:
             kind, event = events.receive()
@@ -137,6 +142,70 @@ def menu() -> int:
     os.execv(str(PANEL), [str(PANEL), "windowmenu", "--con", str(con["id"])])
 
 
+def gap() -> int:
+    base = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config")
+    try:
+        m = re.search(r"^gaps inner\s+(\d+)", (base / "hypeforge/theme/sway.conf").read_text(), re.M)
+        return int(m.group(1)) if m else 10
+    except OSError:
+        return 10
+
+
+def workspace_rect(tree: dict, con_id: int) -> dict | None:
+    for output in tree.get("nodes", []):
+        for ws in output.get("nodes", []):
+            if ws.get("type") == "workspace" and any(w.get("id") == con_id for w in windows(ws)):
+                return ws["rect"]                    # the screen's free room: the bar's strip left out
+    return None
+
+
+def maximize(con_id: int | None = None) -> bool:
+    sway = Sway()
+    tree = sway.ask(GET_TREE)
+    con = next((w for w in windows(tree) if w.get("id") == con_id), None) if con_id else focused(tree)
+    if not con:
+        return False
+    try:
+        saved = json.loads(MAXED.read_text())
+    except (OSError, ValueError):
+        saved = {}
+    key = str(con["id"])
+    deco = (con.get("deco_rect") or {}).get("height") or 0
+    if key in saved:                                  # back where it was
+        r = saved.pop(key)
+        # Sway resizes a floating window around its middle: resize first, then put it in place
+        cmds = [f"[con_id={con['id']}] resize set {r['width']} {r['height']}",
+                f"[con_id={con['id']}] move absolute position {r['x']} {r['y']}"]
+    else:
+        area = workspace_rect(tree, con["id"])
+        if not area:
+            return False
+        # "resize set" and "move position" count the title bar (bench 10-17): the window as a whole
+        saved[key] = {"x": con["rect"]["x"], "y": con["rect"]["y"] - deco,
+                      "width": con["rect"]["width"], "height": con["rect"]["height"] + deco}
+        g = gap()
+        cmds = [f"[con_id={con['id']}] floating enable",
+                f"[con_id={con['id']}] resize set {area['width'] - 2 * g} {area['height'] - 2 * g}",
+                f"[con_id={con['id']}] move absolute position {area['x'] + g} {area['y'] + g}"]
+    MAXED.write_text(json.dumps(saved))
+    reply = sway.run(*cmds)
+    return all(r.get("success") for r in reply)
+
+
+def fallback_notice():
+    """The buttons' login fell back to the system's Sway (hypeforge-session): say so, once a login."""
+    why = os.environ.get("HYPEFORGE_SWAY_FALLBACK")
+    if not why:
+        return
+    have, _, want = why.partition(":")
+    import subprocess
+    body = (f"Sway was updated to {want}; our build is for {have}." if have != "none" else
+            "hypeForge's own Sway isn't built yet.") + \
+        "\nEverything else works. Rebuild: hypeforge/sway-hypeforge/build.py"
+    subprocess.run(["notify-send", "-a", "hypeForge", "-i", "dialog-information",
+                    "Title bar buttons are off for now", body])
+
+
 COMMANDS = {
     "float": "floating enable",
     "tile": "floating disable",
@@ -172,6 +241,8 @@ def main() -> int:
         return watch()
     if a == ["menu"]:
         return menu()
+    if a and a[0] == "maximize" and (len(a) == 1 or (len(a) == 2 and a[1].isdigit())):
+        return 0 if maximize(int(a[1]) if len(a) == 2 else None) else 1
     if len(a) == 2 and a[0] in COMMANDS and a[1].isdigit():
         return 0 if act(a[0], int(a[1])) else 1
     if len(a) == 3 and a[0] == "to" and a[1].isdigit() and a[2].isdigit():

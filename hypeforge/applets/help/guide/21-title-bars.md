@@ -22,6 +22,13 @@ On a floating window's title bar:
 Tiled windows move as before: **Win + left mouse button** drags them in the grid, **Win + right mouse
 button** resizes. **Win + Shift + Space** floats a window or puts it back.
 
+## The buttons (the "Sway (hypeForge buttons)" login)
+
+On hypeForge's own Sway build, a floating window's title bar also has **─ □ ✕** at its right:
+**─** tucks it away, **□** fills the screen (click again: back where it was), **✕** closes it. If Sway
+was updated and our build is out of date, that login starts the normal Sway instead — everything
+works, the buttons are off, and a notification says so until it's rebuilt.
+
 ## Good to know
 
 - A window that floats by itself (a dialog, a window rule, the menu, the keys) gets the title bar

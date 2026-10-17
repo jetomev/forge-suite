@@ -1,0 +1,13 @@
+#!/bin/sh
+# The "Sway (hypeForge buttons)" login (D-111, Javier 2026-10-17: "whenever sway updates, it does not
+# brake our system"). hypeForge's own Sway build (title bar buttons) runs only when it is the same Sway
+# version as the system's and starts at all; otherwise the system's Sway runs, the buttons are off, and
+# hypeforge-window says so once (HYPEFORGE_SWAY_FALLBACK). Rebuild: sway-hypeforge/build.py
+ours="$HOME/.local/opt/sway-hypeforge/current/bin/sway"
+want=$(sway --version 2>/dev/null | sed -n 's/^sway version \([0-9.]*\).*/\1/p')
+have=$("$ours" --version 2>/dev/null | sed -n 's/^sway version \([0-9.]*\).*/\1/p')
+if [ -n "$want" ] && [ "$have" = "$want" ]; then
+    exec "$ours" --unsupported-gpu -c "$HOME/.config/sway/config-buttons" "$@"
+fi
+export HYPEFORGE_SWAY_FALLBACK="${have:-none}:${want:-?}"
+exec sway --unsupported-gpu "$@"
