@@ -14,7 +14,7 @@
 - [x] **Javier's second run** — 10-13, inside Settings (D-11: the first picture shows by itself, the sharp preview in Settings; F-74 #99 fixed)
 
 ## Phase 2 · More layers (Javier: "popups, icons, fonts, and other")
-- [x] **D-12 (10-17): the Rice also lists the other styles' drawn pictures** (Circuit board, Mountains, Planet and stars, Ribbons, Shards, Sky and clouds) before the solid colour, drawn in the colours in use; only the wallpaper changes. Tests 50. **Javier's test** next
+- [x] **D-12 (10-17): the Rice also lists the other styles' drawn pictures** (Circuit board, Mountains, Planet and stars, Ribbons, Shards, Sky and clouds) before the solid colour, drawn in the colours in use; only the wallpaper changes. Tests 50. **Javier: "it works wonders. pass"** (10-17; he changed the colours too and the picture followed)
 - [ ] Corners: straight · rounded · the style's own (`hypeforge-theme corners`, D-81), and the bar's separately from the windows' (idea, 10-10)
 - [x] **Wallpaper page (D-6, 10-11):** source (theme's own · KognogOS Tier Aware / Arch Distro · my pictures · solid), fit (fill · fit · stretch · center · tile), folder + Make Folder (n), picture, half-block preview; hypeForge D-93 makes the pictures. **D-7: the preview at full quality** over the terminal (overlay.py, our own, Javier's pick; overlay-bench 13/13). Javier's run (10-11 night): folders should be browsable, every picture visible → D-8
 - [x] **The Wallpaper page redesigned (D-8, Javier 2026-10-11 night; built 2026-10-13):** Source = the folder in use + **Browse (b)** (a pop-up: Enter into a folder, Backspace up, a typed path, jumps to Home · Pictures · the KognogOS wallpapers, **Use This Folder (u)**) · **Images** = every picture in it, Enter picks → the preview below (✓ on screen, ● picked) · **Fit Style** in plain names, each explained · **Apply Background (F10)** on the page. **D-9** settles the open points: the theme's own, the KognogOS backgrounds and the solid colour are the first place in Browse, "The theme's pictures"; the changes bar is the Theme Picker's. Tests 42 (two deliberate breaks caught), overlay bench 15/15 (the Browse pop-up and the Fit Style list both hide the sharp preview)
@@ -25,6 +25,8 @@
 - [ ] **NEXT:** the next look pages (corners D-81, pop-ups, icons, fonts), the quick-switch tray icon; nightForge 1.1 (#82) in the themeForge batch
 - [ ] Pop-ups, icons, fonts — each its own page
 - [ ] The quick-switch tray icon (D-78)
+
+- [ ] Idea (10-17, from Javier's question): when the generator changes, drop the older copy of the same picture at once instead of waiting for the 40-picture cap (today: 3 copies of Tier Aware in Mocha, 2 files from the 10-10 review no code makes)
 
 ## Phase 3 · Release
 - [x] **What the package needs** written down: `docs/PACKAGING.md`, kept honest by `tests/test_needs.py` (seen failing with Pillow left out)
