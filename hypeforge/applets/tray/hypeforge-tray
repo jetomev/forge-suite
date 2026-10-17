@@ -99,8 +99,13 @@ def run() -> int:
 
     watcher = hfsni.Watcher(changed)
     loop = GLib.MainLoop()
+    try:                                  # GLib 2.80+: the Unix signals moved to GLibUnix
+        from gi.repository import GLibUnix
+        add_signal = GLibUnix.signal_add
+    except ImportError:
+        add_signal = GLib.unix_signal_add
     for sig in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
-        GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, sig, lambda *_: (loop.quit(), False)[1])
+        add_signal(GLib.PRIORITY_DEFAULT, sig, lambda *_: (loop.quit(), False)[1])
     GLib.timeout_add(1500, lambda: (rebuild(), False)[1])
     print("hypeforge-tray: the tray is up (waiting for the watcher's name if another program holds it)")
     try:

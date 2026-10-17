@@ -25,6 +25,7 @@ ap.add_argument("--title", default="Dropbox")
 ap.add_argument("--icon", default="folder")
 ap.add_argument("--clicks")
 ap.add_argument("--pixmap", action="store_true", help="send the icon as pixels instead of a name (like Electron apps)")
+ap.add_argument("--never-register", action="store_true", help="never register (like Insync after the watcher changes hands)")
 a = ap.parse_args()
 
 ITEM_XML = """<node><interface name="org.kde.StatusNotifierItem">
@@ -91,6 +92,8 @@ name = f"org.kde.StatusNotifierItem-{os.getpid()}-1"
 
 
 def register():
+    if a.never_register:
+        return False
     try:
         conn.call_sync("org.kde.StatusNotifierWatcher", "/StatusNotifierWatcher", "org.kde.StatusNotifierWatcher",
                        "RegisterStatusNotifierItem", GLib.Variant("(s)", (name,)), None, Gio.DBusCallFlags.NONE, 2000, None)

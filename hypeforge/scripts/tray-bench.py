@@ -98,7 +98,12 @@ def main() -> int:
         def call(*args, timeout=10):
             return subprocess.run(list(args), env=env, capture_output=True, text=True, timeout=timeout)
 
-        # the tray, then two apps: a named icon (Dropbox's menu shape), and pixels (like Claude)
+        # an app already up that never registers (Insync, 10-17), then the tray, then two apps that do: a named
+        # icon (Dropbox's menu shape), and pixels (like Claude)
+        shy = subprocess.Popen([sys.executable, str(FAKE), "--id", "insync-fake", "--title", "Shy App", "--never-register"],
+                               env=env, stdout=log, stderr=log)
+        procs.append(shy)
+        time.sleep(1)
         procs.append(subprocess.Popen([sys.executable, str(TRAY), "run"], env=env, stdout=log, stderr=log))
         time.sleep(1.2)
         dropbox = subprocess.Popen([sys.executable, str(FAKE), "--clicks", str(clicks), "--icon", "folder"],
@@ -112,10 +117,11 @@ def main() -> int:
         owner = call("busctl", "--user", "status", "org.kde.StatusNotifierWatcher").stdout
         items = call("busctl", "--user", "get-property", "org.kde.StatusNotifierWatcher", "/StatusNotifierWatcher",
                      "org.kde.StatusNotifierWatcher", "RegisteredStatusNotifierItems").stdout
-        check("hypeforge-tray" in owner and items.startswith("as 2"),
-              f"the watcher is hypeForge's tray and lists both apps ({items.strip()[:60]})")
+        check("hypeforge-tray" in owner and items.startswith("as 3"),
+              f"the watcher is hypeForge's tray and lists all three apps ({items.strip()[:60]})")
         slots = json.loads((run / "hypeforge-tray/slots.json").read_text())
-        check(len(slots) == 2 and all(s.get("picture") and Path(s["picture"]).is_file() for s in slots),
+        check(any(s["id"] == "insync-fake" for s in slots), "the app that never registered was taken in anyway")
+        check(len(slots) == 3 and all(s.get("picture") and Path(s["picture"]).is_file() for s in slots),
               f"a picture for each: {[Path(s.get('picture') or '-').name for s in slots]}")
         px = next((s for s in slots if s["id"] == "electron-fake"), {})
         check(Path(px.get("picture", "")).name.startswith("slot-") and Path(px["picture"]).is_file(),
@@ -165,7 +171,7 @@ def main() -> int:
         pixels.terminate()
         time.sleep(1.5)
         left = json.loads((run / "hypeforge-tray/slots.json").read_text())
-        check(len(left) == 1 and left[0]["id"].startswith("dropbox"), f"an app that quits leaves the bar ({len(left)} left)")
+        check(len(left) == 2 and not any(s["id"] == "electron-fake" for s in left), f"an app that quits leaves the bar ({len(left)} left)")
     finally:
         for p in procs:
             if p.poll() is None:

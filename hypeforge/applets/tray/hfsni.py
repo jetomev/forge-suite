@@ -78,7 +78,27 @@ class Watcher:
         if self.reg is None:
             self.reg = conn.register_object(WATCHER_PATH, self.node.interfaces[0], self._call, self._get, None)
         conn.emit_signal(None, WATCHER_PATH, WATCHER, "StatusNotifierHostRegistered", None)
+        self.adopt()
         self.on_change()
+
+    def adopt(self):
+        """Tray apps already up when the watcher changes hands: most register again with the new one, some
+        (Insync, 2026-10-17) only ever register once, at their own start. Their icon is still on the bus
+        under the standard's name, so it is taken in without waiting for them."""
+        try:
+            names = self.conn.call_sync("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+                                        "ListNames", None, GLib.VariantType("(as)"), Gio.DBusCallFlags.NONE, 2000,
+                                        None).unpack()[0]
+        except GLib.Error:
+            return
+        for name in names:
+            if name.startswith(("org.kde.StatusNotifierItem-", "org.freedesktop.StatusNotifierItem-")):
+                entry = f"{name}/StatusNotifierItem"
+                if entry not in self.items:
+                    self.items.append(entry)
+                    self.conn.emit_signal(None, WATCHER_PATH, WATCHER, "StatusNotifierItemRegistered",
+                                          GLib.Variant("(s)", (entry,)))
+                    self._watch_item(entry)
 
     def _lost(self, _conn, _name):
         self.owned = False
