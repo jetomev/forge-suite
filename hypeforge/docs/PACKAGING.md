@@ -32,7 +32,7 @@ aren't listed.*
 | grim | screenshots | (program) |
 | slurp | picking an area for a screenshot | (program) |
 | swappy | editing a screenshot | (program) |
-| libnotify | messages from the applets (notify-send) | (program) |
+| libnotify | messages from the applets, and the watcher's crash notice (#54) (notify-send) | (program) |
 | networkmanager | network (nmcli) | (program) |
 | networkmanager-dmenu | the network list | (program) |
 | wireplumber | volume (wpctl) | (program) |

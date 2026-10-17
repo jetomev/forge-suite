@@ -5,6 +5,11 @@
 
 ---
 
+## 2026-10-17
+
+### D-100 · Every login applet runs under a watcher that says when it crashes (Claude, from #54 — Javier: "then #54")
+F-47 (#43): the Workspaces applet crashed at every login for three days and nobody saw it; the only trace was a traceback in sddm's session log. Now Sway starts every login applet through `applets/common/hypeforge-watch <name> <command>`, and the look command starts a style's applets the same way. The watcher keeps the applet's output in `~/.local/state/hypeforge/logs/<name>.log` (the run before in `.log.1`), and when the applet ends with an error status or a crash signal it sends **one notification that stays until clicked**: the applet in plain words, the last line of its error, and its log. Exit 0 (a job done, a copy already running) and a stop on purpose (SIGTERM, SIGINT, SIGHUP: a style switch, a logout) say nothing. It **tells, it never restarts**: a restart loop would hide the very crash it should show. The applet stays its own process, so its pid file, the style switch's stop and its reloads (SIGHUP) work as before; every applet finds its other copy by pid file, never by searching command lines, so the watcher's own command line can't fool it. The notification is tried again for half a minute in case the notification service is still starting at login. Tests `tests/test_watch.py` (7, seen failing first; one caught a real bug: the error line was read after the end marker); hidden bench (applets through the watcher) OK; switch 16/16, theme 30/30, taskbar 6/6, bar 10/10.
+
 ## 2026-10-13
 
 ### D-99 · The brightness keys work on a desktop too: the monitors' own control when there is no backlight (Claude, from F-71 #94)

@@ -142,8 +142,12 @@ def main():
         if sorted(outs) != sorted(SCREENS):
             print("the bench's screens are", outs, "— expected", SCREENS)
             return 1
+        # through the watcher, as a login starts them since #54 (2026-10-17); its logs stay in the bench
+        env["XDG_STATE_HOME"] = str(base / "state")
         for applet in ("workspaces/hypeforge-workspaces", "placement/hypeforge-placement"):
-            procs.append(subprocess.Popen([sys.executable, str(APPLETS / applet)], env=env, stdout=log, stderr=log))
+            name = applet.split("/")[0]
+            procs.append(subprocess.Popen([str(APPLETS / "common/hypeforge-watch"), name, sys.executable, str(APPLETS / applet)],
+                                          env=env, stdout=log, stderr=log))
         print(f"bench up: 3 fake screens; waiting {QUIET} s (the applet keeps still right after login)")
         time.sleep(QUIET)
         # Like a terminal on the left screen of Daily: that screen has the keyboard

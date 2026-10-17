@@ -18,6 +18,14 @@ counts the ones you have not looked at yet.
 - **On the Rice** the bell sits right after the time, in the middle of the bar: a click on the
   date, the time or the bell opens that same pop-up (right click on the bell: Do Not Disturb).
 
+## When a part of the desktop breaks
+
+Every piece hypeForge starts at login (the bar, Workspaces, Window Placement, the launcher's sections, the
+clipboard…) is watched. If one of them stops with an error, a notification says so at once and stays until you
+click it: **"hypeForge: Workspaces stopped"**, the last line of what went wrong, and where its log is
+(`~/.local/state/hypeforge/logs/`). Nothing is restarted on its own; logging out and in again starts it fresh.
+A style switch or logging out never counts as a crash.
+
 ## Settings
 
 The pop-ups' look, place and timing: `~/.config/mako/config` (mako draws them). A

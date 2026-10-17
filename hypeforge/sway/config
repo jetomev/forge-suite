@@ -70,8 +70,8 @@ focus_follows_mouse no
 exec mako
 
 # hypeForge: clipboard history (applet 9, Javier 2026-10-05) — every copy is kept by cliphist
-exec wl-paste --type text --watch ~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard store
-exec wl-paste --type image --watch ~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard store
+exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch clipboard wl-paste --type text --watch ~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard store
+exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch clipboard-images wl-paste --type image --watch ~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard store
 
 exec swayidle -w \
          timeout 1800 'gtklock -d' \
@@ -311,7 +311,7 @@ bindsym $mod+r mode "resize"
 # the active one coloured (Javier, 2026-10-04). Its settings: ~/.config/sway/waybar/.
 # Started directly (no bar { } block, so Sway's own bar stays off).
 # One bar per screen, each told which screen it's on, so its pop-ups open there (10-10).
-exec ~/Programs/forge-suite/hypeforge/applets/bar/hypeforge-bar start
+exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch bar ~/Programs/forge-suite/hypeforge/applets/bar/hypeforge-bar start
 
 include /etc/sway/config.d/*
 
@@ -337,18 +337,18 @@ exec /usr/lib/pam_kwallet_init
 # tray icon (D-4). Installed command first, then the Forge Suite folder; plain wlsunset only if neither.
 exec sh -c 'if command -v nightforge >/dev/null; then exec nightforge start; elif [ -x "$HOME/Programs/forge-suite/nightforge/main.py" ]; then exec "$HOME/Programs/forge-suite/nightforge/main.py" start; elif command -v wlsunset >/dev/null; then exec wlsunset -l 25.77 -L -80.19; fi'
 # hypeForge: start-at-login apps from ~/.config/autostart (applet 10; Sway does not read that folder)
-exec ~/Programs/forge-suite/hypeforge/applets/autostart/hypeforge-autostart
+exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch autostart ~/Programs/forge-suite/hypeforge/applets/autostart/hypeforge-autostart
 # hypeForge: the Favorites menu on the bar (applet 4 writes it)
-exec ~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections bar
-exec ~/Programs/forge-suite/hypeforge/applets/workspaces/hypeforge-workspaces
+exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch sections ~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections bar
+exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch workspaces ~/Programs/forge-suite/hypeforge/applets/workspaces/hypeforge-workspaces
 
 # hypeForge: applet 2 · Window Placement (D-50) — new windows fill a fixed order of spots.
 # Switched on and off in ~/.config/hypeforge/applets/placement.toml (enabled = true/false).
-exec ~/Programs/forge-suite/hypeforge/applets/placement/hypeforge-placement
+exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch placement ~/Programs/forge-suite/hypeforge/applets/placement/hypeforge-placement
 # A click on a window tucks away the floating windows covering it, like minimised (Javier, 2026-10-10;
 # Sway always draws floating windows above tiled ones). Its taskbar icon or Win + − brings it back.
-exec ~/Programs/forge-suite/hypeforge/applets/tuck/hypeforge-tuck
+exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch tuck ~/Programs/forge-suite/hypeforge/applets/tuck/hypeforge-tuck
 
 # hypeForge: applet 5 · Window Rules (D-53) — which windows float instead of taking a spot.
 # Switched on and off in ~/.config/hypeforge/applets/rules.toml (enabled = true/false).
-exec ~/Programs/forge-suite/hypeforge/applets/rules/hypeforge-rules
+exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch rules ~/Programs/forge-suite/hypeforge/applets/rules/hypeforge-rules

@@ -1,0 +1,137 @@
+#!/usr/bin/env python3
+"""hypeForge's applet watcher (#54, 2026-10-17): an applet that crashes says so.
+
+    hypeforge-watch <name> <command> [args...]
+
+Sway starts every login applet through this. It runs the applet, keeps its output in
+``~/.local/state/hypeforge/logs/<name>.log`` (the previous run in ``<name>.log.1``), and
+waits. When the applet ends:
+
+* **exit 0** — it finished its job, or found a copy already running: nothing to say.
+* **stopped on purpose** (SIGTERM, SIGINT, SIGHUP — a style switch, a logout): nothing to say.
+* **anything else** (an error status, a crash signal): one notification that stays until it is
+  clicked — the applet's name in plain words, the last line of its error, and its log — so a
+  broken applet is seen the same minute, not found three days later (F-47, #43).
+
+The applet is its own process: its pid file is its own, so a style switch stops it exactly as
+before. A notification that can't be sent yet (the notifications service still starting at login)
+is tried again for half a minute.
+"""
+
+from __future__ import annotations
+
+import os
+import shutil
+import signal
+import subprocess
+import sys
+import time
+from datetime import datetime
+from pathlib import Path
+
+NAMES = {   # the applet as Javier knows it
+    "bar": "the bar", "autostart": "Start-at-login apps", "sections": "App Sections (the launcher)",
+    "workspaces": "Workspaces", "placement": "Window Placement", "tuck": "Tuck (hidden windows)",
+    "rules": "Window Rules", "taskbar": "the Taskbar", "menubar": "the Menu bar", "panels": "the pop-up panels",
+    "notifications": "the bell", "clipboard": "the clipboard", "clipboard-images": "the clipboard (pictures)",
+}
+ON_PURPOSE = {signal.SIGTERM, signal.SIGINT, signal.SIGHUP}
+KEEP_BYTES = 512 * 1024
+NOTIFY_FOR = 30.0
+
+
+def log_dir() -> Path:
+    base = Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state")
+    return base / "hypeforge/logs"
+
+
+def open_log(name: str):
+    d = log_dir()
+    d.mkdir(parents=True, exist_ok=True)
+    path = d / f"{name}.log"
+    if path.exists() and path.stat().st_size > KEEP_BYTES:
+        path.replace(d / f"{name}.log.1")
+    f = path.open("ab", buffering=0)
+    f.write(f"\n=== {datetime.now():%Y-%m-%d %H:%M:%S} · started: {' '.join(sys.argv[2:])}\n".encode())
+    return path, f
+
+
+def last_error(path: Path) -> str:
+    """The line that says what went wrong: a traceback's last line, else the last line written."""
+    try:
+        lines = [l.strip() for l in path.read_text(errors="replace").splitlines() if l.strip()]
+    except OSError:
+        return ""
+    starts = [i for i, l in enumerate(lines) if l.startswith("=== ") and "· started:" in l]
+    run = [l for l in (lines[starts[-1]:] if starts else lines) if not l.startswith("=== ")]   # this run, no markers
+    for l in reversed(run):
+        if not l.startswith((" ", "File ", "Traceback")) and ("Error" in l or "error" in l or ":" in l):
+            return l[:200]
+    return run[-1][:200] if run else ""
+
+
+def how_it_ended(code: int) -> str | None:
+    """None when there is nothing to say; otherwise the end in plain words."""
+    if code == 0:
+        return None
+    if code < 0:
+        sig = signal.Signals(-code)
+        if sig in ON_PURPOSE:
+            return None
+        return f"it crashed ({sig.name})"
+    return f"it stopped with an error (status {code})"
+
+
+def notify(title: str, body: str) -> bool:
+    tool = shutil.which("notify-send")
+    if not tool:
+        return False
+    end = time.time() + NOTIFY_FOR
+    while True:
+        try:
+            r = subprocess.run([tool, "--urgency=critical", "--app-name=hypeForge", "--icon=dialog-warning",
+                                title, body], capture_output=True, timeout=10)
+            if r.returncode == 0:
+                return True
+        except (OSError, subprocess.SubprocessError):
+            pass
+        if time.time() > end:
+            return False
+        time.sleep(1.0)
+
+
+def main(argv: list[str]) -> int:
+    if len(argv) < 2:
+        print(__doc__.strip().split("\n\n")[1], file=sys.stderr)
+        return 2
+    name, cmd = argv[0], argv[1:]
+    path, log = open_log(name)
+    try:
+        child = subprocess.Popen(cmd, stdout=log, stderr=log, stdin=subprocess.DEVNULL)
+    except OSError as e:
+        log.write(f"could not start: {e}\n".encode())
+        code = 127
+    else:
+        # a stop meant for the watcher reaches the applet, and still counts as on purpose
+        for sig in ON_PURPOSE:
+            signal.signal(sig, lambda s, _f: child.send_signal(s))
+        while True:
+            try:
+                code = child.wait()
+                break
+            except InterruptedError:
+                continue
+    ended = how_it_ended(code)
+    log.write(f"=== {datetime.now():%Y-%m-%d %H:%M:%S} · ended: status {code}\n".encode())
+    log.close()
+    if ended:
+        shown = str(path).replace(str(Path.home()), "~")
+        err = last_error(path)
+        word = NAMES.get(name, name)
+        notify(f"hypeForge: {word[0].upper() + word[1:]} stopped",
+               f"{ended}." + (f"\n{err}" if err else "") + f"\nIts log: {shown}")
+    return 0 if code == 0 or not ended else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

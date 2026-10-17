@@ -279,7 +279,10 @@ def sway_applets(style: dict) -> str:
     them (e.g. "taskbar"). exec_always runs at login and at every reload; each applet keeps one
     copy, so a reload never doubles it. A style that needs none says so."""
     names = style_applets(style)
-    lines = [f"exec_always {REPO / 'applets' / n / ('hypeforge-' + n)}" for n in names
+    # #54: through the watcher, so a style applet that crashes says so (a second copy at a reload ends
+    # with status 0, which the watcher keeps quiet about)
+    watch = REPO / "applets/common/hypeforge-watch"
+    lines = [f"exec_always {watch} {n} {REPO / 'applets' / n / ('hypeforge-' + n)}" for n in names
              if (REPO / "applets" / n / f"hypeforge-{n}").is_file()]
     return "\n".join(["# the applets this style's bar needs"] + lines) if lines else "# this style's bar needs no extra applets"
 
