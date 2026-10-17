@@ -24,9 +24,9 @@ import cairo  # noqa: E402
 from gi.repository import Pango, PangoCairo  # noqa: E402
 
 PIECES = [  # (CSS selector, what it shows)
-    ("#custom-nightlight", "\U000f0594"), ("#disk", " 48%"), ("#memory", "\U000f061a 14%"),
+    ("#custom-nightlight", "\U000f0594"), ("#custom-disk", " 48%"), ("#memory", "\U000f061a 14%"),
     ("#custom-temperature", "\U000f050f 54°"), ("#custom-gpu", "\U000f08ae 4%"), ("#cpu", "\U000f035b 3%"),
-    ("#custom-clipboard", "\U000f0147"), ("#custom-printers", "\U000f042a"), ("#custom-drives", "\U000f0553"),
+    ("#custom-clipboard", "\U000f0147"), ("#custom-printers", "\U000f042a"),
     ("#bluetooth", "\U000f00af"), ("#network", "\U000f0200"), ("#wireplumber", "\U000f057e"),
     ("#custom-power-panel", "\U000f0425"),
 ]

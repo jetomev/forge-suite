@@ -11,7 +11,8 @@ lines"), in the style's and theme's own look:
              bar up to its own "hot" mark, the processor's and card's graph, and every fan
   - memory   in use / cache / free as one bar, the graph, the swap, the apps holding the most
   - disk     every disk in plain words (System, Boot, a USB drive by its name), how full, how much is
-             free; a click opens it in the file manager; the drives not opened, in one line
+             free; a click opens it in the file manager; Eject on a USB drive, Mount on one plugged in
+             but not mounted (it took the USB icon's job, 2026-10-17); the internal drives not opened
 
 The numbers move while it is open (every two seconds). The sampler (`applets/system/hypeforge-system
 run`) keeps the last three minutes, so the graphs are drawn from the first moment.
@@ -567,11 +568,26 @@ class View:
 
     # ---- disks
     def _disk(self):
-        self.list = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        self.add(line(), self.list, gap=0)
+        self.drives_tool = drives_applet()
+        self.disk_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.add(self.disk_box, gap=0)
+        self.footer(self.button("Free up space (nogForge)", "alacritty --class nogforge -e nogforge"))
+        self.updates.append(self._disk_update)
+        self._disk_fill()
+
+    def _disk_fill(self):
+        """Every disk with its space, and the USB drives' actions (2026-10-17, Javier: the disk work "shouldn't
+        replace the mount/umount icon?"): Eject on a USB drive mounted for the desktop, Mount on one plugged
+        in but not mounted. A row's click opens it. Drawn again after every action."""
+        for child in self.disk_box.get_children():
+            self.disk_box.remove(child)
         self.disk_rows: dict[str, tuple] = {}
+        self.disk_at = 0.0
         info = hfsys.block_info()
         self.disks = hfsys.disks(info=info)
+        usb = {d[0]: d for d in self.drives_tool.drives()} if self.drives_tool else {}
+        rows = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        self.add(line(), rows, gap=0, into=self.disk_box)
         for d in self.disks:
             b = Gtk.Button()
             b.get_style_context().add_class("hf-sys-row")
@@ -590,20 +606,57 @@ class View:
             meter = Meter(self.paint, 7)
             col.pack_start(meter, False, False, 0)
             where = {"usb": "USB drive", "hdd": "hard drive", "nvme": "NVMe drive", "ssd": "solid-state drive"}[d["kind"]]
-            col.pack_start(label(f"{d['where']} · {d['model'] or where} · {where}" if d["model"] else f"{d['where']} · {where}",
-                                 "hf-sys-sub"), False, False, 0)
+            drive = usb.get(d["device"])
+            if drive and not self.drives_tool.ejectable(drive):
+                where += " · mounted by the system"          # e.g. /mnt/exodos: shown, never offered for Eject
+            col.pack_start(label(f"{d['where']} · {where}", "hf-sys-sub"), False, False, 0)   # the model: in the tip
+            if d["model"]:
+                b.set_tooltip_text(f"{d['model']}\nOpen {d['where']} in the file manager")
             box.pack_start(col, True, True, 0)
             b.add(box)
-            self.list.pack_start(b, False, False, 0)
+            row = Gtk.Box(spacing=4)
+            row.pack_start(b, True, True, 0)
+            if drive and self.drives_tool.ejectable(drive):
+                row.pack_end(self.drive_button("Eject", drive, self.drives_tool.eject), False, False, 0)
+            rows.pack_start(row, False, False, 0)
             self.disk_rows[d["device"]] = (free, meter)
+        waiting = [d for d in usb.values() if not d[3]]      # plugged in, not mounted
+        if waiting:
+            plugged = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+            for drive in waiting:
+                row = Gtk.Box(spacing=10)
+                glyph = label(GLYPH["usb"], "hf-sys-glyph", ellipsize=False)
+                row.pack_start(glyph, False, False, 0)
+                words = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1)
+                words.set_valign(Gtk.Align.CENTER)
+                words.pack_start(label(drive[1], "hf-sys-name"), False, False, 0)
+                words.pack_start(label(f"{drive[2]} · not mounted", "hf-sys-sub"), False, False, 0)
+                row.pack_start(words, True, True, 0)
+                row.pack_end(self.drive_button("Mount", drive, self.drives_tool.mount), False, False, 0)
+                plugged.pack_start(row, False, False, 0)
+            self.add(line(), section("USB drives"), plugged, gap=0, into=self.disk_box)
         if info["idle"]:
-            names = ", ".join(f"{i['model'] or 'a drive'} ({hfsys.size(i['size'])})" for i in info["idle"])
-            idle = Gtk.Label(label=f"Not opened: {names}", xalign=0, wrap=True, max_width_chars=48)
-            idle.get_style_context().add_class("hf-sys-sub")
-            self.add(line(), idle, gap=0)
-        self.footer(self.button("Free up space (nogForge)", "alacritty --class nogforge -e nogforge"))
-        self.updates.append(self._disk_update)
-        self.disk_at = 0.0
+            inside = [i for i in info["idle"] if i["tran"] != "usb"]
+            if inside:
+                names = ", ".join(f"{i['model'] or 'a drive'} ({hfsys.size(i['size'])})" for i in inside)
+                idle = Gtk.Label(label=f"Not opened (inside the computer, never mounted from here): {names}",
+                                 xalign=0, wrap=True, max_width_chars=48)
+                idle.get_style_context().add_class("hf-sys-sub")
+                self.add(line(), idle, gap=0, into=self.disk_box)
+        self.disk_box.show_all()
+        self._disk_update({})
+
+    def drive_button(self, words: str, drive, action) -> Gtk.Button:
+        b = Gtk.Button(label=words)
+        b.set_valign(Gtk.Align.CENTER)
+        b.set_tooltip_text(f"{words} {drive[1]}")
+
+        def clicked(_b):
+            b.set_sensitive(False)
+            b.set_label("…")
+            GLib.idle_add(lambda: (action(drive), self._disk_fill(), False)[2])
+        b.connect("clicked", clicked)
+        return b
 
     def _disk_update(self, _n: dict):
         if time.time() - self.disk_at < 10 and self.disk_at:
@@ -646,6 +699,22 @@ class View:
         else:
             self.sampler.sample(with_gpu=self.part in ("gpu", "temp"))
         return self.update()
+
+
+def drives_applet():
+    """The USB drives applet (applets/drives/): its list, and its Eject and Mount — one place for those rules
+    (only what was mounted for the desktop is ever ejected; internal drives are never mounted)."""
+    import importlib.machinery
+    import importlib.util
+    path = panelkit.APPLETS / "drives/hypeforge-drives"
+    try:
+        loader = importlib.machinery.SourceFileLoader("hypeforge_drives", str(path))
+        spec = importlib.util.spec_from_loader("hypeforge_drives", loader)
+        mod = importlib.util.module_from_spec(spec)
+        loader.exec_module(mod)
+        return mod
+    except Exception:
+        return None
 
 
 def build(look: panelkit.Look, args) -> panelkit.Panel:

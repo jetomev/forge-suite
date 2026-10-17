@@ -2,8 +2,12 @@
 """hypeForge applet 11 · USB drives on the bar (Javier, 2026-10-05).
 
     hypeforge-drives bar       the drives icon, as Waybar JSON (the count of USB drives mounted)
-    hypeforge-drives menu      the list: Open (Midnight Commander) · Eject · Mount, per drive
+    hypeforge-drives menu      the plain list: Open (Midnight Commander) · Eject · Mount, per drive
     hypeforge-drives changed   tell the bar to redraw (udiskie's event hook runs this)
+
+Since 2026-10-17 (Javier: "the system disk work… shouldn't replace the mount/umount icon?") a click on
+the bar opens the **Disks** pop-up (`hypeforge-panel system --part disk`), which ejects and mounts
+through `eject()` and `mount()` below; the Rice's disk piece took this icon's place.
 
 udiskie mounts USB drives and discs by itself (~/.config/udiskie/config.yml): internal drives
 are never touched, NTFS is mounted read-only. This applet only ever ejects what is mounted under
@@ -28,7 +32,11 @@ OURS = "/run/media/"
 
 
 def drives():
-    """USB / hot-plugged partitions with a filesystem: (device, label, fstype, mountpoint, disk)."""
+    """USB / hot-plugged partitions with a filesystem: (device, label, fstype, mountpoint, disk).
+    HYPEFORGE_DRIVES_FAKE (a preview's or a test's JSON list of those) stands in for the real ones."""
+    fake = os.environ.get("HYPEFORGE_DRIVES_FAKE")
+    if fake:
+        return [tuple(d) for d in json.loads(Path(fake).read_text())]
     out = subprocess.run(["lsblk", "-J", "-o", "NAME,PATH,LABEL,FSTYPE,MOUNTPOINT,HOTPLUG,TRAN,SIZE"],
                          capture_output=True, text=True).stdout
     found = []
@@ -54,18 +62,44 @@ def notify(title, body=""):
     subprocess.run(["notify-send", "-a", "Drives", "-i", "drive-removable-media", title, body])
 
 
+def ejectable(drive) -> bool:
+    """Only what was mounted for the desktop (under /run/media) is ever offered for Eject."""
+    return bool(drive[3]) and drive[3].startswith(OURS)
+
+
+def eject(drive) -> bool:
+    """Unmount it and switch it off; a notification says it can be unplugged, or that it is busy."""
+    dev, label, _fs, _mnt, disk = drive
+    if subprocess.run(["udisksctl", "unmount", "-b", dev], capture_output=True).returncode != 0:
+        notify(f"{label} is busy", "Close what is using it, then eject again.")
+        return False
+    subprocess.run(["udisksctl", "power-off", "-b", disk], capture_output=True)
+    notify(f"{label} can be unplugged")
+    changed()
+    return True
+
+
+def mount(drive) -> bool:
+    dev, label = drive[0], drive[1]
+    if subprocess.run(["udisksctl", "mount", "-b", dev], capture_output=True).returncode != 0:
+        notify(f"{label} could not be mounted")
+        return False
+    changed()
+    return True
+
+
 def menu():
     if hfmenu.close_open("drives"):  # a second click closes it
         return
     items = []  # (text, action, drive)
     for dev, label, fstype, mnt, disk in drives():
         if mnt and mnt.startswith(OURS):
-            items.append((f"Open   {label}", "open", (dev, label, mnt, disk)))
-            items.append((f"Eject   {label}", "eject", (dev, label, mnt, disk)))
+            items.append((f"Open   {label}", "open", (dev, label, fstype, mnt, disk)))
+            items.append((f"Eject   {label}", "eject", (dev, label, fstype, mnt, disk)))
         elif mnt:
             items.append((f"{label} — a system mount ({mnt})", None, None))
         else:
-            items.append((f"Mount   {label}", "mount", (dev, label, mnt, disk)))
+            items.append((f"Mount   {label}", "mount", (dev, label, fstype, mnt, disk)))
     lines = [t for t, _, _ in items] or ["No USB drives plugged in"]
     cmd = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", "Drives  ",
            "--anchor", "top-right", "--x-margin", "4", "--y-margin", "4", "--width", "48",
@@ -77,19 +111,11 @@ def menu():
         return
     _, action, drive = items[int(picked)]
     if action == "open":
-        subprocess.run(["swaymsg", "exec", f"alacritty -e mc '{drive[2]}'"])
+        subprocess.run(["swaymsg", "exec", f"alacritty -e mc '{drive[3]}'"])
     elif action == "eject":
-        dev, label, mnt, disk = drive
-        if subprocess.run(["udisksctl", "unmount", "-b", dev], capture_output=True).returncode != 0:
-            notify(f"{label} is busy", "Close what is using it, then eject again.")
-            return
-        subprocess.run(["udisksctl", "power-off", "-b", disk], capture_output=True)
-        notify(f"{label} can be unplugged")
+        eject(drive)
     elif action == "mount":
-        dev, label, _, _ = drive
-        if subprocess.run(["udisksctl", "mount", "-b", dev], capture_output=True).returncode != 0:
-            notify(f"{label} could not be mounted")
-    changed()
+        mount(drive)
 
 
 def changed():

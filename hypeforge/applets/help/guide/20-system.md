@@ -20,7 +20,9 @@ red when *anything* inside is hot.
   - **Memory:** in use, cache (memory the computer gives back the moment an app needs it) and free,
     the swap (memory kept on the disk), and the apps holding the most.
   - **Disks:** each disk in plain words (System, Boot, a USB drive by its name) and how much is free.
-    **Click one** to open it; **Free up space** opens nogForge.
+    **Click one** to open it; **Eject** on a USB drive, **Mount** on one plugged in but not mounted
+    (see *USB drives*); **Free up space** opens nogForge. The disk piece turns blue while a USB
+    drive is mounted.
 - **Right click** the processor or memory: **btop**, every program, in the terminal.
 - **Esc**, a click outside, or the same piece again closes it; another piece swaps it.
 

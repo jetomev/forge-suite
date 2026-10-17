@@ -4,8 +4,10 @@ Temperature, Memory, Disks Space. Let's make them pretty too!!!").
 
     hypeforge-system run            the sampler, started at login: a reading every 2 seconds, the last
                                     three minutes kept for the pop-ups' graphs
-    hypeforge-system bar gpu|temp   the bar's graphics card and temperature pieces (Waybar's own
-                                    readers draw the processor, memory and disk pieces)
+    hypeforge-system bar gpu|temp|disk
+                                    the bar's graphics card, temperature and disk pieces (Waybar's
+                                    own readers draw the processor and memory); the disk piece lights
+                                    up while a USB drive is mounted (it took the USB icon's job)
     hypeforge-system panel PART [where]
                                     a click: PART's pop-up (cpu, gpu, temp, memory, disk)
 
@@ -110,7 +112,39 @@ def bar(part: str) -> int:
         say({"text": f"{GLYPH['temp']} {shown:{FIG}>2.0f}°", "tooltip": "\n".join(tip),
                           "class": hot["state"] if hot else "ok", "percentage": int(shown)})
         return 0
+    if part == "disk":
+        st = os.statvfs("/")
+        total, free = st.f_blocks * st.f_frsize, st.f_bavail * st.f_frsize
+        used = total - st.f_bfree * st.f_frsize
+        pct = 100.0 * used / (used + free) if used + free else 0.0
+        tip = [f"The system disk: {hfsys.size(free)} free of {hfsys.size(total)}"]
+        classes = [hfsys.level(pct, *hfsys.FULL)]
+        usb = usb_drives()
+        mounted = [d for d in usb if d[3]]
+        for d in usb:
+            tip.append(f"{d[1]}: {d[3] or 'plugged in, not mounted'}")
+        if any((d[3] or "").startswith("/run/media/") for d in mounted):
+            classes.append("has")                      # the USB icon's blue, now on the disk piece
+        tip.append("Click: every disk · eject · mount")
+        say({"text": f"{GLYPH['disk']} {pct:{FIG}>2.0f}%", "tooltip": "\n".join(tip), "class": classes,
+             "percentage": int(pct)})
+        return 0
     sys.exit(__doc__)
+
+
+def usb_drives() -> list:
+    """The USB drives applet's own list (applets/drives/), so both read drives the same way."""
+    import importlib.machinery
+    import importlib.util
+    path = HERE.parent / "drives/hypeforge-drives"
+    try:
+        loader = importlib.machinery.SourceFileLoader("hypeforge_drives", str(path))
+        spec = importlib.util.spec_from_loader("hypeforge_drives", loader)
+        mod = importlib.util.module_from_spec(spec)
+        loader.exec_module(mod)
+        return mod.drives()
+    except Exception:
+        return []
 
 
 def panel(part: str, where: list[str]) -> int:
@@ -121,7 +155,7 @@ def main() -> int:
     a = sys.argv[1:]
     if a == ["run"]:
         return run()
-    if len(a) == 2 and a[0] == "bar" and a[1] in ("gpu", "temp"):
+    if len(a) == 2 and a[0] == "bar" and a[1] in ("gpu", "temp", "disk"):
         return bar(a[1])
     if len(a) >= 2 and a[0] == "panel" and a[1] in PARTS:
         return panel(a[1], a[2:])

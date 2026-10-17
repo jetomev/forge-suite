@@ -96,7 +96,8 @@
     "return-type": "json",
     "interval": 60,
     "signal": 11,
-    "on-click": "~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives menu"
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part disk {popup}",
+    "on-click-right": "~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives menu"
   },
   "custom/printers": {
     "exec": "~/Programs/forge-suite/hypeforge/applets/printers/hypeforge-printers bar",
@@ -191,14 +192,16 @@
     "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part memory {popup}",
     "on-click-right": "alacritty --class hf-btop -e btop"
   },
-  "disk": {
-    "path": "/",
-    "format": " {percentage_used: >2}%",
+  // the disk piece is hypeForge's (2026-10-17): it also lights up while a USB drive is mounted — it took the
+  // USB icon's job on the Rice; signal 11 is the one udiskie's hook sends when a drive comes or goes
+  "custom/disk": {
+    "exec": "~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system bar disk",
+    "return-type": "json",
     "interval": 60,
-    "states": { "warning": 80, "critical": 92 },
-    "tooltip-format": "The system disk: {free} free of {total}\nClick: every disk",
+    "signal": 11,
     "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part disk {popup}"
   },
+
   "mpris": {
     "format": "{player_icon} {dynamic}",
     "format-paused": "{status_icon} {dynamic}",

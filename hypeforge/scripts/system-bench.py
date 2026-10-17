@@ -31,7 +31,7 @@ import panelkit  # noqa: E402
 
 BAR = HERE / "applets/bar/hypeforge-bar"
 SYSTEM = HERE / "applets/system/hypeforge-system"
-PARTS = {"cpu": "cpu", "custom/gpu": "gpu", "custom/temperature": "temp", "memory": "memory", "disk": "disk"}
+PARTS = {"cpu": "cpu", "custom/gpu": "gpu", "custom/temperature": "temp", "memory": "memory", "custom/disk": "disk"}
 
 
 def main() -> int:
@@ -106,7 +106,7 @@ def main() -> int:
         check(all(m in mine["modules-right"] for m in PARTS), f"all five pieces on the Rice bar: {[m for m in PARTS if m in mine['modules-right']]}")
         check(all("--edges" in mine[m]["on-click"] and f"HYPEFORGE_OUTPUT={third};" in mine[m]["on-click"] for m in PARTS),
               "each click carries the bar's pop-up place and its screen")
-        for part in ("gpu", "temp"):
+        for part in ("gpu", "temp", "disk"):
             out = call(sys.executable, str(SYSTEM), "bar", part).stdout
             piece = json.loads(out)
             check({"text", "tooltip", "class"} <= set(piece), f"the {part} piece answers in Waybar's form: {piece['text']!r}")

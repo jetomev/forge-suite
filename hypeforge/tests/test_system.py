@@ -175,8 +175,10 @@ class BarPieces(unittest.TestCase):
         temps = [{"group": "Processor", "name": "Processor", "temp": 9.0, "warm": 75, "hot": 90, "state": "ok"}]
         self.assertTrue(self.piece("temp", {"time": time.time(), "gpu": None, "temps": temps})["text"].endswith(" \u20079°"))
         text = (REPO / "sway/waybar/modules.jsonc").read_text()
-        for field, width in (("usage", 3), ("percentage", 2), ("percentage_used", 2)):
+        for field, width in (("usage", 3), ("percentage", 2)):
             self.assertIn(f"{{{field}:\u2007>{width}}}%", text, field)
+        disk = subprocess.run([sys.executable, str(self.TOOL), "bar", "disk"], capture_output=True, text=True, timeout=10).stdout
+        self.assertRegex(json.loads(disk)["text"], r" [\u2007\d]{2,}%$")
 
     def test_every_piece_opens_its_own_pop_up_from_the_bar_place(self):
         sys.path.insert(0, str(REPO / "tests"))
@@ -189,10 +191,11 @@ class BarPieces(unittest.TestCase):
         loader.exec_module(hb)
         shared = json.loads(hb.strip_comments(text))
         for module, part in (("cpu", "cpu"), ("custom/gpu", "gpu"), ("custom/temperature", "temp"),
-                             ("memory", "memory"), ("disk", "disk")):
+                             ("memory", "memory"), ("custom/disk", "disk"), ("custom/drives", "disk")):
             self.assertIn(f"hypeforge-panel system --part {part} {{popup}}", shared[module]["on-click"], module)
             if module.startswith("custom/"):
                 self.assertIn("interval", shared[module], f"{module}: a piece without an interval runs once")
+        self.assertEqual(shared["custom/disk"]["signal"], 11, "udiskie's hook redraws the disk piece when a drive comes")
 
 
 if __name__ == "__main__":

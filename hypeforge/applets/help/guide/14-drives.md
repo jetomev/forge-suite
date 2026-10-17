@@ -1,20 +1,23 @@
 # USB drives (applet 11)
 
 **What it does:** plug in a USB stick, a USB disk or a disc, and it is **mounted by itself**
-(opened for use) — a notification says so, and the **drives icon** on the bar (left of
-Bluetooth) turns blue with the count of drives mounted.
+(opened for use) — a notification says so. On the **Linux rice** look, the **disk piece** on the
+bar (the drive icon with a percentage) turns blue while a USB drive is mounted; on the other looks,
+the **drives icon** (left of Bluetooth) does, with the count of drives mounted.
 
 ## How to use it
 
-**Click the drives icon** for the list, under the bar's right end:
+**Click the disk piece** (or the drives icon) for the **Disks** pop-up, under the bar:
 
-- **Open** — the drive in Midnight Commander.
-- **Eject** — safely unmount it and switch it off; a notification says when it can be
-  unplugged (or that something is still using it).
-- **Mount** — for a drive that is plugged in but not mounted.
+- **Click a disk** — it opens in the file manager.
+- **Eject** — on a USB drive: safely unmount it and switch it off; a notification says when it
+  can be unplugged (or that something is still using it).
+- **Mount** — under **USB drives**, for a drive that is plugged in but not mounted.
+- Every disk shows how much room is free (see *The system on the bar*).
 
-Drives the system mounts on its own (like the **Backup** drive at `/mnt/backup`) show in the
-list but are never offered for Eject.
+Drives the system mounts on its own (like the **exodos** drive at `/mnt/exodos`) show as
+"mounted by the system" and are never offered for Eject. A **right click on the drives icon**
+still opens the plain list (Open in Midnight Commander · Eject · Mount).
 
 ## Safety
 

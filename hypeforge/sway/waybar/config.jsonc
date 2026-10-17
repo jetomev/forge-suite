@@ -52,7 +52,8 @@
     "return-type": "json",
     "interval": 60,
     "signal": 11,
-    "on-click": "~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives menu"
+    "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part disk {popup}",
+    "on-click-right": "~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives menu"
   },
   // The printer (applet 12, Javier 2026-10-07): grey idle, lit while printing with the job count,
   // red when stopped. Click = the jobs (cancel one), right click = Print Settings.
