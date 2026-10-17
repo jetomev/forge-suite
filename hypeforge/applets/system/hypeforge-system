@@ -26,6 +26,7 @@ sys.path.insert(0, str(HERE))
 PANEL = HERE.parent / "panels/hypeforge-panel"
 PIDFILE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-system.pid"
 PARTS = ("cpu", "gpu", "temp", "memory", "disk")
+FIG = "\u2007"           # a figure space: a digit's width, so a number never changes the piece's width
 GLYPH = {"cpu": "\U000f035b", "gpu": "\U000f08ae", "temp": "\U000f050f", "memory": "\U000f061a", "disk": "\U0000f0a0"}
 
 
@@ -87,7 +88,7 @@ def bar(part: str) -> int:
         if g.get("temp") is not None:
             tip.append(f"Temperature: {g['temp']:.0f} °C")
         tip.append("Click: more")
-        say({"text": f"{GLYPH['gpu']} {busy:.0f}%", "tooltip": "\n".join(tip),
+        say({"text": f"{GLYPH['gpu']} {busy:{FIG}>3.0f}%", "tooltip": "\n".join(tip),
                           "class": hfsys.level(busy, *hfsys.BUSY), "percentage": int(busy)})
         return 0
     if part == "temp":
@@ -106,7 +107,7 @@ def bar(part: str) -> int:
         if hot and hot["state"] != "ok":
             tip.insert(0, f"{hot['name']} is {'hot' if hot['state'] == 'critical' else 'warm'}: {hot['temp']:.0f} °C")
         tip.append("Click: every sensor and fan")
-        say({"text": f"{GLYPH['temp']} {shown:.0f}°", "tooltip": "\n".join(tip),
+        say({"text": f"{GLYPH['temp']} {shown:{FIG}>2.0f}°", "tooltip": "\n".join(tip),
                           "class": hot["state"] if hot else "ok", "percentage": int(shown)})
         return 0
     sys.exit(__doc__)

@@ -165,6 +165,19 @@ class BarPieces(unittest.TestCase):
         self.assertEqual(p["class"], "critical")         # …but red, because a drive is hot
         self.assertIn("A drive is hot", p["tooltip"])
 
+    def test_the_numbers_keep_their_width(self):
+        """Javier, 10-17: going from 9 % to 1x % moved the icons to the left and stretched the tray. Each
+        number is padded with figure spaces (a digit's width) to a fixed width."""
+        import time
+        for busy, text in ((5.0, "\u2007\u20075%"), (15.0, "\u200715%"), (100.0, "100%")):
+            g = {"name": "Card", "maker": "NVIDIA", "busy": busy, "mem_used": 0, "mem_total": 0, "temp": None}
+            self.assertTrue(self.piece("gpu", {"time": time.time(), "gpu": g, "temps": []})["text"].endswith(" " + text))
+        temps = [{"group": "Processor", "name": "Processor", "temp": 9.0, "warm": 75, "hot": 90, "state": "ok"}]
+        self.assertTrue(self.piece("temp", {"time": time.time(), "gpu": None, "temps": temps})["text"].endswith(" \u20079°"))
+        text = (REPO / "sway/waybar/modules.jsonc").read_text()
+        for field, width in (("usage", 3), ("percentage", 2), ("percentage_used", 2)):
+            self.assertIn(f"{{{field}:\u2007>{width}}}%", text, field)
+
     def test_every_piece_opens_its_own_pop_up_from_the_bar_place(self):
         sys.path.insert(0, str(REPO / "tests"))
         text = (REPO / "sway/waybar/modules.jsonc").read_text()
