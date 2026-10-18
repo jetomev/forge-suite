@@ -7,6 +7,15 @@ ours="$HOME/.local/opt/sway-hypeforge/current/bin/sway"
 want=$(sway --version 2>/dev/null | sed -n 's/^sway version \([0-9.]*\).*/\1/p')
 have=$("$ours" --version 2>/dev/null | sed -n 's/^sway version \([0-9.]*\).*/\1/p')
 if [ -n "$want" ] && [ "$have" = "$want" ]; then
+    # this login's own copy of the button lines: a later build may add lines this running build doesn't
+    # know, and a reload (every theme switch) would show them as errors (Javier's red bar, 2026-10-17).
+    # The copy includes ~/.config/sway/config itself, so the look still changes live.
+    # Taken from the repo (sway/config-buttons beside this folder), the lines that match the build just made.
+    run="${XDG_RUNTIME_DIR:-/tmp}"
+    lines="$(dirname "$(readlink -f "$0")")/../sway/config-buttons"
+    [ -f "$lines" ] || lines="$HOME/.config/sway/config-buttons"
+    cp "$lines" "$run/hypeforge-config-buttons" 2>/dev/null &&
+        exec "$ours" --unsupported-gpu -c "$run/hypeforge-config-buttons" "$@"
     exec "$ours" --unsupported-gpu -c "$HOME/.config/sway/config-buttons" "$@"
 fi
 export HYPEFORGE_SWAY_FALLBACK="${have:-none}:${want:-?}"

@@ -30,7 +30,11 @@ class Session(unittest.TestCase):
         path.chmod(0o755)
 
     def start(self) -> str:
-        env = dict(os.environ, HOME=str(self.home), PATH=f"{self.bin}:/usr/bin:/bin")
+        env = dict(os.environ, HOME=str(self.home), PATH=f"{self.bin}:/usr/bin:/bin",
+                   XDG_RUNTIME_DIR=str(self.home / "run"))
+        (self.home / "run").mkdir(exist_ok=True)
+        (self.home / ".config/sway").mkdir(parents=True, exist_ok=True)
+        (self.home / ".config/sway/config-buttons").write_text("include ~/.config/sway/config\ntitlebar_buttons floating\n")
         env.pop("HYPEFORGE_SWAY_FALLBACK", None)
         subprocess.run(["sh", str(SESSION)], env=env, timeout=10)
         return self.ran.read_text()
@@ -43,7 +47,10 @@ class Session(unittest.TestCase):
         self.fake(self.ours(), "1.12-d474619 (Oct 17 2026, branch 'master')")
         ran = self.start()
         self.assertIn(str(self.ours()), ran)
-        self.assertIn("config-buttons", ran)
+        self.assertIn(str(self.home / "run/hypeforge-config-buttons"), ran,
+                      "this login's own copy: a later build's new lines never reach the running one")
+        self.assertEqual((self.home / "run/hypeforge-config-buttons").read_text(),
+                         (REPO / "sway/config-buttons").read_text(), "the repo's lines, matching the build")
         self.assertTrue(ran.rstrip().endswith("fallback="), ran)
 
     def test_a_sway_update_falls_back_to_the_systems_sway(self):
