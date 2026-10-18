@@ -32,6 +32,16 @@ class Watcher(unittest.TestCase):
         self.sway.bind(str(self.dir / "sway.sock"))
         self.sway.listen(8)
         self.env["SWAYSOCK"] = str(self.dir / "sway.sock")
+        import threading
+
+        def answer():                    # like Sway: every knock is answered (and hung up)
+            while True:
+                try:
+                    conn, _ = self.sway.accept()
+                    conn.close()
+                except OSError:
+                    return
+        threading.Thread(target=answer, daemon=True).start()
 
     def tearDown(self):
         self.sway.close()
@@ -65,6 +75,14 @@ class Watcher(unittest.TestCase):
         self.watch(sys.executable, "-c", "raise ConnectionError('Sway closed the connection')")
         self.assertFalse(self.sent.exists(), "no alert when the session itself ended")
         self.assertIn("the session ended", (self.dir / "state/hypeforge/logs/workspaces.log").read_text())
+
+    def test_an_applet_that_loses_the_screen_just_before_sway_goes_says_nothing(self):
+        """Javier's second log-out, 10-17: the clipboard's helpers end with "wl_display_dispatch: Broken pipe"
+        a moment BEFORE Sway's socket closes — Sway still answered, and two alerts came."""
+        import threading
+        threading.Timer(1.0, self.sway.close).start()
+        self.watch(sys.executable, "-c", "import sys; sys.exit('wl_display_dispatch: Broken pipe')")
+        self.assertFalse(self.sent.exists(), "Sway gone a second later: the session ended, no alert")
 
     def test_a_clean_end_says_nothing(self):
         p = self.watch(sys.executable, "-c", "print('already running')")

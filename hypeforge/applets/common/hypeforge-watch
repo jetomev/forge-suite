@@ -84,24 +84,31 @@ def how_it_ended(code: int) -> str | None:
     return f"it stopped with an error (status {code})"
 
 
-def sway_alive(grace: float = 1.0) -> bool:
-    """Is the Sway this applet belongs to still running? At a log-out every applet loses Sway and ends with
-    an error — that is the session ending, not a crash (Javier, 2026-10-17: a row of sticky alerts at the
-    next login). Without SWAYSOCK there is nothing to ask: assume it is."""
+def sway_alive(settle: float = 3.0) -> bool:
+    """Is the Sway this applet belongs to still running, and staying? At a log-out every applet loses Sway
+    and ends with an error — that is the session ending, not a crash (Javier, 2026-10-17: a row of sticky
+    alerts at the next login). The clipboard's helpers hang on to the screen connection, which closes a
+    moment BEFORE Sway's own socket does (his second log-out: two alerts still came), so Sway must still
+    answer after `settle` seconds. Without SWAYSOCK there is nothing to ask: assume it is."""
     path = os.environ.get("SWAYSOCK")
     if not path:
         return True
-    end = time.time() + grace
-    while True:
+
+    def answers() -> bool:
         try:
             with socket.socket(socket.AF_UNIX) as s:
                 s.settimeout(0.5)
                 s.connect(path)
             return True
         except OSError:
-            if time.time() > end:
-                return False
-            time.sleep(0.2)
+            return False
+
+    end = time.time() + settle
+    while time.time() < end:
+        if not answers():
+            return False
+        time.sleep(0.25)
+    return answers()
 
 
 def notify(title: str, body: str) -> bool:
