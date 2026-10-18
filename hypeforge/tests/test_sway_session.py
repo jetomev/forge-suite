@@ -1,4 +1,4 @@
-"""The "Sway (hypeForge buttons)" login never breaks on a Sway update (Javier, 2026-10-17: "whenever sway
+"""The "Sway (hypeForge)" login never breaks on a Sway update (Javier, 2026-10-17: "whenever sway
 updates, it does not brake our system"): our build runs only when it is the system's Sway version and
 starts; otherwise the system's Sway runs and the buttons are off (D-111)."""
 

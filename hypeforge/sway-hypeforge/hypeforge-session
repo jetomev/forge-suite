@@ -1,5 +1,5 @@
 #!/bin/sh
-# The "Sway (hypeForge buttons)" login (D-111, Javier 2026-10-17: "whenever sway updates, it does not
+# The "Sway (hypeForge)" login (D-111, Javier 2026-10-17: "whenever sway updates, it does not
 # brake our system"). hypeForge's own Sway build (title bar buttons) runs only when it is the same Sway
 # version as the system's and starts at all; otherwise the system's Sway runs, the buttons are off, and
 # hypeforge-window says so once (HYPEFORGE_SWAY_FALLBACK). Rebuild: sway-hypeforge/build.py

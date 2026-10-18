@@ -108,7 +108,7 @@ def main() -> int:
     tmp.replace(current)
     out = subprocess.run([prefix / "bin/sway", "--version"], capture_output=True, text=True).stdout.strip()
     say(f"  installed: {prefix} ({out})")
-    say(f"\nDone. hypeForge's Sway {version} is ready; the next \"Sway (hypeForge buttons)\" login uses it.")
+    say(f"\nDone. hypeForge's Sway {version} is ready; the next \"Sway (hypeForge)\" login uses it.")
     say(f"Logs: {log_path}\n\nOK")
     return 0
 
