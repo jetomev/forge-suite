@@ -7,7 +7,7 @@
 
 ## 2026-10-17
 
-### D-114 · hypeForge's own Sway is the everyday login; a safe mode beside it; the FX login removed (Javier)
+### D-114 · hypeForge's own Sway is the everyday login (proven in a clean VM the same night: built from nothing, bench 29/29, the login's fallbacks — `testing/`); a safe mode beside it; the FX login removed (Javier)
 *"Ok, are we implementing the window top bar in hypeForge?"* — after his tests passed ("It worked, this time, in all themes"), then *"we can remove also hypeForge FX"*. At 23:15 (one password, his sudoForge box): **"Sway (hypeForge)" now starts `sway-hypeforge/hypeforge-session`** (our build with the title bar buttons; the system's Sway by itself when the build is out of date, with a notification); **"Sway (hypeForge safe mode)"** is new — always the stock Sway with the full setup, no buttons, the guaranteed way in; the **"Sway (hypeForge buttons)"** test entry and the **"Sway (hypeForge FX)"** login are gone (the SwayFX build stays in `~/.local/opt/swayfx`, and the look still writes `fx.conf`; nothing starts it). Entry files in the repo: `sway-hypeforge/hypeforge.desktop`, `hypeforge-safe.desktop`. Plasma and plain "Sway" untouched.
 
 ### D-113 · The bar is fast: 1.8 s → 0.35 s to appear, 1.7 s → 0.26 s back after a restyle (Javier)

@@ -26,5 +26,8 @@ patches Sway to draw them and act on their clicks, dragging untouched.*
 
 ## Testing
 
+`login-test.sh` (in a test VM, as its user — it refuses on a real desktop): the login starter three ways — versions match · a Sway update · our build broken. Proven on a clean KognogOS VM 2026-10-17 (`testing/`).
+
+
 `scripts/titlebar-bench.py --ours` — our build on a hidden screen with the real button lines: drawn,
 close · minimise · maximise and back, a drag beside them still moves the window.
