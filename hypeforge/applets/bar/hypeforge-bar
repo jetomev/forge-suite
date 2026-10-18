@@ -38,6 +38,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "..
 from hfsway import Sway  # noqa: E402
 
 GET_OUTPUTS = 3
+REPO = Path(os.path.realpath(__file__)).parent.parent.parent      # hypeforge/
 CONF = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "sway/waybar"
 RUN = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-bar"
 PIDS = RUN / "pids.json"
@@ -151,6 +152,19 @@ def main_screen(outputs: list[dict]) -> str | None:
     return row[(len(row) - 1) // 2]["name"] if row else None
 
 
+def tray_size() -> int | None:
+    """The tray apps' picture size for the style in use (its style.toml [bar] tray_size; Javier, 2026-10-17:
+    on the other styles the 20 px pictures beside their 13-16 px icons "look terrible"). None: as defined."""
+    import tomllib
+    base = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config")
+    try:
+        style = tomllib.loads((base / "hypeforge/theme/state.toml").read_text()).get("style", "classic")
+        bar = tomllib.loads((REPO / "styles" / style / "style.toml").read_text()).get("bar", {})
+        return int(bar["tray_size"]) if "tray_size" in bar else None
+    except (OSError, ValueError, KeyError, tomllib.TOMLDecodeError):
+        return None
+
+
 OWN_TRAY = "group/tray"          # hypeForge's tray in place of Waybar's (modules.jsonc, 2026-10-17)
 
 
@@ -182,7 +196,10 @@ def bars_for(text: str, outputs: list[str], main: str | None = None) -> list[dic
             mine.pop(ONLY, None)
             mine["output"] = name
             places = popup_places(full)
+            size = tray_size()
             for module in placed(full):
+                if size and module.startswith("image#tray-") and isinstance(full.get(module), dict):
+                    mine[module] = dict(full[module], size=size)
                 for key in CLICKS:
                     cmd = full.get(module, {}).get(key) if isinstance(full.get(module), dict) else None
                     if isinstance(cmd, str) and cmd:

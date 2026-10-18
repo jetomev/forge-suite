@@ -24,6 +24,11 @@
   "modules-right": [
     "group/hidden-icons",
     "custom/nightlight",
+    "custom/disk",
+    "memory",
+    "custom/temperature",
+    "custom/gpu",
+    "cpu",
     "group/quick",
     "group/datetime"
   ],
@@ -46,7 +51,6 @@
       "custom/chevron",
       "tray",
       "custom/clipboard",
-      "custom/drives",
       "custom/printers"
     ],
     "drawer": {

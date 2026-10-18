@@ -96,3 +96,12 @@ mono    = "JetBrainsMono Nerd Font"
 [wallpaper]
 topic = "shards"
 about = "shards"
+
+[bar]                            # the status pieces on the bar, one look (Javier, 2026-10-17: "inconsistent with icon size, separation, colors"); scripts/bar-spacing.py --style kde writes them into the stylesheet
+font             = "Noto Sans"
+icon_size        = 16            # px, every status icon (Symbols Nerd Font)
+tray_size        = 22            # px, the tray apps' pictures (the bar's image pieces)
+gap              = 10            # px between the drawn parts of two pieces
+tray_gap         = 10            # px between two tray icons
+icon_colour      = "@hf_text"
+edge             = 0            # px at the island's two ends (0: the style's own)

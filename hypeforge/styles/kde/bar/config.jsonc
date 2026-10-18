@@ -26,8 +26,12 @@
   "modules-right": [
     "tray",
     "custom/nightlight",
+    "custom/disk",
+    "memory",
+    "custom/temperature",
+    "custom/gpu",
+    "cpu",
     "custom/clipboard",
-    "custom/drives",
     "custom/printers",
     "group/quick",
     "group/datetime"

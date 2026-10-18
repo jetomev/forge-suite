@@ -81,6 +81,8 @@ Which package brings each font: [FONTS.md](FONTS.md).
 
 **The disk piece (D-109):** `custom/disk`, `@hf_new` while a USB drive is mounted (it took the drives icon's place on the Rice).
 
+**Every style's status pieces (D-112, 2026-10-17):** `[bar]` in each style.toml (font, icon_size, tray_size, gap, tray_gap, icon_colour, edge) → `scripts/bar-spacing.py --style S` writes them; the system pieces in the Rice's order on every style, the disk piece instead of the USB icon.
+
 **Spacing on the Rice's right island (D-107, 2026-10-17):** every drawn part **10 px** apart, 12 px at the island's ends — the paddings written by `scripts/bar-spacing.py --gap 10 --tray-gap 10` from each icon's own empty sides (Pango), between its `bar-spacing` marks in `styles/rice/bar/style.css`; check with `scripts/bar-gaps.py`. Tray icons trimmed by the tray, 10 px apart (`#tray .tray-N image { margin-left }`, pieces 2–10). An icon and its number: one space (4–6 px); the number itself right-aligned in a fixed width of figure spaces — 3 digits processor and card, 2 memory, disk, temperature (D-108), so nothing moves.
 
 **The tray's icons (D-106, 2026-10-17):** a one-colour app icon (white, grey or black) is repainted in **`@hf_tray_icon`** — the style's own icon colour: Rice `module_icon`, macOS / Mac OS 9 `menubar_text`, Classic `bar_fg_dim`, the others `bar_fg` (`tray_icon` role, `role:` names another role) — drawn at 40 px, shading kept; a full-colour icon stays as the app sent it. The night light's moon by day: the other icons' colour on every style.

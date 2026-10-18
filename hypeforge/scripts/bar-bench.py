@@ -123,15 +123,26 @@ def main() -> int:
         for _ in range(5):
             os.kill(again, signal.SIGUSR2)
             time.sleep(1.5)
+        # the bars come back a few seconds after a restyle (each system piece reads once before the bar draws,
+        # 10-17): wait up to 8 s for them
+        for _ in range(16):
+            if alive(again) and all(bar_seen(o) for o in outs):
+                break
+            time.sleep(0.5)
+        if not alive(again):             # keep Waybar's last words (a restart later overwrites its log)
+            log.write("--- waybar's log at the failed restyle ---\n" + (run / "hypeforge-bar/waybar.log").read_text()[-3000:])
+            log.flush()
         check(alive(again) and all(bar_seen(o) for o in outs), "five restyles in place: still running, on every screen")
 
-        before = [shot(o) for o in outs]
+        # the screens' middle only: the bars' own numbers (processor, memory…) change on every screen
+        mid = lambda o: shot(o, o["rect"]["y"] + 70, o["rect"]["height"] - 140)
+        before = [mid(o) for o in outs]
         third = outs[2]["name"]
         click = next(b for b in bars if b["output"] == third)["custom/emblem"]["on-click"]
         panel = subprocess.Popen(["sh", "-c", click], env=env, stdout=log, stderr=log)   # what Waybar runs
         procs.append(panel)
         time.sleep(3)
-        changed = [sum(a != b for a, b in zip(x, shot(o))) for x, o in zip(before, outs)]
+        changed = [sum(a != b for a, b in zip(x, mid(o))) for x, o in zip(before, outs)]
         check(changed[2] > 10000 and changed[0] < 1000 and changed[1] < 1000,
               f"screen 3's emblem click opens Kickoff on screen 3 only (changed bytes: {changed})")
         subprocess.run([sys.executable, str(HERE / "applets/panels/hypeforge-panel"), "kickoff"], env=env,
