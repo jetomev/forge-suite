@@ -1,0 +1,256 @@
+diff --git a/include/sway/commands.h b/include/sway/commands.h
+index 3c5106b..439ac65 100644
+--- a/include/sway/commands.h
++++ b/include/sway/commands.h
+@@ -189,6 +189,7 @@ sway_cmd cmd_tiling_drag;
+ sway_cmd cmd_tiling_drag_threshold;
+ sway_cmd cmd_title_align;
+ sway_cmd cmd_titlebar_button;
++sway_cmd cmd_titlebar_button_hover;
+ sway_cmd cmd_titlebar_buttons;
+ sway_cmd cmd_title_format;
+ sway_cmd cmd_titlebar_border_thickness;
+diff --git a/include/sway/config.h b/include/sway/config.h
+index 317759b..9874378 100644
+--- a/include/sway/config.h
++++ b/include/sway/config.h
+@@ -559,6 +559,10 @@ struct sway_config {
+ 	enum titlebar_buttons_mode titlebar_buttons;
+ 	char *titlebar_button_glyph[TITLEBAR_BUTTON_COUNT];
+ 	char *titlebar_button_command[TITLEBAR_BUTTON_COUNT];
++	// hypeForge (D-111, patch 2): the button under the pointer lights up; close in its own colours
++	bool titlebar_button_hover_set;
++	float titlebar_button_hover_bg[4], titlebar_button_hover_text[4];
++	float titlebar_button_close_bg[4], titlebar_button_close_text[4];
+ 
+ 	bool tiling_drag;
+ 	int tiling_drag_threshold;
+diff --git a/include/sway/tree/container.h b/include/sway/tree/container.h
+index baaf938..6d84454 100644
+--- a/include/sway/tree/container.h
++++ b/include/sway/tree/container.h
+@@ -89,6 +89,8 @@ struct sway_container {
+ 		struct sway_text_node *marks_text;
+ 		// hypeForge (D-111): minimise, maximise, close; NULL when the window shows none
+ 		struct sway_text_node *buttons[TITLEBAR_BUTTON_COUNT];
++		// hypeForge (patch 2): each button's square, lit while the pointer is on it
++		struct wlr_scene_rect *button_bg[TITLEBAR_BUTTON_COUNT];
+ 	} title_bar;
+ 
+ 	struct {
+@@ -195,6 +197,12 @@ void container_update_title_bar(struct sway_container *container);
+  */
+ int container_title_button_at(struct sway_container *con, double lx, double ly);
+ 
++/**
++ * hypeForge (patch 2): the title bar button under the pointer (NULL / -1: none). Lights it, and puts out
++ * the one lit before.
++ */
++void container_title_button_hover(struct sway_container *con, int which);
++
+ void container_update_marks(struct sway_container *container);
+ 
+ size_t parse_title_format(struct sway_container *container, char *buffer);
+diff --git a/sway/commands.c b/sway/commands.c
+index 5f1ce8e..b7c049e 100644
+--- a/sway/commands.c
++++ b/sway/commands.c
+@@ -91,6 +91,7 @@ static const struct cmd_handler handlers[] = {
+ 	{ "title_align", cmd_title_align },
+ 	{ "titlebar_border_thickness", cmd_titlebar_border_thickness },
+ 	{ "titlebar_button", cmd_titlebar_button },
++	{ "titlebar_button_hover", cmd_titlebar_button_hover },
+ 	{ "titlebar_buttons", cmd_titlebar_buttons },
+ 	{ "titlebar_padding", cmd_titlebar_padding },
+ 	{ "unbindcode", cmd_unbindcode },
+diff --git a/sway/commands/titlebar_buttons.c b/sway/commands/titlebar_buttons.c
+index 4b8ad7e..f428d8b 100644
+--- a/sway/commands/titlebar_buttons.c
++++ b/sway/commands/titlebar_buttons.c
+@@ -4,6 +4,8 @@
+ //       which windows show them (default none: Sway as it always was)
+ //   titlebar_button minimize|maximize|close <glyph> <command…>
+ //       a button's symbol and the Sway command its left click runs, on the window clicked
++//   titlebar_button_hover <background> <text> <close background> <close text>
++//       the button under the pointer lights up in these colours (#rrggbb[aa]); close in its own
+ 
+ #include <string.h>
+ #include "sway/commands.h"
+@@ -11,6 +13,7 @@
+ #include "sway/tree/container.h"
+ #include "sway/tree/root.h"
+ #include "stringop.h"
++#include "util.h"
+ 
+ static void arrange_title_bar_iterator(struct sway_container *con, void *data) {
+ 	container_update_title_bar(con);
+@@ -58,3 +61,24 @@ struct cmd_results *cmd_titlebar_button(int argc, char **argv) {
+ 	root_for_each_container(arrange_title_bar_iterator, NULL);
+ 	return cmd_results_new(CMD_SUCCESS, NULL);
+ }
++
++struct cmd_results *cmd_titlebar_button_hover(int argc, char **argv) {
++	struct cmd_results *error = NULL;
++	if ((error = checkarg(argc, "titlebar_button_hover", EXPECTED_EQUAL_TO, 4))) {
++		return error;
++	}
++	float *dest[4] = {
++		config->titlebar_button_hover_bg, config->titlebar_button_hover_text,
++		config->titlebar_button_close_bg, config->titlebar_button_close_text,
++	};
++	for (int i = 0; i < 4; ++i) {
++		uint32_t color;
++		if (!parse_color(argv[i], &color)) {
++			return cmd_results_new(CMD_INVALID,
++					"Invalid colour '%s' (titlebar_button_hover <bg> <text> <close bg> <close text>)", argv[i]);
++		}
++		color_to_rgba(dest[i], color);
++	}
++	config->titlebar_button_hover_set = true;
++	return cmd_results_new(CMD_SUCCESS, NULL);
++}
+diff --git a/sway/config.c b/sway/config.c
+index e689a11..f4d5632 100644
+--- a/sway/config.c
++++ b/sway/config.c
+@@ -287,6 +287,7 @@ static void config_defaults(struct sway_config *config) {
+ 	config->title_align = ALIGN_LEFT;
+ 	// hypeForge (D-111): off unless the config says `titlebar_buttons floating|all`
+ 	config->titlebar_buttons = TITLEBAR_BUTTONS_NONE;
++	config->titlebar_button_hover_set = false;
+ 	config->titlebar_button_glyph[TITLEBAR_BUTTON_MINIMIZE] = strdup("\u2013");
+ 	config->titlebar_button_glyph[TITLEBAR_BUTTON_MAXIMIZE] = strdup("\u25a1");
+ 	config->titlebar_button_glyph[TITLEBAR_BUTTON_CLOSE] = strdup("\u2715");
+diff --git a/sway/input/seatop_default.c b/sway/input/seatop_default.c
+index d1e05dd..4aef283 100644
+--- a/sway/input/seatop_default.c
++++ b/sway/input/seatop_default.c
+@@ -641,6 +641,12 @@ static void handle_pointer_motion(struct sway_seat *seat, uint32_t time_msec) {
+ 		wlr_seat_pointer_notify_clear_focus(seat->wlr_seat);
+ 	}
+ 
++	// hypeForge (patch 2): light the title bar button under the pointer
++	struct sway_container *hover = node && node->type == N_CONTAINER && !surface ?
++		node->sway_container : NULL;
++	container_title_button_hover(hover, hover ?
++		container_title_button_at(hover, cursor->cursor->x, cursor->cursor->y) : -1);
++
+ 	drag_icons_update_position(seat);
+ 
+ 	e->previous_node = node;
+diff --git a/sway/tree/container.c b/sway/tree/container.c
+index 9654c90..e1150ae 100644
+--- a/sway/tree/container.c
++++ b/sway/tree/container.c
+@@ -197,6 +197,51 @@ static void scene_rect_set_color(struct wlr_scene_rect *rect,
+ 	wlr_scene_rect_set_color(rect, premultiplied);
+ }
+ 
++// hypeForge (patch 2): the one title bar button the pointer is on, anywhere on the desktop
++static struct sway_container *title_hover_con = NULL;
++static int title_hover_which = -1;
++
++static void apply_title_button_colors(struct sway_container *con, struct border_colors *colors) {
++	for (int i = 0; i < TITLEBAR_BUTTON_COUNT; ++i) {
++		struct sway_text_node *node = con->title_bar.buttons[i];
++		if (!node) {
++			continue;
++		}
++		bool lit = config->titlebar_button_hover_set &&
++			title_hover_con == con && title_hover_which == i;
++		bool close = i == TITLEBAR_BUTTON_CLOSE;
++		float *bg = close ? config->titlebar_button_close_bg : config->titlebar_button_hover_bg;
++		float *fg = close ? config->titlebar_button_close_text : config->titlebar_button_hover_text;
++		if (con->title_bar.button_bg[i]) {
++			wlr_scene_node_set_enabled(&con->title_bar.button_bg[i]->node, lit);
++			if (lit) {
++				scene_rect_set_color(con->title_bar.button_bg[i], bg, con->alpha);
++			}
++		}
++		sway_text_node_set_color(node, lit ? fg : colors->text);
++		sway_text_node_set_background(node, lit ? bg : colors->background);
++	}
++}
++
++void container_title_button_hover(struct sway_container *con, int which) {
++	if (!con || which < 0) {
++		con = NULL;
++		which = -1;
++	}
++	if (title_hover_con == con && title_hover_which == which) {
++		return;
++	}
++	struct sway_container *before = title_hover_con;
++	title_hover_con = con;
++	title_hover_which = which;
++	if (before && before != con) {
++		apply_title_button_colors(before, container_get_current_colors(before));
++	}
++	if (con) {
++		apply_title_button_colors(con, container_get_current_colors(con));
++	}
++}
++
+ void container_update(struct sway_container *con) {
+ 	struct border_colors *colors = container_get_current_colors(con);
+ 	list_t *siblings = NULL;
+@@ -251,12 +296,7 @@ void container_update(struct sway_container *con) {
+ 		sway_text_node_set_background(con->title_bar.marks_text, colors->background);
+ 	}
+ 
+-	for (int i = 0; i < TITLEBAR_BUTTON_COUNT; ++i) {
+-		if (con->title_bar.buttons[i]) {
+-			sway_text_node_set_color(con->title_bar.buttons[i], colors->text);
+-			sway_text_node_set_background(con->title_bar.buttons[i], colors->background);
+-		}
+-	}
++	apply_title_button_colors(con, colors);
+ }
+ 
+ void container_update_itself_and_parents(struct sway_container *con) {
+@@ -305,6 +345,10 @@ static void destroy_title_buttons(struct sway_container *con) {
+ 			wlr_scene_node_destroy(con->title_bar.buttons[i]->node);
+ 			con->title_bar.buttons[i] = NULL;
+ 		}
++		if (con->title_bar.button_bg[i]) {
++			wlr_scene_node_destroy(&con->title_bar.button_bg[i]->node);
++			con->title_bar.button_bg[i] = NULL;
++		}
+ 	}
+ }
+ 
+@@ -351,12 +395,23 @@ void container_arrange_title_bar(struct sway_container *con) {
+ 		buttons_width = slot * TITLEBAR_BUTTON_COUNT;
+ 		for (int i = 0; i < TITLEBAR_BUTTON_COUNT; ++i) {
+ 			if (!con->title_bar.buttons[i]) {
++				// the hover square first, so it sits under the symbol
++				float clear[4] = {0, 0, 0, 0};
++				con->title_bar.button_bg[i] = wlr_scene_rect_create(con->title_bar.tree,
++					slot, height, clear);
++				if (con->title_bar.button_bg[i]) {
++					wlr_scene_node_set_enabled(&con->title_bar.button_bg[i]->node, false);
++				}
+ 				con->title_bar.buttons[i] = sway_text_node_create(con->title_bar.tree,
+ 					config->titlebar_button_glyph[i], colors->text, false);
+ 				sway_text_node_set_background(con->title_bar.buttons[i], colors->background);
+ 			}
+ 			struct sway_text_node *node = con->title_bar.buttons[i];
+ 			int slot_x = full_width - buttons_width + i * slot;
++			if (con->title_bar.button_bg[i]) {
++				wlr_scene_node_set_position(&con->title_bar.button_bg[i]->node, slot_x, 0);
++				wlr_scene_rect_set_size(con->title_bar.button_bg[i], slot, height);
++			}
+ 			sway_text_node_set_max_width(node, slot);
+ 			wlr_scene_node_set_position(node->node,
+ 				slot_x + ((slot - MIN(node->width, slot)) >> 1),
+@@ -551,6 +606,10 @@ void container_destroy(struct sway_container *con) {
+ }
+ 
+ void container_begin_destroy(struct sway_container *con) {
++	if (title_hover_con == con) {             // hypeForge (patch 2): never a lit button on a gone window
++		title_hover_con = NULL;
++		title_hover_which = -1;
++	}
+ 	if (con->view) {
+ 		ipc_event_window(con, "close");
+ 	}

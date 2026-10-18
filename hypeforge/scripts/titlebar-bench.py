@@ -55,7 +55,8 @@ OURS = Path.home() / ".local/opt/sway-hypeforge/current/bin/sway"
 
 
 def button_lines() -> str:
-    """sway/config-buttons without its include: the lines only our build reads."""
+    """sway/config-buttons without its include: the lines only our build reads (their colours are the
+    theme's $hf_… variables, set by the look's sway.conf the bench includes first)."""
     return "\n".join(l for l in (HERE / "sway/config-buttons").read_text().splitlines()
                      if l.startswith("titlebar_button")) + "\n"
 
@@ -242,6 +243,25 @@ def main() -> int:
                 n = wins()[app]
                 r, h = n["rect"], n["deco_rect"]["height"]
                 return int(r["x"] + r["width"] - (3 - i) * h + h / 2), int(r["y"] - h / 2)
+            # the button under the pointer lights up (patch 2): the corner of its square in the theme's colour
+            theme = ht.themes()["kognogos-mocha"]
+            style = ht.styles()["rice"]
+            want = {k: ht.resolve(k, style, theme) for k in ("titlebar_close_hover", "titlebar_button_hover", "titlebar_bg")}
+
+            def corner(app, i):
+                n = wins()[app]
+                r, h = n["rect"], n["deco_rect"]["height"]
+                x = int(r["x"] + r["width"] - (3 - i) * h + 2)
+                y = int(r["y"] - h + 3)
+                out = subprocess.run(["grim", "-g", f"{x},{y} 1x1", "-t", "ppm", "-"], env=env, capture_output=True).stdout
+                return "#%02x%02x%02x" % tuple(out.split(b"\n", 3)[3][:3])
+            mouse(*slot("by-rule", 2))
+            lit_close = corner("by-rule", 2)
+            mouse(*slot("by-rule", 0))
+            lit_min, close_after = corner("by-rule", 0), corner("by-rule", 2)
+            check(lit_close == want["titlebar_close_hover"], f"✕ under the pointer turns the theme's red ({lit_close}, want {want['titlebar_close_hover']})")
+            check(lit_min == want["titlebar_button_hover"] and close_after != lit_close,
+                  f"─ under the pointer lights up, ✕ goes back ({lit_min} want {want['titlebar_button_hover']}; ✕ now {close_after})")
             before = wins()["by-rule"]["rect"]
             mouse(*slot("by-rule", 1), "--click")
             big = wins()["by-rule"]["rect"]

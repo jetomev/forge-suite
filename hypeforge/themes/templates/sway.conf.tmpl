@@ -8,6 +8,11 @@ set $hf_titlebar  {{titlebar_bg}}
 set $hf_text      {{title_text}}
 set $hf_subtext   {{title_text_dim}}
 set $hf_urgent    {{window_urgent}}
+# the title bar's buttons under the pointer — read only by hypeForge's own Sway (sway/config-buttons, D-111)
+set $hf_button_hover      {{titlebar_button_hover}}
+set $hf_button_hover_text {{titlebar_button_text}}
+set $hf_close_hover       {{titlebar_close_hover}}
+set $hf_close_hover_text  {{titlebar_close_text}}
 
 # class                 title-bar edge  title-bar    title text   next-split   window border
 client.focused          $hf_active      $hf_titlebar $hf_text     $hf_active   $hf_active

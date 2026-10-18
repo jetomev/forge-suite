@@ -90,6 +90,9 @@ DEFAULT_ROLES = {
     # the tray's app icons, repainted when they are one colour (2026-10-17): the colour of the style's other
     # icons — "role:<name>" takes another role's colour (the Rice's module_icon, the Macs' menu bar text)
     "tray_icon": "role:bar_fg",
+    # the title bar's buttons under the pointer (our own Sway build, D-111): a soft square, close in red
+    "titlebar_button_hover": "surface.hover", "titlebar_button_text": "role:title_text",
+    "titlebar_close_hover": "status.danger", "titlebar_close_text": "status.on_danger",
 }
 # Classic's lists, notes, lock screen and GTK roles follow its bar's shades (today's look).
 OUTPUTS = [  # template → where it goes, under the config folder

@@ -7,3 +7,6 @@ titlebar_buttons floating
 titlebar_button minimize 󰖰 move scratchpad
 titlebar_button maximize 󰖯 exec ~/Programs/forge-suite/hypeforge/applets/window/hypeforge-window maximize
 titlebar_button close 󰖭 kill
+# the button under the pointer lights up in the theme's colours; close in its red (Javier, 2026-10-17:
+# "if I hover with the mouse over the _, [] and X, can they change color/tone?")
+titlebar_button_hover $hf_button_hover $hf_button_hover_text $hf_close_hover $hf_close_hover_text
