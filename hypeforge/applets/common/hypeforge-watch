@@ -23,6 +23,7 @@ from __future__ import annotations
 import os
 import shutil
 import signal
+import socket
 import subprocess
 import sys
 import time
@@ -83,6 +84,26 @@ def how_it_ended(code: int) -> str | None:
     return f"it stopped with an error (status {code})"
 
 
+def sway_alive(grace: float = 1.0) -> bool:
+    """Is the Sway this applet belongs to still running? At a log-out every applet loses Sway and ends with
+    an error — that is the session ending, not a crash (Javier, 2026-10-17: a row of sticky alerts at the
+    next login). Without SWAYSOCK there is nothing to ask: assume it is."""
+    path = os.environ.get("SWAYSOCK")
+    if not path:
+        return True
+    end = time.time() + grace
+    while True:
+        try:
+            with socket.socket(socket.AF_UNIX) as s:
+                s.settimeout(0.5)
+                s.connect(path)
+            return True
+        except OSError:
+            if time.time() > end:
+                return False
+            time.sleep(0.2)
+
+
 def notify(title: str, body: str) -> bool:
     tool = shutil.which("notify-send")
     if not tool:
@@ -123,6 +144,9 @@ def main(argv: list[str]) -> int:
             except InterruptedError:
                 continue
     ended = how_it_ended(code)
+    if ended and not sway_alive():
+        ended = None                     # the session ended (a log-out), not the applet
+        log.write(b"(Sway had gone: the session ended, no alert)\n")
     log.write(f"=== {datetime.now():%Y-%m-%d %H:%M:%S} · ended: status {code}\n".encode())
     log.close()
     if ended:

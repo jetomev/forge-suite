@@ -22,13 +22,14 @@ from __future__ import annotations
 import json
 import os
 import re
+import select
 import sys
 import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "common"))
-from hfsway import GET_TREE, SUBSCRIBE, EVENT_WINDOW, Sway  # noqa: E402
+from hfsway import GET_TREE, SUBSCRIBE, EVENT_WINDOW, EVENT_WORKSPACE, Sway  # noqa: E402
 
 PANEL = HERE.parent / "panels/hypeforge-panel"
 PIDFILE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-window.pid"
@@ -36,6 +37,7 @@ PIDFILE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-window.pi
 # and the bench, 10-17): they get ours. Every Forge app runs in Alacritty, whatever its window's name.
 DRAWS_NONE = {"alacritty", "foot", "kitty", "wezterm-gui"}
 SCRATCH = "__i3_scratch"
+SWEEP = 3.0                      # seconds between the quiet checks of every window
 MAXED = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-maximized.json"   # id → where it was
 
 
@@ -91,31 +93,42 @@ def watch() -> int:
         pass
     PIDFILE.write_text(str(os.getpid()))
     control, events = Sway(), Sway()
-    events.ask(SUBSCRIBE, json.dumps(["window"]))
-    tiled, floating = borders()
-    # the windows already open (a restart, or the first start after an update)
-    fixes = [f"[con_id={w['id']}] border {b}" for w in windows(control.ask(GET_TREE))
-             if (b := wanted(w, tiled, floating))]
-    if fixes:
-        control.run(*fixes)
-    print("hypeforge-window: floating windows get the title bar")
+    # window changes, and the workspace "reload" a theme switch causes
+    events.ask(SUBSCRIBE, json.dumps(["window", "workspace"]))
+
+    def sweep(only: int | None = None):
+        """Every window (or one) given the frame it should have now."""
+        tiled, floating = borders()                  # a new look may have changed them
+        fixes = [f"[con_id={w['id']}] border {b}" for w in windows(control.ask(GET_TREE))
+                 if (only is None or w.get("id") == only) and (b := wanted(w, tiled, floating))]
+        if fixes:
+            control.run(*fixes)
+
+    sweep()                              # the windows already open (a restart, or the first start after an update)
+    print("hypeforge-window: floating windows get the title bar", flush=True)
     fallback_notice()
     try:
         while True:
-            kind, event = events.receive()
-            if kind != EVENT_WINDOW or event.get("change") not in ("new", "floating"):
+            # Javier, 10-17: after theme switches a floating window lost its title bar with no message from
+            # Sway to say so (never reproduced hidden). So: any message about a window re-checks it, a reload
+            # re-checks them all, and a quiet sweep every SWEEP seconds catches whatever is left.
+            ready, _, _ = select.select([events.sock], [], [], SWEEP)
+            if not ready:
+                sweep()
                 continue
-            con = event.get("container") or {}
+            kind, event = events.receive()
+            if kind == EVENT_WORKSPACE:
+                if event.get("change") == "reload":
+                    time.sleep(0.3)
+                    sweep()
+                continue
+            if kind != EVENT_WINDOW or event.get("change") == "close":
+                continue
             # Sway announces a window before it has its frame ("border": "none" in the message, even for a
             # window a rule floats — bench 10-17): a moment later, the window as it is then
-            time.sleep(0.12)
-            con = next((w for w in windows(control.ask(GET_TREE)) if w.get("id") == con.get("id")), None)
-            if con is None:
-                continue
-            tiled, floating = borders()                  # a new look may have changed them
-            b = wanted(con, tiled, floating)
-            if b:
-                control.run(f"[con_id={con['id']}] border {b}")
+            if event.get("change") in ("new", "floating"):
+                time.sleep(0.12)
+            sweep(only=(event.get("container") or {}).get("id"))
     finally:
         try:
             if int(PIDFILE.read_text()) == os.getpid():

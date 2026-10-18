@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import os
 import signal
+import socket
 import subprocess
 import sys
 import tempfile
@@ -26,6 +27,14 @@ class Watcher(unittest.TestCase):
         (bin_ / "notify-send").write_text(f'#!/bin/sh\nprintf "%s\\n" "$@" >> {self.sent}\necho --- >> {self.sent}\n')
         (bin_ / "notify-send").chmod(0o755)
         self.env = dict(os.environ, PATH=f"{bin_}:{os.environ['PATH']}", XDG_STATE_HOME=str(self.dir / "state"))
+        # a stand-in Sway socket: the watcher asks it whether the session is still on (2026-10-17)
+        self.sway = socket.socket(socket.AF_UNIX)
+        self.sway.bind(str(self.dir / "sway.sock"))
+        self.sway.listen(8)
+        self.env["SWAYSOCK"] = str(self.dir / "sway.sock")
+
+    def tearDown(self):
+        self.sway.close()
 
     def watch(self, *cmd, wait=True):
         p = subprocess.Popen([str(WATCH), "workspaces", *cmd], env=self.env)
@@ -47,6 +56,15 @@ class Watcher(unittest.TestCase):
         self.assertIn("~/.local/state/hypeforge/logs/workspaces.log" if str(self.dir) in str(Path.home()) else "workspaces.log", n)
         self.assertIn("--urgency=critical", n, "it stays until clicked")
         self.assertIn("Traceback", self.log(), "the whole error is kept in the applet's log")
+
+    def test_an_applet_ending_with_the_session_says_nothing(self):
+        """Javier, 2026-10-17: a row of sticky "stopped" alerts after logging out and in again. At a
+        log-out Sway goes first and every applet ends with "Sway closed the connection"."""
+        self.sway.close()
+        Path(self.env["SWAYSOCK"]).unlink()
+        self.watch(sys.executable, "-c", "raise ConnectionError('Sway closed the connection')")
+        self.assertFalse(self.sent.exists(), "no alert when the session itself ended")
+        self.assertIn("the session ended", (self.dir / "state/hypeforge/logs/workspaces.log").read_text())
 
     def test_a_clean_end_says_nothing(self):
         p = self.watch(sys.executable, "-c", "print('already running')")

@@ -80,10 +80,13 @@ class TodaysLook(Base):
         self.assertNotIn("{{", mako)
         self.assertIn("gtk-cursor-theme-name=catppuccin-mocha-dark-cursors", self.read("gtk-3.0/settings.ini"))
 
-    def test_a_titlebar_style_turns_title_bars_on(self):
+    def test_a_style_puts_its_title_bars_on_floating_windows_only(self):
+        """Mac OS 9 had title bars on every window; Javier, 10-17: floating ones only (a tiled window with
+        one was "not looking nice") — its look stays on the floating ones."""
         self.apply("mac-os-9", "light-gray")
         sway = self.read("hypeforge/theme/sway.conf")
-        self.assertIn("default_border normal 1", sway)
+        self.assertIn("default_border pixel 1", sway)
+        self.assertIn("default_floating_border normal 1", sway)
         self.assertIn("title_align center", sway)
         self.assertIn("font pango:Noto Sans Bold 10", sway)
 

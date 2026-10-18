@@ -153,8 +153,36 @@ def main() -> int:
         time.sleep(0.8)
         a = wins().get("a-forge-app", {})
         check(a.get("border") == "normal", f"a Forge app in Alacritty, floated, gets our title bar ({a.get('border')}; F-55)")
+        # a theme switch reloads Sway, and a reload puts every window back to the default frame (Javier,
+        # 10-17: "when sway switched between them, the title bar disappeared even when it was still floating")
+        msg("reload")
+        time.sleep(1.5)
+        check(wins()["by-rule"]["border"] == "normal", f"after a reload (a theme switch) a floating window keeps its title bar ({wins()['by-rule']['border']})")
+        check(wins()["tiled"]["border"] == "pixel", f"after a reload a tiled window keeps the plain frame ({wins()['tiled']['border']})")
+        check(wins()["a-forge-app"]["border"] == "normal", f"after a reload a floating Forge app (Alacritty) keeps its title bar ({wins()['a-forge-app']['border']})")
+        # whatever takes a title bar away with no word from Sway (never reproduced hidden), it comes back
+        msg('[app_id="by-rule"] border pixel 2')
+        time.sleep(4)
+        check(wins()["by-rule"]["border"] == "normal", f"a title bar taken away behind the watcher's back comes back within seconds ({wins()['by-rule']['border']})")
+
+        # the real switch, as themeForge runs it: every style in turn, the Forge app floating through all
+        lost = []
+        for slug in ("windows-11", "mac-os-9", "kde", "macos", "cosmic", "classic", "rice"):
+            r = subprocess.run([sys.executable, str(HERE / "applets/theme/hypeforge-theme"), "apply", slug, "kognogos-mocha"],
+                               env=env, capture_output=True, text=True, timeout=120)
+            time.sleep(1.5)
+            w = wins()
+            seen = (w.get("a-forge-app", {}).get("border"), w.get("by-rule", {}).get("border"), w.get("tiled", {}).get("border"))
+            tall = (w.get("a-forge-app", {}).get("deco_rect", {}).get("height"), w.get("by-rule", {}).get("deco_rect", {}).get("height"))
+            log.write(f"switch to {slug}: forge-app {seen[0]} {tall[0]} px · gtk {seen[1]} {tall[1]} px · tiled {seen[2]} (exit {r.returncode})\n")
+            subprocess.run(["grim", str(base / f"switch-{slug}.png")], env=env)
+            # the frame setting AND a title bar actually there (Javier saw it gone while the setting held)
+            if seen[0] != "normal" or seen[1] != "normal" or seen[2] == "normal" or not all(h and h > 10 for h in tall):
+                lost.append(f"{slug}: {seen} {tall}")
+        check(not lost, f"through every style's switch the floating windows keep their title bar, tiled ones don't get one ({lost or 'all kept'})")
         msg('[app_id="a-forge-app"] kill')
         time.sleep(0.5)
+
         msg('[app_id="tiled"] focus')
         msg('[app_id="tiled"] floating toggle')            # what Win + Shift + Space runs
         time.sleep(0.6)
