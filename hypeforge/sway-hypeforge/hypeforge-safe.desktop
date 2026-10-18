@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Sway (hypeForge safe mode)
+Comment=hypeForge on the system's own Sway, no title bar buttons: the way in if hypeForge's Sway build ever misbehaves
+Exec=sway --unsupported-gpu
+Type=Application
+DesktopNames=sway;wlroots

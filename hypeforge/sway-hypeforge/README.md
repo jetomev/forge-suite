@@ -11,8 +11,9 @@ patches Sway to draw them and act on their clicks, dragging untouched.*
 | `0001-titlebar-buttons.patch` | the change to Sway: two config lines (`titlebar_buttons none\|floating\|all`, `titlebar_button minimize\|maximize\|close <glyph> <command>`), the three symbols drawn at the title bar's right in its own colours, a left press on one runs its command (anything else on the bar still drags). 9 files, ~300 lines; off unless the config asks |
 | `0002-titlebar-button-hover.patch` | the button under the pointer lights up: `titlebar_button_hover <bg> <text> <close bg> <close text>` — a square in the theme's hover colour, close in its red |
 | `build.py` | the system's Sway version: download (github.com/swaywm/sway) → signature checked against Sway's release key → patches applied (stops if one no longer fits) → built → installed to `~/.local/opt/sway-hypeforge/<version>`, `current` pointing at it. Logs to `logs/sway-build-*.log` |
-| `hypeforge-session` | the "Sway (hypeForge buttons)" login: our build only when it is the system's Sway version and starts; otherwise the system's Sway, the buttons off, and one notification saying so |
-| `hypeforge-buttons.desktop` | that login's entry, for `/usr/share/wayland-sessions/` |
+| `hypeforge-session` | the "Sway (hypeForge)" login (D-114; was the test entry "Sway (hypeForge buttons)"): our build only when it is the system's Sway version and starts; otherwise the system's Sway, the buttons off, and one notification saying so |
+| `hypeforge.desktop` | that login's entry (`/usr/share/wayland-sessions/sway-hypeforge.desktop`) |
+| `hypeforge-safe.desktop` | "Sway (hypeForge safe mode)": the stock Sway, the full setup, no buttons — the way in if our build misbehaves |
 | `../sway/config-buttons` | what only our build reads: `include ~/.config/sway/config`, then the button lines |
 
 ## Why a Sway update can't break the desktop

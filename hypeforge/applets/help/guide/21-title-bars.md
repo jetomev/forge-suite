@@ -22,12 +22,15 @@ On a floating window's title bar:
 Tiled windows move as before: **Win + left mouse button** drags them in the grid, **Win + right mouse
 button** resizes. **Win + Shift + Space** floats a window or puts it back.
 
-## The buttons (the "Sway (hypeForge buttons)" login)
+## The buttons
 
-On hypeForge's own Sway build, a floating window's title bar also has **─ □ ✕** at its right:
+A floating window's title bar also has **─ □ ✕** at its right (hypeForge's own Sway build, the
+"Sway (hypeForge)" login):
 **─** tucks it away, **□** fills the screen (click again: back where it was), **✕** closes it. If Sway
 was updated and our build is out of date, that login starts the normal Sway instead — everything
-works, the buttons are off, and a notification says so until it's rebuilt.
+works, the buttons are off, and a notification says so until it's rebuilt. If our build ever
+misbehaves, pick **Sway (hypeForge safe mode)** on the login screen: your whole setup on the
+normal Sway, without the buttons.
 
 ## Good to know
 

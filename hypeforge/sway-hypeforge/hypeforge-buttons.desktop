@@ -1,6 +1,0 @@
-[Desktop Entry]
-Name=Sway (hypeForge buttons)
-Comment=hypeForge on our own Sway build: title bar buttons (D-111); the system's Sway if the build is stale
-Exec=/home/jetomev/Programs/forge-suite/hypeforge/sway-hypeforge/hypeforge-session
-Type=Application
-DesktopNames=sway
