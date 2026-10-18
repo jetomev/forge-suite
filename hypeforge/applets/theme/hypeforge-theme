@@ -967,7 +967,16 @@ def reload_all(theme: dict, say=print, restart_bar: Path | None = None, style: d
         if os.environ.get("SWAYSOCK") and run("swaymsg", "exec", cmd):
             say("  the bar restarted with its new layout")
     elif run("pkill", "-USR2", "-x", "waybar"):
-        say("  the bar restyled")
+        # a restyle in place can take the bar down with no word (Javier, 2026-10-17 21:41: "there is not top
+        # bar"); it is checked, and started again the way login does
+        time.sleep(2.0)
+        tool = REPO / "applets/bar/hypeforge-bar"
+        if not run("pgrep", "-x", "waybar") and os.environ.get("SWAYSOCK") and tool.is_file():
+            watch = REPO / "applets/common/hypeforge-watch"
+            run("swaymsg", "exec", f"{watch} bar {tool} start")
+            say("  the bar went away while restyling: started again")
+        else:
+            say("  the bar restyled")
     if run("makoctl", "reload"):
         say("  notifications restyled")
     n = names_for(theme, check=False)
