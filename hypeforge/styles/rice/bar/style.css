@@ -42,7 +42,7 @@ tooltip label { color: @hf_text; }
 .pill:hover { background-color: @hf_pill_hover; }
 
 /* every piece: room, the theme's icon colour, a soft hover */
-#clock, #mpris, #cpu, #memory, #custom-disk, #custom-gpu, #custom-temperature, #network, #bluetooth, #wireplumber, #tray,
+#clock, #mpris, #custom-cpu, #custom-memory, #custom-disk, #custom-gpu, #custom-temperature, #network, #bluetooth, #wireplumber, #tray,
 #custom-clipboard, #custom-drives, #custom-printers, #custom-notifications, #custom-power-panel,
 #custom-nightlight, #custom-tucked {
   padding: 0 9px;
@@ -50,7 +50,7 @@ tooltip label { color: @hf_text; }
 }
 #clock { color: @hf_text; font-weight: bold; }
 #mpris { color: @hf_subtext; }
-#cpu:hover, #memory:hover, #custom-disk:hover, #custom-gpu:hover, #custom-temperature:hover, #quick:hover, #custom-clipboard:hover,
+#custom-cpu:hover, #custom-memory:hover, #custom-disk:hover, #custom-gpu:hover, #custom-temperature:hover, #quick:hover, #custom-clipboard:hover,
 #custom-drives:hover, #custom-printers:hover, #custom-power-panel:hover,
 #custom-nightlight:hover, #custom-tucked:hover, #datetime:hover {
   background-color: @hf_pill_hover; border-radius: 8px;
@@ -60,8 +60,8 @@ tooltip label { color: @hf_text; }
 #custom-notifications.dnd { color: @hf_alert; }
 #custom-clipboard.new, #custom-drives.has, #custom-disk.has { color: @hf_new; }
 /* the system pieces: warm, then the alert colour, when busy, full or hot (2026-10-17) */
-#cpu.warning, #memory.warning, #custom-disk.warning, #custom-gpu.warning, #custom-temperature.warning { color: @hf_bell; }
-#cpu.critical, #memory.critical, #custom-disk.critical, #custom-gpu.critical, #custom-temperature.critical { color: @hf_alert; }
+#custom-cpu.warning, #custom-memory.warning, #custom-disk.warning, #custom-gpu.warning, #custom-temperature.warning { color: @hf_bell; }
+#custom-cpu.critical, #custom-memory.critical, #custom-disk.critical, #custom-gpu.critical, #custom-temperature.critical { color: @hf_alert; }
 /* the windows tucked away: the theme's colour, so a hidden window is noticed */
 #custom-tucked.some { color: @hf_new; }
 #custom-power-panel { color: @hf_alert; padding-right: 12px; }
@@ -80,17 +80,17 @@ tooltip label { color: @hf_text; }
 #quick, #datetime { border-radius: 8px; }
 
 /* bar-spacing:start — written by scripts/bar-spacing.py --style rice from its style.toml [bar]: one font, 14 px icons, the drawn parts 10 px apart (2026-10-17) */
-#custom-nightlight, #custom-disk, #memory, #custom-temperature, #custom-gpu, #cpu, #custom-clipboard, #custom-drives, #custom-printers, #bluetooth, #network, #wireplumber, #custom-power-panel { font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", sans-serif; font-size: 14px; color: @hf_icon; }
-#custom-nightlight, #custom-disk, #memory, #custom-temperature, #custom-gpu, #cpu, #custom-clipboard, #custom-drives, #custom-printers, #bluetooth, #network, #wireplumber, #custom-power-panel { margin-left: 0; margin-right: 0; }
+#custom-nightlight, #custom-disk, #custom-memory, #custom-temperature, #custom-gpu, #custom-cpu, #custom-clipboard, #custom-drives, #custom-printers, #bluetooth, #network, #wireplumber, #custom-power-panel { font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", sans-serif; font-size: 14px; color: @hf_icon; }
+#custom-nightlight, #custom-disk, #custom-memory, #custom-temperature, #custom-gpu, #custom-cpu, #custom-clipboard, #custom-drives, #custom-printers, #bluetooth, #network, #wireplumber, #custom-power-panel { margin-left: 0; margin-right: 0; }
 #quick { padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; }
 #tray { padding-left: 12px; padding-right: 5px; }
 #tray .tray-2 image, #tray .tray-3 image, #tray .tray-4 image, #tray .tray-5 image, #tray .tray-6 image, #tray .tray-7 image, #tray .tray-8 image, #tray .tray-9 image, #tray .tray-10 image { margin-left: 10px; }
 #custom-nightlight { padding-left: 6px; padding-right: 9px; }
 #custom-disk { padding-left: 5px; padding-right: 6px; }
-#memory { padding-left: 5px; padding-right: 6px; }
+#custom-memory { padding-left: 5px; padding-right: 6px; }
 #custom-temperature { padding-left: 4px; padding-right: 4px; }
 #custom-gpu { padding-left: 5px; padding-right: 6px; }
-#cpu { padding-left: 6px; padding-right: 6px; }
+#custom-cpu { padding-left: 6px; padding-right: 6px; }
 #custom-clipboard { padding-left: 5px; padding-right: 8px; }
 #custom-drives { padding-left: 5px; padding-right: 6px; }
 #custom-printers { padding-left: 5px; padding-right: 9px; }
@@ -98,7 +98,7 @@ tooltip label { color: @hf_text; }
 #network { padding-left: 5px; padding-right: 9px; }
 #wireplumber { padding-left: 5px; padding-right: 8px; }
 #custom-power-panel { padding-left: 5px; padding-right: 12px; }
-#cpu.warning, #memory.warning, #custom-disk.warning, #custom-gpu.warning, #custom-temperature.warning { color: @hf_bell; }
-#cpu.critical, #memory.critical, #custom-disk.critical, #custom-gpu.critical, #custom-temperature.critical { color: @hf_alert; }
+#custom-cpu.warning, #custom-memory.warning, #custom-disk.warning, #custom-gpu.warning, #custom-temperature.warning { color: @hf_bell; }
+#custom-cpu.critical, #custom-memory.critical, #custom-disk.critical, #custom-gpu.critical, #custom-temperature.critical { color: @hf_alert; }
 #custom-disk.has { color: @hf_new; }
 /* bar-spacing:end */

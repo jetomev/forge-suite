@@ -42,8 +42,9 @@ aren't listed.*
 | libpulse | volume keys (pactl) | (program) |
 | bluez-utils | Bluetooth (bluetoothctl) | (program) |
 | udisks2 | USB drives (udisksctl) | (program) |
+| util-linux | `flock`, the bar pieces' one-answer-for-every-screen (applets/common/hfpiece) — in base | (program) |
 | udiskie | mounting drives at login | (program) |
-| cups | printers (lpstat, cancel) | (programs) |
+| cups | printers (ipptool — the state in 5 ms, D-113 — lpstat, cancel) | (programs) |
 | playerctl | the media keys | (program) |
 | xdg-user-dirs | where screenshots go | (program xdg-user-dir) |
 | xdg-utils | default apps (xdg-mime) | (program) |

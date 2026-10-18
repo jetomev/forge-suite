@@ -76,7 +76,7 @@
     "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel calendar {popup-calendar}"
   },
   "custom/notifications": {
-    "exec": "~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications bar",
+    "exec": "~/Programs/forge-suite/hypeforge/applets/common/hfpiece sig9-notifications 2 ~/Programs/forge-suite/hypeforge/applets/notifications/hypeforge-notifications bar",
     "return-type": "json",
     "interval": 30,
     "signal": 9,
@@ -85,14 +85,14 @@
   },
   // The night light's moon (the Rice's, nightForge's state): a click opens its small pop-up
   "custom/nightlight": {
-    "exec": "~/Programs/forge-suite/hypeforge/applets/nightlight/hypeforge-nightlight bar",
+    "exec": "~/Programs/forge-suite/hypeforge/applets/common/hfpiece sig13-nightlight 2 ~/Programs/forge-suite/hypeforge/applets/nightlight/hypeforge-nightlight bar",
     "return-type": "json",
     "interval": 30,
     "signal": 13,
     "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel quick --only night {popup}"
   },
   "custom/drives": {
-    "exec": "~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives bar",
+    "exec": "~/Programs/forge-suite/hypeforge/applets/common/hfpiece sig11-drives 2 ~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives bar",
     "return-type": "json",
     "interval": 60,
     "signal": 11,
@@ -100,7 +100,7 @@
     "on-click-right": "~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives menu"
   },
   "custom/printers": {
-    "exec": "~/Programs/forge-suite/hypeforge/applets/printers/hypeforge-printers bar",
+    "exec": "~/Programs/forge-suite/hypeforge/applets/common/hfpiece printers 2 ~/Programs/forge-suite/hypeforge/applets/printers/hypeforge-printers bar",
     "return-type": "json",
     "interval": 10,
     "on-click": "~/Programs/forge-suite/hypeforge/applets/printers/hypeforge-printers menu",
@@ -120,16 +120,16 @@
     "orientation": "inherit",
     "modules": ["image#tray-1", "image#tray-2", "image#tray-3", "image#tray-4", "image#tray-5", "image#tray-6", "image#tray-7", "image#tray-8", "image#tray-9", "image#tray-10"] 
   },
-  "image#tray-1": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 1", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 1 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 1" },
-  "image#tray-2": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 2", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 2 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 2" },
-  "image#tray-3": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 3", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 3 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 3" },
-  "image#tray-4": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 4", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 4 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 4" },
-  "image#tray-5": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 5", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 5 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 5" },
-  "image#tray-6": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 6", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 6 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 6" },
-  "image#tray-7": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 7", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 7 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 7" },
-  "image#tray-8": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 8", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 8 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 8" },
-  "image#tray-9": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 9", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 9 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 9" },
-  "image#tray-10": { "exec": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray icon 10", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 10 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 10" },
+  "image#tray-1": { "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-tray/slot-1.txt\" 2>/dev/null", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 1 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 1" },
+  "image#tray-2": { "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-tray/slot-2.txt\" 2>/dev/null", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 2 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 2" },
+  "image#tray-3": { "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-tray/slot-3.txt\" 2>/dev/null", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 3 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 3" },
+  "image#tray-4": { "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-tray/slot-4.txt\" 2>/dev/null", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 4 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 4" },
+  "image#tray-5": { "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-tray/slot-5.txt\" 2>/dev/null", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 5 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 5" },
+  "image#tray-6": { "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-tray/slot-6.txt\" 2>/dev/null", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 6 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 6" },
+  "image#tray-7": { "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-tray/slot-7.txt\" 2>/dev/null", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 7 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 7" },
+  "image#tray-8": { "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-tray/slot-8.txt\" 2>/dev/null", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 8 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 8" },
+  "image#tray-9": { "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-tray/slot-9.txt\" 2>/dev/null", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 9 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 9" },
+  "image#tray-10": { "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-tray/slot-10.txt\" 2>/dev/null", "size": 20, "interval": 3600, "signal": 15, "on-click": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray menu 10 {popup}", "on-click-middle": "~/Programs/forge-suite/hypeforge/applets/tray/hypeforge-tray open 10" },
   "custom/tucked": {
     "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-tucked.json\" 2>/dev/null",
     "return-type": "json",
@@ -138,7 +138,7 @@
     "on-click": "~/Programs/forge-suite/hypeforge/applets/tuck/hypeforge-tuck back"
   },
   "custom/clipboard": {
-    "exec": "~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard bar",
+    "exec": "~/Programs/forge-suite/hypeforge/applets/common/hfpiece sig10-clipboard 2 ~/Programs/forge-suite/hypeforge/applets/clipboard/hypeforge-clipboard bar",
     "return-type": "json",
     "interval": 60,
     "signal": 10,
@@ -157,45 +157,44 @@
   },
   // The system pieces (2026-10-17, Javier: "icons and popups for CPU, GPU, Temperature, Memory, Disks
   // Space. Let's make them pretty too!!!"): each a number that turns warm, then red, when it matters; a
-  // click opens its own pop-up (applets/panels/views/system.py). Processor, memory and disk are Waybar's
-  // own readers; the graphics card and the temperature are hypeForge's (applets/system/), and hide on a
+  // click opens its own pop-up (applets/panels/views/system.py). All five are hypeForge's (applets/system/):
+  // the sampler writes each one's answer every 2 s and the bar reads it with `cat` (2026-10-17: Waybar's own
+  // processor reader alone held each bar's start back ~90 ms); the card and the temperature hide on a
   // computer with nothing to read. The numbers keep a fixed width (2026-10-17, Javier: going from 9 % to
   // 1x % moved the icons to the left), padded with figure spaces (U+2007, a digit's width): 3 digits for
   // the processor and the card, which reach 100 %, 2 for memory, disk and temperature.
-  "cpu": {
-    "format": "󰍛 {usage: >3}%",
+  "custom/cpu": {
+    "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-system/bar-cpu.json\" 2>/dev/null || ~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system bar cpu",
+    "return-type": "json",
     "interval": 3,
-    "states": { "warning": 70, "critical": 90 },
-    "tooltip-format": "Processor: {usage} % busy\nClick: more · right click: every program",
     "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part cpu {popup}",
     "on-click-right": "alacritty --class hf-btop -e btop"
   },
   "custom/gpu": {
-    "exec": "~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system bar gpu",
+    "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-system/bar-gpu.json\" 2>/dev/null || ~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system bar gpu",
     "return-type": "json",
     "interval": 3,
     "hide-empty-text": true,
     "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part gpu {popup}"
   },
   "custom/temperature": {
-    "exec": "~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system bar temp",
+    "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-system/bar-temp.json\" 2>/dev/null || ~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system bar temp",
     "return-type": "json",
     "interval": 5,
     "hide-empty-text": true,
     "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part temp {popup}"
   },
-  "memory": {
-    "format": "󰘚 {percentage: >2}%",
+  "custom/memory": {
+    "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-system/bar-memory.json\" 2>/dev/null || ~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system bar memory",
+    "return-type": "json",
     "interval": 5,
-    "states": { "warning": 70, "critical": 90 },
-    "tooltip-format": "Memory: {used:0.1f} of {total:0.1f} GB in use\nClick: more · right click: every program",
     "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part memory {popup}",
     "on-click-right": "alacritty --class hf-btop -e btop"
   },
   // the disk piece is hypeForge's (2026-10-17): it also lights up while a USB drive is mounted — it took the
   // USB icon's job on the Rice; signal 11 is the one udiskie's hook sends when a drive comes or goes
   "custom/disk": {
-    "exec": "~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system bar disk",
+    "exec": "cat \"$XDG_RUNTIME_DIR/hypeforge-system/bar-disk.json\" 2>/dev/null || ~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system bar disk",
     "return-type": "json",
     "interval": 60,
     "signal": 11,

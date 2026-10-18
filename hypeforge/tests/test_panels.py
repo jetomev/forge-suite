@@ -276,7 +276,7 @@ class CosmicPopups(unittest.TestCase):
         place ("the system disk work… shouldn't replace the mount/umount icon?")."""
         rice = self.rice()
         right_to_left = ["custom/power-panel", "group/quick", "custom/printers", "custom/clipboard",
-                         "cpu", "custom/gpu", "custom/temperature", "memory", "custom/disk", "custom/nightlight", "tray"]
+                         "custom/cpu", "custom/gpu", "custom/temperature", "custom/memory", "custom/disk", "custom/nightlight", "tray"]
         self.assertEqual(rice["modules-right"], right_to_left[::-1])
 
     def test_the_bell_sits_with_the_time_and_opens_the_same_pop_up(self):

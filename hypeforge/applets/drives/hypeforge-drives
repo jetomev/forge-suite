@@ -119,6 +119,9 @@ def menu():
 
 
 def changed():
+    # the disk piece reads a file the sampler writes every 15 s: a drive that came or went rewrites it now
+    subprocess.run([str(Path(__file__).resolve().parent.parent / "system/hypeforge-system"), "bar", "disk", "--write"],
+                   capture_output=True, timeout=10)
     signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
 
 

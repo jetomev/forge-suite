@@ -136,7 +136,7 @@ class TheBarFollowsTheStyle(Base):
         repo = Path(ht.REPO) / "sway/waybar"
         self.assertEqual(self.read("sway/waybar/config.jsonc"), (repo / "config.jsonc").read_text())
         self.assertEqual(self.read("sway/waybar/style.css"), (repo / "style.css").read_text())
-        self.assertIn('"cpu"', self.read("sway/waybar/modules.jsonc"))
+        self.assertIn('"custom/cpu"', self.read("sway/waybar/modules.jsonc"))
 
     def test_the_rice_brings_its_own_bar(self):
         self.apply("rice", "kognogos-mocha", say=lambda *_: None)

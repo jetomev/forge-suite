@@ -110,6 +110,7 @@ def run(replace: bool = False) -> int:
         tmp.write_text(json.dumps(slots, indent=1))
         tmp.replace(hfsni.SLOTS)
         hfsni.ITEMS.write_text(json.dumps(list(watcher.items)))
+        write_pieces(slots)
         signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
         return False
 
@@ -142,6 +143,7 @@ def run(replace: bool = False) -> int:
         if mine:                          # replaced by a new tray: its files are the new one's now
             PIDFILE.unlink(missing_ok=True)
             hfsni.SLOTS.unlink(missing_ok=True)
+            write_pieces([])
             signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
     return 0
 
@@ -162,15 +164,31 @@ def slot(n: str) -> dict | None:
     return slots[i] if 0 <= i < len(slots) else None
 
 
-def icon(n: str) -> int:
-    """Waybar's image piece: a path, then a tooltip; nothing at all hides the piece."""
-    s = slot(n)
+def piece_text(s: dict | None) -> str:
+    """What the bar's image piece shows: a path, then one tooltip line; nothing at all hides the piece."""
     if not s or not s.get("picture"):
-        return 0
+        return ""
     name = s.get("title") or s.get("id") or "a tray app"
     tip = s.get("tooltip") or name
-    print(s["picture"])
-    print(f"{tip} · click: its menu · middle click: open it")    # one line: Waybar takes the path, then one tooltip line
+    return f"{s['picture']}\n{tip} · click: its menu · middle click: open it\n"
+
+
+def write_pieces(slots: list[dict]):
+    """Each of the bar's ten tray pieces gets its answer as a small file (slot-N.txt): the bar reads it with
+    `cat` (~1 ms) instead of starting this program ten times per screen (~20 ms each — 420 ms of a bar's
+    start on one screen, measured 2026-10-17; Javier: "everything should render, recover, appear, fast!")."""
+    import hfsni
+    for n in range(1, hfsni.MAX_SLOTS + 1):
+        f = hfsni.RUNTIME / f"slot-{n}.txt"
+        text = piece_text(slots[n - 1] if n <= len(slots) else None)
+        tmp = f.with_suffix(".tmp")
+        tmp.write_text(text)
+        tmp.replace(f)
+
+
+def icon(n: str) -> int:
+    """Waybar's image piece, the slow way (the bar reads slot-N.txt instead): a path, then a tooltip."""
+    print(piece_text(slot(n)), end="")
     return 0
 
 

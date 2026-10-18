@@ -7,6 +7,14 @@
 
 ## 2026-10-17
 
+### D-113 · The bar is fast: 1.8 s → 0.35 s to appear, 1.7 s → 0.26 s back after a restyle (Javier)
+*"Timing and speed is everything, specially considering our UI is sway... light, not as complicated, everything should render, recover, appear, fast! Let's check the bar timing please."* Measured first (`scripts/bar-timing.py`, new: three hidden screens, a style's real bar — each piece's command, a cold start until a bar is drawn on every screen, a restyle until every bar is back):
+- **The printer piece took 1,041 ms every 10 s:** `lpstat -p` also scans the network for printers and waits a full second, every call. It now asks CUPS itself with `ipptool` and our own request (`applets/printers/get-printers.test`): **5 ms**, the same answer (`lpstat` kept as the fallback).
+- **The tray held each bar's start back ~420 ms:** its ten picture pieces each started a Python program (Waybar waits for an image piece). The tray now writes each piece's answer to `slot-N.txt` whenever something changes, and the bar reads it with `cat` (~1 ms).
+- **Waybar's own processor reader held each bar back ~90 ms** (two samples before it draws): the processor and memory pieces are hypeForge's now (`custom/cpu`, `custom/memory`), and with the card, the temperature and the disk they read the sampler's answers (`bar-<part>.json`, written every 2 s; the disk every 15 s and at once when a USB drive comes or goes) — the program itself only as a fallback.
+- The remaining Python pieces (moon, bell, clipboard, printer) go through **`applets/common/hfpiece`**: the first screen computes, the others read the kept answer (2 s); `hfbar.signal_bar` throws a piece's kept answer away before it signals, so a change is never shown stale.
+- **Guards:** `bar-timing.py` has a budget (a start under 1 s, a restyle under 0.8 s); `tests/test_bar_look.py` fails if any piece starts a program straight from the bar. Every stylesheet's `#cpu`/`#memory` → `#custom-cpu`/`#custom-memory`. Tests 285; bar 10/10, switch 16/16, tray 23/23, system 10/10, theme 30/30, title bars 21/21.
+
 ### D-112 · One look for the status pieces on every style (Javier)
 *"In all themes, but rice, the icons look terrible. Some are over the others, they aren't consistent with icon size, separation, colors (based on the theme I have on — in rice yellow, in others white), and look. Let's add the icons drives, cpu, gpu, memory that we are using here in rice. They look cool!"* — and later *"Tray icons in all of the themes, looking terrible."*
 - **Every style's `style.toml` has a `[bar]` table:** its bar font, **one** icon size (Rice 14 · Windows 11 16 · Mac OS 9 14 · macOS 14 · KDE 16 · COSMIC 16 · Classic 16), the tray pictures' size (20 · 22 · 18 · 18 · 22 · 22 · 22), the gap (10 px everywhere) and its icon colour (`@hf_icon` on the Rice, `@hf_menubar_text` on the Macs, `@hf_subtext` on Classic, `@hf_text` elsewhere).

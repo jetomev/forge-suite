@@ -31,7 +31,7 @@ import panelkit  # noqa: E402
 
 BAR = HERE / "applets/bar/hypeforge-bar"
 SYSTEM = HERE / "applets/system/hypeforge-system"
-PARTS = {"cpu": "cpu", "custom/gpu": "gpu", "custom/temperature": "temp", "memory": "memory", "custom/disk": "disk"}
+PARTS = {"custom/cpu": "cpu", "custom/gpu": "gpu", "custom/temperature": "temp", "custom/memory": "memory", "custom/disk": "disk"}
 
 
 def main() -> int:
@@ -113,7 +113,7 @@ def main() -> int:
         # below the bar only: the bar's own numbers move every few seconds, on every screen
         below = lambda o: shot(o, o["rect"]["y"] + 70, o["rect"]["height"] - 70)
         before = [below(o) for o in outs]
-        procs.append(subprocess.Popen(["sh", "-c", mine["cpu"]["on-click"]], env=env, stdout=log, stderr=log))
+        procs.append(subprocess.Popen(["sh", "-c", mine["custom/cpu"]["on-click"]], env=env, stdout=log, stderr=log))
         time.sleep(3)
         changed = [sum(a != b for a, b in zip(x, below(o))) for x, o in zip(before, outs)]
         check(changed[2] > 10000 and changed[0] < 1000 and changed[1] < 1000,

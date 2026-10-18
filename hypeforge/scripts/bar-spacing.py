@@ -39,13 +39,13 @@ from gi.repository import Pango, PangoCairo  # noqa: E402
 HERE = Path(__file__).resolve().parent.parent
 FIG = " "
 PIECES = [  # (CSS selector, what it shows) — every status piece a style may place
-    ("#custom-nightlight", "\U000f0594"), ("#custom-disk", f" 48%"), ("#memory", f"\U000f061a 14%"),
-    ("#custom-temperature", "\U000f050f 54°"), ("#custom-gpu", f"\U000f08ae {FIG}4%"), ("#cpu", f"\U000f035b {FIG}3%"),
+    ("#custom-nightlight", "\U000f0594"), ("#custom-disk", f" 48%"), ("#custom-memory", f"\U000f061a 14%"),
+    ("#custom-temperature", "\U000f050f 54°"), ("#custom-gpu", f"\U000f08ae {FIG}4%"), ("#custom-cpu", f"\U000f035b {FIG}3%"),
     ("#custom-clipboard", "\U000f0147"), ("#custom-drives", "\U000f0553"), ("#custom-printers", "\U000f042a"),
     ("#bluetooth", "\U000f00af"), ("#network", "\U000f0200"), ("#wireplumber", "\U000f057e"),
     ("#custom-power-panel", "\U000f0425"),
 ]
-SYSTEM = ("#cpu", "#memory", "#custom-disk", "#custom-gpu", "#custom-temperature")
+SYSTEM = ("#custom-cpu", "#custom-memory", "#custom-disk", "#custom-gpu", "#custom-temperature")
 START, END = "/* bar-spacing:start", "/* bar-spacing:end */"
 
 

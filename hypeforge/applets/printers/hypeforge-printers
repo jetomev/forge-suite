@@ -32,8 +32,22 @@ def run(*cmd):
         return ""
 
 
+REQUEST = Path(__file__).resolve().parent / "get-printers.test"
+STATES = {"idle": "idle", "processing": "printing", "stopped": "stopped"}
+
+
 def printers():
-    """[(name, state)] from `lpstat -p`: state is idle / printing / stopped / disabled."""
+    """[(name, state)]: state is idle / printing / stopped. Asked of CUPS itself (ipptool, 5 ms): `lpstat -p`
+    also scans the network for printers and waits a full second every call — the bar piece runs every
+    10 s (2026-10-17, Javier: "timing and speed is everything"). `lpstat` only if ipptool isn't there."""
+    out = run("ipptool", "-T", "3", "-c", "ipp://localhost/", str(REQUEST))
+    if out.startswith("printer-name,printer-state"):
+        found = []
+        for line in out.splitlines()[1:]:
+            name, _, state = line.rpartition(",")
+            if name:
+                found.append((name, STATES.get(state.strip(), state.strip())))
+        return found
     found = []
     for line in run("lpstat", "-p").splitlines():
         m = re.match(r"printer (\S+) (?:is|now) (\w+)", line)

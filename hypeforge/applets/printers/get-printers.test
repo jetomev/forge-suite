@@ -1,0 +1,15 @@
+# The printers CUPS has set up and their state, asked of CUPS itself (2026-10-17): `lpstat -p` also scans
+# the network for printers it doesn't know and waits a full second every time — 1018 ms against 14 ms.
+# Run: ipptool -c ipp://localhost/ get-printers.test   (prints "printer-name,printer-state" lines)
+{
+  NAME "CUPS-Get-Printers"
+  OPERATION CUPS-Get-Printers
+  GROUP operation-attributes-tag
+  ATTR charset attributes-charset utf-8
+  ATTR naturalLanguage attributes-natural-language en
+  ATTR keyword requested-attributes printer-name,printer-state
+  STATUS successful-ok
+  STATUS client-error-not-found
+  DISPLAY printer-name
+  DISPLAY printer-state
+}

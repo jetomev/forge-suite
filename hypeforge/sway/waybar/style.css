@@ -226,17 +226,17 @@ window#waybar {
 #custom-nightlight.off { color: @hf_alert; }
 
 /* bar-spacing:start — written by scripts/bar-spacing.py --style classic from its style.toml [bar]: one font, 16 px icons, the drawn parts 10 px apart (2026-10-17) */
-#custom-nightlight, #custom-disk, #memory, #custom-temperature, #custom-gpu, #cpu, #custom-clipboard, #custom-drives, #custom-printers, #bluetooth, #network, #wireplumber, #custom-power-panel { font-family: "Noto Sans", "Symbols Nerd Font", sans-serif; font-size: 16px; color: @hf_subtext; }
-#custom-nightlight, #custom-disk, #memory, #custom-temperature, #custom-gpu, #cpu, #custom-clipboard, #custom-drives, #custom-printers, #bluetooth, #network, #wireplumber, #custom-power-panel { margin-left: 0; margin-right: 0; }
+#custom-nightlight, #custom-disk, #custom-memory, #custom-temperature, #custom-gpu, #custom-cpu, #custom-clipboard, #custom-drives, #custom-printers, #bluetooth, #network, #wireplumber, #custom-power-panel { font-family: "Noto Sans", "Symbols Nerd Font", sans-serif; font-size: 16px; color: @hf_subtext; }
+#custom-nightlight, #custom-disk, #custom-memory, #custom-temperature, #custom-gpu, #custom-cpu, #custom-clipboard, #custom-drives, #custom-printers, #bluetooth, #network, #wireplumber, #custom-power-panel { margin-left: 0; margin-right: 0; }
 #quick { padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; }
 #tray { padding-left: 5px; padding-right: 5px; }
 #tray .tray-2 image, #tray .tray-3 image, #tray .tray-4 image, #tray .tray-5 image, #tray .tray-6 image, #tray .tray-7 image, #tray .tray-8 image, #tray .tray-9 image, #tray .tray-10 image { margin-left: 10px; }
 #custom-nightlight { padding-left: 6px; padding-right: 5px; }
 #custom-disk { padding-left: 5px; padding-right: 5px; }
-#memory { padding-left: 5px; padding-right: 5px; }
+#custom-memory { padding-left: 5px; padding-right: 5px; }
 #custom-temperature { padding-left: 5px; padding-right: 4px; }
 #custom-gpu { padding-left: 5px; padding-right: 5px; }
-#cpu { padding-left: 6px; padding-right: 5px; }
+#custom-cpu { padding-left: 6px; padding-right: 5px; }
 #custom-clipboard { padding-left: 5px; padding-right: 5px; }
 #custom-drives { padding-left: 5px; padding-right: 6px; }
 #custom-printers { padding-left: 5px; padding-right: 6px; }
@@ -244,7 +244,7 @@ window#waybar {
 #network { padding-left: 5px; padding-right: 6px; }
 #wireplumber { padding-left: 5px; padding-right: 5px; }
 #custom-power-panel { padding-left: 5px; padding-right: 5px; }
-#cpu.warning, #memory.warning, #custom-disk.warning, #custom-gpu.warning, #custom-temperature.warning { color: @hf_bell; }
-#cpu.critical, #memory.critical, #custom-disk.critical, #custom-gpu.critical, #custom-temperature.critical { color: @hf_alert; }
+#custom-cpu.warning, #custom-memory.warning, #custom-disk.warning, #custom-gpu.warning, #custom-temperature.warning { color: @hf_bell; }
+#custom-cpu.critical, #custom-memory.critical, #custom-disk.critical, #custom-gpu.critical, #custom-temperature.critical { color: @hf_alert; }
 #custom-disk.has { color: @hf_new; }
 /* bar-spacing:end */

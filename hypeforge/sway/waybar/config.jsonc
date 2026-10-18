@@ -43,7 +43,7 @@
   // 2026-10-13), defined once in modules.jsonc.
   "group/indicators": {
     "orientation": "inherit",
-    "modules": ["tray", "custom/nightlight", "custom/disk", "memory", "custom/temperature", "custom/gpu", "cpu", "custom/clipboard", "custom/printers", "group/quick", "group/datetime", "custom/power"]
+    "modules": ["tray", "custom/nightlight", "custom/disk", "custom/memory", "custom/temperature", "custom/gpu", "custom/cpu", "custom/clipboard", "custom/printers", "group/quick", "group/datetime", "custom/power"]
   },
   // USB drives (applet 11): the count of USB drives mounted; click = Open · Eject · Mount.
   // udiskie mounts them (never internal drives; NTFS read-only) and redraws this on every event.

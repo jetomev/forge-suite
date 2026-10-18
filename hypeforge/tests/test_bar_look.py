@@ -13,7 +13,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 STYLES = sorted(p.parent.name for p in (REPO / "styles").glob("*/style.toml"))
-SYSTEM = ["custom/disk", "memory", "custom/temperature", "custom/gpu", "cpu"]
+SYSTEM = ["custom/disk", "custom/memory", "custom/temperature", "custom/gpu", "custom/cpu"]
 
 
 def load(name, path):
@@ -67,6 +67,18 @@ class EveryStyle(unittest.TestCase):
         for slug in STYLES:
             text = spacing.stylesheet(slug).read_text()
             self.assertIn("\n".join(spacing.block(slug)), text, f"{slug}: run scripts/bar-spacing.py --style {slug}")
+
+
+class Fast(unittest.TestCase):
+    def test_no_piece_starts_a_program_straight_from_the_bar(self):
+        """2026-10-17, the bar's timing (1.8 s → 0.35 s): every screen's bar runs its pieces itself, and the tray's
+        ten picture pieces held each bar's start back while ten Python programs started. A piece reads an answer
+        kept ready (`cat`), or goes through applets/common/hfpiece (one run for every screen)."""
+        mods = json.loads(hb.strip_comments((REPO / "sway/waybar/modules.jsonc").read_text()))
+        for name, m in mods.items():
+            if isinstance(m, dict) and m.get("exec"):
+                cmd = m["exec"]
+                self.assertTrue(cmd.startswith("cat ") or "/common/hfpiece " in cmd, f"{name}: {cmd[:70]}")
 
 
 if __name__ == "__main__":

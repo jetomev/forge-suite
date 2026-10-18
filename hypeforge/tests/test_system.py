@@ -174,9 +174,12 @@ class BarPieces(unittest.TestCase):
             self.assertTrue(self.piece("gpu", {"time": time.time(), "gpu": g, "temps": []})["text"].endswith(" " + text))
         temps = [{"group": "Processor", "name": "Processor", "temp": 9.0, "warm": 75, "hot": 90, "state": "ok"}]
         self.assertTrue(self.piece("temp", {"time": time.time(), "gpu": None, "temps": temps})["text"].endswith(" \u20079°"))
+        self.assertTrue(self.piece("cpu", {"time": time.time(), "cpu": 7.0})["text"].endswith(" \u2007\u20077%"))
+        mem = {"total": 32 * 2**30, "used": 3 * 2**30, "percent": 9.0}
+        self.assertTrue(self.piece("memory", {"time": time.time(), "memory": mem})["text"].endswith(" \u20079%"))
         text = (REPO / "sway/waybar/modules.jsonc").read_text()
-        for field, width in (("usage", 3), ("percentage", 2)):
-            self.assertIn(f"{{{field}:\u2007>{width}}}%", text, field)
+        self.assertIn("bar-cpu.json", text, "the processor piece reads the sampler's answer (2026-10-17, the bar's timing)")
+        self.assertIn("bar-memory.json", text)
         disk = subprocess.run([sys.executable, str(self.TOOL), "bar", "disk"], capture_output=True, text=True, timeout=10).stdout
         self.assertRegex(json.loads(disk)["text"], r" [\u2007\d]{2,}%$")
 
@@ -190,8 +193,8 @@ class BarPieces(unittest.TestCase):
         hb = importlib.util.module_from_spec(spec)
         loader.exec_module(hb)
         shared = json.loads(hb.strip_comments(text))
-        for module, part in (("cpu", "cpu"), ("custom/gpu", "gpu"), ("custom/temperature", "temp"),
-                             ("memory", "memory"), ("custom/disk", "disk"), ("custom/drives", "disk")):
+        for module, part in (("custom/cpu", "cpu"), ("custom/gpu", "gpu"), ("custom/temperature", "temp"),
+                             ("custom/memory", "memory"), ("custom/disk", "disk"), ("custom/drives", "disk")):
             self.assertIn(f"hypeforge-panel system --part {part} {{popup}}", shared[module]["on-click"], module)
             if module.startswith("custom/"):
                 self.assertIn("interval", shared[module], f"{module}: a piece without an interval runs once")

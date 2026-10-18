@@ -25,10 +25,10 @@
     "group/hidden-icons",
     "custom/nightlight",
     "custom/disk",
-    "memory",
+    "custom/memory",
     "custom/temperature",
     "custom/gpu",
-    "cpu",
+    "custom/cpu",
     "group/quick",
     "group/datetime"
   ],

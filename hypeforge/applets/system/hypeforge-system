@@ -4,7 +4,7 @@ Temperature, Memory, Disks Space. Let's make them pretty too!!!").
 
     hypeforge-system run            the sampler, started at login: a reading every 2 seconds, the last
                                     three minutes kept for the pop-ups' graphs
-    hypeforge-system bar gpu|temp|disk
+    hypeforge-system bar cpu|memory|gpu|temp|disk [--write]
                                     the bar's graphics card, temperature and disk pieces (Waybar's
                                     own readers draw the processor and memory); the disk piece lights
                                     up while a USB drive is mounted (it took the USB icon's job)
@@ -47,10 +47,16 @@ def run() -> int:
     sampler = hfsys.Sampler(hfsys.read_state().get("history"))     # a restart keeps the graphs
     print("hypeforge-system: reading every 2 seconds")
     try:
+        last_disk = 0.0
         while True:
             time.sleep(hfsys.EVERY)
-            sampler.sample()
+            state = sampler.sample()
             sampler.write()
+            for part in ("cpu", "memory", "gpu", "temp"):
+                write_piece(part, state)
+            if time.time() - last_disk > 15:          # a disk fills slowly; a USB drive tells the bar itself
+                write_piece("disk", {})
+                last_disk = time.time()
     except KeyboardInterrupt:
         return 0
     finally:
@@ -66,23 +72,24 @@ def say(piece: dict):
 
 
 def now() -> dict:
-    """The sampler's last reading; read here and now when the sampler isn't running."""
+    """The sampler's last reading; read here and now when the sampler isn't running (the processor then
+    needs two looks, a fifth of a second apart)."""
     import hfsys
     state = hfsys.read_state()
     if hfsys.fresh(state):
         return state
-    g = hfsys.gpu()
-    return {"gpu": g, "temps": hfsys.temperatures(gpu_now=g)}
+    s = hfsys.Sampler()
+    time.sleep(0.2)
+    return s.sample()
 
 
-def bar(part: str) -> int:
+def piece(part: str, state: dict) -> dict:
+    """What a bar piece shows, as Waybar's JSON, from a reading (the sampler's, or one taken now)."""
     import hfsys
-    state = now()
     if part == "gpu":
         g = state.get("gpu")
         if not g:
-            say({"text": "", "tooltip": "", "class": "none"})    # no card to read: the piece hides
-            return 0
+            return {"text": "", "tooltip": "", "class": "none"}    # no card to read: the piece hides
         busy = g.get("busy") or 0
         tip = [f"{g['name']}: {busy:.0f} % busy"]
         if g.get("mem_total"):
@@ -90,16 +97,14 @@ def bar(part: str) -> int:
         if g.get("temp") is not None:
             tip.append(f"Temperature: {g['temp']:.0f} °C")
         tip.append("Click: more")
-        say({"text": f"{GLYPH['gpu']} {busy:{FIG}>3.0f}%", "tooltip": "\n".join(tip),
-                          "class": hfsys.level(busy, *hfsys.BUSY), "percentage": int(busy)})
-        return 0
+        return {"text": f"{GLYPH['gpu']} {busy:{FIG}>3.0f}%", "tooltip": "\n".join(tip),
+                "class": hfsys.level(busy, *hfsys.BUSY), "percentage": int(busy)}
     if part == "temp":
         temps = state.get("temps") or []
         cpu = hfsys.cpu_temp(temps)
         hot = hfsys.hottest(temps)
         if cpu is None and not hot:
-            say({"text": "", "tooltip": "", "class": "none"})
-            return 0
+            return {"text": "", "tooltip": "", "class": "none"}
         shown = cpu if cpu is not None else hot["temp"]
         tip = [f"{r['name']}: {r['temp']:.0f} °C" for r in temps if r["group"] in ("Processor", "Graphics")][:3]
         drives = [r for r in temps if r["group"] == "Drives"]
@@ -109,9 +114,23 @@ def bar(part: str) -> int:
         if hot and hot["state"] != "ok":
             tip.insert(0, f"{hot['name']} is {'hot' if hot['state'] == 'critical' else 'warm'}: {hot['temp']:.0f} °C")
         tip.append("Click: every sensor and fan")
-        say({"text": f"{GLYPH['temp']} {shown:{FIG}>2.0f}°", "tooltip": "\n".join(tip),
-                          "class": hot["state"] if hot else "ok", "percentage": int(shown)})
-        return 0
+        return {"text": f"{GLYPH['temp']} {shown:{FIG}>2.0f}°", "tooltip": "\n".join(tip),
+                          "class": hot["state"] if hot else "ok", "percentage": int(shown)}
+    if part == "cpu":
+        busy = float(state.get("cpu") or 0.0)
+        tip = [f"Processor: {busy:.0f} % busy"]
+        if state.get("speed"):
+            tip.append(f"Speed: {state['speed']:.2f} GHz")
+        tip.append("Click: more · right click: every program")
+        return {"text": f"{GLYPH['cpu']} {busy:{FIG}>3.0f}%", "tooltip": "\n".join(tip),
+                "class": hfsys.level(busy, *hfsys.BUSY), "percentage": int(busy)}
+    if part == "memory":
+        m = state.get("memory") or hfsys.memory()
+        pct = float(m.get("percent") or 0.0)
+        tip = [f"Memory: {hfsys.gib(m['used'])} of {hfsys.gib(m['total'])} in use",
+               "Click: more · right click: every program"]
+        return {"text": f"{GLYPH['memory']} {pct:{FIG}>2.0f}%", "tooltip": "\n".join(tip),
+                "class": hfsys.level(pct, *hfsys.BUSY), "percentage": int(pct)}
     if part == "disk":
         st = os.statvfs("/")
         total, free = st.f_blocks * st.f_frsize, st.f_bavail * st.f_frsize
@@ -126,10 +145,32 @@ def bar(part: str) -> int:
         if any((d[3] or "").startswith("/run/media/") for d in mounted):
             classes.append("has")                      # the USB icon's blue, now on the disk piece
         tip.append("Click: every disk · eject · mount")
-        say({"text": f"{GLYPH['disk']} {pct:{FIG}>2.0f}%", "tooltip": "\n".join(tip), "class": classes,
-             "percentage": int(pct)})
-        return 0
-    sys.exit(__doc__)
+        return {"text": f"{GLYPH['disk']} {pct:{FIG}>2.0f}%", "tooltip": "\n".join(tip), "class": classes,
+             "percentage": int(pct)}
+    raise ValueError(part)
+
+
+PIECES =Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-system"
+
+
+def write_piece(part: str, state: dict):
+    """The piece's answer as a file (bar-<part>.json): the bar reads it with `cat` (~1 ms) instead of starting
+    this program on every screen (2026-10-17, the bar's timing: "everything should render, recover, appear,
+    fast!"). The sampler writes them at every reading."""
+    PIECES.mkdir(parents=True, exist_ok=True)
+    f = PIECES / f"bar-{part}.json"
+    tmp = f.with_suffix(".tmp")
+    tmp.write_text(json.dumps(piece(part, state), ensure_ascii=False) + "\n")
+    tmp.replace(f)
+
+
+def bar(part: str, write: bool = False) -> int:
+    state = now() if part != "disk" else {}
+    if write:
+        write_piece(part, state)
+    else:
+        say(piece(part, state))
+    return 0
 
 
 def usb_drives() -> list:
@@ -155,8 +196,8 @@ def main() -> int:
     a = sys.argv[1:]
     if a == ["run"]:
         return run()
-    if len(a) == 2 and a[0] == "bar" and a[1] in ("gpu", "temp", "disk"):
-        return bar(a[1])
+    if len(a) in (2, 3) and a[0] == "bar" and a[1] in ("cpu", "memory", "gpu", "temp", "disk") and a[2:] in ([], ["--write"]):
+        return bar(a[1], write=a[2:] == ["--write"])
     if len(a) >= 2 and a[0] == "panel" and a[1] in PARTS:
         return panel(a[1], a[2:])
     sys.exit(__doc__)
