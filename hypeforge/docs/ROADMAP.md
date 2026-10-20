@@ -6,7 +6,7 @@
 
 ## Upcoming — the Sway path (from 4 October 2026, D-44 / D-45)
 
-The live, step-by-step list is [TODO.md](../TODO.md) (Phases 10–14). In short:
+The live, step-by-step list is [TODO.md](../TODO.md) (Phases 10–15). In short:
 
 - [x] **Choose the base:** Sway 1.12 (D-45); three screens at 144 Hz on the NVIDIA test desktop
 - [ ] **The jobs, one by one, terminal first (D-57):** workspaces ✅, window placement ✅, launcher with sections, favourites and a Forge Suite section ✅, window rules ✅, Help & Keys ✅, lock screen + idle ✅, notifications ✅, screenshots ✅, clipboard ✅, the menu bar ✅, sound / network / Bluetooth ✅, USB drives ✅, KDE apps replaced (galculator, cliamp, mc in fresh) ✅ · next: the password helper (our own app, D-56), printing, night light, removing KDE (last)
