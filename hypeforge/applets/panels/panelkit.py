@@ -52,6 +52,8 @@ class Look:
              "panel_tile_on", "panel_tile_on_text", "panel_hover", "panel_selected", "panel_selected_text",
              "panel_danger", "panel_backdrop")
 
+    FONT, SIZE, BORDER, RADIUS = "Noto Sans", 10.5, 1, 10      # the pop-up standard (D-116)
+
     def __init__(self, style: str | None = None, theme: str | None = None):
         ht = theme_tool()
         st = ht.Place().read_state()
@@ -62,13 +64,13 @@ class Look:
         self.straight = self.style.get("corners") == "straight"
         self.pill = 0 if self.straight else 999       # round things (buttons, sliders) follow the corners too
         self.colour = {r: ht.resolve(r, self.style, self.theme) for r in self.ROLES}
-        shape = self.style.get("shape", {})
-        self.radius = int(shape.get("radius_popup", 0) if not isinstance(shape.get("radius_popup"), dict)
-                          else ht.shape_of(self.style, "radius_popup"))
-        self.border = int(shape.get("border_popup", 1))
-        fonts = self.style.get("fonts", {})
-        self.font = fonts.get("ui", "Noto Sans")
-        self.size = float(fonts.get("ui_size", 10.5))
+        # D-116 (Javier, 2026-10-20): ONE pop-up standard on every style for KognogOS v1.0 — one font,
+        # one size, one frame; only the colours follow the theme. Corners follow the corners switch:
+        # square when it says straight, else one rounding (pop-ups have no style of their own in v1.0).
+        self.radius = 0 if self.straight else self.RADIUS
+        self.border = self.BORDER
+        self.font = self.FONT
+        self.size = self.SIZE
 
     def rgba(self, role: str, alpha: float) -> str:
         h = self.colour[role].lstrip("#")

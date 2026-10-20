@@ -5,6 +5,24 @@
 
 ---
 
+## 2026-10-20
+
+### D-116 · One pop-up standard for KognogOS v1.0; the launcher, the bar and the tray are each theme's identity (Javier)
+*"My main comment, as always, is consistency… They look very different (size, gap between the popup and the bar, font, font-size, icons or not, window decoration, content style, etc). They should match the style we have develop for the popups for the tray… For Kognog OS v1.0.0, I do not mind that the bars have differences, but popups cannot be to different between them. Kognog OS v2.0.0 will have themes with different popup styles, for sure."* Then: *"follow the corners switch, Noto Sans. The launcher, the bar, and how the tray icons are presented are the one thing is different in every theme, and gives its identity."*
+- **Found first (the review of Mac OS 9, 2026-10-20):** three building blocks drew the pop-ups — our panel kit (12: the tray menu, Quick Settings, calendar, system, clipboard, power, Start/Kickoff, window menu…), fuzzel lists (~8: Workspaces, Favorites, printers, drives, the notification list, open apps) and Waybar's own GTK menus (Mac OS 9 / macOS: Window, Special, Help). And the panel kit took each style's font and corners (Rice JetBrains Mono 14 px, Mac OS 9 square, Windows 11 8 px…).
+- **The standard (v1.0):** every pop-up is a panel-kit card like the tray menu (D-105); **Noto Sans**, one size, the same bold title row; one border and padding; **corners follow the corners switch (D-81)**; only the colours change with the colour theme; 8 px under the bar, lined up under what was clicked; three widths; every row icon + text, one height, the theme's highlight, the tray menu's fading lines. Lists keep type-to-search. The hover tip no longer covers an open pop-up.
+- **Each theme's identity, outside the standard:** the **launcher**, the **bar**, and **how the tray icons are presented**. The Mac styles have little identity in the bar and pop-ups; their launcher carries it (on Mac OS 9 the emblem menu is the launcher).
+- **COSMIC's launcher becomes full-page, like GNOME's** — its own look, apart from macOS's Spotlight (Javier: *"I do have an objection with how it looks in Cosmic"*).
+- **v2.0:** themes with their own pop-up styles.
+- **Approved and built, step 1 (2026-10-20):** Javier approved the mock (*"yes"*); the panel kit wears the standard on every style (Noto Sans 10.5, 1 px frame, 10 px corners — square when the switch says straight; *rounded* and *style* both 10).
+
+### D-115 · Waybar stays; our own bar is scratched — a bar guard instead (Javier)
+*"What do you think about scratching this one, and keep working with what we have, for which we have done a lot?"* — then *"yes, scratch 18, add the guard"*.
+- **Why:** what makes the bar hypeForge's is already ours — the tray (D-103), every pop-up (the panel kit), the workspace pills, the system pieces (D-104), the menus, the six styles' layouts and spacing (D-112), the speed (D-113). Waybar is the frame they hang on: in Arch's `extra`, maintained, small (the three-part rule, D-57). Our own bar would redo the frame — layer surfaces on every screen, the tray protocol, Sway's messages, six styles — for weeks, to land where we are, and then be ours to maintain. Reliability over novelty.
+- **The cost we accept:** Waybar has bitten us (the image module, F-57 mpris, F-58 the invisible bar, the 10-17 21:41 silent exit after a restyle, cause never found). Each got a fix or a workaround and a bench.
+- **Instead: the bar guard** — the bar comes back by itself whenever it disappears, for any reason, not only after a look re-apply. Its own bench, proven in the failing direction.
+- **Reopened only if** Waybar keeps dying after the guard is in.
+
 ## 2026-10-17
 
 ### D-114 · hypeForge's own Sway is the everyday login (proven in a clean VM the same night: built from nothing, bench 29/29, the login's fallbacks — `testing/`); a safe mode beside it; the FX login removed (Javier)

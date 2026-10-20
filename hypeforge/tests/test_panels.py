@@ -34,9 +34,27 @@ class Look(unittest.TestCase):
                 css = look.css()
                 self.assertIn(look.colour["panel_bg"], css)
 
-    def test_the_rice_is_round_and_mac_os_9_is_square(self):
-        self.assertEqual(panelkit.Look("rice", "kognogos-mocha").radius, 14)
-        self.assertEqual(panelkit.Look("mac-os-9", "light-gray").radius, 0)
+    def looks(self, corners):
+        """Every style's Look with the corners switch on `corners` (not the person's own state)."""
+        from unittest import mock
+        ht = panelkit.theme_tool()                   # Look loads a fresh copy each time: hand it this one
+        asked = []
+        with mock.patch.object(ht.Place, "read_state", lambda self: asked.append(1) or {"corners": corners}), \
+             mock.patch.object(panelkit, "theme_tool", lambda: ht):
+            looks = {slug: panelkit.Look(slug, "kognogos-mocha") for slug in ht.styles()}
+        self.assertEqual(len(asked), len(looks))     # the setup took effect: never the person's own switch
+        return looks
+
+    def test_one_pop_up_standard_on_every_style(self):
+        # D-116 (Javier, 2026-10-20): the Rice was 14 px JetBrains Mono, Mac OS 9 square — now one standard
+        for corners in ("style", "rounded"):
+            looks = self.looks(corners)
+            self.assertGreater(len(looks), 5)
+            shapes = {(lk.font, lk.size, lk.border, lk.radius) for lk in looks.values()}
+            self.assertEqual(shapes, {("Noto Sans", 10.5, 1, 10)}, corners)
+
+    def test_pop_ups_follow_the_corners_switch(self):
+        self.assertEqual({lk.radius for lk in self.looks("straight").values()}, {0})
 
 
 class ViewNames(unittest.TestCase):
