@@ -32,7 +32,7 @@ from hfbar import signal_bar  # noqa: E402
 import hfmenu  # noqa: E402
 
 RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
-FUZZEL = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+FUZZEL = hfmenu.LOOK
 STATE = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "hypeforge"
 SEEN = STATE / "clipboard.seen"
 BAR_SIGNAL = 10  # Waybar redraws the clipboard icon on SIGRTMIN+10

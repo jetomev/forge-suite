@@ -83,7 +83,7 @@ def pick(cfg, lines, prompt, icons=True, lines_shown=None, menu="launcher", extr
     fuzzel = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", prompt, *extra]
     if lines_shown:
         fuzzel += ["--lines", str(lines_shown)]
-    look = Path(os.path.expanduser(cfg.get("fuzzel_config", "")))
+    look = Path(hfmenu.config_path(cfg.get("fuzzel_config", "")))
     if look.is_file():
         fuzzel += ["--config", str(look)]
     text = "\n".join(f"{t}\0icon\x1f{i}" if icons and i else t for t, i in lines) + "\n"
@@ -269,7 +269,7 @@ def main():
         return
     cfg = load()
     if not cfg.get("enabled", False):
-        look = os.path.expanduser(cfg.get("fuzzel_config", ""))
+        look = hfmenu.config_path(cfg.get("fuzzel_config", ""))
         screen = os.environ.get("HYPEFORGE_OUTPUT")   # opened from a bar: that bar's screen
         os.execvp("fuzzel", ["fuzzel"] + (["--config", look] if os.path.isfile(look) else [])
                   + ([f"--output={screen}"] if screen else []))

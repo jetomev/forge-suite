@@ -27,7 +27,7 @@ import hfmenu  # noqa: E402
 
 BAR_SIGNAL = 11
 ICON = "\U000f0553"  # 󰕓 USB (Nerd Font)
-FUZZEL = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+FUZZEL = hfmenu.LOOK
 OURS = "/run/media/"
 
 

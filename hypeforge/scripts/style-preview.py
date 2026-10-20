@@ -61,6 +61,12 @@ def main() -> int:
         if (real / rel).exists():
             (conf / rel).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(real / rel, conf / rel)
+    # the pop-up lists' settings, pointed at THIS preview's look: the shared fuzzel.ini includes
+    # "~/.config/…", the real home, so the lists wore the live look (F-81, 2026-10-20)
+    lists = conf / "sway/fuzzel/fuzzel.ini"          # where the applets look (hfmenu.LOOK)
+    lists.parent.mkdir(parents=True, exist_ok=True)
+    lists.unlink(missing_ok=True)                     # never write through a link into the repo copy
+    lists.write_text((HERE / "sway/fuzzel/fuzzel.ini").read_text().replace("include=~/.config/", f"include={conf}/"))
     sys.path.insert(0, str(APPLETS / "panels"))
     import panelkit
     ht = panelkit.theme_tool()
@@ -75,7 +81,12 @@ def main() -> int:
            if k not in ("SWAYSOCK", "WAYLAND_DISPLAY", "DISPLAY", "I3SOCK", "DBUS_SESSION_BUS_ADDRESS")}
     env.update(XDG_RUNTIME_DIR=str(run), XDG_CONFIG_HOME=str(conf), XDG_DATA_HOME=str(conf / ".local-data"), WLR_BACKENDS="headless", WLR_RENDERER="pixman",
                WLR_HEADLESS_OUTPUTS="1", WLR_LIBINPUT_NO_DEVICES="1", GDK_BACKEND="wayland",
-               PATH=f"{fakebin}:{os.environ['PATH']}")
+               PATH=f"{fakebin}:{os.environ['PATH']}",
+               XDG_CACHE_HOME=str(conf / ".cache"), XDG_STATE_HOME=str(conf / ".state"))
+    # the clipboard: made-up copies in the preview's own history — never the person's (F-80, 2026-10-20)
+    for sample in ("https://kognogos.org", "Meeting moved to 3 pm", "sudo nog update",
+                   "The quick brown fox jumps over the lazy dog"):
+        subprocess.run(["cliphist", "store"], input=sample.encode(), env=env)
     bus = subprocess.run(["dbus-daemon", "--session", "--fork", "--print-address=1", "--print-pid=1"],
                          capture_output=True, text=True, env=env).stdout.split()
     env["DBUS_SESSION_BUS_ADDRESS"], bus_pid = bus[0], int(bus[1])
@@ -104,8 +115,9 @@ def main() -> int:
             for n in names:
                 procs.append(subprocess.Popen([sys.executable, "-c", window, n], env=env, stdout=log, stderr=log))
                 time.sleep(0.8)
-        procs.append(subprocess.Popen(["waybar", "-c", str(conf / "sway/waybar/config.jsonc"),
-                                       "-s", str(conf / "sway/waybar/style.css")], env=env, stdout=log, stderr=log))
+        # through hypeforge-bar, as at login: it fills in each click's {popup} place (2026-10-20: a raw
+        # Waybar handed the pop-ups the bare token, so no panel opened on a --click of the right side)
+        subprocess.run([sys.executable, str(APPLETS / "bar/hypeforge-bar"), "start"], env=env, stdout=log, stderr=log)
         time.sleep(4)
         for name in ht.styles()[a.style].get("layout", {}).get("applets", []):
             pid = next((f for f in run.glob(f"hypeforge-*{name}.pid")), None)
@@ -121,6 +133,7 @@ def main() -> int:
         print(out)
         return 0
     finally:
+        subprocess.run([sys.executable, str(APPLETS / "bar/hypeforge-bar"), "stop"], env=env, capture_output=True)
         try:
             ask(sock, 0, "exit") if sock else None
         except Exception:

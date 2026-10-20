@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "common"))
 import hfmenu  # noqa: E402
 
 ICON = "\U000f042a"  # 󰐪 printer (Nerd Font)
-FUZZEL = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+FUZZEL = hfmenu.LOOK
 SETTINGS_APP = "system-config-printer"
 
 

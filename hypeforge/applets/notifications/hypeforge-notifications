@@ -26,7 +26,7 @@ RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
 SEEN = RUNTIME / "hypeforge-notifications.seen"
 BAR_SIGNAL = 9          # Waybar redraws the bell on SIGRTMIN+9
 DND = "do-not-disturb"  # mako mode; [mode=do-not-disturb] in its config hides pop-ups
-FUZZEL = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+FUZZEL = hfmenu.LOOK
 
 BELL, BELL_NEW, BELL_OFF = "\U000f009a", "\U000f009e", "\U000f009b"  # 󰂚 󰂞 󰂛 (Nerd Font)
 

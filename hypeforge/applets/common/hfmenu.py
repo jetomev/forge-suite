@@ -16,6 +16,18 @@ BACKDROP = Path(__file__).resolve().with_name("hfbackdrop.py")   # a click anywh
 OPEN = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-menu.open"  # "<pid> <name>"
 
 
+def config_path(path: str) -> str:
+    """A "~/.config/…" path in the config folder in use: $XDG_CONFIG_HOME when set (a hidden preview
+    sets it), else ~/.config. Everything else is just ~-expanded (F-81, 2026-10-20)."""
+    base = os.environ.get("XDG_CONFIG_HOME")
+    if base and path.startswith("~/.config/"):
+        return os.path.join(base, path[len("~/.config/"):])
+    return os.path.expanduser(path)
+
+
+LOOK = config_path("~/.config/sway/fuzzel/fuzzel.ini")   # every list's look (fuzzel --config)
+
+
 def close_open(name):
     """Close our list on screen, if any. True when it was `name`'s own: that press meant 'close'."""
     try:

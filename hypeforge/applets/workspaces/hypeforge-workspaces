@@ -287,7 +287,7 @@ def menu(grid):
     here = current()
     # The one on screen is marked (fuzzel cannot colour one line on its own) and selected
     names = [f"{'●' if i == here else '  '}  {i}. {n}" for i, n in enumerate(grid.names, 1)]
-    look = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+    look = hfmenu.LOOK
     cmd = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", "Workspaces  ",
            "--anchor", "top-left", "--x-margin", "44", "--y-margin", "4",
            "--width", "28", "--lines", str(len(names)), "--select-index", str(current() - 1)]

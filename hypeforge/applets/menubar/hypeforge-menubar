@@ -306,7 +306,7 @@ def apps_menu():
         targets.append(w["id"])
     if not rows:
         return
-    look = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+    look = hfmenu.LOOK
     cmd = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", "Open apps  ", "--anchor", "top-right",
            "--x-margin", "4", "--y-margin", "4", "--width", "60", "--lines", str(min(len(rows), 15))]
     if os.path.isfile(look):
@@ -326,7 +326,7 @@ def open_menu(name: str, entries: list | None = None, title: str | None = None):
         return
     items = entries if entries is not None else [e for e in build_menus(apps())[name].tree if e is not None]
     rows = [f"{label}  ▸" if isinstance(target, list) else label for label, target in items]
-    look = os.path.expanduser("~/.config/sway/fuzzel/fuzzel.ini")
+    look = hfmenu.LOOK
     cmd = ["fuzzel", "--dmenu", "--index", "--no-sort", "--prompt", f"{title or MENU_TITLES[name]}  ",
            "--anchor", "top-left", "--x-margin", "4", "--y-margin", "4", "--width", "34",
            "--lines", str(min(len(rows), 16))]
