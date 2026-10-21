@@ -82,7 +82,8 @@ def main() -> int:
     env.update(XDG_RUNTIME_DIR=str(run), XDG_CONFIG_HOME=str(conf), XDG_DATA_HOME=str(conf / ".local-data"), WLR_BACKENDS="headless", WLR_RENDERER="pixman",
                WLR_HEADLESS_OUTPUTS="1", WLR_LIBINPUT_NO_DEVICES="1", GDK_BACKEND="wayland",
                PATH=f"{fakebin}:{os.environ['PATH']}",
-               XDG_CACHE_HOME=str(conf / ".cache"), XDG_STATE_HOME=str(conf / ".state"))
+               XDG_CACHE_HOME=str(conf / ".cache"), XDG_STATE_HOME=str(conf / ".state"),
+               HYPEFORGE_LIST_CARDS=os.environ.get("HYPEFORGE_LIST_CARDS", "1"))   # D-116's list cards (until they're on everywhere)
     # the clipboard: made-up copies in the preview's own history — never the person's (F-80, 2026-10-20)
     for sample in ("https://kognogos.org", "Meeting moved to 3 pm", "sudo nog update",
                    "The quick brown fox jumps over the lazy dog"):

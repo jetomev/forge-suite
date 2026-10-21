@@ -8,7 +8,8 @@ it (a bar button pressed twice). Views: power (the big-button power menu), start
 Start), kickoff (KDE's list), library (COSMIC's App Library), quick (Quick Settings, or one part of
 it with --only), calendar, workspaces (the strip), switcher (Alt + Tab: --hold while Alt is held,
 --back starts from the end, --tucked only the windows tucked away; Alt + Tab again moves it on),
-clipboard, traymenu (a tray app's menu, --slot N), system (--part cpu, gpu, temp, memory or disk), windowmenu (a title bar's right click, --con ID).
+clipboard, traymenu (a tray app's menu, --slot N), system (--part cpu, gpu, temp, memory or disk), windowmenu (a title bar's right click, --con ID),
+list (a bar's short list, D-116: its rows as JSON on stdin, the pick on stdout — common/hfmenu.run opens it).
 --style / --theme draw it in a look other than the active one (the preview bench uses this).
 """
 
@@ -25,7 +26,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "vi
 # view name → its module (a module may not take a standard library's name: "calendar" is one)
 VIEWS = {"power": "power", "start": "start", "quick": "quick", "calendar": "calendar_view", "workspaces": "workspaces",
          "kickoff": "kickoff", "library": "library", "switcher": "switcher", "clipboard": "clipboard", "traymenu": "traymenu",
-         "system": "system", "windowmenu": "windowmenu"}
+         "system": "system", "windowmenu": "windowmenu", "list": "listcard"}
 
 
 def main() -> int:
@@ -54,7 +55,7 @@ def main() -> int:
             return 0
         for other in ("cpu", "gpu", "temp", "memory", "disk"):
             panelkit.close_open(f"system-{other}")
-    elif panelkit.close_open(a.view):
+    elif a.view != "list" and panelkit.close_open(a.view):   # a list: hfmenu.run decides (one list at a time)
         return 0
     a.pending = []
     if a.view == "switcher":
