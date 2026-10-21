@@ -2,6 +2,12 @@
 
 **Target: the first KognogOS release (v1.0, April 2027).** Each section keeps its own detailed list; this one tracks the suite. Updated after every step.
 
+## 2026-10-20 — hypeForge: Phase 11 closed, one pop-up standard (D-116), Sway tells where the pointer is
+- [x] **hypeForge** (details in [hypeforge/TODO.md](hypeforge/TODO.md)): Phase 11 closed (the apps' own title bars → Phase 12, removing KDE → Phase 15); **D-115** Waybar stays, our own bar scratched, a bar guard instead; **D-116** one pop-up standard for v1.0 — the panel kit on every style, the **list card** (on; Javier's live test 3/3); the previews fixed (F-79, F-80, F-81)
+- [x] **Our Sway, patch 3** (`hypeforge/sway-hypeforge/0003-…`): `get_seats` says where the pointer is; VM from nothing 7/7 (`hypeforge/testing/20261020 …`)
+- [ ] **The full theme review** (Javier: Mac OS 9 · macOS · COSMIC *"0/100"*): every style, pop-up, launcher and colour theme, one by one — a long road
+- [ ] Push the 9 local commits + issues F-79…F-81 + the Vault entry — with the next phase (Javier)
+
 ## 2026-10-17 — hypeForge: the system on the bar, our own tray polished, title bars, our own Sway build
 - [x] **hypeForge** (details in [hypeforge/TODO.md](hypeforge/TODO.md)): our own tray (D-103) and its menu as one window (D-105); CPU · GPU · temperature · memory · disk on the bar with their pop-ups (D-104, "Beautiful!"); F-75 #104 (the night light pop-up waited on a Wi-Fi scan); tray icons in each style's colour and a tray restart with no gap (D-106); even 10 px spacing (D-107); numbers that never move the bar (D-108); the disk piece took the USB icon's job (D-109, his USB test passed) — all approved
 - [x] **Title bars on floating windows + the window menu** (D-110): left drag moves, middle click tucks away, right click = float / back into the grid, full screen, workspaces, close; `scripts/titlebar-bench.py` 16/16 — live, his test next
