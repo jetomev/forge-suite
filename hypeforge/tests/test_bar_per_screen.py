@@ -134,25 +134,35 @@ class PopupsOpenOnTheClickedScreen(unittest.TestCase):
 
             def __init__(self, cmd, **_):
                 seen["cmd"] = cmd
+                seen["output"] = os.environ.get("HYPEFORGE_OUTPUT")     # what the card inherits
 
             def communicate(self, _):
                 return b"", b""
         import tempfile
-        saved = {k: os.environ.get(k) for k in ("HYPEFORGE_OUTPUT", "WAYLAND_DISPLAY")}
+        saved = {k: os.environ.get(k) for k in ("HYPEFORGE_OUTPUT", "WAYLAND_DISPLAY", "HYPEFORGE_FUZZEL_LISTS",
+                                                 "HYPEFORGE_LIST_CARDS")}
         old_popen, old_open = hfmenu.subprocess.Popen, hfmenu.OPEN
         hfmenu.subprocess.Popen = FakeMenu
         hfmenu.OPEN = Path(tempfile.mkdtemp(prefix="hfmenu.")) / "open"   # never the real session's
         os.environ["HYPEFORGE_OUTPUT"] = "DP-2"
         os.environ.pop("WAYLAND_DISPLAY", None)                             # no click-catcher either
         try:
+            os.environ["HYPEFORGE_FUZZEL_LISTS"] = "1"                      # fuzzel: told the screen in words
             hfmenu.run("test", ["fuzzel", "--dmenu"], "a\n")
+            fuzzel = seen["cmd"]
+            del os.environ["HYPEFORGE_FUZZEL_LISTS"]                        # the list card (D-116), never the
+            os.environ["HYPEFORGE_LIST_CARDS"] = "1"                         # person's own switch file
+            hfmenu.run("test", ["fuzzel", "--dmenu"], "a\n")
+            card = seen["cmd"]
         finally:
             hfmenu.subprocess.Popen, hfmenu.OPEN = old_popen, old_open
             for k, v in saved.items():
                 os.environ.pop(k, None)
                 if v is not None:
                     os.environ[k] = v
-        self.assertIn("--output=DP-2", seen["cmd"])
+        self.assertIn("--output=DP-2", fuzzel)
+        self.assertIn("list", card)                                         # the card, on the clicked screen
+        self.assertEqual(seen["output"], "DP-2")
 
 
 if __name__ == "__main__":

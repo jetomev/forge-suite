@@ -28,7 +28,7 @@ from hficons import Icons  # noqa: E402
 
 WIDTH = 300           # the standard's narrow width (menus and lists), the tray menu's
 ICON = 20             # a row's icon
-LONG = 12             # rows shown before it scrolls
+LONG = 18             # rows shown before it scrolls (Javier, 2026-10-20: all 18 Favorites)
 SEARCH_FROM = 9       # a list this long shows its search box from the start
 ROW_H = 30            # one row's height, for the scroll limit
 MARK = "●"

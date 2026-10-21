@@ -22,6 +22,11 @@ It runs on **Sway** and adds small pieces of its own, called **applets**.
 
 *Win* is the Windows key (the one with the logo).
 
+**Every list works the same way** (Workspaces, Favorites, the printers, USB drives, notifications, open apps):
+**↑ ↓** move, **Enter** or a click picks, **Escape** or a click anywhere else closes it — and **just
+start typing** to narrow it down: a search box appears with the first letter. The one marked **●** is
+the one in use. The same button again closes the list.
+
 ## The applets
 
 Each applet does one job and can be switched on or off on its own. Every one has a small
