@@ -6,7 +6,7 @@
 - [x] **hypeForge** (details in [hypeforge/TODO.md](hypeforge/TODO.md)): Phase 11 closed (the apps' own title bars → Phase 12, removing KDE → Phase 15); **D-115** Waybar stays, our own bar scratched, a bar guard instead; **D-116** one pop-up standard for v1.0 — the panel kit on every style, the **list card** (on; Javier's live test 3/3); the previews fixed (F-79, F-80, F-81)
 - [x] **Our Sway, patch 3** (`hypeforge/sway-hypeforge/0003-…`): `get_seats` says where the pointer is; VM from nothing 7/7 (`hypeforge/testing/20261020 …`)
 - [ ] **The full theme review** (Javier: Mac OS 9 · macOS · COSMIC *"0/100"*): every style, pop-up, launcher and colour theme, one by one — a long road
-- [ ] Push the 9 local commits + issues F-79…F-81 + the Vault entry — with the next phase (Javier)
+- [x] Pushed 2026-10-22 (Javier: "push, update, document, publish"): the 10 commits, issues #108–#110 (F-79…F-81) opened and closed; hypeForge README roadmap current; Vault entry
 
 ## 2026-10-17 — hypeForge: the system on the bar, our own tray polished, title bars, our own Sway build
 - [x] **hypeForge** (details in [hypeforge/TODO.md](hypeforge/TODO.md)): our own tray (D-103) and its menu as one window (D-105); CPU · GPU · temperature · memory · disk on the bar with their pop-ups (D-104, "Beautiful!"); F-75 #104 (the night light pop-up waited on a Wi-Fi scan); tray icons in each style's colour and a tray restart with no gap (D-106); even 10 px spacing (D-107); numbers that never move the bar (D-108); the disk piece took the USB icon's job (D-109, his USB test passed) — all approved
