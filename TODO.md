@@ -5,6 +5,9 @@
 **Updated after every step.** The full story behind each item is in its GitHub issue.
 
 
+## 2026-10-22 · The project's board
+- [x] **A board for this project** (https://claude.ai/artifact/2idA8cXm3crj2kqhMtQmVE): this TODO as a page beside the chat — calling the project opens it first (mindForge boards, `.board`). Ticks made on the page come back here
+
 ## 2026-10-12 · CLAUDE.md keeps only this project's own rules
 - [x] **One rule, one level** (Javier, 2026-10-12): the 'never the persona names here' line removed; the names come from the global agreement. Commit pushed the same night.
 
