@@ -4,6 +4,9 @@
 
 **Status (17 Oct 2026, 11:50): 1.5.0 RELEASED** — signed tag `v1.5.0`, GitHub Release Latest (tar+asc, SHA256SUMS+asc), AUR `nogforge 1.5.0-1` (`ed429d9`, `nog>=2.0.0`) after Javier installed the locally built package and passed it; kognogos.org card live. **0 open issues** (#16 #23 #27 #28 #29 #30 #31 closed with the release). Benched overnight by Claude alone (desktop + KognogOS VM, every §2 step PASS); 67 tests. Next: Settings.
 
+## 2026-10-22 · The project's board
+- [x] **A board for this project** (https://claude.ai/artifact/ABUXFQtx3bTH7CYrVmcmhX): this TODO as a page beside the chat — calling the project opens it first (mindForge boards, `.board`). Ticks made on the page come back here
+
 ## 2026-10-16 → 17 night · the overnight bench of 1.5.0, all issues resolved
 - [x] **Bookkeeping first** (the brief's rot): mindForge queue lines for nog (2.0.0 released), nogforge, homelab, portal; MEMORY.md lines; homelab TODO's two overdue server clean-ups marked
 - [x] **#16 launcher entry**: `nogforge.desktop` (Terminal=true, Categories=Settings;PackageManager; — one main category, validate shows no hints), installed by the recipe, validated in `check()` and in the test `DesktopEntry`; checked in the VM after `nog install` (MIME-cache hook ran)
