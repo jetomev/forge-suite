@@ -37,7 +37,7 @@ Javier's findings running grubForge inside hypeForge Settings (8 Oct 2026):
 - [x] forgekit's InAppPolkitAgent at start; manual (On a text console, Won't start) updated; 53 tests
 - [x] KognogOS VM tty3: wrong password → try again; right one → backup as root (source and installed 2.1.0rc1)
 - [x] Javier's desktop test passed ("perfect!") → released after forgekit 0.6.0 (AUR recipe: python-gobject + forgekit>=0.6.0, local only)
-- [ ] Decide (Javier): over ssh the policy refuses (allow_any=no) — keep?
+- [x] Decide (Javier): over ssh the policy refuses (allow_any=no) — keep? — **keep** (Javier, 2026-10-22, the KognogOS stage 00 answers) (ticked 2026-10-22 by the KognogOS link check)
 
 ## Next
 - [x] Javier: `nog install grubforge` on the desktop: 2.0.0-1 + python-forgekit 0.5.0-1, verified 2 Oct (public AUR path works)
@@ -71,8 +71,8 @@ Javier's brief (2 Oct): *"screens done with high quality UI and easy to use stru
 - [ ] Test matrix `testing/20261002 - Test Matrix for grubForge v2-0-0.md` — filled phase by phase; §9 needs VMs for Debian/Ubuntu/Fedora/openSUSE; §10 Javier's run
 
 ## Open issues to fold in or decide
-- [ ] #22 `grubforge --version` launches the TUI
-- [ ] #19 frozen boot entries make /etc/default/grub edits inert, with no warning
+- [x] #22 `grubforge --version` launches the TUI — **done**: fixed in v2.0.0, #22 closed (ticked 2026-10-22 by the KognogOS link check)
+- [x] #19 frozen boot entries make /etc/default/grub edits inert, with no warning — **done**: fixed in v2.0.0, #19 closed (ticked 2026-10-22 by the KognogOS link check)
 - [ ] #20 saving a custom order duplicates entries from other generators (41_snapshots-btrfs)
 - [ ] #24 Fedora/openSUSE/RHEL use /boot/grub2 and grub2-mkconfig
 - [ ] #25 test matrix 11.A/11.B can't run on UEFI Arch
