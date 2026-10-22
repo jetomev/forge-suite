@@ -4,6 +4,9 @@
 
 **Current release: v1.1.0** (8 Oct 2026). Before it, v1.0.0 (2 Oct 2026): rebuilt to match grubForge 2.0, "so far the best of the 3" (Javier). **v1.1.0 released 2026-10-08 (GitHub + AUR; Javier on the installed package: "all perfect!") Next after it: #16 hints, #17 mouse shortcuts.
 
+## 2026-10-22 · The project's board
+- [x] **A board for this project** (https://claude.ai/artifact/51mmFoufggp988R7xH6Hd5): this TODO as a page beside the chat — calling the project opens it first (mindForge boards, `.board`). Ticks made on the page come back here
+
 ## 2026-10-12 · CLAUDE.md keeps only this project's own rules
 - [x] **One rule, one level** (Javier, 2026-10-12): the 'never the persona names here' line removed; the names come from the global agreement. Commit pushed the same night.
 
