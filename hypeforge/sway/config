@@ -331,6 +331,9 @@ exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch window ~/Pr
 # pop-ups open with their last three minutes already drawn
 exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch system ~/Programs/forge-suite/hypeforge/applets/system/hypeforge-system run
 exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch bar ~/Programs/forge-suite/hypeforge/applets/bar/hypeforge-bar start
+# the bar guard (D-115, 2026-10-22): brings the bar back whenever it dies, keeps its last words in
+# ~/.local/state/hypeforge/logs/bar-crashes/ (10-22: Waybar crashed 3 s after login, the screen stayed empty)
+exec ~/Programs/forge-suite/hypeforge/applets/common/hypeforge-watch bar-guard ~/Programs/forge-suite/hypeforge/applets/bar/hypeforge-bar guard
 
 include /etc/sway/config.d/*
 

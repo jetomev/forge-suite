@@ -954,7 +954,11 @@ def reload_all(theme: dict, say=print, restart_bar: Path | None = None, style: d
         if gaps and run("swaymsg", ", ".join(gaps)):
             say("  the gaps set on every open workspace")
     if restart_bar is not None:
-        # a new layout: stop the bar by its exact name and start it the way login does (F-58)
+        # a new layout: stop the bar through its own tool first, so the bar guard (D-115) knows it's on purpose,
+        # then any stray one by its exact name, and start it the way login does (F-58)
+        tool = REPO / "applets/bar/hypeforge-bar"
+        if tool.is_file():
+            run(str(tool), "stop")
         run("pkill", "-x", "waybar")
         for _ in range(30):
             if not run("pgrep", "-x", "waybar"):

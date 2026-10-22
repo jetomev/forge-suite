@@ -17,21 +17,35 @@ First built as one Waybar PROCESS per screen: Waybar registers as one app per se
 (fr.arouillard.waybar, APPLICATION_HANDLES_COMMAND_LINE), and on an in-place reload the extra
 copies crashed (GLib: g_application_impl_command_line assertion) — two of three on the bench.
 
+The bar guard (D-115, built 2026-10-22): Waybar crashes now and then (15 times 10-10…10-22), and on
+10-22 it died three seconds after login and left an empty screen until a look re-apply happened to
+start it again. `guard` runs beside it from login: when the saved bar is gone without a `stop`, it
+keeps the dead bar's log (in ~/.local/state/hypeforge/logs/bar-crashes/, which outlives a reboot),
+starts the bar again and says so in a notice. Five deaths within five minutes and it gives up, with a
+notice that stays, so a broken bar can't flash forever. A `stop` (or a style switch, which stops it
+through this tool) clears the saved number first, so the guard never takes a stop for a crash.
+
     hypeforge-bar start      the bar on every screen (stops this tool's earlier one first)
     hypeforge-bar stop       stop it (by its saved process number only)
     hypeforge-bar restart    the same as start
+    hypeforge-bar guard      bring the bar back whenever it dies (one guard per session; ends with Sway)
 
-Writes $XDG_RUNTIME_DIR/hypeforge-bar/config.json from ~/.config/sway/waybar/config.jsonc.
+Writes $XDG_RUNTIME_DIR/hypeforge-bar/config.json from ~/.config/sway/waybar/config.jsonc; the bar's
+log is waybar.log beside it, the run before that one in waybar.log.prev.
 """
 
 from __future__ import annotations
 
+import fcntl
 import json
 import os
+import shutil
 import signal
 import subprocess
 import sys
 import time
+from collections import deque
+from contextlib import contextmanager
 from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "common"))
@@ -43,6 +57,12 @@ CONF = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "sway/
 RUN = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "hypeforge-bar"
 PIDS = RUN / "pids.json"
 PLACES = PIDS.parent / "hypeforge-popup-places.json"   # read by hypeforge-clipboard list (Win + C)
+LOCK = RUN / "bar.lock"                                  # start, stop and the guard, one at a time
+CRASHES = Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state") / "hypeforge/logs/bar-crashes"
+KEEP = 20                                                # crash records kept, newest first
+GUARD_EVERY = float(os.environ.get("HYPEFORGE_BAR_GUARD_EVERY", "2"))      # seconds between looks
+GUARD_MAX = int(os.environ.get("HYPEFORGE_BAR_GUARD_MAX", "5"))            # restarts allowed …
+GUARD_WINDOW = float(os.environ.get("HYPEFORGE_BAR_GUARD_WINDOW", "300"))  # … within this many seconds
 
 
 def strip_comments(text: str) -> str:
@@ -226,8 +246,22 @@ def is_waybar(pid: int) -> bool:
         return False
 
 
+@contextmanager
+def locked():
+    RUN.mkdir(parents=True, exist_ok=True)
+    with open(LOCK, "w") as f:
+        fcntl.flock(f, fcntl.LOCK_EX)
+        yield
+
+
 def stop():
+    with locked():
+        _stop()
+
+
+def _stop():
     pid = saved()
+    PIDS.unlink(missing_ok=True)       # first: from here on a missing bar is a stop, not a crash (the guard)
     if pid and is_waybar(pid):
         try:
             os.kill(pid, signal.SIGTERM)
@@ -237,20 +271,26 @@ def stop():
             if not is_waybar(pid):
                 break
             time.sleep(0.05)
-    PIDS.unlink(missing_ok=True)
 
 
 def start():
-    stop()
-    RUN.mkdir(parents=True, exist_ok=True)
+    with locked():
+        return _start()
+
+
+def _start():
+    _stop()
     found = screens()
     outs = [o["name"] for o in found]
     path = RUN / "config.json"
     path.write_text(json.dumps(bars_for((CONF / "config.jsonc").read_text(), outs, main_screen(found)),
                                indent=2, ensure_ascii=False))
+    if (RUN / "waybar.log").exists():     # the run before this one stays readable (10-22: a restart wiped the crash's)
+        os.replace(RUN / "waybar.log", RUN / "waybar.log.prev")
     log = open(RUN / "waybar.log", "w")
     p = subprocess.Popen(["waybar", "-c", str(path), "-s", str(CONF / "style.css")],
                          stdout=log, stderr=log, start_new_session=True)
+    log.close()                        # the bar holds its own copy
     PIDS.write_text(json.dumps({"pid": p.pid, "screens": outs}))
     # where the bar's pop-ups open, for the ones a key opens (Win + C: the clipboard, 2026-10-17)
     try:
@@ -260,6 +300,131 @@ def start():
     except (OSError, ValueError, IndexError):
         PLACES.unlink(missing_ok=True)
     print(f"hypeforge-bar: the bar on {len(outs)} screen(s): {', '.join(outs)}")
+    return p
+
+
+# ---- the bar guard (D-115) --------------------------------------------------------------------------
+
+def sway_here() -> bool:
+    """Sway still answers: the guard ends with the session, and never starts a bar into a closing one."""
+    try:
+        Sway().ask(GET_OUTPUTS)
+        return True
+    except Exception:
+        return False
+
+
+def notify(title: str, body: str, sticky: bool = False):
+    tool = shutil.which("notify-send")
+    if tool:
+        try:
+            subprocess.run([tool, "--app-name=hypeForge", "--icon=dialog-warning",
+                            "--urgency=" + ("critical" if sticky else "normal"), title, body],
+                           capture_output=True, timeout=10)
+        except (OSError, subprocess.SubprocessError):
+            pass
+
+
+def how_it_ended(pid: int, status: int | None) -> str:
+    """In plain words. The exit status is known only when the guard started that bar itself; otherwise the
+    system's crash record (systemd-coredump) is asked, which takes a moment to be written."""
+    if status is not None:
+        if os.WIFSIGNALED(status):
+            sig = os.WTERMSIG(status)
+            return f"it was stopped by signal {sig} ({signal.Signals(sig).name})"
+        return f"it quit by itself with code {os.WEXITSTATUS(status)}"
+    if shutil.which("coredumpctl"):
+        for _ in range(5):
+            try:
+                out = subprocess.run(["coredumpctl", "--no-pager", "info", str(pid)], capture_output=True,
+                                     text=True, timeout=10).stdout
+            except (OSError, subprocess.SubprocessError):
+                break
+            line = next((l.strip() for l in out.splitlines() if l.strip().startswith("Signal:")), "")
+            if line:
+                return f"it crashed ({line}; details: coredumpctl info {pid})"
+            time.sleep(1)
+    return "no crash record was found; it may have quit by itself"
+
+
+def keep_last_words(pid: int, status: int | None) -> Path:
+    """The dead bar's log, kept where a reboot can't wipe it, with when and how it ended on top."""
+    CRASHES.mkdir(parents=True, exist_ok=True)
+    stamp = time.strftime("%Y%m%d-%H%M%S")
+    path = CRASHES / f"{stamp}-waybar-{pid}.log"
+    try:
+        said = (RUN / "waybar.log").read_text(errors="replace")
+    except OSError:
+        said = "(the bar's log was missing)\n"
+    path.write_text(f"hypeforge-bar guard · the bar (process {pid}) was found gone at "
+                    f"{time.strftime('%Y-%m-%d %H:%M:%S')}\nHow: {how_it_ended(pid, status)}\n"
+                    f"--- what it said (waybar.log) ---\n{said}")
+    for old in sorted(CRASHES.glob("*-waybar-*.log"), reverse=True)[KEEP:]:
+        old.unlink(missing_ok=True)
+    return path
+
+
+def reap() -> dict[int, int]:
+    """Bars this guard started are its children: collect their exit status (and leave no zombies)."""
+    ended = {}
+    while True:
+        try:
+            pid, status = os.waitpid(-1, os.WNOHANG)
+        except ChildProcessError:
+            break
+        if pid == 0:
+            break
+        ended[pid] = status
+    return ended
+
+
+def guard():
+    sys.stdout.reconfigure(line_buffering=True)    # its log (the watcher's file) shows each line as it happens
+    RUN.mkdir(parents=True, exist_ok=True)
+    me = open(RUN / "guard.lock", "w")
+    try:
+        fcntl.flock(me, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        print("hypeforge-bar guard: already guarding this session")
+        return
+    print(f"hypeforge-bar guard: watching the bar every {GUARD_EVERY:g} s "
+          f"(gives up after {GUARD_MAX} restarts in {GUARD_WINDOW:g} s)")
+    restarts: deque[float] = deque()
+    ended: dict[int, int] = {}
+    gave_up_on: int | None = None
+    while True:
+        time.sleep(GUARD_EVERY)
+        ended.update(reap())
+        if not sway_here():
+            print("hypeforge-bar guard: Sway is gone; the guard ends with it")
+            return
+        with locked():
+            pid = saved()
+            if pid is None or is_waybar(pid) or pid == gave_up_on:
+                continue
+            if not sway_here():               # the session closing takes the bar first: not a crash
+                continue
+            kept = keep_last_words(pid, ended.pop(pid, None))
+            now = time.monotonic()
+            while restarts and now - restarts[0] > GUARD_WINDOW:
+                restarts.popleft()
+            when = time.strftime("%H:%M:%S")
+            if len(restarts) >= GUARD_MAX:
+                gave_up_on = pid
+                print(f"hypeforge-bar guard: {when} the bar died again ({kept.name}); "
+                      f"{GUARD_MAX} restarts in {GUARD_WINDOW:g} s, so it stays down")
+                notify("The bar keeps stopping", f"It stopped {GUARD_MAX + 1} times in a few minutes, so hypeForge "
+                       f"stopped bringing it back. What it said last: {kept}", sticky=True)
+                continue
+            restarts.append(now)
+            try:
+                _start()
+            except Exception as e:            # Sway closing mid-start, or a broken config: say it, keep guarding
+                print(f"hypeforge-bar guard: {when} could not start the bar again: {e}")
+                continue
+            gave_up_on = None
+            print(f"hypeforge-bar guard: {when} the bar was gone; started again. Its last words: {kept}")
+        notify("The bar came back", f"It stopped at {when} and was started again. What it said last: {kept}")
 
 
 def main():
@@ -268,6 +433,8 @@ def main():
         start()
     elif args == ["stop"]:
         stop()
+    elif args == ["guard"]:
+        guard()
     else:
         sys.exit(__doc__)
 

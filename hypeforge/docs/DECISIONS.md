@@ -22,6 +22,7 @@
 - **The cost we accept:** Waybar has bitten us (the image module, F-57 mpris, F-58 the invisible bar, the 10-17 21:41 silent exit after a restyle, cause never found). Each got a fix or a workaround and a bench.
 - **Instead: the bar guard** — the bar comes back by itself whenever it disappears, for any reason, not only after a look re-apply. Its own bench, proven in the failing direction.
 - **Reopened only if** Waybar keeps dying after the guard is in.
+- **Built 2026-10-22 (F-82)**, after Waybar crashed three seconds into Javier's login and left an empty screen: `hypeforge-bar guard`, its bench `scripts/bar-guard-bench.py`.
 
 ## 2026-10-17
 

@@ -26,6 +26,12 @@ click it: **"hypeForge: Workspaces stopped"**, the last line of what went wrong,
 (`~/.local/state/hypeforge/logs/`). Nothing is restarted on its own; logging out and in again starts it fresh.
 A style switch or logging out never counts as a crash.
 
+**The bar is the one exception: it comes back by itself.** If the bar disappears, the bar guard starts it
+again within a couple of seconds and a notification says **"The bar came back"**. What the bar said last is
+kept in `~/.local/state/hypeforge/logs/bar-crashes/` (the last 20, kept across restarts of the computer).
+If it keeps stopping (more than five times in five minutes), the guard leaves it down and a notification that
+stays says **"The bar keeps stopping"**; logging out and in again starts it fresh.
+
 ## Settings
 
 The pop-ups' look, place and timing: `~/.config/mako/config` (mako draws them). A
