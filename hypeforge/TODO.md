@@ -129,7 +129,12 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
     - [x] **the list card** (Workspaces, Favorites, printers, drives, notifications, open apps, ⏻) — **built 2026-10-20, waits for Javier's OK**: `views/listcard.py` (the tray menu's look: bold title, soft line, one row height, icons, ● in the accent, type to find, 18 rows then it scrolls (Javier: all 18 Favorites)); `hfmenu.run` turns each applet's fuzzel command into it (applets unchanged; the place from the bar's own `{popup}` place, so lists follow a bottom bar too); the launcher stays fuzzel. **Approved and switched on 2026-10-20 (Javier: "yes, turn it on")** (`~/.config/hypeforge/list-cards` on; delete it to go back; `HYPEFORGE_FUZZEL_LISTS=1` always back to fuzzel); on in the hidden preview. Tests 292 (`test_list_card.py`, 3, the switch and the ● seen failing). Before/after: `logs/popup-review-20261020/list-card-before-after.png`. *Slip:* the first version went live for a few minutes before the switch existed
     - [ ] **the menu card** (Window, Special, Help on the Mac styles) replaces Waybar's menus — needs the step above (they must open under their word)
     - [x] **Sway says where the pointer is — patch 3** (Javier picked it 2026-10-20 over measuring the bar): measured first (a new surface isn't told the pointer's place until it moves; plain Sway reports it nowhere), `sway-hypeforge/0003-seat-cursor-position.patch` (`get_seats` → `cursor {x, y}`), installed here, bench 29/29, exact on three hidden screens; **VM from nothing: 7/7** (`testing/20261020 - Test Results for hypeForge's Sway build 1-12 patch 3.md`, snapshot `sway-patch3-tested`). The desktop gets it at the next login
-    - [ ] every pop-up opens under what was clicked (reads patch 3; plain Sway keeps today's places); the hover tip stops covering it; the app name's `gimp` box
+    - [ ] every pop-up opens under what was clicked (reads patch 3; plain Sway keeps today's places)
+    - [ ] the hover tip stops covering an open pop-up
+    - [ ] the app name's odd `gimp` box on the menu-bar styles
+    - [ ] one title row on every pop-up (Quick Settings has none today)
+    - [ ] three widths only: narrow, medium, wide
+    - [ ] the notification cards on the standard
     - [ ] the review, style by style (Mac OS 9 and macOS first), against the standard
   - [ ] **COSMIC's launcher: full page, like GNOME's** (D-116, Javier 2026-10-20), apart from macOS's Spotlight
   - **2026-10-20 · started: Mac OS 9 + Light Gray**, every pop-up clicked open on the hidden screen (`logs/popup-review-20261020/`, 19 pop-ups, two sheets shown to Javier); his calls next
@@ -140,6 +145,14 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
   - **Order:** Mac OS 9 · macOS · COSMIC first, then Windows 11 · KDE · the Rice · Classic
   - **Per style:** the bar · the launcher (each theme's identity, D-116 — COSMIC full page like GNOME's) · every pop-up against the standard (D-116), one by one · the tray icons
   - **Per colour theme:** each style in all 25 colour themes (light and dark, contrast between and inside, D-90 / F-68)
+  - [ ] the Rice (v1.0, KognogOS's default)
+  - [ ] Windows 11 (v1.0)
+  - [ ] KDE (v1.0)
+  - [ ] Classic (v1.0)
+  - [ ] COSMIC (1.x)
+  - [ ] Mac OS 9 (1.x)
+  - [ ] macOS (1.x)
+  - [ ] every colour theme on each style that ships (1.x)
   - **How:** shot on the hidden screen (`style-preview.py --click`, true since F-79/F-80/F-81) → Javier's call → fix → his look on the real desktop; written down as a matrix in `testing/` so nothing is skipped
   - Folds in: the pop-up review below (Mac OS 9 + Light Gray started 10-20), pop-ups under what was clicked (patch 3 ready)
 - [x] **Title bars on floating windows, and the window menu (D-110, 2026-10-17)** — Javier's list + his picks (left drag moves; floating windows only): every style's floating windows get a themed title bar (`applets/window/hypeforge-window watch` gives it whatever made them float; apps with their own bar keep it, Alacritty and friends get ours), middle click tucks away, right click = the window menu (`views/windowmenu.py`: float / back into the grid, full screen, every workspace, move to a workspace, tuck away, close); `scripts/titlebar-bench.py` 16/16; **live, his look next**
@@ -157,6 +170,10 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [x] From the KognogOS brand (logo, colours): a palette with contrast between elements on purpose — connected, not fused, not monotone — **25 themes approved 10-10 (D-67…D-77)**
 - [x] Each visual step designed and approved before it is built (bar, borders, launcher, notifications, lock screen, terminal, wallpaper…) — **the method held: D-67…D-93, each approved before building**
 - [ ] Apps that draw their own minimise/maximise/close bar (Chrome…): switch it off where the app allows — **unblocked 2026-10-17 (D-110):** our title bar + window menu do the job now; Chrome: Javier turns on Settings → Appearance → "Use system title bar and borders" (his setting) — *moved here from Phase 11, last in this phase (Javier, 2026-10-20)*
+- [ ] **Any number of screens, proven from one to six** (KognogOS 1.x; one and two are proven for 1.0 by KognogOS's own tests)
+- [ ] **Drag and drop windows onto each other to tab or stack them** (KognogOS 1.x)
+- [ ] **The lock screen's box follows the corners switch** (D-81; KognogOS 1.x)
+- [ ] **Our Sway build as a KognogOS package** (D-111): today it's built in the home folder; the disc needs a package (KognogOS 1.0)
 
 ## Track · The order from here
 *Ranked 2026-10-07 — Javier agreed the v1.0 cut; walletForge was pulled to the front, then set back to its place by Javier the same night once #41 removed the pain (D-2). Workflow first, then usability, then coolness. One line per step; the step in progress carries its issue.*
@@ -177,6 +194,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] 8. Network & Wi-Fi
 - [ ] 9. Bluetooth
 - [ ] 10. Look (the Theme manager: wallpaper, themes, icons, pointer, fonts)
+  - [ ] Launcher settings: sections, favourites, its look (KognogOS 1.x)
+  - [ ] Lock screen look settings (KognogOS 1.x)
 - [ ] 11. Default apps (#19)
 - [x] 12a. **Workspaces → workspaceForge 1.0.0** (D-66, released 10-09, AUR; Sharing off until Javier rethinks it)
 - [ ] 12b. **Windows** — its own Forge app (D-66): placement, float rules, tiling/floating; **any number of screens — the ISO gate**
@@ -202,6 +221,14 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
   - ✅ **D-96 (#101; Javier, 10-13): three pop-ups, one version each, on every style** — the date-time-bell piece (the Rice's), the Quick Settings pill (Windows 11's), the night light's moon (the Rice's), defined once in modules.jsonc; `hypeforge-bar` works out each bar's pop-up placement itself (`{popup}`); Classic joins the shared file; tests 202 + 2, all seven bars rendered hidden, bar-bench. ⬜ Javier's look at each style · ✅ **D-97 (#102; 10-13): Settings hands its terminal's cells to the apps in its panes** (themeForge's sharp preview inside Settings; takes effect at Settings' next start). His first look: **F-74** (#99) the preview landed top-left (Settings opened straight on Look → the pane's place asked too early, 0 0) → Settings keeps `pane-<n>` current, themeForge reads it as it follows. ✅ his check from a freshly started Settings (10-13: "working well", #99 closed)
   - ✅ **D-93 (Javier, 10-11): the wallpaper** — each style's topic in the colour theme's colours (the Rice KognogOS Tier Aware; ribbons, shards, space new), KognogOS backgrounds in all 25 colours (lifted art, Mocha = the original), solid, your own; fill · fit · stretch · center · tile; themeForge's Wallpaper page (its D-6; **redesigned 10-13 after his run: a browsable folder, every picture listed, Apply Background — themeForge D-8/D-9, #96**). ⬜ Javier's run of the new page · **packaging (when hypeForge gets one):** the look command now needs python-pillow, python-numpy, swaybg, adw-gtk-theme (+ the palettes' icon and cursor themes) — listed in themeForge's docs/PACKAGING.md too
 - [ ] 26. After 1.0: game controllers + the G13 app · accessibility · online accounts · remote desktop · touchscreen · permissions · spell check · animations
+  - [ ] Game controllers + the G13 app
+  - [ ] Accessibility (large text and pointer)
+  - [ ] Online accounts
+  - [ ] Remote desktop
+  - [ ] Touchscreen
+  - [ ] App permissions
+  - [ ] Spell check
+  - [ ] Animations
 - [ ] 27. **Remove KDE — the very last step** (= Phase 15)
 
 ## Track · Settings catalogue and the v1.0 cut
@@ -215,6 +242,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ## Phase 13 · Forge apps for the gaps
 - [ ] New Forge Suite apps for the jobs with no terminal app (one at a time, each its own project)
+  - [ ] A Calculator in our look (galculator meanwhile; KognogOS 1.x)
 - [x] **The launcher's Forge Suite group removed (Javier, 2026-10-08 late; D-63):** its apps moved into **Settings**, with **hypeForge Settings first** (its launcher entry was already installed) → displayForge, nogForge, grubForge, alacrittyForge, bitlaForge, Help & Keys, printer settings, then the rest by category. Repo + live `sections.toml` (backup kept); checked with the launcher's own sorting. They now open on workspace 6 (Settings), not on the screen you're on — flagged to Javier
 - [x] **The launcher's groups → the standard kinds of app (Javier, 2026-10-08 late; D-64):** Development, Games, Graphics, Internet, Multimedia, Office, Settings, System, Utilities (+ Education, Science, Other when not empty); every app where its own Categories say, `claim_order` for ties, hand placement for apps with none; where they open kept separate (`[workspaces]` + each group's workspace). 95 of 95 apps placed; `tests/test_launcher_groups.py` (5 tests; the priority list was first written after the groups, where TOML made it part of "Other" — a test caught it). Repo + live `sections.toml` (backup kept)
 - [x] **The Claude web app (Chrome) removed from the launcher (Javier, 2026-10-08 late: "we do not need it anymore"):** its launcher file and 5 icons moved to `~/.local/share/hypeforge-removed/claude-web-app-20261008/`, its line out of `sections.toml` (repo + live). Claude Desktop and Claude Terminal stay. Chrome may put it back unless it's also removed inside Chrome (chrome://apps → Claude → Remove) — told Javier
@@ -233,4 +261,4 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 ---
 
 ## Open questions
-- [ ] The test desktop runs nog's stock tier list, not KognogOS's. Is that on purpose? (found 2026-09-28)
+- [x] The test desktop runs nog's stock tier list, not KognogOS's. Is that on purpose? (found 2026-09-28) — **answered 2026-10-22**: not on purpose; this desktop now runs KognogOS's list (backup `/etc/nog/tier-pins.toml.bak-20261022`) (ticked 2026-10-22 by the KognogOS link check)
