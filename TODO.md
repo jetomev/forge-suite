@@ -81,10 +81,11 @@
 - [x] Released 1.2.0 — 22:10 (tag, Release, AUR 1.2.0-1); Javier's first look → #21 #22 → 1.3.0 twenty minutes later
 
 ## Backlog from Javier's use · 2026-10-07 (the sudoForge 1.0.1 update, through nogForge)
-- [ ] **#17 · Update page:** unticking a package with the mouse scrolls the list back to the top — with 52 updates every tick means scrolling down again. Fix: change only the row, or restore the scroll position and the highlighted row after the redraw
-- [ ] **#18 · Update page:** "Tick all" / "Untick all" buttons at the top left of the list (Javier's words: Select All / Deselect All; wording his call), acting on the filtered list; keys in the hint bar and Help
-- [ ] **#19 · In-System page:** per-row buttons on the right — **Update** (only when newer), **Downgrade** (only when an older version is at hand; needs a design pass + nog's say), **Uninstall** (the word is Uninstall, not Remove; asks first with nog's removal preview)
-- [ ] **#20 · Update page:** update **one** package by itself — a filter box above the list + a per-row "Update this one" button (Javier, 10-07 21:50: "too hard to get one package updated by itself"; he used `nog` in a terminal instead). **Javier: these four come before the next hypeForge steps**
+- [x] **#17 · Update page:** unticking a package with the mouse scrolls the list back to the top — with 52 updates every tick means scrolling down again. Fix: change only the row, or restore the scroll position and the highlighted row after the redraw — **done**: shipped in 1.2.0, #17 closed 10-08 (ticked 2026-10-22 by the KognogOS link check)
+- [x] **#18 · Update page:** "Tick all" / "Untick all" buttons at the top left of the list (Javier's words: Select All / Deselect All; wording his call), acting on the filtered list; keys in the hint bar and Help — **done**: shipped in 1.2.0, #18 closed 10-08 (ticked 2026-10-22 by the KognogOS link check)
+- [x] **#19 · In-System page:** per-row buttons on the right — **Update** (only when newer), **Downgrade** (only when an older version is at hand; needs a design pass + nog's say), **Uninstall** (the word is Uninstall, not Remove; asks first with nog's removal preview) — **Update + Uninstall done** in 1.2.0, #19 closed 10-08; Downgrade has its own line below (ticked 2026-10-22 by the KognogOS link check)
+- [x] **#20 · Update page:** update **one** package by itself — a filter box above the list + a per-row "Update this one" button (Javier, 10-07 21:50: "too hard to get one package updated by itself"; he used `nog` in a terminal instead). **Javier: these four come before the next hypeForge steps** — **done**: shipped in 1.2.0, #20 closed 10-08 (ticked 2026-10-22 by the KognogOS link check)
+- [ ] **Downgrade** on In-System rows (the part of #19 not built: only when an older version is at hand; needs a design pass + nog's say)
 - Context: the update itself went fine (sudoforge 1.0.0 → 1.0.1, built by yay, password in nogForge's own box). The wobbly box borders in Javier's screenshots were Claude Desktop's terminal font, not nogForge
 
 ## v1.1.1 — the AUR build works from a terminal · F-13 #15
@@ -98,7 +99,7 @@
 - [x] KognogOS VM, real text console: install (repo + AUR via yay), update with steps, cancelled password, remove — all PASS (matrix `testing/20261004 - Test Matrix for nogForge v1-1-0.md` §1)
 - [x] **Javier's desktop test** (§2): all PASS ("wow! better than expected!", "works wonders")
 - [x] Released in order: forgekit 0.6.0 → nog 1.7.0 → grubForge 2.1.0 → nogForge 1.1.0 (docs, man pages, CHANGELOGs, tags, GitHub, AUR in that order); kognogos.org; close #14, forgekit#6, nog#45, grubforge#36
-- [ ] Decide: nogForge on the KognogOS disc? (it isn't in `iso/packages.x86_64`)
+- [x] Decide: nogForge on the KognogOS disc? (it isn't in `iso/packages.x86_64`) — **yes**: v1.0 (the KognogOS 1.0 cut, 2026-10-21) (ticked 2026-10-22 by the KognogOS link check)
 
 ## Decided (Javier, 3 Oct 2026)
 
