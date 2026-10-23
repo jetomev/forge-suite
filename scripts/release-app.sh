@@ -52,7 +52,7 @@ case "$mode" in
       echo "  Next, by hand (it publishes): the release notes in a file, then"
       echo "    gh release create $tag -R jetomev/forge-suite --title \"<App> $ver — <tagline>\" --notes-file <notes> \\"
       echo "      $out/$name.tar.gz $out/$name.tar.gz.asc $out/$name.SHA256SUMS $out/$name.SHA256SUMS.asc"
-      echo "  (forgekit, the shared library: add --latest=false. An app takes Latest — the newest app release.)"
+      echo "  (forgekit, the shared library: add --latest=false. An app takes Latest: the newest app release, decided 2026-10-22.)"
     else
       echo "  not signed (--no-sign): a dry run"
     fi

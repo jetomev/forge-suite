@@ -45,7 +45,7 @@ gh release create <app>-vX.Y.Z -R jetomev/forge-suite --title "<App> X.Y.Z — <
 ```
 
 - **Rich notes:** what changed in plain words, the findings fixed (with their issues), the test count, how to install.
-- **Latest:** one repository holds many apps, so only one release can be Latest. So far the newest *app* release takes it; forgekit, the shared library, ships with `--latest=false`.
+- **Latest** (decided 2026-10-22; the maintainer left it to Claude): one repository holds many apps, so only one release can be Latest — **the newest app release takes it**, so people landing on the repository see an app they can install; **forgekit, the shared library, never does** (`--latest=false`).
 - Then check it: `scripts/release-app.sh <app> X.Y.Z --verify` downloads the published files, checks both signatures and the checksum, rebuilds from the tag and compares byte for byte.
 
 ## 6 · The AUR recipe
