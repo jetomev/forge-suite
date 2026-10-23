@@ -7,6 +7,8 @@
 - [x] **1.1.1**: the launcher entry (#118) + the app's own links point at the suite (`tests/test_v111.py`, seen failing first); tests 90
 - [ ] Release 1.1.1 (GitHub, `bitlaforge-v1.1.1`), the AUR recipe repointed at forge-suite + the entry installed, **Javier's local test**, then the AUR push; then close #118
 
+## 2026-10-08 · 1.1.0 — the same keys as every Forge app
+
 - [x] **1.1.0 — the same keys as every Forge app ([#13](https://github.com/jetomev/bitlaforge/issues/13)), released 2026-10-08 (GitHub + AUR; Javier on the installed package: "all perfect!")**
   - ✅ Built, on forgekit 0.10.0 (unreleased, in `~/Programs/forge-suite/forgekit`): 1-5 and Ctrl + the underlined letter for every menu entry, Help included (5 = Help), from forgekit; the app's own 1-4 and Ctrl+D/E/L/Y removed. Bottom bar "1-5 menu". `--hypeforge` / `--hypeForge` (hidden from `--help` and the man page): no Quit, Q/Ctrl+Q do nothing; Settings closing it asks first while mining or with unsaved changes (asked twice = one question). Button labels "Words in Title Case (k)". A shutdown error found by the new tests fixed (the 1-second refresh while closing). From-source install now clones forge-suite (the forgekit repo is archived).
   - ✅ Tests 64 → 81 (round 1), warnings 0 → 0; 17 failing-direction checks (each fix taken out, its test fails, put back). Console preview clean (Dashboard, Log, Help menu under `--hypeforge`). Screenshots regenerated. Version 1.1.0 in `__init__.py`, README badge, man page, CHANGELOG/ROADMAP; forgekit ≥ 0.10.0 in README + man page.
