@@ -174,6 +174,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] **Drag and drop windows onto each other to tab or stack them** (KognogOS 1.x)
 - [ ] **The lock screen's box follows the corners switch** (D-81; KognogOS 1.x)
 - [ ] **Our Sway build as a KognogOS package** (D-111): today it's built in the home folder; the disc needs a package (KognogOS 1.0)
+- [ ] **The benches' wallpaper path** (`fx-bench.py`, `theme-bench.py`, `switcher-bench.py`) names `/usr/share/wallpapers/kognog/Kognog OS Semi - Logo Catpuccin Mocha.png`, the copy installed on this desktop; the disc installs it as `KognogOS Semi - Logo Catppuccin Mocha.png` (KognogOS, 2026-10-22) — update the three with the Sway disc (#13)
 
 ## Track · The order from here
 *Ranked 2026-10-07 — Javier agreed the v1.0 cut; walletForge was pulled to the front, then set back to its place by Javier the same night once #41 removed the pain (D-2). Workflow first, then usability, then coolness. One line per step; the step in progress carries its issue.*
