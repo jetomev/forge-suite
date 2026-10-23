@@ -16,6 +16,7 @@
 - [x] **2.2.1** — GitHub Release v2.2.1 (signed, 2026-10-11), 86 tests at the tag; AUR `2635ffd` after Javier's local test ✅
 
 ## At the next release
+- [x] **2.2.2 released 2026-10-22** — GitHub `v2.2.2` (reproducible), Javier's local test all pass, AUR `6abd560` pushed, #37 closed
 - [x] **The launcher entry (#37)** — in 2.2.2 (2026-10-22, Javier: ship it now); — `grubforge.desktop` + `tests/test_desktop_entry.py` are in the repo (2026-10-22, the KognogOS clean-house); at the next version the AUR recipe adds `install -Dm644 grubforge.desktop "${pkgdir}/usr/share/applications/grubforge.desktop"`, `checkdepends=('desktop-file-utils')` and `desktop-file-validate grubforge.desktop` in `check()`; then close #37, and hypeForge's own copy can go
 - [ ] **The AUR description, at the next release** (Javier, 2026-10-09): the AUR `pkgdesc` (and `.SRCINFO`) gets the same "where it runs" words as the README, GitHub About and kognogos.org — distribution · desktop · plain text console. Not pushed on its own: AUR pushes stay one per proven version.
 
