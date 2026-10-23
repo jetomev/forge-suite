@@ -209,3 +209,6 @@ __marimo__/
 # test packages (scripts/make-rc-packages.sh)
 dist-rc/
 logs/
+
+# the history-rewrite backup bundles (scripts/rewrite-old-commit-message.sh)
+backups/
