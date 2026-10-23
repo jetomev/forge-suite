@@ -1,0 +1,15 @@
+[Desktop Entry]
+# alacrittyForge's own launcher entry (#18): the package installs it as /usr/share/applications/alacrittyforge.desktop,
+# so the app shows in every app menu and launcher. Terminal=true: the desktop opens it in its terminal.
+# hypeForge ships its own copy for its floating window; a user copy of the same name replaces this one,
+# so nothing shows twice.
+Type=Application
+Name=alacrittyForge
+GenericName=Terminal settings
+Comment=Alacritty, your terminal: its look, font, cursor, colours and shortcuts
+TryExec=alacrittyforge
+Exec=alacrittyforge
+Icon=utilities-terminal
+Terminal=true
+Categories=Settings;DesktopSettings;
+Keywords=alacritty;terminal;font;colours;cursor;shortcuts;

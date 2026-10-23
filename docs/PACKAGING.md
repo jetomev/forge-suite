@@ -23,6 +23,12 @@ aren't listed.*
 |---|---|---|
 | alacritty | the terminal whose settings it edits | (program alacritty) |
 
+## At build time only (`checkdepends`)
+
+| Package | What uses it | Module / program |
+|---|---|---|
+| desktop-file-utils | `check()` validates the launcher entry `alacrittyforge.desktop` (next release, #18) | (program desktop-file-validate) |
+
 ## The AUR recipe
 
 Matches the AUR recipe 1.1.0-1. Nothing to change.
