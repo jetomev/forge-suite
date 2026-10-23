@@ -1,0 +1,204 @@
+# grubForge release checklist
+
+Pre-flight gates that any cut (alpha or stable) must pass before tag + GitHub release + AUR push. Captures process gaps surfaced by past test runs.
+
+## Pre-test snapshot — preserve outside the backups dir
+
+The §11 cleanup verification needs a survival baseline that is **immune to §8.7's destructive cleanup**. Before launching the test app:
+
+```bash
+mkdir -p /tmp/grubforge-pretest
+sudo cp -p /etc/default/grub /tmp/grubforge-pretest/
+sudo cp -p /etc/grub.d/40_custom /tmp/grubforge-pretest/ 2>/dev/null || true
+sudo sha256sum /etc/default/grub > /tmp/grubforge-pretest/grub.sha256
+```
+
+§11 then diffs against `/tmp/grubforge-pretest/grub` rather than against a backup that the run might have wiped. (Background: M6 in the v1.0.1 test results — without this, drift on individual GRUB keys cannot be conclusively attributed.)
+
+## Async-worker pattern audit — `@work` and `run_worker` must not double-wrap
+
+```bash
+grep -rn "@work" grubforge/
+grep -rn "run_worker" grubforge/
+grep -rn "run_worker(self\.action_" grubforge/   # MUST be empty
+```
+
+The third grep must return zero hits. Any `run_worker(self.action_X())` where `action_X` is `@work`-decorated will throw `WorkerError: Unsupported attempt to run an async worker` on newer Textual versions. (Background: F14 in the v1.0.1 test results — v1.0.0 shipped this bug across themes.py and backup.py; v1.0.1 only fixed themes.py until §8 caught it.)
+
+## Version sync
+
+Before tagging, all of these must agree on the version string:
+
+- `grubforge/__init__.py` `__version__` (since 2.0.0 the only one in the code: `cli.py` and the banner read it; `app.py VERSION` is gone)
+- `grubforge.1` `.TH` header
+- `README.md` Version badge
+- `~/Programs/aur-grubforge/PKGBUILD` `pkgver` + `pkgrel`
+- AUR `.SRCINFO` (regenerate with `makepkg --printsrcinfo > .SRCINFO`)
+- ~~`README.md` AUR badge cache-buster~~ — **NOT here. This one is bumped AFTER the AUR push — see below.**
+
+> The cache-buster is not cosmetic pedantry. GitHub proxies external images
+> through camo, which serves them with `cache-control: max-age=432000` — **five
+> days** — and ignores the shorter `max-age=3600` shields.io actually sends. So
+> after a release the README can advertise the *previous* AUR version for most of
+> a week. Changing the query string changes camo's cache key, which is the only
+> reliable way to force a refresh.
+>
+> ⚠️ **Bumping it "with the version" is exactly what breaks it, and it broke on
+> v1.1.1.** The version surfaces above are all updated in the docs commit, which
+> lands *before* the AUR push. Camo then fetches the badge under the new key
+> while the AUR still serves the OLD version — and caches that for five days.
+> The buster did its job perfectly and cached the wrong answer.
+>
+> Confirmed on 2026-09-01: with `?v=1.1.1` in the README, camo served
+> `aur: v1.1.0-1` on every fetch while shields.io served `aur: v1.1.1-1` for the
+> identical URL. Order of operations, not the value, was the defect.
+>
+> **The rule: bump the cache-buster to the full `pkgver-pkgrel` (e.g. `1.1.1-1`)
+> as a separate commit AFTER the AUR push has landed and the AUR RPC confirms the
+> new version.** Then verify what is actually being served — a green
+> `git push` proves nothing here:
+>
+> ```
+> curl -s https://github.com/jetomev/grubforge \
+>   | grep -oE 'https://camo\.githubusercontent\.com/[a-f0-9]+/[a-f0-9]+' \
+>   | while read u; do python3 -c "import sys,binascii;print(binascii.unhexlify(sys.argv[1].split('/')[-1]).decode())" "$u"; done
+> ```
+>
+> Decode the camo URLs, find the AUR one, fetch it, and read the version out of
+> its `<title>`. If it does not match the AUR, the badge is lying to every visitor.
+
+> `__init__.py` is the one that gets forgotten. It was stale at 1.0.3 during
+> the v1.1.0 cut and this gate is what caught it. v1.0.3 shipped after fixing
+> the same class of bug in `app.py`, so it has now happened twice.
+
+## Privilege model — the three-way path agreement (v1.1.0+)
+
+pkexec runs **only** the exact path named in the polkit policy. If these three
+disagree, authorisation fails at runtime with an error that does not obviously
+point at a packaging mistake:
+
+```bash
+grep exec.path polkit/org.kognogos.grubforge.policy
+grep 'INSTALLED_HELPER' grubforge/privilege.py
+grep 'grubforge-helper' ~/Programs/aur-grubforge/PKGBUILD
+```
+
+All three must read `/usr/lib/grubforge/grubforge-helper`.
+
+Also verify after installing the package:
+
+```bash
+pkaction --action-id org.kognogos.grubforge.manage --verbose
+ls -l /usr/lib/grubforge/grubforge-helper     # must be root:root, not user-writable
+```
+
+A root helper writable by an unprivileged user defeats the entire model.
+
+## Privilege model — constants duplicated in the helper
+
+`helper/grubforge-helper` is deliberately self-contained: root-owned code must
+never import from a user-writable path. The cost is duplicated constants, and
+silent drift between the two copies is a **security** bug, not a cosmetic one —
+the app would offer something the helper refuses, or worse, the helper would
+accept something the app never intended to allow.
+
+```bash
+grep -n 'MAX_BACKUPS' grubforge/backup_manager.py helper/grubforge-helper
+grep -n 'MANAGED_SCRIPTS' grubforge/boot_entries_manager.py helper/grubforge-helper
+grep -n 'BACKUP_DIR\|GRUB_CONFIG_PATH\|CUSTOM_40' grubforge/*.py helper/grubforge-helper
+```
+
+The retention cap stated in the man page must match both copies.
+
+Since v1.1.1 the duplication is no longer only constants. `read-entries` has to
+find the same blocks the parser reads, so `_extract_block()` and the menu-block
+pattern exist in both copies. If they drift, the boot menu grubForge shows is not
+the boot menu on disk — and nothing errors.
+
+```bash
+diff <(sed -n '/^def _extract_block/,/^    return "..".join(block), i/p' grubforge/boot_entries_manager.py) \
+     <(sed -n '/^def _extract_block/,/^    return "..".join(block), i/p' helper/grubforge-helper)
+```
+
+Only the docstrings should differ — the code lines must match exactly.
+
+Since v1.1.3 `read-entries` also passes a few lines through besides the blocks:
+the `### BEGIN/END /etc/grub.d/… ###` markers and grubForge's own origin lines
+(#28). The helper's `_PASSTHROUGH_RES` must accept exactly what the parser's
+`SECTION_BEGIN_RE`, `SECTION_END_RE`, `ORIGIN_RE` and `MANAGED_MARK` read — and
+nothing wider, because anything it accepts leaves a root-only file.
+
+```bash
+grep -n "_RE *=\|MANAGED_MARK *=" grubforge/boot_entries_manager.py
+grep -n -A6 "_PASSTHROUGH_RES = (" helper/grubforge-helper
+python tests/test_boot_entry_sources.py      # section 8 covers the helper
+```
+
+## Tests (v1.1.3+)
+
+`python tests/test_boot_entry_sources.py` must end with *all checks passed*. It
+needs no root and no real `grub.cfg`, and the AUR `check()` runs it too. **Run it
+against the previous release as well** — a new check that also passes on the old
+code is not testing the change.
+
+## Non-Arch install path (v1.1.1+)
+
+`install-helper.sh` is the only way a user on a distribution without a package
+gets the helper and policy in place. If it breaks, those users silently fall back
+to read-only, which on a root-only `grub.cfg` means no boot menu at all.
+
+```bash
+sh install-helper.sh          # must refuse without root, exit 1
+grep -n 'install-helper' README.md grubforge/privilege.py
+```
+
+The path named in the script, the policy, and `privilege.py` must all still read
+`/usr/lib/grubforge/grubforge-helper`.
+
+## Doc coverage
+
+- README and man page must list every binding in `app.py` BINDINGS + every screen `BINDINGS` (excluding `show=False` aliases)
+- Universal section of help overlay (`?`) must match the universal bindings actually defined in `app.py`
+- Backup retention cap mentioned in man page must match `MAX_BACKUPS` in `backup_manager.py`
+
+## Co-author credit
+
+Every release artifact must carry the human + AI credit:
+
+- `~/Programs/aur-grubforge/PKGBUILD` co-developer line
+- `README.md` Authors / Credits section
+- GitHub release body
+- Man page AUTHORS section
+
+## v2.0.0+ gates
+
+- **All tests, no warnings:** `python tests/test_boot_entry_sources.py` and
+  `PYTHONPATH=../forgekit python -W default -m unittest tests.test_v2_settings tests.test_v2_bootmenu tests.test_v2_themes_backups tests.test_v220`
+  (the AUR `check()` runs both; **a new test file must be added to its list too**, or the build
+  silently skips it). Report the count; it was 78 at 2.0.0, 108 at 2.2.0 (25 checks + 83 tests).
+- **100 columns:** the three `*_at_100_columns` tests are the guard; also look at
+  every screen with forgekit's `tools/console-preview.py --size 100x30`.
+- **Other distributions:** `scripts/make-test-vms.sh` (Debian, Ubuntu, Fedora,
+  openSUSE; snapshot `fresh` each), and a real save in each, checked in `grub.cfg`.
+- **A real package upgrade before the tag:** `scripts/make-rc-packages.sh` builds
+  rc packages from the AUR recipes; install them over the released version in the
+  KognogOS VM for the human run, with `nog install ./file.pkg.tar.zst` (nog #17).
+- **python-forgekit first:** grubforge depends on its newest pieces; the AUR must
+  have the forgekit version before the grubforge push.
+
+## Release-day flow
+
+1. Pre-test snapshot (above)
+2. Run the Test Matrix top to bottom; log findings in Test Results
+3. Land HF batch closing all in-scope findings
+4. Audit greps (above)
+5. Version sync (above)
+6. Rebuild package locally; `sudo pacman -U` reinstall
+7. Re-run the regression slice from the previous Test Results' next-session handoff
+8. `git tag vX.Y.Z` + `git push --tags`
+9. GitHub release with notes
+10. README sweep top to bottom (Description, Topics, README sections, Authors, Changelog)
+11. Bump AUR PKGBUILD; `makepkg --printsrcinfo > .SRCINFO`; local `makepkg -si` smoke
+12. `git push` to `ssh://aur@aur.archlinux.org/grubforge.git`
+13. Verify public install path: delete local build → `yay -S grubforge` → smoke
+14. Write end-of-day session log to vault with mandatory `## Next-session handoff (read this first)` section

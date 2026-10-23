@@ -1,0 +1,15 @@
+[Desktop Entry]
+# grubForge's own launcher entry (#37): the package installs it as /usr/share/applications/grubforge.desktop,
+# so the app shows in every app menu and launcher. Terminal=true: the desktop opens it in its terminal.
+# hypeForge ships its own copy for its floating window; a user copy of the same name replaces this one,
+# so nothing shows twice.
+Type=Application
+Name=grubForge
+GenericName=Boot menu settings
+Comment=The boot menu (GRUB): its look, the default system, the timeout, kernel options
+TryExec=grubforge
+Exec=grubforge
+Icon=preferences-system
+Terminal=true
+Categories=Settings;HardwareSettings;
+Keywords=boot;grub;menu;kernel;timeout;theme;
