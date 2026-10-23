@@ -7,7 +7,7 @@
 ## 2026-10-22 · Moved into the Forge Suite, and 1.1.1
 - [x] **Moved into `forge-suite/alacrittyforge`** (Javier: go): `git subtree add` with the full history (signed merge `1369403`), tags re-created signed as `alacrittyforge-v0.1.0…v1.1.0`, open issues moved (#16 → forge-suite#112, #17 → #113, #18 → #114), the old repository got a moved note and is archived, `~/Programs/alacrittyforge` → a shortcut (the old folder in `~/Programs/_moved-into-forge-suite/`)
 - [x] **1.1.1**: the launcher entry (#114) + the app's own links point at the suite (`tests/test_v111.py`, seen failing first); tests 113
-- [ ] Release 1.1.1 (GitHub, `alacrittyforge-v1.1.1`), the AUR recipe repointed at forge-suite + the entry installed, **Javier's local test**, then the AUR push; then close #114
+- [x] Release 1.1.1 (GitHub, `alacrittyforge-v1.1.1`), the AUR recipe repointed at forge-suite + the entry installed, **Javier's local test**, then the AUR push; then close #114 — **done 2026-10-22**: Javier's local test all pass (testing/20261022 Test Results), AUR `50301cf` pushed, #114 closed
 
 ## 2026-10-22 · The project's board
 - [x] **A board for this project** (https://claude.ai/artifact/51mmFoufggp988R7xH6Hd5): this TODO as a page beside the chat — calling the project opens it first (mindForge boards, `.board`). Ticks made on the page come back here

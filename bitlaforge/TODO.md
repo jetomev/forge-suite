@@ -5,7 +5,7 @@
 ## 2026-10-22 · Moved into the Forge Suite, and 1.1.1
 - [x] **Moved into `forge-suite/bitlaforge`** (Javier: go): `git subtree add` with the full history (signed merge `5b85c1a`), tags re-created signed as `bitlaforge-v0.1.0…v1.1.0` (the six old plain tags got a short message), open issues moved (#9 → forge-suite#115, #10 → #116, #11 → #117, #12 → #118), the old repository got a moved note and is archived, `~/Programs/bitlaforge` → a shortcut (the old folder in `~/Programs/_moved-into-forge-suite/`)
 - [x] **1.1.1**: the launcher entry (#118) + the app's own links point at the suite (`tests/test_v111.py`, seen failing first); tests 90
-- [ ] Release 1.1.1 (GitHub, `bitlaforge-v1.1.1`), the AUR recipe repointed at forge-suite + the entry installed, **Javier's local test**, then the AUR push; then close #118
+- [x] Release 1.1.1 (GitHub, `bitlaforge-v1.1.1`), the AUR recipe repointed at forge-suite + the entry installed, **Javier's local test**, then the AUR push; then close #118 — **done 2026-10-22**: Javier's local test all pass, AUR `cdc3765` pushed, #118 closed
 
 ## 2026-10-08 · 1.1.0 — the same keys as every Forge app
 
