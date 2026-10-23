@@ -31,4 +31,4 @@ aren't listed.*
 
 ## The AUR recipe
 
-Matches the AUR recipe 1.1.0-1. Nothing to change.
+Matches the AUR recipe 1.1.1-1 (sources from jetomev/forge-suite; `checkdepends=('desktop-file-utils')` for the launcher entry).

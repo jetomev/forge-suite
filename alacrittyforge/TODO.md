@@ -33,7 +33,7 @@ Issues [#19](https://github.com/jetomev/alacrittyforge/issues/19) (F-8: Help has
 - [x] Found on the way: forgekit 0.10.0's Ctrl+T took the key from the shortcut recorder (1.0.0's own test caught it); forgekit now leaves an open window its keys, and a test here guards it
 - [x] Tests 80 → 109, warnings 0 → 0; each new test proven the other way (fix out → it fails; 29 checks)
 - [x] Test matrix: `testing/20261008 - Test Matrix for alacrittyForge v1-1-0.md` (§2 is Javier's run)
-- [ ] **Javier's run** (matrix §2: on its own, then inside hypeForge Settings)
+- [x] **Javier's run** (matrix §2: on its own, then inside hypeForge Settings) — **done**: run 2026-10-08 inside hypeForge Settings, free-form, passed (`testing/20261008 - Test Results for alacrittyForge v1-1-0.md`); 1.1.1's matrix carries the next run (ticked 2026-10-22: the results file shows it)
 - [x] At release (done 2026-10-08) (the lead): forgekit 0.10.0 first; AUR `PKGBUILD`: `python-forgekit>=0.10.0` and add `tests.test_v110` to `check()`'s list; tag, GitHub release, close #19 #20, AUR after Javier's pass; Vault entry
 
 - [x] Installed on the desktop through nog (2 Oct, 22:50): alacrittyforge 1.0.0-1, python-forgekit 0.5.1-1, python-tomlkit — the public AUR path works. Javier used it right away: 5 saves, one backup each; the 0.2.0-era backups still listed.
