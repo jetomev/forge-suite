@@ -273,7 +273,7 @@ class NogForgeApp(ForgeApp):
                            "Pamac, whose ideas it brings to the terminal.",
             "authors": "jetomev (Javier) · Claude (Anthropic), co-developer",
             "license": "GPL-3.0-or-later",
-            "links": [("Code", "https://github.com/jetomev/nogforge")],
+            "links": [("Code", "https://github.com/jetomev/forge-suite/tree/main/nogforge")],
         }
         super().__init__(**kw)
 

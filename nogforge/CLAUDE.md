@@ -3,7 +3,7 @@
 *How this project is built, tested and shipped. Written for the AI co-developer, and public on purpose: it is part of how the human + AI method is documented.*
 
 ## What it is
-A [forgekit](https://github.com/jetomev/forgekit) (Python/Textual) terminal app for packages on KognogOS: **nog's wrapper, with what Pamac does, in a terminal** (Javier, 3 Oct 2026). Screens: Dashboard, In-System (installed), Install, Update, Maintenance (1.5.0, nog 2.0.0's report), History (Activity, nog Logs), Help; Settings next. Tiers was folded away (Javier, 3 Oct: "isn't actually needed"). Decisions in `TODO.md` ("Decided").
+A [forgekit](https://github.com/jetomev/forge-suite/tree/main/forgekit) (Python/Textual) terminal app for packages on KognogOS: **nog's wrapper, with what Pamac does, in a terminal** (Javier, 3 Oct 2026). Screens: Dashboard, In-System (installed), Install, Update, Maintenance (1.5.0, nog 2.0.0's report), History (Activity, nog Logs), Help; Settings next. Tiers was folded away (Javier, 3 Oct: "isn't actually needed"). Decisions in `TODO.md` ("Decided").
 
 ## Non-negotiables
 - **nog does the thinking; nogForge shows it.** Tiers, holds, hold dates, coupling (which packages must move together) come from nog (`--json`, nog ≥ 2.0.0 since 1.5.0: the list, the search and the maintenance report cover every source), never recomputed here. A Flatpak or snap row is installed by nog's `install_as` and removed by its `remove_as`, never by a bare name. Two copies of that logic would disagree.
@@ -24,7 +24,8 @@ A [forgekit](https://github.com/jetomev/forgekit) (Python/Textual) terminal app 
 - Credit, never comparison (Pamac is the inspiration, credited, not a rival); the human + AI credit on every release artifact.
 
 ## How to run and test
-- From source: `PYTHONPATH=~/Programs/forgekit python main.py`.
+- **Lives in `forge-suite/nogforge` since 2026-10-22** (D-60; the old repository is archived); releases tagged `nogforge-vX.Y.Z` (`../docs/RELEASE-RECIPE.md`).
+- From source: `PYTHONPATH=../forgekit python main.py` (the suite's own forgekit folder).
 - Tests: `tests/`, run with `python -W default -m unittest discover tests`; report the count on every release; it never drops silently. Never run a real install, removal or update from a test: a stand-in `nog` prints nog's JSON.
 - Every distribution where nog runs, in the test VMs, before a beta goes out; Javier's own run with a written test matrix in `testing/`.
 

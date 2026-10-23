@@ -2,6 +2,8 @@
 
 > Packages, the KognogOS way: what's installed, searching and installing, updates and the clean-up, for every source — the repositories, the AUR, Flatpak and Snap — in plain words, in a terminal. The decisions are **nog**'s; nogForge shows them.
 
+> 📦 **Home:** part of the [Forge Suite](https://github.com/jetomev/forge-suite) since 22 October 2026 (`forge-suite/nogforge`, with its full history). Releases are tagged `nogforge-vX.Y.Z`; issues go to [forge-suite](https://github.com/jetomev/forge-suite/issues).
+
 > 🖥 **Where it runs:** **Arch Linux and KognogOS** (it runs on top of nog) · **no desktop needed**: any desktop, or none · **works on a plain text console** (a tty).
 
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
@@ -109,8 +111,8 @@ nogforge
 Or from source:
 
 ```bash
-git clone https://github.com/jetomev/nogforge.git
-python3 nogforge/main.py
+git clone https://github.com/jetomev/forge-suite.git     # nogForge and forgekit both live here
+PYTHONPATH=forge-suite/forgekit python3 forge-suite/nogforge/main.py
 ```
 
 `man nogforge` has the reference; **F1** inside the app has the manual. The package also puts **nogForge in your app menu** (1.5.0): it opens in your terminal.
