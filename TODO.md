@@ -55,8 +55,9 @@
 - [x] kognogos.org: "KognogOS = nog + the Forge Suite", hypeForge on Sway with the new banner, displayForge 1.0, forgekit's new home, 6 on the AUR — live 2026-10-06 (homelab `a9fdc2e`)
 - [x] **forgekit moved in** (2026-10-06): full history, tags `forgekit-v0.1.0…v0.6.0`, old repo archived with a pointer, `~/Programs/forgekit` → shortcut. At its next release the AUR recipe points here
 - [ ] alacrittyForge · bitlaForge · nogForge move in, one at a time, each tested; AUR recipes repointed
+  - **Rehearsed 2026-10-22 (alacrittyForge, a throwaway copy):** `git subtree add --prefix=alacrittyforge ~/Programs/alacrittyforge main` brought all 73 files and all 55 original commits; its 111 tests pass from inside forge-suite. The real move waits on Javier: push, tags `alacrittyforge-v0.1.0…v1.1.0` re-created signed, README/pyproject/CLAUDE.md pointers, the old repo's moved note + archive, `~/Programs/alacrittyforge` → a shortcut, open issues #16–#18 transferred or left, the AUR recipe repointed at its next release
 - [ ] grubForge moves in last (most users, outside contributors)
-- [ ] Release rules (`~/.claude/rules/release.md`) adapted for per-app tags in one repository
+- [x] Release rules (`~/.claude/rules/release.md`) adapted for per-app tags in one repository — **done 2026-10-22**: `docs/RELEASE-RECIPE.md` is the step-by-step; `release.md` points at it
 
 ## Ideas
 - [ ] **Desktop entries in every Forge app's package** (2026-10-06): none of the four AUR apps ships one — grubforge#37, alacrittyforge#18, bitlaforge#12, nogforge#16; hypeForge carries its own until then
