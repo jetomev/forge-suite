@@ -29,6 +29,7 @@ A small Python library on top of [Textual](https://textual.textualize.io): the s
 - After every push: a Vault entry in `~/Google Drive/Rullynastre/ForgeKit/`.
 
 ## Release discipline
+- **The step-by-step for any Forge Suite app, forgekit included:** `../docs/RELEASE-RECIPE.md` (release files from `scripts/release-app.sh`; forgekit ships with `--latest=false`).
 - Version in **every** surface at once: `pyproject.toml`, `forgekit/__init__.py`, README, the AUR `python-forgekit` PKGBUILD (in lockstep on content, not only `pkgver`).
 - Commits: `<scope>: …` for work, `release: vX.Y.Z — <tagline>` for the release commit; every commit GPG-signed and carrying the co-author trailer.
 - Tags are annotated and signed: `git tag -s vX.Y.Z -m "…"` (a bare `git tag` fails here because tag signing is on).

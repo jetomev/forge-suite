@@ -78,4 +78,4 @@
 
 ## 2026-10-06 evening — the first releases from the suite
 - [x] **forgekit 0.7.0** (`forgekit-v0.7.0`, GitHub Release with signed assets, AUR `python-forgekit` fetching from this repository) and **displayForge 1.0.1** (`displayforge-v1.0.1`, Latest): the per-app tag release works end to end. Details in each section's TODO
-- [ ] Write the per-app release recipe (archive a section at its tag, sign, Release, AUR) into `forgekit/CLAUDE.md` and this file, now that it is proven
+- [x] Write the per-app release recipe (archive a section at its tag, sign, Release, AUR) into `forgekit/CLAUDE.md` and this file, now that it is proven — **done 2026-10-22**: `docs/RELEASE-RECIPE.md` + `scripts/release-app.sh` (build · `--no-sign` · `--verify`); found: release files weren't reproducible (file times = build time) → `--mtime` pins them to the tag's commit; nightForge 1.1.0 and displayForge 1.1.1 verify as same files, other times
