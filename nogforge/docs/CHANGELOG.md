@@ -1,0 +1,58 @@
+# nogForge — changelog
+
+*Newest first. The README carries the two most recent releases; older ones are here.*
+
+### v1.3.0 — October 7, 2026 · searches follow the typing; one-row filters ([#21](https://github.com/jetomev/nogforge/issues/21), [#22](https://github.com/jetomev/nogforge/issues/22))
+
+- **Every search filters as you type**, like Update's Find: In-System at once (it filters what is already here); Install after half a second's pause and from two characters on (it asks nog); Enter still searches at once; an emptied box clears the results. The Search button is gone.
+- **One-row filters:** the search boxes, labels, drop-downs and buttons on the filter rows are one row tall (they were three), on a terminal and on a text console alike. The filter area went from seven rows to four.
+- Tests: 42 (was 41); the position checks cover the drop-downs' height.
+
+### v1.2.0 — October 7, 2026 · Javier's four ([#17](https://github.com/jetomev/nogforge/issues/17), [#18](https://github.com/jetomev/nogforge/issues/18), [#19](https://github.com/jetomev/nogforge/issues/19), [#20](https://github.com/jetomev/nogforge/issues/20))
+
+- **Update:** a **Find** box narrows the Ready and Held lists as you type (`/` goes there); every ready row has **⬆ Update**, which hands nog that one name alone; **Tick All (t)** and **Untick All (n)**; a tick far down the list keeps the scroll and the highlight (#17).
+- **In-System:** **✕ Uninstall** instead of Remove, everywhere a person reads it; **⬆ Update** beside it when nog's plan has a newer version (#19). Downgrade waits for nog to offer one (a nog feature first).
+- The package list draws two buttons per row where a row has two; the mouse hovers and clicks each on its own.
+- Tests: 41 (was 37). Found on the way: a plain Textual app needs forgekit's colour variables to mount a `PackageList` in a test.
+
+### v1.1.1 — October 4, 2026 · the AUR build works from a terminal
+
+The 1.1.0 AUR package didn't build on Javier's computer: three tests failed inside yay ([F-13, #15](https://github.com/jetomev/nogforge/issues/15)). The app itself was fine; a test's stand-in for nog decided "am I inside nogForge's run window?" by checking for a terminal. Our own builds had none; yay's build has one. The stand-in now goes by nog's steps file, the older tests never give it a keyboard, and our test builds now run with a terminal attached, the way yay does. Tests: 37, passing with and without a terminal.
+
+### v1.1.0 — October 4, 2026 · nog works inside nogForge
+
+Javier, an hour after 1.0.0: *"nog running outside the UI. It is not beautiful, it is disrupting"*, and the password belongs in the app, also on a text console. Five options were researched ([docs/research](docs/research/2026-10-04-nog-inside-the-ui.md)); he chose three, all in this release ([#14](https://github.com/jetomev/nogforge/issues/14)). Needs [nog 1.7.0](https://github.com/jetomev/nog/releases/tag/v1.7.0) and [forgekit 0.6.0](https://github.com/jetomev/forgekit/releases/tag/v0.6.0).
+
+- 🪟 **No more leaving the app.** A change opens a window with nog's steps (from nog's `NOG_EVENTS`) and a progress bar. nog's own screen stays folded until nog or pacman asks something (Yes/No buttons, the table in view), until something fails, or until **F12**. yay's menus are typed in it; its viewer and editor work there too.
+- 🔐 **The password in nogForge's own box**, desktop or text console; no desktop password window needed.
+- 📦 **Installs name the row's source** (`aur/neofetch`, `extra/cowsay`): in the KognogOS VM, the AUR's neofetch had become chaotic-aur's unifetch ([nog F-11](https://github.com/jetomev/nog/issues/45)).
+- The review window's **Install (i)** / **Remove (r)** now answer to their key (found on the text console; fixed in forgekit for every app).
+
+Tested in the KognogOS VM on a real text console (installs from the repositories and the AUR, an update with steps, a cancelled password, a removal), then by Javier on his desktop and tty3: *"wow! better than expected!"*, *"works wonders"* ([testing/](testing/20261004%20-%20Test%20Matrix%20for%20nogForge%20v1-1-0.md)). Tests: 36 → 37.
+
+*Earlier versions: [docs/CHANGELOG.md](docs/CHANGELOG.md).*
+
+---
+
+### v1.0.0 — October 4, 2026 · first stable release
+
+Javier's Update test on the desktop (untick, promote, update), then his call: *"publish nogForge 1.0.0. We can do that."* Needs [nog 1.6.1](https://github.com/jetomev/nog/releases/tag/v1.6.1). On the [AUR](https://aur.archlinux.org/packages/nogforge) from this version.
+
+- **A tick changes at once** ([F-10, #11](https://github.com/jetomev/nogforge/issues/11)). Before, it waited about 3 seconds for nog's answer, and every click asked nog again. Now quick clicks go to nog as one question.
+- **A yellow "nog is working on it…" sign** beside the update button, which waits in cream until nog answers ([F-11, #12](https://github.com/jetomev/nogforge/issues/12)).
+- **The update hands nog only the ticked ones, by name** (with nog 1.6.1, [nog#44](https://github.com/jetomev/nog/issues/44)): nog shows and installs just those, and refuses a held one that wasn't promoted.
+- **A finished update no longer says "nog stopped"** ([F-12, #13](https://github.com/jetomev/nogforge/issues/13)).
+- Out of beta: no "beta" in the title, a man page (`man nogforge`).
+
+Tested by Javier on the desktop: `update vde2 wolfssl`, then git promoted with `update freerdp git --promote git`: *"exactly what was described!"* ([testing/](../testing/)). Tests: 33 → 36.
+
+### v0.3.0 — October 3, 2026 · first beta
+
+The design approved on 3 October, built the same morning, then reworked after Javier's two runs on the desktop the same day (*"This is a work of art my friend"*). Needs [nog 1.6.0](https://github.com/jetomev/nog/releases/tag/v1.6.0).
+
+- Dashboard, In-System, Install, Update (with choices) and History, as above.
+- From Javier's runs: Home became **In-System** and Search **Install**; one filter bar with a Search button, a Tier filter and a Repositories window; a Repository column; options drawn as buttons, blue under the mouse; **Promote makes an update ready** instead of installing it alone (nog's `--promote`); the Tiers screen folded away; History split into Activity and nog Logs, with each run's full log.
+- Fixed ([F-1 to F-9](https://github.com/jetomev/nogforge/issues?q=label%3Afinding+is%3Aclosed)): a crash when quitting after a promote; "calc" finding perl first; shaded and selected rows the same colour; an update that couldn't be unticked; Promote installing at once; screen keys typed into the Search box; a click on a row's name opening the review; the two filter lines touching, boxes not lined up, short buttons, and **c** meaning two things (now always Clean Up; **k** checks for updates).
+- The bottom bar showing the last screen's keys was fixed in [forgekit 0.5.2](https://github.com/jetomev/forgekit/releases/tag/v0.5.2), for every Forge app.
+
+Tests: 33. Readable on a plain text console, every screen.
