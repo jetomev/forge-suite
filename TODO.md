@@ -60,7 +60,7 @@
 - [x] **Round 2** (Javier's second run, 10-08 evening; forgekit `d3e8e90`): Javier's letter rule (first letter, else the next free one; Help H, Quit Q; an app's `acc` ignored) → History **Ctrl+S**, Install N, all `acc` removed; History closes on its number pressed again and is lit while open; License and About are pages (Help lit, Esc back). Tests 52 → **54**, 0 warnings; docs, manual, man page, matrix rows 1.7b/1.7c, 2.6b, 2.9b/c, 2.12b
 - [x] Tests 42 → 52 (round 2: **54**), warnings 0 → 0; every new test seen failing with its fix taken out; screenshots regenerated (bottom bar `1-6 menu`, title 1.4.0)
 - [x] Version 1.4.0 everywhere (code, README, man page, changelog; 1.2.0 moved to docs/CHANGELOG.md); forgekit ≥ 0.10.0 in README + man page
-- [ ] **Javier's run**: `testing/20261008 - Test Matrix for nogForge v1-4-0.md` §2 (inside Settings) and §3 (on its own)
+- [x] **Javier's run**: `testing/20261008 - Test Matrix for nogForge v1-4-0.md` §2 (inside Settings) and §3 (on its own) — **done**: run 2026-10-08, passed (`testing/20261008 - Test Results for nogForge v1-4-0.md`); 1.5.0 then passed every step on 2026-10-17 (ticked 2026-10-22: the results file shows it)
 - [ ] Release after his pass: push + signed tag, GitHub Release, AUR recipe (`depends` python-forgekit>=0.10.0), local makepkg, Javier installs, then AUR push; close #24 #25 #26
 
 ## Later — the run window (Javier, 2026-10-07 22:55, #23)
