@@ -1,0 +1,174 @@
+.\" bitlaforge.1 — bitlaForge man page
+.\" GNU GPL v3 — see LICENSE
+.TH BITLAFORGE 1 "October 2026" "bitlaForge v1.1.0" "User Commands"
+.
+.SH NAME
+bitlaforge \- solo Bitcoin mining, honestly framed
+.
+.SH SYNOPSIS
+.B bitlaforge
+.br
+.B bitlaforge \-\-version
+.br
+.B bitlaforge \-\-help
+.
+.SH DESCRIPTION
+.B bitlaForge
+is a keyboard-driven terminal application for solo Bitcoin mining as the
+lottery it is. It runs
+.BR minerd (1)
+from the cpuminer project, shows what it is doing in plain words, keeps every
+mining session, and shows the real chance of finding a block.
+.PP
+bitlaForge never starts mining on its own: only
+.B M
+or the Start button does, and only with a valid wallet. Closing bitlaForge
+stops the miner, after asking. The miner is started under
+.B setpriv \-\-pdeathsig TERM
+so that the system stops it if bitlaForge ends without a chance to.
+.PP
+Only Bitcoin is mined (the sha256d method). The wallet address is checked on
+the computer (Base58Check, bech32, bech32m); nothing is sent to check it.
+.PP
+No root privileges are needed. The full manual is inside the application
+(Help \(-> Manual, or
+.B F1
+on a setting) and in
+.I /usr/lib/bitlaforge/bitlaforge/manual/
+as Markdown.
+.
+.SH OPTIONS
+.TP
+.B \-\-version
+Print the version and exit.
+.TP
+.B \-\-help
+Print the usage and exit.
+.
+.SH SCREENS
+.TP
+.B 1 \- Dashboard
+Mining state and pool; speed now and on average, a chart of the last 30
+minutes and a bar per core; the chance of a block today and this year;
+processor temperature, the miner's processor use, priority and shares.
+.TP
+.B 2 \- Settings
+Pool & wallet (solo pools from a list, or Other; the wallet checked as it is
+typed; worker name), Miner (cores to use; Gentle or Normal priority), Safety
+(pause when hot and at what temperature; lottery odds).
+.TP
+.B 3 \- Log
+The miner's output, the important lines in plain words. Show: Important,
+Everything, Problems, Shares. The wallet is never shown.
+.TP
+.B 4 \- History
+Every mining session, kept between runs, with why it stopped, and the totals.
+.
+.SH KEYBINDINGS
+.TP
+.B M
+Start or stop mining.
+.TP
+.B T
+Test the miner: 10 seconds on one core, without a pool.
+.TP
+.B 1 \(en 5 ", " Ctrl+D ", " Ctrl+S ", " Ctrl+L ", " Ctrl+I ", " Ctrl+H
+Go to a menu entry: Dashboard, Settings, Log, History, then the Help menu
+(its key again closes it). The Ctrl keys work even while typing in a field.
+On a text console Ctrl+I is the same key as Tab; use 4 there.
+The manual, the keys list, About and License open as pages; Esc goes back.
+.TP
+.B Tab ", " Shift+Tab
+Next / previous field or button.
+.TP
+.B Enter
+Open a list, press a button, confirm.
+.TP
+.B Space
+Flip a switch.
+.TP
+.B Up ", " Down
+In a number: step through its presets.
+.TP
+.B Esc
+Close a window, or leave a field.
+.TP
+.B F10 ", " S
+Save settings, with a review first.
+.TP
+.B R
+Read the settings file again; unsaved changes stay.
+.TP
+.B F1
+Help on what is selected.
+.TP
+.B / ", " F ", " C
+In the Log: find, follow on or off, clear.
+.TP
+.B ?
+All keys.
+.TP
+.B Q ", " Ctrl+Q
+Quit; stops the miner, after asking.
+.
+.SH SAFETY
+A save shows every change (old \(-> new), backs the file up first and writes
+it in one step; anything else in the file is kept. A settings file that cannot
+be read is never saved over; the newest backup is offered instead.
+.PP
+With Pause when hot on (the default), the miner is paused (SIGSTOP) when the
+processor reaches the limit (85 \(deC by default) and resumed (SIGCONT) 5
+\(deC lower. The temperature comes from the processor's own sensor
+(k10temp, zenpower, coretemp or cpu_thermal under
+.IR /sys/class/hwmon ).
+.PP
+With Lottery odds on (the default), mempool.space is asked once an hour for
+the network's difficulty and the last block's reward. Nothing about the user
+is sent.
+.
+.SH FILES
+.TP
+.I ~/.config/bitlaforge/config.toml
+The settings. Read and written by bitlaForge.
+.TP
+.I ~/.config/bitlaforge/backups/
+Backups (the newest 20), each with a note saying why it was made.
+.TP
+.I ~/.local/share/bitlaforge/history.json
+Every mining session.
+.TP
+.I ~/.local/share/bitlaforge/logs/
+One line per run, by day.
+.TP
+.I ~/.cache/bitlaforge/network.json
+The last answer from mempool.space.
+.
+.SH REQUIREMENTS
+Linux; Python 3.11 or newer; python-textual, python-rich, python-tomlkit and
+python-forgekit 0.10.0 or newer; util-linux. To mine:
+.B minerd
+(the cpuminer package on Arch and openSUSE; elsewhere the cpuminer project's
+ready-made program, see the manual).
+.
+.SH SEE ALSO
+.BR minerd (1),
+.BR setpriv (1),
+.BR nice (1)
+.
+.SH AUTHORS
+.B jetomev
+\(em idea, vision, direction, testing
+.PP
+.B Claude (Anthropic)
+\(em co-developer, architecture, implementation
+.
+.SH LICENSE
+bitlaForge is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License v3.0 as published by the Free
+Software Foundation.
+.PP
+See
+.I /usr/share/licenses/bitlaforge/LICENSE
+or
+.UR https://www.gnu.org/licenses/gpl-3.0.html
+.UE
