@@ -29,7 +29,7 @@ Javier's findings running grubForge inside hypeForge Settings (8 Oct 2026):
 - [x] **Round 3 (Javier: "yes, Keys and Manual as pages too"):** the manual through forgekit's `show_manual` (F1 still opens the right page; Esc back to the screen, Backspace to the previous manual page); Keys a page through forgekit
 - [x] Tests 78 → 108 (`tests/test_v220.py`, 30 new, each seen failing with its fix out); warnings 3 → 3
 - [x] Test matrix: `testing/20261008 - Test Matrix for grubForge v2-2-0.md`
-- [ ] **Javier runs the matrix** (§2–§6), on the desktop and inside hypeForge Settings
+- [x] **Javier runs the matrix** (§2–§6), on the desktop and inside hypeForge Settings — **done**: run 2026-10-08 inside hypeForge Settings, passed (`testing/20261008 - Test Results for grubForge v2-2-0.md`); 2.2.2's matrix carries the next run (ticked 2026-10-22: the results file shows it)
 - [x] At release (done 2026-10-08) (lead): forgekit 0.10.0 released + on the AUR first; AUR recipe `python-forgekit>=0.10.0` and **`tests.test_v220` added to `check()`**; tag, GitHub release, issues #38 #39 #40 closed, AUR push after Javier's local test, badge cache-buster after; Vault
 - [ ] Screenshots in `screenshots/` still show "Boot menu" and the old button labels (`scripts/make-screenshots.py`)
 - [x] **Fixed in forgekit 0.10.0 (2026-10-08, found by this build):** a window open over the app keeps its keys, so Ctrl+E and Ctrl+K in the Rename field edit the text again and nothing switches the screen behind it (forgekit test `test_a_dialog_keeps_its_keys`; grubForge's 75 tests pass on it)
