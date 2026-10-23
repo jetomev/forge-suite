@@ -24,6 +24,12 @@ aren't listed.*
 |---|---|---|
 | os-prober | other systems on the boot menu | (program os-prober) |
 
+## At build time only (`checkdepends`)
+
+| Package | What uses it | Module / program |
+|---|---|---|
+| desktop-file-utils | `check()` validates the launcher entry `grubforge.desktop` (next release, #37) | (program desktop-file-validate) |
+
 ## The AUR recipe
 
-AUR 2.2.0-1 lacks **grub** (a GRUB manager without GRUB only shows its sample menu) and the optional **os-prober**. A recipe-only change: 2.2.0-2.
+Fixed in the AUR's **2.2.1-1**: `depends` carries **grub** (a GRUB manager without GRUB only shows its sample menu) and `optdepends` **os-prober** (checked against the AUR 2026-10-22). Was missing from 2.2.0-1.
