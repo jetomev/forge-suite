@@ -2,6 +2,11 @@
 
 *The README carries the upcoming work and the two most recent releases; everything older lives here, newest-first.*
 
+### v1.1.1 — October 22, 2026
+
+- [x] The launcher entry ships with the package ([forge-suite#114](https://github.com/jetomev/forge-suite/issues/114))
+- [x] Moved into the Forge Suite with its full history; the open issues moved with it ([#112](https://github.com/jetomev/forge-suite/issues/112), [#113](https://github.com/jetomev/forge-suite/issues/113))
+
 ### v1.1.0 — October 8, 2026
 - [x] 1 – 6 and Ctrl + the underlined letter for every menu entry, Help included, from forgekit 0.10.0 (#19, F-8)
 - [x] "1-6 menu" in the bottom bar; 6 again closes Help

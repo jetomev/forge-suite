@@ -1,4 +1,4 @@
-"""alacrittyForge v1.1.0 — the app frame, on forgekit.
+"""alacrittyForge v1.1.1 — the app frame, on forgekit.
 
 The frame is forgekit's (title bar, menu bar, changes bar, hint bar); the
 screens are alacrittyForge's. All file work goes through the Session.
@@ -208,7 +208,7 @@ class AlacrittyForgeApp(ForgeApp):
             "description": "Part of the Forge Suite for KognogOS.",
             "authors": "jetomev (Javier) · Claude (Anthropic), co-developer",
             "license": "GPL-3.0-or-later",
-            "links": [("Code", "https://github.com/jetomev/alacrittyforge")],
+            "links": [("Code", "https://github.com/jetomev/forge-suite/tree/main/alacrittyforge")],
         }
         super().__init__(**kw)
 

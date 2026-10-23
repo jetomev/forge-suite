@@ -1,4 +1,4 @@
-"""Starting alacrittyForge from the terminal (v1.1.0).
+"""Starting alacrittyForge from the terminal (v1.1.1).
 
 ``--version`` and ``--help`` answer and exit without opening the app.
 ``--hypeforge`` (any case, so ``--hypeForge`` too) is how hypeForge Settings
@@ -27,7 +27,7 @@ Usage:
 
 Inside: Tab moves, Enter opens, F10 saves (with a review first), F1 explains,
 M opens the manual, ? lists every key.
-Manual: https://github.com/jetomev/alacrittyforge/tree/main/alacrittyforge/manual
+Manual: https://github.com/jetomev/forge-suite/tree/main/alacrittyforge/alacrittyforge/manual
 """
 
 LOG_DIR = "~/.local/share/alacrittyforge/logs"

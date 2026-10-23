@@ -2,14 +2,16 @@
 
 > Alacritty's settings, without editing the file by hand: every setting in plain words, picked from lists, reviewed before it's saved, with a backup first and your own notes kept.
 
+> 📦 **Home:** part of the [Forge Suite](https://github.com/jetomev/forge-suite) since 22 October 2026 (`forge-suite/alacrittyforge`, with its full history). Releases are tagged `alacrittyforge-vX.Y.Z`; issues go to [forge-suite](https://github.com/jetomev/forge-suite/issues).
+
 > 🖥 **Where it runs:** **any Linux distribution** · for the **Alacritty** terminal; **no particular desktop needed** · **works on a plain text console** (a tty).
 
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
 ![Platform: Linux](https://img.shields.io/badge/Platform-Linux-lightgrey.svg)
 ![Python: 3.11+](https://img.shields.io/badge/Python-3.11+-green.svg)
 ![Status: Stable](https://img.shields.io/badge/Status-Stable-brightgreen.svg)
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-purple.svg)
-[![AUR](https://img.shields.io/aur/version/alacrittyforge?v=1.0.0-1)](https://aur.archlinux.org/packages/alacrittyforge)
+![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-purple.svg)
+[![AUR](https://img.shields.io/aur/version/alacrittyforge?v=1.1.1-1)](https://aur.archlinux.org/packages/alacrittyforge)
 
 > 🛡 **Security** — every release is GPG-signed and every commit is GitHub-Verified. **[Where We Stand](https://github.com/jetomev/KognogOS/blob/main/docs/where-we-stand.md)** covers our response to the 2026 AUR supply-chain attacks and how to check us yourself.
 
@@ -90,11 +92,10 @@ yay -S alacrittyforge           # any AUR helper
 ### Any other distribution
 
 ```bash
-git clone https://github.com/jetomev/alacrittyforge.git
-git clone https://github.com/jetomev/forge-suite.git     # forgekit lives here
-cd alacrittyforge
+git clone https://github.com/jetomev/forge-suite.git     # alacrittyForge and forgekit both live here
+cd forge-suite/alacrittyforge
 python3 -m venv .venv && .venv/bin/pip install textual rich tomlkit
-PYTHONPATH=../forge-suite/forgekit .venv/bin/python main.py
+PYTHONPATH=../forgekit .venv/bin/python main.py
 ```
 
 A virtual environment is used because most current distributions refuse `pip install` into the system Python. If yours packages `textual`, `rich` and `tomlkit`, prefer those.
@@ -173,18 +174,28 @@ A human and AI collaboration. The 1.0 redesign was drawn screen by screen and ap
 
 ### Next
 
-- [ ] Edit the hints (which text on screen can be opened with Ctrl+Shift+O) ([#16](https://github.com/jetomev/alacrittyforge/issues/16))
-- [ ] Mouse shortcuts, alongside the keyboard ones ([#17](https://github.com/jetomev/alacrittyforge/issues/17))
+- [ ] Edit the hints (which text on screen can be opened with Ctrl+Shift+O) ([forge-suite#112](https://github.com/jetomev/forge-suite/issues/112))
+- [ ] Mouse shortcuts, alongside the keyboard ones ([forge-suite#113](https://github.com/jetomev/forge-suite/issues/113))
 
 ### Done
 
+- [x] **v1.1.1** ([forge-suite#114](https://github.com/jetomev/forge-suite/issues/114)): the launcher entry ships with the package; moved into the Forge Suite with its full history
 - [x] **v1.1.0** ([#19](https://github.com/jetomev/alacrittyforge/issues/19), [#20](https://github.com/jetomev/alacrittyforge/issues/20)): 1 – 6 and Ctrl + the underlined letter for every menu entry, Help included, letters by Javier's rule; "1-6 menu" in the bottom bar; Help's pages (Manual, Keys, About, License) inside the app; no Quit inside hypeForge Settings; every button names its key
-- [x] **v1.0.0** ([#8](https://github.com/jetomev/alacrittyforge/issues/8)): rebuilt to match grubForge 2.0; safe saving that keeps your notes; every setting; shortcuts recorded by pressing keys; backups you can restore; every major distribution
 - [x] Earlier releases: [docs/ROADMAP.md](docs/ROADMAP.md)
 
 ---
 
 ## Changelog
+
+### v1.1.1 — October 22, 2026
+
+**A launcher entry, and a new home.** alacrittyForge now shows in every app menu and launcher, and it lives in the Forge Suite.
+
+- 🚀 **The launcher entry ships with the package** ([forge-suite#114](https://github.com/jetomev/forge-suite/issues/114), was #18): `alacrittyforge.desktop`, so the app shows in any desktop's app menu and launcher, opening in a terminal. Checked by `desktop-file-validate` in the tests and in the package's own check. hypeForge keeps its own copy for its floating window.
+- 📦 **Moved into the [Forge Suite](https://github.com/jetomev/forge-suite/tree/main/alacrittyforge)** (22 October 2026), with its full history. Releases are tagged `alacrittyforge-vX.Y.Z` there; the open issues moved with it ([#112](https://github.com/jetomev/forge-suite/issues/112), [#113](https://github.com/jetomev/forge-suite/issues/113)). The old repository is archived and stays readable. The app's own links (`--help`'s manual, About's Code) point at the new home.
+- 🔁 **The release files are reproducible**: rebuilt from the tag, they come out byte for byte the same (the Forge Suite's release recipe).
+
+Tests: 109 → **113**; warnings 0 → 0. Needs `python-forgekit` ≥ 0.10.0; `desktop-file-utils` for the package's check.
 
 ### v1.1.0 — October 8, 2026
 
@@ -198,20 +209,6 @@ A human and AI collaboration. The 1.0 redesign was drawn screen by screen and ap
 - 🎙 **Recording a shortcut still takes every key.** Found by 1.0.0's own test when moving to forgekit 0.10.0: its new **Ctrl+T** (Themes) caught the key before the recorder in **Add a Shortcut** could. forgekit now leaves an open window its own keys (only Quit gets through), and a test here makes sure Ctrl+O, S, T, R, B and H are recorded.
 
 Tests: 80 → **109**; warnings 0 → 0. Needs `python-forgekit` ≥ 0.10.0.
-
-### v1.0.0 — October 2, 2026
-
-**alacrittyForge, rebuilt, and safe.** Every screen was redesigned to match grubForge 2.0, from a plan Javier approved screen by screen before any code was written. Taking stock of 0.2.0 first found four ways it could damage your settings; all are fixed, each with a test.
-
-- 💾 **Saving is safe now.** A save touches only the settings you changed; your notes and layout stay. A cleared setting no longer breaks the save. A file that can't be read is never saved over. One backup per save (0.2.0 made one per shortcut change, which could push out all your older backups). The file is written in one step, links are followed.
-- 🔧 **Every setting**, about 60 on Linux, in plain words, with presets and lists; settings you haven't set say what Alacritty does instead.
-- 🎨 **Themes** with a preview, **Adjust colours** (your own copy), hypeForge's themes locked, safe installs.
-- ⌨ **Shortcuts in words**, recorded by pressing the keys; Alacritty's own can be turned off. Every part of a shortcut is kept when it's changed.
-- 🗂 **Backups**: what restoring would change; restore and delete ask first. Backups are dated when they were made (0.2.0 showed your settings' last edit).
-- 🐧 **Every major distribution**: writes the names your Alacritty reads (Ubuntu 24.04's 0.13 uses older ones); tested in Ubuntu, Debian, Fedora and openSUSE VMs with each one's own Alacritty.
-- 📖 A manual inside the app, `--version` and `--help`, a closing note in the terminal, readable on a text console.
-
-Found and fixed on the way, each with an issue: [#9](https://github.com/jetomev/alacrittyforge/issues/9)–[#15](https://github.com/jetomev/alacrittyforge/issues/15). Tested by Javier on KognogOS as a package upgrade from 0.2.0: *"a beautiful piece of software"*. Tests: 0 → **80**; warnings 0. New dependency: `python-tomlkit`; `python-forgekit` ≥ 0.5.1; no longer `python-tomli-w`.
 
 *The complete history lives in [docs/CHANGELOG.md](docs/CHANGELOG.md).*
 

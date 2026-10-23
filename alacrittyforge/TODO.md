@@ -2,7 +2,12 @@
 
 *The live work list and the handoff between sessions. Newest work first. Updated after every step.*
 
-**Current release: v1.1.0** (8 Oct 2026). Before it, v1.0.0 (2 Oct 2026): rebuilt to match grubForge 2.0, "so far the best of the 3" (Javier). **v1.1.0 released 2026-10-08 (GitHub + AUR; Javier on the installed package: "all perfect!") Next after it: #16 hints, #17 mouse shortcuts.
+**Current release: v1.1.1** (22 Oct 2026: the launcher entry; moved into the Forge Suite). Before it, v1.1.0 (8 Oct 2026). Before it, v1.0.0 (2 Oct 2026): rebuilt to match grubForge 2.0, "so far the best of the 3" (Javier). **v1.1.0 released 2026-10-08 (GitHub + AUR; Javier on the installed package: "all perfect!") Next after it: #16 hints, #17 mouse shortcuts.
+
+## 2026-10-22 · Moved into the Forge Suite, and 1.1.1
+- [x] **Moved into `forge-suite/alacrittyforge`** (Javier: go): `git subtree add` with the full history (signed merge `1369403`), tags re-created signed as `alacrittyforge-v0.1.0…v1.1.0`, open issues moved (#16 → forge-suite#112, #17 → #113, #18 → #114), the old repository got a moved note and is archived, `~/Programs/alacrittyforge` → a shortcut (the old folder in `~/Programs/_moved-into-forge-suite/`)
+- [x] **1.1.1**: the launcher entry (#114) + the app's own links point at the suite (`tests/test_v111.py`, seen failing first); tests 113
+- [ ] Release 1.1.1 (GitHub, `alacrittyforge-v1.1.1`), the AUR recipe repointed at forge-suite + the entry installed, **Javier's local test**, then the AUR push; then close #114
 
 ## 2026-10-22 · The project's board
 - [x] **A board for this project** (https://claude.ai/artifact/51mmFoufggp988R7xH6Hd5): this TODO as a page beside the chat — calling the project opens it first (mindForge boards, `.board`). Ticks made on the page come back here
@@ -14,7 +19,7 @@
 - [x] **What it needs, measured** (2026-10-11, forge-suite#91): `docs/PACKAGING.md` + `tests/test_needs.py`; the AUR recipe 1.1.0-1 builds clean in a clean Arch system and matches the code
 
 ## At the next release
-- [ ] **The launcher entry (#18)** — `alacrittyforge.desktop` + `tests/test_desktop_entry.py` are in the repo (2026-10-22, the KognogOS clean-house); at the next version the AUR recipe adds `install -Dm644 alacrittyforge.desktop "${pkgdir}/usr/share/applications/alacrittyforge.desktop"`, `checkdepends=('desktop-file-utils')` and `desktop-file-validate alacrittyforge.desktop` in `check()`; then close #18, and hypeForge's own copy can go
+- [x] **The launcher entry (#18, now forge-suite#114)** — in 1.1.1; — `alacrittyforge.desktop` + `tests/test_desktop_entry.py` are in the repo (2026-10-22, the KognogOS clean-house); at the next version the AUR recipe adds `install -Dm644 alacrittyforge.desktop "${pkgdir}/usr/share/applications/alacrittyforge.desktop"`, `checkdepends=('desktop-file-utils')` and `desktop-file-validate alacrittyforge.desktop` in `check()`; then close #18, and hypeForge's own copy can go
 - [ ] **The AUR description, at the next release** (Javier, 2026-10-09): the AUR `pkgdesc` (and `.SRCINFO`) gets the same "where it runs" words as the README, GitHub About and kognogos.org — distribution · desktop · plain text console. Not pushed on its own: AUR pushes stay one per proven version.
 
 ## 1.1.0 — released 2026-10-08 (GitHub + AUR; Javier on the installed package: "all perfect!")

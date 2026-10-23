@@ -1,10 +1,10 @@
 # alacrittyForge — how this project works (L2)
 
-A terminal app for Alacritty's settings (`~/.config/alacritty/alacritty.toml`): view, edit, theme, fonts, key bindings, with a backup before every save. Python 3.11+, Textual, on **forgekit**. Part of the Forge Suite; ships on the AUR as `alacrittyforge`. Name: **alacrittyForge** (lowercase a).
+A terminal app for Alacritty's settings (`~/.config/alacritty/alacritty.toml`): view, edit, theme, fonts, key bindings, with a backup before every save. Python 3.11+, Textual, on **forgekit**. Part of the Forge Suite: it lives in `forge-suite/alacrittyforge` since 2026-10-22 (D-60; the old repository is archived), releases tagged `alacrittyforge-vX.Y.Z` (`../docs/RELEASE-RECIPE.md`); ships on the AUR as `alacrittyforge`. Name: **alacrittyForge** (lowercase a).
 
 ## Run and test
-- Run from the tree: `PYTHONPATH=../forgekit python main.py` (`../forgekit` is a link to `../forge-suite/forgekit`; the installed `python-forgekit` works too, if it is 0.10.0 or newer).
-- Tests: `PYTHONPATH=../forgekit python -W always -m unittest discover -s tests` (109 at 1.1.0). Every release reports the count, which must never drop silently, and the warnings. A new test file must also be added to the AUR `check()` and to `testing/RELEASE-CHECKLIST.md`, which name the files one by one.
+- Run from the tree: `PYTHONPATH=../forgekit python main.py` (`../forgekit` is the suite's own forgekit folder; the installed `python-forgekit` works too, if it is 0.10.0 or newer).
+- Tests: `PYTHONPATH=../forgekit python -W always -m unittest discover -s tests` (113 at 1.1.1). Every release reports the count, which must never drop silently, and the warnings. A new test file must also be added to the AUR `check()` and to `testing/RELEASE-CHECKLIST.md`, which name the files one by one.
 - **`--hypeforge`** (1.1.0, #20): hypeForge Settings starts the app with it (any case, `--hypeForge` too). Then there is no Quit: none in the menu bar, Q and Ctrl+Q do nothing; Settings closes the app through forgekit's `host_quit()`, which runs `before_quit()`, so unsaved changes still ask first. It is for Settings, not for people: kept out of `--help` and the man page (a test checks both), written down in the README, the manual's All keys page, this file and the changelog. `cli.py` spells the flag itself so `--version` stays instant; a test checks it matches forgekit's `HYPEFORGE_FLAG`.
 - It writes only user files, so it needs **no sudo and has no read-only mode**. Before testing a save on this desktop, copy `alacritty.toml` aside (see `testing/RELEASE-CHECKLIST.md`). Backups go to `~/.config/alacritty/backups/` (20 kept).
 - Look at it on a text console and at 100 columns: forgekit's `tools/console-preview.py --size 100x30`.
