@@ -10,6 +10,8 @@
 
 ## Done
 
+- [x] **v2.2.2**: the launcher entry ships with the package ([#37](https://github.com/jetomev/grubforge/issues/37))
+- [x] **v2.2.1**: the AUR package builds on any machine; a reload reads the file it opened ([#41](https://github.com/jetomev/grubforge/issues/41))
 - [x] **v2.2.0**: a key for every menu entry (Help is 6), "Boot Menu", a page of hypeForge Settings, buttons that show their key ([#38](https://github.com/jetomev/grubforge/issues/38), [#39](https://github.com/jetomev/grubforge/issues/39), [#40](https://github.com/jetomev/grubforge/issues/40))
 - [x] **v2.1.0**: the password in grubForge's own box, and saving on a text console ([#36](https://github.com/jetomev/grubforge/issues/36))
 - [x] **v2.0.0**: rebuilt on forgekit, every screen redesigned, every major distribution ([#21](https://github.com/jetomev/grubforge/issues/21), [#20](https://github.com/jetomev/grubforge/issues/20), [#19](https://github.com/jetomev/grubforge/issues/19), [#17](https://github.com/jetomev/grubforge/issues/17), [#22](https://github.com/jetomev/grubforge/issues/22), [#24](https://github.com/jetomev/grubforge/issues/24), [#25](https://github.com/jetomev/grubforge/issues/25), [#29–#33](https://github.com/jetomev/grubforge/issues?q=is%3Aissue+F-))

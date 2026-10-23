@@ -8,8 +8,8 @@
 ![Platform: Linux](https://img.shields.io/badge/Platform-Linux-lightgrey.svg)
 ![Python: 3.10+](https://img.shields.io/badge/Python-3.10+-green.svg)
 ![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen.svg)
-![Version: 2.2.1](https://img.shields.io/badge/Version-2.2.1-purple.svg)
-[![AUR](https://img.shields.io/aur/version/grubforge?v=2.1.0-1)](https://aur.archlinux.org/packages/grubforge)
+![Version: 2.2.2](https://img.shields.io/badge/Version-2.2.2-purple.svg)
+[![AUR](https://img.shields.io/aur/version/grubforge?v=2.2.2-1)](https://aur.archlinux.org/packages/grubforge)
 
 > 🛡 **Security** — every release is GPG-signed and every commit is GitHub-Verified. **[Where We Stand](https://github.com/jetomev/KognogOS/blob/main/docs/where-we-stand.md)** covers our response to the 2026 AUR supply-chain attacks and how to check us yourself.
 
@@ -218,14 +218,23 @@ grubForge is a human and AI collaboration, and we've written down how that works
 
 ### Done
 
+- [x] **v2.2.2**: the launcher entry ships with the package ([#37](https://github.com/jetomev/grubforge/issues/37))
 - [x] **v2.2.1**: the AUR package builds on any machine; a reload reads the file it opened ([#41](https://github.com/jetomev/grubforge/issues/41))
-- [x] **v2.2.0**: a key for every menu entry (Help is 6), "Boot Menu", a page of hypeForge Settings, buttons that show their key ([#38](https://github.com/jetomev/grubforge/issues/38), [#39](https://github.com/jetomev/grubforge/issues/39), [#40](https://github.com/jetomev/grubforge/issues/40))
-- [x] **v2.1.0**: the password in grubForge's own box, and saving on a text console ([#36](https://github.com/jetomev/grubforge/issues/36))
 - [x] Earlier releases: [docs/ROADMAP.md](docs/ROADMAP.md)
 
 ---
 
 ## Changelog
+
+### v2.2.2 — October 22, 2026
+
+**A launcher entry: grubForge shows in every app menu** ([#37](https://github.com/jetomev/grubforge/issues/37)).
+
+- 🚀 **The launcher entry ships with the package**: `grubforge.desktop`, so the app shows in any desktop's app menu and launcher, opening in a terminal. Checked by `desktop-file-validate` in the tests and in the package's own check. hypeForge keeps its own copy for its floating window.
+- 🔁 **Reproducible release files**: rebuilt from the tag, the tarball comes out byte for byte the same (every file dated the tag's commit time).
+- 📖 The man page says the right version again (it still said 2.2.0 in 2.2.1).
+
+Tests: 86 → **87**; warnings from grubForge's own code 0 → 0 (one from python-gobject's own code under Python 3.14 shows at 2.2.1 too on today's system). `desktop-file-utils` for the package's check.
 
 ### v2.2.1 — October 11, 2026
 
@@ -233,19 +242,9 @@ grubForge is a human and AI collaboration, and we've written down how that works
 
 Tests: 108 → **111** (3 new: the package's needs list, a session reading its own file, GRUB's own check on its own; the session test fails on the old code). Warnings: 3 → 3 (no change).
 
-### v2.2.0 — October 8, 2026
+*The complete history lives in [docs/CHANGELOG.md](docs/CHANGELOG.md).*
 
-**A key for every menu entry, "Boot Menu", a page of hypeForge Settings, and buttons that show their key.** Javier found these on October 8 while running grubForge inside hypeForge Settings, in two rounds.
-
-- ⌨ **Help has a number now** ([#38](https://github.com/jetomev/grubforge/issues/38), F-6). The numbers **1 – 6** follow the menu bar, Help included (Quit has none), and **Ctrl** + an entry's underlined letter goes there too. The bottom bar says **1-6 menu** instead of the confusing "1-5 screens". These keys now come from [forgekit](https://github.com/jetomev/forge-suite/tree/main/forgekit) 0.10.0, which makes them from the menu itself, so no entry can be left without a key again.
-- 🔡 **Javier's letter rule** (his second run, same day): each entry's Ctrl letter is the first letter of its name unless another entry already has it, then the next letter of the name. Help is always H, Quit Q, and grubForge's own Ctrl+R (rebuild) is left alone. So **Settings is now Ctrl+S** (was Ctrl+E) and **Backups Ctrl+A** (was Ctrl+K: B belongs to Boot Menu). Pressing a menu's number again closes it (6, 6 opens and closes Help), and the open menu's name stays lit while it's open.
-- 📄 **About, License, Keys and the manual open as pages** in the main area instead of windows on top, with Help lit while they show; **Esc** goes back to where you were. **F1** still opens the manual at the right page, and Esc then returns to the screen you were on; in the manual, **Backspace** goes to the previous manual page.
-- 🔤 **"Boot Menu"** ([#39](https://github.com/jetomev/grubforge/issues/39), F-7): the screen's name in the menu bar, on the screen itself, in the manual and here.
-- 🧩 **A page of hypeForge Settings** ([#40](https://github.com/jetomev/grubforge/issues/40)): started as `grubforge --hypeforge` (any capitals), grubForge has no Quit of its own. Settings closes it, and grubForge first asks its usual question when something isn't saved or isn't in the boot menu yet. `--help` doesn't list it: it's for Settings, not for people.
-- 🏷 **Buttons in Javier's format** ([#40](https://github.com/jetomev/grubforge/issues/40)): the name in Title Case, then the key in brackets: **Save Changes (s)**, **Rebuild Boot Menu (F9)**, **Restore (r)**, **Find Other Systems (f)**. A button without a key of its own shows just its name. Three buttons said "(asks for your password)"; that moved into the text beside them, so brackets always mean a key.
-- Also: the install steps for other distributions now fetch forgekit from the [Forge Suite](https://github.com/jetomev/forge-suite) (its old repository is archived) together with `pyte`, and the Usage section describes 2.1's password box instead of the desktop's password window.
-
-Tests: 78 → **108** (30 new; each one was seen to fail with its fix taken out). Warnings: 3 → 3 (no change), all deprecation notices from the PyGObject library and forgekit's use of it, none from grubForge's own code. New requirement: `python-forgekit` ≥ 0.10.0.
+---
 
 ## Related Projects
 

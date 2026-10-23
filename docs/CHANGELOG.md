@@ -2,6 +2,16 @@
 
 *The README carries the two most recent entries; the complete history lives here, newest-first.*
 
+### v2.2.2 — October 22, 2026
+
+**A launcher entry: grubForge shows in every app menu** ([#37](https://github.com/jetomev/grubforge/issues/37)).
+
+- 🚀 **The launcher entry ships with the package**: `grubforge.desktop`, so the app shows in any desktop's app menu and launcher, opening in a terminal. Checked by `desktop-file-validate` in the tests and in the package's own check. hypeForge keeps its own copy for its floating window.
+- 🔁 **Reproducible release files**: rebuilt from the tag, the tarball comes out byte for byte the same (every file dated the tag's commit time).
+- 📖 The man page says the right version again (it still said 2.2.0 in 2.2.1).
+
+Tests: 86 → **87**; warnings from grubForge's own code 0 → 0 (one from python-gobject's own code under Python 3.14 shows at 2.2.1 too on today's system). `desktop-file-utils` for the package's check.
+
 ### v2.2.1 — October 11, 2026
 
 **The AUR package builds on any machine, and a reload always reads the file it opened** ([#41](https://github.com/jetomev/grubforge/issues/41), F-8). The Forge Suite's dependency audit built the 2.2.0 recipe in a clean Arch system and five tests failed there. Four came from a real slip: a reload of the settings read the system's own `/etc/default/grub` instead of the file the session was opened on. In everyday use they're the same file, so nothing looked wrong; the tests passed here only because this desktop's timeout matched theirs. The fifth needs GRUB's own checker, so the package now **depends on grub** (and suggests **os-prober** for other systems on the menu). What the package needs, with why: [docs/PACKAGING.md](PACKAGING.md).

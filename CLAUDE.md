@@ -4,7 +4,7 @@ GRUB bootloader manager for the terminal (Python 3.10+, Textual). Part of the Fo
 
 ## Run and test
 - Run from the tree: `python main.py` (or `python -m grubforge`). Without `/etc/default/grub` it mounts in mock mode.
-- Tests: `python tests/test_boot_entry_sources.py` (25 checks, no root) and `PYTHONPATH=~/Programs/forge-suite/forgekit python -W always -m unittest discover -s tests` (83 tests at 2.2.0, 86 at 2.2.1; no root, never writes /etc). The AUR `check()` also runs a headless mount (`app.run_test()`) and the helper refusal checks — run the same three before any tag.
+- Tests: `python tests/test_boot_entry_sources.py` (25 checks, no root) and `PYTHONPATH=~/Programs/forge-suite/forgekit python -W always -m unittest discover -s tests` (83 tests at 2.2.0, 86 at 2.2.1, 87 at 2.2.2; no root, never writes /etc). The AUR `check()` also runs a headless mount (`app.run_test()`) and the helper refusal checks — run the same three before any tag.
 - `cargo`-style counts: report the number of test checks in every changelog entry; a drop means something was deleted.
 - A real save touches the bootloader. Test saves in a VM (`kognog-hypeforge` for Arch/KognogOS, `debian13-grubforge` for Debian — fragile boot, see memory) before this desktop.
 
