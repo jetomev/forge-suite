@@ -5,6 +5,11 @@
 **Updated after every step.** The full story behind each item is in its GitHub issue.
 
 
+## 2026-10-22 · Moved into the Forge Suite (the last app)
+- [x] **Moved into `forge-suite/grubforge`** (Javier: "can you?" — go): `git subtree add` with the full history (signed merge `81ac492`), all 22 tags re-created signed as `grubforge-v0.1.0…v2.2.2`, open issues moved (#34 → forge-suite#119, #35 → #120), no open pull requests and no forks, the old repository got a moved note (and a thank-you for its 10 stars, which stay there) and is archived, `~/Programs/grubforge` → a shortcut (the old folder in `~/Programs/_moved-into-forge-suite/`)
+- [x] The app's own links (`--help`'s manual, About's Code) point at the suite (`tests/test_home.py`, seen failing first)
+- [ ] **At the next version:** the release from forge-suite (`scripts/release-app.sh grubforge X.Y.Z`), the AUR recipe repointed at `jetomev/forge-suite` releases
+
 ## 2026-10-22 · The project's board
 - [x] **A board for this project** (https://claude.ai/artifact/2idA8cXm3crj2kqhMtQmVE): this TODO as a page beside the chat — calling the project opens it first (mindForge boards, `.board`). Ticks made on the page come back here
 

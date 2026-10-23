@@ -2,6 +2,8 @@
 
 > The GRUB boot menu, without editing files by hand: every setting in plain words, picked from lists, reviewed before it's written, with a backup first.
 
+> 📦 **Home:** part of the [Forge Suite](https://github.com/jetomev/forge-suite) since 22 October 2026 (`forge-suite/grubforge`, with its full history). Releases are tagged `grubforge-vX.Y.Z`; issues go to [forge-suite](https://github.com/jetomev/forge-suite/issues).
+
 > 🖥 **Where it runs:** **any major Linux distribution with GRUB** (Arch, Debian/Ubuntu, Fedora/RHEL, openSUSE…) · **no desktop needed**: any desktop, or none · **works on a plain text console** (a tty), saving included.
 
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
@@ -93,12 +95,11 @@ yay -S grubforge           # any AUR helper
 ### Any other distribution
 
 ```bash
-git clone https://github.com/jetomev/grubforge.git
-cd grubforge
+git clone https://github.com/jetomev/forge-suite.git     # grubForge and forgekit both live here
+cd forge-suite/grubforge
 python3 -m venv .venv && .venv/bin/pip install textual rich pyte
-git clone https://github.com/jetomev/forge-suite.git ../forge-suite
 sudo sh install-helper.sh
-PYTHONPATH=../forge-suite/forgekit .venv/bin/python main.py
+PYTHONPATH=../forgekit .venv/bin/python main.py
 ```
 
 `install-helper.sh` copies two files and nothing else: the helper to `/usr/lib/grubforge/` and the polkit rule to `/usr/share/polkit-1/actions/`, both owned by root. polkit only runs a helper installed at the exact path named in its policy. Without it grubForge still runs, read-only, and says so.
@@ -212,8 +213,8 @@ grubForge is a human and AI collaboration, and we've written down how that works
 
 ### Next
 
-- [ ] **Write settings into `/etc/default/grub.d`** on Debian and Ubuntu, so settings decided there can be changed from grubForge too (today they're shown, locked, with the file to edit) ([#34](https://github.com/jetomev/grubforge/issues/34))
-- [ ] **Fedora-style entries**: rename and reorder entries kept as separate files ([#35](https://github.com/jetomev/grubforge/issues/35))
+- [ ] **Write settings into `/etc/default/grub.d`** on Debian and Ubuntu, so settings decided there can be changed from grubForge too (today they're shown, locked, with the file to edit) ([forge-suite#119](https://github.com/jetomev/forge-suite/issues/119))
+- [ ] **Fedora-style entries**: rename and reorder entries kept as separate files ([forge-suite#120](https://github.com/jetomev/forge-suite/issues/120))
 - [ ] **Configurable preferences**: backup retention, theme folder
 
 ### Done

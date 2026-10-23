@@ -28,7 +28,7 @@ Usage:
 
 Inside: Tab moves, Enter opens, F10 saves, F9 rebuilds the boot menu, F1 explains,
 M opens the manual, ? lists every key.
-Manual: https://github.com/jetomev/grubforge/tree/main/grubforge/manual
+Manual: https://github.com/jetomev/forge-suite/tree/main/grubforge/grubforge/manual
 """
 
 LOG_DIR = "~/.local/share/grubforge/logs"

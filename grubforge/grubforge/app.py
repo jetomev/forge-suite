@@ -201,7 +201,7 @@ class GrubForgeApp(ForgeApp):
             "description": "Part of the Forge Suite for KognogOS. Works on every major Linux distribution.",
             "authors": "jetomev (Javier) · Claude (Anthropic), co-developer",
             "license": "GPL-3.0-or-later",
-            "links": [("Code", "https://github.com/jetomev/grubforge")],
+            "links": [("Code", "https://github.com/jetomev/forge-suite/tree/main/grubforge")],
         }
         super().__init__(**kw)
 
