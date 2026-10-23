@@ -2,6 +2,11 @@
 
 *The live work list and the handoff between sessions. Newest work first. Updated after every step.*
 
+## 2026-10-22 · Moved into the Forge Suite, and 1.1.1
+- [x] **Moved into `forge-suite/bitlaforge`** (Javier: go): `git subtree add` with the full history (signed merge `5b85c1a`), tags re-created signed as `bitlaforge-v0.1.0…v1.1.0` (the six old plain tags got a short message), open issues moved (#9 → forge-suite#115, #10 → #116, #11 → #117, #12 → #118), the old repository got a moved note and is archived, `~/Programs/bitlaforge` → a shortcut (the old folder in `~/Programs/_moved-into-forge-suite/`)
+- [x] **1.1.1**: the launcher entry (#118) + the app's own links point at the suite (`tests/test_v111.py`, seen failing first); tests 90
+- [ ] Release 1.1.1 (GitHub, `bitlaforge-v1.1.1`), the AUR recipe repointed at forge-suite + the entry installed, **Javier's local test**, then the AUR push; then close #118
+
 - [x] **1.1.0 — the same keys as every Forge app ([#13](https://github.com/jetomev/bitlaforge/issues/13)), released 2026-10-08 (GitHub + AUR; Javier on the installed package: "all perfect!")**
   - ✅ Built, on forgekit 0.10.0 (unreleased, in `~/Programs/forge-suite/forgekit`): 1-5 and Ctrl + the underlined letter for every menu entry, Help included (5 = Help), from forgekit; the app's own 1-4 and Ctrl+D/E/L/Y removed. Bottom bar "1-5 menu". `--hypeforge` / `--hypeForge` (hidden from `--help` and the man page): no Quit, Q/Ctrl+Q do nothing; Settings closing it asks first while mining or with unsaved changes (asked twice = one question). Button labels "Words in Title Case (k)". A shutdown error found by the new tests fixed (the 1-second refresh while closing). From-source install now clones forge-suite (the forgekit repo is archived).
   - ✅ Tests 64 → 81 (round 1), warnings 0 → 0; 17 failing-direction checks (each fix taken out, its test fails, put back). Console preview clean (Dashboard, Log, Help menu under `--hypeforge`). Screenshots regenerated. Version 1.1.0 in `__init__.py`, README badge, man page, CHANGELOG/ROADMAP; forgekit ≥ 0.10.0 in README + man page.
@@ -35,7 +40,7 @@
 - [x] **What it needs, measured** (2026-10-11, forge-suite#91): `docs/PACKAGING.md` + `tests/test_needs.py`; the AUR recipe 1.1.0-1 builds clean in a clean Arch system and matches the code
 
 ## At the next release
-- [ ] **The launcher entry (#12)** — `bitlaforge.desktop` + `tests/test_desktop_entry.py` are in the repo (2026-10-22, the KognogOS clean-house); at the next version the AUR recipe adds `install -Dm644 bitlaforge.desktop "${pkgdir}/usr/share/applications/bitlaforge.desktop"`, `checkdepends=('desktop-file-utils')` and `desktop-file-validate bitlaforge.desktop` in `check()`; then close #12, and hypeForge's own copy can go
+- [x] **The launcher entry (#12, now forge-suite#118)** — in 1.1.1; — `bitlaforge.desktop` + `tests/test_desktop_entry.py` are in the repo (2026-10-22, the KognogOS clean-house); at the next version the AUR recipe adds `install -Dm644 bitlaforge.desktop "${pkgdir}/usr/share/applications/bitlaforge.desktop"`, `checkdepends=('desktop-file-utils')` and `desktop-file-validate bitlaforge.desktop` in `check()`; then close #12, and hypeForge's own copy can go
 - [ ] **The AUR description, at the next release** (Javier, 2026-10-09): the AUR `pkgdesc` (and `.SRCINFO`) gets the same "where it runs" words as the README, GitHub About and kognogos.org — distribution · desktop · plain text console. Not pushed on its own: AUR pushes stay one per proven version.
 
 ## Next — the grubForge 2.0 look (Javier, 2026-10-02)

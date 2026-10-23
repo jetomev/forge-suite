@@ -2,6 +2,11 @@
 
 *The README carries the upcoming work and the two most recent releases; everything older lives here, newest-first.*
 
+### v1.1.1 — October 22, 2026 — a launcher entry, and a new home ([forge-suite#118](https://github.com/jetomev/forge-suite/issues/118))
+
+- [x] The launcher entry ships with the package
+- [x] Moved into the Forge Suite with its full history; the open issues moved with it
+
 ### v1.1.0 — October 8, 2026 — the same keys as every Forge app ([#13](https://github.com/jetomev/bitlaforge/issues/13))
 - [x] Menu keys from forgekit 0.10.0: **1-5** and **Ctrl + the underlined letter** for every menu entry, Help included (5 opens Help, 5 again closes it; the open menu lit); the bottom bar says "1-5 menu"
 - [x] Javier's letter rule: the first letter of the name, else its next free one; Help H. **Ctrl+S** Settings, **Ctrl+I** History

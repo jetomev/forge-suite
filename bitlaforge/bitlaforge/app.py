@@ -1,4 +1,4 @@
-"""bitlaForge v1.1.0 — the app frame, on forgekit.
+"""bitlaForge v1.1.1 — the app frame, on forgekit.
 
 The frame is forgekit's (title bar, menu bar, changes bar, hint bar); the
 screens are bitlaForge's. Javier's rulings for 1.0.0 (2 Oct 2026,
@@ -192,7 +192,7 @@ class BitlaForgeApp(ForgeApp):
                            "its own.",
             "authors": "jetomev (Javier) · Claude (Anthropic), co-developer",
             "license": "GPL-3.0-or-later",
-            "links": [("Code", "https://github.com/jetomev/bitlaforge")],
+            "links": [("Code", "https://github.com/jetomev/forge-suite/tree/main/bitlaforge")],
         }
         super().__init__(**kw)
 

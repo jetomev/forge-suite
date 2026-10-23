@@ -1,4 +1,4 @@
-"""Starting bitlaForge from the terminal (v1.1.0).
+"""Starting bitlaForge from the terminal (v1.1.1).
 
 ``--version`` and ``--help`` answer and exit without opening the app.
 ``--hypeforge`` (any case; 1.1.0, #13) is how hypeForge Settings starts it: a
@@ -32,7 +32,7 @@ Inside: M starts and stops mining (never on its own), T tests the miner.
 History, Help. F10 saves settings (with a review first), F1 explains,
 ? lists every key.
 Closing bitlaForge stops the miner.
-Manual: https://github.com/jetomev/bitlaforge/tree/main/bitlaforge/manual
+Manual: https://github.com/jetomev/forge-suite/tree/main/bitlaforge/bitlaforge/manual
 """
 
 LOG_DIR = "~/.local/share/bitlaforge/logs"

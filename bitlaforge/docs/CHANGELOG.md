@@ -2,6 +2,16 @@
 
 *The README carries the two most recent entries; the complete history lives here, newest-first.*
 
+### v1.1.1 — October 22, 2026
+
+**A launcher entry, and a new home.** bitlaForge now shows in every app menu and launcher, and it lives in the Forge Suite.
+
+- 🚀 **The launcher entry ships with the package** ([forge-suite#118](https://github.com/jetomev/forge-suite/issues/118), was #12): `bitlaforge.desktop`, so the app shows in any desktop's app menu and launcher, opening in a terminal. Checked by `desktop-file-validate` in the tests and in the package's own check. hypeForge keeps its own copy for its floating window.
+- 📦 **Moved into the [Forge Suite](https://github.com/jetomev/forge-suite/tree/main/bitlaforge)** (22 October 2026), with its full history. Releases are tagged `bitlaforge-vX.Y.Z` there; the open issues moved with it ([#115](https://github.com/jetomev/forge-suite/issues/115), [#116](https://github.com/jetomev/forge-suite/issues/116), [#117](https://github.com/jetomev/forge-suite/issues/117)). The old repository is archived and stays readable. The app's own links (`--help`'s manual, About's Code) point at the new home.
+- 🔁 **The release files are reproducible**: rebuilt from the tag, they come out byte for byte the same (the Forge Suite's release recipe).
+
+Tests: 86 → **90**; warnings 0 → 0. Needs `python-forgekit` ≥ 0.10.0; `desktop-file-utils` for the package's check.
+
 ### v1.1.0 — October 8, 2026
 
 **The same keys as every Forge app** ([#13](https://github.com/jetomev/bitlaforge/issues/13)). On 8 October Javier ran the Forge apps inside hypeForge Settings and asked for all six to move together. bitlaForge now gets its menu keys from forgekit 0.10.0, the suite's shared base, instead of writing its own:

@@ -2,14 +2,16 @@
 
 > Solo Bitcoin mining, honestly framed: start and stop the miner, watch it work, and see your real chance of finding a block. It never starts mining on its own, and it stops the miner when it closes.
 
+> 📦 **Home:** part of the [Forge Suite](https://github.com/jetomev/forge-suite) since 22 October 2026 (`forge-suite/bitlaforge`, with its full history). Releases are tagged `bitlaforge-vX.Y.Z`; issues go to [forge-suite](https://github.com/jetomev/forge-suite/issues).
+
 > 🖥 **Where it runs:** **any Linux distribution** (it needs `minerd`) · **no desktop needed** · **works on a plain text console** (a tty).
 
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
 ![Platform: Linux](https://img.shields.io/badge/Platform-Linux-lightgrey.svg)
 ![Python: 3.11+](https://img.shields.io/badge/Python-3.11+-green.svg)
 ![Status: Stable](https://img.shields.io/badge/Status-Stable-brightgreen.svg)
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-purple.svg)
-[![AUR](https://img.shields.io/aur/version/bitlaforge?v=1.0.0-1)](https://aur.archlinux.org/packages/bitlaforge)
+![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-purple.svg)
+[![AUR](https://img.shields.io/aur/version/bitlaforge?v=1.1.1-1)](https://aur.archlinux.org/packages/bitlaforge)
 
 > 🛡 **Security** — every release is GPG-signed and every commit is GitHub-Verified. **[Where We Stand](https://github.com/jetomev/KognogOS/blob/main/docs/where-we-stand.md)** covers our response to the 2026 AUR supply-chain attacks and how to check us yourself.
 
@@ -94,11 +96,10 @@ With any other AUR helper: `yay -S bitlaforge` and `yay -S cpuminer`.
 ### Any other distribution
 
 ```bash
-git clone https://github.com/jetomev/bitlaforge.git
-git clone https://github.com/jetomev/forge-suite.git     # forgekit lives inside it
-cd bitlaforge
+git clone https://github.com/jetomev/forge-suite.git     # bitlaForge and forgekit both live here
+cd forge-suite/bitlaforge
 python3 -m venv .venv && .venv/bin/pip install textual rich tomlkit
-PYTHONPATH=../forge-suite/forgekit .venv/bin/python main.py
+PYTHONPATH=../forgekit .venv/bin/python main.py
 ```
 
 A virtual environment is used because most distributions refuse `pip install` into the system Python.
@@ -184,19 +185,29 @@ A human and AI collaboration. The 1.0 redesign was drawn screen by screen and ap
 
 Still on the plan from before 1.0:
 
-- [ ] Check that the pool can be reached when you save, not only when you start ([#9](https://github.com/jetomev/bitlaforge/issues/9))
-- [ ] Optionally restart the miner if it stops by itself ([#10](https://github.com/jetomev/bitlaforge/issues/10))
-- [ ] Switch between saved setups with one key ([#11](https://github.com/jetomev/bitlaforge/issues/11))
+- [ ] Check that the pool can be reached when you save, not only when you start ([forge-suite#115](https://github.com/jetomev/forge-suite/issues/115))
+- [ ] Optionally restart the miner if it stops by itself ([forge-suite#116](https://github.com/jetomev/forge-suite/issues/116))
+- [ ] Switch between saved setups with one key ([forge-suite#117](https://github.com/jetomev/forge-suite/issues/117))
 
 ### Done
 
+- [x] **v1.1.1** ([forge-suite#118](https://github.com/jetomev/forge-suite/issues/118)): the launcher entry ships with the package; moved into the Forge Suite with its full history
 - [x] **v1.1.0** ([#13](https://github.com/jetomev/bitlaforge/issues/13)): the same keys as every Forge app (a number and Ctrl + the underlined letter for every menu entry, Help included; the manual, Keys, About and License as pages); a page of hypeForge Settings with no Quit of its own; buttons that show their key, like **Start Mining (m)**
-- [x] **v1.0.0** ([#4](https://github.com/jetomev/bitlaforge/issues/4)): rebuilt to match grubForge 2.0; the miner never outlives bitlaForge; real odds; History; pause when hot; the wallet checked; every major distribution
 - [x] Earlier releases: [docs/ROADMAP.md](docs/ROADMAP.md)
 
 ---
 
 ## Changelog
+
+### v1.1.1 — October 22, 2026
+
+**A launcher entry, and a new home.** bitlaForge now shows in every app menu and launcher, and it lives in the Forge Suite.
+
+- 🚀 **The launcher entry ships with the package** ([forge-suite#118](https://github.com/jetomev/forge-suite/issues/118), was #12): `bitlaforge.desktop`, so the app shows in any desktop's app menu and launcher, opening in a terminal. Checked by `desktop-file-validate` in the tests and in the package's own check. hypeForge keeps its own copy for its floating window.
+- 📦 **Moved into the [Forge Suite](https://github.com/jetomev/forge-suite/tree/main/bitlaforge)** (22 October 2026), with its full history. Releases are tagged `bitlaforge-vX.Y.Z` there; the open issues moved with it ([#115](https://github.com/jetomev/forge-suite/issues/115), [#116](https://github.com/jetomev/forge-suite/issues/116), [#117](https://github.com/jetomev/forge-suite/issues/117)). The old repository is archived and stays readable. The app's own links (`--help`'s manual, About's Code) point at the new home.
+- 🔁 **The release files are reproducible**: rebuilt from the tag, they come out byte for byte the same (the Forge Suite's release recipe).
+
+Tests: 86 → **90**; warnings 0 → 0. Needs `python-forgekit` ≥ 0.10.0; `desktop-file-utils` for the package's check.
 
 ### v1.1.0 — October 8, 2026
 
@@ -211,20 +222,6 @@ Still on the plan from before 1.0:
 - 📚 The install-from-source steps now fetch forgekit from the Forge Suite repository, where it lives since 6 October.
 
 Tests: 64 → **86**; warnings 0 → 0. Dependency: `python-forgekit` ≥ 0.10.0. Nothing changes in your settings or history.
-
-### v1.0.0 — October 2, 2026
-
-**bitlaForge, rebuilt, and safe.** Every screen was redesigned to match grubForge 2.0, from a plan Javier approved screen by screen before any code was written. Taking stock of 0.2.1 first found that **closing it left the miner running**, with the processor at full load and nothing on screen to stop it. That and three more are fixed, each with a test:
-
-- 🛑 **The miner never outlives bitlaForge** ([#5](https://github.com/jetomev/bitlaforge/issues/5)): closing asks, then stops it; a parent-death signal stops it even if bitlaForge is killed.
-- 📊 **Rejected shares are counted** ([#6](https://github.com/jetomev/bitlaforge/issues/6)): the miner reports them inside its "accepted" line; 0.2.1 always showed 0.
-- 🔌 **Pools typed as `name:port` connect** ([#7](https://github.com/jetomev/bitlaforge/issues/7)): without `stratum+tcp://` the miner contacted the pool as a website. Pools are now picked from a list.
-- 💾 **A broken settings file is never saved over** ([#8](https://github.com/jetomev/bitlaforge/issues/8)): 0.2.1 read a file with one typo as blank settings, and the next save erased the wallet. Saves are reviewed, backed up and written in one step.
-- ⌨ **Esc leaves a field** ([#3](https://github.com/jetomev/bitlaforge/issues/3)); readable on a plain text console ([#2](https://github.com/jetomev/bitlaforge/issues/2)).
-- 🆕 **Four screens** (Dashboard, Settings, Log, History), the speed chart and per-core bars, the honest odds, pause when hot, the wallet checked offline, **Bitcoin only**, a manual inside the app, `--version` / `--help`, the closing note.
-- 🐧 **Every major distribution**: tested with each one's own miner in Debian, Ubuntu, Fedora and openSUSE VMs; the manual says how to get the miner on each.
-
-Tested by Javier on KognogOS with real mining: *"so much better!"* Tests: 0 → **64**; warnings 0. Dependencies: `python-tomlkit` (new), `python-forgekit` ≥ 0.5.1, `util-linux`; no longer `python-tomli-w`. Your 0.2.x settings carry over as they are.
 
 *The complete history lives in [docs/CHANGELOG.md](docs/CHANGELOG.md).*
 

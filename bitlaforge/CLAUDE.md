@@ -3,6 +3,8 @@
 *How this project is built, tested and shipped. Written for the AI co-developer, and public on purpose: it is part of how the human + AI method is documented.*
 
 ## What it is
+*Lives in `forge-suite/bitlaforge` since 2026-10-22 (D-60; the old repository is archived); releases tagged `bitlaforge-vX.Y.Z` (`../docs/RELEASE-RECIPE.md`).*
+
 A [forgekit](https://github.com/jetomev/forge-suite/tree/main/forgekit) (Python/Textual) terminal app for **solo** Bitcoin mining as the lottery it is: it wraps `minerd`, shows its state, and keeps its settings. Unlike the other Forge apps it drives a **long-running external process** (start/stop, stdout parsing, live dashboard); its files are all the user's: `~/.config/bitlaforge/config.toml` (+ `backups/`), `~/.local/share/bitlaforge/history.json` and `logs/`, `~/.cache/bitlaforge/network.json` (no `/etc`, no root). Since 1.0 (Javier, 2 Oct 2026): four screens (Dashboard, Settings, Log, History), Bitcoin only, pause when hot, honest odds from mempool.space, and **the miner never outlives bitlaForge**.
 
 ## Non-negotiables
@@ -24,8 +26,8 @@ A [forgekit](https://github.com/jetomev/forge-suite/tree/main/forgekit) (Python/
 - `minerd` is AUR-only on Arch (an `optdepends`), packaged on openSUSE, and **not packaged on Debian, Ubuntu or Fedora** (the cpuminer project's ready-made program works there; tested 2 Oct 2026). The app finds it with `shutil.which("minerd")` each time; without it the Dashboard points to the manual's *Installing the miner*.
 
 ## How to run and test
-- From source, on the kit in development: `PYTHONPATH=~/Programs/forge-suite/forgekit python main.py` (`~/Programs/forgekit` is a link to it). Installed: `bitlaforge`. As a hypeForge Settings page: add `--hypeforge`.
-- Tests: `PYTHONPATH=~/Programs/forge-suite/forgekit python -W default -m unittest discover -s tests` — **86 at 1.1.0 (64 at 1.0.0), 0 warnings**; the count must never drop silently. A stand-in `minerd` (a script printing cpuminer's real lines) drives the lifecycle; `ps -C minerd` must be empty afterwards.
+- From source, on the kit in development: `PYTHONPATH=../forgekit python main.py` (the suite's own forgekit folder). Installed: `bitlaforge`. As a hypeForge Settings page: add `--hypeforge`.
+- Tests: `PYTHONPATH=~/Programs/forge-suite/forgekit python -W default -m unittest discover -s tests` — **90 at 1.1.1 (86 at 1.1.0), 0 warnings**; the count must never drop silently. A stand-in `minerd` (a script printing cpuminer's real lines) drives the lifecycle; `ps -C minerd` must be empty afterwards.
 - Every distribution: `scripts/vm-distro-check.py` in the gf-* VMs. Test packages: `scripts/make-rc-packages.sh` (AUR recipe, rc suffix). Pictures: `docs/screenshots/generate.py`.
 - Every release: `testing/RELEASE-CHECKLIST.md` top to bottom (snapshot `config.toml` first, audit greps, version sync), a Test Matrix and Test Results in `testing/` (`YYYYMMDD - Test Matrix for bitlaForge vX-Y-Z.md`), a console run, and **Javier's own test before anything builds on it**.
 - Mining on real hardware (Javier's run) before any release that touches `miner.py`, the line reader or starting/stopping.
