@@ -111,6 +111,22 @@ class Widths(unittest.TestCase):
             own = re.findall(r"min-width: (?:\d{3}|\{\w+\})px|set_size_request\((?:\d{3}|WIDTH|panelkit\.\w+)", src)
             self.assertEqual(own, [], f"{view} still sets its own width: {own}")
 
+    def test_the_content_fills_the_width(self):
+        # 2026-10-24, Javier: "the content has been shrunk, and looks pushed to the left". The card had the
+        # width; what was inside kept its own smaller size. Measured here off screen, nothing shown.
+        from gi.repository import Gtk
+        for card in (True, False):
+            label = Gtk.Label(label="Night light")
+            outer = panelkit.wrap(label, card=card, width=panelkit.NARROW)
+            win = Gtk.OffscreenWindow()
+            win.add(outer)
+            win.show_all()
+            while Gtk.events_pending():
+                Gtk.main_iteration()
+            self.assertGreaterEqual(label.get_allocated_width(), panelkit.NARROW - 40,
+                                    f"card={card}: the content is {label.get_allocated_width()} px in a {panelkit.NARROW} px pop-up")
+            win.destroy()
+
     def test_the_panel_puts_it_on_the_outermost_piece(self):
         import inspect
         self.assertIn("width", inspect.signature(panelkit.Panel.__init__).parameters)

@@ -215,6 +215,24 @@ EDGES = {"top": GtkLayerShell.Edge.TOP, "bottom": GtkLayerShell.Edge.BOTTOM,
          "left": GtkLayerShell.Edge.LEFT, "right": GtkLayerShell.Edge.RIGHT}
 
 
+def wrap(content: "Gtk.Widget", card: bool = True, width: int | None = None) -> "Gtk.Widget":
+    """The pop-up's outermost piece: `content` in its card (or bare), `width` (NARROW, MEDIUM, WIDE) on that
+    outermost piece, and the content stretched to fill it. 2026-10-24: with the width on the card alone, the
+    content kept its own smaller size, pushed to the left (Night light, Processor, Graphics, Temperature, the
+    printers list; Javier: "the content has been shrunk")."""
+    if width:
+        content.set_hexpand(True)
+        content.set_halign(Gtk.Align.FILL)
+    if card:
+        box = Gtk.Box()
+        box.get_style_context().add_class("hf-card")
+        box.pack_start(content, True, True, 0)
+        content = box
+    if width:
+        content.set_size_request(width, -1)
+    return content
+
+
 class Panel:
     """A pop-up: a card of widgets anchored to `edges` (e.g. ["bottom"] = bottom centre,
     ["top", "right"] = top-right corner, [] = the middle), `margins` in pixels from those edges.
@@ -243,14 +261,7 @@ class Panel:
         self._layer(self.window, GtkLayerShell.Layer.OVERLAY, monitor, list(edges), margins or {})
         GtkLayerShell.set_keyboard_mode(self.window, GtkLayerShell.KeyboardMode.EXCLUSIVE)
         self._transparent(self.window)
-        if card:
-            box = Gtk.Box()
-            box.get_style_context().add_class("hf-card")
-            box.add(content)
-            content = box
-        if width:
-            content.set_size_request(width, -1)
-        self.window.add(content)
+        self.window.add(wrap(content, card, width))
         self.window.connect("key-press-event", self._key)
         for w in self.backdrops + [self.window]:
             w.connect("destroy", lambda *_: self.close())
