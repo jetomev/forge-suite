@@ -28,11 +28,6 @@ from hficons import Icons  # noqa: E402
 WINDOW = panelkit.APPLETS / "window/hypeforge-window"
 CSS = """
 .hf-card.hf-wm {{ padding: 8px 6px; }}
-.hf-wm-head {{ padding: 2px 8px 2px 8px; }}
-.hf-wm-title {{ font-weight: bold; }}
-.hf-wm-app {{ color: {dim}; font-size: {small}pt; }}
-.hf-wm-line {{ min-height: 1px; margin: 5px 6px; border: none; background-color: transparent;
-               background-image: linear-gradient(to right, transparent, {line} 15%, {line} 85%, transparent); }}
 .hf-wm button {{ background: transparent; border-color: transparent; padding: 4px 10px; border-radius: {inner}px;
                 color: {text}; }}
 .hf-wm button:hover, .hf-wm button:focus {{ background: {hover}; }}
@@ -102,10 +97,8 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
             subprocess.Popen([str(WINDOW), action, *extra, str(con_id)])
         return clicked
 
-    def line():
-        sep = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
-        sep.get_style_context().add_class("hf-wm-line")
-        return sep
+    def line():                            # the kit's soft line, the one under every head (D-116)
+        return panelkit.head_line()
 
     def entry(words: str, clicked, mark: str = "", key: str = "", danger: bool = False, arrow=None) -> Gtk.Button:
         row = Gtk.Box(spacing=12)
@@ -129,7 +122,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
 
     # ---- the head
     head = Gtk.Box(spacing=10)
-    head.get_style_context().add_class("hf-wm-head")
+    head.get_style_context().add_class("hf-head")
     entries = apps()
     app = Matcher(entries).of_window(con) if con else None
     app_name = entries[app]["name"] if app in entries else ((con or {}).get("app_id") or "A window")
@@ -143,10 +136,10 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     words = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
     title = Gtk.Label(label=(con or {}).get("name") or app_name, xalign=0, ellipsize=Pango.EllipsizeMode.END,
                       max_width_chars=30)
-    title.get_style_context().add_class("hf-wm-title")
+    title.get_style_context().add_class("hf-head-name")
     words.pack_start(title, False, False, 0)
     sub = Gtk.Label(label=app_name, xalign=0, ellipsize=Pango.EllipsizeMode.END, max_width_chars=30)
-    sub.get_style_context().add_class("hf-wm-app")
+    sub.get_style_context().add_class("hf-head-sub")
     words.pack_start(sub, False, False, 0)
     head.pack_start(words, True, True, 0)
     root.pack_start(head, False, False, 0)

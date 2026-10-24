@@ -30,8 +30,6 @@ TAB = "\t"
 
 CSS = """
 .hf-clip-panel {{ min-width: 440px; }}
-.hf-clip-head .hf-clip-glyph {{ font-family: "Symbols Nerd Font", "{font}"; font-size: {big}pt; color: {accent}; }}
-.hf-clip-count {{ color: {dim}; }}
 .hf-card.hf-clip-list {{ padding: 4px; }}
 .hf-clip-list list, .hf-clip-list row {{ background: transparent; }}
 .hf-clip-list row {{ border-radius: {inner}px; padding: 6px 8px; margin: 1px 0; color: {text}; }}   /* the panel's text, never the GTK theme's */
@@ -117,15 +115,15 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
 
     # ---- the head
     head = Gtk.Box(spacing=10)
-    head.get_style_context().add_class("hf-clip-head")
+    head.get_style_context().add_class("hf-head")
     glyph = Gtk.Label(label=GLYPH["clipboard"])
-    glyph.get_style_context().add_class("hf-clip-glyph")
+    glyph.get_style_context().add_class("hf-head-glyph")
     head.pack_start(glyph, False, False, 0)
     title = Gtk.Label(label="Clipboard", xalign=0)
-    title.get_style_context().add_class("hf-title")
+    title.get_style_context().add_class("hf-head-name")
     head.pack_start(title, False, False, 0)
     count = Gtk.Label(label=f"{len(lines)} kept" if lines else "", xalign=0)
-    count.get_style_context().add_class("hf-clip-count")
+    count.get_style_context().add_class("hf-head-sub")
     head.pack_start(count, True, True, 0)
     clear = Gtk.Button(label="Clear all")
     clear.get_style_context().add_class("flat")

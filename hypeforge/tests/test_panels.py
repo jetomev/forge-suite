@@ -57,6 +57,36 @@ class Look(unittest.TestCase):
         self.assertEqual({lk.radius for lk in self.looks("straight").values()}, {0})
 
 
+class TitleRow(unittest.TestCase):
+    """D-116 (Javier, 2026-10-20): "the same bold title row" on every pop-up, the tray menu's. Seven views
+    drew their titles four ways (1.1x, 1.25x, 1.35x, none: Quick Settings); now one set of panel-kit
+    classes and one soft line. The launchers (start, kickoff, library) are each style's own, outside it."""
+
+    VIEWS = HERE / "applets/panels/views"
+    TITLED = ["quick", "clipboard", "calendar_view", "system", "windowmenu", "traymenu", "listcard"]
+    # their head is a card of its own above the others: the card's edge does the line's job (whether they
+    # become one card, as D-116 says, is for Javier's pop-up review)
+    OWN_CARD = {"clipboard", "calendar_view"}
+    OLD = ["hf-one-title", "hf-wm-title", "hf-tm-name", "hf-list-name", "hf-clip-glyph",
+           '"hf-title"']
+
+    def test_the_kit_draws_the_one_title_row(self):
+        css = panelkit.Look("rice", "kognogos-mocha").css()
+        for cls in (".hf-head ", ".hf-head-name", ".hf-head-glyph", ".hf-head-sub", ".hf-head-line"):
+            self.assertIn(cls, css)
+        self.assertIn(f"font-size: {panelkit.Look.SIZE * 1.1}pt", css.split(".hf-head-name")[1].split("}")[0])
+        self.assertTrue(callable(getattr(panelkit, "head_line", None)), "one shared soft line under the head")
+
+    def test_every_titled_pop_up_wears_it(self):
+        for view in self.TITLED:
+            src = (self.VIEWS / f"{view}.py").read_text()
+            self.assertTrue("hf-head-name" in src, f"{view} has no title row")
+            if view not in self.OWN_CARD:
+                self.assertTrue("panelkit.head_line(" in src, f"{view} has no soft line under its head")
+            for old in self.OLD:
+                self.assertFalse(old in src, f"{view} still draws its own title ({old})")
+
+
 class ViewNames(unittest.TestCase):
     def test_no_view_module_shadows_the_standard_library(self):
         # views/ goes first on the import path: a view called calendar.py would replace Python's own

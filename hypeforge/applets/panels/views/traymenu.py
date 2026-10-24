@@ -27,10 +27,6 @@ import hfsni  # noqa: E402
 LONG = 12             # a submenu longer than this scrolls
 CSS = """
 .hf-card.hf-tm {{ padding: 8px 6px; }}
-.hf-tm-head {{ padding: 2px 4px 2px 8px; }}
-.hf-tm-name {{ font-weight: bold; font-size: {big}pt; }}
-.hf-tm-line {{ min-height: 1px; margin: 5px 6px; border: none; background-color: transparent;
-               background-image: linear-gradient(to right, transparent, {line} 15%, {line} 85%, transparent); }}
 .hf-tm-group button {{ background: transparent; border-color: transparent; padding: 4px 10px; border-radius: {inner}px;
                       color: {text}; }}
 .hf-tm-group button:hover, .hf-tm-group button:focus {{ background: {hover}; }}
@@ -103,7 +99,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         except Exception:
             pass
     label = Gtk.Label(label=name, xalign=0, ellipsize=Pango.EllipsizeMode.END, max_width_chars=28)
-    label.get_style_context().add_class("hf-tm-name")
+    label.get_style_context().add_class("hf-head-name")
     head.pack_start(label, True, True, 0)
     # an app that only offers a menu has no window to open: ItemIsMenu, or an Ayatana item (Dropbox), which
     # never answers Activate
@@ -112,7 +108,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         opener.set_tooltip_text(f"Open {name}'s own window")
         opener.connect("clicked", lambda _b: (hfsni.activate(conn, item["name"], item["path"]), close()))
         head.pack_end(opener, False, False, 0)
-    head.get_style_context().add_class("hf-tm-head")
+    head.get_style_context().add_class("hf-head")
     root.pack_start(head, False, False, 0)
 
     # ---- the menu
@@ -222,7 +218,5 @@ def entry_widget(e, clicked, depth: int) -> Gtk.Widget:
 
 
 def line() -> Gtk.Widget:
-    """A soft line between the app's groups, fading at both ends."""
-    sep = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
-    sep.get_style_context().add_class("hf-tm-line")
-    return sep
+    """A soft line between the app's groups, fading at both ends: the kit's, the one under every head."""
+    return panelkit.head_line()

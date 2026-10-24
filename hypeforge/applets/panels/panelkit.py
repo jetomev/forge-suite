@@ -87,6 +87,14 @@ window.hf-panel {{ background: transparent; }}
             border-radius: {self.radius}px; padding: 14px; }}
 .hf-dim {{ color: {c["panel_text_dim"]}; }}
 .hf-title {{ font-weight: bold; font-size: {self.size * 1.25}pt; }}
+/* D-116: the one title row every pop-up wears (the tray menu's): a symbol or icon, the name in bold,
+   a dim line under it when there is one, and a soft line that fades at both ends below the head */
+.hf-head {{ padding: 2px 4px 2px 8px; }}
+.hf-head-name {{ font-weight: bold; font-size: {self.size * 1.1}pt; }}
+.hf-head-glyph {{ font-family: "Symbols Nerd Font", "{self.font}"; font-size: {self.size * 1.35}pt; color: {c["panel_tile_on"]}; }}
+.hf-head-sub {{ color: {c["panel_text_dim"]}; font-size: {self.size * 0.9}pt; }}
+.hf-head-line {{ min-height: 1px; margin: 5px 6px; border: none; background-color: transparent;
+                 background-image: linear-gradient(to right, transparent, {c["panel_border"]} 15%, {c["panel_border"]} 85%, transparent); }}
 button {{ background: {c["panel_tile"]}; color: {c["panel_tile_text"]}; border: 1px solid {c["panel_border"]};
           border-radius: {max(4, self.radius // 2)}px; box-shadow: none; background-image: none; text-shadow: none; padding: 6px 10px; }}
 button:hover, button:focus {{ background: {c["panel_hover"]}; outline: none; }}
@@ -98,6 +106,13 @@ button.flat:hover, button.flat:focus {{ background: {c["panel_hover"]}; }}
 entry {{ background: {c["panel_tile"]}; color: {c["panel_text"]}; border: 1px solid {c["panel_border"]};
          border-radius: {max(4, self.radius // 2)}px; padding: 6px 10px; box-shadow: none; }}
 """
+
+
+def head_line() -> "Gtk.Separator":
+    """The soft line under a pop-up's title row (D-116): the same on every pop-up."""
+    sep = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+    sep.get_style_context().add_class("hf-head-line")
+    return sep
 
 
 # ---- Where: the screen in use ----------------------------------------------------------------

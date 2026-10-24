@@ -35,11 +35,6 @@ MARK = "●"
 
 CSS = """
 .hf-card.hf-list {{ padding: 8px 6px; }}
-.hf-list-head {{ padding: 2px 4px 2px 8px; }}
-.hf-list-name {{ font-weight: bold; font-size: {big}pt; }}
-.hf-list-glyph {{ font-family: "Symbols Nerd Font", "{font}"; color: {accent}; }}
-.hf-list-line {{ min-height: 1px; margin: 5px 6px; border: none; background-color: transparent;
-                 background-image: linear-gradient(to right, transparent, {line} 15%, {line} 85%, transparent); }}
 .hf-list-rows, .hf-list-rows row {{ background: transparent; }}
 .hf-list-rows row {{ padding: 4px 10px; border-radius: {inner}px; color: {text}; min-height: {row_h}px; }}
 .hf-list-rows row:hover {{ background: {hover}; }}
@@ -84,18 +79,16 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     root.set_size_request(WIDTH, -1)
 
     head = Gtk.Box(spacing=8)
-    head.get_style_context().add_class("hf-list-head")
+    head.get_style_context().add_class("hf-head")
     if data["glyph"]:
         glyph = Gtk.Label(label=data["glyph"])
-        glyph.get_style_context().add_class("hf-list-glyph")
+        glyph.get_style_context().add_class("hf-head-glyph")
         head.pack_start(glyph, False, False, 0)
     name = Gtk.Label(label=data["title"] or "Choose", xalign=0, ellipsize=Pango.EllipsizeMode.END, max_width_chars=30)
-    name.get_style_context().add_class("hf-list-name")
+    name.get_style_context().add_class("hf-head-name")
     head.pack_start(name, True, True, 0)
     root.pack_start(head, False, False, 0)
-    sep = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
-    sep.get_style_context().add_class("hf-list-line")
-    root.pack_start(sep, False, False, 0)
+    root.pack_start(panelkit.head_line(), False, False, 0)
 
     search = Gtk.SearchEntry(placeholder_text="Type to find")
     root.pack_start(search, False, False, 0)

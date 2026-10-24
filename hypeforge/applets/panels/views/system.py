@@ -40,7 +40,7 @@ TICK = 2000           # ms between updates while open
 
 CSS = """
 .hf-sys {{ min-width: {width}px; }}
-.hf-sys-glyph {{ font-family: "Symbols Nerd Font", "{font}"; font-size: {glyph}pt; color: {accent}; }}
+.hf-sys-glyph {{ font-family: "Symbols Nerd Font", "{font}"; font-size: {glyph}pt; color: {accent}; }}   /* the drive rows' */
 .hf-sys-sub {{ color: {dim}; font-size: {small}pt; }}
 .hf-sys-big {{ font-size: {big}pt; font-weight: bold; color: {text}; }}
 .hf-sys-big.warning {{ color: {warm}; }}
@@ -361,15 +361,15 @@ class View:
         getattr(self, f"_{part}")()
         self.update()
 
-    # the head: the glyph, the title and a dim line, the big number
+    # the head: the glyph, the title and a dim line (the one title row, D-116), the big number
     def _head(self):
         head = Gtk.Box(spacing=12)
-        glyph = label(GLYPH[self.part], "hf-sys-glyph", ellipsize=False)
+        glyph = label(GLYPH[self.part], "hf-head-glyph", ellipsize=False)
         head.pack_start(glyph, False, False, 0)
         words = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1)
         words.set_valign(Gtk.Align.CENTER)
-        words.pack_start(label(TITLE[self.part], "hf-title"), False, False, 0)
-        self.sub = label("", "hf-sys-sub")
+        words.pack_start(label(TITLE[self.part], "hf-head-name"), False, False, 0)
+        self.sub = label("", "hf-head-sub")
         words.pack_start(self.sub, False, False, 0)
         head.pack_start(words, True, True, 0)
         self.big = label("", "hf-sys-big", xalign=1, ellipsize=False)
@@ -399,7 +399,7 @@ class View:
         self.threads_word = section("")
         self.tiles = Tiles(["Speed", "Temperature", "Load (1 minute)", "Running for"])
         self.apps = Rows(self.paint, 5)
-        self.add(line(), section("The last 3 minutes"), self.graph, gap=0)
+        self.add(panelkit.head_line(), section("The last 3 minutes"), self.graph, gap=0)
         self.add(line(), self.threads_word, self.threads, gap=0)
         self.add(line(), self.tiles, gap=0)
         self.add(line(), section("Busiest apps"), self.apps, gap=0)
@@ -433,7 +433,7 @@ class View:
         self.vram_word = label("", "hf-sys-sub")
         self.tiles = Tiles(["Temperature", "Power", "Fan", "Speed"])
         self.apps = Rows(self.paint, 5)
-        self.add(line(), section("The last 3 minutes"), self.graph, gap=0)
+        self.add(panelkit.head_line(), section("The last 3 minutes"), self.graph, gap=0)
         vrow = Gtk.Box(spacing=8)
         vrow.pack_start(section("Its own memory"), True, True, 0)
         vrow.pack_end(self.vram_word, False, False, 0)
@@ -478,7 +478,7 @@ class View:
         left, right = (Gtk.Box(orientation=Gtk.Orientation.VERTICAL) for _ in range(2))
         cols.pack_start(left, True, True, 0)
         cols.pack_start(right, True, True, 0)
-        self.add(line(), cols, gap=0)
+        self.add(panelkit.head_line(), cols, gap=0)
         self.graph = Graph(self.paint, top=100, low=20)
         self.add(section("The last 3 minutes · 20 to 100 °C"), self.graph, gap=0, into=left)
         self.add(legend(self.paint, [("Processor", self.paint.accent), ("Graphics card", self.paint.second)]), gap=6, into=left)
@@ -536,7 +536,7 @@ class View:
         self.swap = Meter(self.paint, 6)
         self.swap_word = label("", "hf-sys-sub", ellipsize=False)
         self.apps = Rows(self.paint, 5)
-        self.add(line(), self.meter, gap=0)
+        self.add(panelkit.head_line(), self.meter, gap=0)
         self.keys = legend(self.paint, [("In use", self.paint.accent), ("Cache (given back when needed)", self.paint.second),
                                         ("Free", self.paint.dim)])
         self.add(self.keys, gap=6)
@@ -587,7 +587,7 @@ class View:
         self.disks = hfsys.disks(info=info)
         usb = {d[0]: d for d in self.drives_tool.drives()} if self.drives_tool else {}
         rows = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        self.add(line(), rows, gap=0, into=self.disk_box)
+        self.add(panelkit.head_line(), rows, gap=0, into=self.disk_box)
         for d in self.disks:
             b = Gtk.Button()
             b.get_style_context().add_class("hf-sys-row")

@@ -133,6 +133,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
     - [ ] the hover tip stops covering an open pop-up
     - [ ] the app name's odd `gimp` box on the menu-bar styles
     - [ ] one title row on every pop-up (Quick Settings has none today)
+      - built 2026-10-24, live, waits for Javier's look: the panel kit's one title row (`.hf-head*`, `panelkit.head_line()`) on Quick Settings (new) and its one-part pop-ups, the tray menu, the list card, the window menu, Clipboard, Calendar, System; before/after sheet `logs/popup-titles-20261024/title-row-before-after.png`; `TitleRow` tests (seen failing first), 294 tests. His calls: Power, Workspaces and the window switcher (no title today) · Clipboard and Calendar as one card?
     - [ ] three widths only: narrow, medium, wide
     - [ ] the notification cards on the standard
     - [ ] the review, style by style (Mac OS 9 and macOS first), against the standard

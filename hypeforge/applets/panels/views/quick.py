@@ -48,7 +48,6 @@ CSS = """
                           border: 3px solid {card}; box-shadow: none; }}
 .hf-quick .hf-foot {{ border-top: 1px solid {line}; padding-top: 8px; }}
 .hf-quick.hf-one {{ min-width: 320px; }}
-.hf-quick .hf-one-title {{ font-weight: bold; }}
 """
 # the one-part pop-ups (C-5): which tiles and sliders each shows, and its full settings app
 ONLY = {
@@ -257,9 +256,16 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     root.get_style_context().add_class("hf-quick")
     if only:
         root.get_style_context().add_class("hf-one")
-        title = Gtk.Label(label=ONLY[only][0], xalign=0)
-        title.get_style_context().add_class("hf-one-title")
-        root.pack_start(title, False, False, 0)
+    # the one title row (D-116): Quick Settings had none; a one-part pop-up names its part
+    top = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+    head = Gtk.Box(spacing=8)
+    head.get_style_context().add_class("hf-head")
+    name = Gtk.Label(label=ONLY[only][0] if only else "Quick Settings", xalign=0)
+    name.get_style_context().add_class("hf-head-name")
+    head.pack_start(name, True, True, 0)
+    top.pack_start(head, False, False, 0)
+    top.pack_start(panelkit.head_line(), False, False, 0)
+    root.pack_start(top, False, False, 0)
     grid = Gtk.Grid(column_spacing=8, row_spacing=8, column_homogeneous=True)
     root.pack_start(grid, False, False, 0)
 
