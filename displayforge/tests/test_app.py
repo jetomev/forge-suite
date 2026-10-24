@@ -476,6 +476,31 @@ class OneScreen(unittest.TestCase):
         asyncio.run(go())
 
 
+class ScreenWithoutAList(unittest.TestCase):
+    """F-9 (2026-10-24, the screens bench): a screen that reports no list of sizes — a virtual one (Sway's
+    headless outputs, what screen-sharing tools add) — made the Settings page crash: an empty drop-down."""
+
+    tearDown, run_app = App.tearDown, App.run_app         # App's throwaway folder and fakes, not its tests
+
+    def setUp(self):
+        App.setUp(self)
+        data = json.loads(DATA.read_text())
+        for o in data:
+            o["modes"] = []
+        self.session = Session(S.parse(data), {"names": {}, "bus": {}}, main="DP-3")
+
+    def test_the_form_offers_the_size_it_is_at(self):
+        s = self.session.screen("DP-3")
+        self.assertEqual(s.sizes(), [(s.mode.width, s.mode.height)])
+        self.assertEqual([m.hz for m in s.rates(s.mode.width, s.mode.height)], [s.mode.hz])
+
+        async def steps(app, pilot):
+            await pilot.press("2")
+            await pilot.pause(0.5)
+            self.assertTrue(app.query("#f-size"), "the Settings page opened, with its Resolution")
+        self.run_app(steps)
+
+
 if __name__ == "__main__":
     unittest.main()
 

@@ -6,7 +6,10 @@
 
 - **The bar tells the truth during the countdown** ([F-8 #121](https://github.com/jetomev/forge-suite/issues/121)): while "Keep these settings?" counts down, the bar under it says *Trying 1 change on your screens · keep them or go back in the window*. It used to say "not tried yet" until you answered.
 
-Tests: 66 → **67**. Warnings: none.
+- **A screen that lists no sizes no longer crashes Settings** ([F-9 #125](https://github.com/jetomev/forge-suite/issues/125)): a virtual screen (what screen-sharing tools add to Sway) reports the size it is at but no list; the Resolution drop-down came out empty and the app stopped. The form now offers the size the screen is at. Found by the new screens bench.
+- **A screens bench** (`scripts/screens-bench.py`, for the people building it): a screen-less Sway with one, two and three fake screens; the real engine tries 80 % and 90 % sizes and a new arrangement through the countdown and checks Sway after each answer, and the app is photographed at 100 columns. 31 / 31.
+
+Tests: 66 → **68**. Warnings: none.
 
 ## 1.1.1 — 2026-10-11 · one-screen computers start again, and the AUR package builds on any machine
 

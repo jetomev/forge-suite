@@ -40,6 +40,7 @@
 - [x] **1.0.1 released 2026-10-06 evening**: Javier's run of the check screen (forgekit's example, 17:57) PASS; `python-forgekit` 0.7.0 installed from the AUR (18:37); tag `displayforge-v1.0.1`, GitHub Release, suite README, KognogOS README, kognogos.org; the launcher entry back on the installed forgekit. Still to run by Javier: the launcher from a KDE login (expect the screen) — not tonight, he did not want to close everything
 - [x] **Javier, 2026-10-06 evening, on the real screens:** Arrange "worked as I expected, no issues"; Identify "worked wonders" (the F-2 re-run: the screens come back) — the last piece of his own 1.0 testing
 - [ ] One and two screens (test VM)
+  - Claude's part done 2026-10-24: `scripts/screens-bench.py`, one / two / three hidden screens, 31/31 (80 and 90 % on and back, Keep It keeps, a screen moved to the other side and back to the exact place); it found **F-9 #125** (a screen that lists no sizes crashed Settings: fixed, test seen failing first, 68 tests). Javier's part: the VM with one and two screens — the test matrix
 - [ ] Sizes 80 / 90 % on real apps (X11 apps blur at non-whole sizes)
 - [ ] Plain text console, 100 columns; the drawing's right edge in a real terminal
 - [x] The status bar under the keep dialog still says "not tried yet" while the countdown runs (seen in the screenshots) — **fixed 2026-10-24 (F-8 #121): "Trying N changes on your screens · keep them or go back in the window"; next release**

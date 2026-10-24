@@ -54,9 +54,16 @@ class Screen:
     modes: tuple[Mode, ...] = field(default_factory=tuple)
 
     # -- what the form offers: only what the screen really reports (D-2) --
+    def offered(self) -> tuple[Mode, ...]:
+        """The screen's list, with the size it is at: a virtual screen (Sway's headless outputs, what
+        screen-sharing tools add) reports no list at all, and an empty drop-down crashed the form (F-9)."""
+        if self.mode and self.mode not in self.modes:
+            return self.modes + (self.mode,)
+        return self.modes
+
     def sizes(self) -> list[tuple[int, int]]:
         seen = []
-        for m in sorted(self.modes, key=lambda m: (m.width * m.height, m.width), reverse=True):
+        for m in sorted(self.offered(), key=lambda m: (m.width * m.height, m.width), reverse=True):
             if (m.width, m.height) not in seen:
                 seen.append((m.width, m.height))
         return seen
@@ -64,7 +71,7 @@ class Screen:
     def rates(self, width: int, height: int) -> list[Mode]:
         """The refresh rates the screen offers at one size, highest first, one per whole Hz."""
         best: dict[int, Mode] = {}
-        for m in self.modes:
+        for m in self.offered():
             if (m.width, m.height) == (width, height):
                 if m.hz not in best or m.refresh > best[m.hz].refresh:
                     best[m.hz] = m
