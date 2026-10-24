@@ -90,6 +90,32 @@ class TitleRow(unittest.TestCase):
                 self.assertFalse(old in src, f"{view} still draws its own title ({old})")
 
 
+class Widths(unittest.TestCase):
+    """D-116: three widths only (Javier, 2026-10-24: "300 · 380 · 460"). Workspaces and the window switcher
+    grow with their tiles and Power has no card (his call the same day); the launchers are each style's own."""
+
+    VIEWS = HERE / "applets/panels/views"
+    SIZED = ["quick", "clipboard", "calendar_view", "system", "windowmenu", "traymenu", "listcard"]
+
+    def test_the_kit_has_the_three(self):
+        self.assertEqual((panelkit.NARROW, panelkit.MEDIUM, panelkit.WIDE), (300, 380, 460))
+
+    def test_no_pop_up_picks_its_own_width(self):
+        # the width is the card's VISIBLE width, applied by the Panel to its outermost piece: set inside a
+        # card's padding (most views) or on a stack of cards (Calendar, Clipboard) the same number showed
+        # 30 px apart (measured on the photos, 2026-10-24)
+        import re
+        for view in self.SIZED:
+            src = (self.VIEWS / f"{view}.py").read_text()
+            self.assertTrue(re.search(r"width=(panelkit\.)?(NARROW|MEDIUM|WIDE|WIDTH)\b", src), f"{view} hands the Panel no width")
+            own = re.findall(r"min-width: (?:\d{3}|\{\w+\})px|set_size_request\((?:\d{3}|WIDTH|panelkit\.\w+)", src)
+            self.assertEqual(own, [], f"{view} still sets its own width: {own}")
+
+    def test_the_panel_puts_it_on_the_outermost_piece(self):
+        import inspect
+        self.assertIn("width", inspect.signature(panelkit.Panel.__init__).parameters)
+
+
 class ViewNames(unittest.TestCase):
     def test_no_view_module_shadows_the_standard_library(self):
         # views/ goes first on the import path: a view called calendar.py would replace Python's own

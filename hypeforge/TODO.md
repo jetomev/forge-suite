@@ -135,6 +135,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
     - [x] one title row on every pop-up (Quick Settings has none today) — **Javier, 2026-10-24: "looks good!"**
       - built 2026-10-24, live, waits for Javier's look: the panel kit's one title row (`.hf-head*`, `panelkit.head_line()`) on Quick Settings (new) and its one-part pop-ups, the tray menu, the list card, the window menu, Clipboard, Calendar, System; before/after sheet `logs/popup-titles-20261024/title-row-before-after.png`; `TitleRow` tests (seen failing first), 294 tests. Javier the same day: *"give all popups their title"* → Power, Workspaces, the window switcher too (`panelkit.titled()`, sheet `title-row-the-last-three.png`). Still his: Clipboard and Calendar as one card? the list card's OK (10-20)
     - [ ] three widths only: narrow, medium, wide
+      - built 2026-10-24, live, waits for Javier's look: **300 · 380 · 460** (his pick), the card's visible width through `panelkit.Panel(width=…)`; measured exact on all seven; Temperature one column, scrolling (proven only with one sensor on the hidden screen: the real list is on his desktop). Workspaces / switcher grow with their tiles. Seen: Clipboard sits 8 px from the edge, the others 10 → for "under what was clicked"
     - [ ] the notification cards on the standard
     - [ ] the review, style by style (Mac OS 9 and macOS first), against the standard
   - [ ] **COSMIC's launcher: full page, like GNOME's** (D-116, Javier 2026-10-20), apart from macOS's Spotlight

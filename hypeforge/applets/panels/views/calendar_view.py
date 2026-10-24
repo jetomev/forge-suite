@@ -30,7 +30,6 @@ NOTIFY = panelkit.APPLETS / "notifications/hypeforge-notifications"
 CLEARED = panelkit.RUNTIME / "hypeforge-panel-cleared"     # notifications up to this id are cleared
 SHOWN = 6
 CSS = """
-.hf-calendar {{ min-width: 380px; }}
 .hf-note-app {{ font-weight: bold; }}
 .hf-card.hf-note {{ padding: 6px 12px; }}     /* Javier, 10-17: the notifications a little smaller, closer together */
 .hf-card.hf-head {{ padding: 4px 6px 4px 12px; }}   /* 10-17, his second look: "gap spaces, still too much" */
@@ -94,7 +93,7 @@ def plain(v) -> str:
 def build(look: panelkit.Look, args) -> panelkit.Panel:
     c = look.colour
     provider = Gtk.CssProvider()
-    provider.load_from_data(CSS.format(dim=c["panel_text_dim"], small=look.size * 0.9, text=c["panel_text"],
+    provider.load_from_data(CSS.format(medium=panelkit.MEDIUM, dim=c["panel_text_dim"], small=look.size * 0.9, text=c["panel_text"],
                                        accent=c["panel_tile_on"], on_accent=c["panel_tile_on_text"],
                                        muted=c["panel_border"], pill=look.pill).encode())
     Gtk.StyleContext.add_provider_for_screen(panelkit.Gdk.Screen.get_default(), provider,
@@ -174,7 +173,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
 
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["bottom", "right"]
     margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"bottom": 60, "right": 10}
-    return panelkit.Panel("calendar", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()},
+    return panelkit.Panel("calendar", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()}, width=panelkit.MEDIUM,
                           card=False)
 
 

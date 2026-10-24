@@ -14,6 +14,7 @@
 - **Each theme's identity, outside the standard:** the **launcher**, the **bar**, and **how the tray icons are presented**. The Mac styles have little identity in the bar and pop-ups; their launcher carries it (on Mac OS 9 the emblem menu is the launcher).
 - **COSMIC's launcher becomes full-page, like GNOME's** — its own look, apart from macOS's Spotlight (Javier: *"I do have an objection with how it looks in Cosmic"*).
 - **v2.0:** themes with their own pop-up styles.
+- **Three widths, step 3 (2026-10-24):** Javier chose **300 · 380 · 460** (narrow · medium · wide) over 300 · 460 · 760, and *grow with content* for Workspaces and the window switcher. Temperature goes to one column at 460 with its sensors scrolling (two columns had been the fix for a too-tall list).
 - **The one title row, step 2 (2026-10-24):** every pop-up's head drawn by the panel kit (`.hf-head*`, `panelkit.head_line()`, `panelkit.titled()`): Quick Settings got one, seven more were made the same; then Javier: *"give all popups their title"*, so Power, Workspaces and the window switcher too. The launchers stay each style's own.
 - **Approved and built, step 1 (2026-10-20):** Javier approved the mock (*"yes"*); the panel kit wears the standard on every style (Noto Sans 10.5, 1 px frame, 10 px corners — square when the switch says straight; *rounded* and *style* both 10).
 

@@ -45,6 +45,12 @@ def theme_tool():
     return mod
 
 
+# D-116: three widths only (Javier, 2026-10-24: "300 · 380 · 460"). Narrow: menus and lists, the small
+# pop-ups from a bar icon; medium: Calendar, System; wide: Quick Settings, Clipboard, Temperature. Workspaces
+# and the window switcher grow with their tiles; Power has no card.
+NARROW, MEDIUM, WIDE = 300, 380, 460
+
+
 class Look:
     """The active style + theme (or the ones given), resolved into colours and shapes."""
 
@@ -212,10 +218,12 @@ EDGES = {"top": GtkLayerShell.Edge.TOP, "bottom": GtkLayerShell.Edge.BOTTOM,
 class Panel:
     """A pop-up: a card of widgets anchored to `edges` (e.g. ["bottom"] = bottom centre,
     ["top", "right"] = top-right corner, [] = the middle), `margins` in pixels from those edges.
-    `dim` darkens the screen around it (the Rice's power buttons)."""
+    `dim` darkens the screen around it (the Rice's power buttons). `width` is one of NARROW, MEDIUM, WIDE: the
+    card's visible width, put on the outermost piece (the card, or a stack of cards) so a number means the
+    same on every pop-up (D-116)."""
 
     def __init__(self, view: str, content: Gtk.Widget, look: Look, edges=(), margins=None,
-                 dim: bool = False, card: bool = True):
+                 dim: bool = False, card: bool = True, width: int | None = None):
         self.view, self.look = view, look
         provider = Gtk.CssProvider()
         provider.load_from_data(look.css().encode())
@@ -240,6 +248,8 @@ class Panel:
             box.get_style_context().add_class("hf-card")
             box.add(content)
             content = box
+        if width:
+            content.set_size_request(width, -1)
         self.window.add(content)
         self.window.connect("key-press-event", self._key)
         for w in self.backdrops + [self.window]:

@@ -83,7 +83,6 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         item = None
     conn = hfsni.bus()
     root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-    root.set_size_request(300, -1)
     panel_ref = {}
 
     def close():
@@ -143,7 +142,8 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
 
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["top", "right"]
     margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"top": 44, "right": 8}
-    panel = panelkit.Panel("traymenu", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()})
+    panel = panelkit.Panel("traymenu", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()},
+                           width=panelkit.NARROW)
     frame = panel.window.get_child()                      # the panel's one card: the content fills it
     frame.get_style_context().add_class("hf-tm")
     frame.set_child_packing(root, True, True, 0, Gtk.PackType.START)

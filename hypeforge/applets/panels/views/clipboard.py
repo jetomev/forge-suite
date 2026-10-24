@@ -29,7 +29,6 @@ THUMBS = 16           # pictures given a real thumbnail (the rest a badge)
 TAB = "\t"
 
 CSS = """
-.hf-clip-panel {{ min-width: 440px; }}
 .hf-card.hf-clip-list {{ padding: 4px; }}
 .hf-clip-list list, .hf-clip-list row {{ background: transparent; }}
 .hf-clip-list row {{ border-radius: {inner}px; padding: 6px 8px; margin: 1px 0; color: {text}; }}   /* the panel's text, never the GTK theme's */
@@ -99,7 +98,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     c = look.colour
     inner = 0 if look.straight else max(4, look.radius // 2)
     provider = Gtk.CssProvider()
-    provider.load_from_data(CSS.format(font=look.font, big=look.size * 1.35, small=look.size * 0.88,
+    provider.load_from_data(CSS.format(wide=panelkit.WIDE, font=look.font, big=look.size * 1.35, small=look.size * 0.88,
                                        accent=c["panel_tile_on"], dim=c["panel_text_dim"], tile=c["panel_tile"],
                                        hover=c["panel_hover"], sel=c["panel_selected"], text=c["panel_text"],
                                        sel_text=c["panel_selected_text"], inner=inner).encode())
@@ -304,7 +303,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
 
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["top", "right"]
     margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"top": 44, "right": 8}
-    panel = panelkit.Panel("clipboard", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()},
+    panel = panelkit.Panel("clipboard", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()}, width=panelkit.WIDE,
                            card=False)
     panel_ref["p"] = panel
     panel.window.show_all()

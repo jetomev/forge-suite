@@ -35,11 +35,10 @@ import hfsys  # noqa: E402
 GLYPH = {"cpu": "\U000f035b", "gpu": "\U000f08ae", "temp": "\U000f050f", "memory": "\U000f061a", "disk": "\U0000f0a0",
          "ssd": "\U0000f0a0", "nvme": "\U0000f0a0", "hdd": "\U000f02ca", "usb": "\U000f0553", "fan": "\U000f0210"}
 TITLE = {"cpu": "Processor", "gpu": "Graphics card", "temp": "Temperature", "memory": "Memory", "disk": "Disks"}
-WIDTH = 380
+WIDTH = panelkit.MEDIUM   # the standard's medium width; Temperature is wide (D-116)
 TICK = 2000           # ms between updates while open
 
 CSS = """
-.hf-sys {{ min-width: {width}px; }}
 .hf-sys-glyph {{ font-family: "Symbols Nerd Font", "{font}"; font-size: {glyph}pt; color: {accent}; }}   /* the drive rows' */
 .hf-sys-sub {{ color: {dim}; font-size: {small}pt; }}
 .hf-sys-big {{ font-size: {big}pt; font-weight: bold; color: {text}; }}
@@ -251,6 +250,18 @@ def line() -> Gtk.Widget:
     sep = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
     sep.get_style_context().add_class("hf-line")
     return sep
+
+
+def sensor_room() -> int:
+    """How tall the temperature list may grow before it scrolls: the smallest screen, less the bar, the head,
+    the graph and the card's edges (on a 1080-line screen: 600)."""
+    heights = []
+    try:
+        display = Gdk.Display.get_default()
+        heights = [display.get_monitor(i).get_geometry().height for i in range(display.get_n_monitors())]
+    except Exception:
+        pass
+    return max(240, min(heights or [1080]) - 480)
 
 
 def section(words: str) -> Gtk.Label:
@@ -473,15 +484,19 @@ class View:
 
     # ---- temperatures
     def _temp(self):
-        # many sensors: two columns side by side (one column ran past a 1080-line screen)
-        cols = Gtk.Box(spacing=22, homogeneous=True)
-        left, right = (Gtk.Box(orientation=Gtk.Orientation.VERTICAL) for _ in range(2))
-        cols.pack_start(left, True, True, 0)
-        cols.pack_start(right, True, True, 0)
-        self.add(panelkit.head_line(), cols, gap=0)
+        # Wide, one column (D-116, Javier 2026-10-24: three widths, "300 · 380 · 460"): the graph on top, the
+        # sensors and fans scrolling under it, capped to the smallest screen. Two columns (760 px) had been the
+        # answer to one column running past a 1080-line screen; the cap keeps that from coming back.
         self.graph = Graph(self.paint, top=100, low=20)
-        self.add(section("The last 3 minutes · 20 to 100 °C"), self.graph, gap=0, into=left)
-        self.add(legend(self.paint, [("Processor", self.paint.accent), ("Graphics card", self.paint.second)]), gap=6, into=left)
+        self.add(panelkit.head_line(), section("The last 3 minutes · 20 to 100 °C"), self.graph, gap=0)
+        self.add(legend(self.paint, [("Processor", self.paint.accent), ("Graphics card", self.paint.second)]), gap=6)
+        col = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        scroller = Gtk.ScrolledWindow()
+        scroller.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        scroller.set_propagate_natural_height(True)
+        scroller.set_max_content_height(sensor_room())
+        scroller.add(col)
+        self.add(line(), scroller, gap=0)
         self.groups: dict[str, Rows] = {}
         self.tiled: dict[str, Tiles] = {}
         temps = self.sampler.now.get("temps") or []
@@ -496,13 +511,12 @@ class View:
             else:
                 box = Rows(self.paint, len(rows))
                 self.groups[g] = box
-            col = left if g in ("Processor", "Graphics", "Drives") else right
             first = not col.get_children()
             self.add(*([] if first else [line()]), section(words), box, gap=0, into=col)
         fans = self.sampler.now.get("fans") or []
         self.fans = Tiles([f["name"] for f in fans]) if fans else None
         if self.fans:
-            self.add(*([line()] if right.get_children() else []), section("Fans"), self.fans, gap=0, into=right)
+            self.add(*([line()] if col.get_children() else []), section("Fans"), self.fans, gap=0, into=col)
         self.updates.append(self._temp_update)
 
     def _temp_update(self, n: dict):
@@ -733,9 +747,8 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     view = View(look, part, lambda: ref["p"].close())
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["top", "right"]
     margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"top": 56, "right": 10}
-    if part == "temp":
-        view.root.set_size_request(WIDTH * 2, -1)
-    panel = panelkit.Panel(f"system-{part}", view.root, look, edges=edges, margins={k: int(v) for k, v in margins.items()})
+    panel = panelkit.Panel(f"system-{part}", view.root, look, edges=edges, margins={k: int(v) for k, v in margins.items()},
+                           width=panelkit.WIDE if part == "temp" else WIDTH)
     ref["p"] = panel
     def first():                       # the processor's busiest apps need a second look soon
         view.tick()

@@ -26,7 +26,7 @@ from gi.repository import Gdk, GdkPixbuf, Gtk, Pango  # noqa: E402
 sys.path.insert(0, str(panelkit.APPLETS / "common"))
 from hficons import Icons  # noqa: E402
 
-WIDTH = 300           # the standard's narrow width (menus and lists), the tray menu's
+WIDTH = panelkit.NARROW   # the standard's narrow width (menus and lists), the tray menu's
 ICON = 20             # a row's icon
 LONG = 18             # rows shown before it scrolls (Javier, 2026-10-20: all 18 Favorites)
 SEARCH_FROM = 9       # a list this long shows its search box from the start
@@ -76,7 +76,6 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     panel_ref = {}
 
     root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-    root.set_size_request(WIDTH, -1)
 
     head = Gtk.Box(spacing=8)
     head.get_style_context().add_class("hf-head")
@@ -183,7 +182,8 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         return False
 
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["top", "left"]
-    panel = panelkit.Panel("list", root, look, edges=edges, margins=margins(getattr(args, "margin", None)) or {"top": 44, "left": 8})
+    panel = panelkit.Panel("list", root, look, edges=edges, margins=margins(getattr(args, "margin", None)) or {"top": 44, "left": 8},
+                           width=WIDTH)
     for child in panel.window.get_children():
         child.get_style_context().add_class("hf-list")
     panel.window.connect("key-press-event", keys)

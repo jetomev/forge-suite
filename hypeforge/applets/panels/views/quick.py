@@ -37,7 +37,6 @@ NOTIFY = panelkit.APPLETS / "notifications/hypeforge-notifications"
 SNAPSHOT = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "kognog/updates.json"
 NIGHTFORGE_LIBS = [Path("/usr/lib/nightforge"), Path.home() / "Programs/forge-suite/nightforge"]
 CSS = """
-.hf-quick {{ min-width: 460px; }}
 .hf-quick .hf-tile {{ min-height: 50px; padding: 6px; }}
 .hf-quick .hf-tile-name {{ font-size: {small}pt; }}
 .hf-quick .hf-tile-sub {{ font-size: {tiny}pt; color: {dim}; }}
@@ -47,7 +46,6 @@ CSS = """
 .hf-quick scale slider {{ min-width: 16px; min-height: 16px; border-radius: {pill}px; background: {accent};
                           border: 3px solid {card}; box-shadow: none; }}
 .hf-quick .hf-foot {{ border-top: 1px solid {line}; padding-top: 8px; }}
-.hf-quick.hf-one {{ min-width: 320px; }}
 """
 # the one-part pop-ups (C-5): which tiles and sliders each shows, and its full settings app
 ONLY = {
@@ -245,7 +243,7 @@ def tile(name, icon, on, sub, clicked):
 def build(look: panelkit.Look, args) -> panelkit.Panel:
     c = look.colour
     provider = Gtk.CssProvider()
-    provider.load_from_data(CSS.format(small=look.size * 0.95, tiny=look.size * 0.8, dim=c["panel_text_dim"],
+    provider.load_from_data(CSS.format(wide=panelkit.WIDE, narrow=panelkit.NARROW, small=look.size * 0.95, tiny=look.size * 0.8, dim=c["panel_text_dim"],
                                        on_text=c["panel_tile_on_text"], track=c["panel_tile"], accent=c["panel_tile_on"],
                                        card=c["panel_bg"], line=c["panel_border"], pill=look.pill).encode())
     Gtk.StyleContext.add_provider_for_screen(panelkit.Gdk.Screen.get_default(), provider,
@@ -376,5 +374,6 @@ def finish(root, look, args) -> panelkit.Panel:
     global panel
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["bottom", "right"]
     margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"bottom": 60, "right": 10}
-    panel = panelkit.Panel("quick", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()})
+    panel = panelkit.Panel("quick", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()},
+                           width=panelkit.NARROW if getattr(args, "only", None) else panelkit.WIDE)
     return panel

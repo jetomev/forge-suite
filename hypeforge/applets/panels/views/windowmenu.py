@@ -85,7 +85,6 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     con_id = int(args.con) if getattr(args, "con", None) else None
     con = find(tree, con_id) if con_id else None
     root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-    root.set_size_request(320, -1)
     ref = {}
 
     def close():
@@ -208,7 +207,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
             y = top_of + (d.get("height") or 0) - out["rect"]["y"]
             margins = {"left": max(8, min(x, out["rect"]["width"] - 300)),
                        "top": max(8, min(y, out["rect"]["height"] - 420))}
-    panel = panelkit.Panel("windowmenu", root, look, edges=edges, margins=margins)
+    panel = panelkit.Panel("windowmenu", root, look, edges=edges, margins=margins, width=panelkit.NARROW)
     frame = panel.window.get_child()
     frame.get_style_context().add_class("hf-wm")
     frame.get_style_context().add_class("hf-card")
