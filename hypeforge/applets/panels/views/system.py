@@ -518,6 +518,13 @@ class View:
         if self.fans:
             self.add(*([line()] if col.get_children() else []), section("Fans"), self.fans, gap=0, into=col)
         self.updates.append(self._temp_update)
+        # a pop-up's window takes the list's SMALLEST height, one row, and the rest only scrolled (2026-10-24):
+        # once it is on screen (show_all brings back what the first update hid), the list asks for all its rows,
+        # up to the cap
+        def fit():
+            self.update()
+            scroller.set_min_content_height(min(col.get_preferred_height()[1], sensor_room()))
+        GLib.idle_add(fit)
 
     def _temp_update(self, n: dict):
         temps = n.get("temps") or []

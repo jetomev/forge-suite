@@ -6,7 +6,7 @@ program (10-10: a click on macOS's menu bar opened nothing on the hidden screen)
 Wayland protocol directly (the zwlr_virtual_pointer_v1 extension, which Sway offers), so the bar
 and the panels get a real pointer, exactly as from a mouse. Python standard library only.
 
-    fake-pointer.py X Y [--click] [--button left|middle|right] [--drag X2 Y2] [--hold S] [--width W --height H]
+    fake-pointer.py X Y [--click] [--button left|middle|right] [--drag X2 Y2] [--hold S] [--rest S] [--width W --height H]
                                                                        (X, Y in the screens' layout, pixels)
 
 --drag presses at X Y, moves to X2 Y2 in small steps and lets go there (a window dragged by its title
@@ -80,6 +80,7 @@ def main() -> int:
     ap.add_argument("--width", type=int, default=2560, help="the screens' layout, all screens together")
     ap.add_argument("--height", type=int, default=1440)
     ap.add_argument("--hold", type=float, default=0.5, help="seconds the mouse stays plugged in afterwards")
+    ap.add_argument("--rest", type=float, default=0.3, help="seconds the mouse rests before the click (a hover tip shows)")
     a = ap.parse_args()
     run = os.environ.get("XDG_RUNTIME_DIR", "/tmp")
     w = Wire(os.path.join(run, os.environ.get("WAYLAND_DISPLAY", "wayland-1")))
@@ -115,7 +116,7 @@ def main() -> int:
 
     move(a.x, a.y)
     if a.click or a.drag:
-        time.sleep(0.3)
+        time.sleep(a.rest)
         button(1)
         time.sleep(0.15)
         if a.drag:

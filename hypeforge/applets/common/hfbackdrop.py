@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import os
 import signal
+import subprocess
 import sys
 
 import gi
@@ -56,7 +57,22 @@ def backdrops(on_click, dim_monitor=None, dim_rgba: str | None = None) -> list[G
         GtkLayerShell.set_keyboard_mode(w, GtkLayerShell.KeyboardMode.NONE)   # the keyboard stays with the pop-up
         w.connect("button-press-event", lambda *_: on_click())
         out.append(w)
+    if out:
+        out[0].connect("map-event", lambda *_: GLib.timeout_add(NUDGE_MS, _nudge) and False)
     return out
+
+
+NUDGE_MS = 150
+
+
+def _nudge() -> bool:
+    """Tell Sway to look again at what is under the mouse (a move of zero), so the bar hears the
+    mouse leave it. Sway only checks on a move: the backdrop lands over the bar under a still mouse,
+    and the bar's hover tip stayed up over the pop-up, drawn again at every update (2026-10-24)."""
+    if os.environ.get("SWAYSOCK"):
+        subprocess.Popen(["swaymsg", "-q", "seat", "-", "cursor", "move", "0", "0"],
+                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return False
 
 
 def _alive(pid: int) -> bool:

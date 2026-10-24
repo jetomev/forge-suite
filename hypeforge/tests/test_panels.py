@@ -7,6 +7,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -130,6 +131,81 @@ class Widths(unittest.TestCase):
     def test_the_panel_puts_it_on_the_outermost_piece(self):
         import inspect
         self.assertIn("width", inspect.signature(panelkit.Panel.__init__).parameters)
+
+
+class HoverTip(unittest.TestCase):
+    """2026-10-24: the bar's hover tip stayed up over an open pop-up. Sway looks at what is under the mouse only
+    when it moves; the pop-up's backdrop lands over the bar under a still mouse, so the bar never heard it leave."""
+
+    def setUp(self):
+        sys.path.insert(0, str(HERE / "applets/common"))
+        import hfbackdrop
+        self.hb = hfbackdrop
+
+    def test_the_nudge_is_a_move_of_zero(self):
+        from unittest import mock
+        with mock.patch.dict(os.environ, {"SWAYSOCK": "/nowhere"}), mock.patch.object(self.hb.subprocess, "Popen") as run:
+            self.assertFalse(self.hb._nudge(), "once, not again and again")
+        cmd = run.call_args[0][0]
+        self.assertEqual(cmd[0], "swaymsg")
+        self.assertEqual(cmd[-5:], ["seat", "-", "cursor", "move", "0", "0"][-5:])
+        self.assertIn("-", cmd)
+
+    def test_no_sway_no_nudge(self):
+        from unittest import mock
+        env = {k: v for k, v in os.environ.items() if k != "SWAYSOCK"}
+        with mock.patch.dict(os.environ, env, clear=True), mock.patch.object(self.hb.subprocess, "Popen") as run:
+            self.hb._nudge()
+        run.assert_not_called()
+
+    def test_a_backdrop_showing_nudges(self):
+        from unittest import mock
+        if not os.environ.get("WAYLAND_DISPLAY"):
+            self.skipTest("the backdrops are layer surfaces: they need a Wayland screen")
+        from gi.repository import Gdk
+        with mock.patch.object(self.hb, "_nudge") as nudge, \
+                mock.patch.object(self.hb.GLib, "timeout_add", side_effect=lambda _ms, f: f()):
+            wins = self.hb.backdrops(lambda: None)
+            wins[0].emit("map-event", Gdk.Event.new(Gdk.EventType.MAP))
+            for w in wins:
+                w.destroy()
+        nudge.assert_called_once()
+
+
+class TemperatureList(unittest.TestCase):
+    def test_every_sensor_shows_without_scrolling(self):
+        # 2026-10-24: one column at WIDE, the sensors in a scrolling list (D-116). The pop-up took the list's
+        # smallest height, one row: Processor only, the drives, the board and the fans hidden below it.
+        from unittest import mock
+        from gi.repository import Gtk
+        import system as sysview
+        temps = [{"group": g, "name": f"{g} {i}", "temp": 40.0, "hot": 90.0, "state": "ok"}
+                 for g in ("Processor", "Graphics", "Drives", "Board") for i in range(3)]
+        state = {"temps": temps, "fans": [{"name": "Case fan 1", "rpm": 1100}],
+                 "history": {"cpu_temp": [40.0], "gpu_temp": [40.0]}}
+        with mock.patch.object(sysview.hfsys, "read_state", return_value=state), \
+                mock.patch.object(sysview.hfsys, "fresh", return_value=True):
+            view = sysview.View(panelkit.Look("kde", "dark-blue"), "temp", lambda: None)
+            win = Gtk.OffscreenWindow()
+            win.add(panelkit.wrap(view.root, width=panelkit.WIDE))
+            win.show_all()
+            for _ in range(20):                      # a window takes a new size on its next drawing tick
+                while Gtk.events_pending():
+                    Gtk.main_iteration()
+                time.sleep(0.02)
+        scroller = next(w for w in walk(view.root) if isinstance(w, Gtk.ScrolledWindow))
+        whole = scroller.get_child().get_preferred_height()[1]
+        self.assertGreater(whole, 200, "the setup: twelve sensors and a fan")
+        self.assertGreaterEqual(scroller.get_allocated_height(), min(whole, sysview.sensor_room()) - 2,
+                                f"the list shows {scroller.get_allocated_height()} of its {whole} px")
+        win.destroy()
+
+
+def walk(widget):
+    yield widget
+    if hasattr(widget, "get_children"):
+        for c in widget.get_children():
+            yield from walk(c)
 
 
 class ViewNames(unittest.TestCase):
