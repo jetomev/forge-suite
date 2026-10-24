@@ -236,6 +236,24 @@ class FakeRun:
 
 
 class QuickSettings(unittest.TestCase):
+    def test_each_slider_writes_its_own_number(self):
+        # Javier, 2026-10-24: "If I move the volume, it is the night light indicator that moves" — both rows
+        # named their label `value`, and the volume's handler found the night light's at run time
+        moved = []
+        volume, vol_label = quick.slider(0, 100, 1, 40, lambda v: f"{int(v)} %", moved.append)
+        warmth, warm_label = quick.slider(3000, 5000, 500, 4000, lambda v: f"{int(v)} K", moved.append)
+        volume.set_value(70)
+        self.assertEqual(vol_label.get_text(), "70 %")
+        self.assertEqual(warm_label.get_text(), "4000 K", "the volume wrote into the night light's number")
+        self.assertEqual(moved, [70])
+
+    def test_the_full_pop_up_has_no_warmth_slider(self):
+        # Javier, 2026-10-24: "since we have a night light popup, we don't need the night light bar in the
+        # quick settings popup"; the Night light tile stays, the slider lives in the moon's pop-up
+        self.assertEqual(quick.SLIDERS[None], ("volume",))
+        self.assertEqual(quick.SLIDERS["night"], ("warmth",))
+        self.assertEqual(quick.SLIDERS["sound"], ("volume",))
+
     def test_wifi_off_on_a_cable_says_so(self):
         be = quick.Backend(FakeRun({"nmcli -t -f WIFI radio": "disabled\n",
                                     "nmcli -t -f DEVICE,TYPE,STATE dev": "enp5s0:ethernet:connected\nwlan0:wifi:unavailable\n"}))

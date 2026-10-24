@@ -9,7 +9,7 @@
 | **Volume** | the level, red when muted | **Quick Settings** | **wiremix**, the mixer |
 
 **Quick Settings** (on macOS it's called Control Center): tiles for Wi-Fi, Bluetooth, the night light,
-Do Not Disturb, Screens and VPN, the volume and night-warmth sliders, the update count, a button into
+Do Not Disturb, Screens and VPN, the volume slider (the night light's warmth is in its own pop-up, from the moon), the update count, a button into
 **hypeForge Settings**, and the power buttons; the big buttons open the Forge apps (Screens →
 displayForge, updates → nogForge). A click anywhere else closes it. The **moon** next to the tray is
 the night light: its own small pop-up (Warm Now · Daylight Now · Automatic, the warmth slider, a button

@@ -220,6 +220,28 @@ def redraw_moon():
         pass
 
 
+# Which sliders each pop-up shows (Javier, 2026-10-24: the night light has its own pop-up, so the full Quick
+# Settings keeps its tile, not the warmth slider)
+SLIDERS = {None: ("volume",), "sound": ("volume",), "night": ("warmth",), "network": (), "bluetooth": ()}
+
+
+def slider(low, high, step, now, words, changed=None, inverted=False):
+    """A slider and ITS number, tied together here (2026-10-24: two rows named their number `value`, and moving
+    the volume rewrote the night light's). `words(v)` is what the number says; `changed(v)` runs on a move."""
+    scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, low, high, step)
+    scale.set_inverted(inverted)
+    scale.set_value(now)
+    scale.set_draw_value(False)
+    number = Gtk.Label(label=words(now))
+
+    def moved(s):
+        number.set_text(words(s.get_value()))
+        if changed:
+            changed(s.get_value())
+    scale.connect("value-changed", moved)
+    return scale, number
+
+
 def tile(name, icon, on, sub, clicked):
     b = Gtk.Button()
     b.get_style_context().add_class("hf-tile")
@@ -302,38 +324,31 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
 
     fill_tiles()
 
-    # the sliders
-    level, muted = be.volume() if only in (None, "sound") else (None, False)
+    # the sliders: which ones each pop-up shows (SLIDERS), each built with its own number (slider())
+    wanted = SLIDERS.get(only, ())
+    level, muted = be.volume() if "volume" in wanted else (None, False)
     if level is not None:
         row = Gtk.Box(spacing=10)
         mute = Gtk.Button.new_from_icon_name("audio-volume-muted" if muted else "audio-volume-high", Gtk.IconSize.BUTTON)
         mute.get_style_context().add_class("flat")
         mute.connect("clicked", lambda b: (be.mute_toggle(), b.set_image(Gtk.Image.new_from_icon_name(
             "audio-volume-muted" if be.volume()[1] else "audio-volume-high", Gtk.IconSize.BUTTON))))
-        scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 100, 1)
-        scale.set_value(level)
-        scale.set_draw_value(False)
-        value = Gtk.Label(label=f"{level} %")
-        scale.connect("value-changed", lambda s: (be.set_volume(s.get_value()), value.set_text(f"{int(s.get_value())} %")))
+        scale, number = slider(0, 100, 1, level, lambda v: f"{int(v)} %", be.set_volume)
         row.pack_start(mute, False, False, 0)
         row.pack_start(scale, True, True, 0)
-        row.pack_start(value, False, False, 0)
+        row.pack_start(number, False, False, 0)
         root.pack_start(row, False, False, 0)
     elif only == "sound":
         root.pack_start(Gtk.Label(label="No sound device found", xalign=0), False, False, 0)
-    if night.ok and only in (None, "night"):
+    if night.ok and "warmth" in wanted:
         _w, _why, kelvin, mode = night.state()
         row = Gtk.Box(spacing=10)
         row.pack_start(Gtk.Image.new_from_icon_name("weather-clear-night", Gtk.IconSize.BUTTON), False, False, 0)
-        scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 3000, 5000, 500)
-        scale.set_inverted(True)                  # warmer to the right
-        scale.set_value(kelvin)
-        scale.set_draw_value(False)
-        value = Gtk.Label(label=f"{kelvin} K")
-        scale.connect("value-changed", lambda s: value.set_text(f"{int(round(s.get_value() / 500) * 500)} K"))
+        scale, number = slider(3000, 5000, 500, kelvin, lambda v: f"{int(round(v / 500) * 500)} K", inverted=True)
+        # the warmth is set when the slider is let go (nightForge restarts its filter), not on every step
         scale.connect("button-release-event", lambda s, *_: (night.set_warmth(round(s.get_value() / 500) * 500), refresh_later(), False)[2])
         row.pack_start(scale, True, True, 0)
-        row.pack_start(value, False, False, 0)
+        row.pack_start(number, False, False, 0)
         if mode != "auto":
             back = Gtk.Button(label="Automatic")
             back.get_style_context().add_class("flat")
