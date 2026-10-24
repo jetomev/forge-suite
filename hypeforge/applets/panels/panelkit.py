@@ -115,6 +115,27 @@ def head_line() -> "Gtk.Separator":
     return sep
 
 
+def titled(content: "Gtk.Widget", name: str, glyph: str = "", spacing: int = 8) -> "Gtk.Box":
+    """`content` with the one title row on top (D-116): the name in bold (an optional symbol before it)
+    and the soft line under it. Returns the box to give the Panel; the name label is `box.title`."""
+    box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+    head = Gtk.Box(spacing=8)
+    head.get_style_context().add_class("hf-head")
+    if glyph:
+        g = Gtk.Label(label=glyph)
+        g.get_style_context().add_class("hf-head-glyph")
+        head.pack_start(g, False, False, 0)
+    label = Gtk.Label(label=name, xalign=0)
+    label.get_style_context().add_class("hf-head-name")
+    head.pack_start(label, True, True, 0)
+    box.pack_start(head, False, False, 0)
+    box.pack_start(head_line(), False, False, 0)
+    content.set_margin_top(spacing - 5 if spacing > 5 else 0)
+    box.pack_start(content, True, True, 0)
+    box.title = label
+    return box
+
+
 # ---- Where: the screen in use ----------------------------------------------------------------
 
 def sway_ask(kind: int, payload: str = ""):

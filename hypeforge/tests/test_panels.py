@@ -63,7 +63,8 @@ class TitleRow(unittest.TestCase):
     classes and one soft line. The launchers (start, kickoff, library) are each style's own, outside it."""
 
     VIEWS = HERE / "applets/panels/views"
-    TITLED = ["quick", "clipboard", "calendar_view", "system", "windowmenu", "traymenu", "listcard"]
+    TITLED = ["quick", "clipboard", "calendar_view", "system", "windowmenu", "traymenu", "listcard",
+              "power", "workspaces", "switcher"]          # Javier, 2026-10-24: "give all popups their title"
     # their head is a card of its own above the others: the card's edge does the line's job (whether they
     # become one card, as D-116 says, is for Javier's pop-up review)
     OWN_CARD = {"clipboard", "calendar_view"}
@@ -76,13 +77,15 @@ class TitleRow(unittest.TestCase):
             self.assertIn(cls, css)
         self.assertIn(f"font-size: {panelkit.Look.SIZE * 1.1}pt", css.split(".hf-head-name")[1].split("}")[0])
         self.assertTrue(callable(getattr(panelkit, "head_line", None)), "one shared soft line under the head")
+        self.assertTrue(callable(getattr(panelkit, "titled", None)), "one shared way to put the title row on top")
 
     def test_every_titled_pop_up_wears_it(self):
         for view in self.TITLED:
             src = (self.VIEWS / f"{view}.py").read_text()
-            self.assertTrue("hf-head-name" in src, f"{view} has no title row")
+            shared = "panelkit.titled(" in src                   # the kit's title row and line, whole
+            self.assertTrue(shared or "hf-head-name" in src, f"{view} has no title row")
             if view not in self.OWN_CARD:
-                self.assertTrue("panelkit.head_line(" in src, f"{view} has no soft line under its head")
+                self.assertTrue(shared or "panelkit.head_line(" in src, f"{view} has no soft line under its head")
             for old in self.OLD:
                 self.assertFalse(old in src, f"{view} still draws its own title ({old})")
 

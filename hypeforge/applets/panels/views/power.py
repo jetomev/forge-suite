@@ -24,6 +24,7 @@ ACTIONS = [("lock", "Lock", "system-lock-screen", False),
 CSS = """
 .hf-power button {{ border-radius: {pill}px; min-width: 112px; min-height: 112px; padding: 0; }}
 .hf-power .hf-label {{ margin-top: 12px; color: {text}; font-size: {size}pt; font-weight: bold; }}
+.hf-power-top .hf-head-name {{ color: {text}; }}   /* no card behind it: the panel's text, as the buttons' labels */
 """
 
 
@@ -86,5 +87,9 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     provider.load_from_data(CSS.format(text=look.colour["panel_text"], size=look.size * 1.3, pill=look.pill).encode())
     Gtk.StyleContext.add_provider_for_screen(row.get_screen() or panelkit.Gdk.Screen.get_default(), provider,
                                              Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1)
-    panel = panelkit.Panel("power", row, look, edges=(), dim=True, card=False)
+    # the one title row (D-116; Javier, 2026-10-24: "give all popups their title"), over the dimmed
+    # screen like the buttons (Power has no card)
+    top = panelkit.titled(row, "Power", spacing=14)
+    top.get_style_context().add_class("hf-power-top")
+    panel = panelkit.Panel("power", top, look, edges=(), dim=True, card=False)
     return panel

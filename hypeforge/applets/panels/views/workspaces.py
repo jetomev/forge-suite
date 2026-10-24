@@ -121,5 +121,6 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
 
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["bottom"]
     margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"bottom": 60}
-    panel = panelkit.Panel("workspaces", row, look, edges=edges, margins={k: int(v) for k, v in margins.items()})
+    # the one title row (D-116; Javier, 2026-10-24: "give all popups their title")
+    panel = panelkit.Panel("workspaces", panelkit.titled(row, "Workspaces"), look, edges=edges, margins={k: int(v) for k, v in margins.items()})
     return panel

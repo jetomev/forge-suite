@@ -164,7 +164,9 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         grid.add(empty)
     show(state["at"])
 
-    panel = panelkit.Panel("switcher", grid, look, edges=[])
+    # the one title row (D-116; Javier, 2026-10-24: "give all popups their title")
+    panel = panelkit.Panel("switcher", panelkit.titled(grid, "Tucked away" if tucked_only else "Open windows"),
+                           look, edges=[])
 
     def key(_w, event):
         k = event.keyval
