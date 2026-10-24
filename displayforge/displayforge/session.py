@@ -62,7 +62,10 @@ class Session:
 
     # -- changing --------------------------------------------------------------------------------
     def change(self, name: str, **fields) -> None:
+        before = self.screen(name)
         self.pending = [replace(s, **fields) if s.name == name else s for s in self.pending]
+        if before.on and self.screen(name).on:          # its room changed: the neighbours slide (F-10)
+            self.pending = S.follow_size(self.pending, name, before)
 
     def arrange(self, name: str, where: str, of: str, align: str = "start") -> None:
         self.pending = S.place(self.pending, name, where, of, align)

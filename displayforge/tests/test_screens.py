@@ -159,5 +159,40 @@ class AnyLayout(unittest.TestCase):
         self.assertIn("hdr off", S.config_lines([a])[0])
 
 
+class SizeMakesRoom(unittest.TestCase):
+    """2026-10-24, Javier's run on his three screens: the middle one at 90 % "says these screens overlap and
+    doesn't change". At 90 % a 2560-wide screen holds 2844 of desktop and grew into its neighbour; the
+    screens beside it never moved. Now they slide by what it grew (or shrank), as Arrange's make-room."""
+
+    def setUp(self):
+        from displayforge.session import Session
+        self.se = Session(S.parse(REAL), {"names": {}, "bus": {}}, main="DP-3")
+
+    def xs(self):
+        return {s.name: s.x for s in self.se.pending}
+
+    def test_the_middle_screen_at_90_and_80(self):
+        for size, room in ((0.9, 2844), (0.8, 3200)):
+            self.se.discard()
+            self.se.change("DP-3", scale=size)
+            self.assertEqual(self.se.problems(), [], f"{size:.0%}")
+            self.assertEqual(self.xs(), {"DP-2": 0, "DP-3": 2560, "DP-1": 2560 + room}, f"{size:.0%}: the right one slid over")
+
+    def test_and_back_to_100(self):
+        self.se.change("DP-3", scale=0.9)
+        self.se.change("DP-3", scale=1.0)
+        self.assertEqual(self.xs(), {"DP-2": 0, "DP-3": 2560, "DP-1": 5120})
+        self.assertEqual(self.se.change_count, 0, "nothing left to try")
+
+    def test_bigger_things_close_the_gap(self):
+        self.se.change("DP-3", scale=1.25)                 # 2048 of desktop: no hole between the screens
+        self.assertEqual(self.xs(), {"DP-2": 0, "DP-3": 2560, "DP-1": 2560 + 2048})
+
+    def test_the_left_screen_pushes_both(self):
+        self.se.change("DP-2", scale=0.9)
+        self.assertEqual(self.xs(), {"DP-2": 0, "DP-3": 2844, "DP-1": 2844 + 2560})
+        self.assertEqual(self.se.problems(), [])
+
+
 if __name__ == "__main__":
     unittest.main()

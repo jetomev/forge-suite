@@ -231,6 +231,26 @@ def make_room(screens: list[Screen], moved: str, where: str) -> list[Screen]:
     return [by[s.name] for s in screens]
 
 
+def follow_size(screens: list[Screen], name: str, before: Screen) -> list[Screen]:
+    """Screen `name` takes more or less room than `before` (its size of things, resolution or rotation
+    changed): the screens past its right edge slide by what it grew in width, those past its bottom
+    edge by what it grew in height — so it never covers a neighbour and never leaves a gap (2026-10-24,
+    Javier's run: the middle screen at 90 % "says these screens overlap and doesn't change")."""
+    now = next(s for s in screens if s.name == name)
+    (ow, oh), (nw, nh) = before.extent, now.extent
+    if (ow, oh) == (nw, nh):
+        return screens
+    right, bottom = before.x + ow, before.y + oh
+    out = []
+    for s in screens:
+        if s.name == name or not s.on:
+            out.append(s)
+            continue
+        out.append(replace(s, x=s.x + (nw - ow) if s.x >= right else s.x,
+                           y=s.y + (nh - oh) if s.y >= bottom else s.y))
+    return normalise(out)
+
+
 def normalise(screens: list[Screen]) -> list[Screen]:
     """Shift everything so the layout starts at 0, 0 (Sway is happiest that way)."""
     on = [s for s in screens if s.on]

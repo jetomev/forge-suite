@@ -69,16 +69,25 @@ def engine(n: int, env: dict) -> None:
     os.environ["SWAYSOCK"] = env["SWAYSOCK"]                 # screens.read() asks the hidden Sway
     se = Session(S.read(), {"names": {}, "bus": {}})
     check(len(se.live) == n, f"{n} screen(s): displayForge reads {len(se.live)}")
-    first = se.live[0].name
+    first = min(se.live, key=lambda s: s.x).name     # the leftmost: a bigger desktop pushes into the others
+    # (2026-10-24: the bench resized the rightmost screen only, and missed Javier's "these screens overlap")
     for size in (0.8, 0.9):
         se.change(first, scale=size)
+        check(se.problems() == [], f"{n} screen(s): {first} at {size:.0%} — nothing in the way ({se.problems()})")
+        before = {k: (v["rect"]["x"], v["rect"]["y"]) for k, v in outputs(env).items()}
         t = T.Trial(se.live, se.pending, swaymsg="swaymsg")
         check(t.start(), f"{n} screen(s): Sway takes {first} at {size:.0%}")
-        now = outputs(env)[first]["scale"]
+        o = outputs(env)
+        now = o[first]["scale"]
         check(abs(now - size) < 1e-6, f"{n} screen(s): while it counts down, {first} is at {now:.0%}")
+        rects = sorted((v["rect"]["x"], v["rect"]["width"]) for v in o.values())
+        touching = all(a[0] + a[1] == b[0] for a, b in zip(rects, rects[1:]))
+        check(touching, f"{n} screen(s): side by side, no overlap and no gap {rects}")
         t.revert_now()
+        after = {k: (v["rect"]["x"], v["rect"]["y"]) for k, v in outputs(env).items()}
         back = outputs(env)[first]["scale"]
-        check(abs(back - 1.0) < 1e-6, f"{n} screen(s): after Go Back Now, {first} is at {back:.0%} again")
+        check(abs(back - 1.0) < 1e-6 and after == before,
+              f"{n} screen(s): after Go Back Now, {first} is at {back:.0%} and every screen where it was")
         se.discard()
     se.change(first, scale=0.9)
     t = T.Trial(se.live, se.pending, swaymsg="swaymsg")
@@ -93,7 +102,7 @@ def engine(n: int, env: dict) -> None:
     t.keep()
     se.tried()
     if n >= 2:
-        last = se.live[-1].name
+        last = next(s.name for s in reversed(se.live) if s.name != first)
         before = {k: (v["rect"]["x"], v["rect"]["y"]) for k, v in outputs(env).items()}
         side = "right" if before[last][0] < before[first][0] else "left"     # the other side from where it is
         se.arrange(last, side, first)
