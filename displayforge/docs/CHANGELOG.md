@@ -2,6 +2,12 @@
 
 *Newest first.*
 
+## Unreleased
+
+- **The bar tells the truth during the countdown** ([F-8 #121](https://github.com/jetomev/forge-suite/issues/121)): while "Keep these settings?" counts down, the bar under it says *Trying 1 change on your screens · keep them or go back in the window*. It used to say "not tried yet" until you answered.
+
+Tests: 66 → **67**. Warnings: none.
+
 ## 1.1.1 — 2026-10-11 · one-screen computers start again, and the AUR package builds on any machine
 
 - **Computers with one screen crashed at start** ([F-6 #58](https://github.com/jetomev/forge-suite/issues/58)): Textual 8 changed what an empty choice is (`Select.BLANK` is False now), and the one-screen path used the old one. Fixed with `Select.NULL` (`9648068`).

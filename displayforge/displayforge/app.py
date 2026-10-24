@@ -793,6 +793,11 @@ class DisplayForgeApp(ForgeApp):
         if not trial.start():
             self.notify("Sway did not accept that. Nothing changed.", title="Not tried", severity="error")
             return False
+        # While the window counts down the changes are on screen, so the bar says so (it said
+        # "not tried yet" until the answer: TODO.md, seen in screenshots).
+        n = se.change_count
+        self.changes_bar.show(f"Trying {n} change{'s' if n != 1 else ''} on your screens · "
+                              "keep them or go back in the window", "changed")
         keep = await self.push_screen_wait(KeepDialog(what))
         if keep:
             trial.keep()

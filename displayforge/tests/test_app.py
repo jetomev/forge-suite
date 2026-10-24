@@ -294,6 +294,29 @@ class App(unittest.TestCase):
             self.assertIn("1-6", text)
             self.assertIn("menu", text)
 
+    def test_the_bar_says_trying_during_the_countdown(self):
+        # TODO.md, seen in screenshots: the bar under the keep window still said "not tried yet"
+        # while the changes were on screen being tried.
+        said = []
+
+        async def steps(app, pilot):
+            show = app.changes_bar.show
+            app.changes_bar.show = lambda msg, *a, **k: (said.append(msg), show(msg, *a, **k))[1]
+            self.session.change("DP-1", scale=0.9)
+            await pilot.press("2")
+            await pilot.pause(0.3)
+            await pilot.press("f9")
+            await pilot.pause(0.6)
+            said.append(("window", type(app.screen).__name__))
+            await pilot.press("enter")                       # keep it
+            await pilot.pause(0.6)
+        self.run_app(steps)
+        i = said.index(("window", "KeepDialog"))
+        during = said[i - 1]
+        self.assertIn("Trying", during, f"the bar during the countdown said: {during!r}")
+        self.assertNotIn("not tried yet", during)
+        self.assertTrue(any("Kept on screen" in m for m in said[i + 1:] if isinstance(m, str)), "after keeping, it says kept")
+
     def test_elsewhere_f9_only_reminds_and_the_bar_points_the_way(self):
         seen = []
 

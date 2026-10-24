@@ -42,7 +42,7 @@
 - [ ] One and two screens (test VM)
 - [ ] Sizes 80 / 90 % on real apps (X11 apps blur at non-whole sizes)
 - [ ] Plain text console, 100 columns; the drawing's right edge in a real terminal
-- [ ] The status bar under the keep dialog still says "not tried yet" while the countdown runs (seen in the screenshots)
+- [x] The status bar under the keep dialog still says "not tried yet" while the countdown runs (seen in the screenshots) — **fixed 2026-10-24 (F-8 #121): "Trying N changes on your screens · keep them or go back in the window"; next release**
 
 ## Later
 - [ ] Profiles (switch layouts when screens are plugged in / out)
