@@ -3,10 +3,10 @@
 </p>
 
 <p align="center">
-  <img alt="Version 1.1.1" src="https://img.shields.io/badge/version-1.1.1-a6e3a1?style=flat-square&labelColor=313244">
+  <img alt="Version 1.1.2" src="https://img.shields.io/badge/version-1.1.2-a6e3a1?style=flat-square&labelColor=313244">
   <img alt="Sway" src="https://img.shields.io/badge/for-Sway-89b4fa?style=flat-square&labelColor=313244">
   <img alt="Terminal app" src="https://img.shields.io/badge/app-terminal-b4befe?style=flat-square&labelColor=313244">
-  <img alt="Tests: 54" src="https://img.shields.io/badge/tests-54-94e2d5?style=flat-square&labelColor=313244">
+  <img alt="Tests: 72" src="https://img.shields.io/badge/tests-72-94e2d5?style=flat-square&labelColor=313244">
   <img alt="License: GPLv3" src="https://img.shields.io/badge/license-GPLv3-a6e3a1?style=flat-square&labelColor=313244">
   <img alt="Built by a human and an AI" src="https://img.shields.io/badge/built%20by-human%20%2B%20AI-f9e2af?style=flat-square&labelColor=313244">
 </p>
@@ -95,12 +95,12 @@ On a plain text console, **Ctrl+I** arrives as Tab (an old terminal can't tell t
 
 ---
 
-## Known limits in 1.1.1
+## Known limits in 1.1.2
 
 Said plainly, so nobody finds out the hard way:
-- **Tested on one setup:** three identical 1440p screens on NVIDIA. One- and two-screen setups, the 80 / 90 % sizes on real apps and a plain text console are **not tested yet**; they come next, and anything they find becomes a 1.0.x fix.
-- **Arrange** is still being tried by Javier on the real screens.
-- No profiles yet (a layout that switches by itself when a screen is plugged in), and no night light.
+- **Tested on:** three identical 1440p screens on NVIDIA (the maintainer's desktop), and one and two screens in a virtual machine; the 80 / 90 % sizes on real apps and a plain text console too (2026-10-24). Other graphics cards and mixed screen sizes are not tried yet.
+- A **virtual screen** (what screen-sharing tools add to Sway) shows "0 Hz": it reports no refresh rate.
+- No profiles yet (a layout that switches by itself when a screen is plugged in), and no night light (that's [nightForge](../nightforge/)).
 
 ---
 
@@ -108,13 +108,11 @@ Said plainly, so nobody finds out the hard way:
 
 | Version | What | Status |
 |---|---|---|
-| **1.1.x** | The tests above: 1 and 2 screens, 80 / 90 %, text console; Javier's Arrange run | ⬜ next |
-| **1.2** | Profiles | ⬜ |
-| **AUR** | `yay -S displayforge` — 1.1.0 packaged 2026-10-09 (Javier: all ready apps on the AUR) | ✅ |
-| **1.1.0** | Javier's run inside hypeForge Settings: Ctrl + every underlined letter, Help numbered, "1-6 menu"; Try and Save only where things change; a real "Apply your changes?" before quitting; the Save button in the bar works; `--hypeforge`; button labels as "Try It (F9)" | ✅ 2026-10-08 |
-| **1.0.1** | Sway only, said everywhere and checked at launch (on forgekit 0.7.0's start-up check) | ✅ 2026-10-06 |
+| **1.2** | Profiles: a layout that applies itself when screens are plugged in or out | ⬜ next |
+| **1.1.2** | Tested on one and two screens, at 80 / 90 % and on a text console (Javier's run). Fixed: 80 / 90 % on a screen with neighbours said "these screens overlap" — now the screens beside it slide (F-10); a screen that lists no sizes crashed Settings (F-9); the bar says "Trying…" during the countdown (F-8) | ✅ 2026-10-24 |
+| **1.1.1** | One-screen computers start again (F-6); the AUR package builds on any machine (F-7) | ✅ 2026-10-11 |
 
-Full detail: [docs/ROADMAP.md](docs/ROADMAP.md) · History: [docs/CHANGELOG.md](docs/CHANGELOG.md)
+Full detail and older releases: [docs/ROADMAP.md](docs/ROADMAP.md) · History: [docs/CHANGELOG.md](docs/CHANGELOG.md)
 
 ---
 

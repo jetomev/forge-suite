@@ -1,6 +1,11 @@
 # displayForge — the list
 
-**1.1.0 released 2026-10-08** (his runs inside hypeForge Settings: keys, Try/Save where they belong, a real question before quitting, pages for Help); before it **1.0.1 released 2026-10-06** (Sway only, D-5), after 1.0.0 the same morning (D-4). Next: 1.1.x tests (one and two screens, 80 / 90 %, text console). A Forge Suite app (terminal, forgekit) for screen settings on Sway: arrange, resolution, refresh rate, scale, rotation, on / off, main screen, brightness. Section of the Forge Suite (D-60). Updated after every step.
+**1.1.2 releasing 2026-10-24** (Javier's stage-03 run passed: one and two screens, 80 / 90 %, a text console; F-8, F-9, F-10 fixed). Before it 1.1.1 (2026-10-11), 1.1.0 (2026-10-08). Next: 1.2 profiles. A Forge Suite app (terminal, forgekit) for screen settings on Sway: arrange, resolution, refresh rate, scale, rotation, on / off, main screen, brightness. Section of the Forge Suite (D-60). Updated after every step.
+
+## 1.1.2 · the release (2026-10-24)
+- [x] Javier's run passed (`testing/20261024 - Test Results for displayForge v1-1-2.md`); 72 tests, 0 warnings
+- [x] version on every surface · signed tag `displayforge-v1.1.2` · GitHub Release (Latest) · `--verify` (ticked as each lands; see below)
+- [ ] AUR recipe 1.1.2-1 · makepkg (check() runs the tests) · Javier's local install test · then the AUR push
 
 ## 2026-10-11 · What it needs, measured
 - [x] **What it needs, measured** (2026-10-11, #91): `docs/PACKAGING.md` + `tests/test_needs.py`. The AUR 1.1.0 build **failed without ddcutil** (F-7 #92, a test) → fixed; recipe + python-rich
@@ -10,7 +15,7 @@
 - [x] **On the AUR, 2026-10-09** (Javier: "all ready to use apps on AUR, even if they are private"): signed files added to the 1.1.0 release, `displayforge` 1.1.0-1 built locally (63/63 tests in check()), Javier installed and tested it ("displayForge good"), pushed `27bed27`; its AUR description already carries the "where it runs" words
 
 ## At the next release
-- [ ] **The AUR description, at the next release** (Javier, 2026-10-09): the AUR `pkgdesc` (and `.SRCINFO`) gets the same "where it runs" words as the README, GitHub About and kognogos.org — distribution · desktop · plain text console. Not pushed on its own: AUR pushes stay one per proven version.
+- [x] **The AUR description, at the next release** — already carried them (checked at 1.1.2, 2026-10-24) (Javier, 2026-10-09): the AUR `pkgdesc` (and `.SRCINFO`) gets the same "where it runs" words as the README, GitHub About and kognogos.org — distribution · desktop · plain text console. Not pushed on its own: AUR pushes stay one per proven version.
 
 ## Phase 0 · Research and design
 - [x] Name: **displayForge** (Javier, 2026-10-05)

@@ -2,7 +2,10 @@
 
 *Newest first.*
 
-## Unreleased
+## 1.1.2 — 2026-10-24 · tested on one and two screens; 80 / 90 % works beside other screens
+
+Javier's run of the stage-03 tests ([the matrix](../testing/20261024%20-%20Test%20Matrix%20for%20displayForge%20v1-1-2.md), [the results](../testing/20261024%20-%20Test%20Results%20for%20displayForge%20v1-1-2.md)): one and two screens in a virtual machine, 80 / 90 % on real apps, a plain text console — every row passed, after F-10 was fixed during the run.
+
 
 - **The bar tells the truth during the countdown** ([F-8 #121](https://github.com/jetomev/forge-suite/issues/121)): while "Keep these settings?" counts down, the bar under it says *Trying 1 change on your screens · keep them or go back in the window*. It used to say "not tried yet" until you answered.
 
@@ -10,7 +13,7 @@
 - **80 % and 90 % work on a screen with neighbours** ([F-10 #126](https://github.com/jetomev/forge-suite/issues/126), found in Javier's test run): a smaller size gives a screen more desktop, and it grew into the screen beside it — displayForge said *these screens overlap* and changed nothing. Now when a screen's room changes (size of things, resolution, rotation) the screens to its right and below slide by the same amount: no overlap, and no gap when it shrinks.
 - **A screens bench** (`scripts/screens-bench.py`, for the people building it): a screen-less Sway with one, two and three fake screens; the real engine tries 80 % and 90 % sizes and a new arrangement through the countdown and checks Sway after each answer, and the app is photographed at 100 columns. 43 / 43 (it resizes the leftmost screen now: resizing only the rightmost had missed F-10).
 
-Tests: 66 → **72**. Warnings: none.
+Tests: 66 → **72**. Warnings: 0 → 0.
 
 ## 1.1.1 — 2026-10-11 · one-screen computers start again, and the AUR package builds on any machine
 
