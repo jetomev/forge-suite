@@ -6,9 +6,10 @@ desktop, bar and applets are never touched), runs hypeForge's Workspaces applet 
 against it, opens test windows on four workspaces, then saves through workspaceForge's own Session
 and Live: a rename, a swap of two workspaces and a delete whose windows go to another workspace.
 Afterwards every window must be on the workspace it belongs to, the applet still running, and the
-workspaces must not keep switching.
+workspaces must not keep switching. `--screens 1` or `2` runs it on one or two screens (stage 03 of
+KognogOS, 2026-10-24: "tested with one or two screens"); a second screen's window is left out on one.
 
-    python3 scripts/bench-save.py            exit 0 = all good
+    python3 scripts/bench-save.py [--screens 1|2|3]     exit 0 = all good
 """
 
 import json
@@ -25,7 +26,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 APPLET = ROOT.parent / "hypeforge/applets/workspaces/hypeforge-workspaces"
-SCREENS = ["HEADLESS-1", "HEADLESS-2", "HEADLESS-3"]
+COUNT = int(sys.argv[sys.argv.index("--screens") + 1]) if "--screens" in sys.argv else 3
+SCREENS = [f"HEADLESS-{i}" for i in range(1, COUNT + 1)]
 
 FILE = f'''
 enabled = true
@@ -98,7 +100,7 @@ def main():
     (fakebin / "pgrep").chmod(0o755)
     env = {k: v for k, v in os.environ.items() if k not in ("SWAYSOCK", "WAYLAND_DISPLAY", "DISPLAY", "I3SOCK")}
     env.update(XDG_RUNTIME_DIR=str(run), XDG_CONFIG_HOME=str(conf), WLR_BACKENDS="headless",
-               WLR_RENDERER="pixman", WLR_HEADLESS_OUTPUTS="3", WLR_LIBINPUT_NO_DEVICES="1",
+               WLR_RENDERER="pixman", WLR_HEADLESS_OUTPUTS=str(COUNT), WLR_LIBINPUT_NO_DEVICES="1",
                PATH=f"{fakebin}:{os.environ['PATH']}")
     procs, log = [], open(base / "bench.log", "w")
     ok = False
@@ -122,6 +124,8 @@ def main():
         # one window on the main screen of each workspace, and one on Work's left screen
         homes = {"win-daily": "1:Daily", "win-work": "2:Work", "win-work-left": "12:Work",
                  "win-ent": "3:Entertainment", "win-game": "4:Gaming"}
+        if COUNT == 1:                                     # no second screen: no window on it
+            homes.pop("win-work-left")
         for app_id in homes:
             procs.append(subprocess.Popen([sys.executable, "-c", WINDOW, app_id], env={**env, "GDK_BACKEND": "wayland"},
                                           stdout=log, stderr=log))
@@ -154,6 +158,8 @@ def main():
         after = where(sock)
         expect = {"win-daily": "1:Home", "win-work": "2:Gaming", "win-work-left": "12:Gaming",
                   "win-ent": "3:Entertainment", "win-game": "2:Gaming"}
+        if COUNT == 1:
+            expect.pop("win-work-left")
         print("moves:", sum(results), "of", len(results), "worked (renames of empty workspaces may not)")
         print("after: ", after)
         # no switching after the dust settles
@@ -164,7 +170,7 @@ def main():
         alive = procs[1].poll() is None
         print("applet reloaded:", reloaded, "| still running:", alive, "| screens steady:", still)
         ok = after == expect and alive and still and reloaded
-        print("RESULT:", "OK — every window followed its workspace" if ok else f"FAILED (expected {expect})")
+        print("RESULT:", f"OK — every window followed its workspace ({COUNT} screen(s))" if ok else f"FAILED (expected {expect})")
         return 0 if ok else 1
     finally:
         for p in reversed(procs):

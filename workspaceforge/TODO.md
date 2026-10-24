@@ -36,6 +36,7 @@
 - [ ] **Sharing, rethought** — waits on Javier ("have to think better about this section"); SharingView dormant in app.py
 - [ ] More than nine workspaces (D-6): the applet's cell naming changes first, with a bench test
 - [ ] Not yet tried: one or two screens (a VM), a real tty
+  - Claude's part done 2026-10-24: `scripts/bench-save.py --screens 1|2|3` all OK (a rename, a swap and a delete, every window follows its workspace, the applet keeps running); the app drawn in memory with one and two screens. Seen: with one screen Daily still says "switches all your screens". Javier's part: the VM — the test matrix
 
 ## Phase 3 · Release
 - [x] 1.0.0 (Javier: "this is workspaceForge v1.0", D-8): version everywhere, changelog, roadmap, matrix + results in `testing/`
