@@ -132,7 +132,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
     - [ ] every pop-up opens under what was clicked (reads patch 3; plain Sway keeps today's places)
     - [ ] the hover tip stops covering an open pop-up
     - [ ] the app name's odd `gimp` box on the menu-bar styles
-    - [ ] one title row on every pop-up (Quick Settings has none today)
+    - [x] one title row on every pop-up (Quick Settings has none today) — **Javier, 2026-10-24: "looks good!"**
       - built 2026-10-24, live, waits for Javier's look: the panel kit's one title row (`.hf-head*`, `panelkit.head_line()`) on Quick Settings (new) and its one-part pop-ups, the tray menu, the list card, the window menu, Clipboard, Calendar, System; before/after sheet `logs/popup-titles-20261024/title-row-before-after.png`; `TitleRow` tests (seen failing first), 294 tests. Javier the same day: *"give all popups their title"* → Power, Workspaces, the window switcher too (`panelkit.titled()`, sheet `title-row-the-last-three.png`). Still his: Clipboard and Calendar as one card? the list card's OK (10-20)
     - [ ] three widths only: narrow, medium, wide
     - [ ] the notification cards on the standard
