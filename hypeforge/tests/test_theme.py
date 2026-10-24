@@ -588,5 +588,59 @@ class ASwitchStopsTheOldStylesApplets(unittest.TestCase):
         for s in ht.styles().values():
             self.assertNotIn("strip", ht.style_applets(s))
 
+class NotificationCards(Base):
+    """D-116 (Javier, 2026-10-20): the notifications wear the pop-up standard on every style — before 2026-10-24
+    each style gave them its own corners (KDE 8, Rice 14, Mac OS 9 square…), 420 px and no app icon."""
+
+    def mako(self, style, corners):
+        files, _pic = ht.render(style, "dark-blue", self.place, str(self.wall), False, False, corners, None)
+        return files[self.place.root / "mako/config"]
+
+    def test_every_style_every_corners_choice(self):
+        t = ht.themes()["dark-blue"]
+        for style in ht.styles():
+            for corners in ("style", "rounded", "straight"):
+                conf = self.mako(style, corners)
+                s = ht.with_corners(ht.styles()[style], corners)
+                why = f"{style}, corners {corners}"
+                self.assertIn(f"border-radius={0 if corners == 'straight' else 10}\n", conf, why)
+                self.assertIn("border-size=1\n", conf, why)
+                self.assertIn("font=Noto Sans 10.5\n", conf, why)
+                self.assertIn("width=460\n", conf, why)
+                self.assertIn(f"background-color={ht.resolve('panel_bg', s, t)}\n", conf, why)
+                self.assertIn(f"border-color={ht.resolve('panel_border', s, t)}\n", conf, why)
+                self.assertNotIn("{{", conf, why)
+
+    def test_the_title_is_bold_and_the_percent_is_mako_safe(self):
+        conf = self.mako("kde", "style")
+        line = next(l for l in conf.splitlines() if l.startswith("format="))
+        self.assertIn("<b>", line)
+        self.assertIn('size="110%%"', line, "a lone % is one of mako's fill-in codes: the whole file is refused")
+
+    def test_mako_is_pointed_at_the_icon_map_first(self):
+        conf = self.mako("kde", "style")
+        path = next(l for l in conf.splitlines() if l.startswith("icon-path="))[len("icon-path="):]
+        self.assertEqual(path.split(":")[0], str(self.place.note_icons))
+        self.assertIn(f"max-icon-size={ht.POPUP['icon']}\n", conf)
+
+    def test_the_icon_map_puts_a_theme_in_makos_order(self):
+        base = Path(self.tmp.name) / "icons"
+        for rel in ("fake/apps/scalable/drawn.svg", "fake/places/48/sized.svg", "fake/16x16/apps/already.png"):
+            (base / rel).parent.mkdir(parents=True, exist_ok=True)
+            (base / rel).write_text("x")
+        out = Path(self.tmp.name) / "map"
+        self.assertEqual(ht.note_icon_map(out, "fake", bases=(base,)), 2)
+        n = ht.POPUP["icon"]
+        self.assertTrue((out / f"{n}x{n}/apps/drawn.svg").exists(), "a drawing folder: named for the icon size")
+        self.assertTrue((out / "48x48/places/sized.svg").exists())
+        self.assertFalse((out / "16x16").exists(), "already size/kind: mako reads the theme itself")
+        self.assertEqual(ht.note_icon_map(out, "fake", bases=(base,)), 2, "rebuilt, not added to")
+        self.assertEqual([p.name for p in out.parent.iterdir() if p.name.startswith("map")], ["map"], "no .new or .old left")
+
+    def test_an_apply_lays_the_map(self):
+        self.apply("kde", "dark-blue", say=lambda *_: None, corners="style")
+        self.assertTrue(self.place.note_icons.is_dir())
+
+
 if __name__ == "__main__":
     unittest.main()

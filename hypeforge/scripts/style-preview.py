@@ -6,7 +6,7 @@ Sway's look, the bar's layout and stylesheet, colours, notifications…), starts
 with that look (one fake 2560×1440 screen), runs the Workspaces applet and the bar, opens a few
 stand-in windows named like real apps, and photographs the screen. Nothing touches the real desktop.
 
-    style-preview.py [--style rice] [--theme kognogos-mocha] [--out picture.png] [--scale 0.5] [--click X,Y [--rest S]]
+    style-preview.py [--style rice] [--theme kognogos-mocha] [--out picture.png] [--scale 0.5] [--click X,Y [--rest S]] [--notify]
 """
 
 from __future__ import annotations
@@ -46,6 +46,7 @@ def main() -> int:
     ap.add_argument("--scale", type=float, default=0.5)
     ap.add_argument("--corners", default="style", help="straight, rounded or style (hypeforge-theme corners)")
     ap.add_argument("--click", help="X,Y: a left click there before the picture (e.g. a bar's menu title)")
+    ap.add_argument("--notify", action="store_true", help="show two made-up notifications (mako, the style's own settings)")
     ap.add_argument("--rest", type=float, default=0.3, help="seconds the mouse rests on X,Y before the click (2 = its hover tip shows first)")
     a = ap.parse_args()
     out = Path(a.out or HERE / f"logs/style-preview-{a.style}-{a.theme}{'' if a.corners == 'style' else '-' + a.corners}.png")
@@ -124,6 +125,14 @@ def main() -> int:
         for name in ht.styles()[a.style].get("layout", {}).get("applets", []):
             pid = next((f for f in run.glob(f"hypeforge-*{name}.pid")), None)
             print(f"applet {name}: " + ("running" if pid else "NOT running"), file=sys.stderr)
+        if a.notify:                  # the style's mako settings, two made-up notifications (never the person's)
+            procs.append(subprocess.Popen(["mako"], env=env, stdout=log, stderr=log))
+            time.sleep(0.8)
+            for app, icon, head, body, urgency in (
+                    ("nog", "system-software-update", "12 updates ready", "Open nogForge to see them, or wait for tonight", "normal"),
+                    ("Screenshot", "applets-screenshooter", "Screenshot saved", "Pictures/Screenshots · copied, ready to paste", "low")):
+                subprocess.run(["notify-send", "-a", app, "-i", icon, "-u", urgency, "-t", "60000", head, body], env=env)
+            time.sleep(1)
         if a.click:                   # a real click: the hidden Sway has no mouse, fake-pointer.py is one
             x, y = a.click.split(",")
             procs.append(subprocess.Popen([sys.executable, str(HERE / "scripts/fake-pointer.py"), x, y, "--click",

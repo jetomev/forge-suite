@@ -34,7 +34,7 @@ BAR_PAIRS = {
 }
 # every place the templates put a text colour on a background
 ROLE_PAIRS = [("bar_bg", "bar_fg", 4.5), ("list_bg", "list_text", 4.5), ("list_selection", "list_selection_text", 4.5),
-              ("note_bg", "note_text", 4.5), ("panel_bg", "panel_text", 4.5), ("panel_bg", "panel_text_dim", 3),
+              ("panel_bg", "panel_text", 4.5), ("panel_bg", "panel_text_dim", 3),
               ("panel_tile", "panel_tile_text", 4.5), ("panel_tile_on", "panel_tile_on_text", 4.5),
               ("panel_selected", "panel_selected_text", 4.5), ("menu_background", "menubar_text", 4.5),
               ("menu_highlight", "menu_highlight_text", 4.5), ("menubar_background", "menubar_text", 4.5),

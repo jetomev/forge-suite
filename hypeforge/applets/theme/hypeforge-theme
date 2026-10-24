@@ -58,9 +58,6 @@ DEFAULT_ROLES = {
     "titlebar_bg": "surface.raised", "title_text": "text.primary", "title_text_dim": "text.muted",
     "list_bg": "surface.raised", "list_text": "text.primary", "list_prompt": "text.secondary",
     "list_match": "pop.text", "list_selection": "band.base", "list_selection_text": "band.on", "list_border": "border.subtle",
-    "note_bg": "surface.raised", "note_text": "text.primary", "note_border": "border.subtle",
-    "note_low_border": "surface.overlay", "note_low_text": "text.secondary", "note_critical": "status.danger",
-    "note_progress": "surface.overlay",
     "lock_bg": "surface.base", "lock_text": "text.primary", "lock_border": "border.subtle",
     "lock_focus": "accent.base", "lock_error": "status.danger",
     "gtk_accent": "accent.base", "gtk_accent_fg": "accent.on", "gtk_window_bg": "surface.base", "gtk_view_bg": "surface.base",
@@ -173,6 +170,75 @@ SHAPE_DEFAULTS = {"border_window": 2, "border_popup": 1, "radius_window": 0, "ra
                   "gap_inner": 10, "gap_outer": 0, "titlebar": False}
 
 
+# The pop-up standard (D-116, Javier, 2026-10-20): one font, frame and rounding for every pop-up and
+# notification on every style in KognogOS v1.0; only the colours follow the theme. The corners switch
+# squares it (straight); otherwise one rounding. The panel kit draws the same (panelkit.Look; a test
+# holds the two together). Widths: narrow 300 · medium 380 · wide 460.
+POPUP = {"font": "Noto Sans", "size": 10.5, "border": 1, "radius": 10, "narrow": 300, "medium": 380, "wide": 460,
+         "icon": 32}                                     # a notification's app icon
+
+
+def popup_value(style: dict, theme: dict, name: str, note_icons: str | None = None):
+    """`{{popup:…}}` in a template: the standard's numbers for this style (its corners switch)."""
+    if name == "radius":
+        return 0 if style.get("corners") == "straight" else POPUP["radius"]
+    if name == "font":
+        return f"{POPUP['font']} {POPUP['size']}"
+    if name == "icon_path":              # mako finds an app's icon only in the folders it is given
+        names = theme.get("names", {})
+        out = [note_icons] if note_icons else []           # the theme's icons in mako's order (note_icon_map)
+        for name_ in (names.get("icons"), "Adwaita", "hicolor"):
+            for base in ("~/.local/share/icons", "/usr/share/icons"):
+                d = Path(base).expanduser() / name_ if name_ else None
+                if d and d.is_dir() and str(d) not in out:
+                    out.append(str(d))
+        return ":".join(out) or "/usr/share/icons/hicolor"
+    if name in POPUP:
+        return POPUP[name]
+    raise LookError(f"the pop-up standard has no {name}")
+
+
+ICON_SIZE = re.compile(r"(\d+)(?:x\d+)?(?:@\d+x?)?|scalable")
+
+
+def note_icon_map(out: Path, icon_theme: str, bases=("~/.local/share/icons", "/usr/share/icons")) -> int:
+    """Notifications show an app's icon by name only from folders laid out size/kind/name with a NUMBER for
+    the size (48x48/apps/…): mako 1.11 skips "scalable" (icon.c, resolve_icon). Many icon themes are
+    kind/size/name and all drawings (candy-icons: apps/scalable/…), so mako showed no icon (2026-10-24).
+    A map of links in mako's order, a drawing folder named for the notification's icon size (an exact
+    match, drawn at that size); rebuilt at every apply. Returns the links made."""
+    new = out.with_name(out.name + ".new")
+    if new.exists():
+        shutil.rmtree(new)                               # links and folders only: rmtree never follows a link
+    made = 0
+    for base in bases:                                   # the person's copy first
+        root = Path(base).expanduser() / icon_theme
+        if not root.is_dir():
+            continue
+        for kind in sorted(k for k in root.iterdir() if k.is_dir()):
+            for size in sorted(d for d in kind.iterdir() if d.is_dir()):
+                m = ICON_SIZE.fullmatch(size.name)
+                if not m or ICON_SIZE.fullmatch(kind.name):       # already mako's order: it reads those itself
+                    continue
+                px = POPUP["icon"] if size.name == "scalable" else m.group(1)
+                at = new / f"{px}x{px}" / kind.name
+                if at.exists() or at.is_symlink():
+                    continue
+                at.parent.mkdir(parents=True, exist_ok=True)
+                at.symlink_to(size)
+                made += 1
+    new.mkdir(parents=True, exist_ok=True)
+    old = out.with_name(out.name + ".old")
+    if old.exists():
+        shutil.rmtree(old)
+    if out.exists():
+        out.rename(old)
+    new.rename(out)
+    if old.exists():
+        shutil.rmtree(old)
+    return made
+
+
 def shape_of(style: dict, name: str):
     shape = style.get("shape", {})
     v = shape.get(name, SHAPE_DEFAULTS.get(name))
@@ -242,8 +308,9 @@ def fx_value(style: dict, theme: dict, name: str) -> str:
             # bar_shadows: a bar flush against the windows casts its shadow ON their frame and dims
             # it (Javier's FX screenshot, 10-10); such styles say bar_shadows = false
             shadows = fx.get("bar_shadows", fx.get("shadows")) if ns == "waybar" else fx.get("shadows")
+            radius = popup_value(style, theme, "radius") if ns == "notifications" else r   # D-116: the standard's
             out.append(f'layer_effects "{ns}" {{\n    blur {onoff(fx.get("blur"))};\n    blur_ignore_transparent enable;\n'
-                       f'    shadows {onoff(shadows)};\n    corner_radius {r};\n}}')
+                       f'    shadows {onoff(shadows)};\n    corner_radius {radius};\n}}')
         return "\n".join(out)
     raise LookError(f"unknown SwayFX setting {name}")
 
@@ -330,6 +397,8 @@ def fill(template: str, ctx: dict) -> str:
             return str(ctx["meta"][key[5:]])
         if key.startswith("shape:"):
             return str(shape_of(style, key[6:]))
+        if key.startswith("popup:"):
+            return str(popup_value(style, theme, key[6:], ctx.get("note_icons")))
         if key.startswith("token:"):
             return token(theme, key[6:])
         if key.startswith("names:"):
@@ -573,6 +642,7 @@ class Place:
         self.cache = (self.root / ".cache-wallpapers") if root else cache / "hypeforge/wallpapers"
         data = Path(os.environ.get("XDG_DATA_HOME", "~/.local/share")).expanduser()
         self.gtk_themes = (self.root / ".gtk-themes") if root else data / "themes"
+        self.note_icons = (self.root / ".notification-icons") if root else data / "hypeforge/notification-icons"
 
     def read_state(self) -> dict:
         try:
@@ -731,7 +801,7 @@ def render(style_slug: str, theme_slug: str, place: Place, wallpaper: str | None
         raise LookError(f"a wallpaper lies {', '.join(FITS)} — not {fit}")
     pic = picture_for(mode, style_slug, theme_slug, place.cache, make=make_wallpaper)
     ctx = {"style": style, "theme": theme, "names": names_for(theme, check_names), "wallpaper": str(pic),
-           "wallpaper_line": wallpaper_line(mode, pic, fit, theme_slug, theme),
+           "wallpaper_line": wallpaper_line(mode, pic, fit, theme_slug, theme), "note_icons": str(place.note_icons),
            "meta": {"style": style["meta"]["name"], "theme": theme["meta"]["name"],
                     "when": dt.datetime.now().strftime("%Y-%m-%d %H:%M")}}
     css = fill((TEMPLATES / "gtk.css.tmpl").read_text(), ctx)
@@ -884,6 +954,7 @@ def apply(style_slug: str, theme_slug: str, place: Place, *, wallpaper: str | No
     saved = backup(place, targets)
     if gtk:
         write_gtk_theme(place, gtk["name"], gtk["files"])   # before settings.ini names it
+    note_icon_map(place.note_icons, names_for(themes()[theme_slug], False)["icons"])   # before mako reads its icon-path
     for p, body in files.items():                       # every file first, then reload: never half
         p.parent.mkdir(parents=True, exist_ok=True)
         tmp = p.with_name(p.name + ".hftmp")

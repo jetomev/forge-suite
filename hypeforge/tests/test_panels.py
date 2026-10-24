@@ -128,6 +128,15 @@ class Widths(unittest.TestCase):
                                     f"card={card}: the content is {label.get_allocated_width()} px in a {panelkit.NARROW} px pop-up")
             win.destroy()
 
+    def test_the_notifications_share_the_standard(self):
+        # the theme tool writes mako's settings from its POPUP; the panel kit draws the pop-ups: one standard
+        ht = panelkit.theme_tool()
+        L = panelkit.Look
+        self.assertEqual((ht.POPUP["font"], ht.POPUP["size"], ht.POPUP["border"], ht.POPUP["radius"]),
+                         (L.FONT, L.SIZE, L.BORDER, L.RADIUS))
+        self.assertEqual((ht.POPUP["narrow"], ht.POPUP["medium"], ht.POPUP["wide"]),
+                         (panelkit.NARROW, panelkit.MEDIUM, panelkit.WIDE))
+
     def test_the_panel_puts_it_on_the_outermost_piece(self):
         import inspect
         self.assertIn("width", inspect.signature(panelkit.Panel.__init__).parameters)
