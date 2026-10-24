@@ -43,7 +43,7 @@ Open a terminal, a Chrome window and an older app (Steam, or anything X11) on yo
 
 | # | What | How | Who | Result |
 |---|---|---|---|---|
-| — | **F-10 #126, found on C5's first try** | "says these screens overlap and doesn't change to 90%": the middle screen grew into its neighbour; fixed (the neighbours slide), tests  (4) and the bench now resize the leftmost screen (43 / 43, fails on the old code with his message) | Claude | ✅ fixed, C5 again |
+| — | **F-10 #126, found on C5's first try** | "says these screens overlap and doesn't change to 90%": the middle screen grew into its neighbour; fixed (the neighbours slide), tests `SizeMakesRoom` (4) and the bench now resize the leftmost screen (43 / 43, fails on the old code with his message) | Claude | ✅ fixed, C5 again |
 | C5 | 90 % on real apps | `python3 ~/Programs/forge-suite/displayforge/main.py` → 2 → your main screen → Size of things 90 → F9 → look: terminal and Chrome sharp, the older app slightly soft (what the note under the setting says) → Esc: back | Javier | |
 | C6 | 80 % on real apps | same with 80 → look → Esc: back | Javier | |
 | C7 | The bar and the pop-ups at 90 % | while at 90 % (F9, then Enter to keep it a moment): the bar, a pop-up from it, a notification look right → set 100 → F9 → Enter | Javier | |
