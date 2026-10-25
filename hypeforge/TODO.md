@@ -138,6 +138,12 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
     - [x] three widths only: narrow, medium, wide — **Javier, 2026-10-25: "All popups seem to be working well. I like it very much!"**
       - built 2026-10-24, live, waits for Javier's look: **300 · 380 · 460** (his pick), the card's visible width through `panelkit.Panel(width=…)`; measured exact on all seven; Temperature one column, scrolling (proven only with one sensor on the hidden screen — and it was wrong: F-84). Workspaces / switcher grow with their tiles. Seen: Clipboard sits 8 px from the edge, the others 10 → for "under what was clicked"
       - Javier's look, 2026-10-24: Night light, Temperature, Graphics, Processor, Printer "look terrible… the content has been shrunk, pushed to the left" → the width was on the card, the content didn't stretch: fixed (`panelkit.wrap()`, test `test_the_content_fills_the_width` fails on the old layout: 64 px in 300), `2a9e937`. Then Quick Settings: moving the volume moved the night light's number (both rows' labels named `value`) → `quick.slider()`; and the warmth slider leaves the full Quick Settings (`SLIDERS`, his call)
+    - [ ] **Quick Settings pages: Wi-Fi, Bluetooth, night light, sound (D-117, Javier 2026-10-25)** — a tile's detail opens inside the same card ("‹ Quick Settings" back); the same page opens alone from a bar icon
+      - [ ] mock the four pages + the Quick Settings card with arrows on its tiles → Javier approves
+      - [ ] the Wi-Fi page: networks nearby (strongest first), connect with a password box, Disconnect, the cable shown when plugged (NetworkManager, `nmcli`)
+      - [ ] the Bluetooth page: on/off, paired devices, Connect / Disconnect (BlueZ, `bluetoothctl`); "Pair a new device…" opens bluetoothForge (bluetui until it exists)
+      - [ ] the night light and sound pages inside Quick Settings (today their own pop-ups)
+      - [ ] bar icons optional: one setting for Wi-Fi, Bluetooth, sound, night light; each style's defaults
     - [ ] the notification cards on the standard
       - **F-85 #124** built 2026-10-24, live, waits for Javier's look: mako from the theme tool's `POPUP` on every style (was each style's own: KDE 8, Rice 14, Mac OS 9 square; 420 px): **wide 460** (380 wrapped to three lines), corners 10 / square by the switch, the pop-ups' colours (`note_*` retired), the title bold 1.1 ×, 8 px under the bar, 10 from the edge (measured; mako's `margin` counts outside too), **the app's icon** — never shown before: mako 1.11 skips `scalable` folders and candy-icons is all drawings → `note_icon_map` (links in mako's order, at every apply). Bench: `style-preview.py --notify` (new); sheet `logs/notify-cards-20261024/notify-before-after.png`. Tests `NotificationCards` (5) + the standard held equal (seen failing on the old code), 310; theme 30/30, switch 16/16, FX 7/7. Live by writing only mako's file + `makoctl reload` (a full re-apply restarts the bar and the tray)
     - [ ] the review, style by style (Mac OS 9 and macOS first), against the standard
@@ -197,8 +203,8 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
   - [x] **10-08 evening, Javier's run 2** (8 notes: Help / History not closing on their number, the open menu not lit, the letter rule, About and License in the content area; "bottom bar, awesome!"): all in forgekit (`d3e8e90`); Settings shows About / License on the right, the list stays (test 5); Help & Keys letters by the rule (Windows = I now), `acc` gone from `pages.toml`
   - [x] **Released 2026-10-08:** forgekit 0.10.0, displayForge 1.1.0, alacrittyForge 1.1.0, nogForge 1.4.0, grubForge 2.2.0, bitlaForge 1.1.0 (GitHub → Javier's run on the installed packages, "all perfect!" → AUR, forgekit first); the live `settings.toml` moved to `forge = true` + "Boot Menu" by `scripts/install-local-builds.sh`; #49–#53 closed. *(Was: Javier's run of all six apps inside Settings on the unreleased versions (each app's 20261008 matrix), then the releases: forgekit 0.10.0 first (AUR order), then displayForge 1.1.0, alacrittyForge 1.1.0, nogForge 1.4.0, grubForge 2.2.0, bitlaForge 1.1.0; then the live `~/.config/hypeforge/applets/settings.toml` gets `forge = true` + "Boot Menu")*
 - [ ] 7. Sound
-- [ ] 8. Network & Wi-Fi
-- [ ] 9. Bluetooth
+- [ ] 8. Network & Wi-Fi — **networkForge** (D-117: saved networks, forget, hidden networks, details; VPN, hotspot, fixed IP in 1.x)
+- [ ] 9. Bluetooth — **bluetoothForge** (D-117: pair a new device — search, pair, trust — and forget)
 - [ ] 10. Look (the Theme manager: wallpaper, themes, icons, pointer, fonts)
   - [ ] Launcher settings: sections, favourites, its look (KognogOS 1.x)
   - [ ] Lock screen look settings (KognogOS 1.x)

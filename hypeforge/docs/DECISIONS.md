@@ -5,6 +5,17 @@
 
 ---
 
+## 2026-10-25
+
+### D-117 · Quick Settings holds Wi-Fi, Bluetooth, sound and night light; their pages open inside it; networkForge and bluetoothForge (Javier)
+*"We need to work on the Wifi/Network tool. Right now just activates, but how do you pick the wifi, connect or disconnect either wifi or cable… shouldn't we have a basic version for 1.0? Same for bluetooth."* And on the night light: *"Maybe we can use the quick setting option instead to have less icons in the tray."* Claude proposed, Javier picked every option as proposed.
+- **Names:** **networkForge** (Network & Wi-Fi, cable included) and **bluetoothForge** — the two v1.0 Settings apps already on the KognogOS board (stage 06), named now.
+- **Two parts each.** The quick part lives in the pop-up: the Wi-Fi networks nearby, strongest first, click to connect (a password box when needed), Disconnect, the cable shown when plugged; Bluetooth on/off and the paired devices, Connect / Disconnect. The full app (a forgekit terminal app inside Settings) holds the rest: saved networks, forget, hidden networks, details; pairing a new device (search, pair, trust), forget. **v1.x:** VPN, hotspot, a fixed IP address.
+- **Order:** the pop-up parts now, in KognogOS stage 03 (they are the desktop); the two apps stay in stage 06 with the other Settings apps.
+- **Quick Settings always holds Wi-Fi, Bluetooth, sound and night light**; each **can also have its own bar icon**, through one setting; each style picks the defaults (the Rice shows its own icons today), the person can change them — fewer icons when wanted.
+- **A tile's detail opens inside the same card:** Quick Settings turns into that page, with "‹ Quick Settings" in its title row to go back (Esc too). One card, nothing stacked over it. The same page opens on its own from a bar icon, when the style or the person keeps one.
+- Built after the design is approved (mock first, D-116's standard: the title row, the widths, the tray menu's rows).
+
 ## 2026-10-20
 
 ### D-116 · One pop-up standard for KognogOS v1.0; the launcher, the bar and the tray are each theme's identity (Javier)
