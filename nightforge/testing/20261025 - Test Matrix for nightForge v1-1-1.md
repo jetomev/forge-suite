@@ -11,4 +11,4 @@
 | 2 | The tray icon is gone | after Claude restarts nightForge's tray: no ☀ / ☾ / ○ night-light icon in the tray | Javier | ✅ 2026-10-25 |
 | 3 | The night light from Quick Settings | Quick Settings → the Night light tile → its page: the switch, the sentence, the warmth, Warm now, Automatic; ‹ back | Javier | ✅ 2026-10-25 |
 | 4 | nightForge from the page | the icon at the page's bottom right opens nightForge (1.1.1 in its title) | Javier | ✅ 2026-10-25 |
-| 5 | Next login: no moon on the bar | log out and in: the bar has no moon; still no tray icon; the night light works as before | Javier | |
+| 5 | Next login: no moon on the bar | log out and in: the bar has no moon; still no tray icon; the night light works as before | Javier | ✅ 2026-10-25 |
