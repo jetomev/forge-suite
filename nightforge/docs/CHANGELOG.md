@@ -2,6 +2,12 @@
 
 *Newest first.*
 
+### 1.1.1 — October 25, 2026 · the tray icon steps aside on every hypeForge bar
+
+- **The tray icon hides on any hypeForge bar** ([#129](https://github.com/jetomev/forge-suite/issues/129)). hypeForge's night light now lives in Quick Settings on every style, and the moon left every bar (hypeForge D-117, Javier: *"remove the night light icon, outside the quick settings from all themes"*). The icon hid only where the moon was, so it would have come back everywhere; now it steps aside wherever the bar is hypeForge's, and still shows on any other bar.
+
+Tests: 26 → **27** (a hypeForge style bar and the Classic bar hide it, someone else's bar shows it — failing on 1.1.0's rule). Warnings: 0 → 0.
+
 ### 1.1.0 — October 11, 2026 · the tray icon steps aside where the bar has its own moon
 
 - **The tray icon steps aside** (D-7, [#82](https://github.com/jetomev/forge-suite/issues/82)). Javier, on hypeForge's Rice: *"now I have 2 night-light icons. Take the old one please, leave the one with the window and the slider."* When hypeForge's bar in use has its own night-light moon, the tray icon marks itself passive, which the bar's tray hides; on a style without the moon it's back. It watches the bar's file, so a style switch shows or hides it at once.

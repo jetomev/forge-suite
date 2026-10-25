@@ -28,11 +28,11 @@
 yay -S nightforge
 ```
 
-Then `nightforge`, the **Night light** page of hypeForge Settings, or the tray icon. At login hypeForge runs `nightforge start`.
+Then `nightforge`, the **Night light** page of hypeForge Settings, Quick Settings' Night light page (on hypeForge), or the tray icon (on other bars: on hypeForge's it steps aside, since the night light is in Quick Settings). At login hypeForge runs `nightforge start`.
 
 ## Status
 
-**1.1.0, October 11, 2026.** What changed: [docs/CHANGELOG.md](docs/CHANGELOG.md) · next: [docs/ROADMAP.md](docs/ROADMAP.md) · decisions: [docs/DECISIONS.md](docs/DECISIONS.md) · the design: [docs/design/](docs/design/) · tests: [testing/](testing/) · the list: [TODO.md](TODO.md).
+**1.1.1, October 25, 2026.** What changed: [docs/CHANGELOG.md](docs/CHANGELOG.md) · next: [docs/ROADMAP.md](docs/ROADMAP.md) · decisions: [docs/DECISIONS.md](docs/DECISIONS.md) · the design: [docs/design/](docs/design/) · tests: [testing/](testing/) · the list: [TODO.md](TODO.md).
 
 ## License & credits
 

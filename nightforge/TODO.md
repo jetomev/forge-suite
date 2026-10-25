@@ -2,6 +2,10 @@
 
 **Target: the Night light page of hypeForge Settings, KognogOS v1.0 (April 2027); started 2026-10-09 (D-1).** Section of the Forge Suite (D-60). Issue #44. Updated after every step.
 
+## 2026-10-25 · 1.1.1 — the tray icon steps aside on every hypeForge bar (#129, D-8)
+- [x] the rule: Passive where the bar shows the moon or is hypeForge's; test (fails on 1.1.0); 27 tests, 0 warnings
+- [ ] version everywhere · signed tag · GitHub Release · AUR recipe 1.1.1-1 · Javier's local test (the icon gone from the tray; Quick Settings' Night light page; the app from its icon) · AUR push
+
 ## 2026-10-11 · What it needs, measured
 - [x] **What it needs, measured** (2026-10-11, #91): `docs/PACKAGING.md` + `tests/test_needs.py`. The AUR 1.0.0 build **failed off Miami time** (F-1 #93, a test) → fixed; 1.1.0's new tray test read hypeForge's files → its own fixtures (`06ab889`); recipe + python-rich, glib2
 - [x] **1.1.0** (D-7 #82, F-1 #93) — rebuilt clean, GitHub Release 2026-10-11 (signed, Latest), AUR `9981628` after Javier's local test ✅

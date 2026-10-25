@@ -19,11 +19,11 @@ The night light has its own app, **nightForge**: Settings → **Night light**, t
   nothing is looked up online) or **fixed times** with a fade.
 - **F10** saves, with a review first; the night light restarts with it at once.
 
-**On the Rice**, a **moon** of its own sits on the bar, just right of the tray (Javier, 10-11):
-mustard while the screens are warm, quiet by day, red when switched off. A click opens the Night
-light page — the switch, what it's doing in words, the evening warmth, Warm now and Automatic, and
-nightForge as the icon at the bottom right. The same page opens from Quick Settings (click its tile). nightForge's
-tray icon is still there too, for now; a nightForge update will hide it where the bar has the moon.
+**In Quick Settings** (every style, since 2026-10-25): click the **Night light** tile and the card
+turns into the Night light page — the switch, what it's doing in words, the evening warmth, Warm now
+and Automatic, and nightForge as the icon at the bottom right; **‹** or Esc goes back. There is no
+night-light icon on the bar any more (Javier: *"remove the night light icon, outside the quick
+settings from all themes"*), and nightForge's own tray icon steps aside on hypeForge's bars.
 
 ## How it works
 

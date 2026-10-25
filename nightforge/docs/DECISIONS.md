@@ -2,6 +2,11 @@
 
 *Newest first. Each one says what was decided, by whom, and why.*
 
+## 2026-10-25
+
+### D-8 · On any hypeForge bar the tray icon steps aside: the night light is in Quick Settings (Javier)
+*"now we can remove the night light icon, outside the quick settings from all themes. Let's keep using the quick settings combo on all."* hypeForge D-117 took the moon off every style's bar; the night light lives in Quick Settings (its tile opens the Night light page, with nightForge at the bottom right). D-7 hid the icon only where the moon was, so it would have come back everywhere. Now it hides wherever the bar is hypeForge's (every bar file hypeforge-theme writes starts with `// hypeForge`) and still shows on any other bar. #129.
+
 ## 2026-10-11
 
 ### D-7 · The tray icon steps aside where the bar has its own moon (Javier)
