@@ -7,7 +7,7 @@
 
 ## Phase 0 · Design
 - [x] Born (D-1) and scoped to workspaces only (D-2), Javier, 2026-10-09
-- [x] Design page drawn with Javier's real values: Workspaces, Delete, Apps, Add an app, Sharing, Save; 8 questions with recommendations — `docs/design/v0.1.0-screens.html`, published https://claude.ai/artifact/9oLhy6kVfMhJSaoiadREwx (2026-10-09)
+- [x] Design page drawn with Javier's real values: Workspaces, Delete, Apps, Add an app, Sharing, Save; 8 questions with recommendations — `docs/design/v0.1.0-screens.html`, published https://github.com/jetomev/forge-suite/blob/main/workspaceforge/docs/design/v0.1.0-screens.html (2026-10-09)
 - [x] First review (Javier, 2026-10-09, D-3): workspaces dynamic; Apps = two tables with `>>` / `<<`; second draft published
 - [x] Second review (Javier, 2026-10-09, D-4): buttons on top; new and edit on the page, not pop-ups; ⚠ note after a rename; Apps "perfect"; Sharing = a switch per cell + Save; third draft published
 - [x] **Approved** (Javier, 2026-10-09: "approved!!!!"; D-5) — the third draft, the 11 questions answered by the recommendations (tracking issue #56)

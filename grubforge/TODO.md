@@ -57,7 +57,7 @@ Javier's findings running grubForge inside hypeForge Settings (8 Oct 2026):
 Javier's brief (2 Oct): *"screens done with high quality UI and easy to use structure … caring for formatting, use of colors, contrasts, and following flow of use from selecting, tabbing, buttons … leave as little to the user to write where options are known to select from … besides the help shortcuts, a manual on how to use it."*
 
 - [x] Research (2 Oct): inventory of every screen/setting today; forgekit's API and gaps; how well-regarded TUIs do settings, pickers, apply/preview, manuals
-- [x] Design approved (2 Oct): https://claude.ai/artifact/EM3avQE6fn4EXYHnz9674R · copy in `docs/design/v2.0.0-screens.html`. Javier's rulings:
+- [x] Design approved (2 Oct): https://github.com/jetomev/forge-suite/blob/main/grubforge/docs/design/v2.0.0-screens.html · copy in `docs/design/v2.0.0-screens.html`. Javier's rulings:
   1. Settings as a **form** with visible controls
   2. **Save** and **Rebuild** are two buttons; saved stays saved; the bar shows "saved, not rebuilt"
   3. **Plain names**, GRUB name in the help line

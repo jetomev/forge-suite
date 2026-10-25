@@ -11,7 +11,7 @@
 
 ## Phase 0 · Research and design
 - [x] Name: **sudoForge** (Javier, 2026-10-06; D-1)
-- [x] Design approved (D-2): https://claude.ai/artifact/J1CtQopNBRmQmJUTohwq9u — four screens (on the desktop, admin pop-up, sudo/nog, wrong password), three rounds of Javier's notes
+- [x] Design approved (D-2): https://github.com/jetomev/forge-suite/blob/main/hypeforge/docs/design/archive-artifacts/sudoforge-design — four screens (on the desktop, admin pop-up, sudo/nog, wrong password), three rounds of Javier's notes
 - [x] Research: `docs/research/2026-10-06-sudoforge.md` — **proven**: the sudo helper can read which command asks (its parent is sudo); one agent signed up for the session receives other programs' requests (kind, sentence, who asked); `/etc/sudo.conf` is a backup file of the sudo package
 - [x] Where sudo learns about it: `/etc/sudo.conf`, applied by sudoForge with a backup and an undo (D-3)
 - [x] nog / sudo in a terminal keep asking in the terminal (D-4)

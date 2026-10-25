@@ -13,7 +13,7 @@
 ## Phase 0 · Design
 - [x] Research: wlsunset 0.4.0 — options only at start (-t/-T warmth, -l/-L place, -S/-s fixed times, -d fade), SIGUSR1 cycles forced day → forced warm → automatic; no status, no settings file
 - [x] The sun worked out on the computer (`nightforge/sun.py`, NOAA formulas): Miami today 07:15 / 19:00, checked against June, London, Svalbard
-- [x] Design page: Night Light, Preview, Schedule, the bar's moon, Save; 10 questions — `docs/design/v0.1.0-screens.html`, published https://claude.ai/artifact/XuQYKnzCpXp7KPMCiAoa3G
+- [x] Design page: Night Light, Preview, Schedule, the bar's moon, Save; 10 questions — `docs/design/v0.1.0-screens.html`, published https://github.com/jetomev/forge-suite/blob/main/nightforge/docs/design/v0.1.0-screens.html
 - [x] First review (D-2): Preview and Save both pop-ups; second draft published
 - [x] **Approved** (D-3, "perfect"), with a tray icon (D-4)
 
