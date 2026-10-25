@@ -501,6 +501,34 @@ class ScreenWithoutAList(unittest.TestCase):
         self.run_app(steps)
 
 
+class KeepDialogAnswersOnce(unittest.TestCase):
+    """F-11 (Javier's local test of the 1.1.2 package, 2026-10-24): 90 % → F9 → Esc, and displayForge crashed with
+    InvalidStateError. The countdown's once-a-second clock ticked once more after the answer and answered again."""
+
+    def test_a_late_tick_after_the_answer_does_nothing(self):
+        from textual.app import App as TApp
+        from displayforge.app import KeepDialog
+        outcome = {}
+
+        class Host(TApp):
+            def on_mount(self):
+                self.dialog = KeepDialog("DP-3: 90 %", seconds=3)
+                self.push_screen(self.dialog, lambda r: outcome.setdefault("answers", []).append(r))
+
+        async def go():
+            app = Host()
+            async with app.run_test(size=(100, 34)) as pilot:
+                await pilot.pause(0.3)
+                await pilot.press("escape")
+                await pilot.pause(0.1)
+                app.dialog._tick()                       # the clock's late tick, after the answer
+                app.dialog._tick()
+                app.dialog._tick()                       # past 0: it would answer "go back" again
+                await pilot.pause(1.5)
+        asyncio.run(go())
+        self.assertEqual(outcome.get("answers"), [False], "one answer: Go Back, once")
+
+
 if __name__ == "__main__":
     unittest.main()
 

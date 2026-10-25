@@ -56,6 +56,7 @@ class KeepDialog(ForgeModal[bool]):
     def __init__(self, what: str, seconds: int = T.SECONDS) -> None:
         super().__init__()
         self._what, self._left = what, seconds
+        self._answered, self._clock = False, None
 
     def compose(self) -> ComposeResult:
         with Vertical(classes="forge-panel"):
@@ -68,7 +69,7 @@ class KeepDialog(ForgeModal[bool]):
     def on_mount(self) -> None:
         self._draw()
         self.query_one("#keep", Button).focus()
-        self.set_interval(1, self._tick)
+        self._clock = self.set_interval(1, self._tick)
 
     def _draw(self) -> None:
         self.query_one("#df-keep-body", Static).update(
@@ -76,21 +77,33 @@ class KeepDialog(ForgeModal[bool]):
             f"[$forge-muted]So a screen that went black fixes itself.[/]")
 
     def _tick(self) -> None:
+        if self._answered:          # a tick after the answer: the window is closing (F-11)
+            return
         self._left -= 1
         if self._left <= 0:
-            self.dismiss(False)
+            self._answer(False)
         else:
             self._draw()
 
+    def _answer(self, keep: bool) -> None:
+        """One answer, once: the clock stops with it. A tick could still come after Esc or Enter and
+        answer again — a crash (F-11, Javier's local test of 1.1.2, 2026-10-24)."""
+        if self._answered:
+            return
+        self._answered = True
+        if self._clock is not None:
+            self._clock.stop()
+        self.dismiss(keep)
+
     def on_button_pressed(self, e: Button.Pressed) -> None:
         e.stop()
-        self.dismiss(e.button.id == "keep")
+        self._answer(e.button.id == "keep")
 
     def action_keep(self) -> None:
-        self.dismiss(True)
+        self._answer(True)
 
     def action_back(self) -> None:
-        self.dismiss(False)
+        self._answer(False)
 
 
 
