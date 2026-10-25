@@ -2,6 +2,13 @@
 
 *Newest first.*
 
+## 1.1.4 — 2026-10-24 · keys pressed during the countdown wait for its answer
+
+- **F9 during the "Keep these settings?" countdown opened a second countdown, and the app froze** ([F-12 #128](https://github.com/jetomev/forge-suite/issues/128), found by Javier in his local test of the 1.1.3 package). F9 and F10 work on every page, even with a window open over the app; under the countdown F9 started a second try over the first, and nothing answered any more. Now F9 and F10 wait while a window is open (the key goes to the window), and Quit says *Answer the countdown first*. Your screens were never at risk: an unanswered try undoes itself.
+- **1.1.3 never went to the AUR** either: the AUR goes from 1.1.1 straight to 1.1.4.
+
+Tests: 73 → **75**. Warnings: 0 → 0.
+
 ## 1.1.3 — 2026-10-24 · the countdown window answers once
 
 - **Esc in the "Keep these settings?" countdown could crash displayForge** ([F-11 #127](https://github.com/jetomev/forge-suite/issues/127), found by Javier in his local test of the 1.1.2 package): the window's once-a-second clock kept running after the answer, and a late tick redrew a window already gone or answered a second time (`InvalidStateError`). Your screens were never affected — the change had already been undone. Now the window answers once and its clock stops with the answer.
