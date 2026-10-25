@@ -5,6 +5,8 @@ The notifications are the bell's own list (on screen now + mako's history, newes
 opening this panel counts as reading them, so the bell's "new" number clears, as its own list does.
 "Clear all" hides the ones shown here and dismisses any still on screen (mako keeps no way to
 empty its history, so the panel remembers what was cleared). Escape or a click outside closes.
+**Do Not Disturb** is a switch on the Notifications header (Javier, 2026-10-25: "move it to the
+Time/Date/Alerts combo. Doesn't make sense to have it in the QS popup"); the bell's right click too.
 """
 
 from __future__ import annotations
@@ -90,6 +92,27 @@ def plain(v) -> str:
     return "" if v in (None, "None") else str(v)
 
 
+def dnd_on() -> bool:
+    return "do-not-disturb" in subprocess.run(["makoctl", "mode"], capture_output=True, text=True).stdout.split()
+
+
+def dnd_switch() -> Gtk.Box:
+    """"Do Not Disturb" and its switch, through the bell applet (`hypeforge-notifications dnd`), so the bell
+    redraws too. Moved here from Quick Settings (Javier, 2026-10-25)."""
+    box = Gtk.Box(spacing=6)
+    words = Gtk.Label(label="Do Not Disturb")
+    words.get_style_context().add_class("hf-note-body")
+    sw = Gtk.Switch()
+    sw.set_valign(Gtk.Align.CENTER)
+    sw.set_active(dnd_on())
+    sw.connect("notify::active", lambda s, _p: subprocess.run([str(NOTIFY), "dnd"], capture_output=True)
+               if s.get_active() != dnd_on() else None)
+    box.pack_start(words, False, False, 0)
+    box.pack_start(sw, False, False, 0)
+    box.switch = sw
+    return box
+
+
 def build(look: panelkit.Look, args) -> panelkit.Panel:
     c = look.colour
     provider = Gtk.CssProvider()
@@ -108,12 +131,13 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
     root.get_style_context().add_class("hf-calendar")
 
-    head = Gtk.Box()
+    head = Gtk.Box(spacing=8)
     head.pack_start(Gtk.Label(label="Notifications", xalign=0), True, True, 0)
     if shown:
         clear = Gtk.Button(label="Clear all")
         clear.get_style_context().add_class("flat")
         head.pack_end(clear, False, False, 0)
+    head.pack_end(dnd_switch(), False, False, 0)
     root.pack_start(card(head, "hf-head"), False, False, 0)
 
     cards = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=3)

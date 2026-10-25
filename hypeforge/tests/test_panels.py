@@ -465,6 +465,37 @@ class BluetoothPage(unittest.TestCase):
         self.assertEqual(qspages.ONLY_PAGE["bluetooth"], "bluetooth")
 
 
+class PrinterInQuickSettings(unittest.TestCase):
+    """Javier, 2026-10-25: "The 'Do not Disturb' option in the Quick Settings, we should move it to the
+    Time/Date/Alerts combo… In the open space, let's move the Printer, so we can take out the solo printer icon"."""
+
+    def test_the_tile_says_what_the_printer_is_doing(self):
+        self.assertEqual(qspages.printer_words([], []), (False, "none set up"))
+        self.assertEqual(qspages.printer_words([("HP_M15w", "idle")], []), (False, "HP_M15w · idle"))
+        self.assertEqual(qspages.printer_words([("HP_M15w", "printing")], [("HP-7", "HP", "j", "100")]),
+                         (True, "1 job waiting"))
+        self.assertEqual(qspages.printer_words([("A", "idle"), ("B", "stopped")], []), (False, "B · stopped"))
+
+    def test_printer_took_do_not_disturbs_place(self):
+        import inspect
+        src = inspect.getsource(quick.build)
+        self.assertIn('("Printer"', src)
+        self.assertNotIn('("Do Not Disturb"', src, "Do Not Disturb lives on the calendar's header now")
+        self.assertEqual(quick.PAGES["Printer"], "printer")
+
+    def test_do_not_disturb_is_on_the_calendar(self):
+        import inspect
+        self.assertIn("dnd_switch()", inspect.getsource(hfcalendar.build))
+        self.assertIn('"dnd"', inspect.getsource(hfcalendar.dnd_switch), "through the bell, so the bell redraws")
+
+    def test_no_bar_places_the_printer(self):
+        import json, re
+        for cfg in sorted((HERE / "styles").glob("*/bar/config.jsonc")) + [HERE / "sway/waybar/config.jsonc"]:
+            text = "\n".join(l.split("//", 1)[0] for l in cfg.read_text().splitlines())
+            placed = [m for m in re.findall(r'"custom/printers"\s*([,\]\n])', text)]
+            self.assertEqual(placed, [], f"{cfg.parent.parent.name}: the printer is still on the bar")
+
+
 class ViewNames(unittest.TestCase):
     def test_no_view_module_shadows_the_standard_library(self):
         # views/ goes first on the import path: a view called calendar.py would replace Python's own
@@ -719,7 +750,7 @@ class CosmicPopups(unittest.TestCase):
         in his order, the graphics card, temperature, memory and disk; the disk piece took the USB icon's
         place ("the system disk work… shouldn't replace the mount/umount icon?")."""
         rice = self.rice()
-        right_to_left = ["custom/power-panel", "group/quick", "custom/printers", "custom/clipboard",
+        right_to_left = ["custom/power-panel", "group/quick", "custom/clipboard",   # the printer: Quick Settings (10-25)
                          "custom/cpu", "custom/gpu", "custom/temperature", "custom/memory", "custom/disk", "tray"]   # the moon left (D-117)
         self.assertEqual(rice["modules-right"], right_to_left[::-1])
 

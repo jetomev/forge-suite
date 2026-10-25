@@ -5,7 +5,7 @@
 // The date, time and bell are one piece in the centre; Bluetooth · network · sound one pill on the
 // right (a click: Quick Settings, which holds the night light too since D-117, 2026-10-25: the moon left
 // every bar) — the pieces every style shares, defined once in modules.jsonc (D-96; born here and on Windows 11).
-// The right side, right to left (Javier): power, the status pill, USB drives, printers,
+// The right side, right to left (Javier): power, the status pill, USB drives,
 // clipboard, processor, graphics card, temperature, memory, disk (2026-10-17; the disk piece took the USB
 // icon's job the same day: Eject and Mount are in its pop-up), then the programs' tray icons.
 // After the pills, the windows tucked away (D-82): an icon and how many, hidden when none; a click
@@ -39,7 +39,6 @@
     "custom/gpu",
     "custom/cpu",
     "custom/clipboard",
-    "custom/printers",
     "group/quick",
     "custom/power-panel"
   ]

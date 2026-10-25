@@ -37,13 +37,13 @@
   "modules-right": ["group/indicators"],
 
   // The right side, left to right (Javier, 2026-10-05): background apps,
-  // the clipboard, USB drives, printers, the status pill (Bluetooth · network · volume → Quick
+  // the clipboard, USB drives, the status pill (Bluetooth · network · volume → Quick
   // Settings) | the date, time and bell (→ the calendar with the alerts) | the power menu — one
   // shade. The pill and the date piece are the pieces every style shares (D-96,
   // 2026-10-13), defined once in modules.jsonc; the night light is in Quick Settings (D-117, 2026-10-25).
   "group/indicators": {
     "orientation": "inherit",
-    "modules": ["tray", "custom/disk", "custom/memory", "custom/temperature", "custom/gpu", "custom/cpu", "custom/clipboard", "custom/printers", "group/quick", "group/datetime", "custom/power"]
+    "modules": ["tray", "custom/disk", "custom/memory", "custom/temperature", "custom/gpu", "custom/cpu", "custom/clipboard", "group/quick", "group/datetime", "custom/power"]
   },
   // USB drives (applet 11): the count of USB drives mounted; click = Open · Eject · Mount.
   // udiskie mounts them (never internal drives; NTFS read-only) and redraws this on every event.
@@ -55,7 +55,8 @@
     "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel system --part disk {popup}",
     "on-click-right": "~/Programs/forge-suite/hypeforge/applets/drives/hypeforge-drives menu"
   },
-  // The printer (applet 12, Javier 2026-10-07): grey idle, lit while printing with the job count,
+  // The printer (applet 12, Javier 2026-10-07; off every bar since 2026-10-25, it's in Quick Settings — the piece
+  // stays defined): grey idle, lit while printing with the job count,
   // red when stopped. Click = the jobs (cancel one), right click = Print Settings.
   "custom/printers": {
     "exec": "~/Programs/forge-suite/hypeforge/applets/printers/hypeforge-printers bar",

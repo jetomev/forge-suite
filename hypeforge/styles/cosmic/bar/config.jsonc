@@ -33,7 +33,6 @@
       "custom/gpu",
       "custom/cpu",
       "custom/clipboard",
-      "custom/printers",
       "group/quick",
       "custom/power-panel"
     ],

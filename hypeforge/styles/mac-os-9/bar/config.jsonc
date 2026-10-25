@@ -1,7 +1,7 @@
 // hypeForge style · Mac OS 9 (D-72) — the menu bar. Left: the emblem menu (the Apple menu's place:
 // About, your groups as submenus, All Apps, Settings) · the app in use in bold · Workspaces ·
 // Favorites · Window · Special (lock, log out, restart, shut down) · Help. Right: the tray (Mac OS 9
-// had none; the apps that run in the background need a home), clipboard, USB drives, printers,
+// had none; the apps that run in the background need a home), clipboard, USB drives (the printer is in Quick Settings since 2026-10-25),
 // the status pill and the date-and-bell piece every style shares (D-96; the night light is in the pill's Quick Settings since
 // D-117, 2026-10-25), the Application menu (the
 // app's icon; a click lists the open apps). No Control Strip (D-85): its buttons are on this bar.
@@ -35,7 +35,6 @@
     "custom/gpu",
     "custom/cpu",
     "custom/clipboard",
-    "custom/printers",
     "group/quick",
     "group/datetime",
     "custom/menu-appicon"

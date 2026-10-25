@@ -9,7 +9,7 @@
 | **Volume** | the level, red when muted | **Quick Settings** | **wiremix**, the mixer |
 
 **Quick Settings** (on macOS it's called Control Center): tiles for Wi-Fi, Bluetooth, the night light,
-Do Not Disturb, Screens and VPN, the volume slider, the update count, a button into
+the Printer (since 2026-10-25), Screens and VPN, the volume slider, the update count, a button into
 **hypeForge Settings**, and the power buttons; the big buttons open the Forge apps (Screens →
 displayForge, updates → nogForge). A click anywhere else closes it.
 
@@ -37,7 +37,8 @@ start of the volume row mutes.
 The bar's network icon opens the Wi-Fi page on its own, the Bluetooth icon its page, and the speaker
 the Sound page. Your password is never put on a command line (where any program could read it): it
 goes to NetworkManager through a private file that is deleted right after. The **date, time and bell** are one piece too: a click opens the calendar with your
-alerts as cards; a right click on the bell switches Do Not Disturb.
+alerts as cards, and the **Do Not Disturb** switch on its Notifications header (it moved there from
+Quick Settings, 2026-10-25); a right click on the bell switches it too.
 
 **Scroll** over the volume icon for louder / quieter; the volume keys on the keyboard work too.
 Hover over any of them for details. The terminal apps open in a small floating window. Close

@@ -1,7 +1,7 @@
 // hypeForge style · modern macOS, tiled (D-74) — two bars in the one Waybar (D-86):
 //  1. the menu bar, 26 px, on every screen. Left: the emblem menu (MA-4: Mac OS 9's, with Special's
 //     Lock · Log Out · Restart · Shut Down at its foot, like the Apple menu) · the app in use in bold ·
-//     Workspaces · Favorites · Window · Help. Right: the tray, clipboard, USB drives, printers, the
+//     Workspaces · Favorites · Window · Help. Right: the tray, clipboard, USB drives, the
 //     status icons in one soft pill (Bluetooth · network · sound → Control Center, MA-3), the date and
 //     time (→ the calendar with your notifications), the bell. No Spotlight button: Win + Space is
 //     Spotlight (MA-2).
@@ -39,7 +39,6 @@
       "custom/gpu",
       "custom/cpu",
       "custom/clipboard",
-      "custom/printers",
       "group/quick",
       "group/datetime"
     ],

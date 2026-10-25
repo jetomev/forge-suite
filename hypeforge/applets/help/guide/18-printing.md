@@ -4,12 +4,14 @@
 service (CUPS) runs in the background, and the printers it knows are offered by every app's
 Print dialog.
 
-## The printer on the bar
+## The printer in Quick Settings
 
-The printer icon sits with the indicators at the right. **Grey** means idle; **lit, with a
-number**, means something is printing or waiting (the number is the count of jobs); **red**
-means a printer is stopped. **Click** it for the list of waiting jobs (pick one to cancel it),
-**right click** opens Print Settings.
+Since 2026-10-25 the printer lives in **Quick Settings** (Javier: *"move the Printer, so we can take
+out the solo printer icon"*), not as its own icon on the bar. Its tile says what it's doing
+(*HP_M15w · idle*, or how many jobs are waiting; lit while something prints). **Click** the tile and
+the card turns into the **Printer** page: your printers and their state, the jobs waiting to print
+(each with **Cancel**), and **Print Settings** as the icon at the bottom right. **‹** or Esc goes
+back.
 
 ## Setting up a printer
 

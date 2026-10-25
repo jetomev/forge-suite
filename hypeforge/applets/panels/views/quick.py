@@ -6,7 +6,8 @@ this panel never disagree:
   Wi-Fi           NetworkManager (`nmcli radio wifi on|off`); the network's name, or "off"
   Bluetooth       `bluetoothctl power on|off`; the connected device's name
   Night light     nightForge (Warm Now / Daylight Now; "Automatic" puts the schedule back)
-  Do Not Disturb  the bell applet (`hypeforge-notifications dnd`), so the bell redraws too
+  Printer         the printers and their jobs (the printer applet; Javier, 2026-10-25: it took Do Not
+                  Disturb's place, which moved to the calendar's Notifications header)
   Screens         opens displayForge
   VPN             Private Internet Access (`piactl connect|disconnect`), when it is installed
 Sliders: the volume (WirePlumber, `wpctl`), the night warmth (nightForge's own settings). The
@@ -110,7 +111,12 @@ class Backend:
     def bluetooth_toggle(self, on):
         self.run(["bluetoothctl", "power", "off" if on else "on"])
 
-    # Do Not Disturb
+    # Printer (the printer applet's own readings of CUPS)
+    def printer(self):
+        app = qspages.printer_applet()
+        return qspages.printer_words(app.printers(), app.jobs()) if app else (False, "—")
+
+    # Do Not Disturb (on the calendar's Notifications header since 2026-10-25)
     def dnd(self):
         modes = self.run(["makoctl", "mode"]).split()
         return ("do-not-disturb" in modes), ("on" if "do-not-disturb" in modes else "off")
@@ -350,6 +356,8 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
             return qspages.wifi_page(be.run, go_back, close, refresh_later)
         if name == "bluetooth":
             return qspages.bluetooth_page(be.run, go_back, close, refresh_later)
+        if name == "printer":
+            return qspages.printer_page(go_back, close)
         return qspages.sound_page(be, go_back, close)
 
     def open_page(name):
@@ -397,7 +405,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
                   ("Bluetooth", lambda: ("bluetooth", *be.bluetooth(), be.bluetooth_toggle))]
         if night.ok:
             makers.append(("Night light", lambda: ("weather-clear-night", *night.state()[:2], night.toggle)))
-        makers.append(("Do Not Disturb", lambda: ("notifications-disabled", *be.dnd(), be.dnd_toggle)))
+        makers.append(("Printer", lambda: ("printer", *be.printer(), True)))
         makers.append(("Screens", lambda: ("video-display", False, be.screens()[1], None)))
         if be.vpn_available():
             makers.append(("VPN", lambda: ("network-vpn", *be.vpn(), be.vpn_toggle)))
@@ -455,7 +463,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     return finish(stack, look, args, escape=back)
 
 
-PAGES = {"Night light": "night", "Wi-Fi": "wifi", "Bluetooth": "bluetooth"}   # tiles that open a page (D-117)
+PAGES = {"Night light": "night", "Wi-Fi": "wifi", "Bluetooth": "bluetooth", "Printer": "printer"}   # tiles that open a page (D-117)
 
 
 panel = None

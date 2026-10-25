@@ -2,7 +2,7 @@
 // on the LEFT (Javier, W-1): Start (the KDE-style panel; its search is inside it — the bar's Search pill went: Javier, "if it is just a meme that opens
 // the launcher, it is not worth it") · the workspace on screen (a click
 // opens the workspaces strip) · the pinned + running apps (the Taskbar applet). Right: the hidden
-// icons behind a chevron (tray, clipboard, USB, printers), the Quick Settings
+// icons behind a chevron (tray, clipboard, USB), the Quick Settings
 // pill (volume · network · Bluetooth: a click opens the panel — now every style's, D-96), the clock on
 // two lines with the bell (a click: the calendar with the alerts). Pieces from modules.jsonc; colours from colors.css.
 {
@@ -49,8 +49,7 @@
     "modules": [
       "custom/chevron",
       "tray",
-      "custom/clipboard",
-      "custom/printers"
+      "custom/clipboard"
     ],
     "drawer": {
       "transition-duration": 250,

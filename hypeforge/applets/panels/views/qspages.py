@@ -12,12 +12,15 @@ opens its full app (Javier: "a button/icon bottom right side of the popup").
                 opens under a new secured one), the connected one has Disconnect (NetworkManager, nmcli)
   Bluetooth     on/off; your devices, the connected ones first, Connect / Disconnect, the battery when the
                 device tells it; "Pair a new device…" opens the full app (BlueZ, bluetoothctl)
+  Printer       your printers and what they're doing, the jobs waiting with Cancel; Print Settings at the foot
+                (CUPS, through the printer applet: Javier, 2026-10-25, "move the Printer" into Quick Settings)
 """
 
 from __future__ import annotations
 
 import os
 import re
+import subprocess
 import tempfile
 import threading
 from pathlib import Path
@@ -671,5 +674,86 @@ def bluetooth_page(run, back, close, refresh) -> Gtk.Box:
     timer = GLib.timeout_add(3000, look)          # a device connecting by itself shows up without reopening
     page.connect("destroy", lambda *_: GLib.source_remove(timer))
     page.pack_start(foot("bluetoothForge (bluetui until it exists)", lambda: (close(), panelkit.run_command(BLUETUI))),
+                    False, False, 0)
+    return page
+
+
+# ---- Printer (CUPS, through the printer applet) -------------------------------------------------
+
+PRINT_SETTINGS = "system-config-printer"
+
+
+def printer_applet():
+    """The printer applet (applets/printers/): its CUPS readings — one place for how printers are asked about."""
+    import importlib.machinery
+    import importlib.util
+    path = panelkit.APPLETS / "printers/hypeforge-printers"
+    try:
+        loader = importlib.machinery.SourceFileLoader("hypeforge_printers", str(path))
+        spec = importlib.util.spec_from_loader("hypeforge_printers", loader)
+        mod = importlib.util.module_from_spec(spec)
+        loader.exec_module(mod)
+        return mod
+    except Exception:
+        return None
+
+
+def printer_words(printers: list, jobs: list) -> tuple[bool, str]:
+    """The tile: lit while something prints or waits; what it says."""
+    if not printers:
+        return False, "none set up"
+    if jobs:
+        return True, f"{len(jobs)} job{'s' if len(jobs) != 1 else ''} waiting"
+    stopped = [n for n, st in printers if st == "stopped"]
+    if stopped:
+        return False, f"{stopped[0]} · stopped"
+    name, state = printers[0]
+    return any(st == "printing" for _, st in printers), f"{name} · {state}" if len(printers) == 1 else f"{len(printers)} printers"
+
+
+def printer_page(back, close, applet=None) -> Gtk.Box:
+    app = applet or printer_applet()
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+    body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    page.pack_start(head("Printer", back), False, False, 0)
+    page.pack_start(body, False, False, 0)
+    state = {"shown": None, "note": ""}
+
+    def cancel(jid):
+        r = subprocess.run(["cancel", jid], capture_output=True, text=True) if app else None
+        state["note"] = "" if r is None or r.returncode == 0 else f"Couldn't cancel {jid}."
+        look()
+
+    def look():
+        ps, js = (app.printers(), app.jobs()) if app else ([], [])
+        pic = (tuple(ps), tuple(js), state["note"])
+        if pic == state["shown"]:
+            return True
+        state["shown"] = pic
+        for child in body.get_children():
+            body.remove(child)
+        if not ps:
+            body.pack_start(status("No printer set up yet: Print Settings adds one."), False, False, 0)
+        else:
+            body.pack_start(section("Printers"), False, False, 0)
+            body.pack_start(rows([{"icon": "printer-symbolic", "name": n, "sub": st.capitalize(),
+                                   "on": st == "printing"} for n, st in ps]), False, False, 0)
+            body.pack_start(section("Waiting to print"), False, False, 0)
+            if js:
+                body.pack_start(rows([{"icon": "document-print-symbolic", "name": jid,
+                                       "sub": f"{user} · {size} bytes" if size else user,
+                                       "button": ("Cancel", lambda jid=jid: cancel(jid))} for jid, _p, user, size in js]),
+                                False, False, 0)
+            else:
+                body.pack_start(status("Nothing waiting to print."), False, False, 0)
+        if state["note"]:
+            body.pack_start(status(state["note"]), False, False, 0)
+        body.show_all()
+        return True
+
+    look()
+    timer = GLib.timeout_add(3000, look)          # a job finishing disappears by itself
+    page.connect("destroy", lambda *_: GLib.source_remove(timer))
+    page.pack_start(foot("Print Settings (printerForge one day)", lambda: (close(), panelkit.run_command(PRINT_SETTINGS))),
                     False, False, 0)
     return page
