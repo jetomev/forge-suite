@@ -14,7 +14,7 @@
 - **Order:** the pop-up parts now, in KognogOS stage 03 (they are the desktop); the two apps stay in stage 06 with the other Settings apps.
 - **Quick Settings always holds Wi-Fi, Bluetooth, sound and night light**; each **can also have its own bar icon**, through one setting; each style picks the defaults (the Rice shows its own icons today), the person can change them — fewer icons when wanted.
 - **A tile's detail opens inside the same card:** Quick Settings turns into that page, with "‹ Quick Settings" in its title row to go back (Esc too). One card, nothing stacked over it. The same page opens on its own from a bar icon, when the style or the person keeps one.
-- Built after the design is approved (mock first, D-116's standard: the title row, the widths, the tray menu's rows).
+- Built after the design is approved (mock first, D-116's standard: the title row, the widths, the tray menu's rows). **Approved 2026-10-25** (Javier: *"yes, they look great!"*): a › on the Wi-Fi, Bluetooth and Night light tiles and on the volume row; each page a "‹" back, an on/off switch in its title row where it has one, its rows (the cable and the networks strongest first, a password box opening under the one clicked; your devices with Connect / Disconnect; the warmth, Warm now, Automatic; outputs and inputs), and its full app at the foot. Every page the wide card (460), the same alone from a bar icon.
 
 ## 2026-10-20
 
