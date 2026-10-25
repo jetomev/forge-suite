@@ -25,8 +25,11 @@ start of the volume row mutes.
 - **Wi-Fi** — the switch in the title row; your **cable** (connected or unplugged); the **networks
   nearby**, strongest first. Click one to connect: a saved or open network connects at once, a new
   secured one opens a **password box** under it (Connect, Cancel). The connected one has
-  **Disconnect**. A wrong password says so, and the next try asks again. The icon at the bottom right
-  opens the full network settings (nmtui, until networkForge).
+  **Disconnect**. A wrong password says so, and the next try asks again. The list keeps itself
+  current (switched on, it says *Starting Wi-Fi…* and fills in by itself); the **refresh** button
+  next to the switch looks again at once. Up to 8 named networks, strongest first; **Hidden
+  network…** joins one that doesn't show its name (you type the name and password). The icon at the
+  bottom right opens the full network settings (nmtui, until networkForge).
 The bar's network icon opens the Wi-Fi page on its own, and the speaker the Sound page. The Bluetooth
 page comes next. Your password is never put on a command line (where any program could read it): it
 goes to NetworkManager through a private file that is deleted right after. The **date, time and bell** are one piece too: a click opens the calendar with your

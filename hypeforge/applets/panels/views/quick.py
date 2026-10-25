@@ -336,6 +336,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         old = stack.get_visible_child()
         stack.set_visible_child_name("main")
         stack.remove(old)
+        old.destroy()                          # its timers stop with it (the Wi-Fi page looks every 2 s)
         refresh_later()
         GLib.idle_add(lambda: (shrink(), False)[1])
         return True

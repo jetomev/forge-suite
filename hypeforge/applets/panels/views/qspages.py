@@ -50,8 +50,9 @@ def css(look: panelkit.Look) -> bytes:
 
 # ---- the pieces every page is made of -----------------------------------------------------------
 
-def head(title: str, back=None, switch: bool | None = None, switched=None) -> Gtk.Box:
-    """The one title row: "‹" when `back` is given (it is called on a click), the name, an on/off switch."""
+def head(title: str, back=None, switch: bool | None = None, switched=None, extra=()) -> Gtk.Box:
+    """The one title row: "‹" when `back` is given (it is called on a click), the name, an on/off switch,
+    and `extra` buttons left of the switch (Wi-Fi's refresh)."""
     top = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     row = Gtk.Box(spacing=4)
     row.get_style_context().add_class("hf-head")
@@ -72,6 +73,8 @@ def head(title: str, back=None, switch: bool | None = None, switched=None) -> Gt
         if switched:
             sw.connect("notify::active", lambda s, _p: switched(s.get_active()))
         row.pack_end(sw, False, False, 0)
+    for w in extra:
+        row.pack_end(w, False, False, 0)
     top.pack_start(row, False, False, 0)
     top.pack_start(panelkit.head_line(), False, False, 0)
     return top
@@ -319,18 +322,27 @@ class Wifi:
         return {nm_fields(l)[0] for l in self.run(["nmcli", "-t", "-f", "NAME,TYPE", "connection", "show"]).splitlines()
                 if nm_fields(l)[-1] == "802-11-wireless"}
 
-    def connect(self, ssid: str, security: str, password: str | None = None) -> bool:
+    def connect(self, ssid: str, security: str, password: str | None = None, hidden: bool = False) -> bool:
         """A saved network, or an open one: straight up. A new secured one: a profile, then up with the
         password in a private file (never on a command line, where any program could read it); a wrong
         password takes the new profile away again, so the next try asks again."""
         if ssid in self.saved():
             return self._ok(self.run(["nmcli", "connection", "up", "id", ssid], timeout=45))
-        if not security:
+        if not security and not hidden:
             return self._ok(self.run(["nmcli", "dev", "wifi", "connect", ssid], timeout=45))
         key = "sae" if "WPA3" in security and "WPA2" not in security else "wpa-psk"
-        if not self._ok(self.run(["nmcli", "connection", "add", "type", "wifi", "con-name", ssid, "ssid", ssid,
-                                  "wifi-sec.key-mgmt", key])):
+        add = ["nmcli", "connection", "add", "type", "wifi", "con-name", ssid, "ssid", ssid]
+        if hidden:                                  # a network that doesn't say its name: asked for by name
+            add += ["802-11-wireless.hidden", "yes"]
+        if password or not hidden:
+            add += ["wifi-sec.key-mgmt", key]
+        if not self._ok(self.run(add)):
             return False
+        if hidden and not password:                 # an open hidden network: no password to hand over
+            ok = self._ok(self.run(["nmcli", "connection", "up", "id", ssid], timeout=45))
+            if not ok:
+                self.run(["nmcli", "connection", "delete", "id", ssid])
+            return ok
         fd, path = tempfile.mkstemp(prefix="hf-wifi-", dir=os.environ.get("XDG_RUNTIME_DIR") or None)
         try:
             with os.fdopen(fd, "w") as f:                     # mkstemp: only this person can read it
@@ -350,42 +362,75 @@ class Wifi:
         return "success" in out.lower() or "activated" in out.lower()
 
 
+SHOWN = 8            # named networks listed, strongest first (a coffee shop shouldn't be a mile long)
+LOOK_EVERY_MS = 2000  # re-read what NetworkManager knows (cheap: no scan)
+SCAN_EVERY_S = 15     # ask for a fresh scan (Javier, 2026-10-25: switched on, it "said no connections", and
+                      # only showed it connected after closing and opening it again — it looked once, too early)
+
+
+def picture(state: dict) -> tuple:
+    """What the page shows, in a form that compares: rebuilt only when it changes (no flicker every 2 s)."""
+    return (state["on"], tuple((c["name"], c["sub"]) for c in state["cables"]),
+            tuple((n["ssid"], n["now"], bool(n["security"]), n["signal"] // 25) for n in state["nets"]), state["note"])
+
+
 def wifi_page(run, back, close, refresh) -> Gtk.Box:
     wifi = Wifi(run)
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
     body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    on = wifi.on()
+    state = {"on": wifi.on(), "cables": [], "nets": [], "note": "", "shown": None, "busy": False, "starting": False}
 
     def later(fn, then):
         """fn in the background (connecting takes seconds), then `then(result)` back in the pop-up."""
         threading.Thread(target=lambda: GLib.idle_add(lambda r=fn(): (then(r), False)[1]), daemon=True).start()
 
     def switched(want):
-        later(lambda: wifi.switch(want), lambda _r: (refresh(), GLib.timeout_add(1500, lambda: (fill(), False)[1])))
+        state["starting"] = bool(want)
+        state["note"] = "Starting Wi-Fi…" if want else ""
+        later(lambda: wifi.switch(want), lambda _r: (refresh(), look(), later(wifi.rescan, lambda _r: look()) if want else None))
 
-    page.pack_start(head("Wi-Fi", back, on if on is not None else None, switched), False, False, 0)
+    again = Gtk.Button.new_from_icon_name("view-refresh-symbolic", Gtk.IconSize.BUTTON)
+    again.get_style_context().add_class("flat")
+    again.set_tooltip_text("Look for networks again")
+    again.connect("clicked", lambda _b: (state.update(note="Looking for networks…"), draw(force=True),
+                                         later(wifi.rescan, lambda _r: (state.update(note=""), look()))))
+    page.pack_start(head("Wi-Fi", back, state["on"] if state["on"] is not None else None, switched,
+                         extra=[again] if state["on"] is not None else []), False, False, 0)
     page.pack_start(body, False, False, 0)
-    note = {"text": ""}
 
-    def fill(looking=False):
+    def look():
+        """Read NetworkManager again; redraw only what changed, never while a password box is open."""
+        state["on"], state["cables"] = wifi.on(), wifi.cables()
+        state["nets"] = wifi.networks() if state["on"] else []
+        if state["starting"] and (state["nets"] or not state["on"]):
+            state["starting"] = False
+            if state["note"] == "Starting Wi-Fi…":
+                state["note"] = ""
+        if not state["busy"]:
+            draw()
+        return True                                  # the timer keeps going
+
+    def draw(force=False):
+        pic = picture(state)
+        if pic == state["shown"] and not force:
+            return
+        state["shown"] = pic
         for child in body.get_children():
             body.remove(child)
-        cables = wifi.cables()
-        if cables:
+        if state["cables"]:
             body.pack_start(section("Cable"), False, False, 0)
             body.pack_start(rows([{"icon": "network-wired-symbolic", "name": c["name"], "sub": c["sub"], "on": c["now"]}
-                                  for c in cables]), False, False, 0)
+                                  for c in state["cables"]]), False, False, 0)
         body.pack_start(section("Wi-Fi networks"), False, False, 0)
-        if wifi.on() is False:
+        if state["on"] is False:
             body.pack_start(status("Wi-Fi is off."), False, False, 0)
         else:
-            nets = wifi.networks()
-            if not nets:
-                body.pack_start(status("Looking for networks…" if looking else "No networks found."), False, False, 0)
-            else:
-                body.pack_start(network_rows(nets), False, False, 0)
-        if note["text"]:
-            body.pack_start(status(note["text"]), False, False, 0)
+            if state["nets"]:
+                body.pack_start(network_rows(state["nets"][:SHOWN]), False, False, 0)
+            elif not state["note"]:
+                body.pack_start(status("No networks found."), False, False, 0)
+        if state["note"]:
+            body.pack_start(status(state["note"]), False, False, 0)
         body.show_all()
 
     def network_rows(nets) -> Gtk.ListBox:
@@ -393,25 +438,31 @@ def wifi_page(run, back, close, refresh) -> Gtk.Box:
         lb.get_style_context().add_class("hf-page-rows")
         lb.set_selection_mode(Gtk.SelectionMode.NONE)
         lb.set_activate_on_single_click(True)
-        for n in nets:
+        for n in nets + [{"ssid": "", "hidden": True}]:
             r = Gtk.ListBoxRow()
             r.net = n
             v = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
             line = Gtk.Box(spacing=10)
-            line.pack_start(Gtk.Image.new_from_icon_name(signal_icon(n["signal"]), Gtk.IconSize.LARGE_TOOLBAR), False, False, 0)
             words = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
             words.set_valign(Gtk.Align.CENTER)
-            words.pack_start(Gtk.Label(label=n["ssid"], xalign=0, ellipsize=Pango.EllipsizeMode.END, max_width_chars=30), False, False, 0)
-            secured = "secured" if n["security"] else "open · not secured"
-            sub = Gtk.Label(label=f"Connected · {secured}" if n["now"] else secured.capitalize(), xalign=0)
-            sub.get_style_context().add_class("hf-row-on" if n["now"] else "hf-row-sub")
+            if n.get("hidden"):
+                line.pack_start(Gtk.Image.new_from_icon_name("network-wireless-symbolic", Gtk.IconSize.LARGE_TOOLBAR), False, False, 0)
+                words.pack_start(Gtk.Label(label="Hidden network…", xalign=0), False, False, 0)
+                sub = Gtk.Label(label="one that doesn't show its name", xalign=0)
+                sub.get_style_context().add_class("hf-row-sub")
+            else:
+                line.pack_start(Gtk.Image.new_from_icon_name(signal_icon(n["signal"]), Gtk.IconSize.LARGE_TOOLBAR), False, False, 0)
+                words.pack_start(Gtk.Label(label=n["ssid"], xalign=0, ellipsize=Pango.EllipsizeMode.END, max_width_chars=30), False, False, 0)
+                secured = "secured" if n["security"] else "open · not secured"
+                sub = Gtk.Label(label=f"Connected · {secured}" if n["now"] else secured.capitalize(), xalign=0)
+                sub.get_style_context().add_class("hf-row-on" if n["now"] else "hf-row-sub")
             words.pack_start(sub, False, False, 0)
             line.pack_start(words, True, True, 0)
-            if n["now"]:
+            if n.get("now"):
                 b = Gtk.Button(label="Disconnect")
                 b.set_valign(Gtk.Align.CENTER)
-                b.connect("clicked", lambda _b, s=n["ssid"]: (note.update(text=""), later(lambda: wifi.disconnect(s),
-                                                                                             lambda _r: (fill(), refresh()))))
+                b.connect("clicked", lambda _b, s=n["ssid"]: (state.update(note=""), later(lambda: wifi.disconnect(s),
+                                                                                              lambda _r: (look(), refresh()))))
                 line.pack_end(b, False, False, 0)
             v.pack_start(line, False, False, 0)
             r.add(v)
@@ -422,20 +473,27 @@ def wifi_page(run, back, close, refresh) -> Gtk.Box:
 
     def picked(r):
         n = r.net
-        if n["now"] or getattr(r, "asking", False):
+        if n.get("now") or getattr(r, "asking", False):
             return
-        if n["security"] and n["ssid"] not in wifi.saved():
+        if n.get("hidden"):
+            ask(r, name=True)
+        elif n["security"] and n["ssid"] not in wifi.saved():
             ask(r)
         else:
-            go(r, None)
+            go(r, n["ssid"], n["security"], None)
 
-    def ask(r):
-        """A password box under the network clicked, with Connect and Cancel."""
-        r.asking = True
+    def ask(r, name=False):
+        """A password box (and a name box for a hidden network) under the row clicked, Connect and Cancel."""
+        r.asking = state["busy"] = True
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        named = Gtk.Entry()
+        named.set_placeholder_text("Network name")
+        if name:
+            box.pack_start(named, False, False, 0)
         line = Gtk.Box(spacing=8)
         entry = Gtk.Entry()
         entry.set_visibility(False)
-        entry.set_placeholder_text("Password")
+        entry.set_placeholder_text("Password" + (" (none for an open one)" if name else ""))
         connect = Gtk.Button(label="Connect")
         connect.get_style_context().add_class("on")
         cancel = Gtk.Button(label="Cancel")
@@ -443,28 +501,39 @@ def wifi_page(run, back, close, refresh) -> Gtk.Box:
         line.pack_start(entry, True, True, 0)
         line.pack_start(connect, False, False, 0)
         line.pack_start(cancel, False, False, 0)
-        r.box.pack_start(line, False, False, 0)
+        box.pack_start(line, False, False, 0)
+        r.box.pack_start(box, False, False, 0)
         r.box.show_all()
-        entry.grab_focus()
-        entry.connect("activate", lambda _e: go(r, entry.get_text()))
-        connect.connect("clicked", lambda _b: go(r, entry.get_text()))
-        cancel.connect("clicked", lambda _b: fill())
+        (named if name else entry).grab_focus()
 
-    def go(r, password):
-        n = r.net
+        def send(*_):
+            ssid = named.get_text().strip() if name else r.net["ssid"]
+            if ssid:
+                go(r, ssid, r.net.get("security", ""), entry.get_text() or None, hidden=name)
+        for w in (entry, named):
+            w.connect("activate", send)
+        connect.connect("clicked", send)
+        cancel.connect("clicked", lambda _b: (state.update(busy=False), draw(force=True)))
+
+    def go(r, ssid, security, password, hidden=False):
         r.sub.set_text("Connecting…")
-        note["text"] = ""
+        state["busy"], state["note"] = True, ""
 
         def done(ok):
+            state["busy"] = False
             if not ok:
-                note["text"] = f"Couldn't connect to {n['ssid']}" + (": check the password." if password else ".")
-            fill()
+                state["note"] = f"Couldn't connect to {ssid}" + (": check the password." if password else ".")
+            look()
+            draw(force=True)
             refresh()
-        later(lambda: wifi.connect(n["ssid"], n["security"], password), done)
+        later(lambda: wifi.connect(ssid, security, password, hidden=hidden), done)
 
-    fill(looking=bool(on))                      # what NetworkManager already saw, then a fresh look
-    if on:
-        later(wifi.rescan, lambda _r: fill())
+    look()
+    if state["on"]:                             # a fresh look straight away, then every SCAN_EVERY_S
+        later(wifi.rescan, lambda _r: look())
+    timers = [GLib.timeout_add(LOOK_EVERY_MS, look),
+              GLib.timeout_add_seconds(SCAN_EVERY_S, lambda: (later(wifi.rescan, lambda _r: look()) if state["on"] else None, True)[1])]
+    page.connect("destroy", lambda *_: [GLib.source_remove(t) for t in timers])
     page.pack_start(foot("networkForge (nmtui until it exists)", lambda: (close(), panelkit.run_command("hypeforge-nmtui"))),
                     False, False, 0)
     return page

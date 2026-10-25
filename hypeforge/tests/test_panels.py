@@ -387,6 +387,33 @@ class WifiPage(unittest.TestCase):
         self.assertIn(["nmcli", "dev", "wifi", "connect", "Guest"], seen)
         self.assertFalse(any(c[:3] == ["nmcli", "connection", "add"] for c in seen), "no new profile for those")
 
+    def test_a_hidden_network_is_asked_for_by_name(self):
+        seen = []
+        w = qspages.Wifi(self.runner({"connection show": "", "connection add": "successfully added",
+                                      "connection up": "Connection successfully activated"}, seen))
+        self.assertTrue(w.connect("Backroom", "", "pw 1", hidden=True))
+        add = next(c for c in seen if c[:3] == ["nmcli", "connection", "add"])
+        self.assertEqual(add[add.index("802-11-wireless.hidden") + 1], "yes")
+        self.assertIn("wpa-psk", add)
+        self.assertFalse(any("pw 1" in " ".join(c) for c in seen if c[0] != "FILE"), "the password on a command line")
+        seen.clear()
+        self.assertTrue(w.connect("OpenBack", "", None, hidden=True))
+        add = next(c for c in seen if c[:3] == ["nmcli", "connection", "add"])
+        self.assertNotIn("wifi-sec.key-mgmt", add, "an open hidden network: no security")
+        self.assertIn(["nmcli", "connection", "up", "id", "OpenBack"], seen)
+
+    def test_it_redraws_only_when_something_changed(self):
+        # Javier, 2026-10-25: switched on, it "said no connections" until closed and opened — now it looks every
+        # 2 s, and redraws only when what it shows changed (no flicker)
+        net = lambda signal, now=False: {"ssid": "TPHOME", "signal": signal, "security": "WPA2", "now": now}
+        a = {"on": True, "cables": [], "nets": [net(55)], "note": ""}
+        self.assertEqual(qspages.picture(a), qspages.picture(dict(a, nets=[net(60)])), "a small signal wobble: no redraw")
+        self.assertNotEqual(qspages.picture(a), qspages.picture(dict(a, nets=[net(55, True)])), "connected: redraw")
+        self.assertNotEqual(qspages.picture(a), qspages.picture(dict(a, nets=[])), "gone: redraw")
+        self.assertEqual(qspages.LOOK_EVERY_MS, 2000)
+        self.assertLessEqual(qspages.SCAN_EVERY_S, 20)
+        self.assertGreaterEqual(qspages.SHOWN, 5, "Javier: 'at least the top five'")
+
     def test_the_tile_opens_the_page(self):
         self.assertEqual(quick.PAGES["Wi-Fi"], "wifi")
         self.assertEqual(qspages.ONLY_PAGE["network"], "wifi", "the bar's network pop-up is the page too")
