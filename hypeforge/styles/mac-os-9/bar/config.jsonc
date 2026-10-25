@@ -2,7 +2,8 @@
 // About, your groups as submenus, All Apps, Settings) · the app in use in bold · Workspaces ·
 // Favorites · Window · Special (lock, log out, restart, shut down) · Help. Right: the tray (Mac OS 9
 // had none; the apps that run in the background need a home), clipboard, USB drives, printers,
-// the night light's moon, the status pill and the date-and-bell piece every style shares (D-96), the Application menu (the
+// the status pill and the date-and-bell piece every style shares (D-96; the night light is in the pill's Quick Settings since
+// D-117, 2026-10-25), the Application menu (the
 // app's icon; a click lists the open apps). No Control Strip (D-85): its buttons are on this bar.
 // Pieces from modules.jsonc and the applets' fragments; colours from colors.css.
 {
@@ -28,7 +29,6 @@
   "modules-center": [],
   "modules-right": [
     "tray",
-    "custom/nightlight",
     "custom/disk",
     "custom/memory",
     "custom/temperature",

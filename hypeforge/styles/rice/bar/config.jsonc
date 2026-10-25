@@ -3,11 +3,11 @@
 // centre: the date, time and bell (what's playing comes back as our own piece: Waybar's mpris module
 // crashed the bar on 2026-10-10 when a player started or stopped); right: the tray, the system, power.
 // The date, time and bell are one piece in the centre; Bluetooth · network · sound one pill on the
-// right (a click: Quick Settings); the night light's moon by the tray — the three pieces every style
-// shares, defined once in modules.jsonc (D-96; they were born here and on Windows 11).
+// right (a click: Quick Settings, which holds the night light too since D-117, 2026-10-25: the moon left
+// every bar) — the pieces every style shares, defined once in modules.jsonc (D-96; born here and on Windows 11).
 // The right side, right to left (Javier): power, the status pill, USB drives, printers,
 // clipboard, processor, graphics card, temperature, memory, disk (2026-10-17; the disk piece took the USB
-// icon's job the same day: Eject and Mount are in its pop-up), the night light, then the programs' tray icons.
+// icon's job the same day: Eject and Mount are in its pop-up), then the programs' tray icons.
 // After the pills, the windows tucked away (D-82): an icon and how many, hidden when none; a click
 // brings them back (Javier, 2026-10-11: on the Rice a tucked window had no way back you could see).
 // The pieces are defined in modules.jsonc (shared by every style); colours come from colors.css.
@@ -33,7 +33,6 @@
   ],
   "modules-right": [
     "tray",
-    "custom/nightlight",
     "custom/disk",
     "custom/memory",
     "custom/temperature",

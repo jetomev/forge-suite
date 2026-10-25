@@ -221,15 +221,18 @@ class TheBarFollowsTheStyle(Base):
         self.assertEqual(shared["group/datetime"]["modules"], ["clock", "custom/notifications"])
 
     def test_every_style_places_the_three_shared_pieces_and_none_redefines_their_clicks(self):
-        """D-96 (Javier, 2026-10-13): the date-time-bell piece, the Quick Settings pill and the night light's
-        moon on every style, defined ONCE in modules.jsonc: "when we improve on them, they work already for
+        """D-96 (Javier, 2026-10-13): the date-time-bell piece and the Quick Settings pill on every style (the
+        night light's moon too until D-117, 2026-10-25: now inside Quick Settings), defined ONCE in modules.jsonc: "when we improve on them, they work already for
         all the themes". A style may give the clock its own format; the clicks stay the shared ones."""
         bar = self.bar_tool()
         for name, cfg in self.every_bar():
             with self.subTest(name):
                 shown = bar.placed(bar.merged(cfg) if "include" in cfg else cfg)
-                for piece in ("group/datetime", "group/quick", "custom/nightlight"):
+                for piece in ("group/datetime", "group/quick"):
                     self.assertIn(piece, shown, f"{name}: {piece} not placed")
+                # D-117 (Javier, 2026-10-25): "remove the night light icon, outside the quick settings from all
+                # themes"; the piece stays defined in modules.jsonc for the optional-icon setting
+                self.assertNotIn("custom/nightlight", shown, f"{name}: the moon is back on the bar")
                 self.assertNotIn("mpris", shown)
                 for piece in ("clock", "custom/notifications", "network", "bluetooth", "wireplumber", "custom/nightlight",
                               "group/quick", "group/datetime"):

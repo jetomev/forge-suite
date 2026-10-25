@@ -27,7 +27,6 @@
     ],
     "modules-right": [
       "tray",
-      "custom/nightlight",
       "custom/disk",
       "custom/memory",
       "custom/temperature",
