@@ -17,8 +17,9 @@ hypeForge Settings, the power buttons.
 small pop-up per status icon — just that part, with a button to its full settings app (nmtui,
 wiremix, bluetui, nightForge).
 
-Pages (D-117, 2026-10-25, views/qspages.py): a tile's › (Night light) and the volume's › open that
-part's page inside this same card — "‹" or Esc goes back. `--only night|sound` opens that page alone.
+Pages (D-117, 2026-10-25, views/qspages.py): a click on a big tile that has a page (Night light) or on
+the volume row's speaker opens that part's page inside this same card — "‹" or Esc goes back; its
+on/off switch is on the page. `--only night|sound` opens that page alone.
 """
 
 from __future__ import annotations
@@ -254,20 +255,6 @@ def slider(low, high, step, now, words, changed=None, inverted=False):
     return scale, number
 
 
-def split(t, on, opened):
-    """A tile and its ›: the tile switches the thing, the › opens its page (D-117)."""
-    box = Gtk.Box(spacing=0)
-    t.get_style_context().add_class("hf-split")
-    box.pack_start(t, True, True, 0)
-    arrow = Gtk.Button(label="›")
-    arrow.get_style_context().add_class("hf-arrow")
-    if on:
-        arrow.get_style_context().add_class("on")
-    arrow.connect("clicked", lambda _b: opened())
-    box.pack_start(arrow, False, False, 0)
-    return box
-
-
 def tile(name, icon, on, sub, clicked):
     b = Gtk.Button()
     b.get_style_context().add_class("hf-tile")
@@ -302,7 +289,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
                                              Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 2)
     be, night = Backend(), Night()
     only = getattr(args, "only", None)
-    # the card is a stack: the main page, and a part's page in its place when its › is clicked (D-117)
+    # the card is a stack: the main page, and a part's page in its place when its tile is clicked (D-117)
     stack = Gtk.Stack()
     stack.set_homogeneous(False)
     stack.set_transition_type(Gtk.StackTransitionType.NONE)
@@ -389,12 +376,11 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
             icon, on, sub, switch = make()
             if switch is None:                     # Screens opens displayForge
                 fn = lambda _b: (panel.close(), panelkit.run_command("alacritty --class displayforge -e displayforge"))
+            elif not only and name in PAGES:       # a tile with a page opens it; the switch is on the page (D-117)
+                fn = lambda _b, p=PAGES[name]: open_page(p)
             else:
                 fn = toggler(switch, on)
-            t = tile(name, icon, on, sub, fn)
-            if not only and name in PAGES:         # its › opens its page (D-117)
-                t = split(t, on, lambda p=PAGES[name]: open_page(p))
-            grid.attach(t, i % 3, i // 3, 1, 1)
+            grid.attach(tile(name, icon, on, sub, fn), i % 3, i // 3, 1, 1)
         grid.show_all()
 
     tiles["fill"] = fill_tiles
@@ -407,19 +393,16 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         row = Gtk.Box(spacing=10)
         mute = Gtk.Button.new_from_icon_name("audio-volume-muted" if muted else "audio-volume-high", Gtk.IconSize.BUTTON)
         mute.get_style_context().add_class("flat")
-        mute.connect("clicked", lambda b: (be.mute_toggle(), b.set_image(Gtk.Image.new_from_icon_name(
-            "audio-volume-muted" if be.volume()[1] else "audio-volume-high", Gtk.IconSize.BUTTON))))
+        if only:                                   # the speaker's own pop-up (network etc.): mute, as before
+            mute.connect("clicked", lambda b: (be.mute_toggle(), b.set_image(Gtk.Image.new_from_icon_name(
+                "audio-volume-muted" if be.volume()[1] else "audio-volume-high", Gtk.IconSize.BUTTON))))
+        else:                                      # Quick Settings: the speaker opens the Sound page (D-117)
+            mute.set_tooltip_text("Sound")
+            mute.connect("clicked", lambda _b: open_page("sound"))
         scale, number = slider(0, 100, 1, level, lambda v: f"{int(v)} %", be.set_volume)
         row.pack_start(mute, False, False, 0)
         row.pack_start(scale, True, True, 0)
         row.pack_start(number, False, False, 0)
-        if not only:                               # the Sound page (D-117)
-            more = Gtk.Button(label="›")
-            for cls in ("flat", "hf-back"):
-                more.get_style_context().add_class(cls)
-            more.set_tooltip_text("Sound")
-            more.connect("clicked", lambda _b: open_page("sound"))
-            row.pack_start(more, False, False, 0)
         root.pack_start(row, False, False, 0)
     elif only == "sound":
         root.pack_start(Gtk.Label(label="No sound device found", xalign=0), False, False, 0)
@@ -454,7 +437,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     return finish(stack, look, args, escape=back)
 
 
-PAGES = {"Night light": "night"}          # tiles with a page (D-117); Wi-Fi and Bluetooth come next
+PAGES = {"Night light": "night"}          # tiles that open a page (D-117); Wi-Fi and Bluetooth come next
 
 
 panel = None

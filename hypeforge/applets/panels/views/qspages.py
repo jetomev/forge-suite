@@ -1,9 +1,11 @@
-"""Quick Settings' pages (D-117, Javier 2026-10-25): a tile's › turns the Quick Settings card into that
-part's page — "‹" (or Esc) goes back; nothing is stacked over it. The same page opens alone from a bar
-icon (`--only`), without the "‹". Approved from the mock: logs/quick-settings-mock-20261025/.
+"""Quick Settings' pages (D-117, Javier 2026-10-25): a click on a big tile turns the Quick Settings card
+into that part's page — "‹" (or Esc) goes back; nothing is stacked over it. No arrows (Javier, after the
+first build: "no arrow to open the popup. If I click in the quick settings big button, the popup opens…").
+The same page opens alone from a bar icon (`--only`), without the "‹".
 
 Every page: the one title row (a "‹" when it came from Quick Settings, the part's on/off switch on the
-right where it has one), its rows in the tray menu's look, and its full settings app at the foot.
+right where it has one), its rows in the tray menu's look, and an icon button at the bottom right that
+opens its full app (Javier: "a button/icon bottom right side of the popup").
   Night light   on/off, the schedule in words, the warmth, Warm now / Automatic (nightForge)
   Sound         the volume, your outputs and your microphones; a click makes one the one in use (WirePlumber)
 """
@@ -19,10 +21,6 @@ import panelkit
 CSS = """
 .hf-quick .hf-back {{ padding: 0 8px 0 2px; min-width: 0; }}
 .hf-quick .hf-back label {{ font-size: {big}pt; }}
-.hf-quick .hf-tile.hf-split {{ border-top-right-radius: 0; border-bottom-right-radius: 0; }}
-.hf-quick button.hf-arrow {{ padding: 0 6px; min-width: 0; border-left-width: 0;
-                             border-top-left-radius: 0; border-bottom-left-radius: 0; }}
-.hf-quick button.hf-arrow.on {{ background: {accent}; color: {on_text}; border-color: {accent}; }}
 .hf-quick .hf-section {{ color: {dim}; font-weight: bold; font-size: {small}pt; padding: 2px 10px 0 10px; }}
 .hf-page-rows, .hf-page-rows row {{ background: transparent; }}
 .hf-page-rows row {{ padding: 4px 10px; border-radius: {inner}px; min-height: 30px; }}
@@ -117,12 +115,15 @@ def rows(items: list[dict]) -> Gtk.ListBox:
     return lb
 
 
-def foot(words: str, clicked) -> Gtk.Button:
-    b = Gtk.Button(label=words)
+def foot(app: str, clicked, icon: str = "preferences-system") -> Gtk.Box:
+    """The page's last row: its full app as an icon button at the bottom right (its name on hover)."""
+    row = Gtk.Box(spacing=8)
+    b = Gtk.Button.new_from_icon_name(icon, Gtk.IconSize.BUTTON)
     b.get_style_context().add_class("flat")
-    b.set_halign(Gtk.Align.START)
+    b.set_tooltip_text(f"Open {app}")
     b.connect("clicked", lambda _b: clicked())
-    return b
+    row.pack_end(b, False, False, 0)
+    return row
 
 
 # ---- Sound (WirePlumber) ------------------------------------------------------------------------
@@ -166,8 +167,12 @@ def sound_page(be, back, close) -> Gtk.Box:
     level, muted = be.volume()
     if level is not None:
         row = Gtk.Box(spacing=10)
-        row.pack_start(Gtk.Image.new_from_icon_name("audio-volume-muted" if muted else "audio-volume-high",
-                                                    Gtk.IconSize.BUTTON), False, False, 0)
+        mute = Gtk.Button.new_from_icon_name("audio-volume-muted" if muted else "audio-volume-high", Gtk.IconSize.BUTTON)
+        mute.get_style_context().add_class("flat")
+        mute.set_tooltip_text("Mute")
+        mute.connect("clicked", lambda b: (be.mute_toggle(), b.set_image(Gtk.Image.new_from_icon_name(
+            "audio-volume-muted" if be.volume()[1] else "audio-volume-high", Gtk.IconSize.BUTTON))))
+        row.pack_start(mute, False, False, 0)
         scale, number = slider(0, 100, 1, level, lambda v: f"{int(v)} %", be.set_volume)
         row.pack_start(scale, True, True, 0)
         row.pack_start(number, False, False, 0)
@@ -193,7 +198,7 @@ def sound_page(be, back, close) -> Gtk.Box:
     else:
         lists.pack_start(status("No sound device found."), False, False, 0)
     page.pack_start(lists, False, False, 0)
-    page.pack_start(foot("Sound settings…", lambda: (close(), panelkit.run_command(
+    page.pack_start(foot("the mixer (wiremix)", lambda: (close(), panelkit.run_command(
         "alacritty --class hf-mixer -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e wiremix"))), False, False, 0)
     return page
 
@@ -230,6 +235,6 @@ def night_page(night, back, close, refresh) -> Gtk.Box:
     buttons.pack_start(now, False, False, 0)
     buttons.pack_start(auto, False, False, 0)
     page.pack_start(buttons, False, False, 0)
-    page.pack_start(foot("Night light settings…", lambda: (close(), panelkit.run_command(
+    page.pack_start(foot("nightForge", lambda: (close(), panelkit.run_command(
         "alacritty --class nightforge -e nightforge"))), False, False, 0)
     return page
