@@ -293,6 +293,21 @@ class QuickSettingsPages(unittest.TestCase):
         panelkit.Panel._key(p, None, key)
         self.assertEqual(closed, [True, True])
 
+    def test_the_speaker_mutes_and_the_icon_opens_sound(self):
+        # Javier, 2026-10-25: "clicking in the speaker should indeed mute the volume… add an icon next to the
+        # volume % to the right to open the popup"
+        ran, opened = [], []
+        be = quick.Backend(lambda cmd, timeout=3.0: (ran.append(" ".join(cmd)), "Volume: 0.40")[1])
+        row = quick.volume_row(be, 40, False, lambda: opened.append("sound"))
+        row.mute.clicked()
+        self.assertIn("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle", ran)
+        self.assertEqual(opened, [], "the speaker mutes; it doesn't open the page")
+        row.more.clicked()
+        self.assertEqual(opened, ["sound"])
+        kids = row.get_children()
+        self.assertIs(kids[-1], row.more, "the icon sits right of the number")
+        self.assertIsNone(quick.volume_row(be, 40, False).more, "the speaker's own pop-up has no icon to itself")
+
     def test_the_night_light_page_says_it_whole(self):
         night = quick.Night.__new__(quick.Night)
         night.ok = True

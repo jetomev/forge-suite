@@ -17,9 +17,9 @@ hypeForge Settings, the power buttons.
 small pop-up per status icon — just that part, with a button to its full settings app (nmtui,
 wiremix, bluetui, nightForge).
 
-Pages (D-117, 2026-10-25, views/qspages.py): a click on a big tile that has a page (Night light) or on
-the volume row's speaker opens that part's page inside this same card — "‹" or Esc goes back; its
-on/off switch is on the page. `--only night|sound` opens that page alone.
+Pages (D-117, 2026-10-25, views/qspages.py): a click on a big tile that has a page (Night light), or on
+the icon right of the volume's number, opens that part's page inside this same card — "‹" or Esc goes
+back; its on/off switch is on the page; the speaker mutes. `--only night|sound` opens that page alone.
 """
 
 from __future__ import annotations
@@ -255,6 +255,32 @@ def slider(low, high, step, now, words, changed=None, inverted=False):
     return scale, number
 
 
+def volume_row(be, level, muted, opened=None):
+    """The volume: the speaker mutes, the slider and its number, and — in Quick Settings — an icon right of
+    the number that opens the Sound page (Javier, 2026-10-25: "clicking in the speaker should indeed mute the
+    volume… add an icon next to the volume % to the right to open the popup")."""
+    row = Gtk.Box(spacing=10)
+    mute = Gtk.Button.new_from_icon_name("audio-volume-muted" if muted else "audio-volume-high", Gtk.IconSize.BUTTON)
+    mute.get_style_context().add_class("flat")
+    mute.set_tooltip_text("Mute")
+    mute.connect("clicked", lambda b: (be.mute_toggle(), b.set_image(Gtk.Image.new_from_icon_name(
+        "audio-volume-muted" if be.volume()[1] else "audio-volume-high", Gtk.IconSize.BUTTON))))
+    scale, number = slider(0, 100, 1, level, lambda v: f"{int(v)} %", be.set_volume)
+    row.pack_start(mute, False, False, 0)
+    row.pack_start(scale, True, True, 0)
+    row.pack_start(number, False, False, 0)
+    row.mute, row.scale = mute, scale
+    row.more = None
+    if opened:
+        more = Gtk.Button.new_from_icon_name("preferences-desktop-sound", Gtk.IconSize.BUTTON)
+        more.get_style_context().add_class("flat")
+        more.set_tooltip_text("Sound: outputs and microphones")
+        more.connect("clicked", lambda _b: opened())
+        row.pack_start(more, False, False, 0)
+        row.more = more
+    return row
+
+
 def tile(name, icon, on, sub, clicked):
     b = Gtk.Button()
     b.get_style_context().add_class("hf-tile")
@@ -390,20 +416,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     wanted = SLIDERS.get(only, ())
     level, muted = be.volume() if "volume" in wanted else (None, False)
     if level is not None:
-        row = Gtk.Box(spacing=10)
-        mute = Gtk.Button.new_from_icon_name("audio-volume-muted" if muted else "audio-volume-high", Gtk.IconSize.BUTTON)
-        mute.get_style_context().add_class("flat")
-        if only:                                   # the speaker's own pop-up (network etc.): mute, as before
-            mute.connect("clicked", lambda b: (be.mute_toggle(), b.set_image(Gtk.Image.new_from_icon_name(
-                "audio-volume-muted" if be.volume()[1] else "audio-volume-high", Gtk.IconSize.BUTTON))))
-        else:                                      # Quick Settings: the speaker opens the Sound page (D-117)
-            mute.set_tooltip_text("Sound")
-            mute.connect("clicked", lambda _b: open_page("sound"))
-        scale, number = slider(0, 100, 1, level, lambda v: f"{int(v)} %", be.set_volume)
-        row.pack_start(mute, False, False, 0)
-        row.pack_start(scale, True, True, 0)
-        row.pack_start(number, False, False, 0)
-        root.pack_start(row, False, False, 0)
+        root.pack_start(volume_row(be, level, muted, None if only else (lambda: open_page("sound"))), False, False, 0)
     elif only == "sound":
         root.pack_start(Gtk.Label(label="No sound device found", xalign=0), False, False, 0)
     if only:                     # a one-part pop-up ends with its full settings app

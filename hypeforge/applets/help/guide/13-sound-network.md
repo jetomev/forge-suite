@@ -13,9 +13,10 @@ Do Not Disturb, Screens and VPN, the volume slider, the update count, a button i
 **hypeForge Settings**, and the power buttons; the big buttons open the Forge apps (Screens →
 displayForge, updates → nogForge). A click anywhere else closes it.
 
-**Pages inside Quick Settings** (2026-10-25): a click on the **Night light** tile, or on the **speaker**
-at the start of the volume row, opens that part's page **in the same card** — **‹** (or Esc) goes
-back to Quick Settings. The on/off switch is on the page; its full app is the icon at the bottom right.
+**Pages inside Quick Settings** (2026-10-25): a click on the **Night light** tile, or on the **sound icon**
+at the right end of the volume row (after the %), opens that part's page **in the same card** — **‹** (or Esc) goes
+back to Quick Settings. The on/off switch is on the page; its full app is the icon at the bottom right. The speaker at the
+start of the volume row mutes.
 - **Night light** — on/off, what it's doing in words ("Daylight now · warm again from 18:45"), the
   warmth slider, **Warm now** and **Automatic**; the icon at the bottom right opens nightForge.
 - **Sound** — the volume (its speaker mutes), your **outputs** (speakers, headset, a screen's
