@@ -22,8 +22,14 @@ start of the volume row mutes.
 - **Sound** — the volume (its speaker mutes), your **outputs** (speakers, headset, a screen's
   speakers) and your **microphones**: click one to make it the one in use; the icon at the bottom
   right opens the mixer (wiremix).
-The **moon** next to the tray opens the Night light page on its own, and the speaker the Sound page.
-Wi-Fi and Bluetooth pages come next. The **date, time and bell** are one piece too: a click opens the calendar with your
+- **Wi-Fi** — the switch in the title row; your **cable** (connected or unplugged); the **networks
+  nearby**, strongest first. Click one to connect: a saved or open network connects at once, a new
+  secured one opens a **password box** under it (Connect, Cancel). The connected one has
+  **Disconnect**. A wrong password says so, and the next try asks again. The icon at the bottom right
+  opens the full network settings (nmtui, until networkForge).
+The bar's network icon opens the Wi-Fi page on its own, and the speaker the Sound page. The Bluetooth
+page comes next. Your password is never put on a command line (where any program could read it): it
+goes to NetworkManager through a private file that is deleted right after. The **date, time and bell** are one piece too: a click opens the calendar with your
 alerts as cards; a right click on the bell switches Do Not Disturb.
 
 **Scroll** over the volume icon for louder / quieter; the volume keys on the keyboard work too.

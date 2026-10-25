@@ -324,6 +324,74 @@ class QuickSettingsPages(unittest.TestCase):
             self.assertEqual(night.sentence(), words)
 
 
+class WifiPage(unittest.TestCase):
+    """D-117 (Javier, 2026-10-25): "how do you pick the wifi, connect or disconnect either wifi or cable"."""
+
+    LIST = "*:Home-5G:88:WPA2\n :Cafe\\:Bar:61:WPA1 WPA2\n ::70:WPA2\n :Guest:40:\n :Home-5G:52:WPA2\n :Office:55:WPA3\n"
+
+    def runner(self, answers, seen):
+        def run(cmd, timeout=3.0):
+            seen.append(list(cmd))
+            if "passwd-file" in cmd:
+                f = Path(cmd[cmd.index("passwd-file") + 1])
+                seen.append(["FILE", f.read_text(), oct(f.stat().st_mode & 0o777), str(f)])
+            for key, out in answers.items():
+                if key in " ".join(cmd):
+                    return out
+            return ""
+        return run
+
+    def test_the_list_reads_like_a_person_wants_it(self):
+        nets = qspages.parse_networks(self.LIST)
+        self.assertEqual([n["ssid"] for n in nets], ["Home-5G", "Cafe:Bar", "Office", "Guest"],
+                         "the connected one first, then strongest; one row per name; a ':' in a name kept; hidden left out")
+        self.assertEqual(nets[0]["signal"], 88, "the connected one's own signal, not its weaker twin")
+        self.assertTrue(nets[0]["now"])
+        self.assertEqual(nets[-1]["security"], "", "an open network")
+
+    def test_the_cable(self):
+        c = qspages.parse_cables("enp5s0:ethernet:connected:Wired connection 1\neth1:ethernet:unavailable:\nwlan0:wifi:unavailable:\n")
+        self.assertEqual([(x["name"], x["sub"], x["now"]) for x in c],
+                         [("Wired connection 1", "Connected", True), ("Cable", "Cable unplugged", False)])
+
+    def test_a_new_secured_network_never_puts_the_password_on_a_command_line(self):
+        seen = []
+        w = qspages.Wifi(self.runner({"connection show": "", "connection add": "successfully added",
+                                      "connection up": "Connection successfully activated"}, seen))
+        self.assertTrue(w.connect("Cafe:Bar", "WPA1 WPA2", "s3cret pass"))
+        self.assertFalse(any("s3cret pass" in " ".join(c) for c in seen if c[0] != "FILE"), "the password on a command line")
+        add = next(c for c in seen if c[:3] == ["nmcli", "connection", "add"])
+        self.assertIn("wpa-psk", add)
+        f = next(c for c in seen if c[0] == "FILE")
+        self.assertEqual(f[1], "802-11-wireless-security.psk:s3cret pass\n")
+        self.assertEqual(f[2], "0o600", "only this person can read it")
+        self.assertFalse(Path(f[3]).exists(), "the file is gone afterwards")
+
+    def test_a_wrong_password_takes_the_new_profile_away(self):
+        seen = []
+        w = qspages.Wifi(self.runner({"connection show": "", "connection add": "successfully added",
+                                      "connection up": "Error: Connection activation failed: Secrets were required"}, seen))
+        self.assertFalse(w.connect("Office", "WPA3", "wrong"))
+        self.assertIn(["nmcli", "connection", "delete", "id", "Office"], seen, "so the next try asks again")
+        self.assertIn("sae", next(c for c in seen if c[:3] == ["nmcli", "connection", "add"]), "WPA3 alone: SAE")
+        self.assertFalse(Path(next(c for c in seen if c[0] == "FILE")[3]).exists())
+
+    def test_saved_and_open_networks_connect_without_asking(self):
+        seen = []
+        w = qspages.Wifi(self.runner({"NAME,TYPE connection show": "Home-5G:802-11-wireless\n",
+                                      "up id Home-5G": "Connection successfully activated",
+                                      "wifi connect Guest": "Device 'wlan0' successfully activated"}, seen))
+        self.assertTrue(w.connect("Home-5G", "WPA2"))
+        self.assertIn(["nmcli", "connection", "up", "id", "Home-5G"], seen)
+        self.assertTrue(w.connect("Guest", ""))
+        self.assertIn(["nmcli", "dev", "wifi", "connect", "Guest"], seen)
+        self.assertFalse(any(c[:3] == ["nmcli", "connection", "add"] for c in seen), "no new profile for those")
+
+    def test_the_tile_opens_the_page(self):
+        self.assertEqual(quick.PAGES["Wi-Fi"], "wifi")
+        self.assertEqual(qspages.ONLY_PAGE["network"], "wifi", "the bar's network pop-up is the page too")
+
+
 class ViewNames(unittest.TestCase):
     def test_no_view_module_shadows_the_standard_library(self):
         # views/ goes first on the import path: a view called calendar.py would replace Python's own
@@ -444,7 +512,7 @@ class QuickSettings(unittest.TestCase):
         # quick settings popup"; the Night light tile stays, the slider lives on its page (D-117, 2026-10-25)
         self.assertEqual(quick.SLIDERS[None], ("volume",))
         self.assertNotIn("night", quick.SLIDERS)
-        self.assertEqual(qspages.ONLY_PAGE, {"night": "night", "sound": "sound"}, "the moon and the speaker open their pages")
+        self.assertEqual(qspages.ONLY_PAGE, {"night": "night", "sound": "sound", "network": "wifi"}, "the bar's pop-ups open their pages")
 
     def test_wifi_off_on_a_cable_says_so(self):
         be = quick.Backend(FakeRun({"nmcli -t -f WIFI radio": "disabled\n",

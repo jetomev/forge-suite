@@ -8,11 +8,17 @@ right where it has one), its rows in the tray menu's look, and an icon button at
 opens its full app (Javier: "a button/icon bottom right side of the popup").
   Night light   on/off, the schedule in words, the warmth, Warm now / Automatic (nightForge)
   Sound         the volume, your outputs and your microphones; a click makes one the one in use (WirePlumber)
+  Wi-Fi         on/off; the cable; the networks nearby, strongest first: a click connects (a password box
+                opens under a new secured one), the connected one has Disconnect (NetworkManager, nmcli)
 """
 
 from __future__ import annotations
 
+import os
 import re
+import tempfile
+import threading
+from pathlib import Path
 
 from gi.repository import GLib, Gtk, Pango
 
@@ -25,14 +31,14 @@ CSS = """
 .hf-page-rows, .hf-page-rows row {{ background: transparent; }}
 .hf-page-rows row {{ padding: 4px 10px; border-radius: {inner}px; min-height: 30px; }}
 .hf-page-rows row:hover {{ background: {hover}; }}
-.hf-page-rows label {{ color: {text}; }}
+.hf-page-rows label, .hf-page-rows image {{ color: {text}; }}
 .hf-page-rows label.hf-row-sub {{ color: {dim}; font-size: {small}pt; }}
 .hf-page-rows label.hf-row-on {{ color: {accent}; }}
 .hf-quick .hf-status {{ color: {dim}; font-size: {small}pt; padding: 0 10px; }}
 """
 
 # which page each bar icon's pop-up opens (`--only`)
-ONLY_PAGE = {"night": "night", "sound": "sound"}
+ONLY_PAGE = {"night": "night", "sound": "sound", "network": "wifi"}
 
 
 def css(look: panelkit.Look) -> bytes:
@@ -237,4 +243,228 @@ def night_page(night, back, close, refresh) -> Gtk.Box:
     page.pack_start(buttons, False, False, 0)
     page.pack_start(foot("nightForge", lambda: (close(), panelkit.run_command(
         "alacritty --class nightforge -e nightforge"))), False, False, 0)
+    return page
+
+
+# ---- Wi-Fi (NetworkManager) --------------------------------------------------------------------
+
+FIELDS = re.compile(r"(?<!\\):")
+
+
+def nm_fields(line: str) -> list[str]:
+    """One `nmcli -t` line: fields split on ":" — a ":" inside a value comes escaped as "\\:"."""
+    return [f.replace("\\:", ":").replace("\\\\", "\\") for f in FIELDS.split(line)]
+
+
+def parse_networks(text: str) -> list[dict]:
+    """`nmcli -t -f IN-USE,SSID,SIGNAL,SECURITY dev wifi list` → one row per name (its strongest), the
+    connected one first, then strongest first; hidden networks (no name) left out."""
+    best: dict[str, dict] = {}
+    for line in text.splitlines():
+        f = nm_fields(line)
+        if len(f) < 4 or not f[1]:
+            continue
+        n = {"ssid": f[1], "signal": int(f[2]) if f[2].isdigit() else 0, "security": f[3].strip(),
+             "now": f[0].strip() == "*"}
+        old = best.get(n["ssid"])
+        if old is None or n["now"] or (not old["now"] and n["signal"] > old["signal"]):
+            best[n["ssid"]] = n
+    return sorted(best.values(), key=lambda n: (not n["now"], -n["signal"]))
+
+
+def parse_cables(text: str) -> list[dict]:
+    """`nmcli -t -f DEVICE,TYPE,STATE,CONNECTION dev` → the cable ports, with what they say."""
+    out = []
+    for line in text.splitlines():
+        f = nm_fields(line)
+        if len(f) >= 4 and f[1] == "ethernet":
+            on = f[2] == "connected"
+            out.append({"device": f[0], "name": f[3] or "Cable", "now": on,
+                        "sub": "Connected" if on else "Cable unplugged" if f[2] == "unavailable" else f[2].capitalize()})
+    return out
+
+
+def signal_icon(signal: int) -> str:
+    """The bars, as a symbolic icon: drawn in the card's text colour (a full-colour one came out black on the
+    dark card)."""
+    return "network-wireless-signal-" + ("excellent" if signal >= 75 else "good" if signal >= 50
+                                         else "ok" if signal >= 25 else "weak") + "-symbolic"
+
+
+class Wifi:
+    """What the page asks NetworkManager, through `nmcli` (the same as the tile). `run` is swapped in tests."""
+
+    def __init__(self, run):
+        self.run = run
+
+    def on(self) -> bool | None:
+        r = self.run(["nmcli", "-t", "-f", "WIFI", "radio"]).strip()
+        return None if not r else r == "enabled"
+
+    def switch(self, on: bool):
+        self.run(["nmcli", "radio", "wifi", "on" if on else "off"])
+
+    def cables(self) -> list[dict]:
+        return parse_cables(self.run(["nmcli", "-t", "-f", "DEVICE,TYPE,STATE,CONNECTION", "dev"]))
+
+    def networks(self) -> list[dict]:
+        # --rescan no: what NetworkManager already saw (a scan takes seconds; rescan() asks for a new one)
+        return parse_networks(self.run(["nmcli", "-t", "-f", "IN-USE,SSID,SIGNAL,SECURITY", "dev", "wifi", "list",
+                                        "--rescan", "no"]))
+
+    def rescan(self):
+        self.run(["nmcli", "dev", "wifi", "rescan"], timeout=10)
+
+    def saved(self) -> set[str]:
+        return {nm_fields(l)[0] for l in self.run(["nmcli", "-t", "-f", "NAME,TYPE", "connection", "show"]).splitlines()
+                if nm_fields(l)[-1] == "802-11-wireless"}
+
+    def connect(self, ssid: str, security: str, password: str | None = None) -> bool:
+        """A saved network, or an open one: straight up. A new secured one: a profile, then up with the
+        password in a private file (never on a command line, where any program could read it); a wrong
+        password takes the new profile away again, so the next try asks again."""
+        if ssid in self.saved():
+            return self._ok(self.run(["nmcli", "connection", "up", "id", ssid], timeout=45))
+        if not security:
+            return self._ok(self.run(["nmcli", "dev", "wifi", "connect", ssid], timeout=45))
+        key = "sae" if "WPA3" in security and "WPA2" not in security else "wpa-psk"
+        if not self._ok(self.run(["nmcli", "connection", "add", "type", "wifi", "con-name", ssid, "ssid", ssid,
+                                  "wifi-sec.key-mgmt", key])):
+            return False
+        fd, path = tempfile.mkstemp(prefix="hf-wifi-", dir=os.environ.get("XDG_RUNTIME_DIR") or None)
+        try:
+            with os.fdopen(fd, "w") as f:                     # mkstemp: only this person can read it
+                f.write(f"802-11-wireless-security.psk:{password or ''}\n")
+            ok = self._ok(self.run(["nmcli", "connection", "up", "id", ssid, "passwd-file", path], timeout=45))
+        finally:
+            Path(path).unlink(missing_ok=True)
+        if not ok:
+            self.run(["nmcli", "connection", "delete", "id", ssid])
+        return ok
+
+    def disconnect(self, ssid: str):
+        self.run(["nmcli", "connection", "down", "id", ssid], timeout=20)
+
+    @staticmethod
+    def _ok(out: str) -> bool:
+        return "success" in out.lower() or "activated" in out.lower()
+
+
+def wifi_page(run, back, close, refresh) -> Gtk.Box:
+    wifi = Wifi(run)
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+    body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    on = wifi.on()
+
+    def later(fn, then):
+        """fn in the background (connecting takes seconds), then `then(result)` back in the pop-up."""
+        threading.Thread(target=lambda: GLib.idle_add(lambda r=fn(): (then(r), False)[1]), daemon=True).start()
+
+    def switched(want):
+        later(lambda: wifi.switch(want), lambda _r: (refresh(), GLib.timeout_add(1500, lambda: (fill(), False)[1])))
+
+    page.pack_start(head("Wi-Fi", back, on if on is not None else None, switched), False, False, 0)
+    page.pack_start(body, False, False, 0)
+    note = {"text": ""}
+
+    def fill(looking=False):
+        for child in body.get_children():
+            body.remove(child)
+        cables = wifi.cables()
+        if cables:
+            body.pack_start(section("Cable"), False, False, 0)
+            body.pack_start(rows([{"icon": "network-wired-symbolic", "name": c["name"], "sub": c["sub"], "on": c["now"]}
+                                  for c in cables]), False, False, 0)
+        body.pack_start(section("Wi-Fi networks"), False, False, 0)
+        if wifi.on() is False:
+            body.pack_start(status("Wi-Fi is off."), False, False, 0)
+        else:
+            nets = wifi.networks()
+            if not nets:
+                body.pack_start(status("Looking for networks…" if looking else "No networks found."), False, False, 0)
+            else:
+                body.pack_start(network_rows(nets), False, False, 0)
+        if note["text"]:
+            body.pack_start(status(note["text"]), False, False, 0)
+        body.show_all()
+
+    def network_rows(nets) -> Gtk.ListBox:
+        lb = Gtk.ListBox()
+        lb.get_style_context().add_class("hf-page-rows")
+        lb.set_selection_mode(Gtk.SelectionMode.NONE)
+        lb.set_activate_on_single_click(True)
+        for n in nets:
+            r = Gtk.ListBoxRow()
+            r.net = n
+            v = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+            line = Gtk.Box(spacing=10)
+            line.pack_start(Gtk.Image.new_from_icon_name(signal_icon(n["signal"]), Gtk.IconSize.LARGE_TOOLBAR), False, False, 0)
+            words = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            words.set_valign(Gtk.Align.CENTER)
+            words.pack_start(Gtk.Label(label=n["ssid"], xalign=0, ellipsize=Pango.EllipsizeMode.END, max_width_chars=30), False, False, 0)
+            secured = "secured" if n["security"] else "open · not secured"
+            sub = Gtk.Label(label=f"Connected · {secured}" if n["now"] else secured.capitalize(), xalign=0)
+            sub.get_style_context().add_class("hf-row-on" if n["now"] else "hf-row-sub")
+            words.pack_start(sub, False, False, 0)
+            line.pack_start(words, True, True, 0)
+            if n["now"]:
+                b = Gtk.Button(label="Disconnect")
+                b.set_valign(Gtk.Align.CENTER)
+                b.connect("clicked", lambda _b, s=n["ssid"]: (note.update(text=""), later(lambda: wifi.disconnect(s),
+                                                                                             lambda _r: (fill(), refresh()))))
+                line.pack_end(b, False, False, 0)
+            v.pack_start(line, False, False, 0)
+            r.add(v)
+            r.box, r.sub = v, sub
+            lb.add(r)
+        lb.connect("row-activated", lambda _lb, r: picked(r))
+        return lb
+
+    def picked(r):
+        n = r.net
+        if n["now"] or getattr(r, "asking", False):
+            return
+        if n["security"] and n["ssid"] not in wifi.saved():
+            ask(r)
+        else:
+            go(r, None)
+
+    def ask(r):
+        """A password box under the network clicked, with Connect and Cancel."""
+        r.asking = True
+        line = Gtk.Box(spacing=8)
+        entry = Gtk.Entry()
+        entry.set_visibility(False)
+        entry.set_placeholder_text("Password")
+        connect = Gtk.Button(label="Connect")
+        connect.get_style_context().add_class("on")
+        cancel = Gtk.Button(label="Cancel")
+        cancel.get_style_context().add_class("flat")
+        line.pack_start(entry, True, True, 0)
+        line.pack_start(connect, False, False, 0)
+        line.pack_start(cancel, False, False, 0)
+        r.box.pack_start(line, False, False, 0)
+        r.box.show_all()
+        entry.grab_focus()
+        entry.connect("activate", lambda _e: go(r, entry.get_text()))
+        connect.connect("clicked", lambda _b: go(r, entry.get_text()))
+        cancel.connect("clicked", lambda _b: fill())
+
+    def go(r, password):
+        n = r.net
+        r.sub.set_text("Connecting…")
+        note["text"] = ""
+
+        def done(ok):
+            if not ok:
+                note["text"] = f"Couldn't connect to {n['ssid']}" + (": check the password." if password else ".")
+            fill()
+            refresh()
+        later(lambda: wifi.connect(n["ssid"], n["security"], password), done)
+
+    fill(looking=bool(on))                      # what NetworkManager already saw, then a fresh look
+    if on:
+        later(wifi.rescan, lambda _r: fill())
+    page.pack_start(foot("networkForge (nmtui until it exists)", lambda: (close(), panelkit.run_command("hypeforge-nmtui"))),
+                    False, False, 0)
     return page
