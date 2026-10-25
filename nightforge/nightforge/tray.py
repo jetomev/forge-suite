@@ -24,6 +24,8 @@ from .settings import Settings
 # button twice (Javier, 2026-10-11: "in rice, now I have 2 night-light icons. Take the old one please,
 # leave the one with the window and the slider"). So the icon says it's "Passive", which a bar's tray
 # hides (Waybar's does unless told otherwise), and comes back by itself on a style without the moon.
+# Since hypeForge D-117 (Javier, 2026-10-25) no hypeForge bar has the moon — the night light is in Quick
+# Settings — so the icon hides on any hypeForge bar too (nightForge 1.1.1); other bars still show it.
 BAR_CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "sway/waybar/config.jsonc"
 MOON = '"custom/nightlight"'
 
@@ -111,8 +113,20 @@ def bar_has_moon(path: Path | None = None) -> bool:
     return any(MOON in line.split("//", 1)[0] for line in text.splitlines())
 
 
+def bar_is_hypeforge(path: Path | None = None) -> bool:
+    """True when the bar in use is hypeForge's: every one hypeforge-theme writes starts with "// hypeForge".
+    There the night light lives in Quick Settings (hypeForge D-117, 2026-10-25: the moon left every bar)."""
+    try:
+        first = next((l for l in (path or BAR_CONFIG).read_text().splitlines() if l.strip()), "")
+    except OSError:
+        return False
+    return first.lstrip().startswith("// hypeForge")
+
+
 def tray_status(path: Path | None = None) -> str:
-    return "Passive" if bar_has_moon(path) else "Active"
+    """Passive (a bar's tray hides it) where the bar already offers the night light: its moon, or hypeForge's
+    Quick Settings; Active on any other bar."""
+    return "Passive" if bar_has_moon(path) or bar_is_hypeforge(path) else "Active"
 
 
 class Tray:

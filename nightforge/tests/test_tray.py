@@ -64,6 +64,22 @@ class TheMoon(unittest.TestCase):
             self.assertTrue(bar_has_moon(f))
             self.assertEqual(tray_status(Path(d) / "missing.jsonc"), "Active", "no hypeForge bar: the icon shows")
 
+    def test_on_any_hypeforge_bar_quick_settings_has_it(self):
+        # hypeForge D-117 (Javier, 2026-10-25): the moon left every bar — the night light lives in Quick Settings
+        # ("remove the night light icon, outside the quick settings from all themes"). The tray icon hid only
+        # where the moon was, so it came back on every bar the moon left.
+        import tempfile
+        sys.path.insert(0, str(HERE.parent))
+        from nightforge.tray import tray_status
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "config.jsonc"
+            f.write_text("// hypeForge style · KDE Plasma, tiled (D-76) — the floating panel\n{\"modules-right\": [\"tray\", \"group/quick\"]}\n")
+            self.assertEqual(tray_status(f), "Passive", "a hypeForge bar: Quick Settings has the night light")
+            f.write_text("// hypeForge — the top bar in the Sway session (Waybar).\n{\"modules-right\": [\"tray\"]}\n")
+            self.assertEqual(tray_status(f), "Passive", "the Classic bar is hypeForge's too")
+            f.write_text("// my own Waybar\n{\"modules-right\": [\"tray\"]}\n")
+            self.assertEqual(tray_status(f), "Active", "someone else's bar: the icon shows")
+
 
 if __name__ == "__main__":
     unittest.main()
