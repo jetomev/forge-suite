@@ -2,6 +2,11 @@
 
 **Target: the first KognogOS release (v1.0, April 2027).** Each section keeps its own detailed list; this one tracks the suite. Updated after every step.
 
+## 2026-10-24 — KognogOS stage 03: the pop-up standard's next cards, and displayForge 1.1.4
+- [x] **hypeForge (D-116):** one title row on every pop-up (Javier: "looks good!"); three widths 300 · 380 · 460; the hover tip leaves an open pop-up (F-83 #122); Temperature shows every sensor (F-84 #123); the notifications on the standard, with their app's icon (F-85 #124) — the last three live, **waiting for Javier's look** (hypeforge/TODO.md)
+- [x] **displayForge 1.1.4 — GitHub + AUR** (`41c5dc4`, one push 1.1.1 → 1.1.4): Javier's stage-03 run (one and two screens, 80 / 90 %, a text console) passed; F-8 #121, F-9 #125, F-10 #126, and from his tests of the installed packages F-11 #127 (1.1.2) and F-12 #128 (1.1.3) — both GitHub-only. 75 tests; every release reproducible
+- [x] **workspaceForge** tested on one and two screens and a text console (no findings); benches: `displayforge/scripts/screens-bench.py`, `workspaceforge/scripts/bench-save.py --screens`, `hypeforge/scripts/screens-off-bench.py`
+
 ## 2026-10-20 — hypeForge: Phase 11 closed, one pop-up standard (D-116), Sway tells where the pointer is
 - [x] **hypeForge** (details in [hypeforge/TODO.md](hypeforge/TODO.md)): Phase 11 closed (the apps' own title bars → Phase 12, removing KDE → Phase 15); **D-115** Waybar stays, our own bar scratched, a bar guard instead; **D-116** one pop-up standard for v1.0 — the panel kit on every style, the **list card** (on; Javier's live test 3/3); the previews fixed (F-79, F-80, F-81)
 - [x] **Our Sway, patch 3** (`hypeforge/sway-hypeforge/0003-…`): `get_seats` says where the pointer is; VM from nothing 7/7 (`hypeforge/testing/20261020 …`)
