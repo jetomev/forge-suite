@@ -1,0 +1,29 @@
+{
+  "colors": {
+    "a1": "#d20f39",
+    "a2": "#40a02b",
+    "a3": "#8f5500",
+    "a4": "#1d4fc4",
+    "a5": "#ea76cb",
+    "a6": "#179299",
+    "accent": "#1a1a1a",
+    "bar": "#999999",
+    "barText": "#111111",
+    "border": "#3a3a3a",
+    "btnIcon": "#ffffff",
+    "green": "#2b7a1c",
+    "inactive": "#bdbdbd",
+    "red": "#d20f39",
+    "selection": "#c8c8c8",
+    "subtext": "#555555",
+    "text": "#1c1c1c",
+    "titlebar": "#d2d2d2",
+    "window": "#ececec"
+  },
+  "kind": "light",
+  "name": "White",
+  "note": "",
+  "savedAt": "2026-10-07T16:33:59.171Z",
+  "theme": "white",
+  "wallpaper": "#ffffff"
+}

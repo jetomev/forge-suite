@@ -1,0 +1,226 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>hypeForge Look Build Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Noto+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: the brief and what to judge, then one large live screen (controls above it, theme
+   picker beside it), the three screens, how each piece is built, and the style file itself. */
+:root{
+  --paper:#f6f5f9; --card:#ffffff; --ink:#1d1b26; --ink-2:#55526a; --line:#e2e0ea;
+  --accent:#5b3fc0; --accent-soft:#ece7fb; --ok:#1f7a3a; --warn:#9a5b00; --no:#a3313a;
+  --f-display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"DejaVu Sans Mono",monospace;
+  --f-desk:"Noto Sans","IBM Plex Sans",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#15141b; --card:#1e1d27; --ink:#ecebf3; --ink-2:#a9a6bd; --line:#302e3d;
+  --accent:#c4b1ff; --accent-soft:#2a2540; --ok:#7fd99a; --warn:#f2c14e; --no:#ff9aa2; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body);padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,4.4vw,44px);font-weight:750;letter-spacing:-.01em}
+h2{font-size:24px;font-weight:750}
+h3{font-size:16px;font-weight:600}
+p{margin:0}
+code{font-family:var(--f-mono);font-size:.92em}
+.eyebrow{font:600 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{max-width:70ch;color:var(--ink-2);font-size:16px}
+header{display:grid;gap:12px}
+.steps{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.steps span{font:500 12px/1 var(--f-mono);padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2)}
+.steps span.done{color:var(--ok);border-color:currentColor}
+.steps span.on{background:var(--accent);border-color:var(--accent);color:var(--card)}
+section{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
+.sec-head{display:grid;gap:6px}
+.sec-head p{max-width:74ch;color:var(--ink-2)}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.asks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.ask{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:8px;align-content:start;min-width:0}
+.ask .id{font:600 12px/1 var(--f-mono);color:var(--accent)}
+.ask p{color:var(--ink-2);font-size:14px}
+.rec{font:600 11px/1 var(--f-mono);padding:3px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.ask p .rec{white-space:normal;display:inline-block;line-height:1.35}
+.reply{background:var(--accent-soft);border-radius:10px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.reply code{font:500 14px/1.4 var(--f-mono);color:var(--ink);word-break:break-word}
+.copy{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:6px;padding:5px 10px;font:600 12px/1 var(--f-mono)}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:end}
+.seg{display:grid;gap:5px}
+.seg>span{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.seg div{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:transparent;color:var(--ink-2);padding:7px 11px;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--card);font-weight:600}
+.explore{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.picker{order:-1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:8px}
+#fams{display:flex;flex-wrap:wrap;gap:10px 22px}
+.fam{display:grid;gap:6px}
+.fam h3{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 9px 3px 3px;font-size:12.5px}
+.chip i{width:18px;height:18px;border-radius:50%;flex:none;border:1px solid rgba(127,127,127,.35)}
+.chip[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;font-weight:600}
+.stage{display:grid;gap:12px;min-width:0}
+.cap{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink-2)}
+.cap b{color:var(--ink)}
+
+/* the timeline: one row per step, one column per day (Sun 11 Oct → Tue 3 Nov) */
+.tl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card);padding:14px 14px 10px}
+.tl-grid{display:grid;grid-template-columns:minmax(210px,1.4fr) repeat(24,minmax(22px,1fr));min-width:820px;row-gap:6px;font-size:13px;position:relative}
+.tl-day{font:500 10.5px/1.2 var(--f-mono);color:var(--ink-2);text-align:center;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.tl-day.wk{color:var(--ink)}
+.tl-name{padding:5px 10px 5px 0;display:flex;align-items:center;gap:8px;min-width:0}
+.tl-name b{font-weight:600}
+.tl-name small{color:var(--ink-2);font-size:12px}
+.tl-n{font:600 11px/1 var(--f-mono);color:var(--accent);min-width:2.4em}
+.bar{height:22px;align-self:center;border-radius:4px;background:var(--accent);position:relative;cursor:default;outline-offset:2px}
+.bar.side{background:color-mix(in srgb,var(--accent) 45%,var(--card))}
+.bar:hover,.bar:focus-visible{outline:2px solid var(--ink)}
+.gate{position:absolute;right:-7px;top:50%;width:13px;height:13px;transform:translateY(-50%) rotate(45deg);background:var(--warn);border:2px solid var(--card)}
+.tl-bg{grid-row:1/-1;border-left:1px dashed color-mix(in srgb,var(--line) 70%,transparent);pointer-events:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--ink-2);margin-top:10px}
+.legend i{display:inline-block;width:18px;height:10px;border-radius:3px;background:var(--accent);vertical-align:middle;margin-right:6px}
+.legend i.side{background:color-mix(in srgb,var(--accent) 45%,var(--card))}
+.legend i.lg-gate{width:10px;height:10px;transform:rotate(45deg);background:var(--warn);border-radius:0}
+.tip{position:fixed;z-index:10;max-width:320px;background:var(--ink);color:var(--card);border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.45;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.tip b{display:block;margin-bottom:2px}
+/* steps */
+.steps2{display:grid;gap:12px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 16px}
+.step .no{font:700 22px/1 var(--f-display);color:var(--accent);grid-row:1/4;min-width:1.6em}
+.step h3{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+.step h3 small{font:500 12px/1 var(--f-mono);color:var(--ink-2)}
+.step p{color:var(--ink-2);font-size:14px;max-width:80ch}
+.step ul{margin:4px 0 0;padding-left:18px;display:grid;gap:4px;font-size:14px;overflow-wrap:anywhere}
+.step>*{min-width:0}
+.step li::marker{color:var(--accent)}
+.step>:not(.no){grid-column:2}
+.gatebox{font-size:13px;color:var(--ink);background:color-mix(in srgb,var(--warn) 12%,transparent);border-radius:6px;padding:6px 10px;margin-top:6px}
+.gatebox b{color:var(--warn)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:8px;align-content:start;min-width:0}
+.box ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.box li::marker{color:var(--accent)}
+footer{color:var(--ink-2);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">hypeForge · the look · phase 4</p>
+  <h1>The build plan: from six approved styles to your desktop (approved)</h1>
+  <p class="lead">All six styles and the 25 themes are approved. This is the order I'd build them in, about three weeks of work. The shared pieces come first, because one taskbar part serves four styles and one panel code serves all six. Every step is tried on the hidden test desktop before it touches yours, and every step ends with you trying it. Nothing changes on your screen until you approve this plan.</p>
+</header>
+
+<section aria-labelledby="h-ask">
+  <div class="sec-head"><p class="eyebrow">Approved · D-78, 10 October</p><h2 id="h-ask">The plan, with your order</h2>
+  <p>B-1 the styles go Linux Rice, Windows 11, Mac OS 9, KDE, COSMIC, macOS. B-2 today's look stays as <b>hypeForge Classic</b>. B-3 the switcher is <b>themeForge</b>: a Forge app, a full page in hypeForge Settings, and a tray icon for a quick switch in KognogOS colours. B-4 <b>the Linux Rice is KognogOS's default style</b>.</p></div>
+</section>
+
+<section aria-labelledby="h-tl">
+  <div class="sec-head"><p class="eyebrow">The timeline</p><h2 id="h-tl">About three weeks, with a test of yours at the end of each step</h2>
+  <p>Estimates, not promises. Each diamond is a test you do on your own desktop; the next step starts after you pass it. DecadeDrop's launch at the end of November comes first if the two collide. Hover a bar for the details.</p></div>
+  <div class="tl"><div class="tl-grid" id="tl"></div>
+    <div class="legend"><span><i></i>Building</span><span><i class="side"></i>Alongside</span><span><i class="lg-gate"></i>Your test</span></div></div>
+</section>
+
+<section aria-labelledby="h-steps">
+  <div class="sec-head"><p class="eyebrow">The steps</p><h2 id="h-steps">What each step builds, and how you'll try it</h2></div>
+  <div class="steps2" id="steps"></div>
+</section>
+
+<section aria-labelledby="h-risk">
+  <div class="sec-head"><p class="eyebrow">Honest risks</p><h2 id="h-risk">What could slow it down</h2></div>
+  <div class="two">
+    <div class="box"><h3>Known risks</h3><ul>
+      <li>SwayFX on your Nvidia card is "not supported" by its makers (same as Sway); it may need driver settings or turn out slow on three 144 Hz screens. Plain Sway still gets every style.</li>
+      <li>SwayFX can freeze after several config reloads with shadows on (#566): the bench runs ten reloads before you ever see it.</li>
+      <li>Our own graphical panels are new territory (Python + GTK); the first one sets the pattern and may take longer.</li>
+      <li>KDE is still installed: a Plasma login can rewrite the GTK look again (F-52) until KDE leaves.</li>
+    </ul></div>
+    <div class="box"><h3>How the work stays safe</h3><ul>
+      <li>Every change to the desktop passes the hidden test desktop first (the F-51 rule).</li>
+      <li>Every theme switch keeps a backup and an undo; today's look stays one command away.</li>
+      <li>The SwayFX login sits beside the normal one; your Sway login is never touched.</li>
+      <li>Each step ends with your test; nothing stacks on an untested step.</li>
+    </ul></div>
+  </div>
+</section>
+
+<footer>Built by Javier and Claude for KognogOS. The approved styles: <code>hypeforge/docs/design/look/styles/</code>; decisions D-67 to D-77 in <code>hypeforge/docs/DECISIONS.md</code>. Page: <code>hypeforge/docs/design/look/build-plan/</code>.</footer>
+</div>
+
+<script>
+const START = new Date(2026, 9, 11); // Sun 11 Oct
+const DAYS = 24;
+const STEPS = [
+  {n:"1", name:"The theme engine", sub:"hypeforge-theme apply", from:"10-11", to:"10-13", gate:"Switch Mocha → Ember → back on your desktop; undo works", kind:"main",
+   does:"One command that writes every program's look from a style and a theme: Sway, the bar, the lists, notifications, the lock screen, GTK apps, the terminal, Midnight Commander, and sets the theme's wallpaper. It keeps a backup and an undo. It also fixes F-52 (KDE rewrote the GTK look).",
+   items:["The 25 themes and six styles move from research into hypeforge/themes/ and hypeforge/styles/","Every program reads a generated file (include / @import), so a switch rewrites only those files","Wallpapers made on demand by our generator, cached","Today's look kept as the \"hypeForge Classic\" style (B-2)"]},
+  {n:"2", name:"The SwayFX login", sub:"hypeForge FX", from:"10-13", to:"10-14", gate:"Log into hypeForge FX, try it, log back into Sway", kind:"main",
+   does:"SwayFX 0.6 built by us into its own folder (/opt/swayfx), so it never replaces Sway, and a second entry on the login screen. It reads your normal config plus one effects file.",
+   items:["Built from its signed source, installed by nog where possible","Benched: config check, 10 reloads with shadows, then a window inside today's Sway","Nvidia speed measured on your three screens"]},
+  {n:"3", name:"The bar parts", sub:"shared by all six", from:"10-14", to:"10-16", gate:"Pinned + running apps and the pills on today's bar", kind:"main",
+   does:"The pieces several styles share: pinned and running apps as one row (Windows 11's taskbar, the Dock, KDE's panel, COSMIC's dock), workspace pills and the KDE pager, the menus Mac OS 9 and macOS share.",
+   items:["A small Waybar part of ours for pinned + running","Workspace pills (rice), pager (KDE), text buttons (COSMIC)","The Window, Special and Application menus (Mac OS 9, macOS)"]},
+  {n:"4", name:"The panel toolkit", sub:"our graphical pop-ups (D-68)", from:"10-16", to:"10-21", gate:"Open Start and Quick Settings from today's bar", kind:"main",
+   does:"One Python + GTK base for every pop-up, and its views: Start / Launchpad / App Library / Kickoff, Quick Settings / Control Center / tray pages / applet pop-ups, the calendar with notifications, the workspaces strip, the big-button power menu.",
+   items:["Each tile calls the app that owns it (nightForge, displayForge, mako, NetworkManager)","Every view follows the theme and the style's shapes","Keyboard first: arrows, Enter, Esc, the underlined letters"]},
+  {n:"5a", name:"Style · the Linux Rice", sub:"KognogOS's default (B-4)", from:"10-21", to:"10-22", gate:"Live in it for a day", kind:"main", does:"One floating bar with three areas, pills, see-through terminals, the power buttons, the theme's wallpaper.", items:[]},
+  {n:"5b", name:"Style · Windows 11", sub:"", from:"10-22", to:"10-24", gate:"Live in it for a day", kind:"main", does:"The taskbar on every screen (icons left), the KDE-style Start, Quick Settings, the calendar, the tray drawer.", items:[]},
+  {n:"5c", name:"Style · Mac OS 9", sub:"", from:"10-24", to:"10-25", gate:"Live in it for a day", kind:"main", does:"The menu bar with the emblem menu, title bars, the Control Strip, the crisp shadow.", items:[]},
+    {n:"5d", name:"Style · KDE Plasma", sub:"", from:"10-25", to:"10-26", gate:"Live in it for a day", kind:"main", does:"The floating panel, the pager, Kickoff's list, Breeze title bars, one tray pop-up.", items:[]},
+  {n:"5e", name:"Style · COSMIC", sub:"", from:"10-26", to:"10-27", gate:"Live in it for a day", kind:"main", does:"The panel and the dock, the App Library, applet pop-ups, the active hint, three roundness choices.", items:[]},
+  {n:"5f", name:"Style · macOS", sub:"", from:"10-27", to:"10-29", gate:"Live in it for a day", kind:"main", does:"The frosted menu bar, the Dock, Spotlight, Launchpad, Control Center, Notification Center.", items:[]},
+  {n:"6", name:"themeForge", sub:"app · Settings page · tray icon (B-3)", from:"10-29", to:"11-02", gate:"Your run of the app inside Settings", kind:"main",
+   does:"A Forge app (terminal, forgekit), its full page in hypeForge Settings, and a tray icon in KognogOS colours for a quick switch: pick a style, a theme (with its wallpaper or your own), roundness, and whether SwayFX's effects are on.", items:["Shows each choice before saving, as the other Forge apps do","The tray icon's menu: the seven styles and your favourite themes, one click each","Same keys, same look as every Forge app"]},
+  {n:"7", name:"Documentation", sub:"alongside every step", from:"10-11", to:"11-03", gate:"", kind:"side",
+   does:"THEME.md rewritten for styles and themes, the Help guide pages, decisions, the README; the public pages only after you approve publishing (D-docs rule).", items:[]},
+];
+const $ = id => document.getElementById(id);
+const dayIndex = s => { const [m,d] = s.split("-").map(Number); return Math.round((new Date(2026, m-1, d) - START) / 864e5); };
+
+function timeline(){
+  const g = $("tl"); let h = `<span></span>`;
+  for (let i = 0; i < DAYS; i++) { const d = new Date(START); d.setDate(d.getDate()+i);
+    const wk = d.getDay() === 1; h += `<span class="tl-day ${wk?"wk":""}">${wk||i===0?d.toLocaleDateString("en-US",{month:"short"})+"<br>":"<br>"}${d.getDate()}</span>`; }
+  STEPS.forEach((s,r) => {
+    const a = Math.max(0, dayIndex(s.from)), b = Math.min(DAYS-1, dayIndex(s.to)), row = r + 2;
+    h += `<span class="tl-name" style="grid-row:${row};grid-column:1"><span class="tl-n">${s.n}</span><span><b>${s.name}</b>${s.sub?`<br><small>${s.sub}</small>`:""}</span></span>`;
+    h += `<span class="bar ${s.kind==="side"?"side":""}" tabindex="0" data-i="${r}" style="grid-row:${row};grid-column:${a+2} / ${b+3}">${s.gate?'<i class="gate"></i>':""}</span>`;
+  });
+  g.innerHTML = h;
+  const tip = document.createElement("div"); tip.className = "tip"; tip.hidden = true; document.body.appendChild(tip);
+  const fmt = s => { const [m,d] = s.split("-").map(Number); return new Date(2026,m-1,d).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}); };
+  const showTip = (el, x, y) => { const s = STEPS[+el.dataset.i]; tip.innerHTML = `<b>${s.n} · ${s.name}</b>${fmt(s.from)} → ${fmt(s.to)}${s.gate?`<br>Your test: ${s.gate}`:""}`; tip.hidden = false;
+    const w = tip.offsetWidth; tip.style.left = Math.min(x + 14, innerWidth - w - 12) + "px"; tip.style.top = (y + 16) + "px"; };
+  g.querySelectorAll(".bar").forEach(el => {
+    el.addEventListener("mousemove", e => showTip(el, e.clientX, e.clientY));
+    el.addEventListener("mouseleave", () => tip.hidden = true);
+    el.addEventListener("focus", () => { const r = el.getBoundingClientRect(); showTip(el, r.left, r.bottom); });
+    el.addEventListener("blur", () => tip.hidden = true);
+  });
+}
+
+function steps(){
+  const fmt = s => { const [m,d] = s.split("-").map(Number); return new Date(2026,m-1,d).toLocaleDateString("en-US",{month:"short",day:"numeric"}); };
+  $("steps").innerHTML = STEPS.map(s => `<article class="step"><span class="no">${s.n}</span><h3>${s.name}<small>${fmt(s.from)} → ${fmt(s.to)}</small></h3><p>${s.does}</p>${s.items.length?`<ul>${s.items.map(i=>`<li>${i}</li>`).join("")}</ul>`:"<span></span>"}${s.gate?`<span class="gatebox"><b>◆ Your test:</b> ${s.gate}</span>`:""}</article>`).join("");
+}
+
+$("copy")?.addEventListener("click", () => {
+  navigator.clipboard?.writeText($("reply-text").textContent).then(() => { $("copy").textContent = "Copied"; })
+    .catch(() => { const r = document.createRange(); r.selectNodeContents($("reply-text")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
+});
+timeline(); steps();
+</script>
+
+</body></html>

@@ -1,0 +1,133 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>hypeForge Terminal Palettes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+/* Layout: one row per desktop theme, "now" and "proposed" terminals side by side, the verdict under each pair. */
+:root {
+  --bg: #f3f1f7; --panel: #ffffff; --fg: #221f2b; --muted: #5d586b; --line: #dcd7e6; --accent: #7a4fc9;
+  --good: #1f7a45; --bad: #b3261e;
+  --display: "Bricolage Grotesque", "Segoe UI", sans-serif;
+  --body: "Atkinson Hyperlegible", "Noto Sans", system-ui, sans-serif;
+  --mono: "JetBrains Mono", "JetBrainsMono Nerd Font", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #16141c; --panel: #1f1c27; --fg: #ece8f4; --muted: #a39db3; --line: #332e40; --accent: #cba6f7;
+  --good: #7fd6a0; --bad: #f2a3a0; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #16141c; --panel: #1f1c27; --fg: #ece8f4; --muted: #a39db3; --line: #332e40; --accent: #cba6f7;
+  --good: #7fd6a0; --bad: #f2a3a0; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.5; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 28px; }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(28px, 4vw, 40px); margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+.lede { max-width: 68ch; color: var(--muted); margin: 6px 0 0; }
+.how { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; display: grid; gap: 8px; max-width: 80ch; }
+.how h2 { font-family: var(--display); font-size: 18px; margin: 0; }
+.how p { margin: 0; }
+section.theme { display: grid; gap: 12px; }
+.theme-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.theme-head h2 { font-family: var(--display); font-weight: 600; font-size: 24px; margin: 0; }
+.kind { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 1px 10px; }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 16px; }
+figure { margin: 0; display: grid; gap: 6px; min-width: 0; }
+figcaption { font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+figcaption b { color: var(--fg); letter-spacing: 0.02em; }
+.term { border-radius: 10px; overflow: hidden; box-shadow: 0 1px 0 var(--line), 0 10px 30px rgba(20, 10, 40, 0.12); min-width: 0; }
+.bar { display: flex; justify-content: space-between; align-items: center; padding: 5px 10px; font: 12px var(--mono); }
+.dots { display: flex; gap: 6px; }
+.dots i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+.screen { font: 13px/1.55 var(--mono); padding: 12px 14px 14px; overflow-x: auto; white-space: pre; }
+.b { font-weight: 700; }
+.sw { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; margin-top: 10px; }
+.sw span { height: 14px; border-radius: 2px; }
+.note { font-size: 14px; color: var(--muted); max-width: 90ch; margin: 0; }
+.note strong { color: var(--fg); }
+.foot { font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; max-width: 90ch; }
+@media (prefers-reduced-motion: no-preference) { .term { transition: transform .2s ease; } .term:hover { transform: translateY(-2px); } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Terminal colours, theme by theme</h1>
+    <p class="lede">Finding F-12 from VM test 1: Alacritty's colours look bad in some themes. For each of the five hypeForge themes, the left terminal shows today's colours and the right one the proposal. The output is what you see in a normal day: the prompt, fastfetch, a file listing, git and error messages.</p>
+  </header>
+
+  <div class="how">
+    <h2>Why today's colours go wrong</h2>
+    <p>A terminal has 16 colours. hypeForge builds them automatically from each theme, and on the light themes it gets <strong>"black" and "white" the wrong way round</strong>: "black" becomes a pale grey that almost disappears on the light background. The accent colours were also borrowed from the dark theme on the grey and black themes.</p>
+    <p>The proposal gives each theme a hand-picked set: <strong>Catppuccin Mocha</strong>'s official terminal colours for the three dark themes, <strong>Catppuccin Latte</strong>'s for the two light ones, with Latte's yellow, green and pink darkened so they stay readable on the light backgrounds.</p>
+  </div>
+
+  <div id="themes"></div>
+
+  <p class="foot">How the system switch and alacrittyForge work together: hypeForge writes the chosen theme's terminal colours to <code>~/.config/alacritty/themes/hypeforge-current.toml</code>, the same folder alacrittyForge's Themes section reads. Picking that entry in alacrittyForge means "follow the desktop"; picking any other theme there keeps that one for the terminal only. Tell Claude in the chat: for each theme, <b>proposed</b> or <b>now</b>, and any colour you want changed.</p>
+</div>
+
+<script>
+// 16 colours per palette: normal black red green yellow blue magenta cyan white, then the bright set.
+const MOCHA = ["#f38ba8","#a6e3a1","#f9e2af","#89b4fa","#f5c2e7","#94e2d5"];
+const LATTE_DARKENED = ["#d20f39","#2f7d1f","#a86a00","#1e66f5","#b3389f","#147f86"];
+const themes = [
+  { id:"mocha", name:"Catppuccin Mocha", kind:"dark, the default", bg:"#1e1e2e", fg:"#cdd6f4", bar:"#181825", accent:"#cba6f7",
+    now:{ black:"#45475a", white:"#a6adc8", bblack:"#45475a", bwhite:"#cdd6f4", acc:MOCHA },
+    pro:{ black:"#45475a", white:"#bac2de", bblack:"#585b70", bwhite:"#a6adc8", acc:MOCHA },
+    note:"Barely changes: the grey used for comments and file details gets a step lighter, so it no longer matches the selection colour." },
+  { id:"black", name:"Black", kind:"dark", bg:"#0f0f0f", fg:"#e4e4e4", bar:"#0a0a0a", accent:"#a3a3a3",
+    now:{ black:"#2a2a2a", white:"#9a9a9a", bblack:"#262626", bwhite:"#e4e4e4", acc:MOCHA },
+    pro:{ black:"#3a3a3a", white:"#bdbdbd", bblack:"#6b6b6b", bwhite:"#f2f2f2", acc:MOCHA },
+    note:"Today the grey for comments (#262626) is nearly invisible on black. The proposal lifts the greys so every line reads." },
+  { id:"green", name:"Green", kind:"light", bg:"#eef7f1", fg:"#143d2a", bar:"#dcece2", accent:"#1f6e45",
+    now:{ black:"#c6e3d0", white:"#3d6650", bblack:"#b3d4bf", bwhite:"#143d2a", acc:["#d20f39","#40a02b","#8f5500","#1d4fc4","#ea76cb","#179299"] },
+    pro:{ black:"#1f4a33", white:"#9fbfad", bblack:"#4a7a5e", bwhite:"#c8dccf", acc:["#b8142d","#1d6e2a","#7f5200","#1552b8","#8e2a7c","#0d6f68"], fg:"#0e3321" },
+    note:"Version 2, after Javier: \"the white and the green look too much alike\". Green now has its own set: deep-green \"black\", green-grey for comments and file details, and every colour a step darker for more contrast on the pale green. Today's version is the worst of the five: \"black\" is pale green, so file details and comments vanish." },
+  { id:"gray", name:"Gray", kind:"dark", bg:"#303030", fg:"#ececec", bar:"#262626", accent:"#d0d0d0",
+    now:{ black:"#4a4a4a", white:"#b3b3b3", bblack:"#4d4d4d", bwhite:"#ececec", acc:MOCHA },
+    pro:{ black:"#1e1e1e", white:"#c8c8c8", bblack:"#8a8a8a", bwhite:"#ffffff", acc:MOCHA },
+    note:"Today the comment grey (#4d4d4d) sits almost on the background (#303030). The proposal makes \"black\" darker than the background and the comment grey lighter than it." },
+  { id:"white", name:"White", kind:"light", bg:"#ececec", fg:"#1c1c1c", bar:"#dadada", accent:"#1a1a1a",
+    now:{ black:"#c8c8c8", white:"#555555", bblack:"#bdbdbd", bwhite:"#1c1c1c", acc:["#d20f39","#40a02b","#8f5500","#1d4fc4","#ea76cb","#179299"] },
+    pro:{ black:"#5c5f77", white:"#9ca0b0", bblack:"#6c6f85", bwhite:"#bcc0cc", acc:LATTE_DARKENED },
+    note:"Same problem as Green: \"black\" is a light grey. The proposal uses Latte's greys the right way round and darkens the pink and yellow." }
+];
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+function screen(t, p) {
+  const [red, green, yellow, blue, magenta, cyan] = p.acc;
+  const tf = p.fg || t.fg;
+  const c = (col, s, bold) => `<span style="color:${col}"${bold ? ' class="b"' : ""}>${esc(s)}</span>`;
+  const onBlack = `<span style="background:${p.black};color:${p.bwhite}"> text on the terminal's black </span> <span style="background:${p.white};color:${p.black}"> and on its white </span>`;
+  const lines = [
+    c(green,"javier",true) + c(tf,"@") + c(blue,"kognogos",true) + " " + c(cyan,"~/Programs/hypeforge") + " " + c(magenta,"❯"),
+    c(blue,"OS",true) + "      " + c(tf,"KognogOS v0.9.0-beta"),
+    c(blue,"Kernel",true) + "  " + c(tf,"7.2.7-arch1-1") + "   " + c(blue,"Desktop",true) + " " + c(tf,"Hyprland"),
+    "",
+    c(tf,"❯ ls -la"),
+    c(p.bblack,"drwxr-xr-x javier  4.0K Sep 30 ") + c(blue,"desktop/",true),
+    c(p.bblack,"lrwxrwxrwx javier    14 Sep 30 ") + c(cyan,"hypr -> hypeforge/hypr"),
+    c(p.bblack,"-rwxr-xr-x javier  1.9K Sep 30 ") + c(green,"install-into.sh",true),
+    c(p.bblack,"-rw-r--r-- javier   12K Sep 30 ") + c(tf,"TODO.md"),
+    "",
+    c(tf,"❯ git status --short"),
+    c(red," M desktop/hypr/theme.lua") + "   " + c(green,"A  desktop/walker/config.toml"),
+    c(yellow,"warning:",true) + c(tf," hyprshutdown can hang on NVIDIA + SDDM"),
+    c(red,"error:",true) + c(tf," target not found: elephant") + "  " + c(p.bblack,"# comment grey"),
+    onBlack
+  ];
+  const sw = [p.black, red, green, yellow, blue, magenta, cyan, p.white, p.bblack, red, green, yellow, blue, magenta, cyan, p.bwhite]
+    .map(x => `<span style="background:${x}" title="${x}"></span>`).join("");
+  const fg = p.fg || t.fg;
+  return `<div class="term" style="background:${t.bg};color:${fg}">
+    <div class="bar" style="background:${t.bar};color:${t.fg}"><span>~</span><span class="dots"><i style="background:${t.fg};opacity:.35"></i><i style="background:${red}"></i></span></div>
+    <div class="screen">${lines.join("\n")}<div class="sw">${sw}</div></div></div>`;
+}
+document.getElementById("themes").innerHTML = themes.map(t => `
+  <section class="theme" id="${t.id}">
+    <div class="theme-head"><h2>${t.name}</h2><span class="kind">${t.kind}</span></div>
+    <div class="pair">
+      <figure><figcaption><b>Now</b> what VM test 1 showed</figcaption>${screen(t, t.now)}</figure>
+      <figure><figcaption><b>Proposed</b> hand-picked 16 colours</figcaption>${screen(t, t.pro)}</figure>
+    </div>
+    <p class="note"><strong>What changes:</strong> ${t.note}</p>
+  </section>`).join("");
+</script>
+
+</body></html>

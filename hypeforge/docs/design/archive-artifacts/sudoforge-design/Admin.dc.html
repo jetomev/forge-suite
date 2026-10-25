@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The admin pop-up</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#89b4fa}a:hover{color:#b4befe}
+</style>
+</helmet>
+<div style="width: 720px; height: 480px; box-sizing: border-box; padding: 40px 60px; background: #11111b; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #cdd6f4">
+  <div style="border: 2px solid #cdd6f4; background: #1e1e2e">
+    <div style="background: #11111b; color: #cba6f7; padding: 8px 16px; font-weight: 700; display: flex; justify-content: space-between">
+      <span>sudoForge</span><span style="color: #a6adc8; font-weight: 400">admin rights</span>
+    </div>
+    <div style="padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; background: #313244; margin: 14px; border: 1px solid #585b70">
+      <div style="background: {{titleBg}}; color: #ffffff; font-weight: 700; font-size: 16px; text-align: center; padding: 10px 12px; line-height: 1.35; overflow-wrap: anywhere">Printers wants admin rights</div>
+      <div style="line-height: 1.5; text-align: center">To add the printer "HP LaserJet M15w".</div>
+      <div style="color: #a6adc8; font-size: 12px; text-align: center">Asked by system-config-printer · checked by the system (polkit)</div>
+      <div aria-hidden="true" style="height: 8px"></div>
+      <label for="pw-admin" style="color: #a6adc8; font-size: 12px; text-align: center">Password for jetomev</label>
+      <input id="pw-admin" type="password" value="" placeholder="password" style="font-family: 'JetBrains Mono', monospace; font-size: 14px; background: #1e1e2e; color: #cdd6f4; border: 1px solid #89b4fa; padding: 8px 10px; outline: none; text-align: center">
+      <div style="display: flex; justify-content: flex-end; gap: 12px">
+        <button type="button" style="font-family: 'JetBrains Mono', monospace; font-size: 14px; background: #45475a; color: #cdd6f4; border: none; padding: 8px 22px; min-height: 44px">Cancel</button>
+        <button type="button" style="font-family: 'JetBrains Mono', monospace; font-size: 14px; background: #2b4a7a; color: #cdd6f4; border: none; padding: 8px 30px; min-height: 44px; font-weight: 700">OK</button>
+      </div>
+    </div>
+    <div style="background: #11111b; padding: 6px 16px; font-size: 12px; color: #a6adc8"><span style="color: #89b4fa">Enter</span> OK · <span style="color: #89b4fa">Esc</span> Cancel</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"titleBg":{"editor":"color","default":"#1e1e2e","options":["#1e1e2e","#181825","#262637","#2b4a7a"]},"$preview":{"width":720,"height":480}}'>
+class Component extends DCLogic {
+  renderVals() { return { titleBg: this.props.titleBg ?? '#1e1e2e' }; }
+}
+</script>
+</body>
+</html>
