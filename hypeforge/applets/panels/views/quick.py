@@ -16,6 +16,9 @@ hypeForge Settings, the power buttons.
 `--only network|sound|bluetooth|night` (COSMIC's C-5, D-77; night: the Rice's moon, 10-10): one
 small pop-up per status icon — just that part, with a button to its full settings app (nmtui,
 wiremix, bluetui, nightForge).
+
+Pages (D-117, 2026-10-25, views/qspages.py): a tile's › (Night light) and the volume's › open that
+part's page inside this same card — "‹" or Esc goes back. `--only night|sound` opens that page alone.
 """
 
 from __future__ import annotations
@@ -32,6 +35,7 @@ from pathlib import Path
 from gi.repository import GLib, Gtk
 
 import panelkit
+import qspages
 
 NOTIFY = panelkit.APPLETS / "notifications/hypeforge-notifications"
 SNAPSHOT = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "kognog/updates.json"
@@ -194,6 +198,14 @@ class Night:
         st = self.control.status(s)
         return st["state"] == "warm", short(st["why"]), s.warmth, st["mode"]
 
+    def sentence(self) -> str:
+        """nightForge's own sentence, whole, for the Night light page (the tile has room for `short()` only)."""
+        st = self.control.status(self.settings.Settings.load())
+        why = st["why"]
+        if st["state"] != "warm" and not why.startswith(("Daylight Now", "switched off")):
+            why = "Daylight now · " + why
+        return why[:1].upper() + why[1:]
+
     def toggle(self, warm_now: bool):
         self.control.start(self.settings.Settings.load(), "day" if warm_now else "warm")
 
@@ -222,7 +234,7 @@ def redraw_moon():
 
 # Which sliders each pop-up shows (Javier, 2026-10-24: the night light has its own pop-up, so the full Quick
 # Settings keeps its tile, not the warmth slider)
-SLIDERS = {None: ("volume",), "sound": ("volume",), "night": ("warmth",), "network": (), "bluetooth": ()}
+SLIDERS = {None: ("volume",), "network": (), "bluetooth": ()}   # night and sound: their pages (D-117)
 
 
 def slider(low, high, step, now, words, changed=None, inverted=False):
@@ -240,6 +252,20 @@ def slider(low, high, step, now, words, changed=None, inverted=False):
             changed(s.get_value())
     scale.connect("value-changed", moved)
     return scale, number
+
+
+def split(t, on, opened):
+    """A tile and its ›: the tile switches the thing, the › opens its page (D-117)."""
+    box = Gtk.Box(spacing=0)
+    t.get_style_context().add_class("hf-split")
+    box.pack_start(t, True, True, 0)
+    arrow = Gtk.Button(label="›")
+    arrow.get_style_context().add_class("hf-arrow")
+    if on:
+        arrow.get_style_context().add_class("on")
+    arrow.connect("clicked", lambda _b: opened())
+    box.pack_start(arrow, False, False, 0)
+    return box
 
 
 def tile(name, icon, on, sub, clicked):
@@ -270,8 +296,57 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
                                        card=c["panel_bg"], line=c["panel_border"], pill=look.pill).encode())
     Gtk.StyleContext.add_provider_for_screen(panelkit.Gdk.Screen.get_default(), provider,
                                              Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1)
+    pages_css = Gtk.CssProvider()
+    pages_css.load_from_data(qspages.css(look))
+    Gtk.StyleContext.add_provider_for_screen(panelkit.Gdk.Screen.get_default(), pages_css,
+                                             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 2)
     be, night = Backend(), Night()
     only = getattr(args, "only", None)
+    # the card is a stack: the main page, and a part's page in its place when its › is clicked (D-117)
+    stack = Gtk.Stack()
+    stack.set_homogeneous(False)
+    stack.set_transition_type(Gtk.StackTransitionType.NONE)
+    stack.get_style_context().add_class("hf-quick")
+
+    tiles = {"fill": lambda: None}            # the tiles, once there are any (a page alone has none)
+
+    def refresh_later():
+        GLib.timeout_add(700, lambda: (tiles["fill"](), redraw_moon(), False)[2])
+
+    def shrink():
+        if panel is not None:
+            panel.window.resize(1, 1)          # the card takes the page's height, smaller or bigger
+
+    def back():
+        if stack.get_visible_child_name() == "main":
+            return False
+        old = stack.get_visible_child()
+        stack.set_visible_child_name("main")
+        stack.remove(old)
+        refresh_later()
+        GLib.idle_add(lambda: (shrink(), False)[1])
+        return True
+
+    def page_of(name, with_back):
+        go_back = back if with_back else None
+        close = lambda: panel.close()
+        if name == "night":
+            return qspages.night_page(night, go_back, close, refresh_later)
+        return qspages.sound_page(be, go_back, close)
+
+    def open_page(name):
+        page = page_of(name, True)
+        page.get_style_context().add_class("hf-quick")
+        stack.add_named(page, name)
+        page.show_all()
+        stack.set_visible_child_name(name)
+        GLib.idle_add(lambda: (shrink(), False)[1])
+
+    if only in qspages.ONLY_PAGE:              # a bar icon's pop-up: the page alone, no "‹"
+        page = page_of(qspages.ONLY_PAGE[only], False)
+        stack.add_named(page, "main")
+        return finish(stack, look, args)
+
     root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
     root.get_style_context().add_class("hf-quick")
     if only:
@@ -288,9 +363,6 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     root.pack_start(top, False, False, 0)
     grid = Gtk.Grid(column_spacing=8, row_spacing=8, column_homogeneous=True)
     root.pack_start(grid, False, False, 0)
-
-    def refresh_later():
-        GLib.timeout_add(700, lambda: (fill_tiles(), redraw_moon(), False)[2])
 
     def toggler(fn, on):
         def clicked(_b):
@@ -319,9 +391,13 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
                 fn = lambda _b: (panel.close(), panelkit.run_command("alacritty --class displayforge -e displayforge"))
             else:
                 fn = toggler(switch, on)
-            grid.attach(tile(name, icon, on, sub, fn), i % 3, i // 3, 1, 1)
+            t = tile(name, icon, on, sub, fn)
+            if not only and name in PAGES:         # its › opens its page (D-117)
+                t = split(t, on, lambda p=PAGES[name]: open_page(p))
+            grid.attach(t, i % 3, i // 3, 1, 1)
         grid.show_all()
 
+    tiles["fill"] = fill_tiles
     fill_tiles()
 
     # the sliders: which ones each pop-up shows (SLIDERS), each built with its own number (slider())
@@ -337,31 +413,23 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         row.pack_start(mute, False, False, 0)
         row.pack_start(scale, True, True, 0)
         row.pack_start(number, False, False, 0)
+        if not only:                               # the Sound page (D-117)
+            more = Gtk.Button(label="›")
+            for cls in ("flat", "hf-back"):
+                more.get_style_context().add_class(cls)
+            more.set_tooltip_text("Sound")
+            more.connect("clicked", lambda _b: open_page("sound"))
+            row.pack_start(more, False, False, 0)
         root.pack_start(row, False, False, 0)
     elif only == "sound":
         root.pack_start(Gtk.Label(label="No sound device found", xalign=0), False, False, 0)
-    if night.ok and "warmth" in wanted:
-        _w, _why, kelvin, mode = night.state()
-        row = Gtk.Box(spacing=10)
-        row.pack_start(Gtk.Image.new_from_icon_name("weather-clear-night", Gtk.IconSize.BUTTON), False, False, 0)
-        scale, number = slider(3000, 5000, 500, kelvin, lambda v: f"{int(round(v / 500) * 500)} K", inverted=True)
-        # the warmth is set when the slider is let go (nightForge restarts its filter), not on every step
-        scale.connect("button-release-event", lambda s, *_: (night.set_warmth(round(s.get_value() / 500) * 500), refresh_later(), False)[2])
-        row.pack_start(scale, True, True, 0)
-        row.pack_start(number, False, False, 0)
-        if mode != "auto":
-            back = Gtk.Button(label="Automatic")
-            back.get_style_context().add_class("flat")
-            back.connect("clicked", lambda _b: (night.automatic(), refresh_later()))
-            row.pack_start(back, False, False, 0)
-        root.pack_start(row, False, False, 0)
-
     if only:                     # a one-part pop-up ends with its full settings app
         more = Gtk.Button(label=f"{ONLY[only][0]} settings…")
         more.get_style_context().add_class("flat")
         more.connect("clicked", lambda _b: (panel.close(), panelkit.run_command(ONLY[only][2])))
         root.pack_start(more, False, False, 0)
-        return finish(root, look, args)
+        stack.add_named(root, "main")
+        return finish(stack, look, args)
 
     # the footer
     foot = Gtk.Box(spacing=8)
@@ -382,13 +450,21 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     foot.pack_end(power, False, False, 0)
     foot.pack_end(settings, False, False, 0)
     root.pack_start(foot, False, False, 0)
-    return finish(root, look, args)
+    stack.add_named(root, "main")
+    return finish(stack, look, args, escape=back)
 
 
-def finish(root, look, args) -> panelkit.Panel:
+PAGES = {"Night light": "night"}          # tiles with a page (D-117); Wi-Fi and Bluetooth come next
+
+
+panel = None
+
+
+def finish(root, look, args, escape=None) -> panelkit.Panel:
     global panel
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["bottom", "right"]
     margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"bottom": 60, "right": 10}
     panel = panelkit.Panel("quick", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()},
-                           width=panelkit.NARROW if getattr(args, "only", None) else panelkit.WIDE)
+                           width=panelkit.WIDE if getattr(args, "only", None) in (None, *qspages.ONLY_PAGE) else panelkit.NARROW)
+    panel.escape = escape
     return panel

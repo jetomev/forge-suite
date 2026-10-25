@@ -18,6 +18,7 @@ import panelkit  # noqa: E402
 import power  # noqa: E402
 import start  # noqa: E402
 import quick  # noqa: E402
+import qspages  # noqa: E402
 import calendar_view as hfcalendar  # noqa: E402
 import workspaces as wsview  # noqa: E402
 
@@ -217,6 +218,97 @@ def walk(widget):
             yield from walk(c)
 
 
+WPCTL = """PipeWire 'pipewire-0' [1.4.9, jetomev@tphome-linux, cookie:1]
+ └─ Clients:
+        33. pipewire                            [1.4.9, jetomev@tphome-linux, pid:1]
+
+Audio
+ ├─ Devices:
+ │      44. Ryzen HD Audio Controller           [alsa]
+ │      46. SteelSeries Arctis 5                [alsa]
+ │  
+ ├─ Sinks:
+ │      55. SteelSeries Arctis 5 Game           [vol: 0.36]
+ │      65. SteelSeries Arctis 5 Chat           [vol: 0.50]
+ │      67. GA106 High Definition Audio Controller Digital Stereo (HDMI) [Sceptre Y27] [vol: 0.55]
+ │  *   82. Ryzen HD Audio Controller Analog Stereo [vol: 0.40]
+ │  
+ ├─ Sources:
+ │  *   56. SteelSeries Arctis 5 Chat           [vol: 0.94]
+ │      63. C920 PRO HD Webcam Analog Stereo    [vol: 0.47]
+ │  
+ ├─ Filters:
+ │  
+ └─ Streams:
+
+Video
+ ├─ Devices:
+ │      77. C920 PRO HD Webcam                  [v4l2]
+ ├─ Sources:
+ │  *   90. C920 PRO HD Webcam (V4L2)
+"""
+
+
+class QuickSettingsPages(unittest.TestCase):
+    """D-117 (Javier, 2026-10-25): a tile's › opens its page inside Quick Settings; ‹ or Esc goes back."""
+
+    def test_sound_reads_this_computers_outputs_and_inputs(self):
+        d = qspages.parse_wpctl(WPCTL)
+        self.assertEqual([x["name"] for x in d["Sinks"]], ["SteelSeries Arctis 5 Game", "SteelSeries Arctis 5 Chat",
+                         "GA106 High Definition Audio Controller Digital Stereo (HDMI) [Sceptre Y27]",
+                         "Ryzen HD Audio Controller Analog Stereo"])
+        self.assertEqual([x["id"] for x in d["Sinks"] if x["now"]], ["82"], "the one in use")
+        self.assertEqual([x["name"] for x in d["Sources"]], ["SteelSeries Arctis 5 Chat", "C920 PRO HD Webcam Analog Stereo"],
+                         "audio only: the webcam's video source is not a microphone")
+        self.assertEqual([x["id"] for x in d["Sources"] if x["now"]], ["56"])
+
+    def test_nothing_to_read_is_empty_not_a_crash(self):
+        self.assertEqual(qspages.parse_wpctl(""), {"Sinks": [], "Sources": []})
+
+    def test_each_device_gets_an_icon_that_says_what_it_is(self):
+        self.assertEqual(qspages.sound_icon("SteelSeries Arctis 5 Game", False), "audio-headphones")
+        self.assertEqual(qspages.sound_icon("GA106 … Digital Stereo (HDMI) [Sceptre Y27]", False), "video-display")
+        self.assertEqual(qspages.sound_icon("Ryzen HD Audio Controller Analog Stereo", False), "audio-speakers")
+        self.assertEqual(qspages.sound_icon("C920 PRO HD Webcam Analog Stereo", True), "camera-web")
+        self.assertEqual(qspages.sound_icon("SteelSeries Arctis 5 Chat", True), "audio-input-microphone")
+
+    def test_esc_on_a_page_goes_back_before_it_closes(self):
+        from gi.repository import Gdk
+        closed = []
+
+        class Fake:
+            escape = None
+            def close(self):
+                closed.append(True)
+        key = Gdk.Event.new(Gdk.EventType.KEY_PRESS)
+        key.keyval = Gdk.KEY_Escape
+        p = Fake()
+        p.escape = lambda: True                         # a page was open: it went back
+        self.assertTrue(panelkit.Panel._key(p, None, key))
+        self.assertEqual(closed, [], "Esc on a page goes back to Quick Settings, it doesn't close")
+        p.escape = lambda: False                        # already on Quick Settings
+        panelkit.Panel._key(p, None, key)
+        self.assertEqual(closed, [True])
+        p.escape = None                                 # every other pop-up
+        panelkit.Panel._key(p, None, key)
+        self.assertEqual(closed, [True, True])
+
+    def test_the_night_light_page_says_it_whole(self):
+        night = quick.Night.__new__(quick.Night)
+        night.ok = True
+
+        class Settings:
+            @staticmethod
+            def load():
+                return object()
+        night.settings = type("S", (), {"Settings": Settings})
+        for st, words in (({"state": "day", "why": "warm again from 18:45"}, "Daylight now · warm again from 18:45"),
+                          ({"state": "warm", "why": "4000 K since 18:46 · daylight at 07:02"}, "4000 K since 18:46 · daylight at 07:02"),
+                          ({"state": "day", "why": "Daylight Now, until you pick Automatic"}, "Daylight Now, until you pick Automatic")):
+            night.control = type("C", (), {"status": staticmethod(lambda _s, st=st: st)})
+            self.assertEqual(night.sentence(), words)
+
+
 class ViewNames(unittest.TestCase):
     def test_no_view_module_shadows_the_standard_library(self):
         # views/ goes first on the import path: a view called calendar.py would replace Python's own
@@ -334,10 +426,10 @@ class QuickSettings(unittest.TestCase):
 
     def test_the_full_pop_up_has_no_warmth_slider(self):
         # Javier, 2026-10-24: "since we have a night light popup, we don't need the night light bar in the
-        # quick settings popup"; the Night light tile stays, the slider lives in the moon's pop-up
+        # quick settings popup"; the Night light tile stays, the slider lives on its page (D-117, 2026-10-25)
         self.assertEqual(quick.SLIDERS[None], ("volume",))
-        self.assertEqual(quick.SLIDERS["night"], ("warmth",))
-        self.assertEqual(quick.SLIDERS["sound"], ("volume",))
+        self.assertNotIn("night", quick.SLIDERS)
+        self.assertEqual(qspages.ONLY_PAGE, {"night": "night", "sound": "sound"}, "the moon and the speaker open their pages")
 
     def test_wifi_off_on_a_cable_says_so(self):
         be = quick.Backend(FakeRun({"nmcli -t -f WIFI radio": "disabled\n",

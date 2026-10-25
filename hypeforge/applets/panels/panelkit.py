@@ -243,6 +243,7 @@ class Panel:
     def __init__(self, view: str, content: Gtk.Widget, look: Look, edges=(), margins=None,
                  dim: bool = False, card: bool = True, width: int | None = None):
         self.view, self.look = view, look
+        self.escape = None          # a view's own Esc: True when it handled it (Quick Settings' pages go back)
         provider = Gtk.CssProvider()
         provider.load_from_data(look.css().encode())
         Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), provider,
@@ -287,6 +288,8 @@ class Panel:
 
     def _key(self, _w, event):
         if event.keyval == Gdk.KEY_Escape:
+            if self.escape and self.escape():     # a page inside the pop-up goes back first (D-117)
+                return True
             self.close()
             return True
         return False

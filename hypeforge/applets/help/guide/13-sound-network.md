@@ -9,11 +9,19 @@
 | **Volume** | the level, red when muted | **Quick Settings** | **wiremix**, the mixer |
 
 **Quick Settings** (on macOS it's called Control Center): tiles for Wi-Fi, Bluetooth, the night light,
-Do Not Disturb, Screens and VPN, the volume slider (the night light's warmth is in its own pop-up, from the moon), the update count, a button into
+Do Not Disturb, Screens and VPN, the volume slider, the update count, a button into
 **hypeForge Settings**, and the power buttons; the big buttons open the Forge apps (Screens →
-displayForge, updates → nogForge). A click anywhere else closes it. The **moon** next to the tray is
-the night light: its own small pop-up (Warm Now · Daylight Now · Automatic, the warmth slider, a button
-into nightForge). The **date, time and bell** are one piece too: a click opens the calendar with your
+displayForge, updates → nogForge). A click anywhere else closes it.
+
+**Pages inside Quick Settings** (2026-10-25): the small **›** on the Night light tile and at the end
+of the volume row opens that part's page **in the same card** — **‹** (or Esc) goes back to Quick
+Settings, and a click on the tile itself still just switches it on or off.
+- **Night light** — on/off, what it's doing in words ("Daylight now · warm again from 18:45"), the
+  warmth slider, **Warm now** and **Automatic**, and **Night light settings…** (nightForge).
+- **Sound** — the volume, your **outputs** (speakers, headset, a screen's speakers) and your
+  **microphones**: click one to make it the one in use; **Sound settings…** opens wiremix.
+The **moon** next to the tray opens the Night light page on its own, and the speaker the Sound page.
+Wi-Fi and Bluetooth pages come next. The **date, time and bell** are one piece too: a click opens the calendar with your
 alerts as cards; a right click on the bell switches Do Not Disturb.
 
 **Scroll** over the volume icon for louder / quieter; the volume keys on the keyboard work too.

@@ -51,6 +51,9 @@ def main() -> int:
                     "(e.g. \"--only sound --edges top,right --margin top=44,right=8\")")
     ap.add_argument("--notes", action="store_true", help="send three sample notifications first")
     ap.add_argument("--system", action="store_true", help="system: this computer's readings with three made-up minutes behind them")
+    ap.add_argument("--click", action="append", default=[], metavar="X,Y",
+                    help="a real left click there once the panel is up (repeat it: each click gets its own picture, "
+                         "<out>-1.png, -2.png …; e.g. a Quick Settings tile's › then the page's ‹)")
     ap.add_argument("--tray", action="store_true", help="traymenu: hypeForge's tray and a stand-in tray app (Dropbox's menu shape) first")
     a = ap.parse_args()
     out = Path(a.out or HERE / f"logs/panel-preview-{a.view}-{a.style}-{a.theme}.png")
@@ -142,6 +145,15 @@ def main() -> int:
                                       env=env, stdout=log, stderr=log))
         time.sleep(8 if a.view == "quick" else 5 if a.view in ("start", "kickoff", "library") else 3)   # quick asks nmcli, bluetoothctl…
         shot = base / "shot.png"
+        for n, spot in enumerate(a.click, 1):     # the hidden Sway has no mouse: fake-pointer.py is one
+            x, y = spot.split(",")
+            subprocess.run([sys.executable, str(HERE / "scripts/fake-pointer.py"), x, y, "--click", "--hold", "0.3"],
+                           env=env, stdout=log, stderr=log, timeout=30)
+            time.sleep(1.5)
+            subprocess.run(["grim", "-s", str(a.scale), str(shot)], env=env, check=True)
+            step = out.with_name(f"{out.stem}-{n}{out.suffix}")
+            step.write_bytes(shot.read_bytes())
+            print(step)
         subprocess.run(["grim", "-s", str(a.scale), str(shot)], env=env, check=True)
         out.write_bytes(shot.read_bytes())
         print(out)
