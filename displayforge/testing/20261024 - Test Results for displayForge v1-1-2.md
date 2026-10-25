@@ -2,7 +2,7 @@
 
 *2026-10-24 · Javier's run of [the matrix](20261024%20-%20Test%20Matrix%20for%20displayForge%20v1-1-2.md), the code on `main` (F-8, F-9, F-10). The test VM `kognog-hypeforge` (snapshot `screens-test-before` first) in virt-viewer; the desktop: NVIDIA RTX 3060, three Sceptre Y27 (2560 × 1440), Sway (hypeForge, KDE style · Dark Blue).*
 
-**Result: PASS — every row, after one finding fixed during the run (F-10).**
+**Result: PASS — every row, after one finding fixed during the run (F-10); the installed package passed at 1.1.4, after F-11 and F-12 (below).**
 
 | # | What | Result |
 |---|---|---|
@@ -18,6 +18,14 @@
 | D1 | A text console, no Sway: the start-up check | ✅ |
 | D2 | A text console pointed at the desktop: readable, the boxes' right edge | ✅ |
 | D3 | Back to the desktop | ✅ |
+
+## The package, installed (Javier's local tests, the same evening)
+
+| Package | What | Result |
+|---|---|---|
+| 1.1.2-1 | 90 % → F9 → Esc | ❌ crash, `InvalidStateError` → **F-11 #127** → 1.1.3 |
+| 1.1.3-1 | F9 pressed during the countdown | ❌ a second countdown over the first, then frozen; force-quit → **F-12 #128** → 1.1.4 |
+| 1.1.4-1 | the title says 1.1.4; 90 % → F9, then F9 several times, F10, Ctrl+Q during the countdown ("Answer the countdown first"), Esc at different moments and near zero, several rounds | ✅ *"ok, all good"* → **AUR 1.1.4-1 pushed** (`41c5dc4`), the only AUR push: 1.1.1 → 1.1.4 |
 
 ## Findings
 
