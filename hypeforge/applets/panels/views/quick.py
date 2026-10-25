@@ -17,9 +17,9 @@ hypeForge Settings, the power buttons.
 small pop-up per status icon — just that part, with a button to its full settings app (nmtui,
 wiremix, bluetui, nightForge).
 
-Pages (D-117, 2026-10-25, views/qspages.py): a click on a big tile that has a page (Night light, Wi-Fi), or on
+Pages (D-117, 2026-10-25, views/qspages.py): a click on a big tile that has a page (Night light, Wi-Fi, Bluetooth), or on
 the icon right of the volume's number, opens that part's page inside this same card — "‹" or Esc goes
-back; its on/off switch is on the page; the speaker mutes. `--only night|sound|network` opens that page alone.
+back; its on/off switch is on the page; the speaker mutes. `--only night|sound|network|bluetooth` opens that page alone.
 """
 
 from __future__ import annotations
@@ -348,6 +348,8 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
             return qspages.night_page(night, go_back, close, refresh_later)
         if name == "wifi":
             return qspages.wifi_page(be.run, go_back, close, refresh_later)
+        if name == "bluetooth":
+            return qspages.bluetooth_page(be.run, go_back, close, refresh_later)
         return qspages.sound_page(be, go_back, close)
 
     def open_page(name):
@@ -453,7 +455,7 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     return finish(stack, look, args, escape=back)
 
 
-PAGES = {"Night light": "night", "Wi-Fi": "wifi"}   # tiles that open a page (D-117); Bluetooth comes next
+PAGES = {"Night light": "night", "Wi-Fi": "wifi", "Bluetooth": "bluetooth"}   # tiles that open a page (D-117)
 
 
 panel = None

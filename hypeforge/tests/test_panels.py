@@ -419,6 +419,52 @@ class WifiPage(unittest.TestCase):
         self.assertEqual(qspages.ONLY_PAGE["network"], "wifi", "the bar's network pop-up is the page too")
 
 
+class BluetoothPage(unittest.TestCase):
+    """D-117 (Javier, 2026-10-25): "Same for bluetooth." Your devices, Connect / Disconnect, pair a new one."""
+
+    def runner(self, answers, seen):
+        def run(cmd, timeout=3.0):
+            seen.append(list(cmd))
+            return answers.get(" ".join(cmd[1:]), "")
+        return run
+
+    ANSWERS = {"show": "\tPowered: yes\n",
+               "devices Paired": "Device AA:01 WH-1000XM4\nDevice AA:02 Xbox Wireless Controller\nDevice AA:03 a keyboard\n",
+               "info AA:01": "\tIcon: audio-headset\n\tConnected: yes\n\tBattery Percentage: 0x50 (80)\n",
+               "info AA:02": "\tIcon: input-gaming\n\tConnected: no\n",
+               "info AA:03": "\tConnected: no\n",
+               "connect AA:02": "Attempting to connect to AA:02\nConnection successful\n",
+               "connect AA:03": "Failed to connect: org.bluez.Error.Failed\n",
+               "disconnect AA:01": "Successful disconnected\n"}
+
+    def test_your_devices_the_connected_first(self):
+        bt = qspages.Bluetooth(self.runner(self.ANSWERS, []))
+        d = bt.devices()
+        self.assertEqual([x["name"] for x in d], ["WH-1000XM4", "a keyboard", "Xbox Wireless Controller"])
+        self.assertEqual((d[0]["connected"], d[0]["battery"], d[0]["icon"]), (True, 80, "audio-headset"))
+        self.assertIsNone(d[1]["battery"], "no battery said: none shown")
+
+    def test_connect_and_disconnect_say_whether_they_worked(self):
+        seen = []
+        bt = qspages.Bluetooth(self.runner(self.ANSWERS, seen))
+        self.assertTrue(bt.connect("AA:02"))
+        self.assertFalse(bt.connect("AA:03"), "a failure is a failure, not a success")
+        self.assertTrue(bt.disconnect("AA:01"))
+        self.assertIn(["bluetoothctl", "connect", "AA:02"], seen)
+
+    def test_off_and_missing(self):
+        self.assertFalse(qspages.Bluetooth(self.runner({"show": "\tPowered: no\n"}, [])).on())
+        self.assertIsNone(qspages.Bluetooth(self.runner({}, [])).on(), "no Bluetooth at all")
+
+    def test_each_device_gets_its_icon(self):
+        self.assertEqual(qspages.BT_ICONS["audio-headset"], "audio-headphones-symbolic")
+        self.assertEqual(qspages.BT_ICONS["input-gaming"], "input-gaming-symbolic")
+
+    def test_the_tile_opens_the_page(self):
+        self.assertEqual(quick.PAGES["Bluetooth"], "bluetooth")
+        self.assertEqual(qspages.ONLY_PAGE["bluetooth"], "bluetooth")
+
+
 class ViewNames(unittest.TestCase):
     def test_no_view_module_shadows_the_standard_library(self):
         # views/ goes first on the import path: a view called calendar.py would replace Python's own
@@ -539,7 +585,7 @@ class QuickSettings(unittest.TestCase):
         # quick settings popup"; the Night light tile stays, the slider lives on its page (D-117, 2026-10-25)
         self.assertEqual(quick.SLIDERS[None], ("volume",))
         self.assertNotIn("night", quick.SLIDERS)
-        self.assertEqual(qspages.ONLY_PAGE, {"night": "night", "sound": "sound", "network": "wifi"}, "the bar's pop-ups open their pages")
+        self.assertEqual(qspages.ONLY_PAGE, {"night": "night", "sound": "sound", "network": "wifi", "bluetooth": "bluetooth"}, "the bar's pop-ups open their pages")
 
     def test_wifi_off_on_a_cable_says_so(self):
         be = quick.Backend(FakeRun({"nmcli -t -f WIFI radio": "disabled\n",

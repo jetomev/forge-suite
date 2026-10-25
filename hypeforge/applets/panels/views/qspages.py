@@ -10,6 +10,8 @@ opens its full app (Javier: "a button/icon bottom right side of the popup").
   Sound         the volume, your outputs and your microphones; a click makes one the one in use (WirePlumber)
   Wi-Fi         on/off; the cable; the networks nearby, strongest first: a click connects (a password box
                 opens under a new secured one), the connected one has Disconnect (NetworkManager, nmcli)
+  Bluetooth     on/off; your devices, the connected ones first, Connect / Disconnect, the battery when the
+                device tells it; "Pair a new device…" opens the full app (BlueZ, bluetoothctl)
 """
 
 from __future__ import annotations
@@ -38,7 +40,7 @@ CSS = """
 """
 
 # which page each bar icon's pop-up opens (`--only`)
-ONLY_PAGE = {"night": "night", "sound": "sound", "network": "wifi"}
+ONLY_PAGE = {"night": "night", "sound": "sound", "network": "wifi", "bluetooth": "bluetooth"}
 
 
 def css(look: panelkit.Look) -> bytes:
@@ -535,5 +537,139 @@ def wifi_page(run, back, close, refresh) -> Gtk.Box:
               GLib.timeout_add_seconds(SCAN_EVERY_S, lambda: (later(wifi.rescan, lambda _r: look()) if state["on"] else None, True)[1])]
     page.connect("destroy", lambda *_: [GLib.source_remove(t) for t in timers])
     page.pack_start(foot("networkForge (nmtui until it exists)", lambda: (close(), panelkit.run_command("hypeforge-nmtui"))),
+                    False, False, 0)
+    return page
+
+
+# ---- Bluetooth (BlueZ) --------------------------------------------------------------------------
+
+BT_ICONS = {"audio-headset": "audio-headphones-symbolic", "audio-headphones": "audio-headphones-symbolic",
+            "audio-card": "audio-speakers-symbolic", "input-gaming": "input-gaming-symbolic",
+            "input-keyboard": "input-keyboard-symbolic", "input-mouse": "input-mouse-symbolic",
+            "input-tablet": "input-tablet-symbolic", "phone": "phone-symbolic", "computer": "computer-symbolic"}
+BLUETUI = "alacritty --class hf-bluetooth -o window.dimensions.columns=110 -o window.dimensions.lines=30 -e bluetui"
+
+
+def parse_bt_info(text: str) -> dict:
+    """`bluetoothctl info <address>` → connected, icon, battery (None when the device doesn't tell)."""
+    info = {"connected": False, "icon": "", "battery": None}
+    for line in text.splitlines():
+        line = line.strip()
+        if line.startswith("Connected:"):
+            info["connected"] = line.split(":", 1)[1].strip() == "yes"
+        elif line.startswith("Icon:"):
+            info["icon"] = line.split(":", 1)[1].strip()
+        elif line.startswith("Battery Percentage:"):
+            m = re.search(r"\((\d+)\)", line)
+            info["battery"] = int(m.group(1)) if m else None
+    return info
+
+
+class Bluetooth:
+    """What the page asks BlueZ, through `bluetoothctl` (the same as the tile). `run` is swapped in tests."""
+
+    def __init__(self, run):
+        self.run = run
+
+    def on(self) -> bool | None:
+        show = self.run(["bluetoothctl", "show"])
+        return None if "Powered:" not in show else "Powered: yes" in show
+
+    def switch(self, on: bool):
+        self.run(["bluetoothctl", "power", "on" if on else "off"])
+
+    def devices(self) -> list[dict]:
+        """Your paired devices, the connected ones first, then by name."""
+        out = []
+        for line in self.run(["bluetoothctl", "devices", "Paired"]).splitlines():
+            parts = line.split(" ", 2)
+            if len(parts) == 3 and parts[0] == "Device":
+                d = {"address": parts[1], "name": parts[2], **parse_bt_info(self.run(["bluetoothctl", "info", parts[1]]))}
+                out.append(d)
+        return sorted(out, key=lambda d: (not d["connected"], d["name"].lower()))
+
+    def connect(self, address: str) -> bool:
+        return "successful" in self.run(["bluetoothctl", "connect", address], timeout=20).lower()
+
+    def disconnect(self, address: str) -> bool:
+        return "successful" in self.run(["bluetoothctl", "disconnect", address], timeout=10).lower()
+
+
+def bt_picture(state: dict) -> tuple:
+    return (state["on"], tuple((d["address"], d["name"], d["connected"], d["battery"]) for d in state["devices"]),
+            state["note"], tuple(sorted(state["working"])))
+
+
+def bluetooth_page(run, back, close, refresh) -> Gtk.Box:
+    bt = Bluetooth(run)
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+    body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    state = {"on": bt.on(), "devices": [], "note": "", "shown": None, "working": set()}
+
+    def later(fn, then):
+        threading.Thread(target=lambda: GLib.idle_add(lambda r=fn(): (then(r), False)[1]), daemon=True).start()
+
+    def switched(want):
+        later(lambda: bt.switch(want), lambda _r: (refresh(), look()))
+
+    page.pack_start(head("Bluetooth", back, state["on"] if state["on"] is not None else None, switched), False, False, 0)
+    page.pack_start(body, False, False, 0)
+
+    def look():
+        state["on"] = bt.on()
+        state["devices"] = bt.devices() if state["on"] else []
+        draw()
+        return True
+
+    def act(d, connect):
+        state["working"].add(d["address"])
+        state["note"] = ""
+        draw()
+
+        def done(ok):
+            state["working"].discard(d["address"])
+            if not ok:
+                state["note"] = f"Couldn't {'connect' if connect else 'disconnect'} {d['name']}" + \
+                                (": is it on, and close by?" if connect else ".")
+            look()
+            refresh()
+        later(lambda: bt.connect(d["address"]) if connect else bt.disconnect(d["address"]), done)
+
+    def draw(force=False):
+        pic = bt_picture(state)
+        if pic == state["shown"] and not force:
+            return
+        state["shown"] = pic
+        for child in body.get_children():
+            body.remove(child)
+        if state["on"] is None:
+            body.pack_start(status("No Bluetooth on this computer."), False, False, 0)
+        elif state["on"] is False:
+            body.pack_start(status("Bluetooth is off."), False, False, 0)
+        else:
+            body.pack_start(section("Your devices"), False, False, 0)
+            items = []
+            for d in state["devices"]:
+                busy = d["address"] in state["working"]
+                sub = ("Connecting…" if not d["connected"] else "Disconnecting…") if busy else \
+                      (f"Connected · battery {d['battery']} %" if d["battery"] is not None else "Connected") if d["connected"] \
+                      else "Not connected"
+                items.append({"icon": BT_ICONS.get(d["icon"], "bluetooth-symbolic"), "name": d["name"], "sub": sub,
+                              "on": d["connected"] and not busy,
+                              "button": None if busy else ("Disconnect" if d["connected"] else "Connect",
+                                                           lambda d=d: act(d, not d["connected"]))})
+            items.append({"icon": "list-add-symbolic", "name": "Pair a new device…",
+                          "sub": "in the Bluetooth app", "picked": lambda: (close(), panelkit.run_command(BLUETUI))})
+            if not state["devices"]:
+                body.pack_start(status("No devices yet: pair one first."), False, False, 0)
+            body.pack_start(rows(items), False, False, 0)
+        if state["note"]:
+            body.pack_start(status(state["note"]), False, False, 0)
+        body.show_all()
+
+    look()
+    timer = GLib.timeout_add(3000, look)          # a device connecting by itself shows up without reopening
+    page.connect("destroy", lambda *_: GLib.source_remove(timer))
+    page.pack_start(foot("bluetoothForge (bluetui until it exists)", lambda: (close(), panelkit.run_command(BLUETUI))),
                     False, False, 0)
     return page

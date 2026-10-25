@@ -30,8 +30,12 @@ start of the volume row mutes.
   next to the switch looks again at once. Up to 8 named networks, strongest first; **Hidden
   network…** joins one that doesn't show its name (you type the name and password). The icon at the
   bottom right opens the full network settings (nmtui, until networkForge).
-The bar's network icon opens the Wi-Fi page on its own, and the speaker the Sound page. The Bluetooth
-page comes next. Your password is never put on a command line (where any program could read it): it
+- **Bluetooth** — the switch in the title row; **your devices**, the connected ones first, each with
+  **Connect** or **Disconnect** (and its battery, when the device tells it); *Connecting…* while it
+  works, and a note if it couldn't (is it on, and close by?). **Pair a new device…** opens the
+  Bluetooth app (bluetui, until bluetoothForge), and so does the icon at the bottom right.
+The bar's network icon opens the Wi-Fi page on its own, the Bluetooth icon its page, and the speaker
+the Sound page. Your password is never put on a command line (where any program could read it): it
 goes to NetworkManager through a private file that is deleted right after. The **date, time and bell** are one piece too: a click opens the calendar with your
 alerts as cards; a right click on the bell switches Do Not Disturb.
 
