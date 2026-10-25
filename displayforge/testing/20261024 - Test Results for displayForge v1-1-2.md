@@ -22,7 +22,6 @@
 ## Findings
 
 - **F-11 [#127](https://github.com/jetomev/forge-suite/issues/127)** (Javier, his local test of the **1.1.2 package**, after the run above): 90 % → F9 → Esc, and the app crashed (`InvalidStateError`) — the countdown's clock ticked once more after the answer. Screens fine. Fixed; **ships as 1.1.3** (1.1.2 was already on GitHub; it never went to the AUR).
-
 - **F-9 [#125](https://github.com/jetomev/forge-suite/issues/125)** (Claude's bench, before the run): a screen that lists no sizes (a virtual one) crashed Settings. Fixed `43fe5a5`.
 - **F-10 [#126](https://github.com/jetomev/forge-suite/issues/126)** (Javier, row C5): 80 / 90 % on a screen with a neighbour said "these screens overlap" and changed nothing — a smaller size gives a screen more desktop and it grew into the next one. Now the screens beside it slide. Fixed `57b7ac9`; the bench had missed it because it resized only the rightmost screen.
 

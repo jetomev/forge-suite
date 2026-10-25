@@ -2,6 +2,13 @@
 
 *Newest first.*
 
+## 1.1.3 — 2026-10-24 · the countdown window answers once
+
+- **Esc in the "Keep these settings?" countdown could crash displayForge** ([F-11 #127](https://github.com/jetomev/forge-suite/issues/127), found by Javier in his local test of the 1.1.2 package): the window's once-a-second clock kept running after the answer, and a late tick redrew a window already gone or answered a second time (`InvalidStateError`). Your screens were never affected — the change had already been undone. Now the window answers once and its clock stops with the answer.
+- **1.1.2 never went to the AUR**: it was on GitHub when F-11 was found, so the AUR goes from 1.1.1 straight to 1.1.3.
+
+Tests: 72 → **73**. Warnings: 0 → 0.
+
 ## 1.1.2 — 2026-10-24 · tested on one and two screens; 80 / 90 % works beside other screens
 
 Javier's run of the stage-03 tests ([the matrix](../testing/20261024%20-%20Test%20Matrix%20for%20displayForge%20v1-1-2.md), [the results](../testing/20261024%20-%20Test%20Results%20for%20displayForge%20v1-1-2.md)): one and two screens in a virtual machine, 80 / 90 % on real apps, a plain text console — every row passed, after F-10 was fixed during the run.
