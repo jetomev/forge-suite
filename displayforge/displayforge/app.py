@@ -775,6 +775,17 @@ class DisplayForgeApp(ForgeApp):
             self.notify("Changes discarded. Nothing was changed on your screens.")
 
     # -- try, keep or go back --------------------------------------------------------------------
+    def _window_open(self) -> bool:
+        """A window over the app (the countdown, a review, a question): F9 and F10 are keys that work on
+        every page, and pressed under the countdown they opened a second one over it — it reached 1
+        and nothing answered (F-12, Javier's local test of 1.1.3). They wait for the window's answer."""
+        return len(self.screen_stack) > 1
+
+    def check_action(self, action: str, parameters) -> bool | None:
+        if action in ("try_it", "save") and self._window_open():
+            return False                          # the key goes on to the window, as if F9 / F10 weren't bound
+        return super().check_action(action, parameters)
+
     @work(exclusive=True, group="df-try")
     async def action_try_it(self) -> None:
         if self.current_section not in self.CHANGING:
@@ -872,6 +883,9 @@ class DisplayForgeApp(ForgeApp):
         """1.1.0 (Javier, 2026-10-08): anything not finished gets a proper question before quitting:
         apply it now (try with the countdown, then save) or quit without it. Esc stays."""
         se = self.session
+        if any(isinstance(w, KeepDialog) for w in self.screen_stack):    # F-12: quit waits for the countdown
+            self.notify("Answer the countdown first: Keep It (Enter) or Go Back Now (Esc).", timeout=5)
+            return False
         if not (se.change_count or self.kept_not_saved):
             return True
         if se.change_count:

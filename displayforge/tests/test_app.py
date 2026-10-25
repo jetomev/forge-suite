@@ -64,6 +64,54 @@ class App(unittest.TestCase):
         asyncio.run(go())
         return app
 
+    def test_keys_during_the_countdown_wait_for_its_answer(self):
+        # F-12 (Javier's local test of 1.1.3, 2026-10-24): F9 pressed while "Keep these settings?" counted down
+        # opened a second countdown over the first; it reached 1 and nothing answered — he had to kill the app.
+        # F9, F10 and Quit are keys that work everywhere; under the countdown they must wait for its answer.
+        from displayforge.app import ApplyDialog, KeepDialog
+
+        async def steps(app, pilot):
+            await pilot.press("2")
+            await pilot.pause(0.3)
+            self.session.change("DP-3", scale=0.9)
+            app.query_one(SettingsView)._changed()
+            await pilot.pause(0.2)
+            waiting = self.session.change_count            # its size, and the screen on its right sliding (F-10)
+            await pilot.press("f9")
+            await pilot.pause(0.4)
+            self.assertIsInstance(app.screen, KeepDialog, "the countdown is open")
+            for key in ("f9", "f10", "ctrl+q", "1"):
+                await pilot.press(key)
+                await pilot.pause(0.3)
+            dialogs = [type(s).__name__ for s in app.screen_stack if isinstance(s, (KeepDialog, ApplyDialog))]
+            self.assertEqual(dialogs, ["KeepDialog"], "one countdown, nothing over it")
+            await pilot.press("escape")
+            await pilot.pause(0.4)
+            self.assertFalse(any(isinstance(s, (KeepDialog, ApplyDialog)) for s in app.screen_stack), "answered, closed")
+            self.assertEqual(self.session.change_count, waiting, "Go Back: the changes wait again, untried")
+        self.run_app(steps)
+        tried = [l for l in self.lines("sway.log") if "scale" in l]
+        self.assertEqual(len(tried), 2, f"tried once and undone once, nothing more: {tried}")
+
+    def test_f9_twice_at_once_tries_once(self):
+        # F-12's cousin: two F9 in a row (a held key) before the countdown window is up
+        from displayforge.app import KeepDialog
+
+        async def steps(app, pilot):
+            await pilot.press("2")
+            await pilot.pause(0.3)
+            self.session.change("DP-3", scale=0.9)
+            app.query_one(SettingsView)._changed()
+            await pilot.pause(0.2)
+            await pilot.press("f9", "f9", "f9")
+            await pilot.pause(0.5)
+            self.assertEqual(sum(isinstance(s, KeepDialog) for s in app.screen_stack), 1, "one countdown")
+            await pilot.press("enter")
+            await pilot.pause(0.4)
+        self.run_app(steps)
+        tried = [l for l in self.lines("sway.log") if "scale" in l]
+        self.assertEqual(len(tried), 1, f"tried once, kept: {tried}")
+
     def test_change_try_keep_save(self):
         async def steps(app, pilot):
             se = self.session
