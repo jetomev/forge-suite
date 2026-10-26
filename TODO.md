@@ -2,6 +2,12 @@
 
 **Target: the first KognogOS release (v1.0, April 2027).** Each section keeps its own detailed list; this one tracks the suite. Updated after every step.
 
+## 2026-10-25 — KognogOS stage 03 complete: Quick Settings pages, nightForge 1.1.1, the bar waits for sound
+- [x] **hypeForge (D-117):** Quick Settings pages for Night light, Sound, Wi-Fi (networks, password, hidden networks, refresh), Bluetooth and Printer; a tile opens its page, each page's app icon is at the bottom right; Do Not Disturb moved to the calendar; the moon and the printer left every bar; notification cards approved, which closed **stage 03, 14/14** (hypeforge/TODO.md)
+- [x] **nightForge 1.1.1 — GitHub + AUR** (#129, AUR `65394dc`): its tray icon steps aside on any hypeForge bar; his login check passed
+- [x] **The 19 old design artifacts** archived in `hypeforge/docs/design/archive-artifacts/` (`8fd12d9`), links repointed (`6424f33`), then deleted with Javier's OK
+- [ ] **F-86 #130, the bar waits for sound at login** (`3e741dd`): built and benched; **live at Javier's next login**, close #130 when it shows the bar from the start
+
 ## 2026-10-24 — KognogOS stage 03: the pop-up standard's next cards, and displayForge 1.1.4
 - [x] **hypeForge (D-116):** one title row on every pop-up (Javier: "looks good!"); three widths 300 · 380 · 460; the hover tip leaves an open pop-up (F-83 #122); Temperature shows every sensor (F-84 #123); the notifications on the standard, with their app's icon (F-85 #124) — the last three live, **waiting for Javier's look** (hypeforge/TODO.md)
 - [x] **displayForge 1.1.4 — GitHub + AUR** (`41c5dc4`, one push 1.1.1 → 1.1.4): Javier's stage-03 run (one and two screens, 80 / 90 %, a text console) passed; F-8 #121, F-9 #125, F-10 #126, and from his tests of the installed packages F-11 #127 (1.1.2) and F-12 #128 (1.1.3) — both GitHub-only. 75 tests; every release reproducible
