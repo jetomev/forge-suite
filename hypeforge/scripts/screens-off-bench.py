@@ -20,7 +20,7 @@ S = ["HEADLESS-1", "HEADLESS-2", "HEADLESS-3"]
     + "".join(f'[[workspace]]\nname = "{n}"\n' for n in ("Daily", "Work", "Entertainment", "Gaming")) + "[share]\n")
 (base / "sway.conf").write_text("".join(f"output {s} resolution 1280x720 position {i*1280} 0\n" for i, s in enumerate(S)) + "xwayland disable\n")
 env = {k: v for k, v in os.environ.items() if k not in ("SWAYSOCK", "WAYLAND_DISPLAY", "DISPLAY", "I3SOCK")}
-env.update(XDG_RUNTIME_DIR=str(run), XDG_CONFIG_HOME=str(conf), WLR_BACKENDS="headless", WLR_RENDERER="pixman",
+env.update(XDG_RUNTIME_DIR=str(run), HYPEFORGE_BAR_READY_WAIT="0", XDG_CONFIG_HOME=str(conf), WLR_BACKENDS="headless", WLR_RENDERER="pixman",
            WLR_HEADLESS_OUTPUTS="3", WLR_LIBINPUT_NO_DEVICES="1")
 log = open(base / "log", "w")
 procs = [subprocess.Popen(["sway", "-c", str(base / "sway.conf")], env=env, stdout=log, stderr=log)]

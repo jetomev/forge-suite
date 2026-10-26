@@ -202,7 +202,7 @@ def main() -> int:
     (fakebin / "pgrep").write_text('#!/bin/sh\n[ "$1 $2" = "-x waybar" ] && exit 1\nexec /usr/bin/pgrep "$@"\n')
     (fakebin / "pgrep").chmod(0o755)
     env = {k: v for k, v in os.environ.items() if k not in ("SWAYSOCK", "WAYLAND_DISPLAY", "DISPLAY", "I3SOCK")}
-    env.update(XDG_RUNTIME_DIR=str(run), XDG_CONFIG_HOME=str(conf), XDG_DATA_HOME=str(conf / ".local-data"), WLR_BACKENDS="headless",
+    env.update(XDG_RUNTIME_DIR=str(run), HYPEFORGE_BAR_READY_WAIT="0", XDG_CONFIG_HOME=str(conf), XDG_DATA_HOME=str(conf / ".local-data"), WLR_BACKENDS="headless",
                WLR_RENDERER="pixman", WLR_HEADLESS_OUTPUTS="1", WLR_LIBINPUT_NO_DEVICES="1",
                PATH=f"{fakebin}:{os.environ['PATH']}")
     procs, log = [], open(base / "preview.log", "w")

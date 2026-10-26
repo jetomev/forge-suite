@@ -41,6 +41,7 @@
 - **Instead: the bar guard** — the bar comes back by itself whenever it disappears, for any reason, not only after a look re-apply. Its own bench, proven in the failing direction.
 - **Reopened only if** Waybar keeps dying after the guard is in.
 - **Built 2026-10-22 (F-82)**, after Waybar crashed three seconds into Javier's login and left an empty screen: `hypeforge-bar guard`, its bench `scripts/bar-guard-bench.py`.
+- **2026-10-25 (F-86, #130), the guard's first catch explained:** at Javier's login the bar started 0.03 s before PipeWire, and Waybar's sound piece (`wireplumber`) took the whole bar down 2 s later, before WirePlumber was ready. The guard brought it back in ~5 s (*"then a message appeared top-right letting me know, and, BOOM!, the bar appeared"*). Now the bar waits (at most 15 s, then starts anyway) for the services its placed pieces need: sound (`wpctl status` lists WirePlumber) and Bluetooth (BlueZ not mid-start). Every other built-in piece needs none (network reads the kernel, the tray is ours). Instant once the session is up (9 ms live). The hidden benches can't see this session's sound, so they set `HYPEFORGE_BAR_READY_WAIT=0`; the two bar benches use the real sound instead (they click nothing that changes it).
 
 ## 2026-10-17
 

@@ -24,7 +24,7 @@ def main() -> int:
                                     'for_window [app_id="floaty"] floating enable, resize set 800 500, move position center\n'
                                     'for_window [title="Save as"] floating enable, resize set 700 400, move position center\n')
     env = {k: v for k, v in os.environ.items() if k not in ("SWAYSOCK", "WAYLAND_DISPLAY", "DISPLAY")}
-    env.update(XDG_RUNTIME_DIR=str(run), WLR_BACKENDS="headless", WLR_RENDERER="pixman", WLR_HEADLESS_OUTPUTS="1",
+    env.update(XDG_RUNTIME_DIR=str(run), HYPEFORGE_BAR_READY_WAIT="0", WLR_BACKENDS="headless", WLR_RENDERER="pixman", WLR_HEADLESS_OUTPUTS="1",
                WLR_LIBINPUT_NO_DEVICES="1", GDK_BACKEND="wayland")
     log = open(base / "bench.log", "w")
     procs, results = [], []

@@ -25,6 +25,11 @@ starts the bar again and says so in a notice. Five deaths within five minutes an
 notice that stays, so a broken bar can't flash forever. A `stop` (or a style switch, which stops it
 through this tool) clears the saved number first, so the guard never takes a stop for a crash.
 
+The bar waits for its services (F-86, 2026-10-25): at a login the bar started 0.03 s before PipeWire and
+Waybar's sound piece took the whole bar down (the guard's first catch). So before Waybar starts, the
+services its placed pieces need must answer — sound (WirePlumber) and Bluetooth (BlueZ) — for at most
+HYPEFORGE_BAR_READY_WAIT seconds (15; 0 = don't look), then it starts anyway. Instant once the session is up.
+
     hypeforge-bar start      the bar on every screen (stops this tool's earlier one first)
     hypeforge-bar stop       stop it (by its saved process number only)
     hypeforge-bar restart    the same as start
@@ -63,6 +68,8 @@ KEEP = 20                                                # crash records kept, n
 GUARD_EVERY = float(os.environ.get("HYPEFORGE_BAR_GUARD_EVERY", "2"))      # seconds between looks
 GUARD_MAX = int(os.environ.get("HYPEFORGE_BAR_GUARD_MAX", "5"))            # restarts allowed …
 GUARD_WINDOW = float(os.environ.get("HYPEFORGE_BAR_GUARD_WINDOW", "300"))  # … within this many seconds
+READY_WAIT = float(os.environ.get("HYPEFORGE_BAR_READY_WAIT", "15"))       # longest wait for the bar's services
+READY_EVERY = 0.25                                                         # seconds between looks
 
 
 def strip_comments(text: str) -> str:
@@ -273,6 +280,81 @@ def _stop():
             time.sleep(0.05)
 
 
+# ---- the bar waits for the services its pieces need (F-86) ------------------------------------------
+
+def run_ok(cmd: list[str]) -> str | None:
+    """What a quick command printed, or None when it failed (or isn't installed)."""
+    try:
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=2)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return r.stdout if r.returncode == 0 else None
+
+
+def sound_ready() -> bool:
+    """PipeWire answers and WirePlumber has joined it. Waybar's sound piece (wireplumber) aborted the
+    whole bar when it came up first: 25 Oct 18:52, bar 26.6 s, PipeWire 26.65 s, crash 28.85 s,
+    WirePlumber's first word 29 s. No wpctl means nothing to wait for."""
+    if not shutil.which("wpctl"):
+        return True
+    said = run_ok(["wpctl", "status"])
+    return said is not None and any(l.split(".", 1)[-1].strip().startswith("WirePlumber")
+                                    for l in said.splitlines())
+
+
+def bluetooth_ready() -> bool:
+    """BlueZ is not in the middle of starting. Not there at all is fine too (no Bluetooth on this
+    machine): the bar's Bluetooth piece just stays empty. It starts at boot, long before a login."""
+    if not shutil.which("systemctl"):
+        return True
+    try:
+        state = subprocess.run(["systemctl", "is-active", "bluetooth.service"], capture_output=True,
+                               text=True, timeout=2).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return True
+    return state not in ("activating", "reloading")
+
+
+# Waybar's own pieces that lean on a background service, and the look that says it's ready. The rest
+# need none: clock, network (the kernel's own messages), wlr/taskbar (Sway), the tray (ours, D-103),
+# and the custom pieces are our scripts, which can't take the bar down.
+NEEDS = {"wireplumber": ("sound (WirePlumber)", sound_ready),
+         "bluetooth": ("Bluetooth (BlueZ)", bluetooth_ready)}
+
+
+def needed(bars: list[dict]) -> list[tuple[str, callable]]:
+    """The services the bars about to start need, each once."""
+    want = []
+    for bar in bars:
+        for module in placed(merged(bar)):
+            if module in NEEDS and NEEDS[module] not in want:
+                want.append(NEEDS[module])
+    return want
+
+
+def wait_for(needs: list[tuple[str, callable]], longest: float | None = None) -> list[str]:
+    """Wait until every service is ready, at most `longest` seconds; then the bar starts anyway (a bar
+    without sound beats no bar). Returns what was still not ready. Instant once the session is up.
+    0 doesn't look at all: the hidden benches, whose Sway can't see this session's sound."""
+    longest = READY_WAIT if longest is None else longest
+    if longest <= 0:
+        return []
+    began = time.monotonic()
+    todo = list(needs)
+    while True:
+        todo = [(name, ready) for name, ready in todo if not ready()]
+        took = time.monotonic() - began
+        if not todo:
+            if took >= READY_EVERY:
+                print(f"hypeforge-bar: waited {took:.1f} s for {', '.join(n for n, _ in needs)}")
+            return []
+        if took >= longest:
+            print(f"hypeforge-bar: still not ready after {longest:g} s: {', '.join(n for n, _ in todo)}; "
+                  f"starting the bar anyway")
+            return [n for n, _ in todo]
+        time.sleep(READY_EVERY)
+
+
 def start():
     with locked():
         return _start()
@@ -283,8 +365,9 @@ def _start():
     found = screens()
     outs = [o["name"] for o in found]
     path = RUN / "config.json"
-    path.write_text(json.dumps(bars_for((CONF / "config.jsonc").read_text(), outs, main_screen(found)),
-                               indent=2, ensure_ascii=False))
+    bars = bars_for((CONF / "config.jsonc").read_text(), outs, main_screen(found))
+    path.write_text(json.dumps(bars, indent=2, ensure_ascii=False))
+    wait_for(needed(bars))             # at login the bar can beat sound to it (F-86); later: instant
     if (RUN / "waybar.log").exists():     # the run before this one stays readable (10-22: a restart wiped the crash's)
         os.replace(RUN / "waybar.log", RUN / "waybar.log.prev")
     log = open(RUN / "waybar.log", "w")

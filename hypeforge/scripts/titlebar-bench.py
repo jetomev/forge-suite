@@ -85,7 +85,7 @@ def main() -> int:
         'for_window [app_id="own-bar"] floating enable, move position 60 420\n')
     env = {k: v for k, v in os.environ.items()
            if k not in ("SWAYSOCK", "WAYLAND_DISPLAY", "DISPLAY", "DBUS_SESSION_BUS_ADDRESS", "HYPEFORGE_OUTPUT")}
-    env.update(XDG_RUNTIME_DIR=str(run), XDG_CONFIG_HOME=str(conf), XDG_DATA_HOME=str(conf / ".local-data"),
+    env.update(XDG_RUNTIME_DIR=str(run), HYPEFORGE_BAR_READY_WAIT="0", XDG_CONFIG_HOME=str(conf), XDG_DATA_HOME=str(conf / ".local-data"),
                WLR_BACKENDS="headless", WLR_RENDERER="pixman", WLR_HEADLESS_OUTPUTS="1", WLR_LIBINPUT_NO_DEVICES="1",
                GDK_BACKEND="wayland")
     bus = subprocess.run(["dbus-daemon", "--session", "--fork", "--print-address=1", "--print-pid=1"],
