@@ -37,6 +37,8 @@ CSS = """
 .hf-page-rows row {{ padding: 4px 10px; border-radius: {inner}px; min-height: 30px; }}
 .hf-page-rows row:hover {{ background: {hover}; }}
 .hf-page-rows label, .hf-page-rows image {{ color: {text}; }}
+.hf-quick image {{ color: {text}; }}
+.hf-quick button.on image {{ color: {on_text}; }}
 .hf-page-rows label.hf-row-sub {{ color: {dim}; font-size: {small}pt; }}
 .hf-page-rows label.hf-row-on {{ color: {accent}; }}
 .hf-quick .hf-status {{ color: {dim}; font-size: {small}pt; padding: 0 10px; }}
@@ -54,6 +56,39 @@ def css(look: panelkit.Look) -> bytes:
 
 
 # ---- the pieces every page is made of -----------------------------------------------------------
+
+def mono(name: str, *instead: str) -> str:
+    """The one-colour (symbolic) version of an icon, drawn in the card's text colour (Javier, 2026-10-27, the
+    Rice review: "fix 1" — Quick Settings mixed one-colour symbols with full-colour pictures, and the
+    headphones came out dark blue on the dark card). `instead`: names to try when the icon set has no
+    one-colour version of the first."""
+    theme = Gtk.IconTheme.get_default()
+    for n in (name, *instead):
+        if not n:
+            continue
+        sym = n if n.endswith("-symbolic") else n + "-symbolic"
+        if theme is None or theme.has_icon(sym):
+            return sym
+    return name
+
+
+def friendly(name: str, source: bool) -> str:
+    """A sound device's name as people say it (Javier, 2026-10-27: "fix 2" — "GA106 High Definition Audio
+    Controller Digital Stereo (…" was cut off). PipeWire's description, shortened: the monitor's name and its
+    port, the computer's own jack, the "Analog Stereo" endings dropped. The full name stays on hover."""
+    m = re.match(r"^(.*?)\s*\[(.+)\]$", name)
+    if m:                                             # a screen's speakers: "… Digital Stereo (HDMI) [Sceptre Y27]"
+        port = re.search(r"\(([^()]+)\)\s*$", m.group(1))
+        return f"{m.group(2)} · {port.group(1)}" if port else m.group(2)
+    if "audio controller" in name.lower():            # the computer's own chip, no screen named
+        if "digital" in name.lower() or "hdmi" in name.lower():
+            return "HDMI audio"
+        return "Microphone jack" if source else "Speakers jack"
+    m = re.match(r"^(.*?)\s+(?:Analog |Digital )?(?:Stereo|Mono|Surround [0-9.]+)\s*(?:\(([^()]+)\))?$", name)
+    if m:                                             # "… Analog Stereo", "… Digital Stereo (HDMI 2)"
+        return f"{m.group(1)} · {m.group(2)}" if m.group(2) else m.group(1)
+    return name
+
 
 def head(title: str, back=None, switch: bool | None = None, switched=None, extra=()) -> Gtk.Box:
     """The one title row: "‹" when `back` is given (it is called on a click), the name, an on/off switch,
@@ -106,8 +141,10 @@ def rows(items: list[dict]) -> Gtk.ListBox:
     for it in items:
         r = Gtk.ListBoxRow()
         r.picked = it.get("picked")
+        if it.get("tip"):
+            r.set_tooltip_text(it["tip"])
         line = Gtk.Box(spacing=10)
-        line.pack_start(Gtk.Image.new_from_icon_name(it.get("icon") or "", Gtk.IconSize.LARGE_TOOLBAR), False, False, 0)
+        line.pack_start(Gtk.Image.new_from_icon_name(mono(it.get("icon") or ""), Gtk.IconSize.LARGE_TOOLBAR), False, False, 0)
         words = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         words.set_valign(Gtk.Align.CENTER)
         words.pack_start(Gtk.Label(label=it["name"], xalign=0, ellipsize=Pango.EllipsizeMode.END, max_width_chars=34),
@@ -132,7 +169,7 @@ def rows(items: list[dict]) -> Gtk.ListBox:
 def foot(app: str, clicked, icon: str = "preferences-system") -> Gtk.Box:
     """The page's last row: its full app as an icon button at the bottom right (its name on hover)."""
     row = Gtk.Box(spacing=8)
-    b = Gtk.Button.new_from_icon_name(icon, Gtk.IconSize.BUTTON)
+    b = Gtk.Button.new_from_icon_name(mono(icon), Gtk.IconSize.BUTTON)
     b.get_style_context().add_class("flat")
     b.set_tooltip_text(f"Open {app}")
     b.connect("clicked", lambda _b: clicked())
@@ -181,11 +218,11 @@ def sound_page(be, back, close) -> Gtk.Box:
     level, muted = be.volume()
     if level is not None:
         row = Gtk.Box(spacing=10)
-        mute = Gtk.Button.new_from_icon_name("audio-volume-muted" if muted else "audio-volume-high", Gtk.IconSize.BUTTON)
+        mute = Gtk.Button.new_from_icon_name(mono("audio-volume-muted" if muted else "audio-volume-high"), Gtk.IconSize.BUTTON)
         mute.get_style_context().add_class("flat")
         mute.set_tooltip_text("Mute")
         mute.connect("clicked", lambda b: (be.mute_toggle(), b.set_image(Gtk.Image.new_from_icon_name(
-            "audio-volume-muted" if be.volume()[1] else "audio-volume-high", Gtk.IconSize.BUTTON))))
+            mono("audio-volume-muted" if be.volume()[1] else "audio-volume-high"), Gtk.IconSize.BUTTON))))
         row.pack_start(mute, False, False, 0)
         scale, number = slider(0, 100, 1, level, lambda v: f"{int(v)} %", be.set_volume)
         row.pack_start(scale, True, True, 0)
@@ -202,7 +239,8 @@ def sound_page(be, back, close) -> Gtk.Box:
             if not now[part]:
                 continue
             lists.pack_start(section(words), False, False, 0)
-            lists.pack_start(rows([{"icon": sound_icon(d["name"], source), "name": d["name"],
+            lists.pack_start(rows([{"icon": sound_icon(d["name"], source), "name": friendly(d["name"], source),
+                                    "tip": d["name"],
                                     "sub": "In use" if d["now"] else "", "on": d["now"],
                                     "picked": (lambda i=d["id"]: (be.run(["wpctl", "set-default", i]), fill()))}
                                    for d in now[part]]), False, False, 0)
@@ -233,7 +271,7 @@ def night_page(night, back, close, refresh) -> Gtk.Box:
                     False, False, 0)
     page.pack_start(words, False, False, 0)
     row = Gtk.Box(spacing=10)
-    row.pack_start(Gtk.Image.new_from_icon_name("weather-clear-night", Gtk.IconSize.BUTTON), False, False, 0)
+    row.pack_start(Gtk.Image.new_from_icon_name(mono("weather-clear-night"), Gtk.IconSize.BUTTON), False, False, 0)
     scale, number = slider(3000, 5000, 500, kelvin, lambda v: f"{int(round(v / 500) * 500)} K", inverted=True)
     # set when the slider is let go (nightForge restarts its filter), not on every step
     scale.connect("button-release-event", lambda s, *_: (night.set_warmth(round(s.get_value() / 500) * 500), refresh(), False)[2])
@@ -394,7 +432,7 @@ def wifi_page(run, back, close, refresh) -> Gtk.Box:
         state["note"] = "Starting Wi-Fi…" if want else ""
         later(lambda: wifi.switch(want), lambda _r: (refresh(), look(), later(wifi.rescan, lambda _r: look()) if want else None))
 
-    again = Gtk.Button.new_from_icon_name("view-refresh-symbolic", Gtk.IconSize.BUTTON)
+    again = Gtk.Button.new_from_icon_name(mono("view-refresh-symbolic"), Gtk.IconSize.BUTTON)
     again.get_style_context().add_class("flat")
     again.set_tooltip_text("Look for networks again")
     again.connect("clicked", lambda _b: (state.update(note="Looking for networks…"), draw(force=True),
@@ -451,12 +489,12 @@ def wifi_page(run, back, close, refresh) -> Gtk.Box:
             words = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
             words.set_valign(Gtk.Align.CENTER)
             if n.get("hidden"):
-                line.pack_start(Gtk.Image.new_from_icon_name("network-wireless-symbolic", Gtk.IconSize.LARGE_TOOLBAR), False, False, 0)
+                line.pack_start(Gtk.Image.new_from_icon_name(mono("network-wireless-symbolic"), Gtk.IconSize.LARGE_TOOLBAR), False, False, 0)
                 words.pack_start(Gtk.Label(label="Hidden network…", xalign=0), False, False, 0)
                 sub = Gtk.Label(label="one that doesn't show its name", xalign=0)
                 sub.get_style_context().add_class("hf-row-sub")
             else:
-                line.pack_start(Gtk.Image.new_from_icon_name(signal_icon(n["signal"]), Gtk.IconSize.LARGE_TOOLBAR), False, False, 0)
+                line.pack_start(Gtk.Image.new_from_icon_name(mono(signal_icon(n["signal"])), Gtk.IconSize.LARGE_TOOLBAR), False, False, 0)
                 words.pack_start(Gtk.Label(label=n["ssid"], xalign=0, ellipsize=Pango.EllipsizeMode.END, max_width_chars=30), False, False, 0)
                 secured = "secured" if n["security"] else "open · not secured"
                 sub = Gtk.Label(label=f"Connected · {secured}" if n["now"] else secured.capitalize(), xalign=0)

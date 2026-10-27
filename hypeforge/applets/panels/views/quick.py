@@ -266,11 +266,11 @@ def volume_row(be, level, muted, opened=None):
     the number that opens the Sound page (Javier, 2026-10-25: "clicking in the speaker should indeed mute the
     volume… add an icon next to the volume % to the right to open the popup")."""
     row = Gtk.Box(spacing=10)
-    mute = Gtk.Button.new_from_icon_name("audio-volume-muted" if muted else "audio-volume-high", Gtk.IconSize.BUTTON)
+    mute = Gtk.Button.new_from_icon_name(qspages.mono("audio-volume-muted" if muted else "audio-volume-high"), Gtk.IconSize.BUTTON)
     mute.get_style_context().add_class("flat")
     mute.set_tooltip_text("Mute")
     mute.connect("clicked", lambda b: (be.mute_toggle(), b.set_image(Gtk.Image.new_from_icon_name(
-        "audio-volume-muted" if be.volume()[1] else "audio-volume-high", Gtk.IconSize.BUTTON))))
+        qspages.mono("audio-volume-muted" if be.volume()[1] else "audio-volume-high"), Gtk.IconSize.BUTTON))))
     scale, number = slider(0, 100, 1, level, lambda v: f"{int(v)} %", be.set_volume)
     row.pack_start(mute, False, False, 0)
     row.pack_start(scale, True, True, 0)
@@ -278,7 +278,7 @@ def volume_row(be, level, muted, opened=None):
     row.mute, row.scale = mute, scale
     row.more = None
     if opened:
-        more = Gtk.Button.new_from_icon_name("preferences-desktop-sound", Gtk.IconSize.BUTTON)
+        more = Gtk.Button.new_from_icon_name(qspages.mono("preferences-desktop-sound", "audio-card", "audio-speakers"), Gtk.IconSize.BUTTON)
         more.get_style_context().add_class("flat")
         more.set_tooltip_text("Sound: outputs and microphones")
         more.connect("clicked", lambda _b: opened())
@@ -293,7 +293,7 @@ def tile(name, icon, on, sub, clicked):
     if on:
         b.get_style_context().add_class("on")
     box = Gtk.Box(spacing=8)
-    box.pack_start(Gtk.Image.new_from_icon_name(icon, Gtk.IconSize.LARGE_TOOLBAR), False, False, 0)
+    box.pack_start(Gtk.Image.new_from_icon_name(qspages.mono(icon), Gtk.IconSize.LARGE_TOOLBAR), False, False, 0)
     words = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     n = Gtk.Label(label=name, xalign=0)
     n.get_style_context().add_class("hf-tile-name")
@@ -447,12 +447,12 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     updates.get_style_context().add_class("flat")
     updates.connect("clicked", lambda _b: (panel.close(), panelkit.run_command("alacritty --class nogforge -e nogforge")))
     foot.pack_start(updates, False, False, 0)
-    power = Gtk.Button.new_from_icon_name("system-shutdown", Gtk.IconSize.BUTTON)
+    power = Gtk.Button.new_from_icon_name(qspages.mono("system-shutdown"), Gtk.IconSize.BUTTON)
     power.get_style_context().add_class("flat")
     power.set_tooltip_text("Power")
     power.connect("clicked", lambda _b: (panel.close(), panelkit.run_command(
         f"{shlex.quote(sys.executable)} {shlex.quote(str(panelkit.HERE / 'hypeforge-panel'))} power")))
-    settings = Gtk.Button.new_from_icon_name("preferences-system", Gtk.IconSize.BUTTON)
+    settings = Gtk.Button.new_from_icon_name(qspages.mono("preferences-system"), Gtk.IconSize.BUTTON)
     settings.get_style_context().add_class("flat")
     settings.set_tooltip_text("hypeForge Settings")
     settings.connect("clicked", lambda _b: (panel.close(), panelkit.run_command(SETTINGS)))

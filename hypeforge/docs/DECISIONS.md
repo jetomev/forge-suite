@@ -7,6 +7,9 @@
 
 ## 2026-10-27
 
+### D-120 · Quick Settings: one-colour icons, and short names on the Sound page (Javier)
+The Rice review, piece 4 (the hidden screen now with the real icon set, `e03cbe6`): Quick Settings mixed one-colour symbols (Wi-Fi, VPN) with full-colour pictures (Bluetooth, the printer, the screen, a grey moon photo, rainbow gears), and on the Sound page candy-icons' headphones were dark blue on the dark card; the names were cut off (*"GA106 High Definition Audio Controller Digital Stereo (…"*). Claude proposed (1) one-colour icons in the text colour everywhere in Quick Settings, as on the bar (D-119), the accent kept for what is on, and (2) short names; Javier: *"fix 1 and 2, go ahead. switches are the theme color, so good"* (the blue switches were the hidden screen's: no GTK theme there). **Every style's Quick Settings** gets it: the card is the pop-up standard (D-116). Details: THEME.md. The switches stay the GTK theme's.
+
 ### D-119 · The Rice's icons wear its text colour, in every theme (Javier)
 The Rice review (stage 04), after the launcher: *"left and central islands icons and text are clear color, but right island (tray) are not. Let's make the tray icons same colors as the elements of the other 2 islands, please. They look better. These needs to be applied for all Rice themes, all the same."* The right area's icons and numbers, the bell, and the tray's one-colour icons took the accent (`module_icon = pop.text`). Now they take the areas' text colour (`text.primary`, the same as `bar_fg`), in all 25 themes. The state colours keep meaning something: new (the clipboard's count) `@hf_new`, warning `@hf_bell`, alert `@hf_alert` (muted, offline, too hot). A test checks all 25 themes, seen failing on the old colour. Sheet: `logs/rice-review-20261027/sheet-3-icon-colour.png` (Mocha, Dark Gray, Ember, White; before and after).
 

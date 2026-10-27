@@ -794,6 +794,39 @@ class CosmicPopups(unittest.TestCase):
         self.assertIn("sets = sets[-1:] + sets[:-1]", (HERE / "applets/panels/views/start.py").read_text())
 
 
+
+class QuickSettingsOneColourAndShortNames(unittest.TestCase):
+    """The Rice review, 2026-10-27 (Javier: "fix 1 and 2"): Quick Settings mixed one-colour symbols with
+    full-colour pictures (the headphones dark blue on the dark card), and long sound names were cut off."""
+
+    def test_every_icon_goes_through_the_one_colour_helper(self):
+        import re
+        for f, helper in (("views/quick.py", "qspages.mono("), ("views/qspages.py", "mono(")):
+            src = (HERE / "applets/panels" / f).read_text()
+            calls = re.findall(r"new_from_icon_name\(\s*(\S+?\()?", src)
+            self.assertTrue(calls, f)
+            for found in re.finditer(r"new_from_icon_name\(\s*", src):
+                self.assertTrue(src[found.end():].startswith(helper), f"{f}: {src[found.end():found.end() + 60]!r}")
+
+    def test_the_helper_gives_one_colour_names(self):
+        self.assertTrue(qspages.mono("printer").endswith("-symbolic"))
+        self.assertEqual(qspages.mono("view-refresh-symbolic"), "view-refresh-symbolic")
+
+    def test_icons_wear_the_cards_text_colour_and_the_on_tiles_own(self):
+        css = qspages.css(panelkit.Look("rice", "kognogos-mocha")).decode()
+        self.assertIn(".hf-quick image", css)
+        self.assertIn(".hf-quick button.on image", css)
+
+    def test_short_sound_names(self):
+        f = qspages.friendly
+        self.assertEqual(f("GA106 High Definition Audio Controller Digital Stereo (HDMI) [Sceptre Y27]", False),
+                         "Sceptre Y27 · HDMI")
+        self.assertEqual(f("Ryzen HD Audio Controller Analog Stereo", False), "Speakers jack")
+        self.assertEqual(f("Ryzen HD Audio Controller Analog Stereo", True), "Microphone jack")
+        self.assertEqual(f("C920 PRO HD Webcam Analog Stereo", True), "C920 PRO HD Webcam")
+        self.assertEqual(f("SteelSeries Arctis 5 Chat", False), "SteelSeries Arctis 5 Chat")
+        self.assertEqual(f("Navi 21 HDMI/DP Audio Digital Stereo (HDMI 2)", False), "Navi 21 HDMI/DP Audio · HDMI 2")
+
 if __name__ == "__main__":
     unittest.main()
 
