@@ -41,7 +41,7 @@ def main() -> int:
     (base / "sway.conf").write_text("output * resolution 1280x720 bg #ff00ff solid_color\nxwayland disable\n")
     env = {k: v for k, v in os.environ.items()
            if k not in ("SWAYSOCK", "WAYLAND_DISPLAY", "DISPLAY", "DBUS_SESSION_BUS_ADDRESS", "HYPEFORGE_OUTPUT")}
-    env.update(XDG_RUNTIME_DIR=str(run), PIPEWIRE_RUNTIME_DIR=os.environ.get("PIPEWIRE_RUNTIME_DIR") or os.environ["XDG_RUNTIME_DIR"], XDG_CONFIG_HOME=str(conf), XDG_DATA_HOME=str(conf / ".local-data"), WLR_BACKENDS="headless", WLR_RENDERER="pixman",
+    env.update(XDG_RUNTIME_DIR=str(run), XDG_CONFIG_HOME=str(conf), XDG_DATA_HOME=str(conf / ".local-data"), WLR_BACKENDS="headless", WLR_RENDERER="pixman",
                WLR_HEADLESS_OUTPUTS="3", WLR_LIBINPUT_NO_DEVICES="1", GDK_BACKEND="wayland")
     bus = subprocess.run(["dbus-daemon", "--session", "--fork", "--print-address=1", "--print-pid=1"],
                          capture_output=True, text=True, env=env).stdout.split()

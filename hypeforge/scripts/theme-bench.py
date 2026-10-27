@@ -126,7 +126,7 @@ def runtime_checks(base: Path, conf: Path, env: dict):
         ht.apply(style, theme, place, wallpaper=OWN_WALL, reload=False)
         cfg = base / f"sway-{style}.conf"
         cfg.write_text(f"output HEADLESS-1 resolution 1280x720\ninclude {conf}/hypeforge/theme/sway.conf\n")
-        e = dict(env, XDG_RUNTIME_DIR=str(run), HYPEFORGE_BAR_READY_WAIT="0", WLR_BACKENDS="headless", WLR_RENDERER="pixman",
+        e = dict(env, XDG_RUNTIME_DIR=str(run), WLR_BACKENDS="headless", WLR_RENDERER="pixman",
                  WLR_HEADLESS_OUTPUTS="1", WLR_LIBINPUT_NO_DEVICES="1")
         log = open(base / f"{style}.log", "w")
         procs = []

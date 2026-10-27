@@ -90,7 +90,7 @@ def main():
             run = base / f"r-{style}"; run.mkdir(mode=0o700)
             cfg = base / f"{style}.conf"
             cfg.write_text(f"output HEADLESS-1 resolution 1280x720\nxwayland disable\ninclude {conf}/hypeforge/theme/sway.conf\ninclude {fxconf}\n")
-            e = dict(env, XDG_RUNTIME_DIR=str(run), HYPEFORGE_BAR_READY_WAIT="0", WLR_RENDERER="gles2", WLR_HEADLESS_OUTPUTS="1")
+            e = dict(env, XDG_RUNTIME_DIR=str(run), WLR_RENDERER="gles2", WLR_HEADLESS_OUTPUTS="1")
             log = open(base / f"{style}.log", "w")
             procs = []
             try:

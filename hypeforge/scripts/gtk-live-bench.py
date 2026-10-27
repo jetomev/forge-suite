@@ -62,7 +62,7 @@ def main() -> int:
                                     f"include {conf}/hypeforge/theme/sway.conf\n")
     env = {k: v for k, v in os.environ.items()
            if k not in ("SWAYSOCK", "WAYLAND_DISPLAY", "DISPLAY", "I3SOCK", "DBUS_SESSION_BUS_ADDRESS")}
-    env.update(XDG_RUNTIME_DIR=str(run), HYPEFORGE_BAR_READY_WAIT="0", XDG_CONFIG_HOME=str(conf), XDG_DATA_HOME=str(data),
+    env.update(XDG_RUNTIME_DIR=str(run), XDG_CONFIG_HOME=str(conf), XDG_DATA_HOME=str(data),
                XDG_STATE_HOME=str(base / "s"), XDG_CACHE_HOME=str(base / "cache"),
                WLR_BACKENDS="headless", WLR_RENDERER="pixman", WLR_HEADLESS_OUTPUTS="1",
                WLR_LIBINPUT_NO_DEVICES="1", GSETTINGS_BACKEND="dconf")

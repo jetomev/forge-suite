@@ -321,6 +321,13 @@ def style_applets(style: dict) -> list[str]:
     return [n for n in names if isinstance(n, str)] if isinstance(names, list) else []
 
 
+def wait_for_sound():
+    """A reload in place waits for sound to settle: Waybar's sound piece takes the bar down otherwise (F-86)."""
+    sys.path.insert(0, str(REPO / "applets/common"))
+    from hfbar import wait_for_sound as wait
+    wait()
+
+
 def stop_other_applets(keep: list[str], say=print, runtime: Path | None = None) -> list[str]:
     """A switch stops what the OLD style started and the new one doesn't use (Windows 11's Taskbar
     applet has nothing to do on the Rice). By the saved process number only, and only when that process
@@ -1041,7 +1048,9 @@ def reload_all(theme: dict, say=print, restart_bar: Path | None = None, style: d
                else f"waybar -c {restart_bar / 'config.jsonc'} -s {restart_bar / 'style.css'}")
         if os.environ.get("SWAYSOCK") and run("swaymsg", "exec", cmd):
             say("  the bar restarted with its new layout")
-    elif run("pkill", "-USR2", "-x", "waybar"):
+    else:
+        wait_for_sound()        # a reload while sound is starting takes the bar down (F-86)
+    if restart_bar is None and run("pkill", "-USR2", "-x", "waybar"):
         # a restyle in place can take the bar down with no word (Javier, 2026-10-17 21:41: "there is not top
         # bar"); it is checked, and started again the way login does
         time.sleep(2.0)
