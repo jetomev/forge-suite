@@ -38,6 +38,14 @@ def ask(sock, kind, payload=""):
         return json.loads(s.recv(size, socket.MSG_WAITALL))
 
 
+def panelkit_icons(theme: str) -> str:
+    """The colour theme's icon set, the way the look tool names it."""
+    sys.path.insert(0, str(HERE / "applets/panels"))
+    import panelkit
+    ht = panelkit.theme_tool()
+    return ht.names_for(ht.themes()[theme], check=False)["icons"]
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--style", default="rice")
@@ -94,6 +102,10 @@ def main() -> int:
     bus = subprocess.run(["dbus-daemon", "--session", "--fork", "--print-address=1", "--print-pid=1"],
                          capture_output=True, text=True, env=env).stdout.split()
     env["DBUS_SESSION_BUS_ADDRESS"], bus_pid = bus[0], int(bus[1])
+    # the look's icon set, as on the desktop: GTK on Wayland asks GSettings, and this bus's dconf writes into the
+    # preview's own config folder, never the person's (2026-10-27: stock icons showed as blank pages)
+    subprocess.run(["gsettings", "set", "org.gnome.desktop.interface", "icon-theme",
+                    panelkit_icons(a.theme)], env=env, capture_output=True)
     procs, log, sock = [], open(base / "preview.log", "w"), None
     try:
         procs.append(subprocess.Popen(["sway", "-c", str(base / "sway.conf")], env=env, stdout=log, stderr=log))
