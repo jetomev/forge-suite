@@ -158,7 +158,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
   - **Order:** Mac OS 9 · macOS · COSMIC first, then Windows 11 · KDE · the Rice · Classic
   - **Per style:** the bar · the launcher (each theme's identity, D-116 — COSMIC full page like GNOME's) · every pop-up against the standard (D-116), one by one · the tray icons
   - **Per colour theme:** each style in all 25 colour themes (light and dark, contrast between and inside, D-90 / F-68)
-  - [ ] the Rice (v1.0, KognogOS's default)
+  - [ ] the Rice (v1.0, KognogOS's default) — **started 2026-10-27**, matrix `testing/20261027 - Test Matrix for hypeForge style review - the Rice.md`: 1 the bar **approved** (R-1 widths change with the counts: logged, his "doesn't bother me"); 2 the launcher **decided (D-118, `c322098`)**: seven launchers shot on the Rice, his pick **G, COSMIC's App Library** (Win + Space and the emblem, proven on the hidden screen); the list (A) saved as a theme option (themeForge's launcher pick, 1.x); 3 the tray next
   - [ ] Windows 11 (v1.0)
   - [ ] KDE (v1.0)
   - [ ] Classic (v1.0)
