@@ -412,21 +412,34 @@ class Wallpaper(Base):
         with self.assertRaises(ht.LookError):
             self.apply("rice", "blue", fit="sideways", say=lambda *_: None)
 
-    def test_a_picture_of_yours_stays_when_the_colours_change(self):
+    def test_new_colours_bring_the_themes_own_wallpaper(self):
+        """D-121 (Javier, 2026-10-27): "When you switch themes, the wallpaper should change to the theme default."
+        Before, a picture of yours stayed when the colours changed."""
         self.apply("rice", "kognogos-mocha", wallpaper=str(self.wall), fit="center", say=lambda *_: None)
-        self.apply("rice", "light-pink", wallpaper=None, say=lambda *_: None)     # no wallpaper said: keep it
-        self.assertIn(f'output * bg "{self.wall}" center', self.sway())
+        self.apply("rice", "light-pink", wallpaper=None, say=lambda *_: None)
+        line = next(l for l in self.sway().splitlines() if l.startswith("output"))
+        self.assertNotIn(str(self.wall), line)
+        self.assertIn("light-pink", line)
+        self.assertIn(" fill ", line)
         look = ht.read_look(self.place)["wallpaper"]
-        self.assertEqual((look["picture"], look["fit"]), (str(self.wall), "center"), "the look file says so")
+        self.assertEqual((look["picture"], look["fit"]), ("theme", "fill"), "the look file says so")
 
-    def test_an_old_look_file_keeps_the_wallpaper_on_screen(self):
+    def test_a_new_style_brings_its_own_wallpaper_even_from_themeforges_look_file(self):
         self.apply("rice", "kognogos-mocha", wallpaper=str(self.wall), say=lambda *_: None)
-        f = self.place.root / ht.LOOK
-        f.write_text('theme = "rice"\ncolors = "blue"\n')        # written before the Wallpaper page
-        want = ht.read_look(self.place)
-        self.assertIsNone(want["wallpaper"]["picture"])
-        self.apply(want["theme"], want["colors"], wallpaper=want["wallpaper"]["picture"], say=lambda *_: None)
+        want = ht.read_look(self.place)                     # themeForge carries the picture on screen along
+        self.apply("classic", want["colors"], wallpaper=want["wallpaper"]["picture"], say=lambda *_: None)
+        self.assertNotIn(f'"{self.wall}"', self.sway())
+        self.assertEqual(self.place.read_state()["wallpaper"], "theme")
+
+    def test_a_wallpaper_picked_with_the_switch_wins(self):
+        self.apply("rice", "kognogos-mocha", wallpaper="theme", say=lambda *_: None)
+        self.apply("rice", "blue", wallpaper=str(self.wall), say=lambda *_: None)
         self.assertIn(f'"{self.wall}"', self.sway())
+
+    def test_the_same_look_again_keeps_your_picture(self):
+        self.apply("rice", "kognogos-mocha", wallpaper=str(self.wall), fit="center", say=lambda *_: None)
+        self.apply("rice", "kognogos-mocha", wallpaper=None, say=lambda *_: None)
+        self.assertIn(f'output * bg "{self.wall}" center', self.sway())
 
     def test_undo_brings_the_wallpaper_back_too(self):
         self.apply("rice", "kognogos-mocha", wallpaper=str(self.wall), say=lambda *_: None)

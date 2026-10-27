@@ -945,8 +945,15 @@ def terminal_files(place: "Place", st: dict, body: str) -> dict:
 def apply(style_slug: str, theme_slug: str, place: Place, *, wallpaper: str | None = None, dry: bool = False,
           reload: bool = True, check_names: bool = True, make_wallpaper: bool = True, say=print,
           corners: str | None = None, fit: str | None = None) -> dict:
-    files, pic = render(style_slug, theme_slug, place, wallpaper, check_names, make_wallpaper, corners, fit)
     st = place.read_state()
+    # a new style or new colours bring the theme's own wallpaper, drawn in the new colours (Javier, 2026-10-27,
+    # D-121: "When you switch themes, the wallpaper should change to the theme default… Then people can switch
+    # the wallpaper to the one of their preference"). A wallpaper picked in the same step still wins; the one
+    # already on screen, carried along by themeForge's look file, doesn't.
+    if st and (style_slug, theme_slug) != (st.get("style"), st.get("theme")) and wallpaper in (None, st.get("wallpaper")):
+        wallpaper = "theme"
+        fit = fit if fit not in (None, st.get("fit")) else "fill"
+    files, pic = render(style_slug, theme_slug, place, wallpaper, check_names, make_wallpaper, corners, fit)
     lock = place.root / "gtklock/background.jpg"
     new_pic = pic != st.get("picture")
     changed = [p for p, body in files.items() if not p.exists() or p.read_text() != body]

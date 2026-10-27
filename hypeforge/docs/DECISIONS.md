@@ -7,6 +7,9 @@
 
 ## 2026-10-27
 
+### D-121 · A new style or new colours bring the theme's own wallpaper (Javier)
+*"When you switch themes, the wallpaper should change to the theme default. And while switching theme colors, with the change of colors, the theme should switch to a different theme wallpaper. Then people can switch the wallpaper to the one of their preference."* `hypeforge-theme apply`: when the style or the colours differ from what is on screen and no other wallpaper was picked in the same step (themeForge's look file carries the one on screen along, so that counts as none), the wallpaper becomes `theme` (the style's own picture, drawn in the new colours) and lies `fill`. Re-applying the same look, or changing only the wallpaper, keeps your picture. Replaces themeForge D-6's *"a picture of yours stays through theme and colour changes"* (themeForge D-13). Tests: `Wallpaper` (4, the two for the rule seen failing on the old code).
+
 ### D-120 · Quick Settings: one-colour icons, and short names on the Sound page (Javier)
 The Rice review, piece 4 (the hidden screen now with the real icon set, `e03cbe6`): Quick Settings mixed one-colour symbols (Wi-Fi, VPN) with full-colour pictures (Bluetooth, the printer, the screen, a grey moon photo, rainbow gears), and on the Sound page candy-icons' headphones were dark blue on the dark card; the names were cut off (*"GA106 High Definition Audio Controller Digital Stereo (…"*). Claude proposed (1) one-colour icons in the text colour everywhere in Quick Settings, as on the bar (D-119), the accent kept for what is on, and (2) short names; Javier: *"fix 1 and 2, go ahead. switches are the theme color, so good"* (the blue switches were the hidden screen's: no GTK theme there). **Every style's Quick Settings** gets it: the card is the pop-up standard (D-116). Details: THEME.md. The switches stay the GTK theme's.
 
