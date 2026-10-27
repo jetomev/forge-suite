@@ -224,7 +224,7 @@ def sound_page(be, back, close) -> Gtk.Box:
         mute.connect("clicked", lambda b: (be.mute_toggle(), b.set_image(Gtk.Image.new_from_icon_name(
             mono("audio-volume-muted" if be.volume()[1] else "audio-volume-high"), Gtk.IconSize.BUTTON))))
         row.pack_start(mute, False, False, 0)
-        scale, number = slider(0, 100, 1, level, lambda v: f"{int(v)} %", be.set_volume)
+        scale, number = slider(0, 100, 1, level, lambda v: f"{int(v)} %", be.set_volume, released=be.chime)
         row.pack_start(scale, True, True, 0)
         row.pack_start(number, False, False, 0)
         page.pack_start(row, False, False, 0)

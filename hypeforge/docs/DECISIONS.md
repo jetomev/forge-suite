@@ -7,6 +7,9 @@
 
 ## 2026-10-27
 
+### D-122 · The volume chimes when you let go of the slider (Javier)
+*"When you are sliding the volume, when you release the button, can we do what's kind off the standard, and sound a chime so people can hear the chime at the set volume? That would be nice!"* Quick Settings' volume slider and the Sound page's: on letting go, freedesktop's `audio-volume-change` plays through `pw-play` at the new volume (`Backend.chime()`), never waited on; not when muted. New needs: `pipewire-audio` (pw-play), `sound-theme-freedesktop` (docs/PACKAGING.md). Help page 13. Tests `TheVolumeChime` (3, seen failing on the old code).
+
 ### D-121 · A new style or new colours bring the theme's own wallpaper (Javier)
 *"When you switch themes, the wallpaper should change to the theme default. And while switching theme colors, with the change of colors, the theme should switch to a different theme wallpaper. Then people can switch the wallpaper to the one of their preference."* `hypeforge-theme apply`: when the style or the colours differ from what is on screen and no other wallpaper was picked in the same step (themeForge's look file carries the one on screen along, so that counts as none), the wallpaper becomes `theme` (the style's own picture, drawn in the new colours) and lies `fill`. Re-applying the same look, or changing only the wallpaper, keeps your picture. Replaces themeForge D-6's *"a picture of yours stays through theme and colour changes"* (themeForge D-13). Tests: `Wallpaper` (4, the two for the rule seen failing on the old code).
 

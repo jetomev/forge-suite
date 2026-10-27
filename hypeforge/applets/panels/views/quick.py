@@ -41,6 +41,8 @@ import qspages
 
 NOTIFY = panelkit.APPLETS / "notifications/hypeforge-notifications"
 SNAPSHOT = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "kognog/updates.json"
+CHIMES = [Path(d) / "sounds/freedesktop/stereo/audio-volume-change.oga"          # sound-theme-freedesktop
+          for d in os.environ.get("XDG_DATA_DIRS", "/usr/local/share:/usr/share").split(":") if d]
 NIGHTFORGE_LIBS = [Path("/usr/lib/nightforge"), Path.home() / "Programs/forge-suite/nightforge"]
 CSS = """
 .hf-quick .hf-tile {{ min-height: 50px; padding: 6px; }}
@@ -156,6 +158,19 @@ class Backend:
     def mute_toggle(self):
         self.run(["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"])
 
+    def chime(self, _percent=None):
+        """The standard plink, at the volume just set (Javier, 2026-10-27: "when you release the button… sound a
+        chime so people can hear the chime at the set volume"). Not when muted; never waited on."""
+        if self.volume()[1]:
+            return
+        sound = next((p for p in CHIMES if p.exists()), None)
+        if sound and shutil.which("pw-play"):
+            try:
+                subprocess.Popen(["pw-play", str(sound)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                                 start_new_session=True)
+            except OSError:
+                pass
+
     # Updates (KognogOS's snapshot, written by its update timer; never a network call here)
     def updates(self):
         try:
@@ -244,9 +259,10 @@ def redraw_moon():
 SLIDERS = {None: ("volume",), "network": (), "bluetooth": ()}   # night and sound: their pages (D-117)
 
 
-def slider(low, high, step, now, words, changed=None, inverted=False):
+def slider(low, high, step, now, words, changed=None, inverted=False, released=None):
     """A slider and ITS number, tied together here (2026-10-24: two rows named their number `value`, and moving
-    the volume rewrote the night light's). `words(v)` is what the number says; `changed(v)` runs on a move."""
+    the volume rewrote the night light's). `words(v)` is what the number says; `changed(v)` runs on a move,
+    `released(v)` when the mouse lets go of it (the volume's chime)."""
     scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, low, high, step)
     scale.set_inverted(inverted)
     scale.set_value(now)
@@ -258,6 +274,8 @@ def slider(low, high, step, now, words, changed=None, inverted=False):
         if changed:
             changed(s.get_value())
     scale.connect("value-changed", moved)
+    if released:
+        scale.connect("button-release-event", lambda s, _e: (released(s.get_value()), False)[1])
     return scale, number
 
 
@@ -271,7 +289,7 @@ def volume_row(be, level, muted, opened=None):
     mute.set_tooltip_text("Mute")
     mute.connect("clicked", lambda b: (be.mute_toggle(), b.set_image(Gtk.Image.new_from_icon_name(
         qspages.mono("audio-volume-muted" if be.volume()[1] else "audio-volume-high"), Gtk.IconSize.BUTTON))))
-    scale, number = slider(0, 100, 1, level, lambda v: f"{int(v)} %", be.set_volume)
+    scale, number = slider(0, 100, 1, level, lambda v: f"{int(v)} %", be.set_volume, released=be.chime)
     row.pack_start(mute, False, False, 0)
     row.pack_start(scale, True, True, 0)
     row.pack_start(number, False, False, 0)

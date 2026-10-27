@@ -827,6 +827,38 @@ class QuickSettingsOneColourAndShortNames(unittest.TestCase):
         self.assertEqual(f("SteelSeries Arctis 5 Chat", False), "SteelSeries Arctis 5 Chat")
         self.assertEqual(f("Navi 21 HDMI/DP Audio Digital Stereo (HDMI 2)", False), "Navi 21 HDMI/DP Audio · HDMI 2")
 
+
+class TheVolumeChime(unittest.TestCase):
+    """Javier, 2026-10-27: "When you are sliding the volume, when you release the button … sound a chime so people
+    can hear the chime at the set volume"."""
+
+    def setUp(self):
+        self.popen, self.old = [], quick.subprocess.Popen
+        quick.subprocess.Popen = lambda cmd, **kw: self.popen.append(cmd)
+
+    def tearDown(self):
+        quick.subprocess.Popen = self.old
+
+    def test_letting_go_of_the_slider_chimes(self):
+        be = quick.Backend(lambda cmd, timeout=3.0: "Volume: 0.40")
+        row = quick.volume_row(be, 40, False)
+        event = panelkit.Gdk.Event.new(panelkit.Gdk.EventType.BUTTON_RELEASE)
+        event.button.button = 1
+        handled = row.scale.emit("button-release-event", event)
+        self.assertFalse(handled, "the slider still gets its release (it lets go of the knob)")
+        self.assertEqual(len(self.popen), 1)
+        self.assertEqual(self.popen[0][0], "pw-play")
+        self.assertTrue(self.popen[0][1].endswith("audio-volume-change.oga"))
+
+    def test_no_chime_when_muted(self):
+        be = quick.Backend(lambda cmd, timeout=3.0: "Volume: 0.40 [MUTED]")
+        be.chime()
+        self.assertEqual(self.popen, [])
+
+    def test_the_sound_page_chimes_too(self):
+        src = (HERE / "applets/panels/views/qspages.py").read_text()
+        self.assertIn("released=be.chime", src)
+
 if __name__ == "__main__":
     unittest.main()
 

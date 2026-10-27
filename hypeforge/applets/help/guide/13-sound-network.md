@@ -16,7 +16,7 @@ displayForge, updates → nogForge). A click anywhere else closes it.
 **Pages inside Quick Settings** (2026-10-25): a click on the **Night light** tile, or on the **sound icon**
 at the right end of the volume row (after the %), opens that part's page **in the same card** — **‹** (or Esc) goes
 back to Quick Settings. The on/off switch is on the page; its full app is the icon at the bottom right. The speaker at the
-start of the volume row mutes.
+start of the volume row mutes. **Let go of the volume slider and a short chime plays at the new volume**, so you hear where you set it (not when muted). On the Sound page the device names are short: a screen's speakers by the screen and its port (*Sceptre Y27 · HDMI*), the computer's own as *Speakers jack* / *Microphone jack*; point at one for its full name.
 - **Night light** — on/off, what it's doing in words ("Daylight now · warm again from 18:45"), the
   warmth slider, **Warm now** and **Automatic**; the icon at the bottom right opens nightForge.
 - **Sound** — the volume (its speaker mutes), your **outputs** (speakers, headset, a screen's
