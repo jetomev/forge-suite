@@ -7,6 +7,9 @@
 
 ## 2026-10-27
 
+### D-119 · The Rice's icons wear its text colour, in every theme (Javier)
+The Rice review (stage 04), after the launcher: *"left and central islands icons and text are clear color, but right island (tray) are not. Let's make the tray icons same colors as the elements of the other 2 islands, please. They look better. These needs to be applied for all Rice themes, all the same."* The right area's icons and numbers, the bell, and the tray's one-colour icons took the accent (`module_icon = pop.text`). Now they take the areas' text colour (`text.primary`, the same as `bar_fg`), in all 25 themes. The state colours keep meaning something: new (the clipboard's count) `@hf_new`, warning `@hf_bell`, alert `@hf_alert` (muted, offline, too hot). A test checks all 25 themes, seen failing on the old colour. Sheet: `logs/rice-review-20261027/sheet-3-icon-colour.png` (Mocha, Dark Gray, Ember, White; before and after).
+
 ### D-118 · The Rice's launcher is COSMIC's App Library; the list waits as a theme option (Javier)
 In the Rice's review (KognogOS stage 04, piece 2), Javier asked to *"see how it would look using the other launchers we have"*. Seven were shot on the Rice on the hidden screen: A the Rice's own list, B COSMIC's search near the top, C Spotlight, D Windows 11's Start, E KDE's Kickoff, F Mac OS 9's emblem menu, and G COSMIC's App Library (G came after Javier's *"you did not used the Cosmic"*: B was only COSMIC's quick search). His pick: *"I would like to use G for rice too. Let's save A, as an option when we start adding theme edits as one of the options :D."*
 - **The Rice:** `[layout] launcher = "library"`. Win + Space and the emblem (its click now runs `hypeforge-sections key`, so it follows the style) open the App Library centred under the bar. Classic keeps the list.

@@ -54,6 +54,16 @@ class Roles(Base):
         with self.assertRaises(ht.LookError):
             ht.fill("{{no_such_role}}", ctx)
 
+    def test_the_rices_icons_wear_its_text_colour_in_every_theme(self):
+        """Javier, 2026-10-27: "Let's make the tray icons same colors as the elements of the other 2 islands…
+        for all Rice themes, all the same." The right area's icons, the tray's one-colour icons and the
+        bell take the areas' text colour (was the accent, pop.text)."""
+        rice = ht.styles()["rice"]
+        for slug, t in ht.themes().items():
+            text = ht.resolve("bar_fg", rice, t)
+            self.assertEqual(ht.resolve("module_icon", rice, t), text, slug)
+            self.assertEqual(ht.resolve("tray_icon", rice, t), text, slug)
+
     def test_cosmic_roundness_picks_one_value(self):
         cosmic = ht.styles()["cosmic"]
         self.assertEqual(ht.shape_of(cosmic, "radius_popup"), 8, "slightly round by default (D-77)")

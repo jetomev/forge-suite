@@ -8,7 +8,8 @@ KognogOS stage 04, "The four styles and their colours" (board card look-071: *"F
 |---|---|---|---|---|---|
 | 1 | The bar: three areas (emblem + pills · date, time, bell · the system, clipboard, Quick Settings, power) | `sheet-1-bar.png` | **Approved** (2026-10-27): *"bar looks good to me"* | R-1: the middle area and the tray area still change width when the notification count or the clipboard count appears. *"It doesn't bother me that much… not as visible as the others were before."* Logged, not fixed. | — |
 | 2 | The launcher (Win + Space, or a click on the emblem) | `sheet-2-launcher.png`; the seven launchers `launcher-sheet-A…G.png` | **Decided (D-118):** *"I would like to use G for rice too. Let's save A, as an option when we start adding theme edits"*: COSMIC's App Library | The list's four (4 px under the bar, square picked row, two gears, a grey star) go with the list into the theme options | `c322098`: Win + Space and the emblem open it (hidden screen, live code) |
-| 3 | The tray (programs' icons, their menus) | real desktop | | | |
+| 1b | The bar's icon colour | `sheet-3-icon-colour.png` | **Asked (D-119):** *"Let's make the tray icons same colors as the elements of the other 2 islands… for all Rice themes, all the same"* | R-2: the right area's icons, the bell and the tray's one-colour icons wore the accent | the text colour in all 25 themes (test seen failing on the old colour) |
+| 3 | The tray (programs' icons, their menus) | real desktop, at the end beside 13 | | | |
 | 4 | Quick Settings + its pages (Wi-Fi, Bluetooth, Sound, Night light, Printer) | | | | |
 | 5 | The date, time and bell → alerts + calendar | | | | |
 | 6 | The system pop-ups (disk, memory, temperature, graphics card, processor) | | | | |
