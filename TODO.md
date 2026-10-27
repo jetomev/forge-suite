@@ -6,7 +6,7 @@
 - [x] **hypeForge (D-117):** Quick Settings pages for Night light, Sound, Wi-Fi (networks, password, hidden networks, refresh), Bluetooth and Printer; a tile opens its page, each page's app icon is at the bottom right; Do Not Disturb moved to the calendar; the moon and the printer left every bar; notification cards approved, which closed **stage 03, 14/14** (hypeforge/TODO.md)
 - [x] **nightForge 1.1.1 — GitHub + AUR** (#129, AUR `65394dc`): its tray icon steps aside on any hypeForge bar; his login check passed
 - [x] **The 19 old design artifacts** archived in `hypeforge/docs/design/archive-artifacts/` (`8fd12d9`), links repointed (`6424f33`), then deleted with Javier's OK
-- [ ] **F-86 #130, the bar waits for sound at login** (`3e741dd`): built and benched; **live at Javier's next login**, close #130 when it shows the bar from the start
+- [ ] **F-86 #130, a bar reload waits for sound to settle** (`3556cd8`, 2026-10-26): the 10-25 start wait (`3e741dd`) was wrong — his 10-26 login crashed the same way, hidden by the guard. Real cause, reproduced on a hidden screen with a private sound service: a reload while WirePlumber is still starting. Every reload now waits for sound (`hfbar.wait_for_sound`); new `hypeforge/scripts/sound-reload-bench.py`; **close #130 when his next login leaves no new crash file**
 
 ## 2026-10-24 — KognogOS stage 03: the pop-up standard's next cards, and displayForge 1.1.4
 - [x] **hypeForge (D-116):** one title row on every pop-up (Javier: "looks good!"); three widths 300 · 380 · 460; the hover tip leaves an open pop-up (F-83 #122); Temperature shows every sensor (F-84 #123); the notifications on the standard, with their app's icon (F-85 #124) — the last three live, **waiting for Javier's look** (hypeforge/TODO.md)
