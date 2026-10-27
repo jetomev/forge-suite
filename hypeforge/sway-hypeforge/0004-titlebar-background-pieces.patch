@@ -1,0 +1,29 @@
+hypeForge (patch 4, 2026-10-27): the title bar background in as many pieces as its texts cut it into
+
+Sway makes five background pieces up front; a title and the three buttons (patch 1) cut it into
+seven, and the pieces past the fifth were never drawn: a see-through strip under the title bar
+and right of the close button. Javier: "there is like a transparent border inside the top of the
+window". Bench: scripts/titlebar-paint-bench.py.
+
+--- a/sway/tree/container.c	2026-10-20 22:17:32.030947447 -0400
++++ b/sway/tree/container.c	2026-10-27 19:22:44.138644872 -0400
+@@ -316,6 +316,19 @@
+ 		return;
+ 	}
+ 
++	// hypeForge (patch 4): the title bar's background comes in as many pieces as its texts cut it into.
++	// Sway makes five up front, enough for a title and its marks; the three buttons make seven, and the
++	// pieces past the fifth were never drawn — a see-through strip under the title bar and right of the
++	// close button (Javier, 2026-10-27: "a transparent border inside the top of the window"). Make the
++	// missing ones; container_update() colours every piece after this.
++	int have = wl_list_length(&tree->children);
++	for (; have < len; have++) {
++		float clear[4] = {0, 0, 0, 0};
++		if (!wlr_scene_rect_create(tree, 0, 0, clear)) {
++			break;
++		}
++	}
++
+ 	int i = 0;
+ 	struct wlr_scene_node *node;
+ 	wl_list_for_each(node, &tree->children, link) {
