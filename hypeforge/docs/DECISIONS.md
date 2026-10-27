@@ -5,6 +5,15 @@
 
 ---
 
+## 2026-10-27
+
+### D-118 · The Rice's launcher is COSMIC's App Library; the list waits as a theme option (Javier)
+In the Rice's review (KognogOS stage 04, piece 2), Javier asked to *"see how it would look using the other launchers we have"*. Seven were shot on the Rice on the hidden screen: A the Rice's own list, B COSMIC's search near the top, C Spotlight, D Windows 11's Start, E KDE's Kickoff, F Mac OS 9's emblem menu, and G COSMIC's App Library (G came after Javier's *"you did not used the Cosmic"*: B was only COSMIC's quick search). His pick: *"I would like to use G for rice too. Let's save A, as an option when we start adding theme edits as one of the options :D."*
+- **The Rice:** `[layout] launcher = "library"`. Win + Space and the emblem (its click now runs `hypeforge-sections key`, so it follows the style) open the App Library centred under the bar. Classic keeps the list.
+- **Every launcher can open on any style:** `HYPEFORGE_LAUNCHER=<kind>` picks one (`fuzzel`, `fuzzel-top`, `spotlight`, `start-panel`, `panel-kickoff-list`, `emblem-menu`, `library`). This is the switch the review used, and the groundwork for the look file's own launcher pick. Start and Kickoff open under a top bar, or above a bottom one, read from where the bar's pop-ups sit (before the bar has started: as before).
+- **The list (A) is kept** as a launcher choice for themeForge's element pages, when people pick each piece of a look (1.x).
+- The preview gained `style-preview.py --run CMD` (a command in the hidden desktop before the picture). Sheets: `logs/rice-review-20261027/launcher-sheet-A…G.png`.
+
 ## 2026-10-25
 
 ### D-117 · Quick Settings holds Wi-Fi, Bluetooth, sound and night light; their pages open inside it; networkForge and bluetoothForge (Javier)

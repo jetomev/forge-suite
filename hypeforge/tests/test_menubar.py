@@ -223,7 +223,7 @@ class TheMenusByKeyboard(unittest.TestCase):
 
 
 class WinSpaceFollowsTheStyle(unittest.TestCase):
-    def run_key(self, style):
+    def run_key(self, style, place=None):
         spec = importlib.util.spec_from_loader("hfsections", importlib.machinery.SourceFileLoader(
             "hfsections", str(HERE / "applets/sections/hypeforge-sections")))
         s = importlib.util.module_from_spec(spec)
@@ -235,6 +235,12 @@ class WinSpaceFollowsTheStyle(unittest.TestCase):
         old_env, old_execv = os.environ.get("XDG_CONFIG_HOME"), os.execv
         os.environ["XDG_CONFIG_HOME"] = str(conf)
         os.execv = lambda prog, argv: calls.append(argv)
+        if place:                                   # where the bar's pop-ups sit (never the live desktop's)
+            s.hfmenu.PLACES = Path(conf / "places.json")
+            s.hfmenu.PLACES.write_text("{}")
+            s.hfmenu.bar_place = lambda: place
+        else:
+            s.hfmenu.PLACES = Path(conf / "no-places.json")
         s.search_top = lambda where=s.NEAR_THE_TOP: calls.append(["search_top"] + (["spotlight"] if where == s.SPOTLIGHT else []))
         try:
             try:
@@ -248,6 +254,29 @@ class WinSpaceFollowsTheStyle(unittest.TestCase):
             else:
                 os.environ["XDG_CONFIG_HOME"] = old_env
         return handled, " ".join(calls[0]) if calls else ""
+
+    def test_the_rice_opens_the_app_library(self):
+        """D-118 (Javier, 2026-10-27): "I would like to use G for rice too" — COSMIC's App Library."""
+        handled, call = self.run_key("rice")
+        self.assertIn("hypeforge-panel library", call)
+
+    def test_the_rice_emblem_follows_the_style(self):
+        conf = (HERE / "styles/rice/bar/config.jsonc").read_text()
+        self.assertIn("hypeforge-sections key", conf)
+
+    def test_classic_keeps_the_list(self):
+        self.assertEqual(self.run_key("classic"), (False, ""))
+
+    def test_any_launcher_can_be_tried_and_start_opens_under_a_top_bar(self):
+        os.environ["HYPEFORGE_LAUNCHER"] = "start-panel"
+        try:
+            call = self.run_key("rice", place=("top", 56))[1]
+        finally:
+            del os.environ["HYPEFORGE_LAUNCHER"]
+        self.assertIn("hypeforge-panel start --edges top,left --margin top=56,left=8", call)
+
+    def test_start_stays_above_a_bottom_bar(self):
+        self.assertIn("--edges bottom,left --margin bottom=56,left=8", self.run_key("windows-11", place=("bottom", 56))[1])
 
     def test_windows_11_opens_start(self):
         self.assertIn("hypeforge-panel start", self.run_key("windows-11")[1])
@@ -293,9 +322,6 @@ class WinSpaceFollowsTheStyle(unittest.TestCase):
         bar = (HERE / "styles/macos/bar/config.jsonc").read_text()
         self.assertIn('"custom/menu-system"', bar)
         self.assertNotIn('"custom/menu-special"', bar)
-
-    def test_the_rice_keeps_its_list(self):
-        self.assertEqual(self.run_key("rice"), (False, ""))
 
 
 if __name__ == "__main__":

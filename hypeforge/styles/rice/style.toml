@@ -16,7 +16,7 @@ credit = "After the r/unixporn community's work, with thanks. Learned from, neve
 
 [elements]                       # what this theme's version of each piece is (themeForge shows it; the look file picks)
 bar          = "one floating bar in three areas, top"
-launcher     = "the launcher list (Win + Space)"
+launcher     = "the App Library: every app in a grid, the groups as folders (Win + Space)"
 workspaces   = "numbered pills, the one on screen named"
 taskbar      = "none"
 datetime     = "the date, time and bell in the middle; a click: alerts + calendar"
@@ -51,7 +51,7 @@ bar_on           = "every-screen"
 area_left        = ["emblem", "workspace-pills"]                 # pills: numbers; the active one wide, with its name (R-2)
 area_center      = ["clock", "now-playing"]
 area_right       = ["cpu", "gpu", "temperature", "memory", "disk", "network", "volume", "night-light", "tray", "power"]
-launcher         = "fuzzel"      # restyled: centred, rounded, a bright frame
+launcher         = "library"     # COSMIC's App Library under the bar (Javier, 2026-10-27, D-118); the list was "fuzzel"
 power            = "panel-buttons"  # big round buttons over a dimmed screen (R-5)
 wallpaper        = "theme"       # the theme's own generated picture (D-75: every theme, every style)
 

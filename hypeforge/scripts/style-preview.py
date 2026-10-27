@@ -6,7 +6,7 @@ Sway's look, the bar's layout and stylesheet, colours, notifications…), starts
 with that look (one fake 2560×1440 screen), runs the Workspaces applet and the bar, opens a few
 stand-in windows named like real apps, and photographs the screen. Nothing touches the real desktop.
 
-    style-preview.py [--style rice] [--theme kognogos-mocha] [--out picture.png] [--scale 0.5] [--click X,Y [--rest S]] [--notify]
+    style-preview.py [--style rice] [--theme kognogos-mocha] [--out picture.png] [--scale 0.5] [--click X,Y [--rest S]] [--run CMD] [--notify]
 """
 
 from __future__ import annotations
@@ -47,6 +47,7 @@ def main() -> int:
     ap.add_argument("--corners", default="style", help="straight, rounded or style (hypeforge-theme corners)")
     ap.add_argument("--click", help="X,Y: a left click there before the picture (e.g. a bar's menu title)")
     ap.add_argument("--notify", action="store_true", help="show two made-up notifications (mako, the style's own settings)")
+    ap.add_argument("--run", help="a shell command run inside the hidden desktop before the picture (e.g. a launcher)")
     ap.add_argument("--rest", type=float, default=0.3, help="seconds the mouse rests on X,Y before the click (2 = its hover tip shows first)")
     a = ap.parse_args()
     out = Path(a.out or HERE / f"logs/style-preview-{a.style}-{a.theme}{'' if a.corners == 'style' else '-' + a.corners}.png")
@@ -138,6 +139,9 @@ def main() -> int:
             procs.append(subprocess.Popen([sys.executable, str(HERE / "scripts/fake-pointer.py"), x, y, "--click",
                                            "--hold", "10", "--rest", str(a.rest)], env=env, stdout=log, stderr=log))
             time.sleep(3 + a.rest)
+        if a.run:                     # e.g. HYPEFORGE_LAUNCHER=start-panel …/hypeforge-sections key
+            procs.append(subprocess.Popen(["sh", "-c", a.run], env=env, stdout=log, stderr=log))
+            time.sleep(3)
         shot = base / "shot.png"
         subprocess.run(["grim", "-s", str(a.scale), str(shot)], env=env, check=True)
         out.write_bytes(shot.read_bytes())

@@ -24,6 +24,7 @@
 - [x] **His third run (10-13, fresh Settings):** "it is working well" — the sharp preview sits on the box inside Settings; #99 (F-74) closed
 - [ ] **NEXT:** the next look pages (corners D-81, pop-ups, icons, fonts), the quick-switch tray icon; nightForge 1.1 (#82) in the themeForge batch
 - [ ] Pop-ups, icons, fonts — each its own page
+- [ ] **Launcher** (KognogOS 1.x, hypeForge D-118, 2026-10-27): the launcher as a pick of its own — the list (Javier: *"save A, as an option when we start adding theme edits"*), COSMIC's search, Spotlight, Start, Kickoff, the emblem menu, the App Library; `HYPEFORGE_LAUNCHER` / `hypeforge-sections` already open any of them on any style; the look file's `[elements] launcher` sets it
 - [ ] **Status icons** (KognogOS 1.x, hypeForge D-117, 2026-10-25): the combined piece that opens Quick Settings (every style today) or separate bar icons — Wi-Fi, Bluetooth, sound, night light, printer — each on/off; hypeforge-theme places them
 - [ ] The quick-switch tray icon (D-78)
 
