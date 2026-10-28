@@ -1,0 +1,53 @@
+hypeForge (patch 5, 2026-10-27): the mouse, used while a key is held, cancels that key's release shortcut
+
+Javier: "Can we try again using Win (solo) to open the launcher, and then we have Win+ComboKey for other
+stuff. What happened was, launcher was always opening when pressing Win+ComboKey". Sway already cancels a
+`bindsym --release` shortcut when another key joins in; a mouse button or a scroll did not, so Win + a
+click or Win + drag (moving a window) opened the launcher when Win was let go.
+Bench: scripts/winkey-bench.py (8 cases).
+
+--- a/sway/input/cursor.c	2026-05-25 10:51:16.000000000 -0400
++++ b/sway/input/cursor.c	2026-10-27 20:40:30.893640936 -0400
+@@ -349,12 +349,34 @@
+ 		dx, dy);
+ }
+ 
++// hypeForge (patch 5): the mouse, used while a key is held, cancels that key's "on release" shortcut.
++// Javier, 2026-10-27: Win alone opens the launcher (`bindsym --release Super_L`), and Win + a key never
++// does (Sway already cancels it when another key joins in) — but Win + a click or Win + drag (moving a
++// window) still opened it when Win was let go.
++static void cancel_held_bindings(struct sway_seat *seat) {
++	struct sway_seat_device *device;
++	wl_list_for_each(device, &seat->devices, link) {
++		if (device->keyboard) {
++			device->keyboard->held_binding = NULL;
++		}
++	}
++	struct sway_keyboard_group *group;
++	wl_list_for_each(group, &seat->keyboard_groups, link) {
++		if (group->seat_device && group->seat_device->keyboard) {
++			group->seat_device->keyboard->held_binding = NULL;
++		}
++	}
++}
++
+ void dispatch_cursor_button(struct sway_cursor *cursor,
+ 		struct wlr_input_device *device, uint32_t time_msec, uint32_t button,
+ 		enum wl_pointer_button_state state) {
+ 	if (time_msec == 0) {
+ 		time_msec = get_current_time_in_msec();
+ 	}
++	if (state == WL_POINTER_BUTTON_STATE_PRESSED) {
++		cancel_held_bindings(cursor->seat);
++	}
+ 
+ 	seatop_button(cursor->seat, time_msec, device, button, state);
+ }
+@@ -380,6 +402,7 @@
+ 
+ void dispatch_cursor_axis(struct sway_cursor *cursor,
+ 		struct wlr_pointer_axis_event *event) {
++	cancel_held_bindings(cursor->seat);              // hypeForge (patch 5): Win + scroll too
+ 	seatop_pointer_axis(cursor->seat, event);
+ }
+ 

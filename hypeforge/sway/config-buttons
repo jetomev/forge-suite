@@ -10,3 +10,9 @@ titlebar_button close 󰖭 kill
 # the button under the pointer lights up in the theme's colours; close in its red (Javier, 2026-10-17:
 # "if I hover with the mouse over the _, [] and X, can they change color/tone?")
 titlebar_button_hover $hf_button_hover $hf_button_hover_text $hf_close_hover $hf_close_hover_text
+
+# Win alone opens the launcher of your style, on release (Javier, 2026-10-27, D-123: "Can we try again using
+# Win (solo) to open the launcher"). Win + any key never does (Sway cancels it), and our build's patch 5
+# cancels it for Win + a click or a drag too — so it lives here: stock Sway (the safe mode) would open the
+# launcher after every Win + drag. Win + Space keeps the launcher until the Quick Search takes it over.
+bindsym --release Super_L exec ~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections key

@@ -15,14 +15,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CONFIG = ROOT / "sway/config"
+BUTTONS = ROOT / "sway/config-buttons"      # what only our Sway build reads (D-111, D-123)
 CHART = ROOT / "applets/help/keys.toml"
 WORKSPACES = ROOT / "applets/workspaces/workspaces.toml"
 
 
 def sway_keys():
-    """Every bindsym in sway/config, as written ("$mod+Return"); resize mode as "resize:…"."""
+    """Every bindsym in sway/config and sway/config-buttons, as written ("$mod+Return"); resize mode as "resize:…"."""
     keys, mode = set(), None
-    for line in CONFIG.read_text().splitlines():
+    for line in (CONFIG.read_text() + "\n" + (BUTTONS.read_text() if BUTTONS.exists() else "")).splitlines():
         line = line.split("#", 1)[0].strip() if not line.strip().startswith("#") else ""
         if not line:
             continue

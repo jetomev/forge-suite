@@ -7,6 +7,13 @@
 
 ## 2026-10-27
 
+### D-123 · Win alone opens the launcher; Win + Space becomes the Quick Search (Javier)
+*"Can we try again using Win (solo) to open the launcher, and then we have Win+ComboKey for other stuff. What happened was, launcher was always opening when pressing Win+ComboKey plus whatever was being executed. If we can, that would place us in the next Window Manager and Tiling level."* Then: *"Actually, Win+Space could be to open a Quick Search in the top/middle of the screen, to search of anything (apps, files, history, whatnot, whatever)"*; order: *"the Win key with patch 5 first, then the Quick Search mock"*. Reopens D-51 (*"A, Win only if possible, if not Win+Space"*: back then Win alone *"started opening terminals"*).
+- **Measured first** (`scripts/winkey-bench.py`, a hidden Sway, a fake keyboard and mouse): Sway 1.12 already cancels a `bindsym --release Super_L` when another key joins in (Win + Enter, + 1, + Shift + Q, + Space: only their own job), but **not when the mouse does**: Win + a click and Win + drag (moving a window) opened the launcher on letting go. Old build 6/8.
+- **Patch 5** (`sway-hypeforge/0005-…`): a mouse button or a scroll cancels the held release shortcut. Our build 8/8.
+- **Win alone** = the style's launcher (`hypeforge-sections key`), in `sway/config-buttons` (only our build reads it; stock Sway in the safe mode would bring the drag problem back, and keeps Win + Space). Key chart and help page 04; `check-keys.py` reads config-buttons too.
+- **Win + Space** keeps the launcher until the Quick Search exists (its mock is next).
+
 ### D-122 · The volume chimes when you let go of the slider (Javier)
 *"When you are sliding the volume, when you release the button, can we do what's kind off the standard, and sound a chime so people can hear the chime at the set volume? That would be nice!"* Quick Settings' volume slider and the Sound page's: on letting go, freedesktop's `audio-volume-change` plays through `pw-play` at the new volume (`Backend.chime()`), never waited on; not when muted. New needs: `pipewire-audio` (pw-play), `sound-theme-freedesktop` (docs/PACKAGING.md). Help page 13. Tests `TheVolumeChime` (3, seen failing on the old code).
 
