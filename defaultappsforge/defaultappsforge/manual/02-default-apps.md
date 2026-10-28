@@ -18,3 +18,10 @@ Some jobs can be done by a website, so the lists offer them too, marked **· web
 
 Pick one and save: a small launcher is made (it also shows in your apps), and it opens in its own window of your browser (Chrome, Chromium, Brave, Edge or Vivaldi), or a tab of any other browser. A web app takes links only, never files: an email file (.eml) keeps opening in an email app.
 
+## Any app… and Find more…
+
+Every list ends with two more lines:
+
+- **Any app…** opens every installed app in a list you can type to filter, for the times an app can do the job but doesn't say so (a picture editor as your image viewer, say).
+- **Find more…** opens nogForge already searching for that kind of app (email, music player, PDF…), to install another one.
+

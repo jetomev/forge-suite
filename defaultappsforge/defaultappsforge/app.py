@@ -18,7 +18,8 @@ from textual.coordinate import Coordinate
 from textual.widgets import Button, Collapsible, DataTable, Input, Select, Static
 
 from forgekit import (
-    FORGE_CSS, GPL3_NOTICE, MENU_HINT, ChangeGroup, ForgeApp, ForgeModal, ReviewDialog, load_pages, start_check,
+    FORGE_CSS, GPL3_NOTICE, MENU_HINT, ChangeGroup, FilterPicker, ForgeApp, ForgeModal, ReviewDialog, load_pages,
+    start_check,
 )
 
 from . import __version__, system as S
@@ -139,6 +140,13 @@ def rows_for(exts: list[str]) -> list[tuple[str, str]]:
 
 # ---- 1 · Default Apps ----------------------------------------------------------------------------------
 
+ANY_APP = "Any app…"          # every installed app, for a job its entry doesn't claim (D-5)
+FIND_MORE = "Find more…"      # nogForge, searching for this kind of app (D-5)
+SEARCH_WORDS = {"web": "browser", "email": "email", "calendar": "calendar", "phone": "phone", "image": "image viewer",
+                "music": "music player", "video": "video player", "text": "text editor", "pdf": "pdf",
+                "files": "file manager", "terminal": "terminal emulator", "archive": "archive", "map": "map",
+                "office": "office"}
+
 class DefaultsView(VerticalScroll):
     FORGE_HINTS = [("Tab", "next"), ("Enter", "open the list"), ("F10", "save"), MENU_HINT]
 
@@ -151,22 +159,46 @@ class DefaultsView(VerticalScroll):
             yield Static("Defaults", id="da-t1")
             yield Static("Selection", id="da-t2")
         for r in ROLES:
-            cands = self.session.candidates(r.key)
-            options = [(self.session.label(a, cands), a.id) for a in cands]
+            options = self.options_for(r.key)
             now = self.session.apps_now[r.key]
-            blank_words = "— none installed —" if not options else "— not chosen —"
             with Horizontal(classes="da-row"):
                 yield Static(f"• {r.title}", classes="da-name")
                 yield Select(options, value=now if now in {o[1] for o in options} else Select.NULL,
-                             allow_blank=True, prompt=blank_words, id=f"da-{r.key}", disabled=not options)
+                             allow_blank=True, prompt="— not chosen —", id=f"da-{r.key}")
+
+    def options_for(self, key: str) -> list[tuple[str, str]]:
+        """The apps that can do it, then Any app… and Find more… (D-5, Javier 2026-10-27)."""
+        cands = self.session.candidates(key)
+        return [(self.session.label(a, cands), a.id) for a in cands] + [(ANY_APP, ANY_APP), (FIND_MORE, FIND_MORE)]
 
     def on_select_changed(self, e: Select.Changed) -> None:
         key = (e.select.id or "").removeprefix("da-")
-        if key in BY_KEY:
-            e.stop()
-            value = None if e.value is Select.NULL else str(e.value)
-            self.session.choose(key, value)
-            self.app.refresh_state()
+        if key not in BY_KEY:
+            return
+        e.stop()
+        if e.value in (ANY_APP, FIND_MORE):
+            back = self.session.apps_now[key]
+            e.select.value = back if back in {o[1] for o in self.options_for(key)} else Select.NULL
+            if e.value == FIND_MORE:
+                self.app.notify(f"nogForge opens, searching for {SEARCH_WORDS[key]!r}", timeout=4)
+                S.find_more(SEARCH_WORDS[key])
+                return
+            apps = sorted((a for a in self.session.apps.values() if not a.hidden), key=lambda a: a.name.lower())
+            self.app.push_screen(FilterPicker(f"Any app for {BY_KEY[key].title}", [(a.id, a.name) for a in apps],
+                                              hint="Every installed app, even one that doesn't say it can do this"),
+                                 lambda picked, key=key, sel=e.select: self.picked(key, sel, picked))
+            return
+        value = None if e.value is Select.NULL else str(e.value)
+        self.session.choose(key, value)
+        self.app.refresh_state()
+
+    def picked(self, key: str, select: Select, desktop_id: str | None) -> None:
+        if not desktop_id:
+            return
+        self.session.choose(key, desktop_id)
+        select.set_options(self.options_for(key))
+        select.value = desktop_id
+        self.app.refresh_state()
 
 
 # ---- 2 · File Types: two tables, >> / << (D-2), aligned from the top (D-3) ------------------------------

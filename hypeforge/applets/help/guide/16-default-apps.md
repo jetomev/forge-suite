@@ -15,6 +15,8 @@ Settings → **Default apps**, or the launcher (Settings → defaultappsForge).
 - **Web apps** are choices too (since 2026-10-27): Gmail or Outlook for email, Google Calendar or Outlook for
   your calendar (a click on a day in the bar's calendar opens that day there), Google Maps or OpenStreetMap,
   Google Voice. Each opens in its own browser window; they take links, never files.
+- Every list ends with **Any app…** (pick any installed app, even one that doesn't say it can) and
+  **Find more…** (nogForge, already searching for that kind of app).
 - **F10** saves, with a review first; a backup of the old file; at once.
 
 It writes the standard list every desktop reads (`~/.config/mimeapps.list`), so a choice holds in

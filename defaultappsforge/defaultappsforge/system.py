@@ -7,6 +7,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
 import time
 from configparser import ConfigParser
 from dataclasses import dataclass, field
@@ -200,3 +201,17 @@ def write_terminal(desktop_id: str, path: Path = TERMINALS, backups: Path = BACK
 
 def terminal_exec_installed() -> bool:
     return shutil.which("xdg-terminal-exec") is not None
+
+
+def find_more(words: str, run=subprocess.Popen) -> list[str]:
+    """nogForge in its own terminal, already searching (D-5): the repo's copy on a desk that has one, else the
+    installed command."""
+    repo = HOME / "Programs/forge-suite/nogforge/main.py"
+    app = [sys.executable, str(repo)] if repo.exists() else ["nogforge"]
+    cmd = ["alacritty", "--class", "nogforge", "-e", *app, "--search", words]
+    try:
+        run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    except OSError:
+        pass
+    return cmd
+

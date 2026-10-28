@@ -126,5 +126,67 @@ class Pages(unittest.TestCase):
         self.assertNotIn("quit", [m["id"] for m in DefaultAppsForgeApp(self.se, live=False, hypeforge=True).MENU])
 
 
+
+class AnyAppAndFindMore(Pages):
+    """D-5 (Javier, 2026-10-27): "offer an option for one to look and select the app that one wants"."""
+
+    def test_each_list_ends_with_any_app_and_find_more(self):
+        from defaultappsforge.app import ANY_APP, FIND_MORE
+        app = self.make()
+
+        async def go():
+            async with app.run_test(size=(100, 30)) as pilot:
+                await pilot.pause()
+                for sel in app.query(Select):
+                    values = [v for _l, v in sel._options]
+                    self.assertEqual(values[-2:], [ANY_APP, FIND_MORE], sel.id)
+        run(go())
+
+    def test_any_app_picks_an_app_that_doesnt_claim_the_job(self):
+        from forgekit import FilterPicker
+        from defaultappsforge.app import ANY_APP
+        app = self.make()
+
+        async def go():
+            async with app.run_test(size=(100, 30)) as pilot:
+                await pilot.pause()
+                sel = app.query_one("#da-pdf", Select)
+                sel.value = ANY_APP
+                await pilot.pause()
+                picker = app.screen
+                self.assertIsInstance(picker, FilterPicker)
+                self.assertNotIn("gimp.desktop", [a.id for a in self.se.candidates("pdf")], "GIMP doesn't claim PDFs")
+                picker.dismiss("gimp.desktop")
+                await pilot.pause()
+                self.assertEqual(self.se.apps_now["pdf"], "gimp.desktop")
+                self.assertEqual(app.query_one("#da-pdf", Select).value, "gimp.desktop")
+        run(go())
+
+    def test_find_more_opens_nogforge_searching(self):
+        from defaultappsforge.app import FIND_MORE
+        ran = []
+        orig = S.find_more
+        S.find_more = lambda words, run=None: ran.append(words)
+        app = self.make()
+
+        async def go():
+            async with app.run_test(size=(100, 30)) as pilot:
+                await pilot.pause()
+                sel = app.query_one("#da-email", Select)
+                before = sel.value
+                sel.value = FIND_MORE
+                await pilot.pause()
+                self.assertEqual(ran, ["email"])
+                self.assertEqual(sel.value, before, "the choice stays what it was")
+        try:
+            run(go())
+        finally:
+            S.find_more = orig
+
+    def test_find_more_command(self):
+        cmd = S.find_more("email", run=lambda *a, **k: None)
+        self.assertEqual(cmd[:4], ["alacritty", "--class", "nogforge", "-e"])
+        self.assertEqual(cmd[-2:], ["--search", "email"])
+
 if __name__ == "__main__":
     unittest.main()
