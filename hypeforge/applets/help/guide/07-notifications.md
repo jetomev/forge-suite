@@ -14,7 +14,9 @@ counts the ones you have not looked at yet.
   the list. **Right click** turns **Do Not Disturb** on or off: the bell turns red, pop-ups
   stay hidden, and they are still kept in the list.
 - **The clock** (Windows 11, macOS, KDE, COSMIC and the Rice): a click opens your recent
-  notifications as cards, with **Clear all**, and the month's calendar under them.
+  notifications as cards, with **Clear all**, and the month's calendar under them (‹ › change the month). **Click a day to open
+  your calendar on it**: the Calendar app you picked in Default apps (Thunderbird opens on its calendar), or Google
+  Calendar in your browser when none is picked.
 - **On the Rice** the bell sits right after the time, in the middle of the bar: a click on the
   date, the time or the bell opens that same pop-up (right click on the bell: Do Not Disturb).
 

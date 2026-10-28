@@ -693,7 +693,8 @@ class CalendarPanel(unittest.TestCase):
     def test_a_notification_borrows_its_apps_icon(self):
         entries = {"steam": {"name": "Steam", "icon": "steam"}}
         self.assertEqual(hfcalendar.icon_for({"app_name": "Steam", "app_icon": "None"}, entries), "steam")
-        self.assertEqual(hfcalendar.icon_for({"app_name": "nog", "app_icon": "None"}, entries), "dialog-information")
+        # nog has no app entry of its own: its Forge app's icon since 2026-10-27 (the Rice review, fix 3)
+        self.assertEqual(hfcalendar.icon_for({"app_name": "nog", "app_icon": "None"}, entries), "system-software-install")
         self.assertEqual(hfcalendar.icon_for({"app_name": "x", "app_icon": "mail-unread"}, entries), "mail-unread")
 
     def test_makos_none_is_nothing(self):
@@ -858,6 +859,49 @@ class TheVolumeChime(unittest.TestCase):
     def test_the_sound_page_chimes_too(self):
         src = (HERE / "applets/panels/views/qspages.py").read_text()
         self.assertIn("released=be.chime", src)
+
+
+class TheCalendarReview(unittest.TestCase):
+    """The Rice review, piece 5 (Javier, 2026-10-27: "fix all three … If I click on a date, I would like for the
+    default calendar to open")."""
+
+    def setUp(self):
+        import calendar_view
+        self.c = calendar_view
+
+    def test_only_the_weeks_the_month_has(self):
+        from datetime import date
+        self.assertEqual(len(self.c.weeks(2026, 10)), 5)
+        self.assertEqual(len(self.c.weeks(2026, 2)), 4, "February 2026 starts on a Sunday: four rows, no fifth")
+        self.assertEqual(len(self.c.weeks(2027, 5)), 6)
+        for y in (2025, 2026, 2027):
+            for m in range(1, 13):
+                w = self.c.weeks(y, m)
+                self.assertEqual(w[0][0].weekday(), 6, "Sunday first")
+                self.assertTrue(any(d.month == m for d in w[-1]), f"{y}-{m}: a week of only next month")
+                self.assertTrue(any(d == date(y, m, 1) for d in w[0]))
+
+    def test_the_notifications_heading_is_a_title(self):
+        src = (HERE / "applets/panels/views/calendar_view.py").read_text()
+        self.assertRegex(src, r'heading = Gtk.Label\(label="Notifications".*\n.*add_class\("hf-head-name"\)')
+
+    def test_our_own_senders_get_their_icon(self):
+        entries = {"nogforge": {"name": "nogForge", "icon": "system-software-install"}}
+        self.assertEqual(self.c.icon_for({"app_name": "nog"}, entries), "system-software-install")
+        self.assertEqual(self.c.icon_for({"app_name": "nightForge"}, {}), "weather-clear-night")
+        self.assertEqual(self.c.icon_for({"app_name": "someone"}, {}), "dialog-information")
+
+    def test_a_day_opens_your_calendar(self):
+        from datetime import date
+        day = date(2026, 10, 30)
+        tb = {"org.mozilla.Thunderbird": {"exec": "thunderbird %u"}}
+        self.assertEqual(self.c.open_day(day, run=lambda *a, **k: None, query="org.mozilla.Thunderbird.desktop",
+                                         entries=tb), ["thunderbird", "-calendar"])
+        web = {"gcal": {"exec": "google-chrome --app=https://calendar.google.com/calendar/r %U"}}
+        self.assertEqual(self.c.open_day(day, run=lambda *a, **k: None, query="gcal.desktop", entries=web),
+                         ["google-chrome", "--app=https://calendar.google.com/calendar/r/day/2026/10/30"])
+        self.assertEqual(self.c.open_day(day, run=lambda *a, **k: None, query="", entries={}),
+                         ["xdg-open", "https://calendar.google.com/calendar/r/day/2026/10/30"])
 
 if __name__ == "__main__":
     unittest.main()

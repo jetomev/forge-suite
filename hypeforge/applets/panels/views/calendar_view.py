@@ -15,7 +15,7 @@ import importlib.machinery
 import importlib.util
 import os
 import subprocess
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 import sys
@@ -31,6 +31,10 @@ from hficons import Icons  # noqa: E402
 NOTIFY = panelkit.APPLETS / "notifications/hypeforge-notifications"
 CLEARED = panelkit.RUNTIME / "hypeforge-panel-cleared"     # notifications up to this id are cleared
 SHOWN = 6
+# KognogOS's own senders that have no app entry of their own (Javier, 2026-10-27, the Rice review: a blue "i"
+# stood in for nightForge and nog)
+OWN_ICONS = {"nightforge": "weather-clear-night", "nog": "system-software-install", "hypeforge": "preferences-desktop",
+             "sudoforge": "dialog-password", "themeforge": "preferences-desktop-theme"}
 CSS = """
 .hf-note-app {{ font-weight: bold; }}
 .hf-card.hf-note {{ padding: 6px 12px; }}     /* Javier, 10-17: the notifications a little smaller, closer together */
@@ -38,11 +42,12 @@ CSS = """
 .hf-head button {{ padding: 3px 10px; }}
 .hf-card.hf-month {{ padding: 10px 12px; }}
 .hf-note-body {{ color: {dim}; font-size: {small}pt; }}
-.hf-calendar calendar {{ background: transparent; color: {text}; border: none; padding: 4px; }}
-.hf-calendar calendar:selected {{ background: {accent}; color: {on_accent}; border-radius: {pill}px; }}
-.hf-calendar calendar.header {{ border: none; }}
-.hf-calendar calendar.button {{ color: {dim}; }}
-.hf-calendar calendar:indeterminate {{ color: {muted}; }}
+.hf-month-name {{ color: {text}; }}
+.hf-month-nav {{ color: {dim}; padding: 0 8px; min-height: 0; }}
+.hf-day-name {{ color: {dim}; font-size: {small}pt; padding: 4px 0; }}
+.hf-day {{ color: {text}; padding: 3px 0; min-height: 0; min-width: 0; border-radius: {pill}px; }}
+.hf-day.hf-other {{ color: {muted}; }}
+.hf-day.hf-today {{ background: {accent}; color: {on_accent}; }}
 """
 
 
@@ -84,7 +89,10 @@ def icon_for(n: dict, entries: dict) -> str:
     for app_id, app in entries.items():
         if name and (app["name"].lower() == name or app_id.lower() == name):
             return app["icon"]
-    return "dialog-information"
+    for app_id, app in entries.items():          # a command-line sender, by its Forge app: nog → nogForge
+        if name and app["name"].lower() == name + "forge":
+            return app["icon"]
+    return OWN_ICONS.get(name, "dialog-information")
 
 
 def plain(v) -> str:
@@ -132,7 +140,9 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
     root.get_style_context().add_class("hf-calendar")
 
     head = Gtk.Box(spacing=8)
-    head.pack_start(Gtk.Label(label="Notifications", xalign=0), True, True, 0)
+    heading = Gtk.Label(label="Notifications", xalign=0)
+    heading.get_style_context().add_class("hf-head-name")    # the one title row, as the month's (D-116)
+    head.pack_start(heading, True, True, 0)
     if shown:
         clear = Gtk.Button(label="Clear all")
         clear.get_style_context().add_class("flat")
@@ -185,20 +195,120 @@ def build(look: panelkit.Look, args) -> panelkit.Panel:
         clear.connect("clicked", clear_all)
 
     today = date.today()
+    panel_ref = {}
     month = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
     title = Gtk.Label(label=f"{today:%A, %B} {today.day}", xalign=0)
     title.get_style_context().add_class("hf-head-name")      # the one title row (D-116)
     title.get_style_context().add_class("hf-head")
     month.pack_start(title, False, False, 0)
-    cal = Gtk.Calendar()
-    cal.set_display_options(Gtk.CalendarDisplayOptions.SHOW_HEADING | Gtk.CalendarDisplayOptions.SHOW_DAY_NAMES)
-    month.pack_start(cal, False, False, 0)
+    month.pack_start(month_view(today, lambda day: (panel_ref["panel"].close(), open_day(day))), False, False, 0)
     root.pack_start(card(month, "hf-month"), False, False, 0)
 
     edges = args.edges.split(",") if getattr(args, "edges", None) else ["bottom", "right"]
     margins = dict(m.split("=") for m in args.margin.split(",")) if getattr(args, "margin", None) else {"bottom": 60, "right": 10}
-    return panelkit.Panel("calendar", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()}, width=panelkit.MEDIUM,
+    panel = panelkit.Panel("calendar", root, look, edges=edges, margins={k: int(v) for k, v in margins.items()}, width=panelkit.MEDIUM,
                           card=False)
+    panel_ref["panel"] = panel
+    return panel
+
+
+def weeks(year: int, month: int) -> list[list[date]]:
+    """The month's weeks, Sunday first, only as many as it has (4 to 6): a week of the next month is never added
+    (Javier, 2026-10-27, the Rice review: GTK's calendar always drew six rows, the last one next month's)."""
+    first = date(year, month, 1)
+    start = first - timedelta(days=(first.weekday() + 1) % 7)
+    out, day = [], start
+    while day.month == month or day < first or not out:
+        out.append([day + timedelta(days=i) for i in range(7)])
+        day += timedelta(days=7)
+        if day.month != month and day > first:
+            break
+    return out
+
+
+def month_view(today: date, picked) -> Gtk.Box:
+    """‹ October 2026 › and the days; today is the accent pill, the other months' days dim; a click on a day
+    calls `picked(day)`."""
+    shown = {"y": today.year, "m": today.month}
+    box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+    nav = Gtk.Box(spacing=4)
+    back, ahead = Gtk.Button(label="‹"), Gtk.Button(label="›")
+    for b in (back, ahead):
+        b.get_style_context().add_class("flat")
+        b.get_style_context().add_class("hf-month-nav")
+    name = Gtk.Label()
+    name.get_style_context().add_class("hf-month-name")
+    nav.pack_start(back, False, False, 0)
+    nav.pack_start(name, True, True, 0)
+    nav.pack_start(ahead, False, False, 0)
+    box.pack_start(nav, False, False, 0)
+    grid = Gtk.Grid(column_homogeneous=True, row_spacing=2, column_spacing=2)
+    box.pack_start(grid, False, False, 0)
+
+    def fill():
+        for child in grid.get_children():
+            grid.remove(child)
+        y, m = shown["y"], shown["m"]
+        name.set_text(date(y, m, 1).strftime("%B %Y"))
+        for i, word in enumerate(("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")):
+            lab = Gtk.Label(label=word)
+            lab.get_style_context().add_class("hf-day-name")
+            grid.attach(lab, i, 0, 1, 1)
+        for r, week in enumerate(weeks(y, m), 1):
+            for i, day in enumerate(week):
+                b = Gtk.Button(label=str(day.day))
+                ctx = b.get_style_context()
+                ctx.add_class("flat")
+                ctx.add_class("hf-day")
+                if day == today:
+                    ctx.add_class("hf-today")
+                if day.month != m:
+                    ctx.add_class("hf-other")
+                b.set_tooltip_text(day.strftime("%A %d %B: open your calendar on this day"))
+                b.connect("clicked", lambda _b, d=day: picked(d))
+                grid.attach(b, i, r, 1, 1)
+        grid.show_all()
+
+    def step(n):
+        m = shown["m"] - 1 + n
+        shown["y"], shown["m"] = shown["y"] + m // 12, m % 12 + 1
+        fill()
+    back.connect("clicked", lambda _b: step(-1))
+    ahead.connect("clicked", lambda _b: step(1))
+    fill()
+    return box
+
+
+GOOGLE_DAY = "https://calendar.google.com/calendar/r/day/{y}/{m}/{d}"
+
+
+def open_day(day: date, run=subprocess.Popen, query=None, entries=None) -> list[str]:
+    """Your calendar, on that day (Javier, 2026-10-27: "If I click on a date, I would like for the default calendar to
+    open"): the app set for calendars (defaultappsForge's Calendar; xdg-mime's text/calendar). Thunderbird opens on
+    its calendar; a web calendar on that day; no calendar set: Google Calendar's day in the browser. Returns the
+    command it ran."""
+    import shlex
+    if query is None:
+        try:
+            query = subprocess.run(["xdg-mime", "query", "default", "text/calendar"], capture_output=True, text=True,
+                                   timeout=3).stdout.strip()
+        except (OSError, subprocess.SubprocessError):
+            query = ""
+    entries = apps() if entries is None else entries
+    app = entries.get(query[:-len(".desktop")] if query.endswith(".desktop") else query)
+    if app:
+        words = [w for w in shlex.split(app["exec"]) if not (len(w) == 2 and w.startswith("%")) and w not in ("@@u", "@@")]
+        url = GOOGLE_DAY.format(y=day.year, m=day.month, d=day.day)
+        if any("calendar.google.com" in w for w in words):        # a Google Calendar web app: on that day
+            words = [w if "calendar.google.com" not in w else (w.split("=", 1)[0] + "=" + url if "=" in w else url)
+                     for w in words]
+        elif "thunderbird" in app["exec"].lower():
+            words.append("-calendar")
+        cmd = words
+    else:
+        cmd = ["xdg-open", GOOGLE_DAY.format(y=day.year, m=day.month, d=day.day)]
+    run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    return cmd
 
 
 def card(widget: Gtk.Widget, *extra: str) -> Gtk.Box:

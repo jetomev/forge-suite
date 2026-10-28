@@ -11,7 +11,7 @@ KognogOS stage 04, "The four styles and their colours" (board card look-071: *"F
 | 1b | The bar's icon colour | `sheet-3-icon-colour.png` | **Asked (D-119):** *"Let's make the tray icons same colors as the elements of the other 2 islands… for all Rice themes, all the same"* | R-2: the right area's icons, the bell and the tray's one-colour icons wore the accent | the text colour in all 25 themes (test seen failing on the old colour) |
 | 3 | The tray (programs' icons, their menus) | real desktop, at the end beside 13 | | | |
 | 4 | Quick Settings + its pages (Wi-Fi, Bluetooth, Sound, Night light, Printer) | `sheet-4-quick-settings.png`, after: `sheet-4b-quick-settings-fixed.png` | **Fix 1 and 2 (D-120):** *"fix 1 and 2, go ahead. switches are the theme color, so good"* | R-3 icons mixed (one-colour beside full-colour; headphones dark on dark) · R-4 long sound names cut off · (the bench: stock icons on the hidden screen, fixed `e03cbe6`) | one-colour icons in the text colour, short names; 4 tests seen failing on the old code |
-| 5 | The date, time and bell → alerts + calendar | | | | |
+| 5 | The date, time and bell → alerts + calendar | `sheet-5-calendar.png` | **Fix all three + date click (D-125):** *"fix all three, go ahead. Also, If I click on a date, I would like for the default calendar to open"* | R-5 "Notifications" not a title · R-6 six rows always, empty space · R-7 a blue "i" for nightForge and nog | our own month grid; a click on a day opens the calendar app; 4 tests seen failing |
 | 6 | The system pop-ups (disk, memory, temperature, graphics card, processor) | | | | |
 | 7 | The clipboard | | | | |
 | 8 | Power | | | | |
