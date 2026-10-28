@@ -2,6 +2,17 @@
 
 *Newest first. Each one says what was decided, by whom, and why.*
 
+## 2026-10-27
+
+### D-5 · Every job: what you have, web apps, any app, and finding more (Javier)
+From the Rice review (a click on a day should open the default calendar; *"I cannot select among the apps, for email or calendar, chrome (gmail.com apps) which should be available"*), Javier asked for the whole picture: *"a simple linux app for every category … better alternative apps, and also the OS needs to recognize apps installed that can be used for every application of the default, and also offer an option for one to look and select the app that one wants."* Claude's plan, his answer: *"all look good"*.
+- **The installed apps** that say they can do a job are listed, as today.
+- **Web apps are real choices** where they handle links: Gmail and Outlook (email links), Google Calendar and Outlook's calendar (calendar invites and hypeForge's "click a day"), Google Maps / OpenStreetMap (addresses), Google Voice (phone numbers). Picking one writes a small launcher (`~/.local/share/applications/kognogos-web-<name>.desktop`) that opens it in its own window of the browser (Chrome, Chromium or Brave: `--app=`; another browser: a plain tab).
+- **Not as defaults:** YouTube Music and Google Docs can't open a file on the computer, so as the default for music or documents a double-click would open the site, not the file. They go to the App Library as web apps instead (Claude's catch, said to Javier).
+- **Any app…** at the end of each list: every installed app, for a job its entry doesn't claim.
+- **Find more…** opens nogForge searching for that kind of app (needs nogForge's `--search`, noted on its list).
+- The Basic picks (KognogOS Basic's app list) are KognogOS's: board card "Basic edition: the app list redone".
+
 ## 2026-10-09
 
 ### D-4 · The design is approved (Javier)

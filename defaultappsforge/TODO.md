@@ -20,5 +20,11 @@
 - [x] Found on the way: **displayForge F-6 (#58)** — one-screen computers crash at start (Select.BLANK is False in Textual 8): fixed + test, release 1.1.1 waits on Javier
 - [ ] **NEXT — Javier's run**
 
+## Phase 1b · Every job's choices (D-5, Javier 2026-10-27: "all look good")
+- [ ] Web apps as choices: Gmail, Outlook (email) · Google Calendar, Outlook calendar (calendar) · Google Maps, OpenStreetMap (map) · Google Voice (phone); a launcher written on save; Chrome/Chromium/Brave `--app=`, else a tab
+- [ ] Any app… : every installed app, for any job
+- [ ] Find more… : nogForge searching for that kind of app (waits on nogForge `--search`)
+- [ ] YouTube Music, Google Docs: App Library web apps, not file defaults
+
 ## Phase 2 · Release
 - [ ] Javier's run → 1.0.0, GitHub, AUR after his local test; README row, kognogos.org, Vault
