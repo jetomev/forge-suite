@@ -18,14 +18,15 @@
 - [x] hypeForge: the Default apps page + Home card (links · folders · text), a launcher entry + float rule, Help page 16 rewritten, Win + Enter follows the chosen terminal — repo + live, backups; hypeForge's card tests now find cards by name
 - [x] Tests: 19 (model 13, pages 6); 7 deliberate breaks caught (one mutation first hit an unreached branch → re-done, plus a new-user test); pictures checked (glued titles, 3-line drop-downs, cut titles — fixed)
 - [x] Found on the way: **displayForge F-6 (#58)** — one-screen computers crash at start (Select.BLANK is False in Textual 8): fixed + test, release 1.1.1 waits on Javier
-- [ ] **NEXT — Javier's run**
-  - 2026-10-28: web apps ✅ (his own picks, they work) · Find more… ✅ · Any app… still to try
+- [x] **NEXT — Javier's run**
+  - **passed 2026-10-28:** web apps (his own Gmail + Google Calendar picks, saved and working) · Find more… · Any app… — all ✅; next: 1.0.0
 
 ## Phase 1b · Every job's choices (D-5, Javier 2026-10-27: "all look good")
 - [x] Web apps as choices: Gmail, Outlook (email) · Google Calendar, Outlook calendar (calendar) · Google Maps, OpenStreetMap (map) · Google Voice (phone); a launcher written on save; Chrome/Chromium/Brave `--app=`, else a tab — **built 2026-10-27** (`webapps.py`, `webapp-open`; links only, never files; tests 30); hypeForge's day click opens it on that day
   - **his run 2026-10-28:** he picked Gmail (email) and Google Calendar (calendar) himself in Settings → Default apps; a click on a calendar day opened Google Calendar on that day (hypeForge D-125)
 - [x] Any app… : every installed app, for any job
   - **built 2026-10-27** (forgekit's FilterPicker; tests 4)
+  - **his try 2026-10-28:** Music Player → Any app… showed every app, the list shrank as he typed, Esc changed nothing ✅
 - [x] Find more… : nogForge searching for that kind of app (waits on nogForge `--search`) — **built 2026-10-27** (with nogForge's `--search`, same night)
   - **his try 2026-10-28:** Music Player → Find more… opened nogForge searching for music players (*"NICE!!!"*) ✅
 - [x] YouTube Music, Google Docs: App Library web apps, not file defaults
