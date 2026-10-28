@@ -492,9 +492,16 @@ def _stamp(*files: Path) -> str:
 
 
 def _prune_pictures(cache: Path, keep: Path):
-    made = sorted((p for p in cache.glob("*.png") if p != keep), key=lambda p: p.stat().st_mtime)
+    made = sorted((p for p in cache.glob("*.png") if p != keep and not p.name.startswith(".")),
+                  key=lambda p: p.stat().st_mtime)
     for p in made[:-KEEP_PICTURES] if len(made) > KEEP_PICTURES else []:
         p.unlink(missing_ok=True)
+    for p in cache.glob(".*.png"):                  # a picture another program is still drawing stays; one left
+        try:                                        # by a crash an hour ago goes
+            if time.time() - p.stat().st_mtime > 3600:
+                p.unlink(missing_ok=True)
+        except OSError:
+            pass
 
 
 def _contrast(a: str, b: str) -> float:
@@ -521,6 +528,27 @@ def wallpaper_colours(slug: str, t: dict) -> tuple[str, str]:
     return bg, words
 
 
+def _whole(pic: Path) -> bool:
+    """The picture is there and complete. themeForge's preview draws the theme's picture as soon as a colour is
+    picked; an Apply a moment later found it half written ("OSError: image file is truncated", Javier,
+    2026-10-27). Pictures are now written under a temporary name and renamed when done; this also catches a
+    broken leftover, which is then drawn again."""
+    if not pic.exists():
+        return False
+    try:
+        from PIL import Image
+        with Image.open(pic) as im:
+            im.load()
+        return True
+    except Exception:
+        return False
+
+
+def _temp_for(out: Path) -> Path:
+    """Where a picture is drawn before it gets its name: beside it, so the rename is atomic."""
+    return out.with_name(f".{out.stem}.{os.getpid()}.{time.monotonic_ns()}{out.suffix}")
+
+
 def kognogos_wallpaper(design: str, slug: str, t: dict, cache: Path, make: bool = True) -> Path:
     """Our own KognogOS background, its art lifted from the originals (scripts/make-kognogos-layers.py)
     and laid on the theme's colours."""
@@ -528,7 +556,7 @@ def kognogos_wallpaper(design: str, slug: str, t: dict, cache: Path, make: bool 
         raise LookError(f"no KognogOS background called {design} ({', '.join(KOGNOGOS_DESIGNS)})")
     art = [KOGNOGOS_ART / f"kognogos-{design}{part}" for part in ("-emblem.png", "-words.png", ".json")]
     out = cache / f"kognogos-{design}-{slug}-{_stamp(*art, Path(__file__))}.png"
-    if out.exists() or not make:
+    if not make or _whole(out):
         return out
     from PIL import Image
     meta = json.loads(art[2].read_text())
@@ -540,7 +568,9 @@ def kognogos_wallpaper(design: str, slug: str, t: dict, cache: Path, make: bool 
                            tuple(meta["words_at"]))
     canvas.alpha_composite(Image.open(art[0]), tuple(meta["emblem_at"]))
     cache.mkdir(parents=True, exist_ok=True)
-    canvas.convert("RGB").save(out, optimize=True)
+    tmp = _temp_for(out)
+    canvas.convert("RGB").save(tmp, format="PNG", optimize=True)
+    os.replace(tmp, out)
     _prune_pictures(cache, out)
     return out
 
@@ -549,13 +579,16 @@ def topic_wallpaper(topic: str, slug: str, t: dict, cache: Path, make: bool = Tr
     """A drawn topic (circuit, mountains, sky and clouds, ribbons, shards, space…) in the theme's colours."""
     _, mode, cols = wall_job(slug, t)
     out = cache / f"{topic}-{slug}-{_stamp(WALLGEN)}.png"
-    if out.exists() or not make:
+    if not make or _whole(out):
         return out
     cache.mkdir(parents=True, exist_ok=True)
+    tmp = _temp_for(out)
     r = subprocess.run(["python3", str(WALLGEN), "--colors", *[c.lstrip("#") for c in cols], "--mode", mode,
-                        "--motif", topic, "--out", str(out), "--preview", "0"], capture_output=True, text=True)
-    if r.returncode or not out.exists():
+                        "--motif", topic, "--out", str(tmp), "--preview", "0"], capture_output=True, text=True)
+    if r.returncode or not tmp.exists():
+        tmp.unlink(missing_ok=True)
         raise LookError(f"the {topic} wallpaper for {slug} could not be made: {r.stderr.strip()[-200:]}")
+    os.replace(tmp, out)
     _prune_pictures(cache, out)
     return out
 
@@ -564,11 +597,13 @@ def solid_wallpaper(slug: str, t: dict, cache: Path, make: bool = True) -> Path:
     """No picture: the theme's colour. Sway paints it itself; this small file is for the lock screen."""
     bg, _ = wallpaper_colours(slug, t)
     out = cache / f"solid-{bg.lstrip('#')}.png"
-    if out.exists() or not make:
+    if not make or _whole(out):
         return out
     from PIL import Image
     cache.mkdir(parents=True, exist_ok=True)
-    Image.new("RGB", (640, 360), tuple(int(bg.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))).save(out)
+    tmp = _temp_for(out)
+    Image.new("RGB", (640, 360), tuple(int(bg.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))).save(tmp, format="PNG")
+    os.replace(tmp, out)
     return out
 
 

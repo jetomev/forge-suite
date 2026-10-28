@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import importlib.machinery
 import importlib.util
+import subprocess
+import os
 import sys
 import tempfile
 import time
@@ -440,6 +442,54 @@ class Wallpaper(Base):
         self.apply("rice", "kognogos-mocha", wallpaper=str(self.wall), fit="center", say=lambda *_: None)
         self.apply("rice", "kognogos-mocha", wallpaper=None, say=lambda *_: None)
         self.assertIn(f'output * bg "{self.wall}" center', self.sway())
+
+    def test_a_half_written_picture_is_drawn_again(self):
+        """Javier, 2026-10-27: "OSError: image file is truncated" — themeForge's preview was still writing the
+        theme's picture when Apply read it."""
+        cache = Path(self.tmp.name) / "pics"
+        t = ht.themes()["white"]
+        good = ht.kognogos_wallpaper("tier-aware", "white", t, cache)
+        whole = good.read_bytes()
+        good.write_bytes(whole[: len(whole) // 3])            # what a reader saw mid-write
+        again = ht.kognogos_wallpaper("tier-aware", "white", t, cache)
+        self.assertEqual(again, good)
+        self.assertTrue(ht._whole(again), "drawn again, whole")
+
+    def test_pictures_get_their_name_only_when_done(self):
+        cache = Path(self.tmp.name) / "pics"
+        seen = {}
+        real = ht.subprocess.run
+
+        def fake(cmd, **kw):
+            if cmd[1:2] == [str(ht.WALLGEN)]:
+                out = Path(cmd[cmd.index("--out") + 1])
+                seen["out"] = out
+                from PIL import Image
+                Image.new("RGB", (8, 8)).save(out, format="PNG")
+                return subprocess.CompletedProcess(cmd, 0, "", "")
+            return real(cmd, **kw)
+        ht.subprocess.run = fake
+        try:
+            pic = ht.topic_wallpaper("circuit", "white", ht.themes()["white"], cache)
+        finally:
+            ht.subprocess.run = real
+        self.assertNotEqual(seen["out"], pic, "drawn under another name")
+        self.assertEqual(seen["out"].parent, pic.parent, "beside it, so the rename is atomic")
+        self.assertTrue(pic.exists() and not seen["out"].exists())
+
+    def test_the_trim_leaves_a_picture_still_being_drawn(self):
+        cache = Path(self.tmp.name) / "pics"
+        cache.mkdir()
+        drawing = cache / ".circuit-white-x.123.456.png"
+        drawing.write_bytes(b"half")
+        os.utime(drawing, (time.time() - 60, time.time() - 60))     # the oldest file: first in line for the trim
+        for n in range(ht.KEEP_PICTURES + 3):
+            (cache / f"p{n}.png").write_bytes(b"x")
+        keep = cache / "keep.png"
+        keep.write_bytes(b"x")
+        ht._prune_pictures(cache, keep)
+        self.assertTrue(drawing.exists(), "a picture still being drawn is never trimmed")
+        self.assertEqual(len([p for p in cache.glob("p*.png")]), ht.KEEP_PICTURES)
 
     def test_undo_brings_the_wallpaper_back_too(self):
         self.apply("rice", "kognogos-mocha", wallpaper=str(self.wall), say=lambda *_: None)
