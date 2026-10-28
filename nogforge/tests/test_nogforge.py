@@ -509,7 +509,7 @@ class CommandLineAndNames(unittest.TestCase):
             self.assertEqual(main(["--version"]), 0)
             self.assertEqual(main(["--help"]), 0)
         self.assertIn(f"nogForge {__version__}", out.getvalue())
-        self.assertIn("nog 1.7.0 or newer", out.getvalue())
+        self.assertIn("nog 2.0.0 or newer", out.getvalue())
         with contextlib.redirect_stderr(io.StringIO()):
             self.assertEqual(main(["--nope"]), 2)
 
@@ -1339,7 +1339,7 @@ class StartedByHypeForge(unittest.TestCase):
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             main(["--help"])
-        self.assertIn("1-6", out.getvalue())
+        self.assertIn("1-7", out.getvalue())
         self.assertNotIn("hypeforge", out.getvalue().lower())
         self.assertNotIn("hypeforge", parser().format_help().lower())
         self.assertNotIn("hypeforge", (ROOT / "nogforge.1").read_text().lower())

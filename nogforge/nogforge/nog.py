@@ -40,7 +40,7 @@ def ask(*args: str, timeout: float = 300) -> dict:
     """Run ``nog <args> --json`` and return its one JSON document."""
     nog = binary()
     if not nog:
-        raise NogError("nog isn't installed. nogForge shows what nog decides, so it needs nog 1.7.0 or newer.")
+        raise NogError("nog isn't installed. nogForge shows what nog decides, so it needs nog 2.0.0 or newer.")
     try:
         p = subprocess.run([nog, *args, "--json"], stdin=subprocess.DEVNULL, capture_output=True, text=True,
                            timeout=timeout)
