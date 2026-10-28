@@ -5,6 +5,11 @@
 
 ---
 
+## 2026-10-28
+
+### D-126 · The Rice, pieces 6 to 11 approved; Power keeps its colours, the tray stays one colour (Javier)
+The Rice review, pieces 6–11 (`logs/rice-review-20261027/sheet-6-11.png`, then his own screenshots on the real desktop): the system pop-ups, the clipboard, Power, the Workspaces and Favorites lists, Alt + Tab, the notifications. Javier: *"alt+tab works. All good! I do not mind power icons to be colored, to match the file manager and launcher icons. It is ok the tray icons are the way they are and are only one color. We do not need a circus of colors :D"*. So: **Power's buttons keep their full-colour icons** (the same family as the launcher's and the file manager's); **Quick Settings and the tray stay one colour** (D-119, D-120). Nothing changed in code.
+
 ## 2026-10-27
 
 ### D-125 · The calendar: a click on a day opens your calendar; only the month's own weeks (Javier)
