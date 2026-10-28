@@ -23,6 +23,8 @@ USAGE = f"""nogForge {__version__} — packages, the KognogOS way
 
 Usage:
   nogforge             open nogForge
+  nogforge --search WORDS
+                       open on Install, already searching for WORDS
   nogforge --version   print the version
   nogforge --help      print this
 
@@ -66,6 +68,15 @@ def main(argv: list[str] | None = None) -> int:
     if args and args[0] in ("--help", "-h", "help"):
         print(USAGE)
         return 0
+    search = ""
+    if args and args[0] == "--search":
+        search = " ".join(args[1:])
+        if not search.strip():
+            print(f"nogforge: --search needs words to look for\n\n{USAGE}", file=sys.stderr)
+            return 2
+        args = []
+    elif args and args[0].startswith("--search="):
+        search, args = args[0].split("=", 1)[1], []
     if args:
         print(f"nogforge: unknown option {args[0]!r}\n\n{USAGE}", file=sys.stderr)
         return 2
@@ -73,7 +84,7 @@ def main(argv: list[str] | None = None) -> int:
     from forgekit import closing_notice, runs_log_row, session_banner
     from .app import NogForgeApp
 
-    app = NogForgeApp(hypeforge=opts.hypeforge)
+    app = NogForgeApp(hypeforge=opts.hypeforge, **({"search": search} if search else {}))
     app.run()
     ended = dt.datetime.now()
     heading, lines, level = summary(app)

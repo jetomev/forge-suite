@@ -245,8 +245,9 @@ class NogForgeApp(ForgeApp):
         Binding("q", "act('quit')", show=False),
     ]
 
-    def __init__(self, *, apps: dict | None = None, logs=None, cache_dir=None, **kw) -> None:
+    def __init__(self, *, apps: dict | None = None, logs=None, cache_dir=None, search: str = "", **kw) -> None:
         self.apps = catalogue.load() if apps is None else apps
+        self.start_search = search.strip()     # `--search WORDS`: open on Install, already searching (defaultappsForge D-5)
         self.logs = logs or records.LOGS
         self.cache_dir = cache_dir or records.CACHE
         self.packages: list[Package] = []
@@ -292,6 +293,15 @@ class NogForgeApp(ForgeApp):
         self.load_local()
         self.load_plan()
         self.load_maint()
+        if self.start_search:
+            self.call_after_refresh(self.search_for, self.start_search)
+
+    def search_for(self, words: str) -> None:
+        """Install, with its search box already holding `words` (the list follows as if typed)."""
+        self._switch_section("install")
+        box = self.query_one("#in-find")
+        box.value = words
+        box.focus()
 
     def nog_version(self) -> str:
         b = nog.binary()

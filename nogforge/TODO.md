@@ -5,7 +5,7 @@
 **Status (17 Oct 2026, 11:50): 1.5.0 RELEASED** — signed tag `v1.5.0`, GitHub Release Latest (tar+asc, SHA256SUMS+asc), AUR `nogforge 1.5.0-1` (`ed429d9`, `nog>=2.0.0`) after Javier installed the locally built package and passed it; kognogos.org card live. **0 open issues** (#16 #23 #27 #28 #29 #30 #31 closed with the release). Benched overnight by Claude alone (desktop + KognogOS VM, every §2 step PASS); 67 tests. Next: Settings.
 
 ## 2026-10-22 · Moved into the Forge Suite
-- [ ] **`--search WORDS`: open already searching** (defaultappsForge D-5, 2026-10-27: its "Find more…" opens nogForge on the kind of app wanted)
+- [x] **`--search WORDS`: open already searching** (defaultappsForge D-5, 2026-10-27: its "Find more…" opens nogForge on the kind of app wanted) — **built 2026-10-27** (tests 2, seen failing on the old code); goes out with the next release (after Javier's local test)
 - [x] **The old commit message reworded** (Javier ran `scripts/rewrite-old-commit-message.sh`: dry-run, local, push), then **moved into `forge-suite/nogforge`** (Javier: go): `git subtree add` with the full history (signed merge `fc0b8b3`), tags re-created signed as `nogforge-v0.3.0…v1.5.0`, no open issues to move, the old repository got a moved note and is archived, `~/Programs/nogforge` → a shortcut (the old folder, with the rewrite's backup bundle and `pre-rewrite-*` branch, in `~/Programs/_moved-into-forge-suite/`)
 - [x] The About page's Code link points at the suite (`tests/test_home.py`, seen failing first)
 - [ ] **At the next version:** the release from forge-suite (`scripts/release-app.sh nogforge X.Y.Z`), the AUR recipe repointed at `jetomev/forge-suite` releases

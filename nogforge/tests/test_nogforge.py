@@ -294,6 +294,27 @@ class Screens(StandIn, unittest.IsolatedAsyncioTestCase):
             await pilot.pause(0.1)
         return cond()
 
+    async def test_search_opens_install_already_searching(self):
+        """defaultappsForge D-5 (2026-10-27): its "Find more…" opens nogForge searching for that kind of app."""
+        from nogforge.app import NogForgeApp
+        app = NogForgeApp(apps=self.apps, logs=self.logs, cache_dir=self.cache, search="email")
+        async with app.run_test(size=(100, 32)) as pilot:
+            self.assertTrue(await self.until(pilot, lambda: app.query_one("#forge-work").current == "sec-install"))
+            self.assertEqual(app.query_one("#in-find").value, "email")
+
+    def test_the_search_option(self):
+        from unittest import mock
+        from nogforge import cli
+        with mock.patch("nogforge.app.NogForgeApp") as made:
+            made.return_value.run.return_value = None
+            made.return_value.changes = []
+            try:
+                cli.main(["--search", "music", "player"])
+            except Exception:
+                pass
+            self.assertEqual(made.call_args.kwargs.get("search"), "music player")
+        self.assertEqual(cli.main(["--search"]), 2)
+
     async def test_dashboard_tables(self):
         app = self.app()
         async with app.run_test(size=(100, 32)) as pilot:
