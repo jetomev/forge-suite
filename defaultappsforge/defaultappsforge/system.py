@@ -16,6 +16,7 @@ HOME = Path.home()
 CONFIG_HOME = Path(os.environ.get("XDG_CONFIG_HOME", HOME / ".config"))
 MIMEAPPS = CONFIG_HOME / "mimeapps.list"
 TERMINALS = CONFIG_HOME / "xdg-terminals.list"
+APPS_DIR = Path(os.environ.get("XDG_DATA_HOME", HOME / ".local/share")) / "applications"   # web app launchers (D-5)
 BACKUPS = CONFIG_HOME / "defaultappsforge/backups"
 KEEP_BACKUPS = 20
 DEFAULTS = "Default Applications"

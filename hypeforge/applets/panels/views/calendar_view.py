@@ -299,7 +299,9 @@ def open_day(day: date, run=subprocess.Popen, query=None, entries=None) -> list[
     if app:
         words = [w for w in shlex.split(app["exec"]) if not (len(w) == 2 and w.startswith("%")) and w not in ("@@u", "@@")]
         url = GOOGLE_DAY.format(y=day.year, m=day.month, d=day.day)
-        if any("calendar.google.com" in w for w in words):        # a Google Calendar web app: on that day
+        if any(w.endswith("webapp-open") for w in words):           # a KognogOS web app (defaultappsForge D-5)
+            words.append(f"--day={day.isoformat()}")
+        elif any("calendar.google.com" in w for w in words):      # a Google Calendar web app: on that day
             words = [w if "calendar.google.com" not in w else (w.split("=", 1)[0] + "=" + url if "=" in w else url)
                      for w in words]
         elif "thunderbird" in app["exec"].lower():

@@ -900,6 +900,10 @@ class TheCalendarReview(unittest.TestCase):
         web = {"gcal": {"exec": "google-chrome --app=https://calendar.google.com/calendar/r %U"}}
         self.assertEqual(self.c.open_day(day, run=lambda *a, **k: None, query="gcal.desktop", entries=web),
                          ["google-chrome", "--app=https://calendar.google.com/calendar/r/day/2026/10/30"])
+        ours = {"kognogos-web-google-calendar": {"exec": "/usr/bin/python3 /x/webapp-open google-calendar %u"}}
+        self.assertEqual(self.c.open_day(day, run=lambda *a, **k: None, query="kognogos-web-google-calendar.desktop",
+                                         entries=ours), ["/usr/bin/python3", "/x/webapp-open", "google-calendar",
+                                                         "--day=2026-10-30"])
         self.assertEqual(self.c.open_day(day, run=lambda *a, **k: None, query="", entries={}),
                          ["xdg-open", "https://calendar.google.com/calendar/r/day/2026/10/30"])
 

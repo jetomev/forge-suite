@@ -49,7 +49,8 @@ class Pages(unittest.TestCase):
                 self.assertEqual(str(app.query_one("#da-t2").render()), "Selection")
                 selects = list(app.query(Select))
                 self.assertEqual(len(selects), len(ROLES))
-                self.assertTrue(app.query_one("#da-phone", Select).disabled, "Phone Numbers: none installed")
+                # nothing installed for phone numbers, but Google Voice is a web app choice since D-5 (2026-10-27)
+                self.assertFalse(app.query_one("#da-phone", Select).disabled, "Phone Numbers: Google Voice offered")
                 self.assertEqual(app.query_one("#da-web", Select).value, "chrome.desktop")
                 titles, first = app.query_one("#da-t2").region, app.query_one("#da-web", Select).region
                 self.assertEqual(titles.x, first.x, "Selection sits over the drop-downs")

@@ -21,7 +21,7 @@
 - [ ] **NEXT — Javier's run**
 
 ## Phase 1b · Every job's choices (D-5, Javier 2026-10-27: "all look good")
-- [ ] Web apps as choices: Gmail, Outlook (email) · Google Calendar, Outlook calendar (calendar) · Google Maps, OpenStreetMap (map) · Google Voice (phone); a launcher written on save; Chrome/Chromium/Brave `--app=`, else a tab
+- [x] Web apps as choices: Gmail, Outlook (email) · Google Calendar, Outlook calendar (calendar) · Google Maps, OpenStreetMap (map) · Google Voice (phone); a launcher written on save; Chrome/Chromium/Brave `--app=`, else a tab — **built 2026-10-27** (`webapps.py`, `webapp-open`; links only, never files; tests 30); hypeForge's day click opens it on that day
 - [ ] Any app… : every installed app, for any job
 - [ ] Find more… : nogForge searching for that kind of app (waits on nogForge `--search`)
 - [ ] YouTube Music, Google Docs: App Library web apps, not file defaults

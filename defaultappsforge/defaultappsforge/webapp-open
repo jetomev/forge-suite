@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+"""Opens a KognogOS web app (defaultappsForge D-5): `webapp-open gmail mailto:someone@example.com`."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import webapps  # noqa: E402
+
+sys.exit(webapps.main(sys.argv[1:]))

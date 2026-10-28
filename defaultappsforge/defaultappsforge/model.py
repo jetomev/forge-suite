@@ -13,6 +13,7 @@ import tomllib
 from pathlib import Path
 
 from . import system as S
+from . import webapps as W
 from .roles import BY_KEY, FILE_TYPES, ROLES, default_pools
 
 POOLS = S.CONFIG_HOME / "defaultappsforge/settings.toml"
@@ -21,8 +22,14 @@ NONE = None
 
 class Session:
     def __init__(self, apps: dict[str, S.App] | None = None, mimeapps: S.MimeApps | None = None,
-                 pools_path: Path = POOLS, terminals: Path = S.TERMINALS, ask_system=S.system_default) -> None:
+                 pools_path: Path = POOLS, terminals: Path = S.TERMINALS, ask_system=S.system_default,
+                 apps_dir: Path = S.APPS_DIR) -> None:
         self.apps = apps if apps is not None else S.installed()
+        self.apps_dir = apps_dir
+        for w in W.WEB_APPS:                              # web apps are choices before their launcher exists (D-5)
+            if W.launcher_id(w) not in self.apps:
+                self.apps[W.launcher_id(w)] = S.App(W.launcher_id(w), f"{w.name} · web app", set(w.handles),
+                                                     {"Network"}, False)
         self.mime = mimeapps or S.MimeApps()
         self.pools_path, self.terminals, self.ask_system = pools_path, terminals, ask_system
         self.saved_apps = {r.key: self._current(r.key) for r in ROLES}
@@ -140,6 +147,11 @@ class Session:
             role_changed = app != self.saved_apps[r.key]
             exts = self.pools[r.key]
             new_exts = [e for e in exts if e not in self.saved_pools[r.key]]
+            if app and W.is_web(app):                     # a web app takes its links, never files (D-5)
+                if role_changed:
+                    for t in r.main:
+                        out[t] = [app] if t in self.apps[app].types else None
+                continue
             if app and role_changed:
                 for t in r.main:
                     out[t] = [app]
@@ -160,6 +172,9 @@ class Session:
         """Write what changed (backups first); then what is saved is what you see."""
         result = {"backup": None, "tidied": [], "terminal": None}
         plan = self.plan()
+        for key, app in self.apps_now.items():         # a chosen web app's launcher, before the file names it
+            if W.is_web(app) and (app != self.saved_apps.get(key) or not (self.apps_dir / app).exists()):
+                W.write_launcher(W.BY_KEY[app.removeprefix(W.PREFIX).removesuffix(".desktop")], self.apps_dir)
         result["tidied"] = self.mime.tidy(self.apps)
         for mime, apps in plan.items():
             self.mime.set(S.DEFAULTS, mime, apps)

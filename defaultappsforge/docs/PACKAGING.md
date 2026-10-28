@@ -20,7 +20,7 @@ aren't listed.*
 
 | Package | What uses it | Module / program |
 |---|---|---|
-| xdg-utils | reading and setting the defaults (xdg-mime) | (program xdg-mime) |
+| xdg-utils | reading and setting the defaults (xdg-mime); the default browser for web apps (xdg-settings) | (program xdg-mime) |
 | xdg-terminal-exec | the default terminal entry, where installed (not on this desktop) | (program xdg-terminal-exec) |
 
 ## The AUR recipe

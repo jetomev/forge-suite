@@ -6,3 +6,15 @@ Web Browser · Email Client · Calendar · Phone Numbers · Image Viewer · Musi
 - A drop-down lists the apps whose own launcher entry says they can do that job, plus whatever does it today. Two apps with the same name show their launcher name too (for example two "Google Chrome" entries).
 - **— none installed —** means no app on this computer can do it yet (Phone Numbers, often).
 - **Terminal Emulator** uses the `xdg-terminal-exec` standard. If it isn't installed, saving installs it (nog asks for your password) and writes your choice to `~/.config/xdg-terminals.list`. On hypeForge, **Win + Enter** then opens that terminal.
+
+## Web apps
+
+Some jobs can be done by a website, so the lists offer them too, marked **· web app**:
+
+- **Email Client:** Gmail, Outlook. An email link opens a new message there.
+- **Calendar:** Google Calendar, Outlook Calendar. A calendar invite opens it, and a click on a day in the desktop's calendar opens that day.
+- **Map:** Google Maps, OpenStreetMap. An address opens there.
+- **Phone Numbers:** Google Voice. A number opens a call there.
+
+Pick one and save: a small launcher is made (it also shows in your apps), and it opens in its own window of your browser (Chrome, Chromium, Brave, Edge or Vivaldi), or a tab of any other browser. A web app takes links only, never files: an email file (.eml) keeps opening in an email app.
+

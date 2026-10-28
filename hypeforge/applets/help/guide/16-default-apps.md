@@ -12,6 +12,9 @@ Settings → **Default apps**, or the launcher (Settings → defaultappsForge).
   Text Editor · PDF Viewer · File Manager · Terminal Emulator · Archive Manager · Map · Office Suite.
 - **File Types:** the common file types and which default app opens each. Tick types on the left,
   open a default app on the right, **>>** assigns them, **<<** clears them (like workspaceForge).
+- **Web apps** are choices too (since 2026-10-27): Gmail or Outlook for email, Google Calendar or Outlook for
+  your calendar (a click on a day in the bar's calendar opens that day there), Google Maps or OpenStreetMap,
+  Google Voice. Each opens in its own browser window; they take links, never files.
 - **F10** saves, with a review first; a backup of the old file; at once.
 
 It writes the standard list every desktop reads (`~/.config/mimeapps.list`), so a choice holds in
