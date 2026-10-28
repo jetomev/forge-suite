@@ -16,7 +16,7 @@ credit = "After the r/unixporn community's work, with thanks. Learned from, neve
 
 [elements]                       # what this theme's version of each piece is (themeForge shows it; the look file picks)
 bar          = "one floating bar in three areas, top"
-launcher     = "the App Library: every app in a grid, the groups as folders (Win + Space)"
+launcher     = "the App Library: every app in a grid, the groups as folders (Win)"
 workspaces   = "numbered pills, the one on screen named"
 taskbar      = "none"
 datetime     = "the date, time and bell in the middle; a click: alerts + calendar"

@@ -17,7 +17,7 @@ files = ["03-placement.md", "21-title-bars.md", "05-window-rules.md"]
 
 [[page]]
 tab = "Apps"
-files = ["04-launcher.md"]
+files = ["04-launcher.md", "22-quick-search.md"]
 
 [[page]]
 tab = "Tools"

@@ -133,9 +133,10 @@ input type:keyboard {
 
     # Start your launcher
     bindsym $mod+d $menu
-    # hypeForge: Win + Space = the launcher with sections, applet 4 (D-52); Win + D = plain search
-    # the style's own launcher: Start on Windows 11, the emblem menu on Mac OS 9, this list elsewhere (10-10)
-    bindsym $mod+space exec ~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections key
+    # hypeForge: Win + Space = the Quick Search (D-124, Javier 2026-10-27: "search of anything"): apps, Settings
+    # pages, files, Chrome's history, the clipboard; = sums, > commands. Win alone opens the style's launcher
+    # (D-123, sway/config-buttons). Win + D = plain app search.
+    bindsym $mod+space exec ~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel search
     # the menu bar's menus as lists, by the letter underlined in their titles (Javier, 2026-10-10;
     # H, E, L are taken — Win + H is $left — so Help is P, Special I, Window O)
     bindsym $mod+o exec ~/Programs/forge-suite/hypeforge/applets/menubar/hypeforge-menubar open window
@@ -230,7 +231,7 @@ input type:keyboard {
     # away in the grid — the "border pixel" that was here kept the frame since F-55)
 
     # Swap focus between the tiling area and the floating area
-    # hypeForge: Win + Space opens the launcher now; this moved to Win + Shift + Tab
+    # hypeForge: Win + Space opens the Quick Search; this moved to Win + Shift + Tab
     bindsym $mod+Shift+Tab focus mode_toggle
 
     # Move focus to the parent container

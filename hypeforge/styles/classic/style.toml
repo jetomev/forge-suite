@@ -19,7 +19,7 @@ credit = "hypeForge's own look, 2026-10-04 → (D-46)."
 
 [elements]                       # what this theme's version of each piece is (themeForge shows it; the look file picks)
 bar          = "hypeForge's first bar, top"
-launcher     = "the launcher list (Win + Space)"
+launcher     = "the launcher list (Win)"
 workspaces   = "a workspace drop-down"
 taskbar      = "open windows in the middle"
 datetime     = "the date and time"

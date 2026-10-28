@@ -160,7 +160,7 @@ def sway_ask(kind: int, payload: str = ""):
 def output_in_use(outputs: list[dict], env=os.environ) -> dict | None:
     """The screen a panel opens on: the one whose bar was clicked (HYPEFORGE_OUTPUT, set by
     hypeforge-bar on each screen's bar — Javier, 2026-10-10: they all opened on the left screen),
-    else the one Sway has focus on (a key, Win + Space)."""
+    else the one Sway has focus on (a key, Win)."""
     active = [o for o in outputs if o.get("active")]
     named = env.get("HYPEFORGE_OUTPUT")
     return (next((o for o in active if o.get("name") == named), None) if named else None) \

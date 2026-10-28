@@ -8,7 +8,7 @@ the real desktop.
 
     panel-preview.py <view> [--style rice] [--theme kognogos-mocha] [--out picture.png] [--keys …]
 
---keys sends key presses to the panel before the picture (e.g. Right Return), through the hidden
+--keys sends key presses to the panel before the picture (fake-keyboard.py steps: "tap:down tap:tab"), through the hidden
 seat, to show a state such as the power menu asking "Restart?".
 """
 
@@ -62,6 +62,7 @@ def main() -> int:
     ap.add_argument("--click", action="append", default=[], metavar="X,Y[,S]",
                     help="a real left click there once the panel is up (repeat it: each click gets its own picture, "
                          "<out>-1.png, -2.png …; e.g. a Quick Settings tile's › then the page's ‹)")
+    ap.add_argument("--keys", default="", help="fake-keyboard.py steps after the panel opens, e.g. \"tap:down tap:tab\"")
     ap.add_argument("--tray", action="store_true", help="traymenu: hypeForge's tray and a stand-in tray app (Dropbox's menu shape) first")
     a = ap.parse_args()
     out = Path(a.out or HERE / f"logs/panel-preview-{a.view}-{a.style}-{a.theme}.png")
@@ -156,6 +157,10 @@ def main() -> int:
                                        "--style", a.style, "--theme", a.theme, *shlex.split(a.panel_args)],
                                       env=env, stdout=log, stderr=log))
         time.sleep(8 if a.view == "quick" else 5 if a.view in ("start", "kickoff", "library") else 3)   # quick asks nmcli, bluetoothctl…
+        if a.keys:                                # through the hidden seat, as from a keyboard
+            subprocess.run([sys.executable, str(HERE / "scripts/fake-keyboard.py"), *a.keys.split()], env=env,
+                           stdout=log, stderr=log, timeout=30)
+            time.sleep(1)
         shot = base / "shot.png"
         for n, spot in enumerate(a.click, 1):     # the hidden Sway has no mouse: fake-pointer.py is one
             x, y, *wait = spot.split(",")              # a third number: seconds to wait before the picture

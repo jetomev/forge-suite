@@ -48,14 +48,14 @@ bar_position     = "top"
 bar_on           = "every-screen"
 bar_left         = ["emblem-menu", "app-name", "workspaces", "favorites", "window-menu", "help-menu"]
 # the status icons open Control Center (one soft pill, as on Windows 11 and KDE); no Spotlight button —
-# Win + Space is Spotlight (Javier on Windows 11's search pill: "if it is just a meme that opens the
+# Win (alone, D-123) is Spotlight (Javier on Windows 11's search pill: "if it is just a meme that opens the
 # launcher, it is not worth it")
 bar_right        = ["tray", "control-center", "clock", "notification-center"]
 dock             = "bottom-center"           # the dock bar in the one Waybar, always shown (MA-1); windows tile above it
 dock_on          = "main-screen"             # the middle screen of the row (D-87)
 dock_items       = ["launchpad", "favorites", "running", "|", "downloads", "trash"]
 spotlight        = "fuzzel"                  # today's launcher, restyled: a wide rounded search bar, centred
-launcher         = "spotlight"               # Win + Space
+launcher         = "spotlight"               # Win (alone, D-123)
 applets          = ["menubar", "taskbar"]    # the menu bar's menus and app name; the Dock's apps
 launchpad        = "panel-grid"              # our panel (D-68): every app as a grid, groups as tabs
 control_center   = "panel"

@@ -1,6 +1,6 @@
 # hypeForge applet 4 · App Sections (D-47, D-52)
 #
-# The launcher (Win + Space) opens on a first screen: Favourites, the groups (kinds of app),
+# The launcher (Win) opens on a first screen: Favourites, the groups (kinds of app),
 # All apps, Help & Keys. Where an app opens is NOT set here: each workspace lists its apps in
 # workspaces.toml (F-50, #55; workspaceForge edits them), and the app opens there however it is
 # picked. The hypeForge Settings will edit this file; until then, edit it by hand (it is read
@@ -10,7 +10,7 @@
 # Apps are named by their desktop-entry name: the file name in /usr/share/applications or
 # ~/.local/share/applications without ".desktop" (google-chrome, Alacritty, btop…).
 
-# false = Win + Space opens the plain fuzzel search instead.
+# false = Win opens the plain fuzzel search instead.
 enabled = true
 
 # fuzzel's look (colours, size, corners): the same file as the plain launcher

@@ -39,6 +39,7 @@ aren't listed.*
 | networkmanager | network (nmcli) | (program) |
 | networkmanager-dmenu | the network list | (program) |
 | wireplumber | volume (wpctl) | (program) |
+| fd | the Quick Search's files, by name (D-124) | (program) |
 | pipewire-audio | the volume's chime (pw-play) | (program) |
 | sound-theme-freedesktop | the volume's chime (`audio-volume-change.oga`) | (sound) |
 | libpulse | volume keys (pactl) | (program) |

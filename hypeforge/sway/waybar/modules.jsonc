@@ -147,7 +147,7 @@
   },
   "custom/emblem": {
     "format": " ",
-    "tooltip-format": "Apps (Win + Space)",
+    "tooltip-format": "Apps (Win)",
     "on-click": "~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections"
   },
   "custom/power-panel": {

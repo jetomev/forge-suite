@@ -26,7 +26,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "vi
 # view name → its module (a module may not take a standard library's name: "calendar" is one)
 VIEWS = {"power": "power", "start": "start", "quick": "quick", "calendar": "calendar_view", "workspaces": "workspaces",
          "kickoff": "kickoff", "library": "library", "switcher": "switcher", "clipboard": "clipboard", "traymenu": "traymenu",
-         "system": "system", "windowmenu": "windowmenu", "list": "listcard"}
+         "system": "system", "windowmenu": "windowmenu", "list": "listcard",
+         "search": "quicksearch"}
 
 
 def main() -> int:

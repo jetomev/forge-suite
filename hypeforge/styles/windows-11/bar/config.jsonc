@@ -33,7 +33,7 @@
   ],
   "custom/emblem": {
     "format": " ",
-    "tooltip-format": "Start (Win + Space)",
+    "tooltip-format": "Start (Win)",
     "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel start --edges bottom,left --margin bottom=56,left=8"
   },
   "custom/ws-title": {

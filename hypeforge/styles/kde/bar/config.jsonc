@@ -36,7 +36,7 @@
   ],
   "custom/emblem": {
     "format": " ",
-    "tooltip-format": "Kickoff (Win + Space)",
+    "tooltip-format": "Kickoff (Win)",
     "on-click": "~/Programs/forge-suite/hypeforge/applets/panels/hypeforge-panel kickoff --edges bottom,left --margin bottom=60,left=8"
   },
   "custom/sep": {

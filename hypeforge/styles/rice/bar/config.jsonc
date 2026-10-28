@@ -44,7 +44,7 @@
   ],
   // the shared emblem; its click opens the Rice's launcher, the App Library (D-118)
   "custom/emblem": {
-    "tooltip-format": "App Library (Win + Space)",
+    "tooltip-format": "App Library (Win)",
     "on-click": "~/Programs/forge-suite/hypeforge/applets/sections/hypeforge-sections key"
   }
 }

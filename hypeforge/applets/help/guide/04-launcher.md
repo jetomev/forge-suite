@@ -1,13 +1,13 @@
 # App Sections — the launcher (applet 4)
 
-**What it does:** **Win** on its own (press and let go), **Win + Space**, or a click on the **KognogOS emblem** at the left of the bar,
+**What it does:** **Win** on its own (press and let go), or a click on the **KognogOS emblem** at the left of the bar,
 opens the launcher, right under the emblem; press again to close it. Its first screen lists **Favorites**,
 the **groups** every desktop uses — Development, Games, Graphics, Internet, Multimedia, Office, Settings,
 System, Utilities (and Education, Science or Other once something belongs there) — then **All apps**
 and **Help & Keys** — apps only. Lock, log out,
 reboot and shut down are on the bar's **⏻** button.
 
-**Every style keeps its own launcher on Win (and Win + Space):** Win + any other key, a click or a drag (moving a window) never opens it. Windows 11 opens **Start**, KDE opens **Kickoff** (the apps as a list with a line about each), Mac OS 9 the **emblem menu** as a list (its groups open their own list), COSMIC **a search box near the top of the screen** (every app; type to narrow it, Enter opens it), macOS **Spotlight** (the same search, wider, a third of the way down), **the Rice the App Library** (below; its emblem opens it too); Classic opens this one.
+**Every style keeps its own launcher on Win:** (Win + Space is the Quick Search, next page.) Win + any other key, a click or a drag (moving a window) never opens it. Windows 11 opens **Start**, KDE opens **Kickoff** (the apps as a list with a line about each), Mac OS 9 the **emblem menu** as a list (its groups open their own list), COSMIC **a search box near the top of the screen** (every app; type to narrow it, Enter opens it), macOS **Spotlight** (the same search, wider, a third of the way down), **the Rice the App Library** (below; its emblem opens it too); Classic opens this one.
 
 **On COSMIC, the App Library** (on macOS: **Launchpad**, the grid button at the start of the Dock) opens from **Applications** on the top panel or the grid button on the dock: every app as a grid, your groups as folders along the bottom; a click on an app opens it on its own workspace.
 
@@ -37,7 +37,7 @@ The list follows the `favourites` setting below — after changing it by hand, r
 
 `~/.config/hypeforge/applets/sections.toml`
 
-- `enabled = true / false` (off: Win + Space is the plain search)
+- `enabled = true / false` (off: Win opens the plain search)
 - `favourites` — your apps at the top, in your order
 
 The emblem's picture: `~/.config/hypeforge/bar/launcher.png` — put any picture there to change it.
