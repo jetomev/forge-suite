@@ -26,7 +26,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 FX = Path("~/.local/opt/swayfx/bin").expanduser()
-WALL = "/usr/share/wallpapers/kognog/Kognog OS Semi - Logo Catpuccin Mocha.png"
+WALL = str(Path(__file__).resolve().parent.parent / "assets/lock/kognogos-mocha-blurred.jpg")   # the repo's own picture: no system path to drift (2026-10-27)
 RELOADS = 10
 
 loader = importlib.machinery.SourceFileLoader("hypeforge_theme", str(REPO / "applets/theme/hypeforge-theme"))

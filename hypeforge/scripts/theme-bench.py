@@ -31,7 +31,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 TOOL = REPO / "applets/theme/hypeforge-theme"
-OWN_WALL = "/usr/share/wallpapers/kognog/Kognog OS Semi - Logo Catpuccin Mocha.png"
+OWN_WALL = str(Path(__file__).resolve().parent.parent / "assets/lock/kognogos-mocha-blurred.jpg")   # the repo's own picture (2026-10-27)
 LIVE = [("sway/config", "sway/config"), ("sway/waybar/style.css", "sway/waybar/style.css"),
         ("sway/waybar/config.jsonc", "sway/waybar/config.jsonc"), ("sway/fuzzel/fuzzel.ini", "sway/fuzzel/fuzzel.ini"),
         ("sway/gtklock/style.css", "gtklock/style.css")]

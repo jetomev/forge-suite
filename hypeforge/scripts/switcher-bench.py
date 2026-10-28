@@ -58,7 +58,7 @@ def main() -> int:
         print(("  ok    " if ok else "  FAIL  ") + what, flush=True)
 
     subprocess.run([str(HERE / "applets/theme/hypeforge-theme"), "apply", "rice", "kognogos-mocha", "--no-reload",
-                    "--wallpaper", "/usr/share/wallpapers/kognog/Kognog OS Semi - Logo Catpuccin Mocha.png"],
+                    "--wallpaper", str(HERE / "assets/lock/kognogos-mocha-blurred.jpg")],
                    env=env, stdout=log, stderr=log)
     sway = subprocess.Popen(["sway", "-c", str(base / "sway.conf")], env=env, stdout=log, stderr=log)
     try:
