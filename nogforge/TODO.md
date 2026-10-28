@@ -4,6 +4,10 @@
 
 **Status (17 Oct 2026, 11:50): 1.5.0 RELEASED** — signed tag `v1.5.0`, GitHub Release Latest (tar+asc, SHA256SUMS+asc), AUR `nogforge 1.5.0-1` (`ed429d9`, `nog>=2.0.0`) after Javier installed the locally built package and passed it; kognogos.org card live. **0 open issues** (#16 #23 #27 #28 #29 #30 #31 closed with the release). Benched overnight by Claude alone (desktop + KognogOS VM, every §2 step PASS); 67 tests. Next: Settings.
 
+## 2026-10-28 · 1.6.0 — open already searching
+- [x] **1.6.0 prepared:** `--search` in `--help` and the man page; **F-20** `--help` said 1-6 and nog 1.7.0 (and the not-installed message 1.7.0) → 1-7, 2.0.0, the test that pinned "1-6" fixed; README (What's in 1.6, roadmap, changelog; 1.4.0 moved to docs/), version 1.6.0; 70 tests, 0 warnings; matrix `testing/20261028 - Test Matrix for nogForge v1-6-0.md`
+- [ ] **Release:** signed tag `nogforge-v1.6.0`, `scripts/release-app.sh`, GitHub Release, the AUR recipe repointed at forge-suite → makepkg → **Javier's local install test** → AUR push
+
 ## 2026-10-22 · Moved into the Forge Suite
 - [x] **`--search WORDS`: open already searching** (defaultappsForge D-5, 2026-10-27: its "Find more…" opens nogForge on the kind of app wanted) — **built 2026-10-27** (tests 2, seen failing on the old code); goes out with the next release (after Javier's local test)
   - **his try 2026-10-28** through defaultappsForge's Find more… (Music Player): opened searching for music players ✅ — ready for the release

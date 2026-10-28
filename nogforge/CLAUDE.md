@@ -20,6 +20,7 @@ A [forgekit](https://github.com/jetomev/forge-suite/tree/main/forgekit) (Python/
 - **Maintenance is pick-then-nog** (1.5.0): the page shows nog's report (`nog clean --json`) and hands nog only the ticked categories (`nog clean --only a,b`), never `--yes`: nog asks once in its window and pacman and flatpak ask with their own lists. `c` opens the page from anywhere; on it, `c` cleans up the ticked ones. A hidden list never takes the keyboard (Install's search re-run after a change focuses its list only while Install is shown).
 - **nog's run window is forgekit's, with nogForge's arrow** (1.5.0, #23): `ui/run.py` subclasses `RunWindow` only to label the toggle button with the fold's direction (▾ open / ▴ fold; `v` / `^` on a console). The steps, the bar, the question bar and F12 stay forgekit's: a change there lands in every Forge app.
 - **The package ships the launcher entry** (1.5.0, #16): `nogforge.desktop` at the root, `Terminal=true`, one main category (Settings) so it shows once; `desktop-file-validate` runs in the tests and in the recipe's `check()`. hypeForge's own copy (a floating window) replaces it by name, never beside it.
+- **`--search WORDS` opens on Install already searching** (1.6.0, for defaultappsForge's Find more…): the only option besides `--version`, `--help` and Settings' `--hypeforge`; keep it in `--help` and the man page.
 - **The name is `nogForge`** (lowercase n).
 - Credit, never comparison (Pamac is the inspiration, credited, not a rival); the human + AI credit on every release artifact.
 

@@ -2,6 +2,15 @@
 
 *Newest first. The README carries the two most recent releases; older ones are here.*
 
+### v1.4.0 — October 8, 2026 · the menu's keys, the same in every Forge app ([#24](https://github.com/jetomev/nogforge/issues/24), [#25](https://github.com/jetomev/nogforge/issues/25), [#26](https://github.com/jetomev/nogforge/issues/26))
+
+- **Ctrl + the underlined letter works everywhere** ([F-14, #24](https://github.com/jetomev/nogforge/issues/24)): Ctrl+U (Update) did nothing while the cursor was in a search box, because the box used Ctrl+U for "delete what I typed"; Ctrl+Y (History) had never been set up. Both now come from [forgekit 0.10.0](https://github.com/jetomev/forge-suite), which gives every menu entry its Ctrl key, ahead of the box. History's key became **Ctrl+S** under **Javier's letter rule**, the same in every Forge app: each name gets the first letter of its name, or the next free letter of the name when that one is taken; Help is always H and Quit Q (H is Help and I is In-System, so History gets S; Install gets N).
+- **5 opens History's menu, 6 opens Help's** ([F-15, #25](https://github.com/jetomev/nogforge/issues/25)): 5 and 6 used to jump straight into History's two pages. Now the numbers go left to right along the menu bar, Help included, and the bottom bar says **1-6 menu** instead of "1-6 screens". **h** still opens Activity. From Javier's second run: **a menu's number pressed again closes it**, and **the open menu's name is lit**.
+- **The manual, Keys, License and About are pages** in the main area, not windows (Javier: "yes, Keys and Manual as pages too"); Help is lit while they show, Esc goes back to the page you came from, and F1 still opens the manual at the page for where you are. On these pages nogForge's letter keys do nothing (so **c** there can't start a clean-up); numbers, Ctrl + letter, **?** and **F1** still work.
+- **`--hypeforge`** ([#26](https://github.com/jetomev/nogforge/issues/26)): how hypeForge Settings starts nogForge as one of its pages: no Quit, and Settings closes it. Left out of `--help` on purpose.
+- **Never closed while nog is working**: q, Ctrl+Q, Quit and Settings' request all wait until nog is done (before, Ctrl+Q during an update closed nogForge, and nog with it).
+- Needs forgekit 0.10.0. Tests: 56 (was 42), no warnings (was none).
+
 ### v1.3.0 — October 7, 2026 · searches follow the typing; one-row filters ([#21](https://github.com/jetomev/nogforge/issues/21), [#22](https://github.com/jetomev/nogforge/issues/22))
 
 - **Every search filters as you type**, like Update's Find: In-System at once (it filters what is already here); Install after half a second's pause and from two characters on (it asks nog); Enter still searches at once; an emptied box clears the results. The Search button is gone.

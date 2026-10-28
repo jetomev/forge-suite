@@ -10,7 +10,7 @@
 ![Platform: KognogOS / Arch](https://img.shields.io/badge/Platform-KognogOS%20%2F%20Arch-lightgrey.svg)
 ![Python: 3.11+](https://img.shields.io/badge/Python-3.11+-green.svg)
 ![Status: Stable](https://img.shields.io/badge/Status-Stable-brightgreen.svg)
-![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-purple.svg)
+![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-purple.svg)
 [![AUR](https://img.shields.io/aur/version/nogforge?color=1793d1&label=AUR)](https://aur.archlinux.org/packages/nogforge)
 
 ---
@@ -22,6 +22,12 @@
 nogForge brings what [Pamac](https://github.com/manjaro/pamac), Manjaro's software centre, does so well (with thanks: it's the inspiration) to the terminal, on top of nog: your programs as a table, a search with types, and updates you can read. **nog decides; nogForge shows it.** Tiers, holds and which packages must move together are never worked out twice.
 
 ---
+
+## What's in 1.6
+
+**`nogforge --search WORDS`** opens nogForge on Install with those words already searched, the list showing as if you had typed them. It's there for [defaultappsForge](https://github.com/jetomev/forge-suite/tree/main/defaultappsforge)'s **Find more…**: pick it for a job (a music player, an email app…) and nogForge opens already looking for apps that can do it. Javier's try, 28 October 2026: *"it opened searching for music players..... NICE!!!"*
+
+Fixed: `nogforge --help` said the menu keys were 1–6 (they're 1–7 since Maintenance) and that nogForge needs nog 1.7.0 (it needs 2.0.0 since 1.5.0); the same old number was in the message shown when nog isn't installed.
 
 ## What's in 1.5
 
@@ -149,12 +155,19 @@ hypeForge Settings shows nogForge as one of its pages. It starts nogForge with `
 ## Roadmap (each version tested by Javier before the next)
 
 - [ ] **Settings** — nog's holds and sources, pacman's safe options, repositories (signatures required, key checked first), cleaning
+- [x] **`--search WORDS`**, opening already searching (for defaultappsForge's Find more…) — 1.6.0
 - [x] **Flatpak and Snap**, with nog's install chain (nog C3, 1.9.0) and nog 2.0.0's every-source answers: rows, installs, uninstalls, the Repositories window — 1.5.0
 - [x] **Maintenance**: nog 2.0.0's report of what each source has left behind, pick and clean — 1.5.0
 
 ---
 
 ## Changelog
+
+### v1.6.0 — October 28, 2026 · open already searching
+
+- **`nogforge --search WORDS`**: opens on Install with WORDS already in the search box and the results showing, as if typed. Started without it, nogForge opens as before. Made for defaultappsForge's **Find more…** (its D-5), which opens nogForge already looking for apps that can do a job; proven by Javier from there on 28 October. In `--help` and the man page.
+- **Fixed** (F-20): `--help` said **1-6** for the menu's numbers (1-7 since Maintenance arrived in 1.5.0) and **nog 1.7.0 or newer** (2.0.0 since 1.5.0); the message shown when nog isn't installed carried the same old number.
+- The first nogForge release from the [Forge Suite](https://github.com/jetomev/forge-suite) repository: tag `nogforge-v1.6.0`, its files built by the suite's `scripts/release-app.sh` (reproducible: every file dated the tag's commit). Tests: 70 (was 67), no warnings.
 
 ### v1.5.0 — October 15, 2026 · every source, and Maintenance (on nog 2.0.0)
 
@@ -166,20 +179,11 @@ hypeForge Settings shows nogForge as one of its pages. It starts nogForge with `
 - **From the scripted bench in the KognogOS VM** (the night of 16 → 17 October, `scripts/bench-150.py`): [F-17](https://github.com/jetomev/nogforge/issues/29) the Repositories window listed Flatpak only once something from it was installed — now a source nog's plan checked is listed, rows or no rows; [F-18](https://github.com/jetomev/nogforge/issues/30) two runs in the same minute showed oldest first in nog Logs — the line nog wrote last is the newest; [F-19](https://github.com/jetomev/nogforge/issues/31) every run's caption said *no other log for this run* while Enter opened its own log — the caption now says what is there.
 - History's Activity knows the new verbs (reinstall, lock, unlock, tier, info, status, history, keep). Needs nog 2.0.0. Tests: 67 (was 56), no warnings.
 
-### v1.4.0 — October 8, 2026 · the menu's keys, the same in every Forge app ([#24](https://github.com/jetomev/nogforge/issues/24), [#25](https://github.com/jetomev/nogforge/issues/25), [#26](https://github.com/jetomev/nogforge/issues/26))
-
-- **Ctrl + the underlined letter works everywhere** ([F-14, #24](https://github.com/jetomev/nogforge/issues/24)): Ctrl+U (Update) did nothing while the cursor was in a search box, because the box used Ctrl+U for "delete what I typed"; Ctrl+Y (History) had never been set up. Both now come from [forgekit 0.10.0](https://github.com/jetomev/forge-suite), which gives every menu entry its Ctrl key, ahead of the box. History's key became **Ctrl+S** under **Javier's letter rule**, the same in every Forge app: each name gets the first letter of its name, or the next free letter of the name when that one is taken; Help is always H and Quit Q (H is Help and I is In-System, so History gets S; Install gets N).
-- **5 opens History's menu, 6 opens Help's** ([F-15, #25](https://github.com/jetomev/nogforge/issues/25)): 5 and 6 used to jump straight into History's two pages. Now the numbers go left to right along the menu bar, Help included, and the bottom bar says **1-6 menu** instead of "1-6 screens". **h** still opens Activity. From Javier's second run: **a menu's number pressed again closes it**, and **the open menu's name is lit**.
-- **The manual, Keys, License and About are pages** in the main area, not windows (Javier: "yes, Keys and Manual as pages too"); Help is lit while they show, Esc goes back to the page you came from, and F1 still opens the manual at the page for where you are. On these pages nogForge's letter keys do nothing (so **c** there can't start a clean-up); numbers, Ctrl + letter, **?** and **F1** still work.
-- **`--hypeforge`** ([#26](https://github.com/jetomev/nogforge/issues/26)): how hypeForge Settings starts nogForge as one of its pages: no Quit, and Settings closes it. Left out of `--help` on purpose.
-- **Never closed while nog is working**: q, Ctrl+Q, Quit and Settings' request all wait until nog is done (before, Ctrl+Q during an update closed nogForge, and nog with it).
-- Needs forgekit 0.10.0. Tests: 56 (was 42), no warnings (was none).
-
 *Earlier versions: [docs/CHANGELOG.md](docs/CHANGELOG.md).*
 
 ## How this project is built
 
-A human and AI collaboration: the screens were drawn and approved before any code, every change is tested (67 tests, a stand-in nog, so no test touches your packages), and the `testing/` folder holds the test matrices, published on purpose.
+A human and AI collaboration: the screens were drawn and approved before any code, every change is tested (70 tests, a stand-in nog, so no test touches your packages), and the `testing/` folder holds the test matrices, published on purpose.
 
 ## Authors
 

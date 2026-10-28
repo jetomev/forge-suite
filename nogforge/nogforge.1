@@ -1,12 +1,15 @@
 .\" nogforge.1 — nogForge man page
 .\" GNU GPL v3 — see LICENSE
-.TH NOGFORGE 1 "October 2026" "nogForge v1.5.0" "User Commands"
+.TH NOGFORGE 1 "October 2026" "nogForge v1.6.0" "User Commands"
 .
 .SH NAME
 nogforge \- packages the KognogOS way: what is installed, installing, updates and the clean-up, for every source, in a terminal
 .
 .SH SYNOPSIS
 .B nogforge
+.br
+.B nogforge \-\-search
+.I WORDS
 .br
 .B nogforge \-\-version
 .br
@@ -53,6 +56,13 @@ and in
 as Markdown.
 .
 .SH OPTIONS
+.TP
+.BI \-\-search " WORDS"
+Open on Install, already searching for
+.IR WORDS ,
+the list showing as if they had been typed (1.6.0). defaultappsForge's
+.B "Find more..."
+uses it to show the apps that could do a job.
 .TP
 .B \-\-version
 Print the version and exit.
