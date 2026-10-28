@@ -22,9 +22,11 @@
 
 ## Phase 1b · Every job's choices (D-5, Javier 2026-10-27: "all look good")
 - [x] Web apps as choices: Gmail, Outlook (email) · Google Calendar, Outlook calendar (calendar) · Google Maps, OpenStreetMap (map) · Google Voice (phone); a launcher written on save; Chrome/Chromium/Brave `--app=`, else a tab — **built 2026-10-27** (`webapps.py`, `webapp-open`; links only, never files; tests 30); hypeForge's day click opens it on that day
-- [x] Any app… : every installed app, for any job — **built 2026-10-27** (forgekit's FilterPicker; tests 4)
+- [x] Any app… : every installed app, for any job
+  - **built 2026-10-27** (forgekit's FilterPicker; tests 4)
 - [x] Find more… : nogForge searching for that kind of app (waits on nogForge `--search`) — **built 2026-10-27** (with nogForge's `--search`, same night)
-- [x] YouTube Music, Google Docs: App Library web apps, not file defaults — **built 2026-10-27** (`webapp-open --add youtube-music google-docs`, `--remove`; tests 4; not added on this desktop yet: Javier's call)
+- [x] YouTube Music, Google Docs: App Library web apps, not file defaults
+  - **built 2026-10-27** (`webapp-open --add youtube-music google-docs`, `--remove`; tests 4; not added on this desktop yet: Javier's call)
 
 ## Phase 2 · Release
 - [ ] Javier's run → 1.0.0, GitHub, AUR after his local test; README row, kognogos.org, Vault
