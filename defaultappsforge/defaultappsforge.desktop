@@ -1,0 +1,16 @@
+[Desktop Entry]
+# defaultappsForge's own launcher entry (1.0.0): the package installs it as
+# /usr/share/applications/defaultappsforge.desktop, so the app shows in every app
+# menu and launcher. Terminal=true: the desktop opens it in its terminal. hypeForge
+# ships its own copy for its floating window; a user copy of the same name
+# replaces this one, so nothing shows twice.
+Type=Application
+Name=defaultappsForge
+GenericName=Default apps
+Comment=Which app opens what: links, folders, text, PDFs, pictures, music, video and more
+TryExec=defaultappsforge
+Exec=defaultappsforge
+Icon=preferences-desktop-default-applications
+Terminal=true
+Categories=Settings;DesktopSettings;
+Keywords=default;applications;open with;file types;mime;browser;email;

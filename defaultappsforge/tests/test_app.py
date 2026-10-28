@@ -190,3 +190,38 @@ class AnyAppAndFindMore(Pages):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CommandLine(unittest.TestCase):
+    """--help and --version answer and exit, never opening the app (1.0.0: `--help` opened the whole
+    app, found while preparing the release); a word it doesn't know is refused, never ignored."""
+
+    def run_main(self, argv):
+        import contextlib
+        import io
+        from defaultappsforge.app import main
+        from unittest import mock
+        out, err = io.StringIO(), io.StringIO()
+        opened = []
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err), \
+                mock.patch("defaultappsforge.app.DefaultAppsForgeApp.run", lambda *_a, **_k: opened.append("app")):
+            code = main(argv)
+        return code, out.getvalue(), err.getvalue(), opened
+
+    def test_help_and_version_answer_without_opening(self):
+        from defaultappsforge import __version__
+        code, out, _e, opened = self.run_main(["--help"])
+        self.assertEqual((code, opened), (0, []))
+        self.assertIn("defaultappsforge --version", out)
+        self.assertNotIn("hypeforge", out.lower())
+        code, out, _e, opened = self.run_main(["--version"])
+        self.assertEqual((code, out.strip(), opened), (0, f"defaultappsForge {__version__}", []))
+
+    def test_an_unknown_word_is_refused(self):
+        code, _o, err, opened = self.run_main(["--frobnicate"])
+        self.assertEqual((code, opened), (2, []))
+        self.assertIn("--frobnicate", err)
+
+    def test_with_no_words_the_app_opens(self):
+        code, _o, _e, opened = self.run_main([])
+        self.assertEqual((code, opened), (0, ["app"]))

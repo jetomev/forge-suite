@@ -8,6 +8,7 @@ workspaceForge's Apps page, aligned from the top; Save a pop-up review.
 from __future__ import annotations
 
 import os
+import sys
 
 from rich.text import Text
 from textual import work
@@ -570,7 +571,38 @@ def needs() -> list:
     return []           # any Linux, any desktop or none, any terminal: nothing to check
 
 
-def main(*, ask=None) -> int:
+USAGE = f"""defaultappsForge {__version__} — which app opens what
+
+Usage:
+  defaultappsforge             open defaultappsForge
+  defaultappsforge --version   print the version
+  defaultappsforge --help      print this
+
+Inside: Default Apps (one list per job: web browser, email, calendar, phone numbers,
+pictures, music, video, text, PDFs, files, terminal, archives, maps, office), File Types
+(which app opens each kind of file). Every list ends with Any app… and Find more….
+F10 saves, after a review of what changes. It writes ~/.config/mimeapps.list, the
+standard file every desktop and app reads.
+"""
+
+
+def main(argv: list[str] | None = None, *, ask=None) -> int:
+    """--version and --help answer and exit (1.0.0: before, any word opened the app). --hypeforge is
+    hypeForge Settings' (forgekit reads it); any other word is refused, never ignored."""
+    from forgekit import add_hypeforge_argument
+    import argparse
+    p = argparse.ArgumentParser(prog="defaultappsforge", add_help=False, allow_abbrev=False)
+    add_hypeforge_argument(p)
+    _opts, args = p.parse_known_args(sys.argv[1:] if argv is None else argv)
+    if args and args[0] in ("--version", "-V", "version"):
+        print(f"defaultappsForge {__version__}")
+        return 0
+    if args and args[0] in ("--help", "-h", "help"):
+        print(USAGE)
+        return 0
+    if args:
+        print(f"defaultappsforge: {' '.join(args)!r} isn't something it knows\n\n{USAGE}", file=sys.stderr)
+        return 2
     if not start_check("defaultappsForge", needs(), ask=ask):
         return 2
     DefaultAppsForgeApp().run()
