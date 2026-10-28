@@ -60,7 +60,7 @@ WEB_APPS = [
 LIBRARY_ONLY = [
     WebApp("youtube-music", "YouTube Music", None, "https://music.youtube.com", (), "youtube-music",
            "YouTube Music, in its own window"),
-    WebApp("google-docs", "Google Docs", None, "https://docs.google.com", (), "x-office-document",
+    WebApp("google-docs", "Google Docs", None, "https://docs.google.com", (), "google-docs",
            "Google Docs, in its own window"),
 ]
 BY_KEY = {w.key: w for w in WEB_APPS + LIBRARY_ONLY}
@@ -140,8 +140,37 @@ def browser_command(url: str, which=shutil.which, ask=None) -> list[str]:
     return ["xdg-open", url]
 
 
+def apps_dir() -> Path:
+    return Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local/share") / "applications"
+
+
+def to_library(keys: list[str], where: Path, remove: bool = False) -> list[str]:
+    """YouTube Music, Google Docs…: put in (or taken out of) the App Library, never anyone's default."""
+    done = []
+    for key in keys:
+        path = where / launcher_id(BY_KEY[key])
+        if remove:
+            if path.exists():
+                path.unlink()
+                done.append(key)
+        else:
+            write_launcher(BY_KEY[key], where)
+            done.append(key)
+    return done
+
+
 def main(argv: list[str]) -> int:
-    """webapp-open <name> [link] [--day=YYYY-MM-DD]"""
+    """webapp-open <name> [link] [--day=YYYY-MM-DD] · webapp-open --add|--remove <name>…"""
+    if argv and argv[0] in ("--add", "--remove"):
+        keys = argv[1:]
+        wrong = [k for k in keys if k not in BY_KEY]
+        if not keys or wrong:
+            print(f"webapp-open {argv[0]} <" + "|".join(BY_KEY) + ">…", file=sys.stderr)
+            return 2
+        done = to_library(keys, apps_dir(), remove=argv[0] == "--remove")
+        verb = "Added to" if argv[0] == "--add" else "Taken out of"
+        print(f"{verb} the App Library: " + (", ".join(BY_KEY[k].name for k in done) or "nothing to do"))
+        return 0
     if not argv or argv[0] not in BY_KEY:
         print("webapp-open <" + "|".join(BY_KEY) + "> [link] [--day=YYYY-MM-DD]", file=sys.stderr)
         return 2

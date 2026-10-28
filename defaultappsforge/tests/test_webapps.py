@@ -61,6 +61,37 @@ class Choices(unittest.TestCase):
         self.assertIn("x-scheme-handler/mailto=kognogos-web-gmail.desktop", (self.d / "mimeapps.list").read_text())
 
 
+class AppLibrary(unittest.TestCase):
+    """YouTube Music and Google Docs: in the App Library, never a default (they can't open your files)."""
+    def setUp(self):
+        self.dir = tempfile.TemporaryDirectory()
+        self.d = Path(self.dir.name) / "applications"
+
+    def tearDown(self):
+        self.dir.cleanup()
+
+    def test_added_with_no_links_to_take(self):
+        self.assertEqual(W.to_library(["youtube-music", "google-docs"], self.d), ["youtube-music", "google-docs"])
+        for key in ("youtube-music", "google-docs"):
+            text = (self.d / f"kognogos-web-{key}.desktop").read_text()
+            self.assertNotIn("MimeType=", text)
+            self.assertIn(f"webapp-open {key} %u", text)
+
+    def test_taken_out_again(self):
+        W.to_library(["youtube-music"], self.d)
+        self.assertEqual(W.to_library(["youtube-music", "google-docs"], self.d, remove=True), ["youtube-music"])
+        self.assertFalse(list(self.d.iterdir()))
+
+    def test_a_wrong_name_changes_nothing(self):
+        self.assertEqual(W.main(["--add", "youtube-music", "nope"]), 2)
+        self.assertEqual(W.main(["--add"]), 2)
+
+    def test_never_a_choice_for_any_job(self):
+        for w in W.LIBRARY_ONLY:
+            self.assertIsNone(w.role)
+            self.assertNotIn(w, W.WEB_APPS)
+
+
 class Addresses(unittest.TestCase):
     def test_an_email_link_opens_a_new_message(self):
         self.assertEqual(W.address(W.BY_KEY["gmail"], "mailto:ana@example.com?subject=Hi"),

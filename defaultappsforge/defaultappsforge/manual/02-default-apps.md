@@ -18,6 +18,12 @@ Some jobs can be done by a website, so the lists offer them too, marked **· web
 
 Pick one and save: a small launcher is made (it also shows in your apps), and it opens in its own window of your browser (Chrome, Chromium, Brave, Edge or Vivaldi), or a tab of any other browser. A web app takes links only, never files: an email file (.eml) keeps opening in an email app.
 
+YouTube Music and Google Docs are web apps too, but they can't open a file on your computer, so they're never anyone's default: a double-click on a song or a document would only open the website. They go in the App Library instead, with one command (`--remove` takes them out again):
+
+```
+webapp-open --add youtube-music google-docs
+```
+
 ## Any app… and Find more…
 
 Every list ends with two more lines:
