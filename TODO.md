@@ -2,6 +2,13 @@
 
 **Target: the first KognogOS release (v1.0, April 2027).** Each section keeps its own detailed list; this one tracks the suite. Updated after every step.
 
+## 2026-10-27 — KognogOS stage 04 starts: the Rice review, Win alone, Quick Search, every job's choices
+- [x] **hypeForge, the Rice review pieces 1–5** (D-118 App Library launcher, D-119 icons wear the text colour, D-120 Quick Settings one-colour + short names, D-125 the calendar opens your calendar on a day click); pieces 6–11 shot, waiting for Javier's look (hypeforge/TODO.md, testing/)
+- [x] **Found and fixed on the way:** F-87 #131 title bar strip (Sway patch 4), F-88 #132 half-drawn wallpaper, D-121 wallpaper follows a switch, D-122 volume chime, D-123 Win alone (Sway patch 5), D-124 Quick Search on Win + Space — **Win alone and the strip proven at his login**
+- [x] **defaultappsForge D-5:** web apps (Gmail, Google/Outlook calendar, maps, Voice), Any app…, Find more…, App Library web apps; 44 tests; waits for his run → 1.0
+- [x] **nogForge `--search`** (`d61d1e7`), for Find more…; ships with the next nogForge release (AUR after his local test)
+- [ ] **hypeForge's Sway as a package, a draft** (`sway-hypeforge/PKGBUILD`, built + benched, not installed): four choices for Javier in `hypeforge/docs/research/2026-10-27-sway-package.md`
+
 ## 2026-10-25 — KognogOS stage 03 complete: Quick Settings pages, nightForge 1.1.1, the bar waits for sound
 - [x] **hypeForge (D-117):** Quick Settings pages for Night light, Sound, Wi-Fi (networks, password, hidden networks, refresh), Bluetooth and Printer; a tile opens its page, each page's app icon is at the bottom right; Do Not Disturb moved to the calendar; the moon and the printer left every bar; notification cards approved, which closed **stage 03, 14/14** (hypeforge/TODO.md)
 - [x] **nightForge 1.1.1 — GitHub + AUR** (#129, AUR `65394dc`): its tray icon steps aside on any hypeForge bar; his login check passed
