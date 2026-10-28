@@ -34,3 +34,5 @@
 
 ## Phase 2 · Release
 - [ ] Javier's run → 1.0.0, GitHub, AUR after his local test; README row, kognogos.org, Vault
+  - 2026-10-28: his run passed; 1.0.0 prepared — `--help` / `--version` (F-1: `--help` opened the whole app; 3 tests, seen failing), the launcher entry `defaultappsforge.desktop`, README written in full with new screenshots, PACKAGING's AUR section, matrix `testing/20261028 - Test Matrix for defaultappsForge v1-0-0.md`; 47 tests
+  - found on the way: hypeForge's floating-window entries for defaultappsForge, nightForge and workspaceForge are in `~/.config/hypeforge/applications/` but never linked into `~/.local/share/applications/` (the others are) — a hypeForge item

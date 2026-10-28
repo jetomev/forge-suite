@@ -23,6 +23,17 @@ aren't listed.*
 | xdg-utils | reading and setting the defaults (xdg-mime); the default browser for web apps (xdg-settings) | (program xdg-mime) |
 | xdg-terminal-exec | the default terminal entry, where installed (not on this desktop) | (program xdg-terminal-exec) |
 
+## Check only (`checkdepends`)
+
+| Package | What uses it | Module / program |
+|---|---|---|
+| desktop-file-utils | `check()` validates the launcher entry `defaultappsforge.desktop` (1.0.0) | (program desktop-file-validate) |
+
 ## The AUR recipe
 
-No AUR package yet (0.1.0, inside hypeForge Settings).
+`defaultappsforge` from 1.0.0 (2026-10-28), in `~/Programs/aur-defaultappsforge/`: the source is the signed
+release file from `jetomev/forge-suite` (tag `defaultappsforge-vX.Y.Z`, built by `scripts/release-app.sh`).
+It installs `defaultappsforge/` and `main.py` under `/usr/lib/defaultappsforge/`, the `defaultappsforge`
+launcher and a `webapp-open` link in `/usr/bin` (the App Library's web apps and the launchers a save
+writes), the launcher entry, the README and the license. `check()` runs the tests and validates the
+launcher entry.
