@@ -2,6 +2,12 @@
 
 **Target: the first KognogOS release (v1.0, April 2027).** Each section keeps its own detailed list; this one tracks the suite. Updated after every step.
 
+## 2026-10-28 — Javier's tries: everything passed
+- [x] **hypeForge, the Rice pieces 6–11 approved** (D-126): Power keeps its colours and its dimmed screen; Quick Settings and the tray stay one colour
+- [x] **His tries passed:** the Quick Search, a click on a calendar day, the volume chime; defaultappsForge's whole run (web apps, Find more…, Any app…); nogForge's `--search`
+- [ ] **Releases:** defaultappsForge 1.0.0 and nogForge with `--search` — GitHub, then the AUR after his local test
+- [ ] **His decisions, one at a time:** YouTube Music + Google Docs in the App Library · the Sway package's choices · the Rice's pieces 12, 3, 13
+
 ## 2026-10-27 — KognogOS stage 04 starts: the Rice review, Win alone, Quick Search, every job's choices
 - [x] **hypeForge, the Rice review pieces 1–5** (D-118 App Library launcher, D-119 icons wear the text colour, D-120 Quick Settings one-colour + short names, D-125 the calendar opens your calendar on a day click); pieces 6–11 shot, waiting for Javier's look (hypeforge/TODO.md, testing/)
 - [x] **Found and fixed on the way:** F-87 #131 title bar strip (Sway patch 4), F-88 #132 half-drawn wallpaper, D-121 wallpaper follows a switch, D-122 volume chime, D-123 Win alone (Sway patch 5), D-124 Quick Search on Win + Space — **Win alone and the strip proven at his login**
