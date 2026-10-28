@@ -1,0 +1,52 @@
+# DRAFT (2026-10-27, not published): hypeForge's Sway as a KognogOS package (D-111, TODO Phase 12).
+# What build.py does in the home folder, as a package: the same Sway release as Arch's, its signature
+# checked, our patches applied, installed BESIDE the system's Sway (/opt/sway-hypeforge), never over it.
+# The open choices (where it lives, how it follows Sway updates) are in
+# docs/research/2026-10-27-sway-package.md; nothing here is installed until Javier decides.
+# Maintainer: Kognog Labs LLC <jetomev@gmail.com>
+
+pkgname=sway-hypeforge
+pkgver=1.12
+pkgrel=1
+pkgdesc="Sway with hypeForge's patches (title bar buttons, pointer position, Win alone), installed beside the system's Sway — KognogOS"
+arch=('x86_64')
+url="https://github.com/jetomev/forge-suite/tree/main/hypeforge/sway-hypeforge"
+license=('MIT')
+# the system's Sway, same version: our login runs this build only when the two match, else the system's
+depends=("sway>=1:${pkgver}" 'cairo' 'gdk-pixbuf2' 'libevdev' 'libinput' 'json-c' 'pixman' 'systemd-libs'
+         'wayland' 'libxcb' 'libxkbcommon' 'pango' 'pcre2' 'wlroots0.20' 'xcb-util-wm')
+makedepends=('meson' 'ninja' 'wayland-protocols' 'glslang')
+source=("https://github.com/swaywm/sway/releases/download/${pkgver}/sway-${pkgver}.tar.gz"{,.sig}
+        0001-titlebar-buttons.patch
+        0002-titlebar-button-hover.patch
+        0003-seat-cursor-position.patch
+        0004-titlebar-background-pieces.patch
+        0005-mouse-cancels-held-release-binding.patch)
+sha256sums=('a7b1becc217433c11c6284d36bcea0687b87b77b0ed26a384565292ec321f2b1'
+            'SKIP'
+            '75d620b6a7a25672be705a2708cd94ee0b1c51985013fb4b22e66d5a8e89dfe0'
+            '5aa82f5bd7cee1f046a3283832055247f03639bd26c62b746610356cbf1238a4'
+            '9e67c290ccff5d5cf9688447b46d056d185891143929de7c714573e7cc7ce6f8'
+            '77fbdea18802bd2ec06eb456fe1fcbbbbd218a1d4d46f3663a34b4892bb6f5e5'
+            '02b1daa7d8df09de55f42056c661ee6308c1a74715b2342826684d544495954d')
+validpgpkeys=('34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48')   # Simon Ser, Sway's release key
+
+prepare() {
+  cd "sway-${pkgver}"
+  local p
+  for p in "${srcdir}"/0*.patch; do
+    patch -p1 -i "$p"
+  done
+}
+
+build() {
+  arch-meson "sway-${pkgver}" build --prefix=/opt/sway-hypeforge -Dman-pages=disabled -Dwerror=false -Dsd-bus-provider=libsystemd
+  meson compile -C build
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+  # the system's Sway owns these; ours would only collide with them
+  rm -rf "$pkgdir"/opt/sway-hypeforge/share/wayland-sessions "$pkgdir"/opt/sway-hypeforge/etc
+  install -Dm644 "sway-${pkgver}/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
