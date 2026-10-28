@@ -6,6 +6,7 @@
 
 ## 2026-10-22 · Moved into the Forge Suite
 - [x] **`--search WORDS`: open already searching** (defaultappsForge D-5, 2026-10-27: its "Find more…" opens nogForge on the kind of app wanted) — **built 2026-10-27** (tests 2, seen failing on the old code); goes out with the next release (after Javier's local test)
+  - **his try 2026-10-28** through defaultappsForge's Find more… (Music Player): opened searching for music players ✅ — ready for the release
 - [x] **The old commit message reworded** (Javier ran `scripts/rewrite-old-commit-message.sh`: dry-run, local, push), then **moved into `forge-suite/nogforge`** (Javier: go): `git subtree add` with the full history (signed merge `fc0b8b3`), tags re-created signed as `nogforge-v0.3.0…v1.5.0`, no open issues to move, the old repository got a moved note and is archived, `~/Programs/nogforge` → a shortcut (the old folder, with the rewrite's backup bundle and `pre-rewrite-*` branch, in `~/Programs/_moved-into-forge-suite/`)
 - [x] The About page's Code link points at the suite (`tests/test_home.py`, seen failing first)
 - [ ] **At the next version:** the release from forge-suite (`scripts/release-app.sh nogforge X.Y.Z`), the AUR recipe repointed at `jetomev/forge-suite` releases
