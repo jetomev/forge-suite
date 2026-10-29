@@ -37,3 +37,8 @@
   - **released 2026-10-28:** tag `defaultappsforge-v1.0.0` on `5b39074`, GitHub Release Latest (reproducible), #135 opened and closed, clean-chroot build PASS (47 tests), his install 20:00 PASS, **AUR `3c5bd6c` 1.0.0-1 (a new package)**; the suite README's row; Settings and hypeForge's menu entry start the installed program
   - 2026-10-28: his run passed; 1.0.0 prepared — `--help` / `--version` (F-1: `--help` opened the whole app; 3 tests, seen failing), the launcher entry `defaultappsforge.desktop`, README written in full with new screenshots, PACKAGING's AUR section, matrix `testing/20261028 - Test Matrix for defaultappsForge v1-0-0.md`; 47 tests
   - found on the way: hypeForge's floating-window entries for defaultappsForge, nightForge and workspaceForge are in `~/.config/hypeforge/applications/` but never linked into `~/.local/share/applications/` (the others are) — a hypeForge item; defaultappsForge's linked 2026-10-28, nightForge and workspaceForge still not
+
+## 2026-10-29 · Findings from the Craft apps
+
+- [ ] F-2 (#136): Office Suite assumes one app opens every office file
+  - The Craft apps are split (WordCraft, GridCraft, DeckCraft); picking WordCraft would give it spreadsheets and slides. Worked around 10-29 with the app's own writer (36 types, backup kept). Shape waits on Javier's verdict on the Craft apps
