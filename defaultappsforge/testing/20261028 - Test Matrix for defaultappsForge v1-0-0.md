@@ -10,6 +10,7 @@
 | 1.2 | `defaultappsforge --help` / `--version` / `--nope` | usage and exit 0 / `defaultappsForge 1.0.0` / refused, exit 2 — the app never opens | **PASS** | before 1.0.0, `--help` opened the whole app (found preparing the release) |
 | 1.3 | `desktop-file-validate defaultappsforge.desktop` | clean | **PASS** | |
 | 1.4 | README screenshots from the running app (`scripts/make-screenshots.py`, a copy of the settings file) | the three pages at 1.0.0, Gmail and Google Calendar showing | **PASS** | `docs/images/` |
+| 1.5 | The AUR recipe in a clean Arch chroot (the KognogOS VM, `makechrootpkg -c`, forgekit 0.10.0 + nog 2.1.0 built first) | the published file's checksum and signature pass; `check()` green | **PASS** | 47 tests OK, 14 s, 2026-10-28 23:25 UTC; snapshot `before-clean-build-20261028` |
 
 ## §2 · Javier, this desktop — Settings → Default apps (2026-10-28)
 
@@ -24,5 +25,5 @@
 
 | # | Step | Expected | Result | Notes |
 |---|---|---|---|---|
-| 3.1 | `nog install ./defaultappsforge-1.0.0-1-any.pkg.tar.zst` | installs; `defaultappsforge --version` says 1.0.0 | | |
-| 3.2 | `defaultappsforge` in a terminal | the app opens on Default Apps with his choices; Q quits | | |
+| 3.1 | `nog install ./defaultappsforge-1.0.0-1-any.pkg.tar.zst` | installs; `defaultappsforge --version` says 1.0.0 | **PASS** | 20:00: nog → pacman, exit 0, logged; `pacman -Q` defaultappsforge 1.0.0-1; `/usr/bin/webapp-open` → the package's copy |
+| 3.2 | `defaultappsforge` in a terminal | the app opens on Default Apps with his choices; Q quits | **PASS** | the installed 1.0.0 opened with his fourteen: Gmail, Google Calendar, Google Maps, Chrome, Pinta, cliamp, VLC, Fresh, Thunar, Alacritty, Ark, ONLYOFFICE |

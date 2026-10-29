@@ -33,6 +33,7 @@
   - **built 2026-10-27** (`webapp-open --add youtube-music google-docs`, `--remove`; tests 4; not added on this desktop yet: Javier's call)
 
 ## Phase 2 · Release
-- [ ] Javier's run → 1.0.0, GitHub, AUR after his local test; README row, kognogos.org, Vault
+- [x] Javier's run → 1.0.0, GitHub, AUR after his local test; README row, kognogos.org, Vault
+  - **released 2026-10-28:** tag `defaultappsforge-v1.0.0` on `5b39074`, GitHub Release Latest (reproducible), #135 opened and closed, clean-chroot build PASS (47 tests), his install 20:00 PASS, **AUR `3c5bd6c` 1.0.0-1 (a new package)**; the suite README's row; Settings and hypeForge's menu entry start the installed program
   - 2026-10-28: his run passed; 1.0.0 prepared — `--help` / `--version` (F-1: `--help` opened the whole app; 3 tests, seen failing), the launcher entry `defaultappsforge.desktop`, README written in full with new screenshots, PACKAGING's AUR section, matrix `testing/20261028 - Test Matrix for defaultappsForge v1-0-0.md`; 47 tests
-  - found on the way: hypeForge's floating-window entries for defaultappsForge, nightForge and workspaceForge are in `~/.config/hypeforge/applications/` but never linked into `~/.local/share/applications/` (the others are) — a hypeForge item
+  - found on the way: hypeForge's floating-window entries for defaultappsForge, nightForge and workspaceForge are in `~/.config/hypeforge/applications/` but never linked into `~/.local/share/applications/` (the others are) — a hypeForge item; defaultappsForge's linked 2026-10-28, nightForge and workspaceForge still not

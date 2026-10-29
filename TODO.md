@@ -5,7 +5,8 @@
 ## 2026-10-28 — Javier's tries: everything passed
 - [x] **hypeForge, the Rice pieces 6–11 approved** (D-126): Power keeps its colours and its dimmed screen; Quick Settings and the tray stay one colour
 - [x] **His tries passed:** the Quick Search, a click on a calendar day, the volume chime; defaultappsForge's whole run (web apps, Find more…, Any app…); nogForge's `--search`
-- [ ] **Releases:** defaultappsForge 1.0.0 and nogForge with `--search` — GitHub, then the AUR after his local test
+- [x] **Releases:** defaultappsForge 1.0.0 and nogForge with `--search` — GitHub, then the AUR after his local test
+  - **both released 2026-10-28:** GitHub (reproducible), clean-chroot builds, his installs passed, AUR nogforge 1.6.0-1 + defaultappsforge 1.0.0-1 (new); issues #133–#135
 - [ ] **His decisions, one at a time:** YouTube Music + Google Docs in the App Library · the Sway package's choices · the Rice's pieces 12, 3, 13
 
 ## 2026-10-27 — KognogOS stage 04 starts: the Rice review, Win alone, Quick Search, every job's choices

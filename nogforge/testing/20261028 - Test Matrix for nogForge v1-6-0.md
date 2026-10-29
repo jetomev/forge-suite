@@ -10,6 +10,7 @@
 | 1.2 | `nogforge --help` | lists `--search WORDS`; says **1-7** and **nog 2.0.0** | **PASS** | F-20: it said 1-6 and nog 1.7.0; the old test pinned "1-6" and now checks "1-7" |
 | 1.3 | `man --warnings -l nogforge.1` | no warnings; `--search WORDS` in SYNOPSIS and OPTIONS | **PASS** | |
 | 1.4 | `desktop-file-validate nogforge.desktop` | clean | **PASS** | |
+| 1.5 | The AUR recipe in a clean Arch chroot (the KognogOS VM, `makechrootpkg -c`, forgekit 0.10.0 + nog 2.1.0 built first) | the published file's checksum and signature pass; `check()` green | **PASS** | 70 tests OK, 124 s, 2026-10-28 23:24 UTC; snapshot `before-clean-build-20261028` |
 
 ## §2 · Javier, this desktop (2026-10-28)
 
@@ -21,5 +22,5 @@
 
 | # | Step | Expected | Result | Notes |
 |---|---|---|---|---|
-| 3.1 | `nog install ./nogforge-1.6.0-1-any.pkg.tar.zst` | installs; `nogforge --version` says 1.6.0 | | |
-| 3.2 | `nogforge --search "music player"` | opens on Install with the results showing; q quits | | |
+| 3.1 | `nog install ./nogforge-1.6.0-1-any.pkg.tar.zst` | installs; `nogforge --version` says 1.6.0 | **PASS** | 19:22: nog handed off to pacman, 1.5.0-1 → 1.6.0-1, logged; `pacman -Q` nogforge 1.6.0-1 |
+| 3.2 | `nogforge --search "music player"` | opens on Install with the results showing; q quits | **PASS** | "yes, it opened already searching for music players" |

@@ -6,14 +6,15 @@
 
 ## 2026-10-28 · 1.6.0 — open already searching
 - [x] **1.6.0 prepared:** `--search` in `--help` and the man page; **F-20** `--help` said 1-6 and nog 1.7.0 (and the not-installed message 1.7.0) → 1-7, 2.0.0, the test that pinned "1-6" fixed; README (What's in 1.6, roadmap, changelog; 1.4.0 moved to docs/), version 1.6.0; 70 tests, 0 warnings; matrix `testing/20261028 - Test Matrix for nogForge v1-6-0.md`
-- [ ] **Release:** signed tag `nogforge-v1.6.0`, `scripts/release-app.sh`, GitHub Release, the AUR recipe repointed at forge-suite → makepkg → **Javier's local install test** → AUR push
+- [x] **Release:** signed tag `nogforge-v1.6.0`, `scripts/release-app.sh`, GitHub Release, the AUR recipe repointed at forge-suite → makepkg → **Javier's local install test** → AUR push
+  - **released 2026-10-28:** tag on `7419e9e`, GitHub Release (reproducible, `--verify` byte for byte), issues #133 #134 opened and closed, clean-chroot build PASS (70 tests), his install 19:22 + `--search` PASS, **AUR `a1a84e5` 1.6.0-1**
 
 ## 2026-10-22 · Moved into the Forge Suite
 - [x] **`--search WORDS`: open already searching** (defaultappsForge D-5, 2026-10-27: its "Find more…" opens nogForge on the kind of app wanted) — **built 2026-10-27** (tests 2, seen failing on the old code); goes out with the next release (after Javier's local test)
   - **his try 2026-10-28** through defaultappsForge's Find more… (Music Player): opened searching for music players ✅ — ready for the release
 - [x] **The old commit message reworded** (Javier ran `scripts/rewrite-old-commit-message.sh`: dry-run, local, push), then **moved into `forge-suite/nogforge`** (Javier: go): `git subtree add` with the full history (signed merge `fc0b8b3`), tags re-created signed as `nogforge-v0.3.0…v1.5.0`, no open issues to move, the old repository got a moved note and is archived, `~/Programs/nogforge` → a shortcut (the old folder, with the rewrite's backup bundle and `pre-rewrite-*` branch, in `~/Programs/_moved-into-forge-suite/`)
 - [x] The About page's Code link points at the suite (`tests/test_home.py`, seen failing first)
-- [ ] **At the next version:** the release from forge-suite (`scripts/release-app.sh nogforge X.Y.Z`), the AUR recipe repointed at `jetomev/forge-suite` releases
+- [x] **At the next version:** the release from forge-suite (`scripts/release-app.sh nogforge X.Y.Z`), the AUR recipe repointed at `jetomev/forge-suite` releases
 
 ## 2026-10-22 · The project's board
 - [x] **A board for this project** (https://claude.ai/artifact/ABUXFQtx3bTH7CYrVmcmhX): this TODO as a page beside the chat — calling the project opens it first (mindForge boards, `.board`). Ticks made on the page come back here

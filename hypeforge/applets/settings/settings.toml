@@ -25,7 +25,7 @@ forge = true
 [[page]]
 name = "Default apps"
 summary = "which app opens what"
-command = "python3 ~/Programs/forge-suite/defaultappsforge/main.py"   # defaultappsForge 0.1.0, from the repo (not packaged yet)
+command = "defaultappsforge"   # the package (1.0.0, AUR since 2026-10-28)
 forge = true
 
 [[page]]
