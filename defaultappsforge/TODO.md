@@ -30,7 +30,7 @@
 - [x] Find more… : nogForge searching for that kind of app (waits on nogForge `--search`) — **built 2026-10-27** (with nogForge's `--search`, same night)
   - **his try 2026-10-28:** Music Player → Find more… opened nogForge searching for music players (*"NICE!!!"*) ✅
 - [x] YouTube Music, Google Docs: App Library web apps, not file defaults
-  - **built 2026-10-27** (`webapp-open --add youtube-music google-docs`, `--remove`; tests 4; not added on this desktop yet: Javier's call)
+  - **built 2026-10-27** (`webapp-open --add youtube-music google-docs`, `--remove`; tests 4); **added on this desktop 2026-10-29** at his "both, go ahead" — both entries valid; YouTube Music has its icon, Google Docs has none in candy-icons (his look check)
 
 ## Phase 2 · Release
 - [x] Javier's run → 1.0.0, GitHub, AUR after his local test; README row, kognogos.org, Vault
