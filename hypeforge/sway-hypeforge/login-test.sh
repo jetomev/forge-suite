@@ -42,7 +42,7 @@ try "2. Sway updated (1.13) " "$HOME/fakebin:/usr/bin:/bin"
 rm ~/fakebin/sway
 # with the KognogOS package installed, its /opt build must win over the home folder's (2026-10-30)
 if [ -x /opt/sway-hypeforge/bin/sway ]; then
-    echo "(the package's build is installed: cases 1-2 must run /opt/sway-hypeforge/bin/sway)"
+    echo "(the package's build is installed: cases 1 and 3 must run /opt/sway-hypeforge/bin/sway)"
     real=$(readlink ~/.local/opt/sway-hypeforge/current); ln -sfn missing ~/.local/opt/sway-hypeforge/current
     try "3. home build gone     " "/usr/bin:/bin"
     ln -sfn "$real" ~/.local/opt/sway-hypeforge/current
