@@ -1,8 +1,9 @@
 # DRAFT (2026-10-27, not published): hypeForge's Sway as a KognogOS package (D-111, TODO Phase 12).
 # What build.py does in the home folder, as a package: the same Sway release as Arch's, its signature
 # checked, our patches applied, installed BESIDE the system's Sway (/opt/sway-hypeforge), never over it.
-# The open choices (where it lives, how it follows Sway updates) are in
-# docs/research/2026-10-27-sway-package.md; nothing here is installed until Javier decides.
+# Decided 2026-10-30 (docs/research/2026-10-27-sway-package.md): KognogOS's own package source only, not the
+# AUR (D-127); the system's Sway is held at the version this is built from, `sway=` (D-128), so a new Sway
+# arrives only together with our rebuild. hypeforge-session runs /opt/sway-hypeforge/bin/sway first.
 # Maintainer: Kognog Labs LLC <jetomev@gmail.com>
 
 pkgname=sway-hypeforge
@@ -13,7 +14,7 @@ arch=('x86_64')
 url="https://github.com/jetomev/forge-suite/tree/main/hypeforge/sway-hypeforge"
 license=('MIT')
 # the system's Sway, same version: our login runs this build only when the two match, else the system's
-depends=("sway>=1:${pkgver}" 'cairo' 'gdk-pixbuf2' 'libevdev' 'libinput' 'json-c' 'pixman' 'systemd-libs'
+depends=("sway=1:${pkgver}" 'cairo' 'gdk-pixbuf2' 'libevdev' 'libinput' 'json-c' 'pixman' 'systemd-libs'
          'wayland' 'libxcb' 'libxkbcommon' 'pango' 'pcre2' 'wlroots0.20' 'xcb-util-wm')
 makedepends=('meson' 'ninja' 'wayland-protocols' 'glslang')
 source=("https://github.com/swaywm/sway/releases/download/${pkgver}/sway-${pkgver}.tar.gz"{,.sig}

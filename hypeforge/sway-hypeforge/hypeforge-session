@@ -3,7 +3,9 @@
 # brake our system"). hypeForge's own Sway build (title bar buttons) runs only when it is the same Sway
 # version as the system's and starts at all; otherwise the system's Sway runs, the buttons are off, and
 # hypeforge-window says so once (HYPEFORGE_SWAY_FALLBACK). Rebuild: sway-hypeforge/build.py
-ours="$HOME/.local/opt/sway-hypeforge/current/bin/sway"
+# Our build: the KognogOS package's (/opt, D-127/D-128) first, else the one build.py makes in the home folder.
+ours="/opt/sway-hypeforge/bin/sway"
+[ -x "$ours" ] || ours="$HOME/.local/opt/sway-hypeforge/current/bin/sway"
 want=$(sway --version 2>/dev/null | sed -n 's/^sway version \([0-9.]*\).*/\1/p')
 have=$("$ours" --version 2>/dev/null | sed -n 's/^sway version \([0-9.]*\).*/\1/p')
 if [ -n "$want" ] && [ "$have" = "$want" ]; then

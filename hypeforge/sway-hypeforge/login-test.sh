@@ -40,7 +40,17 @@ try "1. versions match      " "/usr/bin:/bin"
 printf '#!/bin/sh\nif [ "$1" = "--version" ]; then echo "sway version 1.13"; exit; fi\nexec /usr/bin/sway "$@"\n' > ~/fakebin/sway; chmod +x ~/fakebin/sway
 try "2. Sway updated (1.13) " "$HOME/fakebin:/usr/bin:/bin"
 rm ~/fakebin/sway
-real=$(readlink ~/.local/opt/sway-hypeforge/current); ln -sfn missing ~/.local/opt/sway-hypeforge/current
-try "3. our build broken    " "/usr/bin:/bin"
-ln -sfn "$real" ~/.local/opt/sway-hypeforge/current
-echo "build link back to: $(readlink ~/.local/opt/sway-hypeforge/current)"
+# with the KognogOS package installed, its /opt build must win over the home folder's (2026-10-30)
+if [ -x /opt/sway-hypeforge/bin/sway ]; then
+    echo "(the package's build is installed: cases 1-2 must run /opt/sway-hypeforge/bin/sway)"
+    real=$(readlink ~/.local/opt/sway-hypeforge/current); ln -sfn missing ~/.local/opt/sway-hypeforge/current
+    try "3. home build gone     " "/usr/bin:/bin"
+    ln -sfn "$real" ~/.local/opt/sway-hypeforge/current
+    echo "build link back to: $(readlink ~/.local/opt/sway-hypeforge/current)"
+    echo "(the package's build broken needs root to fake: checked by hand in the VM, 2026-10-30)"
+else
+    real=$(readlink ~/.local/opt/sway-hypeforge/current); ln -sfn missing ~/.local/opt/sway-hypeforge/current
+    try "3. our build broken    " "/usr/bin:/bin"
+    ln -sfn "$real" ~/.local/opt/sway-hypeforge/current
+    echo "build link back to: $(readlink ~/.local/opt/sway-hypeforge/current)"
+fi
