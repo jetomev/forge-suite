@@ -5,6 +5,14 @@
 
 ---
 
+## 2026-10-30
+
+### D-128 · Sway's update waits for ours: the package holds Sway at the version our build is made from (Javier)
+The second choice in `docs/research/2026-10-27-sway-package.md`. Javier picked the hold, over the drafted fallback (`sway>=`, his 10-17 rule): *"Hold Sway's update back. Our buttons never go missing, but the Sway update sits blocked until our copy is ready, which can also hold up the rest of a system update. But we need to be on top of sway news and changes in advance."* So `sway-hypeforge` pins the system's Sway to the version it is built from (`sway=1:1.12` in the draft, in place of `>=`); a new Sway is installed only together with our rebuild. The fallback login (`hypeforge-session`'s version check) stays as the safety net. The price he accepted: a Sway release can hold up a system update until our rebuild is out, so **we watch Sway and wlroots ahead of time**: a weekly news watch. Offered to the HomeLab: Middle-Earth session the same day; it can't run it yet (its agents have no web access and nothing there runs on a schedule until its plan step 4). Javier: **we wait for Middle-Earth** rather than run it from KognogOS. Until then, Sway's and wlroots' news is checked by hand whenever the Sway package is touched.
+
+### D-127 · Our Sway package is published in KognogOS's own package source only, not the AUR (Javier)
+The first of the four choices in `docs/research/2026-10-27-sway-package.md`. Javier: *"KognogOS only"*. `sway-hypeforge` goes into the package source the disc installs from (KognogOS stage 05's repository) and nowhere else: it is useful only with hypeForge's settings, so an AUR copy would be one more package to keep current for nobody. If someone outside KognogOS asks for it, the AUR can come then.
+
 ## 2026-10-28
 
 ### D-126 · The Rice, pieces 6 to 11 approved; Power keeps its colours, the tray stays one colour (Javier)

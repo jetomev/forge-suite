@@ -34,6 +34,8 @@ only in `~/.local/opt` today, see 3 below), `login-test.sh` in a VM.
 
 ## The choices (Javier's)
 
+*2026-10-30: 1 → KognogOS's own source only (D-127); 2 → the hold, `sway=` (D-128); 3 → done and proven in the VM (`testing/20261030 - Test Results for hypeForge's Sway package 1-12.md`); 4 still open.*
+
 1. **Where it's published.** The KognogOS package source for the disc (stage 05's repository) — or the AUR
    too. *Claude's lean:* the disc's own source first; the AUR only if someone outside KognogOS asks, since
    it's useful only with hypeForge's config.
