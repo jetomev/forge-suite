@@ -18,5 +18,5 @@ KognogOS stage 04, "The four styles and their colours" (board card look-071: *"F
 | 9 | The list cards (Workspaces, Favorites, USB drives, open apps) | `sheet-6-11.png` | waits for his look | none against the standard | — |
 | 10 | Alt + Tab | `sheet-6-11.png` | waits for his look | none against the standard | — |
 | 11 | Notifications | `sheet-6-11.png` | waits for his look (approved 10-25 as F-85) | none | — |
-| 12 | Windows: the frame, gaps, title bars on floating windows | | | | |
+| 12 | Windows: the frame, gaps, title bars on floating windows | `sheet-12-windows.png`, then `sheet-12-windows-v2.png` (before/after) | **Approved after two fixes** (2026-10-30): *"fix both, then show me the sheet again"* → *"approved, bring it live"* | R-3: the title bar's edge 1 px against the frame's 2 px (the corner stepped in). R-4: the title read dim in the thin weight (its colour was already the bright text) | D-129: `titlebar_border_thickness 2` and a bold title, Rice only; theme + switch benches |
 | 13 | The whole look on the real desktop | | | | |

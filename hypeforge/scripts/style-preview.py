@@ -57,6 +57,10 @@ def main() -> int:
     ap.add_argument("--notify", action="store_true", help="show two made-up notifications (mako, the style's own settings)")
     ap.add_argument("--run", help="a shell command run inside the hidden desktop before the picture (e.g. a launcher)")
     ap.add_argument("--rest", type=float, default=0.3, help="seconds the mouse rests on X,Y before the click (2 = its hover tip shows first)")
+    ap.add_argument("--sway", default="sway", help="the Sway to run: ours shows the title bar buttons "
+                    "(~/.local/opt/sway-hypeforge/current/bin/sway, or /opt/sway-hypeforge/bin/sway)")
+    ap.add_argument("--buttons", action="store_true", help="floating windows' title bar buttons on, as on the desktop "
+                    "(sway/config-buttons' three lines; needs --sway ours)")
     a = ap.parse_args()
     out = Path(a.out or HERE / f"logs/style-preview-{a.style}-{a.theme}{'' if a.corners == 'style' else '-' + a.corners}.png")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -82,8 +86,11 @@ def main() -> int:
     import panelkit
     ht = panelkit.theme_tool()
     ht.apply(a.style, a.theme, ht.Place(conf), reload=False, check_names=False, say=lambda *_: None, corners=a.corners)
+    buttons = ("titlebar_buttons floating\ntitlebar_button minimize \U000f05b0 move scratchpad\n"
+               "titlebar_button maximize \U000f05af fullscreen toggle\ntitlebar_button close \U000f05ad kill\n"
+               if a.buttons else "")      # the symbols sway/config-buttons uses (2026-10-30, Rice piece 12)
     (base / "sway.conf").write_text(f"output HEADLESS-1 resolution 2560x1440\nxwayland disable\n"
-                                    f"include {conf}/hypeforge/theme/sway.conf\n")
+                                    f"include {conf}/hypeforge/theme/sway.conf\n{buttons}")
     fakebin = base / "bin"
     fakebin.mkdir()
     (fakebin / "pgrep").write_text('#!/bin/sh\n[ "$1 $2" = "-x waybar" ] && exit 1\nexec /usr/bin/pgrep "$@"\n')
@@ -108,7 +115,7 @@ def main() -> int:
                     panelkit_icons(a.theme)], env=env, capture_output=True)
     procs, log, sock = [], open(base / "preview.log", "w"), None
     try:
-        procs.append(subprocess.Popen(["sway", "-c", str(base / "sway.conf")], env=env, stdout=log, stderr=log))
+        procs.append(subprocess.Popen([a.sway, "-c", str(base / "sway.conf")], env=env, stdout=log, stderr=log))
         for _ in range(100):
             found = list(run.glob("sway-ipc.*.sock"))
             if found:

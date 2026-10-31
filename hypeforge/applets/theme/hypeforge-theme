@@ -392,6 +392,8 @@ def sway_titlebar(style: dict) -> str:
         lines.append(f"font pango:{fonts['ui']}{bold} {fonts.get('ui_size', 10)}")
     pad = max(1, (shape.get("titlebar_height", 24) - 16) // 2)
     lines.append(f"titlebar_padding 6 {pad}")
+    if shape.get("titlebar_edge_matches_border"):   # the title bar's edge as thick as the window's frame (Rice, 2026-10-30)
+        lines.append(f"titlebar_border_thickness {shape.get('border_window', SHAPE_DEFAULTS['border_window'])}")
     return "\n".join(lines)
 
 

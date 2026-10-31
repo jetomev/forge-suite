@@ -35,6 +35,7 @@ radius_area      = 8             # its three areas inside it
 radius_pill      = 999           # workspace pills
 radius_popup     = 14
 border_window    = 2             # a bright frame on the window in use
+titlebar_edge_matches_border = true   # a floating window's title bar framed as thick as its sides (Javier, 2026-10-30, Rice piece 12)
 border_island    = 2
 gap_inner        = 10            # 14 until 2026-10-13 (Javier: "let's do 10")
 gap_outer        = 0             # the edges get the inner gap; Sway adds the two (Javier, 10-11: same as between windows)
@@ -87,6 +88,7 @@ animations         = false       # SwayFX #565/#569
 [fonts]
 ui      = "JetBrainsMono Nerd Font"  # rices lean on one mono font everywhere, icons included
 ui_size = 10.5
+ui_bold = true                       # the title bar's title in bold: the thin weight read as dim (Javier, 2026-10-30, Rice piece 12)
 mono    = "JetBrainsMono Nerd Font"
 
 # The theme's own wallpaper (Javier, 2026-10-11: "Rice uses our KognogOS backgrounds only, the other
