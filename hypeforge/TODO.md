@@ -264,6 +264,7 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 - [ ] **Wallet (Javier, 10-07: "we need a Forge Suite Wallet"):** yes — our own secret store (the standard Secret Service interface, unlocked through sudoForge's box); today KDE's `ksecretd` answers it (Claude Desktop fix #39). Name his call. = the D-61 keyring step
 - [ ] **Pop-up list positions** (= "where the pop-up lists open"): the launcher, the clipboard history and the notification list each open at a fixed spot (under their bar button); a setting to choose the spot (centre, under the button, a corner). Low priority; lands with the Launcher / Notifications apps
 - [ ] Alt+Tab with previews, drag and drop, folder tabs, our own bar = hypeForge pieces (window management, the look), not separate Forge apps
+- [ ] **A lasting lock screen before v1.0** (found 2026-11-03 by the overnight machine check): gtklock 5.0.0 says "This is probably the last gtklock release" (no PRs, only fixes the maker can reproduce; repo not archived). It still works and the next update is harmless; pick the lock screen KognogOS ships with 1.0 (keep gtklock and watch it, or move to a maintained one), Javier's call
 
 ## Phase 13 · Forge apps for the gaps
 - [ ] New Forge Suite apps for the jobs with no terminal app (one at a time, each its own project)
