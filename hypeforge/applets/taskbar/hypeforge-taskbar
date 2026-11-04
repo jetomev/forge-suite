@@ -32,7 +32,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "..
 from hfsway import GET_TREE, SUBSCRIBE, EVENT_WINDOW, Sway  # noqa: E402
 from hfapps import Matcher, all_windows as windows, apps, window_names  # noqa: E402
 from hficons import Icons, icon_rules, safe  # noqa: E402
-from hfbar import signal_bar  # noqa: E402
+from hfbar import Redraws, signal_bar  # noqa: E402
 
 CONFIG_DIR = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets"
 SECTIONS = CONFIG_DIR / "sections.toml"          # Favorites = the pinned apps
@@ -79,9 +79,11 @@ def row(tree, entries: dict, matcher: Matcher, pins: list[str]):
     extra = []
     for w in sorted(windows(tree), key=lambda n: n["id"]):
         app_id = matcher.of_window(w)
-        if app_id is None:  # an app with no desktop entry: its own name and icon name
+        if app_id is None:  # an app with no desktop entry: its own name and icon name, never its title,
+            # which some windows rewrite many times a second (F-89: Godot's movie writer, every frame)
             app_id = next(iter(sorted(window_names(w))), f"window-{w['id']}")
-            entry = {"name": w.get("name") or app_id, "icon": app_id, "noicon": True}
+            props = w.get("window_properties") or {}
+            entry = {"name": w.get("app_id") or props.get("class") or app_id, "icon": app_id, "noicon": True}
         else:
             entry = entries[app_id]
         item = seen.get(app_id)
@@ -189,12 +191,14 @@ def keep_current():
     stamp = SECTIONS.stat().st_mtime if SECTIONS.exists() else 0
     write_bar(pins, entries, icons)
     control, events = Sway(), Sway()
+    redraw = Redraws(signal.SIGRTMIN + BAR_SIGNAL)     # at most a few a second, however busy the windows (F-89)
     if write_state(row(control.ask(GET_TREE), entries, matcher, pins), pins):
-        signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
+        redraw.ask()
     events.ask(SUBSCRIBE, json.dumps(["window"]))
     while True:
         kind, event = events.receive()
-        if kind != EVENT_WINDOW or event.get("change") not in ("new", "close", "focus", "urgent", "move", "title"):
+        # no "title": nothing in the row comes from a window's title (F-89)
+        if kind != EVENT_WINDOW or event.get("change") not in ("new", "close", "focus", "urgent", "move"):
             continue
         now = SECTIONS.stat().st_mtime if SECTIONS.exists() else 0
         if now != stamp:  # Favorites changed: new pins, a new bar fragment
@@ -202,7 +206,7 @@ def keep_current():
             matcher = Matcher(entries)
             write_bar(pins, entries, icons)
         if write_state(row(control.ask(GET_TREE), entries, matcher, pins), pins):
-            signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
+            redraw.ask()
 
 
 def main():

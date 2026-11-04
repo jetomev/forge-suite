@@ -135,5 +135,32 @@ class TheBarReloadsOnlyOnceSoundSettled(unittest.TestCase):
         self.assertFalse((self.dir / "looks").exists())   # sound never asked
 
 
+class Redraws(unittest.TestCase):
+    """F-89 (2026-11-04): a window retitled every frame made the Taskbar send a redraw ~15 times a second, and
+    each one re-ran every taskbar piece on every screen; a new bar starting meanwhile drew nothing for 79 s.
+    A redraw is now asked for, and sent at most once per gap, the last one always."""
+
+    def setUp(self):
+        self.sent = []
+        self.r = hfbar.Redraws(signal.SIGRTMIN + 12, gap=0.2, send=lambda sig: self.sent.append((time.monotonic(), sig)))
+
+    def test_the_first_goes_at_once(self):
+        self.r.ask()
+        self.assertEqual(len(self.sent), 1)
+        self.assertEqual(self.sent[0][1], signal.SIGRTMIN + 12)
+
+    def test_a_storm_is_folded_and_the_last_change_still_lands(self):
+        start = time.monotonic()
+        for _ in range(60):                       # 60 asks over 0.6 s: 100 a second, like a busy title
+            self.r.ask()
+            time.sleep(0.01)
+        last_ask = time.monotonic()
+        time.sleep(0.4)
+        self.assertLessEqual(len(self.sent), 1 + int((last_ask - start) / 0.2) + 1, "at most one per gap")
+        self.assertGreaterEqual(self.sent[-1][0], last_ask - 0.2, "the change asked for last is sent")
+        gaps = [b[0] - a[0] for a, b in zip(self.sent, self.sent[1:])]
+        self.assertTrue(all(g >= 0.19 for g in gaps), gaps)
+
+
 if __name__ == "__main__":
     unittest.main()

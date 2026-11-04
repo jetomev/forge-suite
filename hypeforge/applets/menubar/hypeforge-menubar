@@ -40,7 +40,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "..
 from hfsway import GET_TREE, SUBSCRIBE, EVENT_WINDOW, Sway  # noqa: E402
 from hfapps import Matcher, all_windows, apps  # noqa: E402
 from hficons import Icons, icon_rules, safe  # noqa: E402
-from hfbar import signal_bar  # noqa: E402
+from hfbar import Redraws, signal_bar  # noqa: E402
 import hfmenu  # noqa: E402
 
 CONFIG_DIR = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "hypeforge/applets"
@@ -274,8 +274,9 @@ def keep_current():
     matcher, seen = Matcher(entries), stamp()
     write_bar(entries, icons)
     control, events = Sway(), Sway()
-    if write_state(*focused_app(control.ask(GET_TREE), entries, matcher)):
-        signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
+    redraw = Redraws(signal.SIGRTMIN + BAR_SIGNAL)     # the title in the tooltip: a window retitled every frame
+    if write_state(*focused_app(control.ask(GET_TREE), entries, matcher)):   # redraws a few times a second (F-89)
+        redraw.ask()
     events.ask(SUBSCRIBE, json.dumps(["window"]))
     while True:
         kind, event = events.receive()
@@ -287,7 +288,7 @@ def keep_current():
             matcher = Matcher(entries)
             write_bar(entries, icons)
         if write_state(*focused_app(control.ask(GET_TREE), entries, matcher)):
-            signal_bar(signal.SIGRTMIN + BAR_SIGNAL)
+            redraw.ask()
 
 
 # ---- The Application menu's list -------------------------------------------------------------

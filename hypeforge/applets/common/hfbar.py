@@ -9,11 +9,13 @@ import signal
 import re
 import shutil
 import subprocess
+import threading
 import time
 from pathlib import Path
 
 SOUND_SETTLE = 20.0        # seconds: a WirePlumber this old is settled, speakers or not
 SOUND_WAIT = 20.0          # the longest a reload waits for it
+REDRAW_GAP = 0.25          # seconds: an applet redraws its pieces at most this often (F-89)
 
 
 def bar_listens(pid, sig):
@@ -121,3 +123,37 @@ def signal_bar(sig, wait=5.0):
                 os.kill(pid, sig)
             except ProcessLookupError:
                 pass
+
+
+class Redraws:
+    """An applet's redraws, at most one per `gap` seconds (F-89, 2026-11-04). Every redraw re-runs every piece on
+    that signal, on every screen: a window retitled each frame (a game's movie writer) made the Taskbar send ~15
+    a second, the bar started ~900 programs a second, and a new Windows 11 or KDE bar drew nothing for 79 s.
+    The first redraw goes at once; any asked for within the gap fold into one, sent when the gap ends, so the
+    last change always reaches the bar."""
+
+    def __init__(self, sig, gap: float = REDRAW_GAP, send=None):
+        self.sig, self.gap = sig, gap
+        self.send = send or signal_bar
+        self.last = float("-inf")
+        self.waiting = None
+        self.lock = threading.Lock()
+
+    def ask(self):
+        with self.lock:
+            if self.waiting is not None:       # one is already due: it carries this change too
+                return
+            wait = self.last + self.gap - time.monotonic()
+            if wait > 0:
+                self.waiting = threading.Timer(wait, self._due)
+                self.waiting.daemon = True
+                self.waiting.start()
+                return
+            self.last = time.monotonic()
+        self.send(self.sig)
+
+    def _due(self):
+        with self.lock:
+            self.waiting = None
+            self.last = time.monotonic()
+        self.send(self.sig)

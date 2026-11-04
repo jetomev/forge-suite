@@ -119,6 +119,20 @@ class Files(unittest.TestCase):
         self.assertEqual(self.slot("run-2"), {"text": "", "class": "empty"}, "an unused slot is hidden")
         self.assertFalse(self.tb.write_state(self.tb.row(t, ENTRIES, self.m, pins), pins), "nothing changed")
 
+    def test_a_title_that_keeps_changing_never_changes_the_slot(self):
+        # F-89 (2026-11-04): a window of no installed app took its TITLE as its name; Godot's movie writer
+        # renames its window every frame, so every frame rewrote the slot and redrew every taskbar piece on
+        # every screen (~900 programs started a second), and a new Windows 11 or KDE bar never got drawn
+        def godot(frame):
+            w = win(6, None)
+            w.update(app_id=None, name=f"MovieWriter: Frame {frame} - Cyberbrawling my way to my love! (DEBUG)",
+                     window_properties={"class": "Cyberbrawling my way to my love!", "instance": "Godot_Engine"})
+            return tree(w)
+        self.tb.write_state(self.tb.row(godot(1403), ENTRIES, self.m, []), [])
+        self.assertEqual(self.slot("run-1")["tooltip"], "Cyberbrawling my way to my love!", "the app's name, not its title")
+        self.assertFalse(self.tb.write_state(self.tb.row(godot(1406), ENTRIES, self.m, []), []),
+                         "a new title alone is no change for the bar")
+
     def test_the_bar_gets_a_module_per_slot_and_an_icon_rule_per_app(self):
         class Icons:
             def find(self, name):
