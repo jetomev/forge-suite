@@ -7,3 +7,6 @@
 - **New Forge apps are born here**, as a new section — never a new repository.
 - **The commit hook** runs each section's checks: `git config core.hooksPath hypeforge/scripts/hooks`.
 - Commits name their section: `feat(hypeforge/…): …`. Every commit signed.
+
+## Rules with their words (moved from memory, 2026-11-09)
+- **App names** (Javier, 2026-09-26): "BitlaForge is also a mistake we are dragging. All ForgeKit apps have to be named [n]ameKit, please document this." What he meant by "[n]ameKit" is not settled here; ask him.

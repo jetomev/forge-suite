@@ -34,3 +34,8 @@ The KognogOS desktop on **Sway** (D-45): tiling, terminal apps first. Each featu
 
 ## Assets
 `assets/kognogos-emblem.png` (the bar's launcher button, the README), `assets/lock/` (the lock screen's blurred wallpaper). The new banner and social preview come with the public update, designed and approved first.
+
+## Rules with their words (moved from memory, 2026-11-09)
+- **Colour is never monotone** (Javier, 2026-10-10): "We can use white, black, and grays inside our color themes. If not, they are extremely monotone." · "Inside the window's colors are to much of the same. Thgat is where more contrast is needed to be use."
+- **Live code changes in a side copy** (Claude's lesson, 2026-10-25, not his words): the panels run straight from this folder, so edit, bench and test in a git worktree, then fast-forward into main.
+- **The tray is never restarted live** (Claude's lesson, proven 2026-10-17, not his words): a restart drops Claude Desktop's tray icon until Claude restarts; tray changes take effect at his next login.
