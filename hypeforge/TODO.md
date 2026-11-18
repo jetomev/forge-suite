@@ -9,6 +9,12 @@ The reasons behind each item are in `docs/DECISIONS.md` and `docs/DESIGN.md`. Th
 
 ---
 
+## Before KognogOS 1.0 · findings
+- [ ] 2026-11-18 · **The lock screen's maker is looking for someone to take it over.** gtklock (our lock screen, D-57) has "looking for a new
+  maintainer" at the top of its README; latest release v5.0.1 (2026-11-12; we run 5.0.0). Fine today; before 1.0, choose a lock screen that is
+  still looked after. Candidates: swaylock (tried first in D-57, its ring was not wanted: check whether it can be styled away) and hyprlock.
+  Javier's call. Checked on GitHub 2026-11-18.
+
 ## Phase 0 · Next session (Javier, 2026-10-11 night)
 - [x] **Every app opened from hypeForge Settings opens on the workspace it's called from** (#97) — fix it **using workspaceForge** (Javier: "Remind me to do the fix, using Workspaces tomorrow") — **done 2026-10-12 through workspaceForge (D-94):** Javier deleted the Settings workspace (its 14 apps, the five Forge ones among them, now open where they are called from); proven live: a fresh Settings window lands on the focused workspace, same screen, no screens switching; #97 closed
 
